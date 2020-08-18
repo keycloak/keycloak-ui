@@ -63,9 +63,7 @@ export const TableToolbar = ({
               </Button>
             </InputGroup>
           </ToolbarItem>
-          { toolbarItem && <ToolbarItem>
-            { toolbarItem }
-          </ToolbarItem>}
+          {toolbarItem && <ToolbarItem>{toolbarItem}</ToolbarItem>}
           <ToolbarItem variant="pagination">{pagination()}</ToolbarItem>
         </ToolbarContent>
       </Toolbar>

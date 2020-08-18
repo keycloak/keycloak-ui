@@ -9,6 +9,7 @@ import { Header } from './PageHeader';
 import { PageNav } from './PageNav';
 import { KeycloakContext } from './auth/KeycloakContext';
 import { TableToolbar } from './components/table-toolbar/TableToolbar';
+import { Help } from './components/help-enabler/HelpHeader';
 
 export const App = () => {
   const [max, setMax] = useState(10);
@@ -22,35 +23,37 @@ export const App = () => {
       .then((r) => r.data as Client[]);
   };
   return (
-    <Page header={<Header />} isManagedSidebar sidebar={<PageNav />}>
-      <PageSection variant="light">
-        <DataLoader loader={loader}>
-          {(clients) => (
-            <TableToolbar
-              count={clients!.length}
-              first={first}
-              max={max}
-              onNextClick={(f) => setFirst(f)}
-              onPreviousClick={(f) => setFirst(f)}
-              onPerPageSelect={(f, m) => {
-                setFirst(f);
-                setMax(m);
-              }}
-              toolbarItem={
-                <>
-                  <Button>Create client</Button>
-                  <Button variant="link">Import client</Button>
-                </>
-              }
-            >
-              <ClientList
-                clients={clients}
-                baseUrl={keycloak!.authServerUrl()!}
-              />
-            </TableToolbar>
-          )}
-        </DataLoader>
-      </PageSection>
-    </Page>
+    <Help>
+      <Page header={<Header />} isManagedSidebar sidebar={<PageNav />}>
+        <PageSection variant="light">
+          <DataLoader loader={loader}>
+            {(clients) => (
+              <TableToolbar
+                count={clients!.length}
+                first={first}
+                max={max}
+                onNextClick={(f) => setFirst(f)}
+                onPreviousClick={(f) => setFirst(f)}
+                onPerPageSelect={(f, m) => {
+                  setFirst(f);
+                  setMax(m);
+                }}
+                toolbarItem={
+                  <>
+                    <Button>Create client</Button>
+                    <Button variant="link">Import client</Button>
+                  </>
+                }
+              >
+                <ClientList
+                  clients={clients}
+                  baseUrl={keycloak!.authServerUrl()!}
+                />
+              </TableToolbar>
+            )}
+          </DataLoader>
+        </PageSection>
+      </Page>
+    </Help>
   );
 };
