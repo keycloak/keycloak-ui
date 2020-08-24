@@ -7,6 +7,8 @@ import {
 } from '@patternfly/react-core';
 
 import style from './realm-selector.module.css';
+import { BrowserRouter as Router, Route, Link, Redirect } from "react-router-dom";
+// import { NewRealmForm } from '../../forms/realm/NewRealmForm';
 
 type RealmSelectorProps = {
   realm: string;
@@ -34,10 +36,13 @@ export const RealmSelector = ({ realm, realmList }: RealmSelectorProps) => {
       }
       dropdownItems={[
         ...dropdownItems,
-        <DropdownItem key="add">
-          <Button isBlock>Add Realm</Button>
-        </DropdownItem>,
+        <Router key="add">
+        <DropdownItem >
+          <Link to="/add-realm"><Button isBlock id="addRealmButton">Add Realm</Button></Link>
+        </DropdownItem>
+        </Router>,
       ]}
     />
+
   );
 };
