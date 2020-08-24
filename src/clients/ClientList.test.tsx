@@ -6,14 +6,7 @@ import { ClientList } from './ClientList';
 
 test('renders ClientList', () => {
   const { getByText } = render(
-    <ClientList
-      clients={clientMock}
-      baseUrl="http://blog.nerdin.ch"
-      page={1}
-      pageSize={5}
-      onNextClick={() => {}}
-      onPreviousClick={() => {}}
-    />
+    <ClientList clients={clientMock} baseUrl="http://blog.nerdin.ch" />
   );
   const headerElement = getByText(/Client ID/i);
   expect(headerElement).toBeInTheDocument();
