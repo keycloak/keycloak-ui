@@ -25,6 +25,10 @@ import { Client } from './client-model';
 type ClientListProps = {
   clients?: Client[];
   baseUrl: string;
+  page: number;
+  pageSize: number;
+  onNextClick: (page: number) => void;
+  onPreviousClick: (page: number) => void;
 };
 
 const columns: (keyof Client)[] = [
@@ -34,8 +38,15 @@ const columns: (keyof Client)[] = [
   'baseUrl',
 ];
 
-export const ClientList = ({ baseUrl, clients }: ClientListProps) => {
-  const pagination = (variant: 'top' | 'bottom' = 'top') => (
+export const ClientList = ({
+  baseUrl,
+  clients,
+  page,
+  pageSize,
+  onNextClick,
+  onPreviousClick,
+}: ClientListProps) => {
+  const pagination = (count: number, variant: 'top' | 'bottom' = 'top') => (
     <Pagination
       isCompact
       toggleTemplate={({ firstIndex, lastIndex }: ToggleTemplateProps) => (
@@ -43,9 +54,11 @@ export const ClientList = ({ baseUrl, clients }: ClientListProps) => {
           {firstIndex} - {lastIndex}
         </b>
       )}
-      itemCount={100}
-      page={1}
-      perPage={10}
+      itemCount={count + (page - 1) * pageSize + (count <= pageSize ? 1 : 0)}
+      page={page}
+      perPage={pageSize}
+      onNextClick={(_, p) => onNextClick(p)}
+      onPreviousClick={(_, p) => onPreviousClick(p)}
       variant={variant}
     />
   );
@@ -98,7 +111,9 @@ export const ClientList = ({ baseUrl, clients }: ClientListProps) => {
             <Button>Create client</Button>
             <Button variant="link">Import client</Button>
           </ToolbarItem>
-          <ToolbarItem variant="pagination">{pagination()}</ToolbarItem>
+          <ToolbarItem variant="pagination">
+            {pagination(data.length)}
+          </ToolbarItem>
         </ToolbarContent>
       </Toolbar>
       <Table
@@ -116,7 +131,7 @@ export const ClientList = ({ baseUrl, clients }: ClientListProps) => {
         <TableBody />
       </Table>
       <Toolbar>
-        <ToolbarItem>{pagination('bottom')}</ToolbarItem>
+        <ToolbarItem>{pagination(data.length, 'bottom')}</ToolbarItem>
       </Toolbar>
     </>
   );
