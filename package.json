@@ -33,7 +33,6 @@
     "@babel/preset-typescript": "^7.10.4",
     "@snowpack/app-scripts-react": "^1.4.0",
     "@snowpack/plugin-parcel": "^1.3.0",
-    "@snowpack/plugin-webpack": "^2.0.5",
     "@storybook/addon-actions": "^5.3.19",
     "@storybook/addon-info": "^5.3.19",
     "@storybook/addon-links": "^5.3.19",

@@ -1,24 +1,11 @@
 module.exports = {
-  extends: "@snowpack/app-scripts-react",
-  scripts: {
-    "build:css": "postcss",
-    "bundle:*": "@snowpack/plugin-webpack"
+  "extends": "@snowpack/app-scripts-react",
+  "scripts": {
+    "build:css": "postcss"
   },
-  proxy: {
-    "/realms": process.env.BACKEND_URL,
+  "proxy": {
+    "/realms": process.env.BACKEND_URL
   },
-  plugins: [
-    [
-      "@snowpack/plugin-webpack",
-      {
-        extendConfig: (config) => {
-          config.plugins.push(/* ... */);
-          return config;
-        },
-      },
-    ],
-  ],
-  devServer: {
-    historyApiFallback: true
-  }
-};
+  "plugins": ["@snowpack/plugin-parcel"]
+
+}
