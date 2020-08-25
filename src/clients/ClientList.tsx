@@ -6,8 +6,8 @@ import {
   TableVariant,
   IFormatter,
   IFormatterValueType,
-} from '@patternfly/react-table';
-import { Badge } from '@patternfly/react-core';
+} from "@patternfly/react-table";
+import { Badge } from "@patternfly/react-core";
 
 import { ExternalLink } from '../components/external-link/ExternalLink';
 import { ClientRepresentation } from '../model/client-model';
