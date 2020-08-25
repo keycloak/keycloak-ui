@@ -19,10 +19,16 @@ import { HelpIcon } from '@patternfly/react-icons';
 import { KeycloakContext } from './auth/KeycloakContext';
 
 export const Header = () => {
+
+  const logoProps = {
+    href: '/',
+  };
+
   return (
     <PageHeader
       showNavToggle
       logo={<Brand src="/logo.svg" alt="Logo" />}
+      logoProps={logoProps}
       headerTools={headerTools()}
     />
   );

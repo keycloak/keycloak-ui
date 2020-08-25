@@ -12,9 +12,7 @@ import { TableToolbar } from './components/table-toolbar/TableToolbar';
 import {
   BrowserRouter as Router,
   Route,
-  Link,
   Switch,
-  withRouter,
 } from "react-router-dom";
 import { NewRealmForm } from "./forms/realm/NewRealmForm";
 
@@ -66,9 +64,9 @@ export const App = () => {
             <Route
               exact
               path="/add-realm"
-              component={withRouter(NewRealmForm)}
+              component={NewRealmForm}
             ></Route>
-            <Route exact path="/" component={withRouter(clients)}></Route>
+            <Route exact path="/" component={clients}></Route>
           </Switch>
         </Router>
       </PageSection>

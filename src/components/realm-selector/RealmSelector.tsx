@@ -1,13 +1,18 @@
-import React, { useState } from 'react';
+import React, { useState } from "react";
 import {
   Dropdown,
   DropdownToggle,
   DropdownItem,
   Button,
-} from '@patternfly/react-core';
+} from "@patternfly/react-core";
 
-import style from './realm-selector.module.css';
-import { BrowserRouter as Router, Route, Link, Redirect } from "react-router-dom";
+import style from "./realm-selector.module.css";
+import {
+  BrowserRouter as Router,
+  Route,
+  Link,
+  Redirect,
+} from "react-router-dom";
 // import { NewRealmForm } from '../../forms/realm/NewRealmForm';
 
 type RealmSelectorProps = {
@@ -18,7 +23,9 @@ type RealmSelectorProps = {
 export const RealmSelector = ({ realm, realmList }: RealmSelectorProps) => {
   const [open, setOpen] = useState(false);
   const dropdownItems = realmList.map((r) => (
-    <DropdownItem key={r}>{r}</DropdownItem>
+    <DropdownItem component="a" href="/" key={r}>
+      {r}
+    </DropdownItem>
   ));
   return (
     <Dropdown
@@ -37,12 +44,13 @@ export const RealmSelector = ({ realm, realmList }: RealmSelectorProps) => {
       dropdownItems={[
         ...dropdownItems,
         <Router key="add">
-        <DropdownItem >
-          <Link to="/add-realm"><Button isBlock id="addRealmButton">Add Realm</Button></Link>
-        </DropdownItem>
+          <DropdownItem>
+            <Button component="a" href="/add-realm" variant="primary">
+              Add Realm
+            </Button>
+          </DropdownItem>
         </Router>,
       ]}
     />
-
   );
 };
