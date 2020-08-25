@@ -1,4 +1,4 @@
-import React from 'react';
+import React from "react";
 import {
   Table,
   TableBody,
@@ -38,7 +38,7 @@ export const ClientList = ({ baseUrl, clients }: ClientListProps) => {
   };
 
   const emptyFormatter = (): IFormatter => (data?: IFormatterValueType) => {
-    return data ? data : '—';
+    return data ? data : "—";
   };
 
   const externalLink = (): IFormatter => (data?: IFormatterValueType) => {
@@ -50,13 +50,13 @@ export const ClientList = ({ baseUrl, clients }: ClientListProps) => {
   const replaceBaseUrl = (r: ClientRepresentation) =>
     r.rootUrl &&
     r.rootUrl
-      .replace('${authBaseUrl}', baseUrl)
-      .replace('${authAdminUrl}', baseUrl) +
-      (r.baseUrl ? r.baseUrl.substr(1) : '');
+      .replace("${authBaseUrl}", baseUrl)
+      .replace("${authAdminUrl}", baseUrl) +
+      (r.baseUrl ? r.baseUrl.substr(1) : "");
 
   const data = clients!
     .map((r) => {
-      r.clientId = r.clientId + '#' + r.enabled;
+      r.clientId = r.clientId + "#" + r.enabled;
       r.baseUrl = replaceBaseUrl(r);
       return r;
     })

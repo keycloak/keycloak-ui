@@ -1,6 +1,6 @@
-import React from 'react';
-import { Nav, NavItem, NavList, PageSidebar } from '@patternfly/react-core';
-import { RealmSelector } from './components/realm-selector/RealmSelector';
+import React from "react";
+import { Nav, NavItem, NavList, PageSidebar } from "@patternfly/react-core";
+import { RealmSelector } from "./components/realm-selector/RealmSelector";
 
 export const PageNav = () => {
   return (

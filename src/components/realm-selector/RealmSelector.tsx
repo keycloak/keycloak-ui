@@ -5,9 +5,9 @@ import {
   DropdownToggle,
   DropdownItem,
   Button,
-} from '@patternfly/react-core';
+} from "@patternfly/react-core";
 
-import style from './realm-selector.module.css';
+import style from "./realm-selector.module.css";
 
 type RealmSelectorProps = {
   realm: string;

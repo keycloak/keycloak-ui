@@ -1,5 +1,5 @@
-import React, { useContext, useState } from 'react';
-import { useTranslation } from 'react-i18next';
+import React, { useContext, useState } from "react";
+import { useTranslation } from "react-i18next";
 import {
   Avatar,
   Button,
@@ -61,7 +61,7 @@ const ServerInfoDropdownItem = () => {
 
 const HelpDropdownItem = () => {
   const { t } = useTranslation();
-  const help = t('Help');
+  const help = t("Help");
   return (
     <DropdownItem>
       <HelpIcon />
