@@ -57,19 +57,19 @@ export const App = () => {
   </DataLoader>
   );
   return (
-    <Page header={<Header />} isManagedSidebar sidebar={<PageNav />}>
-      <PageSection variant="light">
-        <Router>
-          <Switch>
-            <Route
-              exact
-              path="/add-realm"
-              component={NewRealmForm}
-            ></Route>
-            <Route exact path="/" component={clients}></Route>
-          </Switch>
-        </Router>
-      </PageSection>
-    </Page>
+    <Router>
+      <Page header={<Header />} isManagedSidebar sidebar={<PageNav />}>
+        <PageSection variant="light">
+            <Switch>
+              <Route
+                exact
+                path="/add-realm"
+                component={NewRealmForm}
+              ></Route>
+              <Route exact path="/" component={clients}></Route>
+            </Switch>
+        </PageSection>
+      </Page>
+    </Router>
   );
 };
