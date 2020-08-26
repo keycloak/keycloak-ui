@@ -1,19 +1,13 @@
-import React, { useState } from "react";
+import React, { useState } from 'react';
+import { useHistory } from 'react-router-dom';
 import {
   Dropdown,
   DropdownToggle,
   DropdownItem,
   Button,
-} from "@patternfly/react-core";
+} from '@patternfly/react-core';
 
-import style from "./realm-selector.module.css";
-import {
-  BrowserRouter as Router,
-  Route,
-  Link,
-  Redirect,
-} from "react-router-dom";
-// import { NewRealmForm } from '../../forms/realm/NewRealmForm';
+import style from './realm-selector.module.css';
 
 type RealmSelectorProps = {
   realm: string;
@@ -22,6 +16,7 @@ type RealmSelectorProps = {
 
 export const RealmSelector = ({ realm, realmList }: RealmSelectorProps) => {
   const [open, setOpen] = useState(false);
+  const history = useHistory();
   const dropdownItems = realmList.map((r) => (
     <DropdownItem component="a" href="/" key={r}>
       {r}
@@ -43,13 +38,9 @@ export const RealmSelector = ({ realm, realmList }: RealmSelectorProps) => {
       }
       dropdownItems={[
         ...dropdownItems,
-        <Router key="add">
-          <DropdownItem>
-            <Button component="a" href="/add-realm" variant="primary">
-              Add Realm
-            </Button>
-          </DropdownItem>
-        </Router>,
+        <DropdownItem component="div" key="add">
+          <Button onClick={() => history.push('/add-realm')}>Add Realm</Button>
+        </DropdownItem>,
       ]}
     />
   );
