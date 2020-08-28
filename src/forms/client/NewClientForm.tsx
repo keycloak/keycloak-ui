@@ -19,7 +19,7 @@ import { sortProvider } from "../../util";
 
 export const NewClientForm = () => {
   const httpClient = useContext(HttpClientContext)!;
-  const [data, setData] = useState<string[]>([]);
+  const [providers, setProviders] = useState<string[]>([]);
   const [open, isOpen] = useState(false);
   useEffect(() => {
     (async () => {
@@ -29,7 +29,7 @@ export const NewClientForm = () => {
       const providers = Object.entries(
         response.data!.providers["login-protocol"].providers
       );
-      setData([...new Map(providers.sort(sortProvider)).keys()]);
+      setProviders([...new Map(providers.sort(sortProvider)).keys()]);
     })();
   }, []);
   return (
@@ -73,7 +73,7 @@ export const NewClientForm = () => {
               aria-label="Select Encryption type"
               isOpen={open}
             >
-              {data.map((option, index) => (
+              {providers.map((option, index) => (
                 <SelectOption key={index} value={option} />
               ))}
             </Select>
