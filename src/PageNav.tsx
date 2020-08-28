@@ -3,8 +3,14 @@ import { Nav, NavItem, NavList, PageSidebar } from "@patternfly/react-core";
 import { RealmSelector } from "./components/realm-selector/RealmSelector";
 
 export const PageNav = () => {
+  const globalContext: GlobalContextObj = useContext(GlobalContext);
+  console.log(globalContext)
+  console.log(globalContext.store)
+
+  const x =  globalContext.store.realmList;  
+  console.log(x[0])
   return (
-    <PageSidebar
+    <PageSidebar 
       nav={
         <Nav>
           <NavList>
