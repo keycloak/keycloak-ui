@@ -9,7 +9,7 @@ import {
 } from '@patternfly/react-table';
 import { Badge } from '@patternfly/react-core';
 
-import { Client } from './client-model';
+import { Client } from '../model/client-model';
 
 type ClientListProps = {
   clients?: Client[];

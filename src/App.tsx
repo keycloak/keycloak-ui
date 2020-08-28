@@ -2,7 +2,7 @@ import React, { useContext, useState } from "react";
 import { ClientList } from "./clients/ClientList";
 import { DataLoader } from "./components/data-loader/DataLoader";
 import { HttpClientContext } from "./http-service/HttpClientContext";
-import { Client } from "./clients/client-model";
+import { Client } from "./model/client-model";
 import { Page, PageSection, Button } from "@patternfly/react-core";
 import { Header } from "./PageHeader";
 import { PageNav } from "./PageNav";

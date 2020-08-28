@@ -14,17 +14,24 @@ import {
   SelectOption,
 } from "@patternfly/react-core";
 import { HttpClientContext } from "../../http-service/HttpClientContext";
+import { ServerInfoRepresentation } from "../../model/server-info";
+import { sortProvider } from "../../util";
 
 export const NewClientForm = () => {
-  const httpClient = useContext(HttpClientContext);
-  const [data, setData] = useState<any>({});
+  const httpClient = useContext(HttpClientContext)!;
+  const [data, setData] = useState<string[]>([]);
   const [open, isOpen] = useState(false);
   useEffect(() => {
     (async () => {
-      const response = await httpClient?.doGet("/admin/serverinfo");
-      setData(response!.data);
+      const response = await httpClient.doGet<ServerInfoRepresentation>(
+        "/admin/serverinfo"
+      );
+      const providers = Object.entries(
+        response.data!.providers["login-protocol"].providers
+      );
+      setData([...new Map(providers.sort(sortProvider)).keys()]);
     })();
-  });
+  }, []);
   return (
     <>
       <PageSection variant="light">
@@ -36,7 +43,12 @@ export const NewClientForm = () => {
       <PageSection variant="light">
         <Form isHorizontal>
           <FormGroup label="Root URL" fieldId="kc-root-url">
-            <TextInput type="text" id="kc-root-url" name="kc-root-url" />
+            <TextInput
+              type="text"
+              id="kc-root-url"
+              name="kc-root-url"
+              placeholder="http://example.com"
+            />
           </FormGroup>
           <FormGroup
             isRequired
@@ -48,6 +60,7 @@ export const NewClientForm = () => {
               type="text"
               id="kc-valid-redirect-uris"
               name="kc-valid-redirect-uris"
+              placeholder="/example/*"
             />
           </FormGroup>
           <FormGroup
@@ -60,12 +73,9 @@ export const NewClientForm = () => {
               aria-label="Select Encryption type"
               isOpen={open}
             >
-              {data.providers &&
-                Object.keys(
-                  data.providers["login-protocol"].providers
-                ).map((option, index) => (
-                  <SelectOption key={index} value={option} />
-                ))}
+              {data.map((option, index) => (
+                <SelectOption key={index} value={option} />
+              ))}
             </Select>
           </FormGroup>
           <ActionGroup>
