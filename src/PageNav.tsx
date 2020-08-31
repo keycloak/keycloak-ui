@@ -2,13 +2,20 @@ import React from "react";
 import { Nav, NavItem, NavList, PageSidebar } from "@patternfly/react-core";
 import { RealmSelector } from "./components/realm-selector/RealmSelector";
 
-export const PageNav = () => {
-  const globalContext: GlobalContextObj = useContext(GlobalContext);
-  console.log(globalContext)
-  console.log(globalContext.store)
 
-  const x =  globalContext.store.realmList;  
-  console.log(x[0])
+export const PageNav: React.FunctionComponent = () => {
+  const httpClient = useContext(HttpClientContext);
+  const [realms, setRealms] = useState([] as Realm[]);
+
+  const getRealms = async () => {
+    return await httpClient?.doGet('/realms')
+      .then((r) => r.data as Realm[]);
+    }
+  
+
+  getRealms().then((result) => {
+    setRealms(result !== undefined ? result: []);});
+
   return (
     <PageSidebar 
       nav={
