@@ -31,15 +31,16 @@ export const Step1 = ({ client, onChange }: Step1Props) => {
       const providers = Object.entries(
         response.data!.providers["login-protocol"].providers
       );
-      setProviders([...new Map(providers.sort(sortProvider)).keys()]);
+      setProviders(["", ...new Map(providers.sort(sortProvider)).keys()]);
     })();
   }, []);
 
   return (
     <Form isHorizontal>
-      <FormGroup label="Client Type" fieldId="kc-type">
+      <FormGroup label="Client Type" fieldId="kc-type" isRequired>
         <Select
           id="kc-type"
+          required
           onToggle={() => isOpen(!open)}
           onSelect={(_, value) => {
             onChange(
@@ -58,7 +59,11 @@ export const Step1 = ({ client, onChange }: Step1Props) => {
           isOpen={open}
         >
           {providers.map((option) => (
-            <SelectOption key={option} value={option} />
+            <SelectOption
+              key={option}
+              value={option || "Select an option"}
+              isPlaceholder={option === ""}
+            />
           ))}
         </Select>
       </FormGroup>

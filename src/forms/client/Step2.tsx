@@ -12,20 +12,20 @@ export const Step2 = ({client, onChange}: Step2Props) => (
     <FormGroup label="Client authentication" fieldId="kc-authentication">
       <Switch
         id="kc-authentication"
-        name="authentication"
+        name="publicClient"
         label="ON"
         labelOff="OFF"
-        isChecked={client.authentication}
+        isChecked={client.publicClient}
         onChange={onChange}
       />
     </FormGroup>
     <FormGroup label="Authentication" fieldId="kc-authorisation">
       <Switch
         id="kc-authorisation"
-        name="authorisation"
+        name="authorizationServicesEnabled"
         label="ON"
         labelOff="OFF"
-        isChecked={client.authorisation}
+        isChecked={client.authorizationServicesEnabled}
         onChange={onChange}
       />
     </FormGroup>
@@ -58,8 +58,8 @@ export const Step2 = ({client, onChange}: Step2Props) => (
         label="Service account"
         aria-label="Enable service account"
         id="kc-flow-service-account"
-        name="serviceAccount"
-        isChecked={client.serviceAccount}
+        name="serviceAccountsEnabled"
+        isChecked={client.serviceAccountsEnabled}
         onChange={onChange}
       />
     </FormGroup>

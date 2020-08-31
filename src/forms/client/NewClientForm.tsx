@@ -1,22 +1,36 @@
-import React, { useState, FormEvent } from "react";
+import React, { useState, FormEvent, useContext } from "react";
 import {
   Text,
   PageSection,
   TextContent,
   Divider,
   Wizard,
+  AlertVariant,
 } from "@patternfly/react-core";
+import { HttpClientContext } from "../../http-service/HttpClientContext";
 import { Step1 } from "./Step1";
 import { Step2 } from "./Step2";
 import { ClientRepresentation } from "../../model/client-model";
+import { AlertPanel } from "../../components/alert/AlertPanel";
+import { useAlerts } from "../../components/alert/Alerts";
 
 export const NewClientForm = () => {
+  const httpClient = useContext(HttpClientContext)!;
   const [client, setClient] = useState<ClientRepresentation>({
     protocol: "",
     clientId: "",
     name: "",
     description: "",
   });
+  const [add, alerts, hide] = useAlerts();
+
+  const save = async () => {
+    try {
+      await httpClient.doPost("/admin/realms/master/clients", client);
+    } catch(error) {
+      add("Could not create client " + error, AlertVariant.danger);
+    }
+  }
 
   const handleInputChange = (
     value: string | boolean,
@@ -34,6 +48,7 @@ export const NewClientForm = () => {
   const title = "Create client";
   return (
     <>
+      <AlertPanel alerts={alerts} onCloseAlert={hide} />
       <PageSection variant="light">
         <TextContent>
           <Text component="h1">{title}</Text>
@@ -55,7 +70,7 @@ export const NewClientForm = () => {
               nextButtonText: "Save",
             },
           ]}
-          onSave={() => console.log(client)}
+          onSave={save}
         />
       </PageSection>
     </>
