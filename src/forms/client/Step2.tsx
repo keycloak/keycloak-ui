@@ -1,13 +1,23 @@
-import { Form, FormGroup, Switch, Checkbox } from "@patternfly/react-core";
+import {
+  Form,
+  FormGroup,
+  Switch,
+  Checkbox,
+  Grid,
+  GridItem,
+} from "@patternfly/react-core";
 import React, { FormEvent } from "react";
 import { ClientRepresentation } from "../../model/client-model";
 
 type Step2Props = {
-  onChange: (value: string | boolean, event: FormEvent<HTMLInputElement>) => void;
+  onChange: (
+    value: string | boolean,
+    event: FormEvent<HTMLInputElement>
+  ) => void;
   client: ClientRepresentation;
 };
 
-export const Step2 = ({client, onChange}: Step2Props) => (
+export const Step2 = ({ client, onChange }: Step2Props) => (
   <Form isHorizontal>
     <FormGroup label="Client authentication" fieldId="kc-authentication">
       <Switch
@@ -30,38 +40,48 @@ export const Step2 = ({client, onChange}: Step2Props) => (
       />
     </FormGroup>
     <FormGroup label="Authentication flow" fieldId="kc-flow">
-      <Checkbox
-        label="Standard flow"
-        aria-label="Enable standard flow"
-        id="kc-flow-standard"
-        name="standardFlowEnabled"
-        isChecked={client.standardFlowEnabled}
-        onChange={onChange}
-      />
-      <Checkbox
-        label="Direct access"
-        aria-label="Enable Direct access"
-        id="kc-flow-direct"
-        name="directAccessGrantsEnabled"
-        isChecked={client.directAccessGrantsEnabled}
-        onChange={onChange}
-      />
-      <Checkbox
-        label="Implicid flow"
-        aria-label="Enable implicid flow"
-        id="kc-flow-implicid"
-        name="implicitFlowEnabled"
-        isChecked={client.implicitFlowEnabled}
-        onChange={onChange}
-      />
-      <Checkbox
-        label="Service account"
-        aria-label="Enable service account"
-        id="kc-flow-service-account"
-        name="serviceAccountsEnabled"
-        isChecked={client.serviceAccountsEnabled}
-        onChange={onChange}
-      />
+      <Grid>
+        <GridItem span={6}>
+          <Checkbox
+            label="Standard flow"
+            aria-label="Enable standard flow"
+            id="kc-flow-standard"
+            name="standardFlowEnabled"
+            isChecked={client.standardFlowEnabled}
+            onChange={onChange}
+          />
+        </GridItem>
+        <GridItem span={6}>
+          <Checkbox
+            label="Direct access"
+            aria-label="Enable Direct access"
+            id="kc-flow-direct"
+            name="directAccessGrantsEnabled"
+            isChecked={client.directAccessGrantsEnabled}
+            onChange={onChange}
+          />
+        </GridItem>
+        <GridItem span={6}>
+          <Checkbox
+            label="Implicid flow"
+            aria-label="Enable implicid flow"
+            id="kc-flow-implicid"
+            name="implicitFlowEnabled"
+            isChecked={client.implicitFlowEnabled}
+            onChange={onChange}
+          />
+        </GridItem>
+        <GridItem span={6}>
+          <Checkbox
+            label="Service account"
+            aria-label="Enable service account"
+            id="kc-flow-service-account"
+            name="serviceAccountsEnabled"
+            isChecked={client.serviceAccountsEnabled}
+            onChange={onChange}
+          />
+        </GridItem>
+      </Grid>
     </FormGroup>
   </Form>
 );

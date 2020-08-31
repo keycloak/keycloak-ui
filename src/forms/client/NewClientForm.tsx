@@ -21,16 +21,19 @@ export const NewClientForm = () => {
     clientId: "",
     name: "",
     description: "",
+    publicClient: false,
+    authorizationServicesEnabled: false,
   });
   const [add, alerts, hide] = useAlerts();
 
   const save = async () => {
     try {
       await httpClient.doPost("/admin/realms/master/clients", client);
-    } catch(error) {
-      add("Could not create client " + error, AlertVariant.danger);
+      add("Client created", AlertVariant.success);
+    } catch (error) {
+      add(`Could not create client: '${error}'`, AlertVariant.danger);
     }
-  }
+  };
 
   const handleInputChange = (
     value: string | boolean,
