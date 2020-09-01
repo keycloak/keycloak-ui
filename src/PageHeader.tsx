@@ -14,10 +14,10 @@ import {
   PageHeaderTools,
   PageHeaderToolsItem,
   PageHeaderToolsGroup,
-} from '@patternfly/react-core';
-import { HelpIcon } from '@patternfly/react-icons';
-import { KeycloakContext } from './auth/KeycloakContext';
-import { Link } from 'react-router-dom';
+} from "@patternfly/react-core";
+import { HelpIcon } from "@patternfly/react-icons";
+import { KeycloakContext } from "./auth/KeycloakContext";
+import { Link } from "react-router-dom";
 
 export const Header = () => {
   return (

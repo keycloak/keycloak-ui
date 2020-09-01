@@ -9,8 +9,8 @@ import {
 } from "@patternfly/react-table";
 import { Badge } from "@patternfly/react-core";
 
-import { ExternalLink } from '../components/external-link/ExternalLink';
-import { ClientRepresentation } from '../model/client-model';
+import { ExternalLink } from "../components/external-link/ExternalLink";
+import { ClientRepresentation } from "../model/client-model";
 
 type ClientListProps = {
   clients?: ClientRepresentation[];
@@ -18,17 +18,17 @@ type ClientListProps = {
 };
 
 const columns: (keyof ClientRepresentation)[] = [
-  'clientId',
-  'protocol',
-  'description',
-  'baseUrl',
+  "clientId",
+  "protocol",
+  "description",
+  "baseUrl",
 ];
 
 export const ClientList = ({ baseUrl, clients }: ClientListProps) => {
   const enabled = (): IFormatter => (data?: IFormatterValueType) => {
     const field = data!.toString();
-    const value = field.substring(0, field.indexOf('#'));
-    return field.indexOf('true') !== -1 ? (
+    const value = field.substring(0, field.indexOf("#"));
+    return field.indexOf("true") !== -1 ? (
       <>{value}</>
     ) : (
       <>
@@ -67,11 +67,11 @@ export const ClientList = ({ baseUrl, clients }: ClientListProps) => {
     <Table
       variant={TableVariant.compact}
       cells={[
-        { title: 'Client ID', cellFormatters: [enabled()] },
-        'Type',
-        { title: 'Description', cellFormatters: [emptyFormatter()] },
+        { title: "Client ID", cellFormatters: [enabled()] },
+        "Type",
+        { title: "Description", cellFormatters: [emptyFormatter()] },
         {
-          title: 'Home URL',
+          title: "Home URL",
           cellFormatters: [externalLink(), emptyFormatter()],
         },
       ]}

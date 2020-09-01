@@ -8,7 +8,7 @@ export const PageNav = () => {
       nav={
         <Nav>
           <NavList>
-            <RealmSelector realm="Master" realmList={['Photoz']} />
+            <RealmSelector realm="Master" realmList={["Photoz"]} />
             <NavItem id="default-link1" to="/default-link1" itemId={0}>
               Link 1
             </NavItem>
