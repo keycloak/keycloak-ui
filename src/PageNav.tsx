@@ -4,24 +4,12 @@ import { RealmSelector } from "./components/realm-selector/RealmSelector";
 
 
 export const PageNav: React.FunctionComponent = () => {
-  const httpClient = useContext(HttpClientContext);
-  const [realms, setRealms] = useState([] as Realm[]);
-
-  const getRealms = async () => {
-    return await httpClient?.doGet('/realms')
-      .then((r) => r.data as Realm[]);
-    }
-  
-
-  getRealms().then((result) => {
-    setRealms(result !== undefined ? result: []);});
-
   return (
-    <PageSidebar 
+    <PageSidebar
       nav={
         <Nav>
           <NavList>
-            <RealmSelector realm="Master" realmList={["Photoz"]} />
+            <RealmSelector />
             <NavItem id="default-link1" to="/default-link1" itemId={0}>
               Link 1
             </NavItem>

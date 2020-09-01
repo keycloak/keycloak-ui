@@ -45,8 +45,6 @@ export class KeycloakService {
     return this.keycloakAuth.realm;
   }
 
-  
-
   public get loggedInUser(): string {
     const { t } = useTranslation();
     return this.loggedInUserName(t, this.keycloakAuth.tokenParsed as Token);
