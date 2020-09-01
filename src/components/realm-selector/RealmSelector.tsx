@@ -9,13 +9,8 @@ import {
   Button
 } from '@patternfly/react-core';
 
-<<<<<<< HEAD
-import style from "./realm-selector.module.css";
-=======
 import style from './realm-selector.module.css';
 import { HttpClientContext } from '../../http-service/HttpClientContext';
-import { KeycloakContext } from '../../auth/KeycloakContext';
->>>>>>> address PR feedback
 
 export const RealmSelector = () => {
   const [open, setOpen] = useState(false);
