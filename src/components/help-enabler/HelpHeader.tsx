@@ -1,4 +1,4 @@
-import React, { useState, useContext, ReactNode, createContext } from 'react';
+import React, { useState, useContext, ReactNode, createContext } from "react";
 import {
   Dropdown,
   DropdownItem,
@@ -6,11 +6,11 @@ import {
   Switch,
   Text,
   TextVariants,
-} from '@patternfly/react-core';
-import { Trans, useTranslation } from 'react-i18next';
-import { HelpIcon, ExternalLinkAltIcon } from '@patternfly/react-icons';
+} from "@patternfly/react-core";
+import { Trans, useTranslation } from "react-i18next";
+import { HelpIcon, ExternalLinkAltIcon } from "@patternfly/react-icons";
 
-import style from './help-header.module.css';
+import style from "./help-header.module.css";
 
 type HelpProps = {
   children: ReactNode;
@@ -46,7 +46,7 @@ export const HelpHeader = () => {
 
   const dropdownItems = [
     <DropdownItem key="link" id="link">
-      {t('Documentation') + ' '}
+      {t("Documentation") + " "}
       <ExternalLinkAltIcon />
     </DropdownItem>,
     <DropdownItem
@@ -55,7 +55,7 @@ export const HelpHeader = () => {
       component="div"
       className={style.helpDropdownItem}
     >
-      {t('Enable help mode') + ' '}
+      {t("Enable help mode") + " "}
       <Switch
         id="enableHelp"
         aria-label="Help is enabled"

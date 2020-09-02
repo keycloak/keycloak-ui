@@ -9,7 +9,7 @@ import { PageNav } from "./PageNav";
 import { KeycloakContext } from "./auth/KeycloakContext";
 import { TableToolbar } from "./components/table-toolbar/TableToolbar";
 
-import { Help } from './components/help-enabler/HelpHeader';
+import { Help } from "./components/help-enabler/HelpHeader";
 import {
   BrowserRouter as Router,
   Route,
