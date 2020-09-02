@@ -36,7 +36,7 @@
     "@snowpack/plugin-postcss": "^1.0.2",
     "@snowpack/plugin-webpack": "^2.0.6",
     "@storybook/addon-actions": "^5.3.19",
-    "@storybook/addon-info": "^5.3.19",
+    "@storybook/addon-info": "^5.3.21",
     "@storybook/addon-links": "^5.3.19",
     "@storybook/addons": "^5.3.19",
     "@storybook/react": "^5.3.19",
