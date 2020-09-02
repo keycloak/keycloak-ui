@@ -1,37 +1,40 @@
-import React, { useState, useContext } from 'react';
-import { useHistory } from 'react-router-dom';
+import React, { useState, useContext } from "react";
+import { useHistory } from "react-router-dom";
 import { Realm } from "../../models/Realm";
 
 import {
   Dropdown,
   DropdownToggle,
   DropdownItem,
-  Button
-} from '@patternfly/react-core';
+  Button,
+} from "@patternfly/react-core";
 
-import style from './realm-selector.module.css';
-import { HttpClientContext } from '../../http-service/HttpClientContext';
+import style from "./realm-selector.module.css";
+import { HttpClientContext } from "../../http-service/HttpClientContext";
 
 export const RealmSelector = () => {
   const [open, setOpen] = useState(false);
   const history = useHistory();
   const httpClient = useContext(HttpClientContext);
   const [realms, setRealms] = useState([] as Realm[]);
-  const [currentRealm, setCurrentRealm] = useState("Master")
-
+  const [currentRealm, setCurrentRealm] = useState("Master");
 
   const getRealms = async () => {
-    return await httpClient?.doGet('/realms')
-      .then((r) => r.data as Realm[]);
-    }
-  
+    return await httpClient?.doGet("/realms").then((r) => r.data as Realm[]);
+  };
 
   getRealms().then((result) => {
-    setRealms(result !== undefined ? result: []);});
+    setRealms(result !== undefined ? result : []);
+  });
 
   const dropdownItems = realms.map((r) => (
-    <DropdownItem component="a" href={ '/#/realms/' + r.id } key={r.id} onClick={() => setCurrentRealm(r.realm)}>
-      {r.realm} 
+    <DropdownItem
+      component="a"
+      href={"/#/realms/" + r.id}
+      key={r.id}
+      onClick={() => setCurrentRealm(r.realm)}
+    >
+      {r.realm}
     </DropdownItem>
   ));
 

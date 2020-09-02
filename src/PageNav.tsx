@@ -2,7 +2,6 @@ import React from "react";
 import { Nav, NavItem, NavList, PageSidebar } from "@patternfly/react-core";
 import { RealmSelector } from "./components/realm-selector/RealmSelector";
 
-
 export const PageNav: React.FunctionComponent = () => {
   return (
     <PageSidebar
