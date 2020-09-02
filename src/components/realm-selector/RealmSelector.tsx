@@ -20,7 +20,9 @@ export const RealmSelector = () => {
   const [currentRealm, setCurrentRealm] = useState("Master");
 
   const getRealms = async () => {
-    return await httpClient?.doGet("/realms").then((r) => r.data as Realm[]);
+    return await httpClient
+      ?.doGet("/admin/realms")
+      .then((r) => r.data as Realm[]);
   };
 
   getRealms().then((result) => {
