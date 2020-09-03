@@ -25,11 +25,12 @@ export const RealmSelector = () => {
       ?.doGet("/admin/realms")
       .then((r) => r.data as Realm[]);
   };
-  
+
   useEffect(() => {
     getRealms().then((result) => {
-      setRealms(result) !== undefined ? result : []});
-    }, [])
+      setRealms(result) !== undefined ? result : [];
+    });
+  }, []);
 
   const dropdownItems = realms.map((r) => (
     <DropdownItem
@@ -58,9 +59,14 @@ export const RealmSelector = () => {
       }
       dropdownItems={[
         ...dropdownItems,
-        <Divider key = {1}/>,
+        <Divider key={1} />,
         <DropdownItem component="div" key="add">
-          <Button className="realmSelectButton" onClick={() => history.push("/add-realm")}>Create Realm</Button>
+          <Button
+            className="realmSelectButton"
+            onClick={() => history.push("/add-realm")}
+          >
+            Create Realm
+          </Button>
         </DropdownItem>,
       ]}
     />

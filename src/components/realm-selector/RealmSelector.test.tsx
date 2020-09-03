@@ -6,7 +6,6 @@ import { act } from "react-dom/test-utils";
 
 import { RealmSelector } from "./RealmSelector";
 
-
 const WithButton = () => {
   const [add, alerts, hide] = useAlerts();
   return (
@@ -18,7 +17,6 @@ const WithButton = () => {
 };
 
 it("renders realm selector", () => {
-
   const tree = mount(<RealmSelector />);
   const button = tree.find("button");
   expect(button).not.toBeNull();
