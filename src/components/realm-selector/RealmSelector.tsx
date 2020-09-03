@@ -1,4 +1,4 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import { useHistory } from "react-router-dom";
 import { Realm } from "../../models/Realm";
 
@@ -7,6 +7,7 @@ import {
   DropdownToggle,
   DropdownItem,
   Button,
+  Divider,
 } from "@patternfly/react-core";
 
 import style from "./realm-selector.module.css";
@@ -24,10 +25,18 @@ export const RealmSelector = () => {
       ?.doGet("/admin/realms")
       .then((r) => r.data as Realm[]);
   };
+  
+  useEffect(() => {
+    getRealms().then((result) => {
+      setRealms(result) !== undefined ? result : []});
+    }
+  )
 
-  getRealms().then((result) => {
-    setRealms(result !== undefined ? result : []);
-  });
+  // getRealms().then((result) => {
+  //   setRealms(result !== undefined ? result : []);
+  // }
+
+
 
   const dropdownItems = realms.map((r) => (
     <DropdownItem
@@ -36,7 +45,7 @@ export const RealmSelector = () => {
       key={r.id}
       onClick={() => setCurrentRealm(r.realm)}
     >
-      {r.realm}
+      {r.realm.charAt(0).toUpperCase() + r.realm.slice(1)}
     </DropdownItem>
   ));
 
@@ -56,8 +65,9 @@ export const RealmSelector = () => {
       }
       dropdownItems={[
         ...dropdownItems,
+        <Divider key = {1}/>,
         <DropdownItem component="div" key="add">
-          <Button onClick={() => history.push("/add-realm")}>Add Realm</Button>
+          <Button className="realmSelectButton" onClick={() => history.push("/add-realm")}>Create Realm</Button>
         </DropdownItem>,
       ]}
     />
