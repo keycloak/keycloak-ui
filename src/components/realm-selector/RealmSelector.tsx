@@ -29,14 +29,7 @@ export const RealmSelector = () => {
   useEffect(() => {
     getRealms().then((result) => {
       setRealms(result) !== undefined ? result : []});
-    }
-  )
-
-  // getRealms().then((result) => {
-  //   setRealms(result !== undefined ? result : []);
-  // }
-
-
+    }, [])
 
   const dropdownItems = realms.map((r) => (
     <DropdownItem

@@ -5,9 +5,7 @@ import EnzymeToJson from "enzyme-to-json";
 import { act } from "react-dom/test-utils";
 
 import { RealmSelector } from "./RealmSelector";
-// import { useAlerts } from "./Alerts";
 
-jest.useFakeTimers();
 
 const WithButton = () => {
   const [add, alerts, hide] = useAlerts();
@@ -19,13 +17,9 @@ const WithButton = () => {
   );
 };
 
-it("renders global alerts", () => {
-  const empty = EnzymeToJson(
-    mount(<AlertPanel alerts={[]} onCloseAlert={() => {}} />)
-  );
-  expect(empty).toMatchSnapshot();
+it("renders realm selector", () => {
 
-  const tree = mount(<WithButton />);
+  const tree = mount(<RealmSelector />);
   const button = tree.find("button");
   expect(button).not.toBeNull();
 
