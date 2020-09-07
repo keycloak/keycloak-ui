@@ -8,13 +8,9 @@
   outline-offset:-32px;    
 }
 
-.menu {
-    /* setting this to 85% for now */
-    min-width: 85%;
-}
-
-.pf-c-button.pf-m-primary.realmSelectButton {
-  width: 100%;
+:global(#realm-select > .pf-c-dropdown__menu) {
+    /* setting this to 78% for now */
+    min-width: 78%;
 }
 
 .toggle {
