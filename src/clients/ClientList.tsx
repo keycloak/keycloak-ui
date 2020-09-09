@@ -8,7 +8,7 @@ import {
   IFormatterValueType,
 } from "@patternfly/react-table";
 import { Badge, AlertVariant } from "@patternfly/react-core";
-import saveAs from "file-saver";
+import { saveAs } from "file-saver";
 
 import { ExternalLink } from "../components/external-link/ExternalLink";
 import { ClientRepresentation } from "../model/client-model";
