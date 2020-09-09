@@ -1,5 +1,5 @@
 import React from "react";
-import { DataLoader } from "./DataLoader";
+import { DataLoader } from "../DataLoader";
 import { act } from "@testing-library/react";
 import { render, unmountComponentAtNode } from "react-dom";
 

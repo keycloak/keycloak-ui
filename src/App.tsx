@@ -1,27 +1,26 @@
 import React from "react";
-import { Page, PageSection, Button } from "@patternfly/react-core";
+import { Page, PageSection } from "@patternfly/react-core";
 import { Header } from "./PageHeader";
 import { PageNav } from "./PageNav";
 
 import { Help } from "./components/help-enabler/HelpHeader";
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
-import { NewRealmForm } from "./forms/realm/NewRealmForm";
-import { NewClientForm } from "./forms/client/NewClientForm";
-import { ImportForm } from "./forms/client/ImportForm";
+import { NewRealmForm } from "./realm/add/NewRealmForm";
+import { NewClientForm } from "./clients/add/NewClientForm";
+import { ImportForm } from "./clients/import/ImportForm";
+import { ClientsPage } from "./clients/ClientsPage";
+import { ClientScopesPage } from "./client-scopes/ClientScopesPage";
+import { RealmRolesPage } from "./realm-roles/RealmRolesPage";
+import { UsersPage } from "./user/UsersPage";
+import { GroupsPage } from "./groups/GroupsPage";
+import { SessionsPage } from "./sessions/SessionsPage";
+import { EventsPage } from "./events/EventsPage";
+import { RealmSettingsPage } from "./realm-settings/RealmSettingsPage";
+import { AuthenticationPage } from "./authentication/AuthenticationPage";
+import { IdentityProvidersPage } from "./identity-providers/IdentityProvidersPage";
+import { UserFederationPage } from "./user-federation/UserFederationPage";
 
-import { ClientsPage } from "./page/ClientsPage";
-import { ClientScopesPage } from "./page/ClientScopesPage";
-import { RealmRolesPage } from "./page/RealmRolesPage";
-import { UsersPage } from "./page/UsersPage";
-import { GroupsPage } from "./page/GroupsPage";
-import { SessionsPage } from "./page/SessionsPage";
-import { EventsPage } from "./page/EventsPage";
-import { RealmSettingsPage } from "./page/RealmSettingsPage";
-import { AuthenticationPage } from "./page/AuthenticationPage";
-import { IdentityProvidersPage } from "./page/IdentityProvidersPage";
-import { UserFederationPage } from "./page/UserFederationPage";
-
-import { PageNotFoundPage } from "./page/PageNotFoundPage";
+import { PageNotFoundPage } from "./PageNotFoundPage";
 
 export const App = () => {
   return (

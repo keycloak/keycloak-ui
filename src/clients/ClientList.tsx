@@ -11,11 +11,11 @@ import { Badge, AlertVariant } from "@patternfly/react-core";
 import { saveAs } from "file-saver";
 
 import { ExternalLink } from "../components/external-link/ExternalLink";
-import { ClientRepresentation } from "../model/client-model";
 import { HttpClientContext } from "../http-service/HttpClientContext";
 import { useAlerts } from "../components/alert/Alerts";
 import { AlertPanel } from "../components/alert/AlertPanel";
 import { useTranslation } from "react-i18next";
+import { ClientRepresentation } from "./models/client-model";
 
 type ClientListProps = {
   clients?: ClientRepresentation[];
@@ -58,6 +58,7 @@ export const ClientList = ({ baseUrl, clients }: ClientListProps) => {
     ) : undefined) as object;
   };
 
+  /* eslint-disable no-template-curly-in-string */
   const replaceBaseUrl = (r: ClientRepresentation) =>
     r.rootUrl &&
     r.rootUrl

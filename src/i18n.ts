@@ -8,7 +8,9 @@ import help from "./help.json";
 const initOptions = {
   ns: ["messages", "help"],
   defaultNS: "messages",
-  resources: { ...messages, ...help },
+  resources: {
+    en: { ...messages, ...help },
+  },
   lng: "en",
   fallbackLng: "en",
   saveMissing: true,
@@ -16,6 +18,7 @@ const initOptions = {
   interpolation: {
     escapeValue: false,
   },
+  debug: true,
 };
 
 i18n
@@ -23,4 +26,4 @@ i18n
   // .use(backend)
   .init(initOptions);
 
-export { i18n, initOptions };
+export default i18n;

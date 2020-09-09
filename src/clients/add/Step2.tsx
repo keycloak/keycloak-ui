@@ -7,7 +7,7 @@ import {
   GridItem,
 } from "@patternfly/react-core";
 import React, { FormEvent } from "react";
-import { ClientRepresentation } from "../../model/client-model";
+import { ClientRepresentation } from "../models/client-model";
 
 type Step2Props = {
   onChange: (

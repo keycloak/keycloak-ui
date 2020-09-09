@@ -1,7 +1,7 @@
 import React from "react";
 import { mount } from "enzyme";
 
-import { JsonFileUpload } from "./JsonFileUpload";
+import { JsonFileUpload } from "../JsonFileUpload";
 
 describe("<JsonFileUpload />", () => {
   it("render", () => {

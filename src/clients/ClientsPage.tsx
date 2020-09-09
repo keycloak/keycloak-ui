@@ -5,10 +5,10 @@ import { Button } from "@patternfly/react-core";
 
 import { DataLoader } from "../components/data-loader/DataLoader";
 import { TableToolbar } from "../components/table-toolbar/TableToolbar";
-import { ClientList } from "../clients/ClientList";
+import { ClientList } from "./ClientList";
 import { HttpClientContext } from "../http-service/HttpClientContext";
 import { KeycloakContext } from "../auth/KeycloakContext";
-import { ClientRepresentation } from "../model/client-model";
+import { ClientRepresentation } from "./models/client-model";
 
 export const ClientsPage = () => {
   const { t } = useTranslation();

@@ -9,9 +9,9 @@ import {
 
 import { HttpClientContext } from "../../http-service/HttpClientContext";
 import { sortProvider } from "../../util";
-import { ServerInfoRepresentation } from "../../model/server-info";
-import { ClientRepresentation } from "../../model/client-model";
-import { ClientDescription } from "./ClientDescription";
+import { ServerInfoRepresentation } from "../models/server-info";
+import { ClientRepresentation } from "../models/client-model";
+import { ClientDescription } from "../ClientDescription";
 
 type Step1Props = {
   onChange: (value: string, event: FormEvent<HTMLInputElement>) => void;

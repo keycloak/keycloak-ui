@@ -10,7 +10,7 @@ import {
 import { HttpClientContext } from "../../http-service/HttpClientContext";
 import { Step1 } from "./Step1";
 import { Step2 } from "./Step2";
-import { ClientRepresentation } from "../../model/client-model";
+import { ClientRepresentation } from "../models/client-model";
 import { AlertPanel } from "../../components/alert/AlertPanel";
 import { useAlerts } from "../../components/alert/Alerts";
 

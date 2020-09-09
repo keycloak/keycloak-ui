@@ -13,8 +13,8 @@ import {
 } from "@patternfly/react-core";
 import { useTranslation } from "react-i18next";
 
-import { ClientRepresentation } from "../../model/client-model";
-import { ClientDescription } from "./ClientDescription";
+import { ClientRepresentation } from "../models/client-model";
+import { ClientDescription } from "../ClientDescription";
 import { HttpClientContext } from "../../http-service/HttpClientContext";
 import { JsonFileUpload } from "../../components/json-file-upload/JsonFileUpload";
 import { useAlerts } from "../../components/alert/Alerts";
@@ -84,7 +84,7 @@ export const ImportForm = () => {
             />
           </FormGroup>
           <ActionGroup>
-            <Button variant="primary" onClick={save}>
+            <Button variant="primary" onClick={() => save()}>
               {t("Save")}
             </Button>
             <Button variant="link">{t("Cancel")}</Button>

@@ -3,8 +3,8 @@ import { Button, AlertVariant } from "@patternfly/react-core";
 import { mount } from "enzyme";
 import { act } from "react-dom/test-utils";
 
-import { AlertPanel } from "./AlertPanel";
-import { useAlerts } from "./Alerts";
+import { AlertPanel } from "../AlertPanel";
+import { useAlerts } from "../Alerts";
 
 jest.useFakeTimers();
 

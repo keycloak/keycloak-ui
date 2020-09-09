@@ -1,6 +1,6 @@
 import React, { useContext } from "react";
 import { render, act, fireEvent } from "@testing-library/react";
-import { HelpHeader, HelpContext } from "./HelpHeader";
+import { HelpHeader, HelpContext } from "../HelpHeader";
 
 describe("<HelpHeader />", () => {
   it("render", () => {

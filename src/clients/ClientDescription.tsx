@@ -1,7 +1,7 @@
 import React, { FormEvent } from "react";
 import { FormGroup, TextInput } from "@patternfly/react-core";
 
-import { ClientRepresentation } from "../../model/client-model";
+import { ClientRepresentation } from "./models/client-model";
 
 type ClientDescriptionProps = {
   onChange: (value: string, event: FormEvent<HTMLInputElement>) => void;
