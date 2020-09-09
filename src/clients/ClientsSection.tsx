@@ -10,7 +10,7 @@ import { HttpClientContext } from "../http-service/HttpClientContext";
 import { KeycloakContext } from "../auth/KeycloakContext";
 import { ClientRepresentation } from "./models/client-model";
 
-export const ClientsPage = () => {
+export const ClientsSection = () => {
   const { t } = useTranslation("clients");
   const history = useHistory();
   const [max, setMax] = useState(10);

@@ -8,19 +8,19 @@ import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import { NewRealmForm } from "./realm/add/NewRealmForm";
 import { NewClientForm } from "./clients/add/NewClientForm";
 import { ImportForm } from "./clients/import/ImportForm";
-import { ClientsPage } from "./clients/ClientsPage";
-import { ClientScopesPage } from "./client-scopes/ClientScopesPage";
-import { RealmRolesPage } from "./realm-roles/RealmRolesPage";
-import { UsersPage } from "./user/UsersPage";
-import { GroupsPage } from "./groups/GroupsPage";
-import { SessionsPage } from "./sessions/SessionsPage";
-import { EventsPage } from "./events/EventsPage";
-import { RealmSettingsPage } from "./realm-settings/RealmSettingsPage";
-import { AuthenticationPage } from "./authentication/AuthenticationPage";
-import { IdentityProvidersPage } from "./identity-providers/IdentityProvidersPage";
-import { UserFederationPage } from "./user-federation/UserFederationPage";
+import { ClientsSection } from "./clients/ClientsSection";
+import { ClientScopesSection } from "./client-scopes/ClientScopesSection";
+import { RealmRolesSection } from "./realm-roles/RealmRolesSection";
+import { UsersSection } from "./user/UsersSection";
+import { GroupsSection } from "./groups/GroupsSection";
+import { SessionsSection } from "./sessions/SessionsSection";
+import { EventsSection } from "./events/EventsSection";
+import { RealmSettingsSection } from "./realm-settings/RealmSettingsSection";
+import { AuthenticationSection } from "./authentication/AuthenticationSection";
+import { IdentityProvidersSection } from "./identity-providers/IdentityProvidersSection";
+import { UserFederationSection } from "./user-federation/UserFederationSection";
 
-import { PageNotFoundPage } from "./PageNotFoundPage";
+import { PageNotFoundSection } from "./PageNotFoundSection";
 
 export const App = () => {
   return (
@@ -31,48 +31,48 @@ export const App = () => {
             <Switch>
               <Route exact path="/add-realm" component={NewRealmForm}></Route>
 
-              <Route exact path="/clients" component={ClientsPage}></Route>
+              <Route exact path="/clients" component={ClientsSection}></Route>
               <Route exact path="/add-client" component={NewClientForm}></Route>
               <Route exact path="/import-client" component={ImportForm}></Route>
 
               <Route
                 exact
                 path="/client-scopes"
-                component={ClientScopesPage}
+                component={ClientScopesSection}
               ></Route>
               <Route
                 exact
                 path="/realm-roles"
-                component={RealmRolesPage}
+                component={RealmRolesSection}
               ></Route>
-              <Route exact path="/users" component={UsersPage}></Route>
-              <Route exact path="/groups" component={GroupsPage}></Route>
-              <Route exact path="/sessions" component={SessionsPage}></Route>
-              <Route exact path="/events" component={EventsPage}></Route>
+              <Route exact path="/users" component={UsersSection}></Route>
+              <Route exact path="/groups" component={GroupsSection}></Route>
+              <Route exact path="/sessions" component={SessionsSection}></Route>
+              <Route exact path="/events" component={EventsSection}></Route>
 
               <Route
                 exact
                 path="/realm-settings"
-                component={RealmSettingsPage}
+                component={RealmSettingsSection}
               ></Route>
               <Route
                 exact
                 path="/authentication"
-                component={AuthenticationPage}
+                component={AuthenticationSection}
               ></Route>
               <Route
                 exact
                 path="/identity-providers"
-                component={IdentityProvidersPage}
+                component={IdentityProvidersSection}
               ></Route>
               <Route
                 exact
                 path="/user-federation"
-                component={UserFederationPage}
+                component={UserFederationSection}
               ></Route>
 
-              <Route exact path="/" component={ClientsPage} />
-              <Route component={PageNotFoundPage} />
+              <Route exact path="/" component={ClientsSection} />
+              <Route component={PageNotFoundSection} />
             </Switch>
           </PageSection>
         </Page>

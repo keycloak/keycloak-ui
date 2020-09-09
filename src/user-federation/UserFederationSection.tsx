@@ -1,5 +1,5 @@
 import React from "react";
 
-export const UserFederationPage = () => {
+export const UserFederationSection = () => {
   return <>The User Federation Page</>;
 };

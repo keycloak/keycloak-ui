@@ -1,5 +1,5 @@
 import React from "react";
 
-export const UsersPage = () => {
+export const UsersSection = () => {
   return <>The Users Page</>;
 };

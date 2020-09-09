@@ -1,5 +1,5 @@
 import React from "react";
 
-export const EventsPage = () => {
+export const EventsSection = () => {
   return <>The Events Page</>;
 };

@@ -1,5 +1,5 @@
 import React from "react";
 
-export const PageNotFoundPage = () => {
+export const PageNotFoundSection = () => {
   return <>Page Not Found</>;
 };

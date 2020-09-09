@@ -1,5 +1,5 @@
 import React from "react";
 
-export const RealmSettingsPage = () => {
+export const RealmSettingsSection = () => {
   return <>The Realm Settings Page</>;
 };

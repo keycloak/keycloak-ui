@@ -1,5 +1,5 @@
 import React from "react";
 
-export const RealmRolesPage = () => {
+export const RealmRolesSection = () => {
   return <>The Realm Roles Page</>;
 };

@@ -1,5 +1,5 @@
 import React from "react";
 
-export const IdentityProvidersPage = () => {
+export const IdentityProvidersSection = () => {
   return <>The Identity Providers Page</>;
 };

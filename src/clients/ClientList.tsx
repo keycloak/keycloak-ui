@@ -9,7 +9,7 @@ import {
   IFormatterValueType,
 } from "@patternfly/react-table";
 import { Badge, AlertVariant } from "@patternfly/react-core";
-import { saveAs } from "file-saver";
+import FileSaver from "file-saver";
 
 import { ExternalLink } from "../components/external-link/ExternalLink";
 import { HttpClientContext } from "../http-service/HttpClientContext";
@@ -104,7 +104,7 @@ export const ClientList = ({ baseUrl, clients }: ClientListProps) => {
                 }
               }
 
-              saveAs(
+              FileSaver.saveAs(
                 new Blob([JSON.stringify(clientCopy, null, 2)], {
                   type: "application/json",
                 }),
