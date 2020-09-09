@@ -18,11 +18,10 @@ type RolesListProps = {
 const columns: (keyof RoleRepresentation)[] = [
   "name",
   "composite",
-  "description"
+  "description",
 ];
 
 export const RolesList = ({ roles }: RolesListProps) => {
-
   const emptyFormatter = (): IFormatter => (data?: IFormatterValueType) => {
     return data ? data : "—";
   };
@@ -36,15 +35,14 @@ export const RolesList = ({ roles }: RolesListProps) => {
   const boolFormatter = (): IFormatter => (data?: IFormatterValueType) => {
     const boolVal = data?.toString();
 
-    return (boolVal ? (
-      boolVal.charAt(0).toUpperCase() + boolVal.slice(1)
-    ) : undefined) as string;
+    return (boolVal
+      ? boolVal.charAt(0).toUpperCase() + boolVal.slice(1)
+      : undefined) as string;
   };
 
-  const data = roles!
-    .map((c) => {
-      return { cells: columns.map((col) => c[col]) };
-    });
+  const data = roles!.map((c) => {
+    return { cells: columns.map((col) => c[col]) };
+  });
   return (
     <Table
       variant={TableVariant.compact}
@@ -53,7 +51,10 @@ export const RolesList = ({ roles }: RolesListProps) => {
           title: "Role name",
           cellFormatters: [externalLink(), emptyFormatter()],
         },
-        { title: "Composite", cellFormatters: [boolFormatter(), emptyFormatter()] },
+        {
+          title: "Composite",
+          cellFormatters: [boolFormatter(), emptyFormatter()],
+        },
         { title: "Description", cellFormatters: [emptyFormatter()] },
       ]}
       rows={data}
