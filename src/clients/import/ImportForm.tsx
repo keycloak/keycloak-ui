@@ -21,7 +21,7 @@ import { useAlerts } from "../../components/alert/Alerts";
 import { AlertPanel } from "../../components/alert/AlertPanel";
 
 export const ImportForm = () => {
-  const { t } = useTranslation();
+  const { t } = useTranslation("clients");
   const httpClient = useContext(HttpClientContext)!;
 
   const [add, alerts, hide] = useAlerts();

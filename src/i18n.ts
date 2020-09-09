@@ -3,13 +3,15 @@ import { initReactI18next } from "react-i18next";
 // import backend from "i18next-http-backend";
 
 import messages from "./messages.json";
+import clients from "./clients/messages.json";
+import realm from "./realm/messages.json";
 import help from "./help.json";
 
 const initOptions = {
-  ns: ["messages", "help"],
+  ns: ["messages", "help", "clients", "realm"],
   defaultNS: "messages",
   resources: {
-    en: { ...messages, ...help },
+    en: { ...messages, ...help, ...clients, ...realm },
   },
   lng: "en",
   fallbackLng: "en",

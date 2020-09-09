@@ -1,4 +1,5 @@
 import React, { useContext } from "react";
+import { useTranslation } from "react-i18next";
 import {
   Table,
   TableBody,
@@ -14,7 +15,6 @@ import { ExternalLink } from "../components/external-link/ExternalLink";
 import { HttpClientContext } from "../http-service/HttpClientContext";
 import { useAlerts } from "../components/alert/Alerts";
 import { AlertPanel } from "../components/alert/AlertPanel";
-import { useTranslation } from "react-i18next";
 import { ClientRepresentation } from "./models/client-model";
 
 type ClientListProps = {
@@ -30,8 +30,8 @@ const columns: (keyof ClientRepresentation)[] = [
 ];
 
 export const ClientList = ({ baseUrl, clients }: ClientListProps) => {
+  const { t } = useTranslation("clients");
   const httpClient = useContext(HttpClientContext)!;
-  const { t } = useTranslation();
   const [add, alerts, hide] = useAlerts();
 
   const convertClientId = (clientId: string) =>

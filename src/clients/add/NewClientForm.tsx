@@ -13,8 +13,10 @@ import { Step2 } from "./Step2";
 import { ClientRepresentation } from "../models/client-model";
 import { AlertPanel } from "../../components/alert/AlertPanel";
 import { useAlerts } from "../../components/alert/Alerts";
+import { useTranslation } from "react-i18next";
 
 export const NewClientForm = () => {
+  const { t } = useTranslation("clients");
   const httpClient = useContext(HttpClientContext)!;
   const [client, setClient] = useState<ClientRepresentation>({
     protocol: "",
@@ -48,7 +50,7 @@ export const NewClientForm = () => {
     });
   };
 
-  const title = "Create client";
+  const title = t("Create client");
   return (
     <>
       <AlertPanel alerts={alerts} onCloseAlert={hide} />
@@ -64,13 +66,13 @@ export const NewClientForm = () => {
           mainAriaLabel={`${title} content`}
           steps={[
             {
-              name: "General Settings",
+              name: t("General Settings"),
               component: <Step1 onChange={handleInputChange} client={client} />,
             },
             {
-              name: "Capability config",
+              name: t("Capability config"),
               component: <Step2 onChange={handleInputChange} client={client} />,
-              nextButtonText: "Save",
+              nextButtonText: t("Save"),
             },
           ]}
           onSave={save}

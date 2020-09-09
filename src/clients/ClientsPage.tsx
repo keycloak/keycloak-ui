@@ -11,7 +11,7 @@ import { KeycloakContext } from "../auth/KeycloakContext";
 import { ClientRepresentation } from "./models/client-model";
 
 export const ClientsPage = () => {
-  const { t } = useTranslation();
+  const { t } = useTranslation("clients");
   const history = useHistory();
   const [max, setMax] = useState(10);
   const [first, setFirst] = useState(0);
