@@ -17,7 +17,7 @@
     "roleCreated": "Role created",
     "roleCreateError": "Could not create role:",
     "roleImportSuccess": "Role import successful",
-    "roleDeletedSucess": "The role has been deleted",
+    "roleDeletedSuccess": "The role has been deleted",
     "roleDeleteError": "Could not delete role:",
     "roleAuthentication": "Role authentication"
   }
