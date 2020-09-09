@@ -1,9 +1,18 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import { useHistory } from "react-router-dom";
 import { Nav, NavItem, NavGroup, PageSidebar } from "@patternfly/react-core";
 import { RealmSelector } from "./components/realm-selector/RealmSelector";
+import { DataLoader } from "./components/data-loader/DataLoader";
+import { HttpClientContext } from "./http-service/HttpClientContext";
+import { Realm } from "./models/Realm";
 
 export const PageNav: React.FunctionComponent = () => {
+  const httpClient = useContext(HttpClientContext)!;
+  const realmLoader = async () => {
+    const response = await httpClient.doGet<Realm[]>("/admin/realms");
+    return response.data;
+  };
+
   const history = useHistory();
 
   let initialItem = history.location.pathname;
@@ -40,7 +49,11 @@ export const PageNav: React.FunctionComponent = () => {
     <PageSidebar
       nav={
         <Nav onSelect={onSelect}>
-          <RealmSelector />
+          <DataLoader loader={realmLoader}>
+            {(realmList) => (
+              <RealmSelector realm="Master" realmList={realmList || []} />
+            )}
+          </DataLoader>
           <NavGroup title="Manage">
             {makeNavItem("Clients", "clients")}
             {makeNavItem("Client Scopes", "client-scopes")}
