@@ -85,9 +85,9 @@ export const ImportForm = () => {
           </FormGroup>
           <ActionGroup>
             <Button variant="primary" onClick={() => save()}>
-              {t("Save")}
+              {t("common:Save")}
             </Button>
-            <Button variant="link">{t("Cancel")}</Button>
+            <Button variant="link">{t("common:Cancel")}</Button>
           </ActionGroup>
         </Form>
       </PageSection>

@@ -92,7 +92,7 @@ export const ClientList = ({ baseUrl, clients }: ClientListProps) => {
         rows={data}
         actions={[
           {
-            title: t("Export"),
+            title: t("common:Export"),
             onClick: (_, rowId) => {
               const clientCopy = JSON.parse(JSON.stringify(data[rowId].client));
               clientCopy.clientId = convertClientId(clientCopy.clientId);
@@ -113,7 +113,7 @@ export const ClientList = ({ baseUrl, clients }: ClientListProps) => {
             },
           },
           {
-            title: t("Delete"),
+            title: t("common:Delete"),
             onClick: (_, rowId) => {
               try {
                 httpClient.doDelete(
@@ -129,7 +129,7 @@ export const ClientList = ({ baseUrl, clients }: ClientListProps) => {
             },
           },
         ]}
-        aria-label="Client list"
+        aria-label={t("Client list")}
       >
         <TableHeader />
         <TableBody />

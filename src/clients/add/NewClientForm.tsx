@@ -72,10 +72,10 @@ export const NewClientForm = () => {
             {
               name: t("Capability config"),
               component: <Step2 onChange={handleInputChange} client={client} />,
-              nextButtonText: t("Save"),
+              nextButtonText: t("common:Save"),
             },
           ]}
-          onSave={save}
+          onSave={() => save()}
         />
       </PageSection>
     </>

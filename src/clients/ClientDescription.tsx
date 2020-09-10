@@ -2,6 +2,7 @@ import React, { FormEvent } from "react";
 import { FormGroup, TextInput } from "@patternfly/react-core";
 
 import { ClientRepresentation } from "./models/client-model";
+import { useTranslation } from "react-i18next";
 
 type ClientDescriptionProps = {
   onChange: (value: string, event: FormEvent<HTMLInputElement>) => void;
@@ -12,9 +13,10 @@ export const ClientDescription = ({
   client,
   onChange,
 }: ClientDescriptionProps) => {
+  const { t } = useTranslation("clients");
   return (
     <>
-      <FormGroup label="Client ID" fieldId="kc-client-id">
+      <FormGroup label={t("Client ID")} fieldId="kc-client-id">
         <TextInput
           type="text"
           id="kc-client-id"
@@ -23,7 +25,7 @@ export const ClientDescription = ({
           onChange={onChange}
         />
       </FormGroup>
-      <FormGroup label="Name" fieldId="kc-name">
+      <FormGroup label={t("Name")} fieldId="kc-name">
         <TextInput
           type="text"
           id="kc-name"
@@ -32,7 +34,7 @@ export const ClientDescription = ({
           onChange={onChange}
         />
       </FormGroup>
-      <FormGroup label="Description" fieldId="kc-description">
+      <FormGroup label={t("Description")} fieldId="kc-description">
         <TextInput
           type="text"
           id="kc-description"
