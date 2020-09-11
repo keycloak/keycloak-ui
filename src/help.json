@@ -2,6 +2,8 @@
   "help": {
     "storybook": "Sometimes you need some help and it's nice when the app does that",
     "storybookTitle": "Form page title",
-    "storybookSubTitle": "Some sub-title that gets removed after help system is disabled"
+    "storybookSubTitle": "Some sub-title that gets removed after help system is disabled",
+    "import/create-clients-sub": "Clients are applications and services that can request authentication of a user.",
+    "create-realm-sub": ""
   }
 }

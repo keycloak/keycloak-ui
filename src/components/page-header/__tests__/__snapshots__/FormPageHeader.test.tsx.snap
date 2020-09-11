@@ -17,6 +17,9 @@ exports[`<FormPageHeader /> render 1`] = `
       dummy
     </div>
   </section>
+  <hr
+    class="pf-c-divider"
+  />
 </DocumentFragment>
 `;
 
@@ -5448,6 +5451,11 @@ exports[`<FormPageHeader /> with help disabled 1`] = `
             </TextContent>
           </section>
         </PageSection>
+        <Divider>
+          <hr
+            className="pf-c-divider"
+          />
+        </Divider>
       </FormPageHeader>
     </withI18nextTranslation(FormPageHeader)>
   </ExampleFormPage>

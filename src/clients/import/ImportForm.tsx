@@ -11,7 +11,7 @@ import {
   Button,
   AlertVariant,
 } from "@patternfly/react-core";
-import { useTranslation } from "react-i18next";
+import { useTranslation, withTranslation } from "react-i18next";
 
 import { ClientRepresentation } from "../models/client-model";
 import { ClientDescription } from "../ClientDescription";
@@ -19,6 +19,7 @@ import { HttpClientContext } from "../../http-service/HttpClientContext";
 import { JsonFileUpload } from "../../components/json-file-upload/JsonFileUpload";
 import { useAlerts } from "../../components/alert/Alerts";
 import { AlertPanel } from "../../components/alert/AlertPanel";
+import { FormPageHeader } from "../../components/page-header/FormPageHeader";
 
 export const ImportForm = () => {
   const { t } = useTranslation("clients");
@@ -55,17 +56,12 @@ export const ImportForm = () => {
       add(`${t("Could not import client:")} '${error}'`, AlertVariant.danger);
     }
   };
+
+  const Header = withTranslation("clients")(FormPageHeader);
   return (
     <>
       <AlertPanel alerts={alerts} onCloseAlert={hide} />
-      <PageSection variant="light">
-        <TextContent>
-          <Text component="h1">{t("Import client")}</Text>
-          {t(
-            "Clients are applications and services that can request authentication of a user"
-          )}
-        </TextContent>
-      </PageSection>
+      <Header titleKey="Import client" subKey="import/create-clients-sub" />
       <Divider />
       <PageSection variant="light">
         <Form isHorizontal>

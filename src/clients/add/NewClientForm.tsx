@@ -13,7 +13,8 @@ import { Step2 } from "./Step2";
 import { ClientRepresentation } from "../models/client-model";
 import { AlertPanel } from "../../components/alert/AlertPanel";
 import { useAlerts } from "../../components/alert/Alerts";
-import { useTranslation } from "react-i18next";
+import { useTranslation, withTranslation } from "react-i18next";
+import { FormPageHeader } from "../../components/page-header/FormPageHeader";
 
 export const NewClientForm = () => {
   const { t } = useTranslation("clients");
@@ -51,14 +52,11 @@ export const NewClientForm = () => {
   };
 
   const title = t("Create client");
+  const Header = withTranslation("clients")(FormPageHeader);
   return (
     <>
       <AlertPanel alerts={alerts} onCloseAlert={hide} />
-      <PageSection variant="light">
-        <TextContent>
-          <Text component="h1">{title}</Text>
-        </TextContent>
-      </PageSection>
+      <Header titleKey="Create client" subKey="import/create-clients-sub" />
       <Divider />
       <PageSection variant="light">
         <Wizard
