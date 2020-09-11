@@ -15,10 +15,10 @@ import { DataLoader } from "../components/data-loader/DataLoader";
 import { TableToolbar } from "../components/table-toolbar/TableToolbar";
 import { HttpClientContext } from "../http-service/HttpClientContext";
 import { RoleRepresentation } from "../model/role-model";
-import { RolesList } from "../roles/RoleList";
-import { NoRealmRolesPage } from "../roles/NoRealmRoles";
+import { RolesList } from "./RoleList";
+import { NoRealmRolesPage } from "./NoRealmRoles";
 
-export const RealmRolesPage = () => {
+export const RealmRolesSection = () => {
   const { t } = useTranslation();
   const history = useHistory();
   const [max, setMax] = useState(10);
@@ -41,42 +41,42 @@ export const RealmRolesPage = () => {
   return (
     <DataLoader loader={loader}>
       {(roles) => (
-          <>
-            <PageSection
-              className="rolesHeader"
-              variant={PageSectionVariants.light}
+        <>
+          <PageSection
+            className="rolesHeader"
+            variant={PageSectionVariants.light}
+          >
+            <TextContent className="rolesDescription">
+              <Text component="h1">Realm roles</Text>
+              <Text component="p">
+                Realm-level roles are a global namespace to define your roles.
+              </Text>
+            </TextContent>
+          </PageSection>
+          <Divider component="li" key={1} />
+          <PageSection className="rolesTable">
+            <TableToolbar
+              count={roles!.length}
+              first={first}
+              max={max}
+              onNextClick={setFirst}
+              onPreviousClick={setFirst}
+              onPerPageSelect={(f, m) => {
+                setFirst(f);
+                setMax(m);
+              }}
+              toolbarItem={
+                <>
+                  <Button onClick={() => history.push("/add-role")}>
+                    {t("Create role")}
+                  </Button>
+                </>
+              }
             >
-              <TextContent className="rolesDescription">
-                <Text component="h1">Realm roles</Text>
-                <Text component="p">
-                  Realm-level roles are a global namespace to define your roles.
-                </Text>
-              </TextContent>
-            </PageSection>
-            <Divider component="li" key={1} />
-            <PageSection className="rolesTable">
-              <TableToolbar
-                count={roles!.length}
-                first={first}
-                max={max}
-                onNextClick={setFirst}
-                onPreviousClick={setFirst}
-                onPerPageSelect={(f, m) => {
-                  setFirst(f);
-                  setMax(m);
-                }}
-                toolbarItem={
-                  <>
-                    <Button onClick={() => history.push("/add-role")}>
-                      {t("Create role")}
-                    </Button>
-                  </>
-                }
-              >
-                <RolesList roles={roles} />
-              </TableToolbar>
-            </PageSection>
-          </>
+              <RolesList roles={roles} />
+            </TableToolbar>
+          </PageSection>
+        </>
       )}
     </DataLoader>
   );
