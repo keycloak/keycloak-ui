@@ -6,10 +6,16 @@
 }
 
 .pf-c-page__main-section.pf-m-light {
-  padding: 0px;
-  background-color: var(--pf-c-page__main-section--m-light--BackgroundColor);
+  padding-left: 0px;
+  padding-top: 0px;
+  padding-right: 0px;
 }
 
-.pf-c-content.rolesDescription {
-  padding: var(--pf-c-page__main-section--PaddingLeft);
+.rolesTable {
+  padding: 0;
+}
+
+.rolesDescription {
+  padding-left: 36px;
+  padding-top: 36px;
 }
