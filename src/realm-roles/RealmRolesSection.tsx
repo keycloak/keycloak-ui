@@ -3,6 +3,7 @@ import { useHistory } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import {
   Button,
+  Divider,
   Page,
   PageSection,
   PageSectionVariants,
@@ -38,9 +39,8 @@ export const RealmRolesPage = () => {
   }, []);
 
   return (
-    // <DataLoader loader={loader}>
-    //   {(roles) => (
-        <Page>
+    <DataLoader loader={loader}>
+      {(roles) => (
           <>
             <PageSection
               className="rolesHeader"
@@ -53,8 +53,8 @@ export const RealmRolesPage = () => {
                 </Text>
               </TextContent>
             </PageSection>
-            <NoRealmRolesPage />
-            {/* <PageSection>
+            <Divider component="li" key={1} />
+            <PageSection className="rolesTable">
               <TableToolbar
                 count={roles!.length}
                 first={first}
@@ -75,10 +75,9 @@ export const RealmRolesPage = () => {
               >
                 <RolesList roles={roles} />
               </TableToolbar>
-            </PageSection> */}
+            </PageSection>
           </>
-        </Page>
-      // )}
-    // </DataLoader>
+      )}
+    </DataLoader>
   );
 };
