@@ -1,5 +1,7 @@
 {
   "help": {
-    "storybook": "Sometimes you need some help and it's nice when the app does that"
+    "storybook": "Sometimes you need some help and it's nice when the app does that",
+    "storybookTitle": "Form page title",
+    "storybookSubTitle": "Some sub-title that gets removed after help system is disabled"
   }
 }

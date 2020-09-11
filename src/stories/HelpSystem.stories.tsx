@@ -4,7 +4,10 @@ import {
   PageHeader,
   PageHeaderTools,
   PageHeaderToolsItem,
+  Button,
+  Divider,
 } from "@patternfly/react-core";
+import { withTranslation } from "react-i18next";
 import { Meta } from "@storybook/react";
 
 import { HelpItem } from "../components/help-enabler/HelpItem";
@@ -13,24 +16,40 @@ import {
   HelpContext,
   HelpHeader,
 } from "../components/help-enabler/HelpHeader";
-import { I18nextProvider } from "react-i18next";
-import i18n from "../i18n";
+import { FormPageHeader } from "../components/page-header/FormPageHeader";
 
 export default {
   title: "Help System Example",
   component: HelpHeader,
 } as Meta;
 
+export const HelpItems = () => <HelpItem item="storybook" />;
+
+export const FormPageHeaders = () => (
+  <Help>
+    <ExampleFormPage />
+  </Help>
+);
+
+const ExampleFormPage = () => {
+  const Example = withTranslation("help")(FormPageHeader);
+  const { enabled, toggleHelp } = useContext(HelpContext);
+  return (
+    <>
+      <Button onClick={() => toggleHelp()}>
+        {enabled ? "Help on" : "No help needed"}
+      </Button>
+      <Divider />
+      <br/>
+      <Example titleKey="storybookTitle" subKey="storybookSubTitle" />
+    </>
+  );
+};
+
 export const HelpSystem = () => (
   <Help>
     <HelpSystemTest />
   </Help>
-);
-
-export const HelpItemz = () => (
-  <I18nextProvider i18n={i18n}>
-    <HelpItem item="storybook" />
-  </I18nextProvider>
 );
 
 const HelpSystemTest = () => {
