@@ -40,7 +40,7 @@ const ExampleFormPage = () => {
         {enabled ? "Help on" : "No help needed"}
       </Button>
       <Divider />
-      <br/>
+      <br />
       <Example titleKey="storybookTitle" subKey="storybookSubTitle" />
     </>
   );
