@@ -1,4 +1,5 @@
 import React from "react";
+import { MemoryRouter } from "react-router-dom";
 import { render } from "@testing-library/react";
 
 import clientMock from "./mock-clients.json";
@@ -9,7 +10,9 @@ import { ClientList } from "../ClientList";
 test("renders ClientList", () => {
   const { getByText } = render(
     <I18nextProvider i18n={i18n}>
-      <ClientList clients={clientMock} baseUrl="http://blog.nerdin.ch" />
+      <MemoryRouter>
+        <ClientList clients={clientMock} baseUrl="http://blog.nerdin.ch" />
+      </MemoryRouter>
     </I18nextProvider>
   );
   const headerElement = getByText(/Client ID/i);

@@ -1,4 +1,5 @@
 import React from "react";
+import { useTranslation } from "react-i18next";
 import {
   FormGroup,
   Switch,
@@ -34,7 +35,7 @@ export const Step2 = ({ form }: Step2Props) => {
           )}
         />
       </FormGroup>
-      <FormGroup label={t("authentication")} fieldId="kc-authorisation">
+      <FormGroup label={t("clientAuthorisation")} fieldId="kc-authorisation">
         <Controller
           name="authorizationServicesEnabled"
           control={form.control}
