@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import React, { useState, useContext, useEffect } from "react";
 import { useHistory } from "react-router-dom";
 import { useTranslation } from "react-i18next";
@@ -16,14 +15,14 @@ import { DataLoader } from "../components/data-loader/DataLoader";
 import { TableToolbar } from "../components/table-toolbar/TableToolbar";
 import { HttpClientContext } from "../http-service/HttpClientContext";
 import { RoleRepresentation } from "../model/role-model";
-import { RolesList } from "./RoleList";
-import { NoRealmRolesPage } from "./NoRealmRoles";
+import { RolesList } from "../realm-roles/RoleList";
+// import { NoRealmRolesPage } from "../realm-roles/NoRealmRoles";
 
-export const RealmRolesSection = () => {
+export const RealmRolesPage = () => {
   const { t } = useTranslation();
   const history = useHistory();
   const [max, setMax] = useState(10);
-  const [, setRoles] = useState([] as RoleRepresentation[]);
+  const [roles, setRoles] = useState([] as RoleRepresentation[]);
   const [first, setFirst] = useState(0);
   const httpClient = useContext(HttpClientContext)!;
 

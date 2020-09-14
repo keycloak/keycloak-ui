@@ -1,17 +1,14 @@
 import React from "react";
 import { Meta } from "@storybook/react";
 import { Page } from "@patternfly/react-core";
-import { RealmRolesSection } from "../realm-roles/RealmRolesSection";
+// import { NewRealmForm } from "../realm/add/NewRealmForm";
+import { RolesList } from "../realm-roles/RoleList";
+import rolesMock from "../clients/__tests__/mock-clients.json";
+import { RoleRepresentation } from "../model/role-model";
 
 export default {
-  title: "Realm roles section",
-  component: RealmRolesSection,
+  title: "Roles List",
+  component: RolesList,
 } as Meta;
 
-export const view = () => {
-  return (
-    <Page>
-      <RealmRolesSection />
-    </Page>
-  );
-};
+export const RolesListExample = () => <RolesList roles={rolesMock} />;
