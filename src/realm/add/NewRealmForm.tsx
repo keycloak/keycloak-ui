@@ -9,7 +9,7 @@ import {
   ActionGroup,
   Button,
 } from "@patternfly/react-core";
-import { useTranslation, withTranslation } from "react-i18next";
+import { useTranslation } from "react-i18next";
 import { FormPageHeader } from "../../components/page-header/FormPageHeader";
 
 //type NewRealmFormProps = {
@@ -18,11 +18,10 @@ import { FormPageHeader } from "../../components/page-header/FormPageHeader";
 
 export const NewRealmForm = () => {
   const { t } = useTranslation("realm");
-  const Header = withTranslation("realm")(FormPageHeader);
   //({ realm }: NewRealmFormProps) => {
   return (
     <>
-      <Header titleKey="Create realm" subKey="create-realm-sub" />
+      <FormPageHeader titleKey="realm:Create realm" subKey="create-realm-sub" />
       <PageSection variant="light">
         <Form isHorizontal>
           <FormGroup label={t("Upload JSON file")} fieldId="kc-realm-filename">

@@ -11,7 +11,7 @@ import {
   Button,
   AlertVariant,
 } from "@patternfly/react-core";
-import { useTranslation, withTranslation } from "react-i18next";
+import { useTranslation } from "react-i18next";
 
 import { ClientRepresentation } from "../models/client-model";
 import { ClientDescription } from "../ClientDescription";
@@ -57,11 +57,13 @@ export const ImportForm = () => {
     }
   };
 
-  const Header = withTranslation("clients")(FormPageHeader);
   return (
     <>
       <AlertPanel alerts={alerts} onCloseAlert={hide} />
-      <Header titleKey="Import client" subKey="import/create-clients-sub" />
+      <FormPageHeader
+        titleKey="client:Import client"
+        subKey="import/create-clients-sub"
+      />
       <Divider />
       <PageSection variant="light">
         <Form isHorizontal>

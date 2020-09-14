@@ -5,19 +5,16 @@ import {
   TextContent,
   Divider,
 } from "@patternfly/react-core";
-import { WithTranslation } from "react-i18next";
+import { useTranslation } from "react-i18next";
 import { HelpContext } from "../help-enabler/HelpHeader";
 
-export interface FormPageHeaderProps extends WithTranslation {
+type FormPageHeaderProps = {
   titleKey: string;
   subKey: string;
-}
+};
 
-export const FormPageHeader = ({
-  t,
-  titleKey,
-  subKey,
-}: FormPageHeaderProps) => {
+export const FormPageHeader = ({ titleKey, subKey }: FormPageHeaderProps) => {
+  const { t } = useTranslation();
   const { enabled } = useContext(HelpContext);
   return (
     <>

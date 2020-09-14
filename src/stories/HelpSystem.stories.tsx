@@ -7,7 +7,6 @@ import {
   Button,
   Divider,
 } from "@patternfly/react-core";
-import { withTranslation } from "react-i18next";
 import { Meta } from "@storybook/react";
 
 import { HelpItem } from "../components/help-enabler/HelpItem";
@@ -32,7 +31,6 @@ export const FormPageHeaders = () => (
 );
 
 const ExampleFormPage = () => {
-  const Example = withTranslation("help")(FormPageHeader);
   const { enabled, toggleHelp } = useContext(HelpContext);
   return (
     <>
@@ -41,7 +39,10 @@ const ExampleFormPage = () => {
       </Button>
       <Divider />
       <br />
-      <Example titleKey="storybookTitle" subKey="storybookSubTitle" />
+      <FormPageHeader
+        titleKey="help:storybookTitle"
+        subKey="storybookSubTitle"
+      />
     </>
   );
 };
