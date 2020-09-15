@@ -1,6 +1,5 @@
-import React, { useContext } from "react";
+import React from "react";
 import { useTranslation } from "react-i18next";
-import { useAlerts } from "../components/alert/Alerts";
 
 import {
   Table,

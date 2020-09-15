@@ -6,7 +6,6 @@ import {
   EmptyStateVariant,
   EmptyStateIcon,
   Title,
-  Text,
   EmptyStateBody,
 } from "@patternfly/react-core";
 import { useHistory } from "react-router-dom";
