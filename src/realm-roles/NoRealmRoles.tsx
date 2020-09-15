@@ -17,7 +17,8 @@ import { useTranslation } from "react-i18next";
 export const NoRealmRolesPage = () => {
   const { t } = useTranslation("realm");
   const history = useHistory();
-  const emptyStateText = "There aren't any realm roles in this realm. Create a realm role to get started"
+  const emptyStateText =
+    "There aren't any realm roles in this realm. Create a realm role to get started";
   return (
     <>
       <PageSection>
