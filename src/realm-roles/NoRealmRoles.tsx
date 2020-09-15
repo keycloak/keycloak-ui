@@ -1,14 +1,12 @@
 import React from "react";
 import {
   Button,
-  Page,
   PageSection,
   EmptyState,
-  Text,
-  TextContent,
   EmptyStateVariant,
   EmptyStateIcon,
   Title,
+  Text,
   EmptyStateBody,
 } from "@patternfly/react-core";
 import { useHistory } from "react-router-dom";
@@ -17,6 +15,7 @@ import { PlusCircleIcon } from "@patternfly/react-icons";
 
 export const NoRealmRolesPage = () => {
   const history = useHistory();
+  const emptyStateText = "There aren't any realm roles in this realm. Create a realm role to get started"
   return (
     <>
       <PageSection>
@@ -26,8 +25,7 @@ export const NoRealmRolesPage = () => {
             No realm roles
           </Title>
           <EmptyStateBody>
-            There aren't any realm roles in this realm. Create a realm role to
-            get started.
+            {emptyStateText}.
           </EmptyStateBody>
           <Button variant="primary" onClick={() => history.push("/add-role")}>
             Create Realm

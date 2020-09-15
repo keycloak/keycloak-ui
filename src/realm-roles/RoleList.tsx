@@ -1,7 +1,6 @@
 import React, { useContext } from "react";
 import { useTranslation } from "react-i18next";
 import { useAlerts } from "../components/alert/Alerts";
-// import { AlertPanel } from "../components/alert/AlertPanel";
 
 import {
   Table,
@@ -13,10 +12,7 @@ import {
 } from "@patternfly/react-table";
 
 import { ExternalLink } from "../components/external-link/ExternalLink";
-import { HttpClientContext } from "../http-service/HttpClientContext";
 import { RoleRepresentation } from "../model/role-model";
-import FileSaver from "file-saver";
-import { AlertVariant } from "@patternfly/react-core";
 
 type RolesListProps = {
   roles?: RoleRepresentation[];
@@ -30,8 +26,6 @@ const columns: (keyof RoleRepresentation)[] = [
 
 export const RolesList = ({ roles }: RolesListProps) => {
   const { t } = useTranslation("roles");
-  const httpClient = useContext(HttpClientContext)!;
-  const [add, alerts, hide] = useAlerts();
 
   const emptyFormatter = (): IFormatter => (data?: IFormatterValueType) => {
     return data ? data : "—";
