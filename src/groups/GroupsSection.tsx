@@ -3,9 +3,13 @@ import { useTranslation } from "react-i18next";
 import {
   Button,
   ButtonVariant,
+  Flex,
   InputGroup,
   TextInput,
   Divider,
+  Dropdown,
+  DropdownItem,
+  KebabToggle,
   PageSection,
   PageSectionVariants,
   Pagination,
@@ -22,25 +26,43 @@ import {
   TableBody,
   TableVariant
 } from '@patternfly/react-table';
-// import { SearchIcon } from '@patternfly/react-icons';
+import { SearchIcon } from '@patternfly/react-icons';
+import { UsersIcon } from '@patternfly/react-icons';
+import './GroupsSection.css';
 
 export const GroupsSection = () => {
 
   // Data
   const columnData = [
     { title: 'Group name' },
-    { title: 'Members' }
+    { title: 'Members' },
   ];
 
   const rowData = [
-    {
-      cells: ['IT-1', '761']
+    { cells: 
+      ['IT-1', 
+      <React.Fragment>
+        <div className="pf-icon-group-members">
+          <UsersIcon />
+          <span>732</span>
+        </div>
+      </React.Fragment>
+      ]
     },
-    {
-      cells: ['IT-2', '583']
+    { cells: 
+      ['IT-2', '583'] 
     },
-    {
-      cells: ['IT-3', '762']
+    { cells: 
+      ['IT-3', '762'] 
+    },
+    { cells: 
+      ['3scale-group', '762'] 
+    },
+    { cells: 
+      ['Fuse-group', '762'] 
+    },
+    { cells: 
+      ['Apicurio-group', '762'] 
     }
   ];
 
@@ -61,6 +83,7 @@ export const GroupsSection = () => {
   const [actions, setActions] = useState(actionData);
   const [page, setPage] = useState(1);
   const [perPage, setPerPage] = useState(20);
+  const [isKebabOpen, setIsKebabOpen] = useState(false);
   
   const { t } = useTranslation();
 
@@ -90,25 +113,60 @@ export const GroupsSection = () => {
     setPerPage(perPage);
   };
 
+  // Filter
+  const filterGroups = (newInput: string) => {
+    var localRowData: object[] = [];
+    rowData.forEach(function(obj) {
+      var groupName = Object.values(obj)[0][0];
+      if (groupName.toLowerCase().includes(newInput.toLowerCase())) {
+        localRowData.push(obj);
+      }
+    });
+    console.log(localRowData);
+    setRows(localRowData);
+  }
+
+  // Kebab delete action
+  const onKebabToggle = isOpen => {
+    setIsKebabOpen(isOpen);
+  };
+
   // Components
+  const deleteKebabItems = (
+    <DropdownItem key="action" component="button">
+      Delete
+    </DropdownItem>
+  );
+
   const toolbarItems = (
     <React.Fragment>
       <ToolbarItem>
         <InputGroup>
-          <TextInput name="textInput1" id="textInput1" type="search" aria-label="search input example" />
+          <TextInput
+            name="textInput1"
+            id="textInput1"
+            type="search"
+            aria-label="search input example"
+            placeholder="Search groups"
+            onChange={filterGroups}
+          />
           <Button variant={ButtonVariant.control} aria-label="search button for search input">
-            {/* <SearchIcon /> */}
+            <SearchIcon />
           </Button>
         </InputGroup>
       </ToolbarItem>
       <ToolbarItem>
-        <Button variant="secondary">Action</Button>
+        <Button variant="primary">Create group</Button>
       </ToolbarItem>
-      <ToolbarItem variant="separator" />
       <ToolbarItem>
-        <Button variant="primary">Action</Button>
-      </ToolbarItem>
-      {/* <ToolbarItem variant="pagination">
+        <Dropdown
+          toggle={<KebabToggle onToggle={onKebabToggle} />}
+          isOpen={isKebabOpen}
+          isPlain
+          dropdownItems={deleteKebabItems}
+        />
+        </ToolbarItem>
+      <ToolbarItem variant="pagination">
         <Pagination
           itemCount={523}
           perPage={perPage}
@@ -117,7 +175,7 @@ export const GroupsSection = () => {
           widgetId="pagination-options-menu-top"
           onPerPageSelect={onPerPageSelect}
         />
-      </ToolbarItem> */}
+      </ToolbarItem>
     </React.Fragment>
   );
 

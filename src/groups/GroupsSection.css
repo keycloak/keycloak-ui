@@ -1,0 +1,10 @@
+.pf-icon-group-members {
+  display: flex;
+  align-items: center;
+}
+
+.pf-icon-group-members svg {
+  color: #6A6E73;
+  font-size: 16pt;
+  margin-right: 8px;
+}
