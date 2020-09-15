@@ -1,4 +1,5 @@
 import React, {useState} from "react";
+import { useTranslation } from "react-i18next";
 import {
   Button,
   ButtonVariant,
@@ -19,10 +20,9 @@ import {
   Table,
   TableHeader,
   TableBody,
-  headerCol,
   TableVariant
 } from '@patternfly/react-table';
-// import SearchIcon from '@patternfly/react-icons/dist/js/icons/search-icon';
+// import { SearchIcon } from '@patternfly/react-icons';
 
 export const GroupsSection = () => {
 
@@ -61,37 +61,8 @@ export const GroupsSection = () => {
   const [actions, setActions] = useState(actionData);
   const [page, setPage] = useState(1);
   const [perPage, setPerPage] = useState(20);
-
-  // Components
-  const toolbarItems = (
-    <React.Fragment>
-      <ToolbarItem>
-        <InputGroup>
-          <TextInput name="textInput1" id="textInput1" type="search" aria-label="search input example" />
-          <Button variant={ButtonVariant.control} aria-label="search button for search input">
-            {/* <SearchIcon /> */}
-          </Button>
-        </InputGroup>
-      </ToolbarItem>
-      <ToolbarItem>
-        <Button variant="secondary">Action</Button>
-      </ToolbarItem>
-      <ToolbarItem variant="separator" />
-      <ToolbarItem>
-        <Button variant="primary">Action</Button>
-      </ToolbarItem>
-      <ToolbarItem variant="pagination">
-        <Pagination
-          itemCount={523}
-          perPage={perPage}
-          page={page}
-          onSetPage={onSetPage}
-          widgetId="pagination-options-menu-top"
-          onPerPageSelect={onPerPageSelect}
-        />
-      </ToolbarItem>
-    </React.Fragment>
-  );
+  
+  const { t } = useTranslation();
 
   // FUNCTIONS
 
@@ -119,32 +90,63 @@ export const GroupsSection = () => {
     setPerPage(perPage);
   };
 
+  // Components
+  const toolbarItems = (
+    <React.Fragment>
+      <ToolbarItem>
+        <InputGroup>
+          <TextInput name="textInput1" id="textInput1" type="search" aria-label="search input example" />
+          <Button variant={ButtonVariant.control} aria-label="search button for search input">
+            {/* <SearchIcon /> */}
+          </Button>
+        </InputGroup>
+      </ToolbarItem>
+      <ToolbarItem>
+        <Button variant="secondary">Action</Button>
+      </ToolbarItem>
+      <ToolbarItem variant="separator" />
+      <ToolbarItem>
+        <Button variant="primary">Action</Button>
+      </ToolbarItem>
+      {/* <ToolbarItem variant="pagination">
+        <Pagination
+          itemCount={523}
+          perPage={perPage}
+          page={page}
+          onSetPage={onSetPage}
+          widgetId="pagination-options-menu-top"
+          onPerPageSelect={onPerPageSelect}
+        />
+      </ToolbarItem> */}
+    </React.Fragment>
+  );
+
   return (
     <React.Fragment>
-    <PageSection variant={PageSectionVariants.light}>
-      <Title headingLevel="h3" size={TitleSizes['2xl']}>
-        Groups
-      </Title>
-    </PageSection>
-    <Divider/>
-    <PageSection>
-      <Toolbar id="toolbar">
-        <ToolbarContent>
-          {toolbarItems}
-        </ToolbarContent>
-      </Toolbar>
-      <Table
-        actions={actions}
-        variant={TableVariant.compact}
-        onSelect={onSelect}
-        canSelectAll={false}
-        aria-label="Selectable Table"
-        cells={columns}
-        rows={rows}>
-        <TableHeader />
-        <TableBody />
-      </Table>
-    </PageSection>
+      <PageSection variant={PageSectionVariants.light}>
+        <Title headingLevel="h3" size={TitleSizes['2xl']}>
+          {t("Groups")}
+        </Title>
+      </PageSection>
+      <Divider/>
+      <PageSection>
+        <Toolbar id="toolbar">
+          <ToolbarContent>
+            {toolbarItems}
+          </ToolbarContent>
+        </Toolbar>
+        <Table
+          actions={actions}
+          variant={TableVariant.compact}
+          onSelect={onSelect}
+          canSelectAll={false}
+          aria-label="Selectable Table"
+          cells={columns}
+          rows={rows}>
+          <TableHeader />
+          <TableBody />
+        </Table>
+      </PageSection>
     </React.Fragment>
   );
 };
