@@ -1,7 +1,7 @@
 import React from "react";
 import { Meta } from "@storybook/react";
 import { RolesList } from "../realm-roles/RoleList";
-import rolesMock from "../clients/__tests__/mock-clients.json";
+import rolesMock from "../realm-roles/__tests__/mock-roles.json";
 
 export default {
   title: "Roles List",
