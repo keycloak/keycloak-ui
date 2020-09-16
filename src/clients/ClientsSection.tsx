@@ -1,7 +1,8 @@
 import React, { useState, useContext } from "react";
 import { useHistory } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import { Button } from "@patternfly/react-core";
+import { Button, InputGroup, TextInput } from "@patternfly/react-core";
+import { SearchIcon } from "@patternfly/react-icons";
 
 import { DataLoader } from "../components/data-loader/DataLoader";
 import { TableToolbar } from "../components/table-toolbar/TableToolbar";
@@ -37,6 +38,16 @@ export const ClientsSection = () => {
             setFirst(f);
             setMax(m);
           }}
+          inputGroup={
+            <>
+              <InputGroup>
+                <TextInput type="text" aria-label="search for client criteria" />
+                <Button variant="control" aria-label="search for client">
+                  <SearchIcon />
+                </Button>
+              </InputGroup>
+            </>
+          }
           toolbarItem={
             <>
               <Button onClick={() => history.push("/add-client")}>

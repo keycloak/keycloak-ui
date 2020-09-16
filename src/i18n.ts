@@ -5,6 +5,7 @@ import { initReactI18next } from "react-i18next";
 import common from "./common-messages.json";
 import clients from "./clients/messages.json";
 import realm from "./realm/messages.json";
+import groups from './groups/messages.json';
 import help from "./help.json";
 
 const initOptions = {

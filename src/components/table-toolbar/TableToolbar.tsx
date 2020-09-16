@@ -20,6 +20,7 @@ type TableToolbarProps = {
   onPerPageSelect: (max: number, first: number) => void;
   toolbarItem?: React.ReactNode;
   children: React.ReactNode;
+  inputGroup?: React.ReactNode;
 };
 
 export const TableToolbar = ({
@@ -31,6 +32,7 @@ export const TableToolbar = ({
   onPerPageSelect,
   toolbarItem,
   children,
+  inputGroup
 }: TableToolbarProps) => {
   const page = first / max;
   const pagination = (variant: "top" | "bottom" = "top") => (
@@ -55,15 +57,8 @@ export const TableToolbar = ({
     <>
       <Toolbar>
         <ToolbarContent>
-          <ToolbarItem>
-            <InputGroup>
-              <TextInput type="text" aria-label="search for client criteria" />
-              <Button variant="control" aria-label="search for client">
-                <SearchIcon />
-              </Button>
-            </InputGroup>
-          </ToolbarItem>
-          {toolbarItem && <ToolbarItem>{toolbarItem}</ToolbarItem>}
+          { inputGroup && <ToolbarItem>{inputGroup}</ToolbarItem> }
+          { toolbarItem }
           <ToolbarItem variant="pagination">{pagination()}</ToolbarItem>
         </ToolbarContent>
       </Toolbar>

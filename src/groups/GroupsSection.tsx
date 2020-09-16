@@ -1,5 +1,11 @@
-import React, {useState} from "react";
+import React, { useContext, useState } from "react";
 import { useTranslation } from "react-i18next";
+import { useHistory } from "react-router-dom";
+import { HttpClientContext } from "../http-service/HttpClientContext";
+import { GroupsList } from "./GroupsList";
+import { DataLoader } from "../components/data-loader/DataLoader";
+import { GroupRepresentation } from "./models/groups";
+import { TableToolbar } from "../components/table-toolbar/TableToolbar";
 import {
   Button,
   ButtonVariant,
@@ -20,164 +26,52 @@ import {
   ToolbarItem,
   ToolbarContent
 } from '@patternfly/react-core';
-import {
-  Table,
-  TableHeader,
-  TableBody,
-  TableVariant
-} from '@patternfly/react-table';
 import { SearchIcon } from '@patternfly/react-icons';
 import { UsersIcon } from '@patternfly/react-icons';
 import './GroupsSection.css';
+import groupMock from "./__tests__/mock-groups.json";
 
 export const GroupsSection = () => {
 
-  // Data
-  const columnData = [
-    { title: 'Group name' },
-    { title: 'Members' },
-  ];
+  const loader = async () => {
+    return await httpClient
+    .doGet("/admin/realms/master/groups", { params: { first, max } })
+    .then((r) => r.data as GroupRepresentation[]);
+  };
 
-  const rowData = [
-    { cells: 
-      ['IT-1', 
-      <React.Fragment>
-        <div className="pf-icon-group-members">
-          <UsersIcon />
-          <span>732</span>
-        </div>
-      </React.Fragment>
-      ]
-    },
-    { cells: 
-      ['IT-2', '583'] 
-    },
-    { cells: 
-      ['IT-3', '762'] 
-    },
-    { cells: 
-      ['3scale-group', '762'] 
-    },
-    { cells: 
-      ['Fuse-group', '762'] 
-    },
-    { cells: 
-      ['Apicurio-group', '762'] 
-    }
-  ];
-
-  const actionData = [
-    {
-      title: 'Some action',
-      onClick: (event, rowId, rowData, extra) => console.log('clicked on Some action, on row: ', rowId)
-    },
-    {
-      title: 'Another action',
-      onClick: (event, rowId, rowData, extra) => console.log('clicked on Some action, on row: ', rowId)
-    }
-  ];
-
-  // States
-  const [columns, setColumns] = useState(columnData);
-  const [rows, setRows] = useState(rowData);
-  const [actions, setActions] = useState(actionData);
-  const [page, setPage] = useState(1);
-  const [perPage, setPerPage] = useState(20);
+  const { t } = useTranslation("groups");
+  const history = useHistory();
+  const httpClient = useContext(HttpClientContext)!;
+  const [max, setMax] = useState(10);
+  const [first, setFirst] = useState(0);
   const [isKebabOpen, setIsKebabOpen] = useState(false);
-  
-  const { t } = useTranslation();
+  const [data, setData] = useState(groupMock);
 
-  // FUNCTIONS
-
-  // Table row
-  function onSelect(event, isSelected, rowId) {
-    let localRow;
-    if (rowId === -1) {
-      localRow = rows.map(oneRow => {
-        oneRow.selected = isSelected;
-        return oneRow;
-      });
-    } else {
-      localRow = [...rows];
-      localRow[rowId].selected = isSelected;
-    }
-    setRows(rows);
-  }
-
-  // Pagination
-  const onSetPage = (_event, pageNumber) => {
-    setPage(pageNumber);
-  };
-
-  const onPerPageSelect = (_event, perPage) => {
-    setPerPage(perPage);
-  };
 
   // Filter
   const filterGroups = (newInput: string) => {
     var localRowData: object[] = [];
-    rowData.forEach(function(obj) {
-      var groupName = Object.values(obj)[0][0];
+    data.forEach(function(d: {}) {
+      console.log('WHAT IS D' + JSON.stringify(d)+ d["name"] );
+      var groupName = d["name"];
+      console.log('what is the groupname' + groupName);
       if (groupName.toLowerCase().includes(newInput.toLowerCase())) {
-        localRowData.push(obj);
+        localRowData.push(d);
+        console.log('what is the LOCAL row data' + JSON.stringify(localRowData));
       }
-    });
+    })
     console.log(localRowData);
-    setRows(localRowData);
+    setData(localRowData);
   }
 
   // Kebab delete action
-  const onKebabToggle = isOpen => {
+  const onKebabToggle = (isOpen: boolean) => {
     setIsKebabOpen(isOpen);
   };
 
-  // Components
-  const deleteKebabItems = (
-    <DropdownItem key="action" component="button">
-      Delete
-    </DropdownItem>
-  );
-
-  const toolbarItems = (
-    <React.Fragment>
-      <ToolbarItem>
-        <InputGroup>
-          <TextInput
-            name="textInput1"
-            id="textInput1"
-            type="search"
-            aria-label="search input example"
-            placeholder="Search groups"
-            onChange={filterGroups}
-          />
-          <Button variant={ButtonVariant.control} aria-label="search button for search input">
-            <SearchIcon />
-          </Button>
-        </InputGroup>
-      </ToolbarItem>
-      <ToolbarItem>
-        <Button variant="primary">Create group</Button>
-      </ToolbarItem>
-      <ToolbarItem>
-        <Dropdown
-          toggle={<KebabToggle onToggle={onKebabToggle} />}
-          isOpen={isKebabOpen}
-          isPlain
-          dropdownItems={deleteKebabItems}
-        />
-        </ToolbarItem>
-      <ToolbarItem variant="pagination">
-        <Pagination
-          itemCount={523}
-          perPage={perPage}
-          page={page}
-          onSetPage={onSetPage}
-          widgetId="pagination-options-menu-top"
-          onPerPageSelect={onPerPageSelect}
-        />
-      </ToolbarItem>
-    </React.Fragment>
-  );
+  const onKebabSelect = (event) => {
+    setIsKebabOpen(!isKebabOpen);
+  };
 
   return (
     <React.Fragment>
@@ -187,24 +81,61 @@ export const GroupsSection = () => {
         </Title>
       </PageSection>
       <Divider/>
-      <PageSection>
-        <Toolbar id="toolbar">
-          <ToolbarContent>
-            {toolbarItems}
-          </ToolbarContent>
-        </Toolbar>
-        <Table
-          actions={actions}
-          variant={TableVariant.compact}
-          onSelect={onSelect}
-          canSelectAll={false}
-          aria-label="Selectable Table"
-          cells={columns}
-          rows={rows}>
-          <TableHeader />
-          <TableBody />
-        </Table>
-      </PageSection>
+      <DataLoader loader={loader}>
+        {(groups) => (
+          <TableToolbar
+            count={groups!.length}
+            first={first}
+            max={max}
+            onNextClick={setFirst}
+            onPreviousClick={setFirst}
+            onPerPageSelect={(f,m) => {
+              setFirst(f);
+              setMax(m);
+            }}
+            toolbarItem={
+              <>
+              <ToolbarItem>
+                <Button variant="primary">{t("Create group")}</Button>
+              </ToolbarItem>
+              <ToolbarItem>
+                <Dropdown
+                  onSelect={onKebabSelect}
+                  toggle={<KebabToggle onToggle={onKebabToggle} />}
+                  isOpen={isKebabOpen}
+                  isPlain
+                  dropdownItems={[
+                    <DropdownItem key="action" component="button">
+                      {t("Delete")}
+                    </DropdownItem>
+                  ]}
+                />
+                </ToolbarItem>
+              {/* <Button onClick={() => history.push("/add-group")}>
+                {t("Create group")}
+              </Button> */}
+              </>
+            }
+            inputGroup={
+              <InputGroup>
+                <TextInput
+                  name="textInput1"
+                  id="textInput1"
+                  type="search"
+                  aria-label={t("Search for groups")}
+                  placeholder={t("Search groups")}
+                  onChange={filterGroups}
+                />
+                <Button variant={ButtonVariant.control} aria-label={t("Search")}>
+                  <SearchIcon />
+                </Button>
+              </InputGroup>
+            }
+          >
+            <GroupsList list={data} />
+          </TableToolbar>
+        )}
+      </DataLoader>
     </React.Fragment>
   );
 };
