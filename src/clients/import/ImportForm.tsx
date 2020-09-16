@@ -18,13 +18,12 @@ import { ClientDescription } from "../ClientDescription";
 import { HttpClientContext } from "../../http-service/HttpClientContext";
 import { JsonFileUpload } from "../../components/json-file-upload/JsonFileUpload";
 import { useAlerts } from "../../components/alert/Alerts";
-import { AlertPanel } from "../../components/alert/AlertPanel";
 
 export const ImportForm = () => {
   const { t } = useTranslation("clients");
   const httpClient = useContext(HttpClientContext)!;
 
-  const [add, alerts, hide] = useAlerts();
+  const [add, Alerts] = useAlerts();
   const defaultClient = {
     protocol: "",
     clientId: "",
@@ -50,20 +49,18 @@ export const ImportForm = () => {
   const save = async () => {
     try {
       await httpClient.doPost("/admin/realms/master/clients", client);
-      add(t("Client imported"), AlertVariant.success);
+      add(t("clientImportSuccess"), AlertVariant.success);
     } catch (error) {
-      add(`${t("Could not import client:")} '${error}'`, AlertVariant.danger);
+      add(`${t("clientImportError")} '${error}'`, AlertVariant.danger);
     }
   };
   return (
     <>
-      <AlertPanel alerts={alerts} onCloseAlert={hide} />
+      <Alerts />
       <PageSection variant="light">
         <TextContent>
-          <Text component="h1">{t("Import client")}</Text>
-          {t(
-            "Clients are applications and services that can request authentication of a user"
-          )}
+          <Text component="h1">{t("importClient")}</Text>
+          {t("clientsExplain")}
         </TextContent>
       </PageSection>
       <Divider />
@@ -74,7 +71,7 @@ export const ImportForm = () => {
             onChange={handleDescriptionChange}
             client={client}
           />
-          <FormGroup label={t("Type")} fieldId="kc-type">
+          <FormGroup label={t("type")} fieldId="kc-type">
             <TextInput
               type="text"
               id="kc-type"
@@ -85,9 +82,9 @@ export const ImportForm = () => {
           </FormGroup>
           <ActionGroup>
             <Button variant="primary" onClick={() => save()}>
-              {t("common:Save")}
+              {t("common:save")}
             </Button>
-            <Button variant="link">{t("common:Cancel")}</Button>
+            <Button variant="link">{t("common:cancel")}</Button>
           </ActionGroup>
         </Form>
       </PageSection>

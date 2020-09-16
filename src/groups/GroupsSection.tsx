@@ -46,23 +46,24 @@ export const GroupsSection = () => {
   const [first, setFirst] = useState(0);
   const [isKebabOpen, setIsKebabOpen] = useState(false);
   const [data, setData] = useState(groupMock);
+  // const [searchText, setSearchText] = useState('');
 
 
   // Filter
   const filterGroups = (newInput: string) => {
-    var localRowData: object[] = [];
-    data.forEach(function(d: {}) {
-      console.log('WHAT IS D' + JSON.stringify(d)+ d["name"] );
-      var groupName = d["name"];
-      console.log('what is the groupname' + groupName);
-      if (groupName.toLowerCase().includes(newInput.toLowerCase())) {
-        localRowData.push(d);
-        console.log('what is the LOCAL row data' + JSON.stringify(localRowData));
+      var localRowData: object[] = [];
+      data.forEach(function(d: {}) {
+        console.log('WHAT IS D' + JSON.stringify(d)+ d["name"] );
+        var groupName = d["name"];
+        console.log('what is the groupname' + groupName + typeof(groupName));
+        if (groupName.toLowerCase().includes(newInput.toLowerCase())) {
+          localRowData.push(d);
+          console.log('what is the LOCAL row data' + JSON.stringify(localRowData));
       }
     })
     console.log(localRowData);
     setData(localRowData);
-  }
+  };
 
   // Kebab delete action
   const onKebabToggle = (isOpen: boolean) => {
@@ -122,6 +123,7 @@ export const GroupsSection = () => {
                   name="textInput1"
                   id="textInput1"
                   type="search"
+                  // value={searchText}
                   aria-label={t("Search for groups")}
                   placeholder={t("Search groups")}
                   onChange={filterGroups}

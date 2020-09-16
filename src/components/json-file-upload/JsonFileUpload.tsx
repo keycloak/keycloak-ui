@@ -66,7 +66,7 @@ export const JsonFileUpload = ({
       {fileUpload.modal && (
         <Modal
           variant={ModalVariant.small}
-          title={t("Clear this file")}
+          title={t("clearFile")}
           isOpen
           onClose={removeDialog}
           actions={[
@@ -78,18 +78,18 @@ export const JsonFileUpload = ({
                 onChange("", "", event);
               }}
             >
-              {t("Clear")}
+              {t("clear")}
             </Button>,
             <Button key="cancel" variant="link" onClick={removeDialog}>
-              {t("Cancel")}
+              {t("cancel")}
             </Button>,
           ]}
         >
-          {t("confirmImportClear")}
+          {t("Are you sure you want to clear this file?")}
         </Modal>
       )}
       <FormGroup
-        label={t("Resource file")}
+        label={t("resourceFile")}
         fieldId={id}
         helperText="Upload a JSON file"
       >
