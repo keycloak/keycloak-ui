@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, {useState, useEffect} from "react";
 import {
   Table,
   TableHeader,
@@ -17,26 +17,32 @@ type GroupsListProps = {
 }
 
 export const GroupsList = ({ list }: GroupsListProps ) => {
+
+  console.log('what is the list coming in' + list);
+
   const { t } = useTranslation("group");
   const columnGroupName: (keyof GroupRepresentation) = "name";
   const columnGroupNumber: (keyof GroupRepresentation) = "groupNumber";
 
-  const data = list.map((c) => {
-    var groupName = c[columnGroupName];
-    var groupNumber = c[columnGroupNumber];
-    return { cells: [
-      <Button variant="link" isInline>
-        {groupName}
-      </Button>,
-        <div className="pf-icon-group-members">
-          <UsersIcon />
-          {groupNumber}
-        </div>
-    ]};
-  });
+  const [templateData, setTemplateData] = useState([{}])
 
-  // States
-  const [rows, setRows] = useState(data);
+  // const data = list.map((c) => {
+  //   var groupName = c[columnGroupName];
+  //   var groupNumber = c[columnGroupNumber];
+  //   return { cells: [
+  //     <Button variant="link" isInline>
+  //       {groupName}
+  //     </Button>,
+  //       <div className="pf-icon-group-members">
+  //         <UsersIcon />
+  //         {groupNumber}
+  //       </div>
+  //   ], selected: false};
+  // });
+
+  // useEffect(() => {
+  //   setTemplateData(data);
+  // }, []);
 
   const tableHeader = [
     { title: t("Group name") },
@@ -55,29 +61,34 @@ export const GroupsList = ({ list }: GroupsListProps ) => {
   ];
 
   // FUNCTIONS
-  function onSelect(event, isSelected, rowId) {
-    let localRow;
-    if (rowId === -1) {
-      localRow = rows.map(oneRow => {
-        oneRow.selected = isSelected;
-        return oneRow;
-      });
-    } else {
-      localRow = [...rows];
-      localRow[rowId].selected = isSelected;
-    }
-    setRows(rows);
-  }
+  // function onSelect(event, isSelected, rowId) {
+  //   let localRow;
+  //   if (rowId === -1) {
+  //     console.log('does rowdid = -1');
+  //     localRow = data.map(oneRow => {
+  //       oneRow.selected = isSelected;
+  //       return oneRow;
+  //     });
+  //   } else {
+  //     console.log('does rowdid not = -1');
+  //     localRow = [...data];
+  //     console.log('what is local row row id' + localRow[rowId].selected);
+  //     localRow[rowId].selected = isSelected;
+  //   }
+  //   console.log('what is LOCALROW after' + localRow[0].selected + localRow[1].selected + data[2].selected);
+  //   console.log('what is data after' + data[0].selected + data[1].selected + data[2].selected);
+  //   return data;
+  // }
 
   return (
     <Table
       actions={actions}
       variant={TableVariant.compact}
-      onSelect={onSelect}
+      //onSelect={onSelect}
       canSelectAll={false}
       aria-label="Selectable Table"
       cells={tableHeader}
-      rows={rows}>
+      rows={list}>
       <TableHeader />
       <TableBody />
     </Table>

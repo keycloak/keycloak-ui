@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { useHistory } from "react-router-dom";
 import { HttpClientContext } from "../http-service/HttpClientContext";
@@ -45,24 +45,60 @@ export const GroupsSection = () => {
   const [max, setMax] = useState(10);
   const [first, setFirst] = useState(0);
   const [isKebabOpen, setIsKebabOpen] = useState(false);
-  const [data, setData] = useState(groupMock);
+  // const [data, setData] = useState([{}]);
+  const [filteredData, setFilteredData] = useState([{}]);
   // const [searchText, setSearchText] = useState('');
+
+  const data = groupMock.map((c) => {
+    var groupName = c["name"];
+    var groupNumber = c["groupNumber"];
+    return { cells: [
+      <Button variant="link" isInline>
+        {groupName}
+      </Button>,
+        <div className="pf-icon-group-members">
+          <UsersIcon />
+          {groupNumber}
+        </div>
+    ], selected: false};
+  });
+
+  // useEffect(() => {
+  //   setData(
+  //     [{ cells: [ "hi", "hi"] }]
+  //   )
+
+  //   // groupMock.map((c) => {
+  //   //   var groupName = c["name"];
+  //   //   var groupNumber = c["groupNumber"];
+  //   //   return { cells: [
+  //   //     <Button variant="link" isInline>
+  //   //       {groupName}
+  //   //     </Button>,
+  //   //       <div className="pf-icon-group-members">
+  //   //         <UsersIcon />
+  //   //         {groupNumber}
+  //   //       </div>
+  //   //   ], selected: false};
+  //   // });
+
+  // }, [data]);
 
 
   // Filter
   const filterGroups = (newInput: string) => {
-      var localRowData: object[] = [];
+    var localRowData: object[] = [];
       data.forEach(function(d: {}) {
-        console.log('WHAT IS D' + JSON.stringify(d)+ d["name"] );
+        console.log('WHAT IS D' + JSON.stringify(Object.values(d)) );
         var groupName = d["name"];
         console.log('what is the groupname' + groupName + typeof(groupName));
         if (groupName.toLowerCase().includes(newInput.toLowerCase())) {
           localRowData.push(d);
-          console.log('what is the LOCAL row data' + JSON.stringify(localRowData));
+          console.log('what is the LOCAL row data' + localRowData);
       }
     })
-    console.log(localRowData);
-    setData(localRowData);
+    console.log('what is the local row data' + localRowData + 'AND DOES IT GET HERE');
+    setFilteredData(localRowData);
   };
 
   // Kebab delete action
@@ -74,6 +110,20 @@ export const GroupsSection = () => {
     setIsKebabOpen(!isKebabOpen);
   };
 
+  function handleDeleteGroup(rowId) {
+    console.log('The row to be deleted is' + rowId);
+  }
+
+
+
+  // const tryThis = [
+  //   let cellsArray = [];
+  //   groupMock.map((row) => {
+  //     cellsArray.push({ cells: [ row["groupName"], row["groupNumber"] ]})
+  //   })
+  //   return cellsArray;
+  // ];
+
   return (
     <React.Fragment>
       <PageSection variant={PageSectionVariants.light}>
@@ -82,10 +132,10 @@ export const GroupsSection = () => {
         </Title>
       </PageSection>
       <Divider/>
-      <DataLoader loader={loader}>
-        {(groups) => (
+      {/* <DataLoader loader={loader}>
+      {(groups) => ( */}
           <TableToolbar
-            count={groups!.length}
+            count={10}
             first={first}
             max={max}
             onNextClick={setFirst}
@@ -136,8 +186,8 @@ export const GroupsSection = () => {
           >
             <GroupsList list={data} />
           </TableToolbar>
-        )}
-      </DataLoader>
+      {/* )}
+      </DataLoader> */}
     </React.Fragment>
   );
 };
