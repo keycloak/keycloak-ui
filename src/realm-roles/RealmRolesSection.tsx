@@ -35,7 +35,7 @@ export const RealmRolesSection = () => {
   };
 
   useEffect(() => {
-    loader().then((result) => (setRoles(result) !== undefined ? result : []));
+    loader().then((result) => setRoles(result || []));
   }, []);
 
   return (
