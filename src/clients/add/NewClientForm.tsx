@@ -115,7 +115,6 @@ export const NewClientForm = () => {
             {
               name: t("capabilityConfig"),
               component: <Step2 form={methods} />,
-              nextButtonText: t("common:Save"),
             },
           ]}
           footer={<Footer />}
