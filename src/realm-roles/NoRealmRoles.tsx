@@ -22,7 +22,7 @@ export const NoRealmRolesPage = () => {
         <EmptyState variant={EmptyStateVariant.large}>
           <EmptyStateIcon icon={PlusCircleIcon} />
           <Title headingLevel="h4" size="lg">
-          {t("noRealmRoles")}
+            {t("noRealmRoles")}
           </Title>
           <EmptyStateBody>{t("emptyStateText")}</EmptyStateBody>
           <Button variant="primary" onClick={() => history.push("/add-role")}>
