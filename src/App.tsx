@@ -12,7 +12,7 @@ import { ClientsSection } from "./clients/ClientsSection";
 import { ClientScopesSection } from "./client-scopes/ClientScopesSection";
 import { RealmRolesSection } from "./realm-roles/RealmRolesSection";
 import { UsersSection } from "./user/UsersSection";
-import { GroupsSection } from "./groups/GroupsSection";
+import { GroupsSectionFormat } from "./groups/GroupsSectionFormat";
 import { SessionsSection } from "./sessions/SessionsSection";
 import { EventsSection } from "./events/EventsSection";
 import { RealmSettingsSection } from "./realm-settings/RealmSettingsSection";
@@ -46,7 +46,7 @@ export const App = () => {
                 component={RealmRolesSection}
               ></Route>
               <Route exact path="/users" component={UsersSection}></Route>
-              <Route exact path="/groups" component={GroupsSection}></Route>
+              <Route exact path="/groups" component={GroupsSectionFormat}></Route>
               <Route exact path="/sessions" component={SessionsSection}></Route>
               <Route exact path="/events" component={EventsSection}></Route>
 

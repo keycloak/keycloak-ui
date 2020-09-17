@@ -61,30 +61,30 @@ export const GroupsList = ({ list }: GroupsListProps ) => {
   ];
 
   // FUNCTIONS
-  // function onSelect(event, isSelected, rowId) {
-  //   let localRow;
-  //   if (rowId === -1) {
-  //     console.log('does rowdid = -1');
-  //     localRow = data.map(oneRow => {
-  //       oneRow.selected = isSelected;
-  //       return oneRow;
-  //     });
-  //   } else {
-  //     console.log('does rowdid not = -1');
-  //     localRow = [...data];
-  //     console.log('what is local row row id' + localRow[rowId].selected);
-  //     localRow[rowId].selected = isSelected;
-  //   }
-  //   console.log('what is LOCALROW after' + localRow[0].selected + localRow[1].selected + data[2].selected);
-  //   console.log('what is data after' + data[0].selected + data[1].selected + data[2].selected);
-  //   return data;
-  // }
+  function onSelect(event, isSelected, rowId) {
+    let localRow;
+    if (rowId === -1) {
+      console.log('does rowdid = -1');
+      localRow = data.map(oneRow => {
+        oneRow.selected = isSelected;
+        return oneRow;
+      });
+    } else {
+      console.log('does rowdid not = -1');
+      localRow = [...list];
+      console.log('what is local row row id' + localRow[rowId].selected);
+      localRow[rowId].selected = isSelected;
+    }
+    console.log('what is LOCALROW after' + localRow[0].selected + localRow[1].selected + localRow[2].selected);
+    console.log('what is data after' + list[0].selected + list[1].selected + list[2].selected);
+    return list;
+  }
 
   return (
     <Table
       actions={actions}
       variant={TableVariant.compact}
-      //onSelect={onSelect}
+      onSelect={onSelect}
       canSelectAll={false}
       aria-label="Selectable Table"
       cells={tableHeader}

@@ -26,12 +26,20 @@ import {
   ToolbarItem,
   ToolbarContent
 } from '@patternfly/react-core';
+import {
+  Table,
+  TableHeader,
+  TableBody,
+  TableVariant
+} from '@patternfly/react-table';
 import { SearchIcon } from '@patternfly/react-icons';
 import { UsersIcon } from '@patternfly/react-icons';
 import './GroupsSection.css';
 import groupMock from "./__tests__/mock-groups.json";
 
-export const GroupsSection = () => {
+export const GroupsSection = ({formattedData}) => {
+
+  console.log('what is formatted data' + formattedData);
 
   const loader = async () => {
     return await httpClient
@@ -45,23 +53,39 @@ export const GroupsSection = () => {
   const [max, setMax] = useState(10);
   const [first, setFirst] = useState(0);
   const [isKebabOpen, setIsKebabOpen] = useState(false);
-  // const [data, setData] = useState([{}]);
+  const [data, setData] = useState(formattedData);
   const [filteredData, setFilteredData] = useState([{}]);
   // const [searchText, setSearchText] = useState('');
 
-  const data = groupMock.map((c) => {
-    var groupName = c["name"];
-    var groupNumber = c["groupNumber"];
-    return { cells: [
-      <Button variant="link" isInline>
-        {groupName}
-      </Button>,
-        <div className="pf-icon-group-members">
-          <UsersIcon />
-          {groupNumber}
-        </div>
-    ], selected: false};
-  });
+  // const initialData = groupMock.map((c) => {
+  //   var groupName = c["name"];
+  //   var groupNumber = c["groupNumber"];
+  //   return { cells: [
+  //     <Button variant="link" isInline>
+  //       {groupName}
+  //     </Button>,
+  //       <div className="pf-icon-group-members">
+  //         <UsersIcon />
+  //         {groupNumber}
+  //       </div>
+  //   ], selected: false};
+  // });
+
+  const tableHeader = [
+    { title: t("Group name") },
+    { title: t("Members") },
+  ];
+
+  const actions = [
+    {
+      title: 'Some action',
+      onClick: (event, rowId, rowData, extra) => console.log('clicked on Some action, on row: ', rowId)
+    },
+    {
+      title: 'Another action',
+      onClick: (event, rowId, rowData, extra) => console.log('clicked on Some action, on row: ', rowId)
+    }
+  ];
 
   // useEffect(() => {
   //   setData(
@@ -87,19 +111,47 @@ export const GroupsSection = () => {
 
   // Filter
   const filterGroups = (newInput: string) => {
-    var localRowData: object[] = [];
-      data.forEach(function(d: {}) {
-        console.log('WHAT IS D' + JSON.stringify(Object.values(d)) );
-        var groupName = d["name"];
+    var localRowData: object[] = [{}];
+      data.forEach(function(obj: {}) {
+        console.log('WHAT IS D' + Object.values(obj)[0][0]);
+        var groupName = Object.values(obj)[0][0].innerText;
+        var groupName2 = groupName[0];
+        var groupName3 = groupName2[0].innerText;
         console.log('what is the groupname' + groupName + typeof(groupName));
         if (groupName.toLowerCase().includes(newInput.toLowerCase())) {
-          localRowData.push(d);
+          localRowData.push(obj);
           console.log('what is the LOCAL row data' + localRowData);
       }
     })
     console.log('what is the local row data' + localRowData + 'AND DOES IT GET HERE');
     setFilteredData(localRowData);
   };
+
+  function onSelect(event, isSelected, rowId) {
+    let localRow;
+    if (rowId === -1) {
+      localRow = data.map(oneRow => {
+        oneRow.selected = isSelected;
+        return oneRow;
+      });
+    } else {
+      localRow = [...data];
+      localRow[rowId].selected = isSelected;
+    }
+    setData(localRow);
+  }
+
+  function deleteRowData() {
+    let localData = data;
+    localData.map((row, index) => {
+      console.log('what is the row' + row.selected);
+      if(row.selected === true) {
+        delete localData[index];
+        // newRows.push(row);
+      }
+    })
+    setData(localData);
+  }
 
   // Kebab delete action
   const onKebabToggle = (isOpen: boolean) => {
@@ -156,7 +208,7 @@ export const GroupsSection = () => {
                   isOpen={isKebabOpen}
                   isPlain
                   dropdownItems={[
-                    <DropdownItem key="action" component="button">
+                    <DropdownItem key="action" component="button" onClick={deleteRowData}>
                       {t("Delete")}
                     </DropdownItem>
                   ]}
@@ -184,7 +236,18 @@ export const GroupsSection = () => {
               </InputGroup>
             }
           >
-            <GroupsList list={data} />
+            {/* <GroupsList list={data} /> */}
+            <Table
+              actions={actions}
+              variant={TableVariant.compact}
+              onSelect={onSelect}
+              canSelectAll={false}
+              aria-label="Selectable Table"
+              cells={tableHeader}
+              rows={data}>
+              <TableHeader />
+              <TableBody />
+            </Table>
           </TableToolbar>
       {/* )}
       </DataLoader> */}
