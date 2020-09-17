@@ -48,9 +48,7 @@ export const RealmRolesSection = () => {
           >
             <TextContent className="rolesDescription">
               <Text component="h1">Realm roles</Text>
-              <Text component="p">
-                {t("roleExplain")}
-              </Text>
+              <Text component="p">{t("roleExplain")}</Text>
             </TextContent>
           </PageSection>
           <Divider component="li" key={1} />
