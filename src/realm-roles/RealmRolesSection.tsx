@@ -42,17 +42,14 @@ export const RealmRolesSection = () => {
     <DataLoader loader={loader}>
       {(roles) => (
         <>
-          <PageSection
-            className="rolesHeader"
-            variant={PageSectionVariants.light}
-          >
-            <TextContent className="rolesDescription">
+          <PageSection variant="light">
+            <TextContent>
               <Text component="h1">Realm roles</Text>
               <Text component="p">{t("roleExplain")}</Text>
             </TextContent>
           </PageSection>
           <Divider component="li" key={1} />
-          <PageSection className="rolesTable">
+          <PageSection padding={{ default: "noPadding" }}>
             <TableToolbar
               count={roles!.length}
               first={first}
