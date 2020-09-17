@@ -17,19 +17,20 @@ import { TableToolbar } from "../components/table-toolbar/TableToolbar";
 import { HttpClientContext } from "../http-service/HttpClientContext";
 import { RoleRepresentation } from "../model/role-model";
 import { RolesList } from "./RoleList";
-import { NoRealmRolesPage } from "./NoRealmRoles";
+import { RealmContext } from "../components/realm-context/RealmContext";
 
 export const RealmRolesSection = () => {
-  const { t } = useTranslation();
+  const { t } = useTranslation("roles");
   const history = useHistory();
   const [max, setMax] = useState(10);
   const [, setRoles] = useState([] as RoleRepresentation[]);
   const [first, setFirst] = useState(0);
   const httpClient = useContext(HttpClientContext)!;
+  const { realm } = useContext(RealmContext);
 
   const loader = async () => {
     return await httpClient
-      .doGet("/admin/realms/master/roles")
+      .doGet(`/admin/realms/${realm}/roles`)
       .then((r) => r.data as RoleRepresentation[]);
   };
 
@@ -48,7 +49,7 @@ export const RealmRolesSection = () => {
             <TextContent className="rolesDescription">
               <Text component="h1">Realm roles</Text>
               <Text component="p">
-                Realm-level roles are a global namespace to define your roles.
+                {t("roleExplain")}
               </Text>
             </TextContent>
           </PageSection>
@@ -67,7 +68,7 @@ export const RealmRolesSection = () => {
               toolbarItem={
                 <>
                   <Button onClick={() => history.push("/add-role")}>
-                    {t("Create role")}
+                    {t("createRole")}
                   </Button>
                 </>
               }

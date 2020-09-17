@@ -52,14 +52,14 @@ export const RolesList = ({ roles }: RolesListProps) => {
       variant={TableVariant.compact}
       cells={[
         {
-          title: "Role name",
+          title: t("roleName"),
           cellFormatters: [externalLink(), emptyFormatter()],
         },
         {
-          title: "Composite",
+          title: t("composite"),
           cellFormatters: [boolFormatter(), emptyFormatter()],
         },
-        { title: "Description", cellFormatters: [emptyFormatter()] },
+        { title: t("description"), cellFormatters: [emptyFormatter()] },
       ]}
       rows={data}
       actions={[
