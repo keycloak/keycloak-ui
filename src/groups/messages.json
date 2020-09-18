@@ -1,6 +1,9 @@
 {
     "groups": {
-      "Create client": "Create client"
+      "Group name": "Group name",
+      "Members": "Members",
+      "Move to": "Move to",
+      "Delete": "Delete"
     }
   }
   

@@ -9,7 +9,6 @@ import { TableToolbar } from "../components/table-toolbar/TableToolbar";
 import {
   Button,
   ButtonVariant,
-  Flex,
   InputGroup,
   TextInput,
   Divider,
@@ -18,28 +17,15 @@ import {
   KebabToggle,
   PageSection,
   PageSectionVariants,
-  Pagination,
-  PaginationVariant,
   Title,
   TitleSizes,
-  Toolbar,
-  ToolbarItem,
-  ToolbarContent
+  ToolbarItem
 } from '@patternfly/react-core';
-import {
-  Table,
-  TableHeader,
-  TableBody,
-  TableVariant
-} from '@patternfly/react-table';
 import { SearchIcon } from '@patternfly/react-icons';
 import { UsersIcon } from '@patternfly/react-icons';
 import './GroupsSection.css';
-import groupMock from "./__tests__/mock-groups.json";
 
-export const GroupsSection = ({formattedData}) => {
-
-  console.log('what is formatted data' + formattedData);
+export const GroupsSection = ({data}) => {
 
   const loader = async () => {
     return await httpClient
@@ -47,83 +33,61 @@ export const GroupsSection = ({formattedData}) => {
     .then((r) => r.data as GroupRepresentation[]);
   };
 
+  const [filteredData, setFilteredData] = useState(data);
   const { t } = useTranslation("groups");
-  const history = useHistory();
   const httpClient = useContext(HttpClientContext)!;
   const [max, setMax] = useState(10);
   const [first, setFirst] = useState(0);
   const [isKebabOpen, setIsKebabOpen] = useState(false);
-  const [data, setData] = useState(formattedData);
-  const [filteredData, setFilteredData] = useState([{}]);
-  // const [searchText, setSearchText] = useState('');
+  const columnGroupName: (keyof GroupRepresentation) = "name";
+  const columnGroupNumber: (keyof GroupRepresentation) = "groupNumber";
 
-  // const initialData = groupMock.map((c) => {
-  //   var groupName = c["name"];
-  //   var groupNumber = c["groupNumber"];
-  //   return { cells: [
-  //     <Button variant="link" isInline>
-  //       {groupName}
-  //     </Button>,
-  //       <div className="pf-icon-group-members">
-  //         <UsersIcon />
-  //         {groupNumber}
-  //       </div>
-  //   ], selected: false};
-  // });
+  const initialFormattedData = data.map((c) => {
+      var groupName = c[columnGroupName];
+      var groupNumber = c[columnGroupNumber];
+      return { cells: [
+        <Button variant="link" isInline>
+          {groupName}
+        </Button>,
+          <div className="pf-icon-group-members">
+            <UsersIcon />
+            {groupNumber}
+          </div>
+      ], selected: false};
+  });
 
-  const tableHeader = [
-    { title: t("Group name") },
-    { title: t("Members") },
-  ];
+  const [formattedData, setFormattedData] = useState(initialFormattedData);
 
-  const actions = [
-    {
-      title: 'Some action',
-      onClick: (event, rowId, rowData, extra) => console.log('clicked on Some action, on row: ', rowId)
-    },
-    {
-      title: 'Another action',
-      onClick: (event, rowId, rowData, extra) => console.log('clicked on Some action, on row: ', rowId)
-    }
-  ];
+  const formatData = (data) => {
+    const format = data.map((c) => {
+      var groupName = c[columnGroupName];
+      var groupNumber = c[columnGroupNumber];
+      return { cells: [
+        <Button variant="link" isInline>
+          {groupName}
+        </Button>,
+          <div className="pf-icon-group-members">
+            <UsersIcon />
+            {groupNumber}
+          </div>
+      ]};
+    });
+    setFormattedData(format);
+  }
 
-  // useEffect(() => {
-  //   setData(
-  //     [{ cells: [ "hi", "hi"] }]
-  //   )
-
-  //   // groupMock.map((c) => {
-  //   //   var groupName = c["name"];
-  //   //   var groupNumber = c["groupNumber"];
-  //   //   return { cells: [
-  //   //     <Button variant="link" isInline>
-  //   //       {groupName}
-  //   //     </Button>,
-  //   //       <div className="pf-icon-group-members">
-  //   //         <UsersIcon />
-  //   //         {groupNumber}
-  //   //       </div>
-  //   //   ], selected: false};
-  //   // });
-
-  // }, [data]);
-
+  useEffect(() => {
+    formatData(filteredData);
+  }, [filteredData])
 
   // Filter
   const filterGroups = (newInput: string) => {
     var localRowData: object[] = [{}];
-      data.forEach(function(obj: {}) {
-        console.log('WHAT IS D' + Object.values(obj)[0][0]);
-        var groupName = Object.values(obj)[0][0].innerText;
-        var groupName2 = groupName[0];
-        var groupName3 = groupName2[0].innerText;
-        console.log('what is the groupname' + groupName + typeof(groupName));
+    filteredData.forEach(function(obj: {}) {
+        var groupName = Object.values(obj)[0];
         if (groupName.toLowerCase().includes(newInput.toLowerCase())) {
           localRowData.push(obj);
-          console.log('what is the LOCAL row data' + localRowData);
       }
     })
-    console.log('what is the local row data' + localRowData + 'AND DOES IT GET HERE');
     setFilteredData(localRowData);
   };
 
@@ -135,22 +99,27 @@ export const GroupsSection = ({formattedData}) => {
         return oneRow;
       });
     } else {
-      localRow = [...data];
+      localRow = [...formattedData];
       localRow[rowId].selected = isSelected;
     }
-    setData(localRow);
+    setFormattedData(localRow);
   }
 
+  // TO DO:
   function deleteRowData() {
-    let localData = data;
-    localData.map((row, index) => {
-      console.log('what is the row' + row.selected);
+    var localFilteredData = [...filteredData]
+    formattedData.map((row, index) => {
       if(row.selected === true) {
-        delete localData[index];
-        // newRows.push(row);
+        localFilteredData.splice(index, 1)
       }
     })
-    setData(localData);
+    setFilteredData(localFilteredData);
+  }
+
+  // TO DO: API to delete individual group row
+  function onDelete(rowId: number) {
+    console.log('DOES IT MAKE IT TO ONDELETE' + filteredData[rowId]);
+    delete filteredData[rowId]
   }
 
   // Kebab delete action
@@ -162,19 +131,6 @@ export const GroupsSection = ({formattedData}) => {
     setIsKebabOpen(!isKebabOpen);
   };
 
-  function handleDeleteGroup(rowId) {
-    console.log('The row to be deleted is' + rowId);
-  }
-
-
-
-  // const tryThis = [
-  //   let cellsArray = [];
-  //   groupMock.map((row) => {
-  //     cellsArray.push({ cells: [ row["groupName"], row["groupNumber"] ]})
-  //   })
-  //   return cellsArray;
-  // ];
 
   return (
     <React.Fragment>
@@ -225,7 +181,6 @@ export const GroupsSection = ({formattedData}) => {
                   name="textInput1"
                   id="textInput1"
                   type="search"
-                  // value={searchText}
                   aria-label={t("Search for groups")}
                   placeholder={t("Search groups")}
                   onChange={filterGroups}
@@ -236,18 +191,7 @@ export const GroupsSection = ({formattedData}) => {
               </InputGroup>
             }
           >
-            {/* <GroupsList list={data} /> */}
-            <Table
-              actions={actions}
-              variant={TableVariant.compact}
-              onSelect={onSelect}
-              canSelectAll={false}
-              aria-label="Selectable Table"
-              cells={tableHeader}
-              rows={data}>
-              <TableHeader />
-              <TableBody />
-            </Table>
+            <GroupsList list={formattedData} onSelect={onSelect} onDelete={onDelete} />
           </TableToolbar>
       {/* )}
       </DataLoader> */}
