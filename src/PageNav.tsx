@@ -66,7 +66,7 @@ export const PageNav: React.FunctionComponent = () => {
                   <RealmSelector realmList={realmList || []} />
                 </NavItem>
               </NavList>
-              <NavGroup title="Manage">
+              <NavGroup title={t("manage")}>
                 {makeNavItem("clients", "clients")}
                 {makeNavItem("clientScopes", "client-scopes")}
                 {makeNavItem("realmRoles", "realm-roles")}
@@ -76,7 +76,7 @@ export const PageNav: React.FunctionComponent = () => {
                 {makeNavItem("events", "events")}
               </NavGroup>
 
-              <NavGroup title="Configure">
+              <NavGroup title={t("configure")}>
                 {makeNavItem("realmSettings", "realm-settings")}
                 {makeNavItem("authentication", "authentication")}
                 {makeNavItem("identityProviders", "identity-providers")}
