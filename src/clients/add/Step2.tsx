@@ -9,7 +9,6 @@ import {
   Form,
 } from "@patternfly/react-core";
 import { UseFormMethods, Controller } from "react-hook-form";
-import { useTranslation } from "react-i18next";
 
 type Step2Props = {
   form: UseFormMethods;
@@ -41,7 +40,7 @@ export const Step2 = ({ form }: Step2Props) => {
           control={form.control}
           render={({ onChange, value }) => (
             <Switch
-          id="kc-authorization"
+              id="kc-authorization"
               name="authorizationServicesEnabled"
               label={t("common:on")}
               labelOff={t("common:off")}
@@ -89,8 +88,8 @@ export const Step2 = ({ form }: Step2Props) => {
               control={form.control}
               render={({ onChange, value }) => (
                 <Checkbox
-              label={t("implicitFlow")}
-              id="kc-flow-implicit"
+                  label={t("implicitFlow")}
+                  id="kc-flow-implicit"
                   name="implicitFlowEnabled"
                   isChecked={value}
                   onChange={onChange}
