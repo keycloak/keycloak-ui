@@ -34,7 +34,7 @@ export const RealmSelector = ({ realmList }: RealmSelectorProps) => {
     realmName.charAt(0).toUpperCase() + realmName.slice(1);
 
   const RealmText = ({ value }: { value: string }) => (
-    <Split>
+    <Split className="keycloak__realm_selector__list-item-split">
       <SplitItem isFilled>{toUpperCase(value)}</SplitItem>
       <SplitItem>{value === realm && <CheckIcon />}</SplitItem>
     </Split>
@@ -101,7 +101,7 @@ export const RealmSelector = ({ realmList }: RealmSelectorProps) => {
             </ContextSelectorItem>
           ))}
           <ContextSelectorItem key="add">
-            <AddRealm className="keycloak__realm_selector__create_realm_button" />
+            <AddRealm  />
           </ContextSelectorItem>
         </ContextSelector>
       )}
