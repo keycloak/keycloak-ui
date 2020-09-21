@@ -10,8 +10,8 @@ import { GroupRepresentation } from "./models/groups";
 
 type GroupsListProps = {
   list: GroupRepresentation[];
-  onSelect: (event: () => void, isSelect: boolean, rowId: number ) => void;
-  onDelete: () => void;
+  onSelect: (event: React.MouseEvent<HTMLElement>, isSelect: boolean, rowId: number ) => void;
+  onDelete: (event: React.MouseEvent<HTMLElement>, rowId: number) => void;
 }
 
 export const GroupsList = ({ list, onSelect, onDelete }: GroupsListProps ) => {
@@ -27,7 +27,7 @@ export const GroupsList = ({ list, onSelect, onDelete }: GroupsListProps ) => {
     },
     {
       title: t("Delete"),
-      onClick: (rowId: number) => onDelete(rowId)
+      onClick: onDelete
     }
   ];
 

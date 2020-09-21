@@ -1,6 +1,11 @@
 {
     "groups": {
+      "Groups": "Groups",
+      "Create group": "Create group",
       "Group name": "Group name",
+      "Search for groups": "Search for groups",
+      "Search groups": "Search groups",
+      "Search": "Search",
       "Members": "Members",
       "Move to": "Move to",
       "Delete": "Delete"

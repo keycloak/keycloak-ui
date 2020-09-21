@@ -1,6 +1,5 @@
 import React, { useContext, useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
-import { useHistory } from "react-router-dom";
 import { HttpClientContext } from "../http-service/HttpClientContext";
 import { GroupsList } from "./GroupsList";
 import { DataLoader } from "../components/data-loader/DataLoader";
@@ -25,15 +24,21 @@ import { SearchIcon } from '@patternfly/react-icons';
 import { UsersIcon } from '@patternfly/react-icons';
 import './GroupsSection.css';
 
-export const GroupsSection = ({data}) => {
+type GroupsSectionProps = {
+  data: []
+}
 
+export const GroupsSection = ({data}: GroupsSectionProps) => {
+
+  // TO DO: Use loader
   const loader = async () => {
     return await httpClient
     .doGet("/admin/realms/master/groups", { params: { first, max } })
     .then((r) => r.data as GroupRepresentation[]);
   };
 
-  const [filteredData, setFilteredData] = useState(data);
+  const [rawData, setRawData] = useState(data);
+  const [filteredData, setFilteredData] = useState(rawData);
   const { t } = useTranslation("groups");
   const httpClient = useContext(HttpClientContext)!;
   const [max, setMax] = useState(10);
@@ -42,9 +47,10 @@ export const GroupsSection = ({data}) => {
   const columnGroupName: (keyof GroupRepresentation) = "name";
   const columnGroupNumber: (keyof GroupRepresentation) = "groupNumber";
 
-  const initialFormattedData = data.map((c) => {
-      var groupName = c[columnGroupName];
-      var groupNumber = c[columnGroupNumber];
+  // On first load pass through formatted data into the list
+  const initialFormattedData = rawData.map((column: {}) => {
+      var groupName = column[columnGroupName];
+      var groupNumber = column[columnGroupNumber];
       return { cells: [
         <Button variant="link" isInline>
           {groupName}
@@ -58,10 +64,11 @@ export const GroupsSection = ({data}) => {
 
   const [formattedData, setFormattedData] = useState(initialFormattedData);
 
-  const formatData = (data) => {
-    const format = data.map((c) => {
-      var groupName = c[columnGroupName];
-      var groupNumber = c[columnGroupNumber];
+  // Format function
+  const formatData = (dataToFormat:[]) => {
+    const format = dataToFormat.map((column) => {
+      var groupName = column[columnGroupName];
+      var groupNumber = column[columnGroupNumber];
       return { cells: [
         <Button variant="link" isInline>
           {groupName}
@@ -75,14 +82,20 @@ export const GroupsSection = ({data}) => {
     setFormattedData(format);
   }
 
+  // Call format function when raw data or filtered data changes
+  useEffect(() => {
+    formatData(rawData);
+  }, [rawData])
+
   useEffect(() => {
     formatData(filteredData);
   }, [filteredData])
 
-  // Filter
+
+  // Filter groups
   const filterGroups = (newInput: string) => {
-    var localRowData: object[] = [{}];
-    filteredData.forEach(function(obj: {}) {
+    var localRowData: object[] = [];
+    rawData.forEach(function(obj: {}) {
         var groupName = Object.values(obj)[0];
         if (groupName.toLowerCase().includes(newInput.toLowerCase())) {
           localRowData.push(obj);
@@ -91,7 +104,7 @@ export const GroupsSection = ({data}) => {
     setFilteredData(localRowData);
   };
 
-  function onSelect(event, isSelected, rowId) {
+  function onSelect(_, isSelected: boolean, rowId: number) {
     let localRow;
     if (rowId === -1) {
       localRow = data.map(oneRow => {
@@ -105,21 +118,30 @@ export const GroupsSection = ({data}) => {
     setFormattedData(localRow);
   }
 
-  // TO DO:
+  // Delete multiple rows using the delete button in the toolbar
   function deleteRowData() {
-    var localFilteredData = [...filteredData]
-    formattedData.map((row, index) => {
+    var localFilteredData = [...rawData];
+    var selectedIndexArray: [] = [];
+    formattedData.map((row: {}, index: number) => {
       if(row.selected === true) {
-        localFilteredData.splice(index, 1)
+        selectedIndexArray.push(index);
       }
     })
-    setFilteredData(localFilteredData);
+    if(selectedIndexArray.length > 0) {
+      var count = 0;
+      selectedIndexArray.map((rowIndex) => {
+        localFilteredData.splice((rowIndex - count), 1);
+        count++;
+      })
+    }
+    setRawData(localFilteredData);
   }
 
-  // TO DO: API to delete individual group row
-  function onDelete(rowId: number) {
-    console.log('DOES IT MAKE IT TO ONDELETE' + filteredData[rowId]);
-    delete filteredData[rowId]
+  // Delete individual rows using the action in the table
+  function onDelete(_, rowId: number) {
+    var localFilteredData = [...rawData];
+    localFilteredData.splice(rowId, 1);
+    setRawData(localFilteredData);
   }
 
   // Kebab delete action
@@ -170,9 +192,6 @@ export const GroupsSection = ({data}) => {
                   ]}
                 />
                 </ToolbarItem>
-              {/* <Button onClick={() => history.push("/add-group")}>
-                {t("Create group")}
-              </Button> */}
               </>
             }
             inputGroup={
