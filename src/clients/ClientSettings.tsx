@@ -68,7 +68,7 @@ export const ClientSettings = ({ client: clientInit }: ClientSettingsProps) => {
             onChange={onChange}
           />
         </FormGroup>
-        <FormGroup label={t("homeUrl")} fieldId="kc-home-url">
+        <FormGroup label={t("homeURL")} fieldId="kc-home-url">
           <TextInput
             type="text"
             id="kc-home-url"

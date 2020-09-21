@@ -127,7 +127,7 @@ export const ClientList = ({ baseUrl, clients }: ClientListProps) => {
                 httpClient.doDelete(
                   `/admin/realms/${realm}/clients/${data[rowId].client.id}`
                 );
-                add(t("clientDeletedSucess"), AlertVariant.success);
+                add(t("clientDeletedSuccess"), AlertVariant.success);
               } catch (error) {
                 add(`${t("clientDeleteError")} ${error}`, AlertVariant.danger);
               }
