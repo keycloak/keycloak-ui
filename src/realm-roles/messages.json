@@ -13,7 +13,7 @@
     "generalSettings": "General Settings",
     "capabilityConfig": "Capability config",
     "roleImportError": "Could not import role",
-    "roleImportSuccess": "Role imported succeful",
+    "roleImportSuccess": "Role import successful",
     "roleDeletedSucess": "The role has been deleted",
     "roleDeleteError": "Could not delete role:",
     "roleAuthentication": "Role authentication"
