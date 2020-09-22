@@ -21,17 +21,24 @@ import { IdentityProvidersSection } from "./identity-providers/IdentityProviders
 import { UserFederationSection } from "./user-federation/UserFederationSection";
 
 import { PageNotFoundSection } from "./PageNotFoundSection";
+import { RealmContextProvider } from "./components/realm-context/RealmContext";
+import { ClientSettings } from "./clients/ClientSettings";
 
 export const App = () => {
   return (
     <Router>
-      <Help>
-        <Page header={<Header />} isManagedSidebar sidebar={<PageNav />}>
-          <PageSection variant="light">
+      <RealmContextProvider>
+        <Help>
+          <Page header={<Header />} isManagedSidebar sidebar={<PageNav />}>
             <Switch>
               <Route exact path="/add-realm" component={NewRealmForm}></Route>
 
               <Route exact path="/clients" component={ClientsSection}></Route>
+              <Route
+                exact
+                path="/client-settings"
+                component={ClientSettings}
+              ></Route>
               <Route exact path="/add-client" component={NewClientForm}></Route>
               <Route exact path="/import-client" component={ImportForm}></Route>
 
@@ -74,9 +81,9 @@ export const App = () => {
               <Route exact path="/" component={ClientsSection} />
               <Route component={PageNotFoundSection} />
             </Switch>
-          </PageSection>
-        </Page>
-      </Help>
+          </Page>
+        </Help>
+      </RealmContextProvider>
     </Router>
   );
 };

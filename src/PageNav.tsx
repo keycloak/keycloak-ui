@@ -1,5 +1,6 @@
 import React, { useState, useContext } from "react";
 import { useHistory } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import {
   Nav,
   NavItem,
@@ -13,6 +14,7 @@ import { HttpClientContext } from "./http-service/HttpClientContext";
 import { RealmRepresentation } from "./realm/models/Realm";
 
 export const PageNav: React.FunctionComponent = () => {
+  const { t } = useTranslation("common");
   const httpClient = useContext(HttpClientContext)!;
   const realmLoader = async () => {
     const response = await httpClient.doGet<RealmRepresentation[]>(
@@ -48,42 +50,42 @@ export const PageNav: React.FunctionComponent = () => {
         to={"/" + path}
         isActive={activeItem === "/" + path}
       >
-        {title}
+        {t(title)}
       </NavItem>
     );
   };
 
   return (
-    <PageSidebar
-      nav={
-        <Nav onSelect={onSelect}>
-          <NavList>
-            <NavItem className="keycloak__page_nav__nav_item__realm-selector">
-              <DataLoader loader={realmLoader}>
-                {(realmList) => (
-                  <RealmSelector realm="Master" realmList={realmList || []} />
-                )}
-              </DataLoader>
-            </NavItem>
-          </NavList>
-          <NavGroup title="Manage">
-            {makeNavItem("Clients", "clients")}
-            {makeNavItem("Client Scopes", "client-scopes")}
-            {makeNavItem("Realm Roles", "realm-roles")}
-            {makeNavItem("Users", "users")}
-            {makeNavItem("Groups", "groups")}
-            {makeNavItem("Sessions", "sessions")}
-            {makeNavItem("Events", "events")}
-          </NavGroup>
+    <DataLoader loader={realmLoader}>
+      {(realmList) => (
+        <PageSidebar
+          nav={
+            <Nav onSelect={onSelect}>
+              <NavList>
+                <NavItem className="keycloak__page_nav__nav_item__realm-selector">
+                  <RealmSelector realmList={realmList || []} />
+                </NavItem>
+              </NavList>
+              <NavGroup title={t("manage")}>
+                {makeNavItem("clients", "clients")}
+                {makeNavItem("clientScopes", "client-scopes")}
+                {makeNavItem("realmRoles", "realm-roles")}
+                {makeNavItem("users", "users")}
+                {makeNavItem("groups", "groups")}
+                {makeNavItem("sessions", "sessions")}
+                {makeNavItem("events", "events")}
+              </NavGroup>
 
-          <NavGroup title="Configure">
-            {makeNavItem("Realm settings", "realm-settings")}
-            {makeNavItem("Authentication", "authentication")}
-            {makeNavItem("Identity providers", "identity-providers")}
-            {makeNavItem("User federation", "user-federation")}
-          </NavGroup>
-        </Nav>
-      }
-    />
+              <NavGroup title={t("configure")}>
+                {makeNavItem("realmSettings", "realm-settings")}
+                {makeNavItem("authentication", "authentication")}
+                {makeNavItem("identityProviders", "identity-providers")}
+                {makeNavItem("userFederation", "user-federation")}
+              </NavGroup>
+            </Nav>
+          }
+        />
+      )}
+    </DataLoader>
   );
 };

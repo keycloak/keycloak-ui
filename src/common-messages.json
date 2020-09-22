@@ -6,15 +6,36 @@
     "save": "Save",
     "cancel": "Cancel",
     "delete": "Delete",
+    "next": "Next",
+    "back": "Back",
     "export": "Export",
     "resourceFile": "Resource file",
     "clearFile": "Clear this file",
+    "on": "On",
+    "off":"Off",
 
     "signOut": "Sign out",
     "manageAccount": "Manage account",
     "serverInfo": "Server info",
     "help": "Help",
     "documentation": "Documentation",
-    "enableHelpMode": "Enable help mode"
+    "enableHelpMode": "Enable help mode",
+
+    "manage": "Manage",
+    "clients": "Clients",
+    "clientScopes": "Client scopes",
+    "realmRoles": "Realm roles",
+    "users": "Users",
+    "groups": "Groups",
+    "sessions": "Sessions",
+    "events": "Events",
+
+    "configure": "Configure",
+    "realmSettings": "Realm settings",
+    "authentication": "Authentication",
+    "identityProviders": "Identity providers",
+    "userFederation": "User federation",
+
+    "required": "Required field"
   }
 }
