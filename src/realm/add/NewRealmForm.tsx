@@ -19,7 +19,7 @@ import { useForm, Controller } from "react-hook-form";
 import { ViewHeader } from "../../components/view-header/ViewHeader";
 
 export const NewRealmForm = () => {
-  const { t } = useTranslation("realm");
+  const { t } = useTranslation("roles");
   const httpClient = useContext(HttpClientContext)!;
   const { addAlert } = useAlerts();
 
@@ -54,7 +54,7 @@ export const NewRealmForm = () => {
       <PageSection variant="light">
         <Form isHorizontal onSubmit={handleSubmit(save)}>
           <JsonFileUpload id="kc-realm-filename" onChange={handleFileChange} />
-          <FormGroup label={t("realmName")} isRequired fieldId="kc-realm-name">
+          <FormGroup label={t("roleName")} isRequired fieldId="kc-realm-name">
             <TextInput
               isRequired
               type="text"
