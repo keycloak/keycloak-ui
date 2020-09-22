@@ -16,7 +16,7 @@ import { useForm } from "react-hook-form";
 import { ScrollForm } from "../components/scroll-form/ScrollForm";
 import { ClientDescription } from "./ClientDescription";
 import { ClientRepresentation } from "./models/client-model";
-import { Step2 } from "./add/Step2";
+import { CapabilityConfig } from "./add/CapabilityConfig";
 
 type ClientSettingsProps = {
   client: ClientRepresentation;
@@ -49,7 +49,7 @@ export const ClientSettings = ({ client: clientInit }: ClientSettingsProps) => {
         ]}
       >
         <Form isHorizontal>
-          <Step2 form={form} />
+          <CapabilityConfig form={form} />
         </Form>
         <Form isHorizontal>
           <ClientDescription register={form.register} />

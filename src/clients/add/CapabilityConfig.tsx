@@ -10,11 +10,11 @@ import {
 } from "@patternfly/react-core";
 import { UseFormMethods, Controller } from "react-hook-form";
 
-type Step2Props = {
+type CapabilityConfigProps = {
   form: UseFormMethods;
 };
 
-export const Step2 = ({ form }: Step2Props) => {
+export const CapabilityConfig = ({ form }: CapabilityConfigProps) => {
   const { t } = useTranslation("clients");
   return (
     <Form isHorizontal>
