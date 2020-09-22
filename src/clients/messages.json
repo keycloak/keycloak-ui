@@ -25,6 +25,12 @@
     "serviceAccount": "Service account",
     "enableServiceAccount": "Enable service account",
     "displayOnClient": "Display client on screen",
-    "consentScreenText": "Client consent screen text"
+    "consentScreenText": "Client consent screen text",
+    "loginSettings": "Login settings",
+    "accessSettings": "Access settings",
+    "rootUrl": "Root URL",
+    "validRedirectUri": "Valid redirect URIs",
+    "loginTheme": "Login theme",
+    "consentRequired": "Consent required"
   }
 }
