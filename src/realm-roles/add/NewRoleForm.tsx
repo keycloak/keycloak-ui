@@ -44,7 +44,7 @@ export const NewRoleForm = () => {
 
   const save = async (role: RoleRepresentation) => {
     try {
-      await httpClient.doPost(`/admin/realms/${realm}/roles`, role);
+      await httpClient.doPost(`/auth/admin/realms/${realm}/roles`, role);
       add(t("Role created"), AlertVariant.success);
     } catch (error) {
       add(`${t("Could not create role:")} '${error}'`, AlertVariant.danger);
