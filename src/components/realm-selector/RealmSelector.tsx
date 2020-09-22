@@ -101,7 +101,7 @@ export const RealmSelector = ({ realmList }: RealmSelectorProps) => {
             </ContextSelectorItem>
           ))}
           <ContextSelectorItem key="add">
-            <AddRealm  />
+            <AddRealm />
           </ContextSelectorItem>
         </ContextSelector>
       )}
