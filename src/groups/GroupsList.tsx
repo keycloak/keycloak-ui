@@ -7,18 +7,6 @@ import {
 } from '@patternfly/react-table';
 import {
   Button,
-  ButtonVariant,
-  InputGroup,
-  TextInput,
-  Divider,
-  Dropdown,
-  DropdownItem,
-  KebabToggle,
-  PageSection,
-  PageSectionVariants,
-  Title,
-  TitleSizes,
-  ToolbarItem
 } from '@patternfly/react-core';
 import { useTranslation } from "react-i18next";
 import { GroupRepresentation } from "./models/groups";
@@ -26,20 +14,20 @@ import { UsersIcon } from '@patternfly/react-icons';
 import { HttpClientContext } from "../http-service/HttpClientContext";
 
 type GroupsListProps = {
-  list: GroupRepresentation[];
-  onSelect: (event: React.MouseEvent<HTMLElement>, isSelect: boolean, rowId: number ) => void;
-  onDelete: (event: React.MouseEvent<HTMLElement>, rowId: number) => void;
+  list?: GroupRepresentation[];
 }
 
 export const GroupsList = ({ list }: GroupsListProps ) => {
 
-  console.log('WHAT IS THE LIST COMING In' + JSON.stringify(list));
+  const { t } = useTranslation("group");
+  const httpClient = useContext(HttpClientContext)!;
+  const columnGroupName: (keyof GroupRepresentation) = "name";
+  const columnGroupNumber: (keyof GroupRepresentation) = "membersLength";
+  const [ formattedData, setFormattedData ] = useState();
 
-  const [ formattedData, setFormattedData ] = useState(formatData);
-
-  var formatData = (data) => data.map((column: {}) => {
-    var groupName = column["name"];
-    var groupNumber = column["membersLength"];
+  var formatData = (data: GroupRepresentation[]) => data.map((group: {}) => {
+    var groupName = group[columnGroupName];
+    var groupNumber = group[columnGroupNumber];
     return { cells: [
       <Button variant="link" isInline>
         {groupName}
@@ -56,12 +44,30 @@ export const GroupsList = ({ list }: GroupsListProps ) => {
   }, [list])
 
 
+  function onSelect(event: React.FormEvent<HTMLInputElement>, isSelected: boolean, rowId: number) {
+    let localRow;
+    if (rowId === -1) {
+      localRow = formattedData.map((row: {}) => {
+        row.selected = isSelected;
+        return row;
+      });
+    } else {
+      localRow = [...formattedData];
+      localRow[rowId].selected = isSelected;
+      setFormattedData(localRow);
+    }
+  }
 
-  const { t } = useTranslation("group");
-  const httpClient = useContext(HttpClientContext)!;
+  // Delete individual rows using the action in the table
+  function onDelete(event: React.MouseEvent, rowIndex: number, rowData: any, extraData: any) {
+    var localFilteredData = [...list];
+    httpClient.doDelete(
+      `/admin/realms/master/groups/${localFilteredData[rowIndex].id}`
+    );
+    // TO DO update the state 
+  }
 
   const tableHeader = [ { title: t("Group name") }, { title: t("Members") }];
-  
   const actions = [
     {
       title: t("Move to"),
@@ -69,53 +75,25 @@ export const GroupsList = ({ list }: GroupsListProps ) => {
     },
     {
       title: t("Delete"),
-      onClick: onDelete
+      onClick: (event: React.MouseEvent, rowIndex: number, rowData: any, extraData: any) => onDelete
     }
   ];
 
-  function onSelect(_, isSelected: boolean, rowId: number) {
-    let localRow;
-    if (rowId === -1) {
-      localRow = formattedData.map(oneRow => {
-        oneRow.selected = isSelected;
-        return oneRow;
-      });
-    } else {
-      localRow = [...formattedData];
-      console.log('what is local row selectd' + localRow[rowId].selected);
-      localRow[rowId].selected = isSelected;
-      setFormattedData(localRow);
-    }
-  }
-
-  // Delete individual rows using the action in the table
-  function onDelete(_, rowId: number) {
-    var localFilteredData = [...list];
-    // localFilteredData.splice(rowId, 1);
-    // setRawData(localFilteredData);
-    console.log('what is the OBJ' + JSON.stringify(localFilteredData[rowId]));
-    console.log('what is the OBJ ID' + JSON.stringify(localFilteredData[rowId].id));
-    httpClient.doDelete(
-      `/admin/realms/master/groups/${localFilteredData[rowId].id}`
-    );
-    // TO DO update the state 
-  }
-
   return (
     <React.Fragment>
-    { formattedData && 
-      <Table
-        actions={actions}
-        variant={TableVariant.compact}
-        onSelect={onSelect}
-        canSelectAll={false}
-        aria-label="Selectable Table"
-        cells={tableHeader}
-        rows={formattedData}>
-        <TableHeader />
-        <TableBody />
-      </Table>
-    }
+      { formattedData && 
+        <Table
+          actions={actions}
+          variant={TableVariant.compact}
+          onSelect={onSelect}
+          canSelectAll={false}
+          aria-label="Selectable Table"
+          cells={tableHeader}
+          rows={formattedData}>
+          <TableHeader />
+          <TableBody />
+        </Table>
+      }
     </React.Fragment>
   );
 };

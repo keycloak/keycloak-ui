@@ -8,4 +8,6 @@ export interface GroupRepresentation {
     subGroups?: GroupRepresentation[];
     access?: { [index: string]: boolean };
     groupNumber?: number;
+    membersLength?: number;
+    list?: []
 }

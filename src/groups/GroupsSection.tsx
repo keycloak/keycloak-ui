@@ -1,10 +1,9 @@
 import React, { useContext, useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
-import { useHistory } from "react-router-dom";
 import { HttpClientContext } from "../http-service/HttpClientContext";
 import { GroupsList } from "./GroupsList";
-import { DataLoader } from "../components/data-loader/DataLoader";
 import { GroupRepresentation } from "./models/groups";
+import { ServerInfoRepresentation } from "./models/server-info";
 import { TableToolbar } from "../components/table-toolbar/TableToolbar";
 import {
   Button,
@@ -22,39 +21,37 @@ import {
   ToolbarItem
 } from '@patternfly/react-core';
 import { SearchIcon } from '@patternfly/react-icons';
-import { UsersIcon } from '@patternfly/react-icons';
 import './GroupsSection.css';
 
-type GroupsSectionProps = {
-  data: []
-}
+export const GroupsSection = () => {
 
-export const GroupsSection = ({data}: GroupsSectionProps) => {
-
-  const [rawData, setRawData] = useState();
+  const { t } = useTranslation("groups");
   const httpClient = useContext(HttpClientContext)!;
-  const [formattedData, setFormattedData] = useState(); // remove
+  const [rawData, setRawData] = useState();
   const [filteredData, setFilteredData] = useState();
+  const [max, setMax] = useState(10);
+  const [first, setFirst] = useState(0);
+  const [isKebabOpen, setIsKebabOpen] = useState(false);
+  const columnID: (keyof GroupRepresentation) = "id";
+  const membersLength: (keyof GroupRepresentation) = "membersLength";
+  const columnGroupName: (keyof GroupRepresentation) = "name";
 
   const loader = async () => {
-    const groups = await httpClient.doGet("/admin/realms/master/groups", { params: { first, max } });
-    const groupsData: [] = await groups.data;
+    const groups: unknown = await httpClient.doGet("/admin/realms/master/groups", { params: { first, max } });
+    const groupsData: unknown = await groups.data;
 
-    const getMembers = async (id) => {
+    const getMembers = async (id: number) => {
       const response = await httpClient.doGet(`/admin/realms/master/groups/${id}/members`);
-      return response.data.length;
+      const responseData: any = response.data
+      return responseData.length;
     }
-
-    const memberPromises = groupsData.map(group => getMembers(group["id"]));
+    const memberPromises = groupsData.map((group: {}) => getMembers(group[columnID]));
     const memberData = await Promise.all(memberPromises);
-
-    const updatedObject = groupsData.map((group, i) => {
+    const updatedObject = groupsData.map((group: {}, i: number) => {
       const object = Object.assign({}, group);
-      object.membersLength = memberData[i];
+      object[membersLength] = memberData[i];
       return object;
     })
-
-    // setRawData(updatedObject);
     return updatedObject;
   };
 
@@ -66,125 +63,25 @@ export const GroupsSection = ({data}: GroupsSectionProps) => {
     })
   }, [])
 
-  // const [rawData, setRawData] = useState(loader);
-
-  const { t } = useTranslation("groups");
-
-  const [max, setMax] = useState(10);
-  const [first, setFirst] = useState(0);
-  const [isKebabOpen, setIsKebabOpen] = useState(false);
-  const columnGroupName: (keyof GroupRepresentation) = "name";
-  const columnGroupNumber: (keyof GroupRepresentation) = "groupNumber";
-
-  console.log('what is rawData' + rawData);
-
-  // On first load pass through formatted data into the list
-  // const initialFormattedData = rawData.map((column: {}) => {
-  //     var groupName = column[columnGroupName];
-  //     var groupNumber = column[columnGroupNumber];
-  //     return { cells: [
-  //       <Button variant="link" isInline>
-  //         {groupName}
-  //       </Button>,
-  //         <div className="pf-icon-group-members">
-  //           <UsersIcon />
-  //           {groupNumber}
-  //         </div>
-  //     ], selected: false};
-  // });
-
-  // const [formattedData, setFormattedData] = useState(initialFormattedData);
-
-  // Format function
-  // const formatData = (dataToFormat:[]) => {
-  //   const format = dataToFormat.map((column) => {
-  //     var groupName = column[columnGroupName];
-  //     var groupNumber = column[columnGroupNumber];
-  //     return { cells: [
-  //       <Button variant="link" isInline>
-  //         {groupName}
-  //       </Button>,
-  //         <div className="pf-icon-group-members">
-  //           <UsersIcon />
-  //           {groupNumber}
-  //         </div>
-  //     ]};
-  //   });
-  //   setFormattedData(format);
-  // }
-
-  // Call format function when raw data or filtered data changes
-  // useEffect(() => {
-  //   formatData(rawData);
-  // }, [rawData])
-
-  // useEffect(() => {
-  //   formatData(filteredData);
-  // }, [filteredData])
-
 
   // Filter groups
   const filterGroups = (newInput: string) => {
     var localRowData: object[] = [];
     rawData.forEach(function(obj: {}) {
-        // var groupName = Object.values(obj)[0];
-        var groupName = obj["name"];
-        console.log('what is groupname' + groupName);
-        if (groupName.toLowerCase().includes(newInput.toLowerCase())) {
-          localRowData.push(obj);
-          console.log('what is local row data' + localRowData);
+      var groupName = obj[columnGroupName];
+      if (groupName.toLowerCase().includes(newInput.toLowerCase())) {
+        localRowData.push(obj);
       }
     })
     setFilteredData(localRowData);
-    console.log('WHAT IS FILTERED DATA AFTER' + JSON.stringify(filteredData));
   };
-
-  // function onSelect(_, isSelected: boolean, rowId: number) {
-  //   let localRow;
-  //   if (rowId === -1) {
-  //     localRow = data.map(oneRow => {
-  //       oneRow.selected = isSelected;
-  //       return oneRow;
-  //     });
-  //   } else {
-  //     localRow = [...formattedData];
-  //     localRow[rowId].selected = isSelected;
-  //   }
-  //   setFormattedData(localRow);
-  // }
-
-  // Delete multiple rows using the delete button in the toolbar
-  function deleteRowData() {
-    var localFilteredData = [...rawData];
-    var selectedIndexArray: [] = [];
-    formattedData.map((row: {}, index: number) => {
-      if(row.selected === true) {
-        selectedIndexArray.push(index);
-      }
-    })
-    if(selectedIndexArray.length > 0) {
-      var count = 0;
-      selectedIndexArray.map((rowIndex) => {
-        localFilteredData.splice((rowIndex - count), 1);
-        count++;
-      })
-    }
-    setRawData(localFilteredData);
-  }
-
-  // Delete individual rows using the action in the table
-  // function onDelete(_, rowId: number) {
-  //   var localFilteredData = [...rawData];
-  //   localFilteredData.splice(rowId, 1);
-  //   setRawData(localFilteredData);
-  // }
 
   // Kebab delete action
   const onKebabToggle = (isOpen: boolean) => {
     setIsKebabOpen(isOpen);
   };
 
-  const onKebabSelect = (event) => {
+  const onKebabSelect = (event: React.MouseEvent) => {
     setIsKebabOpen(!isKebabOpen);
   };
 
@@ -198,8 +95,6 @@ export const GroupsSection = ({data}: GroupsSectionProps) => {
       </PageSection>
       <Divider/>
       <PageSection variant={PageSectionVariants.light}>
-      {/* <DataLoader loader={loader}>
-      {(groups) => ( */}
           <TableToolbar
             count={10}
             first={first}
@@ -223,7 +118,7 @@ export const GroupsSection = ({data}: GroupsSectionProps) => {
                   isOpen={isKebabOpen}
                   isPlain
                   dropdownItems={[
-                    <DropdownItem key="action" component="button" onClick={deleteRowData}>
+                    <DropdownItem key="action" component="button">
                       {t("Delete")}
                     </DropdownItem>
                   ]}
@@ -252,8 +147,6 @@ export const GroupsSection = ({data}: GroupsSectionProps) => {
             }
 
           </TableToolbar>
-        {/* )}
-      </DataLoader>  */}
       </PageSection>
     </React.Fragment>
   );
