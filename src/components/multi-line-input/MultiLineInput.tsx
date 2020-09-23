@@ -26,22 +26,26 @@ export const MultiLineInput = ({ name, form }: MultiLineInputProps) => {
         <Split key={id}>
           <SplitItem>
             <TextInput
-              id={`${name}-${index}`}
               ref={register()}
               name={`${name}[${index}].value`}
               defaultValue={value}
             />
           </SplitItem>
           <SplitItem>
-            {index === 0 && (
-              <Button variant={ButtonVariant.link} onClick={() => append({})}>
+            {index === fields.length - 1 && (
+              <Button
+                variant={ButtonVariant.link}
+                onClick={() => append({})}
+                tabIndex={-1}
+              >
                 <PlusIcon />
               </Button>
             )}
-            {index !== 0 && (
+            {index !== fields.length - 1 && (
               <Button
                 variant={ButtonVariant.link}
                 onClick={() => remove(index)}
+                tabIndex={-1}
               >
                 <MinusIcon />
               </Button>

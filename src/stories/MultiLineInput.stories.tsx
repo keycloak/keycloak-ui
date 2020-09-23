@@ -1,5 +1,6 @@
 import React from "react";
 import { Meta, Story } from "@storybook/react";
+import { action } from "@storybook/addon-actions";
 import { useForm } from "react-hook-form";
 import { Button } from "@patternfly/react-core";
 
@@ -22,7 +23,7 @@ const Template: Story<MultiLineInputProps> = (args) => {
   return (
     <form
       onSubmit={form.handleSubmit((data) => {
-        console.log(JSON.stringify(data));
+        action("submit")(data);
       })}
     >
       <MultiLineInput {...args} form={form} />
