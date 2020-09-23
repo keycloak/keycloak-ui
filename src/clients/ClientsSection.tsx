@@ -42,16 +42,8 @@ export const ClientsSection = () => {
               setFirst(f);
               setMax(m);
             }}
-            inputGroup={
-              <>
-                <InputGroup>
-                  <TextInput type="text" aria-label="search for client criteria" />
-                  <Button variant="control" aria-label="search for client">
-                    <SearchIcon />
-                  </Button>
-                </InputGroup>
-              </>
-            }
+            inputGroupName="clientsToolbarTextInput"
+            inputGroupPlaceholder="Search for client"
             toolbarItem={
               <>
                 <Button onClick={() => history.push("/add-client")}>

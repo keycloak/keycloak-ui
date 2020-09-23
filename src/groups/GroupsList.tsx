@@ -32,7 +32,7 @@ export const GroupsList = ({ list }: GroupsListProps ) => {
       <Button variant="link" isInline>
         {groupName}
       </Button>,
-        <div className="pf-icon-group-members">
+        <div className="keycloak-admin--groups__member-count">
           <UsersIcon />
           {groupNumber}
         </div>
@@ -46,7 +46,7 @@ export const GroupsList = ({ list }: GroupsListProps ) => {
 
   function onSelect(event: React.FormEvent<HTMLInputElement>, isSelected: boolean, rowId: number) {
     let localRow;
-    if (rowId === -1) {
+    if (rowId === undefined) {
       localRow = formattedData.map((row: {}) => {
         row.selected = isSelected;
         return row;

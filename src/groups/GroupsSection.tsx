@@ -3,7 +3,7 @@ import { useTranslation } from "react-i18next";
 import { HttpClientContext } from "../http-service/HttpClientContext";
 import { GroupsList } from "./GroupsList";
 import { GroupRepresentation } from "./models/groups";
-import { ServerInfoRepresentation } from "./models/server-info";
+import { ServerInfoRepresentation, ServerGroupsRepresentation } from "./models/server-info";
 import { TableToolbar } from "../components/table-toolbar/TableToolbar";
 import {
   Button,
@@ -20,7 +20,6 @@ import {
   TitleSizes,
   ToolbarItem
 } from '@patternfly/react-core';
-import { SearchIcon } from '@patternfly/react-icons';
 import './GroupsSection.css';
 
 export const GroupsSection = () => {
@@ -37,12 +36,12 @@ export const GroupsSection = () => {
   const columnGroupName: (keyof GroupRepresentation) = "name";
 
   const loader = async () => {
-    const groups: unknown = await httpClient.doGet("/admin/realms/master/groups", { params: { first, max } });
-    const groupsData: unknown = await groups.data;
+    const groups = await httpClient.doGet("/admin/realms/master/groups", { params: { first, max } });
+    const groupsData = await groups.data;
 
     const getMembers = async (id: number) => {
       const response = await httpClient.doGet(`/admin/realms/master/groups/${id}/members`);
-      const responseData: any = response.data
+      const responseData: any = response.data;
       return responseData.length;
     }
     const memberPromises = groupsData.map((group: {}) => getMembers(group[columnID]));
@@ -65,7 +64,7 @@ export const GroupsSection = () => {
 
 
   // Filter groups
-  const filterGroups = (newInput: string) => {
+  const filterGroups = (newInput: string, event: React.FormEvent<HTMLInputElement>) => {
     var localRowData: object[] = [];
     rawData.forEach(function(obj: {}) {
       var groupName = obj[columnGroupName];
@@ -84,7 +83,6 @@ export const GroupsSection = () => {
   const onKebabSelect = (event: React.MouseEvent) => {
     setIsKebabOpen(!isKebabOpen);
   };
-
 
   return (
     <React.Fragment>
@@ -105,10 +103,12 @@ export const GroupsSection = () => {
               setFirst(f);
               setMax(m);
             }}
+            inputGroupName="groupsToolbarTextInput"
+            inputGroupPlaceholder="Search groups"
+            inputGroupOnChange={filterGroups}
             toolbarItem={
               <>
               <ToolbarItem>
-                {/* {JSON.stringify(groups)} */}
                 <Button variant="primary">{t("Create group")}</Button>
               </ToolbarItem>
               <ToolbarItem>
@@ -126,26 +126,10 @@ export const GroupsSection = () => {
                 </ToolbarItem>
               </>
             }
-            inputGroup={
-              <InputGroup>
-                <TextInput
-                  name="textInput1"
-                  id="textInput1"
-                  type="search"
-                  aria-label={t("Search for groups")}
-                  placeholder={t("Search groups")}
-                  onChange={filterGroups}
-                />
-                <Button variant={ButtonVariant.control} aria-label={t("Search")}>
-                  <SearchIcon />
-                </Button>
-              </InputGroup>
-            }
           >
             { rawData && filteredData &&
               <GroupsList list={filteredData ? filteredData : rawData} />
             }
-
           </TableToolbar>
       </PageSection>
     </React.Fragment>

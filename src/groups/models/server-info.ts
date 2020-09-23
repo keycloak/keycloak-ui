@@ -4,3 +4,8 @@ export interface ServerInfoRepresentation {
   path?: string,
   subGroups?: []
 }
+
+export interface ServerGroupsRepresentation {
+  groups: { [index: string]: ServerInfoRepresentation[] };
+}
+

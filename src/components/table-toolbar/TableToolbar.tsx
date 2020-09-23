@@ -7,9 +7,11 @@ import {
   InputGroup,
   TextInput,
   Button,
+  ButtonVariant,
   Pagination,
 } from "@patternfly/react-core";
 import { SearchIcon } from "@patternfly/react-icons";
+import { useTranslation } from "react-i18next";
 
 type TableToolbarProps = {
   count: number;
@@ -20,7 +22,9 @@ type TableToolbarProps = {
   onPerPageSelect: (max: number, first: number) => void;
   toolbarItem?: React.ReactNode;
   children: React.ReactNode;
-  inputGroup?: React.ReactNode;
+  inputGroupName?: string;
+  inputGroupPlaceholder?: string;
+  inputGroupOnChange?: (newInput: string, event: React.FormEvent<HTMLInputElement>) => void;
 };
 
 export const TableToolbar = ({
@@ -32,8 +36,12 @@ export const TableToolbar = ({
   onPerPageSelect,
   toolbarItem,
   children,
-  inputGroup
+  inputGroupName,
+  inputGroupPlaceholder,
+  inputGroupOnChange
 }: TableToolbarProps) => {
+
+  const { t } = useTranslation("groups");
   const page = first / max;
   const pagination = (variant: "top" | "bottom" = "top") => (
     <Pagination
@@ -57,7 +65,25 @@ export const TableToolbar = ({
     <>
       <Toolbar>
         <ToolbarContent>
-          { inputGroup && <ToolbarItem>{inputGroup}</ToolbarItem> }
+          <React.Fragment>
+          { inputGroupName && 
+            <ToolbarItem>
+              <InputGroup>
+                <TextInput
+                  name={inputGroupName}
+                  id={inputGroupName}
+                  type="search"
+                  aria-label={t("Search")}
+                  placeholder={inputGroupPlaceholder}
+                  onChange={inputGroupOnChange}
+                />
+                <Button variant={ButtonVariant.control} aria-label={t("Search")}>
+                  <SearchIcon />
+                </Button>
+              </InputGroup>
+            </ToolbarItem>
+          }
+          </React.Fragment>
           { toolbarItem }
           <ToolbarItem variant="pagination">{pagination()}</ToolbarItem>
         </ToolbarContent>
