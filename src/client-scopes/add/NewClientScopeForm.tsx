@@ -35,7 +35,7 @@ export const NewClientScopeForm = () => {
   const save = async (clientScopes: ClientScopeRepresentation) => {
     try {
       const keyValues = Object.keys(clientScopes.attributes!).map((key) => {
-        const newKey = key.replaceAll("_", ".");
+        const newKey = key.replace(/_/g, ".");
         return { [newKey]: clientScopes.attributes![key] };
       });
       clientScopes.attributes = Object.assign({}, ...keyValues);
