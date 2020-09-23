@@ -25,7 +25,8 @@ export const GroupsList = ({ list }: GroupsListProps ) => {
   const columnGroupNumber: (keyof GroupRepresentation) = "membersLength";
   const [ formattedData, setFormattedData ] = useState();
 
-  var formatData = (data: GroupRepresentation[]) => data.map((group: {}) => {
+
+  var formatData = (data: GroupRepresentation[]) => data.map((group: {[key: string]: any }) => {
     var groupName = group[columnGroupName];
     var groupNumber = group[columnGroupNumber];
     return { cells: [

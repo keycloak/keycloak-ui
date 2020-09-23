@@ -7,9 +7,6 @@ import { ServerInfoRepresentation, ServerGroupsRepresentation } from "./models/s
 import { TableToolbar } from "../components/table-toolbar/TableToolbar";
 import {
   Button,
-  ButtonVariant,
-  InputGroup,
-  TextInput,
   Divider,
   Dropdown,
   DropdownItem,
@@ -37,13 +34,14 @@ export const GroupsSection = () => {
 
   const loader = async () => {
     const groups = await httpClient.doGet("/admin/realms/master/groups", { params: { first, max } });
-    const groupsData = await groups.data;
+    const groupsData = groups.data;
 
     const getMembers = async (id: number) => {
       const response = await httpClient.doGet(`/admin/realms/master/groups/${id}/members`);
-      const responseData: any = response.data;
+      const responseData = response.data;
       return responseData.length;
     }
+
     const memberPromises = groupsData.map((group: {}) => getMembers(group[columnID]));
     const memberData = await Promise.all(memberPromises);
     const updatedObject = groupsData.map((group: {}, i: number) => {
@@ -66,7 +64,7 @@ export const GroupsSection = () => {
   // Filter groups
   const filterGroups = (newInput: string, event: React.FormEvent<HTMLInputElement>) => {
     var localRowData: object[] = [];
-    rawData.forEach(function(obj: {}) {
+    rawData.forEach(function(obj: { [key: string]: string }) {
       var groupName = obj[columnGroupName];
       if (groupName.toLowerCase().includes(newInput.toLowerCase())) {
         localRowData.push(obj);
@@ -80,7 +78,7 @@ export const GroupsSection = () => {
     setIsKebabOpen(isOpen);
   };
 
-  const onKebabSelect = (event: React.MouseEvent) => {
+  const onKebabSelect = (event?: React.SyntheticEvent<HTMLDivElement, Event>) => {
     setIsKebabOpen(!isKebabOpen);
   };
 
