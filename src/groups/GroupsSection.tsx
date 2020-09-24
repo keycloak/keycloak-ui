@@ -25,8 +25,8 @@ import "./GroupsSection.css";
 export const GroupsSection = () => {
   const { t } = useTranslation("groups");
   const httpClient = useContext(HttpClientContext)!;
-  const [rawData, setRawData] = useState();
-  const [filteredData, setFilteredData] = useState();
+  const [rawData, setRawData] = useState([{}]);
+  const [filteredData, setFilteredData] = useState([{}]);
   const [max, setMax] = useState(10);
   const [first, setFirst] = useState(0);
   const [isKebabOpen, setIsKebabOpen] = useState(false);
@@ -64,7 +64,7 @@ export const GroupsSection = () => {
   };
 
   useEffect(() => {
-    loader().then((data) => {
+    loader().then((data: GroupRepresentation[]) => {
       data && setRawData(data);
       setFilteredData(data);
     });
