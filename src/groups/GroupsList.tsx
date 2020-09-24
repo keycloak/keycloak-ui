@@ -21,19 +21,19 @@ export const GroupsList = ({ list }: GroupsListProps) => {
   const columnGroupName: keyof GroupRepresentation = "name";
   const columnGroupNumber: keyof GroupRepresentation = "membersLength";
   const [formattedData, setFormattedData] = useState([
-    { cells: [<Button>Test</Button>], selected: false },
+    { cells: [<Button key="0">Test</Button>], selected: false },
   ]);
 
-  var formatData = (data: GroupRepresentation[]) =>
-    data.map((group: { [key: string]: any }) => {
-      var groupName = group[columnGroupName];
-      var groupNumber = group[columnGroupNumber];
+  const formatData = (data: GroupRepresentation[]) =>
+    data.map((group: { [key: string]: any }, index) => {
+      const groupName = group[columnGroupName];
+      const groupNumber = group[columnGroupNumber];
       return {
         cells: [
-          <Button variant="link" isInline>
+          <Button variant="link" key={index} isInline>
             {groupName}
           </Button>,
-          <div className="keycloak-admin--groups__member-count">
+          <div className="keycloak-admin--groups__member-count" key={index}>
             <UsersIcon />
             {groupNumber}
           </div>,
@@ -65,13 +65,8 @@ export const GroupsList = ({ list }: GroupsListProps) => {
   }
 
   // Delete individual rows using the action in the table
-  function onDelete(
-    event: React.MouseEvent,
-    rowIndex: number,
-    rowData: any,
-    extraData: any
-  ) {
-    var localFilteredData = [...list!];
+  function onDelete(rowIndex: number) {
+    const localFilteredData = [...list!];
     httpClient.doDelete(
       `/admin/realms/master/groups/${localFilteredData[rowIndex].id}`
     );
@@ -86,12 +81,7 @@ export const GroupsList = ({ list }: GroupsListProps) => {
     },
     {
       title: t("Delete"),
-      onClick: (
-        event: React.MouseEvent,
-        rowIndex: number,
-        rowData: any,
-        extraData: any
-      ) => onDelete,
+      onClick: () => onDelete,
     },
   ];
 

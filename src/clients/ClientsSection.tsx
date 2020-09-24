@@ -1,13 +1,7 @@
 import React, { useState, useContext } from "react";
 import { useHistory } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import {
-  Button,
-  PageSection,
-  InputGroup,
-  TextInput,
-} from "@patternfly/react-core";
-import { SearchIcon } from "@patternfly/react-icons";
+import { Button, PageSection } from "@patternfly/react-core";
 
 import { DataLoader } from "../components/data-loader/DataLoader";
 import { TableToolbar } from "../components/table-toolbar/TableToolbar";

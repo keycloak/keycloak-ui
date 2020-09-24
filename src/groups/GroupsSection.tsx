@@ -71,13 +71,10 @@ export const GroupsSection = () => {
   }, []);
 
   // Filter groups
-  const filterGroups = (
-    newInput: string,
-    event: React.FormEvent<HTMLInputElement>
-  ) => {
-    var localRowData: object[] = [];
+  const filterGroups = (newInput: string) => {
+    const localRowData: object[] = [];
     rawData.forEach(function (obj: { [key: string]: string }) {
-      var groupName = obj[columnGroupName];
+      const groupName = obj[columnGroupName];
       if (groupName.toLowerCase().includes(newInput.toLowerCase())) {
         localRowData.push(obj);
       }
@@ -90,9 +87,7 @@ export const GroupsSection = () => {
     setIsKebabOpen(isOpen);
   };
 
-  const onKebabSelect = (
-    event?: React.SyntheticEvent<HTMLDivElement, Event>
-  ) => {
+  const onKebabSelect = () => {
     setIsKebabOpen(!isKebabOpen);
   };
 
