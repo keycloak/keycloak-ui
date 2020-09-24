@@ -20,7 +20,9 @@ export const GroupsList = ({ list }: GroupsListProps) => {
   const httpClient = useContext(HttpClientContext)!;
   const columnGroupName: keyof GroupRepresentation = "name";
   const columnGroupNumber: keyof GroupRepresentation = "membersLength";
-  const [formattedData, setFormattedData] = useState([{ cells: [<Button>Test</Button>], selected: false }]);
+  const [formattedData, setFormattedData] = useState([
+    { cells: [<Button>Test</Button>], selected: false },
+  ]);
 
   var formatData = (data: GroupRepresentation[]) =>
     data.map((group: { [key: string]: any }) => {
