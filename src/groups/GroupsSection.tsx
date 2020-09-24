@@ -3,7 +3,7 @@ import { useTranslation } from "react-i18next";
 import { HttpClientContext } from "../http-service/HttpClientContext";
 import { GroupsList } from "./GroupsList";
 import { GroupRepresentation } from "./models/groups";
-import { ServerInfoRepresentation, ServerGroupsRepresentation } from "./models/server-info";
+import { ServerGroupsArrayRepresentation, ServerGroupMembersRepresentation } from "./models/server-info";
 import { TableToolbar } from "../components/table-toolbar/TableToolbar";
 import {
   Button,
@@ -33,18 +33,18 @@ export const GroupsSection = () => {
   const columnGroupName: (keyof GroupRepresentation) = "name";
 
   const loader = async () => {
-    const groups = await httpClient.doGet("/admin/realms/master/groups", { params: { first, max } });
-    const groupsData = groups.data;
+    const groups = await httpClient.doGet<ServerGroupsArrayRepresentation[]>("/admin/realms/master/groups", { params: { first, max } });
+    const groupsData = groups.data!;
 
     const getMembers = async (id: number) => {
-      const response = await httpClient.doGet(`/admin/realms/master/groups/${id}/members`);
-      const responseData = response.data;
+      const response = await httpClient.doGet<ServerGroupMembersRepresentation[]>(`/admin/realms/master/groups/${id}/members`);
+      const responseData = response.data!;
       return responseData.length;
     }
 
-    const memberPromises = groupsData.map((group: {}) => getMembers(group[columnID]));
+    const memberPromises = groupsData.map((group: {[key: string]: any }) => getMembers(group[columnID]));
     const memberData = await Promise.all(memberPromises);
-    const updatedObject = groupsData.map((group: {}, i: number) => {
+    const updatedObject = groupsData.map((group: {[key: string]: any }, i: number) => {
       const object = Object.assign({}, group);
       object[membersLength] = memberData[i];
       return object;

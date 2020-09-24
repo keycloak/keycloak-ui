@@ -41,14 +41,14 @@ export const GroupsList = ({ list }: GroupsListProps ) => {
   });
 
   useEffect(() => {
-    setFormattedData(formatData(list));
+    setFormattedData(formatData(list!));
   }, [list])
 
 
   function onSelect(event: React.FormEvent<HTMLInputElement>, isSelected: boolean, rowId: number) {
     let localRow;
     if (rowId === undefined) {
-      localRow = formattedData.map((row: {}) => {
+      localRow = formattedData.map((row: {[key: string]: any }) => {
         row.selected = isSelected;
         return row;
       });
@@ -61,7 +61,7 @@ export const GroupsList = ({ list }: GroupsListProps ) => {
 
   // Delete individual rows using the action in the table
   function onDelete(event: React.MouseEvent, rowIndex: number, rowData: any, extraData: any) {
-    var localFilteredData = [...list];
+    var localFilteredData = [...list!];
     httpClient.doDelete(
       `/admin/realms/master/groups/${localFilteredData[rowIndex].id}`
     );
