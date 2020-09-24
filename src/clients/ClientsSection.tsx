@@ -1,7 +1,12 @@
 import React, { useState, useContext } from "react";
 import { useHistory } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import { Button, PageSection, InputGroup, TextInput } from "@patternfly/react-core";
+import {
+  Button,
+  PageSection,
+  InputGroup,
+  TextInput,
+} from "@patternfly/react-core";
 import { SearchIcon } from "@patternfly/react-icons";
 
 import { DataLoader } from "../components/data-loader/DataLoader";

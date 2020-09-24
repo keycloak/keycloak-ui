@@ -24,7 +24,10 @@ type TableToolbarProps = {
   children: React.ReactNode;
   inputGroupName?: string;
   inputGroupPlaceholder?: string;
-  inputGroupOnChange?: (newInput: string, event: React.FormEvent<HTMLInputElement>) => void;
+  inputGroupOnChange?: (
+    newInput: string,
+    event: React.FormEvent<HTMLInputElement>
+  ) => void;
 };
 
 export const TableToolbar = ({
@@ -38,9 +41,8 @@ export const TableToolbar = ({
   children,
   inputGroupName,
   inputGroupPlaceholder,
-  inputGroupOnChange
+  inputGroupOnChange,
 }: TableToolbarProps) => {
-
   const { t } = useTranslation("groups");
   const page = first / max;
   const pagination = (variant: "top" | "bottom" = "top") => (
@@ -66,25 +68,28 @@ export const TableToolbar = ({
       <Toolbar>
         <ToolbarContent>
           <React.Fragment>
-          { inputGroupName && 
-            <ToolbarItem>
-              <InputGroup>
-                <TextInput
-                  name={inputGroupName}
-                  id={inputGroupName}
-                  type="search"
-                  aria-label={t("Search")}
-                  placeholder={inputGroupPlaceholder}
-                  onChange={inputGroupOnChange}
-                />
-                <Button variant={ButtonVariant.control} aria-label={t("Search")}>
-                  <SearchIcon />
-                </Button>
-              </InputGroup>
-            </ToolbarItem>
-          }
+            {inputGroupName && (
+              <ToolbarItem>
+                <InputGroup>
+                  <TextInput
+                    name={inputGroupName}
+                    id={inputGroupName}
+                    type="search"
+                    aria-label={t("Search")}
+                    placeholder={inputGroupPlaceholder}
+                    onChange={inputGroupOnChange}
+                  />
+                  <Button
+                    variant={ButtonVariant.control}
+                    aria-label={t("Search")}
+                  >
+                    <SearchIcon />
+                  </Button>
+                </InputGroup>
+              </ToolbarItem>
+            )}
           </React.Fragment>
-          { toolbarItem }
+          {toolbarItem}
           <ToolbarItem variant="pagination">{pagination()}</ToolbarItem>
         </ToolbarContent>
       </Toolbar>
