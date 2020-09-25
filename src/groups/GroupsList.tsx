@@ -30,7 +30,7 @@ export const GroupsList = ({ list }: GroupsListProps) => {
       const groupNumber = group[columnGroupNumber];
       return {
         cells: [
-          <Button variant="link" key={index} isInline>
+          <Button variant="link" key={index}>
             {groupName}
           </Button>,
           <div className="keycloak-admin--groups__member-count" key={index}>
