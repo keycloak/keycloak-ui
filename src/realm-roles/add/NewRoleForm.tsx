@@ -21,6 +21,9 @@ import { HttpClientContext } from "../../http-service/HttpClientContext";
 import { useAlerts } from "../../components/alert/Alerts";
 import { useForm, Controller } from "react-hook-form";
 import { RealmContext } from "../../components/realm-context/RealmContext";
+import { getRoles } from "@testing-library/react";
+import { RolesList } from "../RoleList";
+import { JsonFileUpload } from "../../components/json-file-upload/JsonFileUpload";
 
 
 export const NewRoleForm = () => {
@@ -29,18 +32,9 @@ export const NewRoleForm = () => {
   const [add, Alerts] = useAlerts();
   const { realm } = useContext(RealmContext);
 
-  const { register, handleSubmit, setValue, control } = useForm<
+  const { register, handleSubmit } = useForm<
   RoleRepresentation
-  >();
-
-//   const handleFileChange = (value: string | File) => {
-//     const defaultRealm = { id: "", realm: "", enabled: true };
-
-//     const obj = value ? JSON.parse(value as string) : defaultRealm;
-//     Object.keys(obj).forEach((k) => {
-//       setValue(k, obj[k]);
-//     });
-//   };
+>();
 
   const save = async (role: RoleRepresentation) => {
     try {
@@ -62,13 +56,12 @@ export const NewRoleForm = () => {
       <Divider />
       <PageSection variant="light">
         <Form isHorizontal onSubmit={handleSubmit(save)}>
-          {/* <JsonFileUpload id="kc-realm-filename" onChange={handleFileChange} /> */}
           <FormGroup label={t("roleName")} isRequired fieldId="kc-role-name">
             <TextInput
               isRequired
               type="text"
               id="kc-role-name"
-              name="role"
+              name="name"
               ref={register()}
             />
           </FormGroup>
@@ -76,7 +69,7 @@ export const NewRoleForm = () => {
             <TextArea
               type="text"
               id="kc-role-name"
-              name="role"
+              name="description"
               ref={register()}
             />
           </FormGroup>
