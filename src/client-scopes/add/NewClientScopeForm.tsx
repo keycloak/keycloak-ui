@@ -57,7 +57,7 @@ export const NewClientScopeForm = () => {
         <FormGroup
           label={
             <>
-              {t("name")} <HelpItem item="storybook" />
+              {t("name")} <HelpItem item="clientScope.name" />
             </>
           }
           fieldId="kc-name"
@@ -73,7 +73,7 @@ export const NewClientScopeForm = () => {
         <FormGroup
           label={
             <>
-              {t("description")} <HelpItem item="storybook" />
+              {t("description")} <HelpItem item="clientScope.description" />
             </>
           }
           fieldId="kc-description"
@@ -88,7 +88,7 @@ export const NewClientScopeForm = () => {
         <FormGroup
           label={
             <>
-              {t("protocol")} <HelpItem item="storybook" />
+              {t("protocol")} <HelpItem item="clientScope.protocol" />
             </>
           }
           fieldId="kc-protocol"
@@ -115,7 +115,12 @@ export const NewClientScopeForm = () => {
           />
         </FormGroup>
         <FormGroup
-          label={t("displayOnConsentScreen")}
+          label={
+            <>
+              {t("displayOnConsentScreen")}{" "}
+              <HelpItem item="clientScope.displayOnConsentScreen" />
+            </>
+          }
           fieldId="kc-display.on.consent.screen"
         >
           <Controller
@@ -136,7 +141,8 @@ export const NewClientScopeForm = () => {
         <FormGroup
           label={
             <>
-              {t("consentScreenText")} <HelpItem item="storybook" />
+              {t("consentScreenText")}{" "}
+              <HelpItem item="clientScope.consentScreenText" />
             </>
           }
           fieldId="kc-consent-screen-text"
@@ -151,14 +157,14 @@ export const NewClientScopeForm = () => {
         <FormGroup
           label={
             <>
-              {t("guiOrder")} <HelpItem item="storybook" />
+              {t("guiOrder")} <HelpItem item="clientScope.guiOrder" />
             </>
           }
           fieldId="kc-gui-order"
         >
           <TextInput
             ref={register}
-            type="text"
+            type="number"
             id="kc-gui-order"
             name="attributes.gui_order"
           />

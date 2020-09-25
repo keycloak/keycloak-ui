@@ -31,10 +31,10 @@ export const ClientScopeList = ({ clientScopes }: ClientScopeListProps) => {
       <Table
         variant={TableVariant.compact}
         cells={[
-          { title: "name" },
-          { title: "description" },
+          { title: t("name") },
+          { title: t("description") },
           {
-            title: "protocol",
+            title: t("protocol"),
           },
         ]}
         rows={data}
