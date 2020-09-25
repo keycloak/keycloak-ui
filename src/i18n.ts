@@ -13,7 +13,15 @@ import help from "./help.json";
 const initOptions = {
   defaultNS: "common",
   resources: {
-    en: { ...common, ...help, ...clients, ...clientScopes, ...groups, ...realm, ...roles },
+    en: {
+      ...common,
+      ...help,
+      ...clients,
+      ...clientScopes,
+      ...groups,
+      ...realm,
+      ...roles,
+    },
   },
   lng: "en",
   fallbackLng: "en",
