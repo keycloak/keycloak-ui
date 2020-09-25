@@ -73,14 +73,14 @@ export const GroupsList = ({ list }: GroupsListProps) => {
     // TO DO update the state
   }
 
-  const tableHeader = [{ title: t("Group name") }, { title: t("Members") }];
+  const tableHeader = [{ title: t("groupName") }, { title: t("members") }];
   const actions = [
     {
-      title: t("Move to"),
+      title: t("moveTo"),
       onClick: () => console.log("TO DO: Add move to functionality"),
     },
     {
-      title: t("Delete"),
+      title: t("delete"),
       onClick: () => onDelete,
     },
   ];

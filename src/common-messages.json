@@ -12,7 +12,7 @@
     "resourceFile": "Resource file",
     "clearFile": "Clear this file",
     "on": "On",
-    "off": "Off",
+    "off":"Off",
 
     "signOut": "Sign out",
     "manageAccount": "Manage account",

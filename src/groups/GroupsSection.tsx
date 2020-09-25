@@ -95,7 +95,7 @@ export const GroupsSection = () => {
     <React.Fragment>
       <PageSection variant={PageSectionVariants.light}>
         <Title headingLevel="h3" size={TitleSizes["2xl"]}>
-          {t("Groups")}
+          {t("groups")}
         </Title>
       </PageSection>
       <Divider />
@@ -116,7 +116,7 @@ export const GroupsSection = () => {
           toolbarItem={
             <>
               <ToolbarItem>
-                <Button variant="primary">{t("Create group")}</Button>
+                <Button variant="primary">{t("createGroup")}</Button>
               </ToolbarItem>
               <ToolbarItem>
                 <Dropdown
@@ -126,7 +126,7 @@ export const GroupsSection = () => {
                   isPlain
                   dropdownItems={[
                     <DropdownItem key="action" component="button">
-                      {t("Delete")}
+                      {t("delete")}
                     </DropdownItem>,
                   ]}
                 />

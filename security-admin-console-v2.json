@@ -6,8 +6,12 @@
   "enabled": true,
   "alwaysDisplayInConsole": false,
   "clientAuthenticatorType": "client-secret",
-  "redirectUris": ["http://localhost:8080/*"],
-  "webOrigins": ["http://localhost:8080"],
+  "redirectUris": [
+      "http://localhost:8080/*"
+  ],
+  "webOrigins": [
+      "http://localhost:8080"
+  ],
   "notBefore": 0,
   "bearerOnly": false,
   "consentRequired": false,
@@ -23,21 +27,21 @@
   "fullScopeAllowed": true,
   "nodeReRegistrationTimeout": -1,
   "defaultClientScopes": [
-    "web-origins",
-    "role_list",
-    "roles",
-    "profile",
-    "email"
+      "web-origins",
+      "role_list",
+      "roles",
+      "profile",
+      "email"
   ],
   "optionalClientScopes": [
-    "address",
-    "phone",
-    "offline_access",
-    "microprofile-jwt"
+      "address",
+      "phone",
+      "offline_access",
+      "microprofile-jwt"
   ],
   "access": {
-    "view": true,
-    "configure": true,
-    "manage": true
+      "view": true,
+      "configure": true,
+      "manage": true
   }
 }
