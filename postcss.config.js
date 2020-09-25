@@ -1,4 +1,6 @@
-const postImport = require("postcss-import");
+const postImport = require('postcss-import');
 module.exports = {
-  plugins: [postImport()],
-};
+  plugins: [
+    postImport(),
+  ]
+}

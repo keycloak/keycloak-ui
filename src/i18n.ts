@@ -11,7 +11,6 @@ import roles from "./realm-roles/messages.json";
 import help from "./help.json";
 
 const initOptions = {
-  ns: ["common", "help", "clients", "clientScopes", "realm", "groups", "roles"],
   defaultNS: "common",
   resources: {
     en: { ...common, ...help, ...clients, ...clientScopes, ...realm, ...groups, ...roles },
