@@ -12,7 +12,7 @@ import {
   Button,
   Divider,
   AlertVariant,
-  TextArea
+  TextArea,
 } from "@patternfly/react-core";
 
 // import { JsonFileUpload } from "../../components/json-file-upload/JsonFileUpload";
@@ -25,20 +25,17 @@ import { getRoles } from "@testing-library/react";
 import { RolesList } from "../RoleList";
 import { JsonFileUpload } from "../../components/json-file-upload/JsonFileUpload";
 
-
 export const NewRoleForm = () => {
   const { t } = useTranslation("roles");
   const httpClient = useContext(HttpClientContext)!;
   const [add, Alerts] = useAlerts();
   const { realm } = useContext(RealmContext);
 
-  const { register, handleSubmit } = useForm<
-  RoleRepresentation
->();
+  const { register, handleSubmit } = useForm<RoleRepresentation>();
 
   const save = async (role: RoleRepresentation) => {
     try {
-      await httpClient.doPost(`/auth/admin/realms/${realm}/roles`, role);
+      await httpClient.doPost(`admin/realms/${realm}/roles`, role);
       add(t("Role created"), AlertVariant.success);
     } catch (error) {
       add(`${t("Could not create role:")} '${error}'`, AlertVariant.danger);
@@ -66,9 +63,9 @@ export const NewRoleForm = () => {
             />
           </FormGroup>
           <FormGroup label={t("description")} fieldId="kc-role-description">
-            <TextArea
+            <TextInput
               type="text"
-              id="kc-role-name"
+              id="kc-role-description"
               name="description"
               ref={register()}
             />
