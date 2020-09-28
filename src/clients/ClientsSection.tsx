@@ -26,7 +26,7 @@ export const ClientsSection = () => {
     return await httpClient
       .doGet(`/admin/realms/${realm}/clients`, { params: { first, max } })
       .then((r) => r.data as ClientRepresentation[]);
-  };t("moveTo"),
+  };
 
   return (
     <>
