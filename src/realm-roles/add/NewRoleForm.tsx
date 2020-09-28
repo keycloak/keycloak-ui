@@ -22,7 +22,7 @@ import { RealmContext } from "../../components/realm-context/RealmContext";
 export const NewRoleForm = () => {
   const { t } = useTranslation("roles");
   const httpClient = useContext(HttpClientContext)!;
-  const [add, Alerts] = useAlerts();
+  const [addAlert, Alerts] = useAlerts();
   const { realm } = useContext(RealmContext);
 
   const { register, handleSubmit } = useForm<RoleRepresentation>();
@@ -30,9 +30,9 @@ export const NewRoleForm = () => {
   const save = async (role: RoleRepresentation) => {
     try {
       await httpClient.doPost(`admin/realms/${realm}/roles`, role);
-      add(t("Role created"), AlertVariant.success);
+      addAlert(t("roleCreated"), AlertVariant.success);
     } catch (error) {
-      add(`${t("Could not create role:")} '${error}'`, AlertVariant.danger);
+      addAlert(`${t("roleCreateError")} '${error}'`, AlertVariant.danger);
     }
   };
 
