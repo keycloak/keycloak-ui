@@ -1,4 +1,4 @@
-import React, { useState, FormEvent, useContext } from "react";
+import React, { useContext } from "react";
 import { useTranslation } from "react-i18next";
 import {
   Text,
@@ -7,23 +7,17 @@ import {
   FormGroup,
   Form,
   TextInput,
-  Switch,
   ActionGroup,
   Button,
   Divider,
   AlertVariant,
-  TextArea,
 } from "@patternfly/react-core";
 
-// import { JsonFileUpload } from "../../components/json-file-upload/JsonFileUpload";
 import { RoleRepresentation } from "../../model/role-model";
 import { HttpClientContext } from "../../http-service/HttpClientContext";
 import { useAlerts } from "../../components/alert/Alerts";
-import { useForm, Controller } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import { RealmContext } from "../../components/realm-context/RealmContext";
-import { getRoles } from "@testing-library/react";
-import { RolesList } from "../RoleList";
-import { JsonFileUpload } from "../../components/json-file-upload/JsonFileUpload";
 
 export const NewRoleForm = () => {
   const { t } = useTranslation("roles");
