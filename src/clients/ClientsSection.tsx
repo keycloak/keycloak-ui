@@ -26,7 +26,7 @@ export const ClientsSection = () => {
     return await httpClient
       .doGet(`/admin/realms/${realm}/clients`, { params: { first, max } })
       .then((r) => r.data as ClientRepresentation[]);
-  };
+  };t("moveTo"),
 
   return (
     <>
@@ -48,7 +48,7 @@ export const ClientsSection = () => {
                 setMax(max);
               }}
               inputGroupName="clientsToolbarTextInput"
-              inputGroupPlaceholder="Search for client"
+              inputGroupPlaceholder={t("Search for client")}
               toolbarItem={
                 <>
                   <Button onClick={() => history.push("/add-client")}>

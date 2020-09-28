@@ -16,7 +16,7 @@ type GroupsListProps = {
 };
 
 export const GroupsList = ({ list }: GroupsListProps) => {
-  const { t } = useTranslation("group");
+  const { t } = useTranslation("groups");
   const httpClient = useContext(HttpClientContext)!;
   const columnGroupName: keyof GroupRepresentation = "name";
   const columnGroupNumber: keyof GroupRepresentation = "membersLength";
@@ -80,7 +80,7 @@ export const GroupsList = ({ list }: GroupsListProps) => {
       onClick: () => console.log("TO DO: Add move to functionality"),
     },
     {
-      title: t("delete"),
+      title: t("common:Delete"),
       onClick: () => onDelete,
     },
   ];
@@ -93,7 +93,7 @@ export const GroupsList = ({ list }: GroupsListProps) => {
           variant={TableVariant.compact}
           onSelect={onSelect}
           canSelectAll={false}
-          aria-label="Selectable Table"
+          aria-label={t("tableOfGroups")}
           cells={tableHeader}
           rows={formattedData}
         >
