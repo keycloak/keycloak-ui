@@ -10,6 +10,7 @@ import {
   ActionGroup,
   Button,
   AlertVariant,
+  SelectOption,
 } from "@patternfly/react-core";
 import { useParams } from "react-router-dom";
 import { Controller, useForm } from "react-hook-form";
@@ -26,6 +27,8 @@ import {
   toValue,
 } from "../components/multi-line-input/MultiLineInput";
 import { useAlerts } from "../components/alert/Alerts";
+import { ViewHeader } from "../components/view-header/ViewHeader";
+import { exportClient } from "../util";
 
 export const ClientSettings = () => {
   const { t } = useTranslation("clients");
@@ -65,95 +68,138 @@ export const ClientSettings = () => {
   };
 
   return (
-    <PageSection>
-      <Alerts />
-      <ScrollForm
-        sections={[
-          t("capabilityConfig"),
-          t("generalSettings"),
-          t("accessSettings"),
-          t("loginSettings"),
-        ]}
-      >
-        <CapabilityConfig form={form} />
-        <Form isHorizontal>
-          <ClientDescription form={form} />
-        </Form>
-        <Form isHorizontal>
-          <FormGroup label={t("rootUrl")} fieldId="kc-root-url">
-            <TextInput
-              type="text"
-              id="kc-root-url"
-              name="rootUrl"
-              ref={form.register}
-            />
-          </FormGroup>
-          <FormGroup label={t("validRedirectUri")} fieldId="kc-redirect">
-            <MultiLineInput form={form} name="redirectUris" />
-          </FormGroup>
-          <FormGroup label={t("homeURL")} fieldId="kc-home-url">
-            <TextInput
-              type="text"
-              id="kc-home-url"
-              name="baseUrl"
-              ref={form.register}
-            />
-          </FormGroup>
-        </Form>
-        <Form isHorizontal>
-          <FormGroup label={t("consentRequired")} fieldId="kc-consent">
-            <Controller
-              name="consentRequired"
-              defaultValue={false}
-              control={form.control}
-              render={({ onChange, value }) => (
-                <Switch
-                  id="kc-consent"
-                  label={t("common:on")}
-                  labelOff={t("common:off")}
-                  isChecked={value}
-                  onChange={onChange}
-                />
-              )}
-            />
-          </FormGroup>
-          <FormGroup
-            label={t("displayOnClient")}
-            fieldId="kc-display-on-client"
-          >
-            <Controller
-              name="alwaysDisplayInConsole"
-              defaultValue={false}
-              control={form.control}
-              render={({ onChange, value }) => (
-                <Switch
-                  id="kc-display-on-client"
-                  label={t("common:on")}
-                  labelOff={t("common:off")}
-                  isChecked={value}
-                  onChange={onChange}
-                />
-              )}
-            />
-          </FormGroup>
-          <FormGroup
-            label={t("consentScreenText")}
-            fieldId="kc-consent-screen-text"
-          >
-            <TextArea
-              id="kc-consent-screen-text"
-              name="consentText"
-              ref={form.register}
-            />
-          </FormGroup>
-          <ActionGroup>
-            <Button variant="primary" onClick={() => save()}>
-              {t("common:save")}
-            </Button>
-            <Button variant="link">{t("common:cancel")}</Button>
-          </ActionGroup>
-        </Form>
-      </ScrollForm>
-    </PageSection>
+    <>
+      <Controller
+        name="enabled"
+        control={form.control}
+        defaultValue={true}
+        render={({ onChange, value }) => (
+          <ViewHeader
+            titleKey="clients:clientList"
+            subKey="clients:clientsExplain"
+            selectItems={[
+              <SelectOption
+                key="action"
+                value={t("common:action")}
+                isPlaceholder={true}
+              />,
+              <SelectOption key="export" value="export">
+                {t("common:export")}
+              </SelectOption>,
+              <SelectOption key="delete" value="delete">
+                {t("common:delete")}
+              </SelectOption>,
+            ]}
+            isEnabled={value}
+            onToggle={onChange}
+            onSelect={(value) => {
+              if (value === "export") {
+                exportClient(form.getValues());
+              } else if (value === "delete") {
+                try {
+                  httpClient.doDelete(
+                    `/admin/realms/${realm}/clients/${id}`
+                  );
+                  addAlert(t("clientDeletedSuccess"), AlertVariant.success);
+                } catch (error) {
+                  addAlert(`${t("clientDeleteError")} ${error}`, AlertVariant.danger);
+                }
+  
+              }
+            }}
+          />
+        )}
+      />
+      <PageSection>
+        <Alerts />
+        <ScrollForm
+          sections={[
+            t("capabilityConfig"),
+            t("generalSettings"),
+            t("accessSettings"),
+            t("loginSettings"),
+          ]}
+        >
+          <CapabilityConfig form={form} />
+          <Form isHorizontal>
+            <ClientDescription form={form} />
+          </Form>
+          <Form isHorizontal>
+            <FormGroup label={t("rootUrl")} fieldId="kc-root-url">
+              <TextInput
+                type="text"
+                id="kc-root-url"
+                name="rootUrl"
+                ref={form.register}
+              />
+            </FormGroup>
+            <FormGroup label={t("validRedirectUri")} fieldId="kc-redirect">
+              <MultiLineInput form={form} name="redirectUris" />
+            </FormGroup>
+            <FormGroup label={t("homeURL")} fieldId="kc-home-url">
+              <TextInput
+                type="text"
+                id="kc-home-url"
+                name="baseUrl"
+                ref={form.register}
+              />
+            </FormGroup>
+          </Form>
+          <Form isHorizontal>
+            <FormGroup label={t("consentRequired")} fieldId="kc-consent">
+              <Controller
+                name="consentRequired"
+                defaultValue={false}
+                control={form.control}
+                render={({ onChange, value }) => (
+                  <Switch
+                    id="kc-consent"
+                    label={t("common:on")}
+                    labelOff={t("common:off")}
+                    isChecked={value}
+                    onChange={onChange}
+                  />
+                )}
+              />
+            </FormGroup>
+            <FormGroup
+              label={t("displayOnClient")}
+              fieldId="kc-display-on-client"
+            >
+              <Controller
+                name="alwaysDisplayInConsole"
+                defaultValue={false}
+                control={form.control}
+                render={({ onChange, value }) => (
+                  <Switch
+                    id="kc-display-on-client"
+                    label={t("common:on")}
+                    labelOff={t("common:off")}
+                    isChecked={value}
+                    onChange={onChange}
+                  />
+                )}
+              />
+            </FormGroup>
+            <FormGroup
+              label={t("consentScreenText")}
+              fieldId="kc-consent-screen-text"
+            >
+              <TextArea
+                id="kc-consent-screen-text"
+                name="consentText"
+                ref={form.register}
+              />
+            </FormGroup>
+            <ActionGroup>
+              <Button variant="primary" onClick={() => save()}>
+                {t("common:save")}
+              </Button>
+              <Button variant="link">{t("common:cancel")}</Button>
+            </ActionGroup>
+          </Form>
+        </ScrollForm>
+      </PageSection>
+    </>
   );
 };
