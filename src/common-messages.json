@@ -18,6 +18,7 @@
     "off":"Off",
     "enabled": "Enabled",
     "disabled": "Disabled",
+    "disable": "Disable",
 
     "signOut": "Sign out",
     "manageAccount": "Manage account",

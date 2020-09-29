@@ -11,6 +11,7 @@ import {
   Button,
   AlertVariant,
   SelectOption,
+  ButtonVariant,
 } from "@patternfly/react-core";
 import { useParams } from "react-router-dom";
 import { Controller, useForm } from "react-hook-form";
@@ -29,6 +30,7 @@ import {
 import { useAlerts } from "../components/alert/Alerts";
 import { ViewHeader } from "../components/view-header/ViewHeader";
 import { exportClient } from "../util";
+import { useConfirmDialog } from "../components/confirm-dialog/ConfirmDialog";
 
 export const ClientSettings = () => {
   const { t } = useTranslation("clients");
@@ -55,6 +57,21 @@ export const ClientSettings = () => {
     })();
   }, []);
 
+  const [toggleDeleteDialog, DeleteConfirm] = useConfirmDialog({
+    titleKey: "clients:clientDeleteConfirmTitle",
+    messageKey: "clients:clientDeleteConfirm",
+    continueButtonLabel: "common:delete",
+    continueButtonVariant: ButtonVariant.danger,
+    onConfirm: () => {
+      try {
+        httpClient.doDelete(`/admin/realms/${realm}/clients/${id}`);
+        addAlert(t("clientDeletedSuccess"), AlertVariant.success);
+      } catch (error) {
+        addAlert(`${t("clientDeleteError")} ${error}`, AlertVariant.danger);
+      }
+    },
+  });
+
   const save = async () => {
     if (await form.trigger()) {
       const redirectUris = toValue(form.getValues()["redirectUris"]);
@@ -69,46 +86,60 @@ export const ClientSettings = () => {
 
   return (
     <>
+      <DeleteConfirm />
       <Controller
         name="enabled"
         control={form.control}
         defaultValue={true}
-        render={({ onChange, value }) => (
-          <ViewHeader
-            titleKey="clients:clientList"
-            subKey="clients:clientsExplain"
-            selectItems={[
-              <SelectOption
-                key="action"
-                value={t("common:action")}
-                isPlaceholder={true}
-              />,
-              <SelectOption key="export" value="export">
-                {t("common:export")}
-              </SelectOption>,
-              <SelectOption key="delete" value="delete">
-                {t("common:delete")}
-              </SelectOption>,
-            ]}
-            isEnabled={value}
-            onToggle={onChange}
-            onSelect={(value) => {
-              if (value === "export") {
-                exportClient(form.getValues());
-              } else if (value === "delete") {
-                try {
-                  httpClient.doDelete(
-                    `/admin/realms/${realm}/clients/${id}`
-                  );
-                  addAlert(t("clientDeletedSuccess"), AlertVariant.success);
-                } catch (error) {
-                  addAlert(`${t("clientDeleteError")} ${error}`, AlertVariant.danger);
-                }
-  
-              }
-            }}
-          />
-        )}
+        render={({ onChange, value }) => {
+          const [toggleDisableDialog, DisableConfirm] = useConfirmDialog({
+            titleKey: "clients:disableConfirmTitle",
+            messageKey: "clients:disableConfirm",
+            continueButtonLabel: "common:disable",
+            onConfirm: () => {
+              onChange(!value);
+              save();
+            },
+          });
+          return (
+            <>
+              <DisableConfirm />
+              <ViewHeader
+                titleKey="clients:clientList"
+                subKey="clients:clientsExplain"
+                selectItems={[
+                  <SelectOption
+                    key="action"
+                    value={t("common:action")}
+                    isPlaceholder={true}
+                  />,
+                  <SelectOption key="export" value="export">
+                    {t("common:export")}
+                  </SelectOption>,
+                  <SelectOption key="delete" value="delete">
+                    {t("common:delete")}
+                  </SelectOption>,
+                ]}
+                isEnabled={value}
+                onToggle={(value) => {
+                  if (!value) {
+                    toggleDisableDialog();
+                  } else {
+                    onChange(value);
+                    save();
+                  }
+                }}
+                onSelect={(value) => {
+                  if (value === "export") {
+                    exportClient(form.getValues());
+                  } else if (value === "delete") {
+                    toggleDeleteDialog();
+                  }
+                }}
+              />
+            </>
+          );
+        }}
       />
       <PageSection>
         <Alerts />
