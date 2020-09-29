@@ -11,12 +11,14 @@ import {
   Button,
   Divider,
   AlertVariant,
+  TextArea,
+  ValidatedOptions,
 } from "@patternfly/react-core";
 
 import { RoleRepresentation } from "../../model/role-model";
 import { HttpClientContext } from "../../http-service/HttpClientContext";
 import { useAlerts } from "../../components/alert/Alerts";
-import { useForm } from "react-hook-form";
+import { Controller, useForm } from "react-hook-form";
 import { RealmContext } from "../../components/realm-context/RealmContext";
 
 export const NewRoleForm = () => {
@@ -25,7 +27,9 @@ export const NewRoleForm = () => {
   const [addAlert, Alerts] = useAlerts();
   const { realm } = useContext(RealmContext);
 
-  const { register, handleSubmit } = useForm<RoleRepresentation>();
+  const { register, control, errors, handleSubmit } = useForm<
+    RoleRepresentation
+  >();
 
   const save = async (role: RoleRepresentation) => {
     try {
@@ -56,12 +60,27 @@ export const NewRoleForm = () => {
               ref={register()}
             />
           </FormGroup>
-          <FormGroup label={t("description")} fieldId="kc-role-description">
-            <TextInput
-              type="text"
-              id="kc-role-description"
+          <FormGroup
+            label={t("description")}
+            fieldId="kc-role-description"
+            helperTextInvalid="Max length 255"
+            validated={
+              errors ? ValidatedOptions.error : ValidatedOptions.default
+            }
+          >
+            <Controller
               name="description"
-              ref={register()}
+              defaultValue=""
+              control={control}
+              rules={{ maxLength: 255 }}
+              render={({ onChange, value }) => (
+                <TextArea
+                  type="text"
+                  id="kc-role-description"
+                  value={value}
+                  onChange={onChange}
+                />
+              )}
             />
           </FormGroup>
           <ActionGroup>
