@@ -8,6 +8,7 @@ import {
   ServerGroupMembersRepresentation,
 } from "./models/server-info";
 import { TableToolbar } from "../components/table-toolbar/TableToolbar";
+import { ListEmptyState } from "../components/list-empty-state/ListEmptyState";
 import {
   Button,
   Divider,
@@ -99,7 +100,9 @@ export const GroupsSection = () => {
         </Title>
       </PageSection>
       <Divider />
+      
       <PageSection variant={PageSectionVariants.light}>
+        { rawData && rawData.length > 0 ? (
         <TableToolbar
           count={10}
           first={first}
@@ -138,6 +141,14 @@ export const GroupsSection = () => {
             <GroupsList list={filteredData ? filteredData : rawData} />
           )}
         </TableToolbar>
+        ) : (
+        <ListEmptyState
+          message="No groups in this realm"
+          instructions="You haven't created any groups in this realm. Create a group to get started."
+          primaryActionText="Create group"
+          onPrimaryAction=""
+      />
+      )}
       </PageSection>
     </React.Fragment>
   );

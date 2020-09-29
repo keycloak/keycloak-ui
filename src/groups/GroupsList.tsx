@@ -87,20 +87,21 @@ export const GroupsList = ({ list }: GroupsListProps) => {
 
   return (
     <React.Fragment>
-      {formattedData && (
+      { formattedData.length > 0 && 
         <Table
-          actions={actions}
-          variant={TableVariant.compact}
-          onSelect={onSelect}
-          canSelectAll={false}
-          aria-label={t("tableOfGroups")}
-          cells={tableHeader}
-          rows={formattedData}
-        >
-          <TableHeader />
-          <TableBody />
-        </Table>
-      )}
+        actions={actions}
+        variant={TableVariant.compact}
+        onSelect={onSelect}
+        canSelectAll={false}
+        aria-label={t("tableOfGroups")}
+        cells={tableHeader}
+        rows={formattedData}
+      >
+        <TableHeader />
+        <TableBody />
+      </Table>
+      }
+        
     </React.Fragment>
   );
 };
