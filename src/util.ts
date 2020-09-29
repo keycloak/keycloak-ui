@@ -40,4 +40,4 @@ export const exportClient = (client: ClientRepresentation): void => {
     }),
     clientCopy.clientId + ".json"
   );
-}
+};
