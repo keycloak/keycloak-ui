@@ -78,6 +78,7 @@ export const ViewHeader = ({
                   </ToolbarItem>
                   <ToolbarItem>
                     <Select
+                      placeholderText={t("common:action")}
                       isOpen={open}
                       onToggle={() => setOpen(!open)}
                       onSelect={(_, value) => {

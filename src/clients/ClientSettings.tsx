@@ -108,11 +108,6 @@ export const ClientSettings = () => {
                 titleKey="clients:clientList"
                 subKey="clients:clientsExplain"
                 selectItems={[
-                  <SelectOption
-                    key="action"
-                    value={t("common:action")}
-                    isPlaceholder={true}
-                  />,
                   <SelectOption key="export" value="export">
                     {t("common:export")}
                   </SelectOption>,
