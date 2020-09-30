@@ -141,7 +141,7 @@ export const ClientSettings = () => {
           );
         }}
       />
-      <PageSection>
+      <PageSection variant="light">
         <Alerts />
         <ScrollForm
           sections={[
@@ -177,7 +177,11 @@ export const ClientSettings = () => {
             </FormGroup>
           </Form>
           <Form isHorizontal>
-            <FormGroup label={t("consentRequired")} fieldId="kc-consent">
+            <FormGroup
+              label={t("consentRequired")}
+              fieldId="kc-consent"
+              hasNoPaddingTop
+            >
               <Controller
                 name="consentRequired"
                 defaultValue={false}
@@ -196,6 +200,7 @@ export const ClientSettings = () => {
             <FormGroup
               label={t("displayOnClient")}
               fieldId="kc-display-on-client"
+              hasNoPaddingTop
             >
               <Controller
                 name="alwaysDisplayInConsole"
