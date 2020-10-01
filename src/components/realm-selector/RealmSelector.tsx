@@ -81,14 +81,14 @@ export const RealmSelector = ({ realmList }: RealmSelectorProps) => {
 
   const addRealmComponent = (
     <React.Fragment key="Add Realm">
-    { whoami.canCreateRealm() &&
-      <>
-      <Divider key="divider" />
-      <DropdownItem key="add">
-        <AddRealm />
-      </DropdownItem>
-      </>
-    }
+      {whoami.canCreateRealm() && (
+        <>
+          <Divider key="divider" />
+          <DropdownItem key="add">
+            <AddRealm />
+          </DropdownItem>
+        </>
+      )}
     </React.Fragment>
   );
 
@@ -134,10 +134,7 @@ export const RealmSelector = ({ realmList }: RealmSelectorProps) => {
               {toUpperCase(realm)}
             </DropdownToggle>
           }
-          dropdownItems={[
-            ...dropdownItems,
-            addRealmComponent
-          ]}
+          dropdownItems={[...dropdownItems, addRealmComponent]}
         />
       )}
     </>

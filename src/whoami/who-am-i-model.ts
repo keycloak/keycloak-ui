@@ -4,5 +4,5 @@ export default interface WhoAmIRepresentation {
   displayName: string;
   locale: string;
   createRealm: boolean;
-  realm_access: {[key:string]: string[]};
+  realm_access: { [key: string]: string[] };
 }
