@@ -105,7 +105,7 @@ export const ClientSettings = () => {
             <>
               <DisableConfirm />
               <ViewHeader
-                titleKey="clients:clientList"
+                titleKey={form.getValues("clientId")}
                 subKey="clients:clientsExplain"
                 selectItems={[
                   <SelectOption key="export" value="export">
