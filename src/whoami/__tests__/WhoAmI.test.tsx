@@ -20,7 +20,6 @@ test("can not create realm", () => {
 
 test("getRealmAccess", () => {
   const whoami = new WhoAmI("master", whoamiMock);
-  console.log(JSON.stringify(whoamiMock));
   expect(Object.keys(whoami.getRealmAccess()).length).toEqual(2);
   expect(whoami.getRealmAccess()["master"].length).toEqual(18);
 });
