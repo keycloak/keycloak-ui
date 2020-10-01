@@ -13,15 +13,9 @@ import {
 import { ExternalLink } from "../components/external-link/ExternalLink";
 import { RoleRepresentation } from "../model/role-model";
 import { AlertVariant } from "@patternfly/react-core";
-<<<<<<< HEAD
 import { HttpClientContext } from "../context/http-service/HttpClientContext";
 import { useAlerts } from "../components/alert/Alerts";
 import { RealmContext } from "../context/realm-context/RealmContext";
-=======
-import { HttpClientContext } from "../http-service/HttpClientContext";
-import { useAlerts } from "../components/alert/Alerts";
-import { RealmContext } from "../components/realm-context/RealmContext";
->>>>>>> add logic to delete realm role
 
 type RolesListProps = {
   roles?: RoleRepresentation[];

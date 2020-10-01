@@ -61,10 +61,14 @@ export const NewRealmForm = () => {
               id="kc-realm-name"
               name="realm"
 <<<<<<< HEAD
+<<<<<<< HEAD
               ref={register({ required: true })}
 =======
               ref={register({required: true})}
 >>>>>>> add logic to delete realm role
+=======
+              ref={register({ required: true })}
+>>>>>>> format
             />
           </FormGroup>
           <FormGroup label={t("enabled")} fieldId="kc-realm-enabled-switch">
