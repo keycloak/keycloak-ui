@@ -1,4 +1,4 @@
-import React, { useContext, useEffect } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import {
   FormGroup,
@@ -39,6 +39,7 @@ export const ClientSettings = () => {
   const [addAlert, Alerts] = useAlerts();
 
   const { id } = useParams<{ id: string }>();
+  const [name, setName] = useState("");
   const form = useForm();
   const url = `/admin/realms/${realm}/clients/${id}`;
 
@@ -46,6 +47,7 @@ export const ClientSettings = () => {
     (async () => {
       const fetchedClient = await httpClient.doGet<ClientRepresentation>(url);
       if (fetchedClient.data) {
+        setName(fetchedClient.data.clientId);
         Object.entries(fetchedClient.data).map((entry) => {
           if (entry[0] !== "redirectUris") {
             form.setValue(entry[0], entry[1]);
@@ -105,7 +107,7 @@ export const ClientSettings = () => {
             <>
               <DisableConfirm />
               <ViewHeader
-                titleKey={form.getValues("clientId")}
+                titleKey={name}
                 subKey="clients:clientsExplain"
                 selectItems={[
                   <SelectOption key="export" value="export">
