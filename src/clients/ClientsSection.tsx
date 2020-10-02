@@ -47,6 +47,7 @@ export const ClientsSection = () => {
         subKey="clients:clientsExplain"
       />
       <PageSection variant="light">
+<<<<<<< HEAD
         {!clients && (
           <div className="pf-u-text-align-center">
             <Spinner />
@@ -88,6 +89,44 @@ export const ClientsSection = () => {
             />
           </PaginatingTableToolbar>
         )}
+=======
+        <DataLoader loader={loader}>
+          {(clients) => (
+            <TableToolbar
+              count={clients.data.length}
+              first={first}
+              max={max}
+              onNextClick={setFirst}
+              onPreviousClick={setFirst}
+              onPerPageSelect={(first, max) => {
+                setFirst(first);
+                setMax(max);
+              }}
+              inputGroupName="clientsToolbarTextInput"
+              inputGroupPlaceholder={t("Search for client")}
+              toolbarItem={
+                <>
+                  <Button onClick={() => history.push("/add-client")}>
+                    {t("createClient")}
+                  </Button>
+                  <Button
+                    onClick={() => history.push("/import-client")}
+                    variant="link"
+                  >
+                    {t("importClient")}
+                  </Button>
+                </>
+              }
+            >
+              <ClientList
+                clients={clients.data}
+                refresh={clients.refresh}
+                baseUrl={keycloak!.authServerUrl()!}
+              />
+            </TableToolbar>
+          )}
+        </DataLoader>
+>>>>>>> added function to refresh the dataloader data
       </PageSection>
     </>
   );
