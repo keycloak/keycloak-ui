@@ -32,11 +32,7 @@ export const RolesList = ({ roles, refresh }: RolesListProps) => {
   const { t } = useTranslation("roles");
   const httpClient = useContext(HttpClientContext)!;
   const { realm } = useContext(RealmContext);
-<<<<<<< HEAD
   const { addAlert } = useAlerts();
-=======
-  const [addAlert, Alerts] = useAlerts();
->>>>>>> add logic to delete realm role
 
   const emptyFormatter = (): IFormatter => (data?: IFormatterValueType) => {
     return data ? data : "—";
