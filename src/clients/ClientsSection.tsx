@@ -6,10 +6,10 @@ import { Button, PageSection } from "@patternfly/react-core";
 import { DataLoader } from "../components/data-loader/DataLoader";
 import { TableToolbar } from "../components/table-toolbar/TableToolbar";
 import { ClientList } from "./ClientList";
-import { HttpClientContext } from "../http-service/HttpClientContext";
-import { KeycloakContext } from "../auth/KeycloakContext";
+import { HttpClientContext } from "../context/http-service/HttpClientContext";
+import { KeycloakContext } from "../context/auth/KeycloakContext";
 import { ClientRepresentation } from "./models/client-model";
-import { RealmContext } from "../components/realm-context/RealmContext";
+import { RealmContext } from "../context/realm-context/RealmContext";
 import { ViewHeader } from "../components/view-header/ViewHeader";
 
 export const ClientsSection = () => {
