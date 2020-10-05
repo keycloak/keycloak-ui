@@ -140,13 +140,19 @@ export const GroupsSection = () => {
           {rawData && filteredData && (
             <GroupsList list={filteredData ? filteredData : rawData} />
           )}
+          { filteredData.length === 0 &&
+            <ListEmptyState
+              message="No search results"
+              instructions="Click on the search bar above to search for groups."
+            />
+          }
         </TableToolbar>
         ) : (
         <ListEmptyState
+          hasIcon={true}
           message="No groups in this realm"
           instructions="You haven't created any groups in this realm. Create a group to get started."
           primaryActionText="Create group"
-          onPrimaryAction=""
       />
       )}
       </PageSection>

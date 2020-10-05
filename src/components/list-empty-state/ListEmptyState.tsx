@@ -11,8 +11,9 @@ import { PlusCircleIcon } from "@patternfly/react-icons";
 export type ListEmptyStateProps = {
   message: string;
   instructions: string;
-  primaryActionText: string;
-  onPrimaryAction: MouseEventHandler<HTMLButtonElement>;
+  primaryActionText?: string;
+  onPrimaryAction?: MouseEventHandler<HTMLButtonElement>;
+  hasIcon?: boolean;
 };
 
 export const ListEmptyState = ({
@@ -20,18 +21,23 @@ export const ListEmptyState = ({
   instructions,
   primaryActionText,
   onPrimaryAction,
+  hasIcon
 }: ListEmptyStateProps) => {
   return (
     <>
       <EmptyState variant="large">
-        <EmptyStateIcon icon={PlusCircleIcon} />
+        { hasIcon &&
+          <EmptyStateIcon icon={PlusCircleIcon} />
+        }
         <Title headingLevel="h4" size="lg">
           {message}
         </Title>
         <EmptyStateBody>{instructions}</EmptyStateBody>
-        <Button variant="primary" onClick={onPrimaryAction}>
-          {primaryActionText}
-        </Button>
+        { primaryActionText &&
+          <Button variant="primary" onClick={onPrimaryAction}>
+            {primaryActionText}
+          </Button>
+        }
       </EmptyState>
     </>
   );
