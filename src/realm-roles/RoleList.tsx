@@ -55,7 +55,6 @@ export const RolesList = ({ roles, refresh }: RolesListProps) => {
     return { cells: columns.map((col) => column[col]), role: column };
   });
   return (
-<<<<<<< HEAD
     <>
       <Table
         variant={TableVariant.compact}
@@ -88,35 +87,6 @@ export const RolesList = ({ roles, refresh }: RolesListProps) => {
                 );
               }
             },
-=======
-    <Table
-      variant={TableVariant.compact}
-      cells={[
-        {
-          title: t("roleName"),
-          cellFormatters: [externalLink(), emptyFormatter()],
-        },
-        {
-          title: t("composite"),
-          cellFormatters: [boolFormatter(), emptyFormatter()],
-        },
-        { title: t("description"), cellFormatters: [emptyFormatter()] },
-      ]}
-      rows={data}
-      actions={[
-        {
-          title: t("common:Delete"),
-          onClick: async (_, rowId) => {
-            try {
-              await httpClient.doDelete(
-                `/admin/realms/${realm}/roles/${data[rowId].role.name}`
-              );
-              refresh();
-              addAlert(t("roleDeletedSuccess"), AlertVariant.success);
-            } catch (error) {
-              addAlert(`${t("roleDeleteError")} ${error}`, AlertVariant.danger);
-            }
->>>>>>> refresh working
           },
         ]}
         aria-label="Roles list"
