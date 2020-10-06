@@ -60,14 +60,8 @@ export const NewClientScopeForm = () => {
     <PageSection variant="light">
       <Form isHorizontal onSubmit={handleSubmit(save)}>
         <FormGroup
-          label={
-            <>
-              {t("name")}
-            </>
-          }
-      labelIcon={
-          <HelpItem item="clientScope.name" itemFor="kc-name" />
-      }
+          label={<>{t("name")}</>}
+          labelIcon={<HelpItem item="clientScope.name" itemFor="kc-name" />}
           fieldId="kc-name"
           isRequired
         >
@@ -79,12 +73,10 @@ export const NewClientScopeForm = () => {
           />
         </FormGroup>
         <FormGroup
-          label={
-            <>
-              {t("description")} 
-            </>
+          label={<>{t("description")}</>}
+          labelIcon={
+            <HelpItem item="clientScope.description" itemFor="kc-description" />
           }
-          labelIcon={<HelpItem item="clientScope.description" itemFor="kc-description" />}
           fieldId="kc-description"
         >
           <TextInput
@@ -95,12 +87,10 @@ export const NewClientScopeForm = () => {
           />
         </FormGroup>
         <FormGroup
-          label={
-            <>
-              {t("protocol")} 
-            </>
+          label={<>{t("protocol")}</>}
+          labelIcon={
+            <HelpItem item="clientScope.protocol" itemFor="kc-protocol" />
           }
-          labelIcon={<HelpItem item="clientScope.protocol" itemFor="kc-protocol" />}
           fieldId="kc-protocol"
         >
           <Controller
@@ -135,13 +125,13 @@ export const NewClientScopeForm = () => {
         </FormGroup>
         <FormGroup
           hasNoPaddingTop
-          label={
-            <>
-              {t("displayOnConsentScreen")}{" "}
-              
-            </>
+          label={<>{t("displayOnConsentScreen")} </>}
+          labelIcon={
+            <HelpItem
+              item="clientScope.displayOnConsentScreen"
+              itemFor="kc-display.on.consent.screen"
+            />
           }
-          labelIcon={<HelpItem item="clientScope.displayOnConsentScreen" itemFor="kc-display.on.consent.screen" />}
           fieldId="kc-display.on.consent.screen"
         >
           <Controller
@@ -160,13 +150,13 @@ export const NewClientScopeForm = () => {
           />
         </FormGroup>
         <FormGroup
-          label={
-            <>
-              {t("consentScreenText")}{" "}
-              
-            </>
+          label={<>{t("consentScreenText")} </>}
+          labelIcon={
+            <HelpItem
+              item="clientScope.consentScreenText"
+              itemFor="kc-consent-screen-text"
+            />
           }
-          labelIcon={<HelpItem item="clientScope.consentScreenText" itemFor="kc-consent-screen-text" />}
           fieldId="kc-consent-screen-text"
         >
           <TextInput
@@ -177,12 +167,10 @@ export const NewClientScopeForm = () => {
           />
         </FormGroup>
         <FormGroup
-          label={
-            <>
-              {t("guiOrder")}
-            </>
+          label={<>{t("guiOrder")}</>}
+          labelIcon={
+            <HelpItem item="clientScope.guiOrder" itemFor="kc-gui-order" />
           }
-          labelIcon={ <HelpItem item="clientScope.guiOrder" itemFor="kc-gui-order" />}
           fieldId="kc-gui-order"
         >
           <TextInput

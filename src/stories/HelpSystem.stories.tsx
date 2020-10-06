@@ -48,11 +48,7 @@ export const FormFieldHelp = () => (
       }
       fieldId="storybook-form-help"
     >
-      <TextInput
-        isRequired
-        type="text"
-        id="storybook-form-help"
-      ></TextInput>
+      <TextInput isRequired type="text" id="storybook-form-help"></TextInput>
     </FormGroup>
   </Form>
 );
@@ -75,7 +71,8 @@ const HelpSystemTest = () => {
       }
     >
       <PageSection>
-        Help system is {enabled ? "enabled" : "not on, guess you don't need help"}
+        Help system is{" "}
+        {enabled ? "enabled" : "not on, guess you don't need help"}
       </PageSection>
       <PageSection variant="light">
         <FormFieldHelp />

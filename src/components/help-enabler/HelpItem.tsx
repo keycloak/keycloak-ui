@@ -22,7 +22,7 @@ export const HelpItem = ({ item, itemFor }: HelpItemProps) => {
         // </Tooltip>
         <Popover bodyContent={t(`help:${item}`)}>
           <button
-            aria-label={t(`helpLabel`) + ' ' + item} // *** this should say "more help for the [field label]"
+            aria-label={t(`helpLabel`) + " " + item} // *** this should say "more help for the [field label]"
             onClick={(e) => e.preventDefault()}
             aria-describedby={itemFor} // this is the id of the input field that the help is for
             className="pf-c-form__group-label-help"
