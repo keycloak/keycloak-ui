@@ -1,12 +1,7 @@
 import React, { useContext, useEffect, useState } from "react";
 import { useHistory } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import {
-  Button,
-  Divider,
-  PageSection,
-  Spinner,
-} from "@patternfly/react-core";
+import { Button, Divider, PageSection, Spinner } from "@patternfly/react-core";
 
 import { HttpClientContext } from "../context/http-service/HttpClientContext";
 import { RoleRepresentation } from "../model/role-model";
@@ -67,10 +62,7 @@ export const RealmRolesSection = () => {
               </>
             }
           >
-            <RolesList
-              roles={roles}
-              refresh={loader}
-            />
+            <RolesList roles={roles} refresh={loader} />
           </PaginatingTableToolbar>
         )}
       </PageSection>

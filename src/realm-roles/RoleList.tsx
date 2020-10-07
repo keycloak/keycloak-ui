@@ -51,10 +51,9 @@ export const RolesList = ({ roles, refresh }: RolesListProps) => {
       ? boolVal.charAt(0).toUpperCase() + boolVal.slice(1)
       : undefined) as string;
   };
-  const data = roles!
-    .map((column) => {
-      return { cells: columns.map((col) => column[col]), role: column };
-    });
+  const data = roles!.map((column) => {
+    return { cells: columns.map((col) => column[col]), role: column };
+  });
   return (
     <>
       <Table
