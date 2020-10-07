@@ -20,7 +20,7 @@ import { HelpItem } from "../../components/help-enabler/HelpItem";
 import { HttpClientContext } from "../../context/http-service/HttpClientContext";
 import { RealmContext } from "../../context/realm-context/RealmContext";
 import { useAlerts } from "../../components/alert/Alerts";
-import { useLoginProviders } from "../../components/server-info/ServerInfoProvider";
+import { useLoginProviders } from "../../context/server-info/ServerInfoProvider";
 
 export const NewClientScopeForm = () => {
   const { t } = useTranslation("client-scopes");

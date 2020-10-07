@@ -9,9 +9,8 @@ import {
 import { useTranslation } from "react-i18next";
 import { Controller, UseFormMethods } from "react-hook-form";
 
-import { HttpClientContext } from "../../context/http-service/HttpClientContext";
+import { useLoginProviders } from "../../context/server-info/ServerInfoProvider";
 import { ClientDescription } from "../ClientDescription";
-import { useLoginProviders } from "../../components/server-info/ServerInfoProvider";
 
 type GeneralSettingsProps = {
   form: UseFormMethods;

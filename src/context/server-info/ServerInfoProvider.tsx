@@ -1,8 +1,8 @@
 import React, { createContext, ReactNode, useContext } from "react";
 import { ServerInfoRepresentation } from "../../clients/models/server-info";
-import { HttpClientContext } from "../../context/http-service/HttpClientContext";
+import { HttpClientContext } from "../http-service/HttpClientContext";
 import { sortProvider } from "../../util";
-import { DataLoader } from "../data-loader/DataLoader";
+import { DataLoader } from "../../components/data-loader/DataLoader";
 
 const ServerInfoContext = createContext<ServerInfoRepresentation>(
   {} as ServerInfoRepresentation

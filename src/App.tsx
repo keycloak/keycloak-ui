@@ -8,8 +8,8 @@ import { Help } from "./components/help-enabler/HelpHeader";
 
 import { RealmContextProvider } from "./context/realm-context/RealmContext";
 import { WhoAmIContextProvider } from "./context/whoami/WhoAmI";
+import { ServerInfoProvider } from "./context/server-info/ServerInfoProvider";
 import { AlertProvider } from "./components/alert/Alerts";
-import { ServerInfoProvider } from "./components/server-info/ServerInfoProvider";
 
 import { routes } from "./route-config";
 import { PageBreadCrumbs } from "./components/bread-crumb/PageBreadCrumbs";
