@@ -40,8 +40,6 @@ export const NewRoleForm = () => {
     }
   };
 
-  console.log("errors", errors);
-
   return (
     <>
       <PageSection variant="light">
