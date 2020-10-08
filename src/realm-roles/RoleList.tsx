@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useState } from "react";
 import { useTranslation } from "react-i18next";
 
 import {
@@ -12,7 +12,12 @@ import {
 
 import { ExternalLink } from "../components/external-link/ExternalLink";
 import { RoleRepresentation } from "../model/role-model";
-import { AlertVariant } from "@patternfly/react-core";
+import {
+  AlertVariant,
+  Button,
+  Modal,
+  ModalVariant,
+} from "@patternfly/react-core";
 import { HttpClientContext } from "../context/http-service/HttpClientContext";
 import { useAlerts } from "../components/alert/Alerts";
 import { RealmContext } from "../context/realm-context/RealmContext";
@@ -33,6 +38,8 @@ export const RolesList = ({ roles, refresh }: RolesListProps) => {
   const httpClient = useContext(HttpClientContext)!;
   const { realm } = useContext(RealmContext);
   const { addAlert } = useAlerts();
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedRowId, setSelectedRowId] = useState(-1);
 
   const emptyFormatter = (): IFormatter => (data?: IFormatterValueType) => {
     return data ? data : "—";
@@ -54,6 +61,10 @@ export const RolesList = ({ roles, refresh }: RolesListProps) => {
   const data = roles!.map((column) => {
     return { cells: columns.map((col) => column[col]), role: column };
   });
+
+  const selectedRoleName =
+    selectedRowId != -1 ? data[selectedRowId].role.name : "";
+
   return (
     <>
       <Table
@@ -73,7 +84,29 @@ export const RolesList = ({ roles, refresh }: RolesListProps) => {
         actions={[
           {
             title: t("common:Delete"),
-            onClick: async (_, rowId) => {
+            onClick: (_, rowId) => {
+              setIsModalOpen(true);
+              setSelectedRowId(rowId);
+            },
+          },
+        ]}
+        aria-label="Roles list"
+      >
+        <TableHeader />
+        <TableBody />
+      </Table>
+      <Modal
+        variant={ModalVariant.small}
+        title="Delete role?"
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(!isModalOpen)}
+        actions={[
+          <Button
+            key="Delete"
+            variant="danger"
+            onClick={async () => {
+              const rowId = selectedRowId;
+              setIsModalOpen(!isModalOpen);
               try {
                 await httpClient.doDelete(
                   `/admin/realms/${realm}/roles/${data[rowId].role.name}`
@@ -86,14 +119,22 @@ export const RolesList = ({ roles, refresh }: RolesListProps) => {
                   AlertVariant.danger
                 );
               }
-            },
-          },
+            }}
+          >
+            Delete
+          </Button>,
+          <Button
+            key="Cancel"
+            variant="link"
+            onClick={() => setIsModalOpen(!isModalOpen)}
+          >
+            Cancel
+          </Button>,
         ]}
-        aria-label="Roles list"
       >
-        <TableHeader />
-        <TableBody />
-      </Table>
+        This action will permanently delete the {selectedRoleName} role and
+        cannot be undone.
+      </Modal>
     </>
   );
 };

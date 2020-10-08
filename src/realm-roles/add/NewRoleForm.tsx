@@ -18,7 +18,7 @@ import {
 import { RoleRepresentation } from "../../model/role-model";
 import { HttpClientContext } from "../../context/http-service/HttpClientContext";
 import { useAlerts } from "../../components/alert/Alerts";
-import { Controller, useForm } from "react-hook-form";
+import { Controller, useForm, FieldErrors } from "react-hook-form";
 import { RealmContext } from "../../context/realm-context/RealmContext";
 
 export const NewRoleForm = () => {
@@ -39,6 +39,8 @@ export const NewRoleForm = () => {
       addAlert(`${t("roleCreateError")} '${error}'`, AlertVariant.danger);
     }
   };
+
+  console.log(errors);
 
   return (
     <>
@@ -77,7 +79,12 @@ export const NewRoleForm = () => {
               render={({ onChange, value }) => (
                 <TextArea
                   type="text"
-                  validated={value.length >= 255 ? "error" : "default"}
+                  validated={
+                    errors.description &&
+                    errors.description.type === "maxLength"
+                      ? "error"
+                      : "default"
+                  }
                   id="kc-role-description"
                   value={value}
                   onChange={onChange}

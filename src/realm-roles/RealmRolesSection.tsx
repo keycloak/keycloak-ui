@@ -1,7 +1,13 @@
 import React, { useContext, useEffect, useState } from "react";
 import { useHistory } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import { Button, Divider, PageSection, Spinner } from "@patternfly/react-core";
+import {
+  Bullseye,
+  Button,
+  Divider,
+  PageSection,
+  Spinner,
+} from "@patternfly/react-core";
 
 import { HttpClientContext } from "../context/http-service/HttpClientContext";
 import { RoleRepresentation } from "../model/role-model";
@@ -36,11 +42,11 @@ export const RealmRolesSection = () => {
   return (
     <>
       <ViewHeader titleKey="roles:title" subKey="roles:roleExplain" />
-      <PageSection padding={{ default: "noPadding" }}>
+      <PageSection variant="light">
         {!roles && (
-          <div className="pf-u-text-align-center">
+          <Bullseye className="pf-u-text-align-center">
             <Spinner />
-          </div>
+          </Bullseye>
         )}
         <Divider component="li" key={1} />
         {roles && (
