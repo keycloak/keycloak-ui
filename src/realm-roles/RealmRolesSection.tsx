@@ -44,7 +44,7 @@ export const RealmRolesSection = () => {
       <ViewHeader titleKey="roles:title" subKey="roles:roleExplain" />
       <PageSection variant="light">
         {!roles && (
-          <Bullseye className="pf-u-text-align-center">
+          <Bullseye>
             <Spinner />
           </Bullseye>
         )}
