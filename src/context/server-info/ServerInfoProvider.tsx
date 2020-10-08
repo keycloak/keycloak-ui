@@ -1,5 +1,5 @@
 import React, { createContext, ReactNode, useContext } from "react";
-import { ServerInfoRepresentation } from "../../clients/models/server-info";
+import { ServerInfoRepresentation } from "./server-info";
 import { HttpClientContext } from "../http-service/HttpClientContext";
 import { sortProvider } from "../../util";
 import { DataLoader } from "../../components/data-loader/DataLoader";
