@@ -1,15 +1,16 @@
 import React, { useContext } from "react";
-import { Button, Popover } from "@patternfly/react-core";
+import { Popover } from "@patternfly/react-core";
 import { HelpIcon } from "@patternfly/react-icons";
 import { useTranslation } from "react-i18next";
 import { HelpContext } from "./HelpHeader";
 
 type HelpItemProps = {
-  item: string;
-  itemFor: string;
+  helpText: string;
+  forLabel: string;
+  forID: string;
 };
 
-export const HelpItem = ({ item, itemFor }: HelpItemProps) => {
+export const HelpItem = ({ helpText, forLabel, forID }: HelpItemProps) => {
   const { t } = useTranslation();
   const { enabled } = useContext(HelpContext);
   return (
@@ -20,11 +21,12 @@ export const HelpItem = ({ item, itemFor }: HelpItemProps) => {
         //     <HelpIcon />
         //   </span>
         // </Tooltip>
-        <Popover bodyContent={t(`help:${item}`)}>
+        // <Popover bodyContent={t(`help:${item}`)}>
+        <Popover bodyContent={helpText}>
           <button
-            aria-label={t(`helpLabel`, { label: item })} // *** this should say "more help for the [field label]"
+            aria-label={t(`helpLabel`, { label: forLabel })}
             onClick={(e) => e.preventDefault()}
-            aria-describedby={itemFor} // this is the id of the input field that the help is for
+            aria-describedby={forID}
             className="pf-c-form__group-label-help"
           >
             <HelpIcon noVerticalAlign />

@@ -3,7 +3,7 @@
 exports[`<HelpItem /> render 1`] = `
 <DocumentFragment>
   <button
-    aria-describedby=""
+    aria-describedby="placeholder"
     aria-label="helpLabel"
     class="pf-c-form__group-label-help"
   >

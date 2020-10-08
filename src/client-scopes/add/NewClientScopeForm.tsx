@@ -24,6 +24,7 @@ import { useLoginProviders } from "../../context/server-info/ServerInfoProvider"
 
 export const NewClientScopeForm = () => {
   const { t } = useTranslation("client-scopes");
+  const helpText = useTranslation("client-scopes-help").t;
   const { register, control, handleSubmit } = useForm<
     ClientScopeRepresentation
   >();
@@ -60,8 +61,14 @@ export const NewClientScopeForm = () => {
     <PageSection variant="light">
       <Form isHorizontal onSubmit={handleSubmit(save)}>
         <FormGroup
-          label={<>{t("name")}</>}
-          labelIcon={<HelpItem item="clientScope.name" itemFor="kc-name" />}
+          label={t("name")}
+          labelIcon={
+            <HelpItem
+              helpText={helpText("name")}
+              forLabel={t("name")}
+              forID="kc-name"
+            />
+          }
           fieldId="kc-name"
           isRequired
         >
@@ -73,9 +80,13 @@ export const NewClientScopeForm = () => {
           />
         </FormGroup>
         <FormGroup
-          label={<>{t("description")}</>}
+          label={t("description")}
           labelIcon={
-            <HelpItem item="clientScope.description" itemFor="kc-description" />
+            <HelpItem
+              helpText={helpText("description")}
+              forLabel={t("description")}
+              forID="kc-description"
+            />
           }
           fieldId="kc-description"
         >
@@ -87,9 +98,13 @@ export const NewClientScopeForm = () => {
           />
         </FormGroup>
         <FormGroup
-          label={<>{t("protocol")}</>}
+          label={t("protocol")}
           labelIcon={
-            <HelpItem item="clientScope.protocol" itemFor="kc-protocol" />
+            <HelpItem
+              helpText={helpText("protocol")}
+              forLabel="protocol"
+              forID="kc-protocol"
+            />
           }
           fieldId="kc-protocol"
         >
@@ -99,7 +114,7 @@ export const NewClientScopeForm = () => {
             control={control}
             render={({ onChange, value }) => (
               <Select
-                id="kc-protocol"
+                toggleId="kc-protocol"
                 required
                 onToggle={() => isOpen(!open)}
                 onSelect={(_, value, isPlaceholder) => {
@@ -125,11 +140,12 @@ export const NewClientScopeForm = () => {
         </FormGroup>
         <FormGroup
           hasNoPaddingTop
-          label={<>{t("displayOnConsentScreen")} </>}
+          label={t("displayOnConsentScreen")}
           labelIcon={
             <HelpItem
-              item="clientScope.displayOnConsentScreen"
-              itemFor="kc-display.on.consent.screen"
+              helpText={helpText("displayOnConsentScreen")}
+              forLabel={t("displayOnConsentScreen")}
+              forID="kc-display.on.consent.screen"
             />
           }
           fieldId="kc-display.on.consent.screen"
@@ -150,11 +166,12 @@ export const NewClientScopeForm = () => {
           />
         </FormGroup>
         <FormGroup
-          label={<>{t("consentScreenText")} </>}
+          label={t("consentScreenText")}
           labelIcon={
             <HelpItem
-              item="clientScope.consentScreenText"
-              itemFor="kc-consent-screen-text"
+              helpText={helpText("consentScreenText")}
+              forLabel={t("consentScreenText")}
+              forID="kc-consent-screen-text"
             />
           }
           fieldId="kc-consent-screen-text"
@@ -167,9 +184,13 @@ export const NewClientScopeForm = () => {
           />
         </FormGroup>
         <FormGroup
-          label={<>{t("guiOrder")}</>}
+          label={t("guiOrder")}
           labelIcon={
-            <HelpItem item="clientScope.guiOrder" itemFor="kc-gui-order" />
+            <HelpItem
+              helpText={helpText("guiOrder")}
+              forLabel={t("guiOrder")}
+              forID="kc-gui-order"
+            />
           }
           fieldId="kc-gui-order"
         >

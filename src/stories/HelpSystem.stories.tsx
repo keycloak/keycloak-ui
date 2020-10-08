@@ -17,8 +17,6 @@ import {
   HelpContext,
   HelpHeader,
 } from "../components/help-enabler/HelpHeader";
-import { I18nextProvider } from "react-i18next";
-import i18n from "../i18n";
 
 export default {
   title: "Help System Example",
@@ -32,9 +30,11 @@ export const HelpSystem = () => (
 );
 
 export const HelpItems = () => (
-  <I18nextProvider i18n={i18n}>
-    <HelpItem item="storybook" itemFor="storybook-example" />
-  </I18nextProvider>
+  <HelpItem
+    helpText="This explains the related field"
+    forLabel="Field label"
+    forID="storybook-example-id"
+  />
 );
 
 export const FormFieldHelp = () => (
@@ -42,9 +42,11 @@ export const FormFieldHelp = () => (
     <FormGroup
       label="Label"
       labelIcon={
-        <I18nextProvider i18n={i18n}>
-          <HelpItem item="label" itemFor="storybook-form-help" />
-        </I18nextProvider>
+        <HelpItem
+          helpText="This explains the related field"
+          forLabel="Field label"
+          forID="storybook-form-help"
+        />
       }
       fieldId="storybook-form-help"
     >
@@ -70,10 +72,7 @@ const HelpSystemTest = () => {
         />
       }
     >
-      <PageSection>
-        Help system is{" "}
-        {enabled ? "enabled" : "not on, guess you don't need help"}
-      </PageSection>
+      <PageSection>Help system is {enabled ? "enabled" : "not on"}</PageSection>
       <PageSection variant="light">
         <FormFieldHelp />
       </PageSection>
