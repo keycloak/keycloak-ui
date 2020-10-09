@@ -12,10 +12,7 @@ import {
 
 import { ExternalLink } from "../components/external-link/ExternalLink";
 import { RoleRepresentation } from "../model/role-model";
-import {
-  AlertVariant,
-  ButtonVariant,
-} from "@patternfly/react-core";
+import { AlertVariant, ButtonVariant } from "@patternfly/react-core";
 import { HttpClientContext } from "../context/http-service/HttpClientContext";
 import { useAlerts } from "../components/alert/Alerts";
 import { RealmContext } from "../context/realm-context/RealmContext";
