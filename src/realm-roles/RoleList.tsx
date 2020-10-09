@@ -14,13 +14,12 @@ import { ExternalLink } from "../components/external-link/ExternalLink";
 import { RoleRepresentation } from "../model/role-model";
 import {
   AlertVariant,
-  Button,
-  Modal,
-  ModalVariant,
+  ButtonVariant,
 } from "@patternfly/react-core";
 import { HttpClientContext } from "../context/http-service/HttpClientContext";
 import { useAlerts } from "../components/alert/Alerts";
 import { RealmContext } from "../context/realm-context/RealmContext";
+import { useConfirmDialog } from "../components/confirm-dialog/ConfirmDialog";
 
 type RolesListProps = {
   roles?: RoleRepresentation[];
@@ -38,7 +37,6 @@ export const RolesList = ({ roles, refresh }: RolesListProps) => {
   const httpClient = useContext(HttpClientContext)!;
   const { realm } = useContext(RealmContext);
   const { addAlert } = useAlerts();
-  const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedRowId, setSelectedRowId] = useState(-1);
 
   const emptyFormatter = (): IFormatter => (data?: IFormatterValueType) => {
@@ -65,8 +63,29 @@ export const RolesList = ({ roles, refresh }: RolesListProps) => {
   const selectedRoleName =
     selectedRowId != -1 ? data[selectedRowId].role.name : "";
 
+  const [toggleDeleteDialog, DeleteConfirm] = useConfirmDialog({
+    titleKey: "roles:roleDeleteConfirm",
+    messageKey: t(
+      `This action will permanently delete the role ${selectedRoleName} and cannot be undone.`
+    ),
+    continueButtonLabel: "common:delete",
+    continueButtonVariant: ButtonVariant.danger,
+    onConfirm: async () => {
+      try {
+        await httpClient.doDelete(
+          `/admin/realms/${realm}/roles/${data[selectedRowId].role.name}`
+        );
+        refresh();
+        addAlert(t("roleDeletedSuccess"), AlertVariant.success);
+      } catch (error) {
+        addAlert(`${t("roleDeleteError")} ${error}`, AlertVariant.danger);
+      }
+    },
+  });
+
   return (
     <>
+      <DeleteConfirm />
       <Table
         variant={TableVariant.compact}
         cells={[
@@ -85,8 +104,8 @@ export const RolesList = ({ roles, refresh }: RolesListProps) => {
           {
             title: t("common:Delete"),
             onClick: (_, rowId) => {
-              setIsModalOpen(true);
               setSelectedRowId(rowId);
+              toggleDeleteDialog();
             },
           },
         ]}
@@ -95,46 +114,6 @@ export const RolesList = ({ roles, refresh }: RolesListProps) => {
         <TableHeader />
         <TableBody />
       </Table>
-      <Modal
-        variant={ModalVariant.small}
-        title="Delete role?"
-        isOpen={isModalOpen}
-        onClose={() => setIsModalOpen(!isModalOpen)}
-        actions={[
-          <Button
-            key="Delete"
-            variant="danger"
-            onClick={async () => {
-              const rowId = selectedRowId;
-              setIsModalOpen(!isModalOpen);
-              try {
-                await httpClient.doDelete(
-                  `/admin/realms/${realm}/roles/${data[rowId].role.name}`
-                );
-                refresh();
-                addAlert(t("roleDeletedSuccess"), AlertVariant.success);
-              } catch (error) {
-                addAlert(
-                  `${t("roleDeleteError")} ${error}`,
-                  AlertVariant.danger
-                );
-              }
-            }}
-          >
-            Delete
-          </Button>,
-          <Button
-            key="Cancel"
-            variant="link"
-            onClick={() => setIsModalOpen(!isModalOpen)}
-          >
-            Cancel
-          </Button>,
-        ]}
-      >
-        This action will permanently delete the {selectedRoleName} role and
-        cannot be undone.
-      </Modal>
     </>
   );
 };
