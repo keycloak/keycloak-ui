@@ -16,11 +16,14 @@ import {
 import { HelpContext } from "../help-enabler/HelpHeader";
 import { useTranslation } from "react-i18next";
 import { PageBreadCrumbs } from "../bread-crumb/PageBreadCrumbs";
+import { ExternalLink } from "../external-link/ExternalLink";
 
 export type ViewHeaderProps = {
   titleKey: string;
   badge?: string;
   subKey: string;
+  subKeyLinkText?: string;
+  subKeyLinkAddress?: string;
   selectItems?: ReactElement[];
   isEnabled?: boolean;
   onSelect?: (value: string) => void;
@@ -31,6 +34,8 @@ export const ViewHeader = ({
   titleKey,
   badge,
   subKey,
+  subKeyLinkText,
+  subKeyLinkAddress,
   selectItems,
   isEnabled = true,
   onSelect,
@@ -98,7 +103,17 @@ export const ViewHeader = ({
         </Level>
         {enabled && (
           <TextContent>
-            <Text>{t(subKey)}</Text>
+            <Text>
+              {t(subKey)}
+              {subKeyLinkText && (
+                <ExternalLink
+                  href={subKeyLinkAddress}
+                  title={t(subKeyLinkText)}
+                  isInline
+                  className="pf-u-ml-md"
+                />
+              )}
+            </Text>
           </TextContent>
         )}
       </PageSection>
