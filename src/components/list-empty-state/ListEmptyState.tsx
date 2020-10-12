@@ -7,6 +7,7 @@ import {
   Button,
 } from "@patternfly/react-core";
 import { PlusCircleIcon } from "@patternfly/react-icons";
+import { SearchIcon } from "@patternfly/react-icons";
 
 export type ListEmptyStateProps = {
   message: string;
@@ -14,6 +15,7 @@ export type ListEmptyStateProps = {
   primaryActionText?: string;
   onPrimaryAction?: MouseEventHandler<HTMLButtonElement>;
   hasIcon?: boolean;
+  hasSearchIcon?: boolean;
 };
 
 export const ListEmptyState = ({
@@ -21,13 +23,17 @@ export const ListEmptyState = ({
   instructions,
   primaryActionText,
   onPrimaryAction,
-  hasIcon
+  hasIcon,
+  hasSearchIcon
 }: ListEmptyStateProps) => {
   return (
     <>
       <EmptyState variant="large">
         { hasIcon &&
           <EmptyStateIcon icon={PlusCircleIcon} />
+        }
+        { hasSearchIcon &&
+          <EmptyStateIcon icon={SearchIcon} />
         }
         <Title headingLevel="h4" size="lg">
           {message}

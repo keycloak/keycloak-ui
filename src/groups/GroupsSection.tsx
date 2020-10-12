@@ -104,6 +104,7 @@ export const GroupsSection = () => {
       <PageSection variant={PageSectionVariants.light}>
         { rawData && rawData.length > 0 ? (
         <TableToolbar
+          // aria-label={t(`More info for the help: ${item}`)}
           count={10}
           first={first}
           max={max}
@@ -142,6 +143,7 @@ export const GroupsSection = () => {
           )}
           { filteredData.length === 0 &&
             <ListEmptyState
+              hasSearchIcon={true}
               message="No search results"
               instructions="Click on the search bar above to search for groups."
             />
