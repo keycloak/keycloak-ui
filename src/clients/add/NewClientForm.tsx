@@ -11,12 +11,12 @@ import {
 import { useTranslation } from "react-i18next";
 import { useForm } from "react-hook-form";
 
-import { HttpClientContext } from "../../http-service/HttpClientContext";
+import { HttpClientContext } from "../../context/http-service/HttpClientContext";
 import { GeneralSettings } from "./GeneralSettings";
 import { CapabilityConfig } from "./CapabilityConfig";
 import { ClientRepresentation } from "../models/client-model";
 import { useAlerts } from "../../components/alert/Alerts";
-import { RealmContext } from "../../components/realm-context/RealmContext";
+import { RealmContext } from "../../context/realm-context/RealmContext";
 import { ViewHeader } from "../../components/view-header/ViewHeader";
 
 export const NewClientForm = () => {
@@ -37,15 +37,15 @@ export const NewClientForm = () => {
     directAccessGrantsEnabled: false,
     standardFlowEnabled: false,
   });
-  const [add, Alerts] = useAlerts();
+  const { addAlert } = useAlerts();
   const methods = useForm<ClientRepresentation>({ defaultValues: client });
 
   const save = async () => {
     try {
       await httpClient.doPost(`/admin/realms/${realm}/clients`, client);
-      add("Client created", AlertVariant.success);
+      addAlert(t("createSuccess"), AlertVariant.success);
     } catch (error) {
-      add(`Could not create client: '${error}'`, AlertVariant.danger);
+      addAlert(t("createError", { error }), AlertVariant.danger);
     }
   };
 
@@ -93,7 +93,6 @@ export const NewClientForm = () => {
   const title = t("createClient");
   return (
     <>
-      <Alerts />
       <ViewHeader
         titleKey="clients:createClient"
         subKey="clients:clientsExplain"

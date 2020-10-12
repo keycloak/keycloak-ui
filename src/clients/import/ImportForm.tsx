@@ -13,10 +13,10 @@ import { useTranslation } from "react-i18next";
 
 import { ClientRepresentation } from "../models/client-model";
 import { ClientDescription } from "../ClientDescription";
-import { HttpClientContext } from "../../http-service/HttpClientContext";
+import { HttpClientContext } from "../../context/http-service/HttpClientContext";
 import { JsonFileUpload } from "../../components/json-file-upload/JsonFileUpload";
 import { useAlerts } from "../../components/alert/Alerts";
-import { RealmContext } from "../../components/realm-context/RealmContext";
+import { RealmContext } from "../../context/realm-context/RealmContext";
 import { ViewHeader } from "../../components/view-header/ViewHeader";
 
 export const ImportForm = () => {
@@ -26,7 +26,7 @@ export const ImportForm = () => {
   const form = useForm<ClientRepresentation>();
   const { register, handleSubmit, setValue } = form;
 
-  const [add, Alerts] = useAlerts();
+  const { addAlert } = useAlerts();
 
   const handleFileChange = (value: string | File) => {
     const defaultClient = {
@@ -45,14 +45,13 @@ export const ImportForm = () => {
   const save = async (client: ClientRepresentation) => {
     try {
       await httpClient.doPost(`/admin/realms/${realm}/clients`, client);
-      add(t("clientImportSuccess"), AlertVariant.success);
+      addAlert(t("clientImportSuccess"), AlertVariant.success);
     } catch (error) {
-      add(`${t("clientImportError")} '${error}'`, AlertVariant.danger);
+      addAlert(`${t("clientImportError")} '${error}'`, AlertVariant.danger);
     }
   };
   return (
     <>
-      <Alerts />
       <ViewHeader
         titleKey="clients:importClient"
         subKey="clients:clientsExplain"
