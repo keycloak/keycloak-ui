@@ -34,39 +34,35 @@ export const ListEmptyState = ({
   hasIcon,
   hasSearchIcon,
   primaryActionText,
-  secondaryActions
+  secondaryActions,
 }: ListEmptyStateProps) => {
   return (
     <>
       <EmptyState variant="large">
-        { hasIcon &&
-          <EmptyStateIcon icon={PlusCircleIcon} />
-        }
-        { hasSearchIcon &&
-          <EmptyStateIcon icon={SearchIcon} />
-        }
+        {hasIcon && <EmptyStateIcon icon={PlusCircleIcon} />}
+        {hasSearchIcon && <EmptyStateIcon icon={SearchIcon} />}
         <Title headingLevel="h4" size="lg">
           {message}
         </Title>
         <EmptyStateBody>{instructions}</EmptyStateBody>
-        { primaryActionText &&
+        {primaryActionText && (
           <Button variant="primary" onClick={onPrimaryAction}>
             {primaryActionText}
           </Button>
-        }
-        { secondaryActions &&
+        )}
+        {secondaryActions && (
           <EmptyStateSecondaryActions>
-          {secondaryActions.map((action) => (
-            <Button
-              key={action.text}
-              variant={action.type || ButtonVariant.primary}
-              onClick={action.onClick}
-            >
-              {action.text}
-            </Button>
-          ))}
+            {secondaryActions.map((action) => (
+              <Button
+                key={action.text}
+                variant={action.type || ButtonVariant.primary}
+                onClick={action.onClick}
+              >
+                {action.text}
+              </Button>
+            ))}
           </EmptyStateSecondaryActions>
-        }
+        )}
       </EmptyState>
     </>
   );

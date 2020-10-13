@@ -91,58 +91,58 @@ export const GroupsSection = () => {
         </Title>
       </PageSection>
       <Divider />
-      
+
       <PageSection variant={PageSectionVariants.light}>
         {!rawData && (
           <div className="pf-u-text-align-center">
             <Spinner />
           </div>
         )}
-        { rawData && rawData.length > 0 ? (
-        <TableToolbar
-          inputGroupName="groupsToolbarTextInput"
-          inputGroupPlaceholder={t("searchGroups")}
-          inputGroupOnChange={filterGroups}
-          toolbarItem={
-            <>
-              <ToolbarItem>
-                <Button variant="primary">{t("createGroup")}</Button>
-              </ToolbarItem>
-              <ToolbarItem>
-                <Dropdown
-                  onSelect={onKebabSelect}
-                  toggle={<KebabToggle onToggle={onKebabToggle} />}
-                  isOpen={isKebabOpen}
-                  isPlain
-                  dropdownItems={[
-                    <DropdownItem key="action" component="button">
-                      {t("delete")}
-                    </DropdownItem>,
-                  ]}
-                />
-              </ToolbarItem>
-            </>
-          }
-        >
-          {rawData && (
-            <GroupsList list={filteredData ? filteredData : rawData} />
-          )}
-          { filteredData && filteredData.length === 0 &&
-            <ListEmptyState
-              hasSearchIcon={true}
-              message={t("noSearchResults")}
-              instructions={t("noSearchResultsInstructions")}
-            />
-          }
-        </TableToolbar>
+        {rawData && rawData.length > 0 ? (
+          <TableToolbar
+            inputGroupName="groupsToolbarTextInput"
+            inputGroupPlaceholder={t("searchGroups")}
+            inputGroupOnChange={filterGroups}
+            toolbarItem={
+              <>
+                <ToolbarItem>
+                  <Button variant="primary">{t("createGroup")}</Button>
+                </ToolbarItem>
+                <ToolbarItem>
+                  <Dropdown
+                    onSelect={onKebabSelect}
+                    toggle={<KebabToggle onToggle={onKebabToggle} />}
+                    isOpen={isKebabOpen}
+                    isPlain
+                    dropdownItems={[
+                      <DropdownItem key="action" component="button">
+                        {t("delete")}
+                      </DropdownItem>,
+                    ]}
+                  />
+                </ToolbarItem>
+              </>
+            }
+          >
+            {rawData && (
+              <GroupsList list={filteredData ? filteredData : rawData} />
+            )}
+            {filteredData && filteredData.length === 0 && (
+              <ListEmptyState
+                hasSearchIcon={true}
+                message={t("noSearchResults")}
+                instructions={t("noSearchResultsInstructions")}
+              />
+            )}
+          </TableToolbar>
         ) : (
-        <ListEmptyState
-          hasIcon={true}
-          message={t("noGroupsInThisRealm")}
-          instructions={t("noGroupsInThisRealmInstructions")}
-          primaryActionText={t("createGroup")}
-      />
-      )}
+          <ListEmptyState
+            hasIcon={true}
+            message={t("noGroupsInThisRealm")}
+            instructions={t("noGroupsInThisRealmInstructions")}
+            primaryActionText={t("createGroup")}
+          />
+        )}
       </PageSection>
     </React.Fragment>
   );
