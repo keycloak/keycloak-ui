@@ -24,7 +24,7 @@ export type ListEmptyStateProps = {
   onPrimaryAction?: MouseEventHandler<HTMLButtonElement>;
   hasIcon?: boolean;
   hasSearchIcon?: boolean;
-  secondaryActions: Action[];
+  secondaryActions?: Action[];
 };
 
 export const ListEmptyState = ({

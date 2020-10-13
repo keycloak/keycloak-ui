@@ -101,7 +101,7 @@ export const GroupsSection = () => {
         { rawData && rawData.length > 0 ? (
         <TableToolbar
           inputGroupName="groupsToolbarTextInput"
-          inputGroupPlaceholder="Search groups"
+          inputGroupPlaceholder={t("searchGroups")}
           inputGroupOnChange={filterGroups}
           toolbarItem={
             <>
@@ -124,23 +124,23 @@ export const GroupsSection = () => {
             </>
           }
         >
-          {rawData && filteredData && (
+          {rawData && (
             <GroupsList list={filteredData ? filteredData : rawData} />
           )}
-          { !rawData && !filteredData &&
+          { filteredData && filteredData.length === 0 &&
             <ListEmptyState
               hasSearchIcon={true}
-              message="No search results"
-              instructions="Click on the search bar above to search for groups."
+              message={t("noSearchResults")}
+              instructions={t("noSearchResultsInstructions")}
             />
           }
         </TableToolbar>
         ) : (
         <ListEmptyState
           hasIcon={true}
-          message="No groups in this realm"
-          instructions="You haven't created any groups in this realm. Create a group to get started."
-          primaryActionText="Create group"
+          message={t("noGroupsInThisRealm")}
+          instructions={t("noGroupsInThisRealmInstructions")}
+          primaryActionText={t("createGroup")}
       />
       )}
       </PageSection>
