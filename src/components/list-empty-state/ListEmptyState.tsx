@@ -49,7 +49,6 @@ export const ListEmptyState = ({
           {message}
         </Title>
         <EmptyStateBody>{instructions}</EmptyStateBody>
-<<<<<<< HEAD
         { primaryActionText &&
           <Button variant="primary" onClick={onPrimaryAction}>
             {primaryActionText}
@@ -68,24 +67,6 @@ export const ListEmptyState = ({
           ))}
           </EmptyStateSecondaryActions>
         }
-=======
-        <Button variant="primary" onClick={onPrimaryAction}>
-          {primaryActionText}
-        </Button>
-        {secondaryActions && (
-          <EmptyStateSecondaryActions>
-            {secondaryActions.map((action) => (
-              <Button
-                key={action.text}
-                variant={action.type || ButtonVariant.primary}
-                onClick={action.onClick}
-              >
-                {action.text}
-              </Button>
-            ))}
-          </EmptyStateSecondaryActions>
-        )}
->>>>>>> master
       </EmptyState>
     </>
   );
