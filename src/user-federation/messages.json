@@ -65,5 +65,10 @@
     "debug": "Debug",
     "allowPasswordAuthentication": "Allow password authentication",
     "updateFirstLogin": "Update first login"
+  },
+  "userFederation": {
+    "userFederationInfo": "Keycloak can federate external user databases. Out of the box we have support for LDAP and Active Directory.",
+    "learnMore": "Learn more",
+    "addNewProvider": "Add new provider"
   }
 }
