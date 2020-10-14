@@ -8,6 +8,7 @@
     "homeURL": "Home URL",
     "roleExplain": "Realm-level roles are a global namespace to define your roles.",
     "roleName": "Role name",
+    "roleDetails": "Role details",
     "composite": "Composite",
     "description": "Description",
     "roleList": "Role list",
