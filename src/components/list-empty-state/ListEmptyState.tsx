@@ -23,7 +23,7 @@ export type ListEmptyStateProps = {
   primaryActionText?: string;
   onPrimaryAction?: MouseEventHandler<HTMLButtonElement>;
   hasIcon?: boolean;
-  hasSearchIcon?: boolean;
+  isSearchVariant?: boolean;
   secondaryActions?: Action[];
 };
 
@@ -32,15 +32,18 @@ export const ListEmptyState = ({
   instructions,
   onPrimaryAction,
   hasIcon,
-  hasSearchIcon,
+  isSearchVariant,
   primaryActionText,
   secondaryActions,
 }: ListEmptyStateProps) => {
   return (
     <>
       <EmptyState variant="large">
-        {hasIcon && <EmptyStateIcon icon={PlusCircleIcon} />}
-        {hasSearchIcon && <EmptyStateIcon icon={SearchIcon} />}
+        {hasIcon && isSearchVariant ? (
+          <EmptyStateIcon icon={SearchIcon} />
+        ) : (
+          <EmptyStateIcon icon={PlusCircleIcon} />
+        )}
         <Title headingLevel="h4" size="lg">
           {message}
         </Title>

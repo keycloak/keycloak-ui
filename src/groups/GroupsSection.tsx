@@ -129,7 +129,8 @@ export const GroupsSection = () => {
             )}
             {filteredData && filteredData.length === 0 && (
               <ListEmptyState
-                hasSearchIcon={true}
+                hasIcon={true}
+                isSearchVariant={true}
                 message={t("noSearchResults")}
                 instructions={t("noSearchResultsInstructions")}
               />
