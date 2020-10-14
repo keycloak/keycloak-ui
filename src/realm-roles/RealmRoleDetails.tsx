@@ -1,75 +1,124 @@
-import React, { useState } from "react";
-import { useHistory } from "react-router-dom";
+import React, { useContext, useState, useEffect } from "react";
+import { useTranslation } from "react-i18next";
 import {
+  Text,
+  PageSection,
+  TextContent,
+  FormGroup,
+  Form,
+  TextInput,
   ActionGroup,
   Button,
-  FormGroup,
-  PageSection,
-  Tab,
-  Tabs,
-  TabTitleText,
+  Divider,
+  AlertVariant,
   TextArea,
-  TextInput,
+  ValidatedOptions,
 } from "@patternfly/react-core";
-import { useTranslation } from "react-i18next";
-import { useForm } from "react-hook-form";
 
-import { ViewHeader } from "../components/view-header/ViewHeader";
 import { RoleRepresentation } from "../model/role-model";
-import { FormAccess } from "../components/form-access/FormAccess";
+import { HttpClientContext } from "../context/http-service/HttpClientContext";
+import { useHistory, useParams } from "react-router-dom";
+import { useAlerts } from "../components/alert/Alerts";
+import { Controller, useForm } from "react-hook-form";
+import { RealmContext } from "../context/realm-context/RealmContext";
+import { convertToMultiline } from "../components/multi-line-input/MultiLineInput";
 
-export const RolesForm = () => {
-  const { t } = useTranslation("client-scopes");
-  const { register, errors } = useForm<RoleRepresentation>();
+export const RealmRoleDetails = () => {
+  const { t } = useTranslation("roles");
+  const httpClient = useContext(HttpClientContext)!;
   const history = useHistory();
+  const { addAlert } = useAlerts();
+  const { realm } = useContext(RealmContext);
+  const { id } = useParams<{ id: string }>();
+  const [name, setName] = useState("");
+  const form = useForm();
+  const url = `/admin/realms/${realm}/realm-roles/${id}`;
 
-  const [activeTab, setActiveTab] = useState(0);
+  const { register, control, errors, handleSubmit } = useForm<
+    RoleRepresentation
+  >();
+
+  const save = async (role: RoleRepresentation) => {
+    try {
+      await httpClient.doPost(`admin/realms/${realm}/realm-roles`, role);
+      addAlert(t("roleCreated"), AlertVariant.success);
+    } catch (error) {
+      addAlert(`${t("roleCreateError")} '${error}'`, AlertVariant.danger);
+    }
+  };
+
+  useEffect(() => {
+    (async () => {
+      const fetchedRole = await httpClient.doGet<RoleRepresentation>(url);
+      console.log("data", fetchedRole.data);
+      console.log("typeof data", typeof fetchedRole.data);
+
+      if (fetchedRole.data) {
+        setName(fetchedRole.data.id);
+        Object.entries(fetchedRole.data).map((entry) => {
+          if (entry[0] !== "redirectUris") {
+            form.setValue(entry[0], entry[1]);
+          } else if (entry[1] && entry[1].length > 0) {
+            form.setValue(entry[0], convertToMultiline(entry[1]));
+          }
+        });
+      }
+    })();
+  }, []);
 
   return (
     <>
-      <ViewHeader titleKey={"Role Name"} subKey="" />
-
       <PageSection variant="light">
-        <Tabs
-          activeKey={activeTab}
-          onSelect={(_, key) => setActiveTab(key as number)}
-          isBox
-        >
-          <Tab eventKey={0} title={<TabTitleText>{t("Details")}</TabTitleText>}>
-            <FormAccess isHorizontal role="manage-realm" className="pf-u-mt-lg">
-              <FormGroup
-                label={t("Role name")}
-                fieldId="kc-name"
-                isRequired
-                validated={errors.name ? "error" : "default"}
-                helperTextInvalid={t("common:required")}
-              >
-                <TextInput
-                  ref={register({ required: true })}
-                  type="text"
-                  id="kc-name"
-                  name="name"
-                />
-              </FormGroup>
-              <FormGroup label={t("description")} fieldId="kc-description">
+        <TextContent>
+          <Text component="h1"></Text>
+        </TextContent>
+      </PageSection>
+      <Divider />
+      <PageSection variant="light">
+        <Form isHorizontal onSubmit={handleSubmit(save)}>
+          <FormGroup label={t("roleName")} isRequired fieldId="kc-role-name">
+            <TextInput
+              isRequired
+              type="text"
+              id="kc-role-name"
+              name="name"
+              ref={register()}
+            />
+          </FormGroup>
+          <FormGroup
+            label={t("description")}
+            fieldId="kc-role-description"
+            helperTextInvalid="Max length 255"
+            validated={
+              errors ? ValidatedOptions.error : ValidatedOptions.default
+            }
+          >
+            <Controller
+              name="description"
+              defaultValue=""
+              control={control}
+              rules={{ maxLength: 255 }}
+              render={({ onChange, value }) => (
                 <TextArea
-                  ref={register}
                   type="text"
-                  id="kc-description"
-                  name="description"
+                  id="kc-role-description"
+                  value={value}
+                  onChange={onChange}
                 />
-              </FormGroup>
-              <ActionGroup>
-                <Button variant="primary" type="submit">
-                  {t("common:save")}
-                </Button>
-                <Button variant="link" onClick={() => history.push("/roles/")}>
-                  {t("common:reload")}
-                </Button>
-              </ActionGroup>
-            </FormAccess>
-          </Tab>
-        </Tabs>
+              )}
+            />
+          </FormGroup>
+          <ActionGroup>
+            <Button
+              variant="primary"
+              type="submit"
+              onClick={() => history.push(`/role-details`)}
+            >
+              {t("common:create")}
+            </Button>
+            <Button variant="link">{t("common:cancel")}</Button>
+          </ActionGroup>
+        </Form>
       </PageSection>
     </>
   );
