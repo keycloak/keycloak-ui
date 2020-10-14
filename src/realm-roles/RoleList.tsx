@@ -57,8 +57,12 @@ export const RolesList = ({ roles, refresh }: RolesListProps) => {
     return { cells: columns.map((col) => column[col]), role: column };
   });
 
-  const selectedRoleName =
-    selectedRowId != -1 ? data[selectedRowId].role.name : "";
+  let selectedRoleName;
+  if (selectedRowId === data.length) {
+    selectedRoleName = data[selectedRowId - 1].role.name;
+  } else if (selectedRowId != -1) {
+    selectedRoleName = data[selectedRowId].role.name;
+  }
 
   const [toggleDeleteDialog, DeleteConfirm] = useConfirmDialog({
     titleKey: "roles:roleDeleteConfirm",

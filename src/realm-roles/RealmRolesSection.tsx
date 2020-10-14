@@ -48,7 +48,6 @@ export const RealmRolesSection = () => {
             <Spinner />
           </Bullseye>
         )}
-        <Divider component="li" key={1} />
         {roles && (
           <PaginatingTableToolbar
             count={roles!.length}
