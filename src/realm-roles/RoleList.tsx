@@ -66,9 +66,7 @@ export const RolesList = ({ roles, refresh }: RolesListProps) => {
 
   const [toggleDeleteDialog, DeleteConfirm] = useConfirmDialog({
     titleKey: "roles:roleDeleteConfirm",
-    messageKey: t(
-      `This action will permanently delete the role ${selectedRoleName} and cannot be undone.`
-    ),
+    messageKey: t("roles:roleDeleteConfirmDialog", { selectedRoleName }),
     continueButtonLabel: "common:delete",
     continueButtonVariant: ButtonVariant.danger,
     onConfirm: async () => {
