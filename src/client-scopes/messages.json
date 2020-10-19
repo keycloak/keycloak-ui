@@ -49,6 +49,7 @@
     "protocolMapper": "Mapper type",
     "role": "Role",
     "realmRoles": "Realm roles",
+    "clientRoles": "Client roles",
     "newRoleName": "New role name",
     "searchClientByName": "Search client by name",
     "clients": "Clients",
