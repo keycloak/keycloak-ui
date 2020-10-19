@@ -166,7 +166,6 @@ export const RoleMappingForm = ({ clientScopeId }: RoleMappingFormProps) => {
             }
             validated={errors["config.role"] ? "error" : "default"}
             helperTextInvalid={t("common:required")}
-
             fieldId="role"
           >
             <Gallery hasGutter>
