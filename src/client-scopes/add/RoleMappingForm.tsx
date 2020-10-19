@@ -14,6 +14,7 @@ import {
   SelectOption,
   ActionGroup,
   Button,
+  SelectGroup,
 } from "@patternfly/react-core";
 
 import { useAlerts } from "../../components/alert/Alerts";
@@ -58,15 +59,23 @@ export const RoleMappingForm = ({ clientScopeId }: RoleMappingFormProps) => {
       const clientResponse = await httpClient.doGet<ClientRepresentation[]>(
         `/admin/realms/${realm}/clients`
       );
-      setClients(clientResponse.data!);
+      const clients = clientResponse.data!;
+      clients.map(
+        (client) =>
+          (client.toString = function () {
+            return this.name;
+          })
+      );
+      setClients(clients);
     })();
   });
 
   useEffect(() => {
     (async () => {
-      if (selectedClient) {
+      const client = selectedClient as ClientRepresentation;
+      if (client && client.name !== "realmRoles") {
         const response = await httpClient.doGet<RoleRepresentation[]>(
-          `/admin/realms/master/clients/${selectedClient.id}/roles`
+          `/admin/realms/master/clients/${client.id}/roles`
         );
 
         setClientRoles(response.data!);
@@ -87,11 +96,28 @@ export const RoleMappingForm = ({ clientScopeId }: RoleMappingFormProps) => {
   };
 
   const createSelectGroup = (clients: ClientRepresentation[]) => {
-    return clients.map((client) => (
-      <SelectOption key={client.id} value={client}>
-        {client.name}
-      </SelectOption>
-    ));
+    return [
+      <>
+        <SelectOption
+          key="realmRoles"
+          value={
+            {
+              name: "realmRoles",
+              toString: () => t("realmRoles"),
+            } as ClientRepresentation
+          }
+        >
+          {t("realmRoles")}
+        </SelectOption>
+      </>,
+      <SelectGroup key="group" label={t("clients")}>
+        {clients.map((client) => (
+          <SelectOption key={client.id} value={client}>
+            {client.name}
+          </SelectOption>
+        ))}
+      </SelectGroup>,
+    ];
   };
 
   const roleSelectOptions = () => {
@@ -174,8 +200,9 @@ export const RoleMappingForm = ({ clientScopeId }: RoleMappingFormProps) => {
                   onToggle={() => setClientsOpen(!clientsOpen)}
                   isOpen={clientsOpen}
                   variant={SelectVariant.typeahead}
-                  aria-label="Select Input"
-                  placeholderText={t("clients")}
+                  aria-label={t("selectASourceOfRoles")}
+                  placeholderText={t("selectASourceOfRoles")}
+                  isGrouped
                   onFilter={(evt) => {
                     const textInput = evt.target.value;
                     if (textInput === "") {
@@ -190,9 +217,7 @@ export const RoleMappingForm = ({ clientScopeId }: RoleMappingFormProps) => {
                       );
                     }
                   }}
-                  selections={
-                    selectedClient ? [selectedClient.name] : undefined
-                  }
+                  selections={selectedClient}
                   onClear={() => setSelectedClient(undefined)}
                   onSelect={(_, value) => {
                     if (value) {
@@ -216,14 +241,18 @@ export const RoleMappingForm = ({ clientScopeId }: RoleMappingFormProps) => {
                       isOpen={roleOpen}
                       variant={SelectVariant.typeahead}
                       placeholderText={
-                        selectedClient ? t("clientRoles") : t("realmRoles")
+                        selectedClient && selectedClient.name !== "realmRoles"
+                          ? t("clientRoles")
+                          : t("selectARole")
                       }
+                      isDisabled={!selectedClient}
                       aria-label="Select Input"
                       selections={value.name}
                       onSelect={(_, value) => {
                         onChange(value);
                         setRoleOpen(false);
                       }}
+                      onClear={() => onChange("")}
                     >
                       {roleSelectOptions()}
                     </Select>
