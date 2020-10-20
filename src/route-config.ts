@@ -25,7 +25,7 @@ export type RouteDef = {
   component: () => JSX.Element;
   breadcrumb: TFunction | "";
   access: AccessType;
-}
+};
 
 type RoutesFn = (t: TFunction) => RouteDef[];
 
@@ -40,114 +40,114 @@ export const routes: RoutesFn = (t: TFunction) => [
     path: "/clients",
     component: ClientsSection,
     breadcrumb: t("clients:clientList"),
-    access: "query-clients"
+    access: "query-clients",
   },
   {
     path: "/clients/:id",
     component: ClientSettings,
     breadcrumb: t("clients:clientSettings"),
-    access: "view-clients"
+    access: "view-clients",
   },
   {
     path: "/add-client",
     component: NewClientForm,
     breadcrumb: t("clients:createClient"),
-    access: "manage-clients"
+    access: "manage-clients",
   },
   {
     path: "/import-client",
     component: ImportForm,
     breadcrumb: t("clients:importClient"),
-    access: "manage-clients"
+    access: "manage-clients",
   },
   {
     path: "/client-scopes",
     component: ClientScopesSection,
     breadcrumb: t("client-scopes:clientScopeList"),
-    access: "view-clients"
+    access: "view-clients",
   },
   {
     path: "/client-scopes/add-client-scopes",
     component: ClientScopeForm,
     breadcrumb: t("client-scopes:createClientScope"),
-    access: "manage-clients"
+    access: "manage-clients",
   },
   {
     path: "/client-scopes/:id",
     component: ClientScopeForm,
     breadcrumb: t("client-scopes:clientScopeDetails"),
-    access: "view-clients"
+    access: "view-clients",
   },
   {
     path: "/roles",
     component: RealmRolesSection,
     breadcrumb: t("roles:roleList"),
-    access: "view-realm"
+    access: "view-realm",
   },
   {
     path: "/add-role",
     component: NewRoleForm,
     breadcrumb: t("roles:createRole"),
-    access: "manage-realm"
+    access: "manage-realm",
   },
   {
     path: "/users",
     component: UsersSection,
     breadcrumb: t("users:title"),
-    access: "query-users"
+    access: "query-users",
   },
   {
     path: "/groups",
     component: GroupsSection,
     breadcrumb: t("groups"),
-    access: "query-groups"
+    access: "query-groups",
   },
   {
     path: "/sessions",
     component: SessionsSection,
     breadcrumb: t("sessions:title"),
-    access: "view-realm"
+    access: "view-realm",
   },
   {
     path: "/events",
     component: EventsSection,
     breadcrumb: t("events:title"),
-    access: "view-events"
+    access: "view-events",
   },
   {
     path: "/realm-settings",
     component: RealmSettingsSection,
     breadcrumb: t("realmSettings"),
-    access: "view-realm"
+    access: "view-realm",
   },
   {
     path: "/authentication",
     component: AuthenticationSection,
     breadcrumb: t("authentication"),
-    access: "view-realm"
+    access: "view-realm",
   },
   {
     path: "/identity-providers",
     component: IdentityProvidersSection,
     breadcrumb: t("identityProviders"),
-    access: "view-identity-providers"
+    access: "view-identity-providers",
   },
   {
     path: "/user-federation",
     component: UserFederationSection,
     breadcrumb: t("userFederation"),
-    access: "view-realm"
+    access: "view-realm",
   },
   {
     path: "/",
     component: ClientsSection,
     breadcrumb: t("common:home"),
-    access: "anyone"
+    access: "anyone",
   },
   {
     path: "",
     component: PageNotFoundSection,
     breadcrumb: "",
-    access: "anyone"
-  }
+    access: "anyone",
+  },
 ];
