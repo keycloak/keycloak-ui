@@ -3,3 +3,6 @@
     width: 20%;
   }
 
+  .keycloak__user-federation__provider-label {
+    margin-left: 24px;
+  }

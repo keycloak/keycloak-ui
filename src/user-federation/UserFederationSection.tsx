@@ -1,4 +1,4 @@
-import React, { useContext, useState, setState } from "react";
+import React, { useContext, useEffect, useState, setState } from "react";
 import {
   Button,
   Card,
@@ -23,63 +23,69 @@ import {
   ToolbarItem,
   TextContent
 } from "@patternfly/react-core";
-// import { ViewHeader } from "../components/view-header/ViewHeader";   // can't use this because of drop-down button in header
+
+import { ExternalLinkAltIcon } from "@patternfly/react-icons";
 import { useTranslation } from "react-i18next";
 import "./user-federation.css";
 
+import { ClientRepresentation } from "../realm/models/Realm";
+
+import { RealmContext } from "../context/realm-context/RealmContext";
+import { HttpClientContext } from "../context/http-service/HttpClientContext";
 
 export const UserFederationSection = () => {
-  const [open, isOpen] = useState(false);
-  const { t } = useTranslation("client-scopes");
+  const [providerOpen, isProviderMenuOpen] = useState(false);
+  const [cardOpen, isCardMenuOpen] = useState(false);
 
-  // const { isOpen } = this.state;
-  const dropdownItems = [
-    <DropdownItem key="link">Link</DropdownItem>,
-    <DropdownItem key="action" component="button">
-      Action
-    </DropdownItem>,
-    <DropdownItem key="disabled link" isDisabled>
-      Disabled Link
-    </DropdownItem>,
-    <DropdownItem key="disabled action" isDisabled component="button">
-      Disabled Action
-    </DropdownItem>,
-    <DropdownSeparator key="separator" />,
-    <DropdownItem key="separated link">Separated Link</DropdownItem>,
-    <DropdownItem key="separated action" component="button">
-      Separated Action
-    </DropdownItem>
-  ];
+  const { t } = useTranslation("userFederation");
 
-  const ufTypeDropdownItems = [
+  const httpClient = useContext(HttpClientContext)!;
+  const { realm } = useContext(RealmContext);
+
+  useEffect(() => {
+    (async () => {
+      const result = await httpClient.doGet<ClientRepresentation[]>(
+        `/admin/realms/${realm}/client-scopes`
+      );
+      setRawData(result.data!);
+    })();
+  }, []);
+
+  const ufAddProviderDropdownItems = [
     <DropdownItem key="itemLDAP">LDAP</DropdownItem>,
     <DropdownItem key="itemKerberos">Kerberos</DropdownItem>
   ];
 
-  // const onToggle = isOpen => {
-  //   setState({
-  //     isOpen
-  //   });
-  // };
+  const ufCardDropdownItems = [
+    <DropdownItem key="itemDelete">Delete</DropdownItem>
+  ];
 
   return (
     <>
       <PageSection variant={PageSectionVariants.light}>
-        <Title headingLevel="h3" size={TitleSizes["2xl"]}>
+      <Title headingLevel="h3" size={TitleSizes["2xl"]}>
           {t("common:userFederation")}
         </Title>
-        <TextContent>{t("userFederation:userFederationInfo")}</TextContent>
-        {/* <Button>Add new provider</Button> */}
-        <Dropdown
+        <TextContent>{t("userFederation:userFederationInfo")}
+          <Button 
+            variant="link"
+            icon={<ExternalLinkAltIcon />}
+            iconPosition="right"
+            component="a"
+            href="http://www.google.com">
+              {t("common:learnMore")}
+          </Button>        
+        </TextContent>
+      <Dropdown
           // onSelect={this.onSelect}
           className="keycloak__user-federation__dropdown"
           toggle={
-            <DropdownToggle onToggle={() => isOpen(!open)} isPrimary id="ufToggleId">
+            <DropdownToggle onToggle={() => isProviderMenuOpen(!providerOpen)} isPrimary id="ufToggleId">
               {t("userFederation:addNewProvider")}
             </DropdownToggle>
           }
-          isOpen={open}
-          dropdownItems={ufTypeDropdownItems}
+          isOpen={providerOpen}
+          dropdownItems={ufAddProviderDropdownItems}
         />
       </PageSection>
       <Divider />
@@ -90,12 +96,13 @@ export const UserFederationSection = () => {
           <CardHeader>
             <CardActions>
               <Dropdown
-                onSelect={() => isOpen(!open)}
-                toggle={<KebabToggle onToggle={() => isOpen(!open)} />}
                 isPlain
-                dropdownItems={dropdownItems}
                 position={"right"}
-              />
+                // onSelect={() => isCardMenuOpen(!cardOpen)}
+                toggle={<KebabToggle onToggle={() => isCardMenuOpen(!cardOpen)} />}
+                isOpen={cardOpen}
+                dropdownItems={ufCardDropdownItems}
+                />
             </CardActions>
             <CardTitle>LDAP-testing-1</CardTitle>
           </CardHeader>
@@ -103,7 +110,7 @@ export const UserFederationSection = () => {
           <CardBody></CardBody>
           <CardFooter>
             LDAP
-            <Label color="blue">Enabled</Label>
+            <Label color="blue" className="keycloak__user-federation__provider-label">Enabled</Label>
           </CardFooter>
         </Card>
           </GalleryItem>
@@ -112,10 +119,11 @@ export const UserFederationSection = () => {
           <CardHeader>
             <CardActions>
               <Dropdown
-                onSelect={() => isOpen(!open)}
-                toggle={<KebabToggle onToggle={() => isOpen(!open)} />}
+                // onSelect={() => isCardMenuOpen(!cardOpen)}
+                toggle={<KebabToggle onToggle={() => isCardMenuOpen(!cardOpen)} />}
+                isOpen={cardOpen}
                 isPlain
-                dropdownItems={dropdownItems}
+                dropdownItems={ufCardDropdownItems}
                 position={"right"}
               />
             </CardActions>
@@ -124,7 +132,7 @@ export const UserFederationSection = () => {
           <CardBody></CardBody>
           <CardFooter>
             LDAP
-            <Label color="blue">Enabled</Label>
+            <Label color="blue" className="keycloak__user-federation__provider-label">Enabled</Label>
           </CardFooter>
         </Card>
 
@@ -134,10 +142,11 @@ export const UserFederationSection = () => {
           <CardHeader>
             <CardActions>
               <Dropdown
-                onSelect={() => isOpen(!open)}
-                toggle={<KebabToggle onToggle={() => isOpen(!open)} />}
+                // onSelect={() => isCardMenuOpen(!cardOpen)}
+                toggle={<KebabToggle onToggle={() => isCardMenuOpen(!cardOpen)} />}
+                isOpen={cardOpen}
                 isPlain
-                dropdownItems={dropdownItems}
+                dropdownItems={ufCardDropdownItems}
                 position={"right"}
               />
             </CardActions>
@@ -146,7 +155,7 @@ export const UserFederationSection = () => {
           <CardBody></CardBody>
           <CardFooter>
             LDAP
-            <Label color="blue">Enabled</Label>
+            <Label color="blue" className="keycloak__user-federation__provider-label">Enabled</Label>
           </CardFooter>
         </Card>
 
