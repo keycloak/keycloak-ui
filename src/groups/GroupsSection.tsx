@@ -11,6 +11,8 @@ import {
 import { TableToolbar } from "../components/table-toolbar/TableToolbar";
 import { ViewHeader } from "../components/view-header/ViewHeader";
 import { ListEmptyState } from "../components/list-empty-state/ListEmptyState";
+import { RealmContext } from "../context/realm-context/RealmContext";
+import { useAlerts } from "../components/alert/Alerts";
 import {
   Button,
   Dropdown,
@@ -20,6 +22,7 @@ import {
   PageSectionVariants,
   Spinner,
   ToolbarItem,
+  AlertVariant,
 } from "@patternfly/react-core";
 import "./GroupsSection.css";
 
@@ -31,20 +34,27 @@ export const GroupsSection = () => {
   const [isKebabOpen, setIsKebabOpen] = useState(false);
   const [createGroupName, setCreateGroupName] = useState("");
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
+  const [tableRowSelectedArray, setTableRowSelectedArray] = useState<
+    Array<number>
+  >([]);
   const columnID: keyof GroupRepresentation = "id";
   const membersLength: keyof GroupRepresentation = "membersLength";
   const columnGroupName: keyof GroupRepresentation = "name";
+  const { addAlert } = useAlerts();
+  const { realm } = useContext(RealmContext);
 
   const loader = async () => {
     const groups = await httpClient.doGet<ServerGroupsArrayRepresentation[]>(
-      "/admin/realms/master/groups"
+      `/admin/realms/${realm}/groups`
     );
     const groupsData = groups.data!;
-
+    console.log(
+      "what is groupsData here" + groupsData + JSON.stringify(groupsData)
+    );
     const getMembers = async (id: number) => {
       const response = await httpClient.doGet<
         ServerGroupMembersRepresentation[]
-      >(`/admin/realms/master/groups/${id}/members`);
+      >(`/admin/realms/${realm}/groups/${id}/members`);
       const responseData = response.data!;
       return responseData.length;
     };
@@ -90,6 +100,29 @@ export const GroupsSection = () => {
     setIsCreateModalOpen(!isCreateModalOpen);
   };
 
+  const multiDelete = async () => {
+    const deleteGroup = async (rowId: number) => {
+      try {
+        await httpClient.doDelete(
+          `/admin/realms/${realm}/groups/${
+            filteredData ? filteredData : rawData![rowId].id
+          }`
+        );
+        loader();
+      } catch (error) {
+        addAlert(`${t("clientDeleteError")} ${error}`, AlertVariant.danger);
+      }
+    };
+
+    const chainedPromises = tableRowSelectedArray.map((rowId: number) => {
+      deleteGroup(rowId);
+    });
+
+    await Promise.all(chainedPromises).then(() =>
+      addAlert(t("groupsDeleted"), AlertVariant.success)
+    );
+  };
+
   return (
     <>
       <ViewHeader titleKey="groups:groups" subKey="groups:groupsDescription" />
@@ -122,8 +155,12 @@ export const GroupsSection = () => {
                       isOpen={isKebabOpen}
                       isPlain
                       dropdownItems={[
-                        <DropdownItem key="action" component="button">
-                          {t("delete")}
+                        <DropdownItem
+                          key="action"
+                          component="button"
+                          onClick={() => multiDelete()}
+                        >
+                          {t("common:Delete")}
                         </DropdownItem>,
                       ]}
                     />
@@ -135,6 +172,8 @@ export const GroupsSection = () => {
                 <GroupsList
                   list={filteredData ? filteredData : rawData}
                   refresh={loader}
+                  tableRowSelectedArray={tableRowSelectedArray}
+                  setTableRowSelectedArray={setTableRowSelectedArray}
                 />
               )}
               {filteredData && filteredData.length === 0 && (

@@ -16,6 +16,8 @@ import { useAlerts } from "../components/alert/Alerts";
 export type GroupsListProps = {
   list?: GroupRepresentation[];
   refresh: () => void;
+  tableRowSelectedArray: number[];
+  setTableRowSelectedArray: (tableRowSelectedArray: number[]) => void;
 };
 
 type FormattedData = {
@@ -23,7 +25,12 @@ type FormattedData = {
   selected: boolean;
 };
 
-export const GroupsList = ({ list, refresh }: GroupsListProps) => {
+export const GroupsList = ({
+  list,
+  refresh,
+  tableRowSelectedArray,
+  setTableRowSelectedArray,
+}: GroupsListProps) => {
   const { t } = useTranslation("groups");
   const httpClient = useContext(HttpClientContext)!;
   const columnGroupName: keyof GroupRepresentation = "name";
@@ -69,6 +76,7 @@ export const GroupsList = ({ list, refresh }: GroupsListProps) => {
       localRow = [...formattedData];
       localRow[rowId].selected = isSelected;
       setFormattedData(localRow);
+      setTableRowSelectedArray([rowId, ...tableRowSelectedArray]);
     }
   }
 
