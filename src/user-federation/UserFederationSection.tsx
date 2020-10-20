@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState, setState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import {
   Button,
   Card,
@@ -11,7 +11,6 @@ import {
   Dropdown,
   DropdownToggle,
   DropdownItem,   
-  DropdownSeparator,
   Gallery,
   GalleryItem,
   KebabToggle,
@@ -20,7 +19,6 @@ import {
   PageSectionVariants,
   Title,
   TitleSizes,
-  ToolbarItem,
   TextContent
 } from "@patternfly/react-core";
 
@@ -42,6 +40,8 @@ export const UserFederationSection = () => {
   const httpClient = useContext(HttpClientContext)!;
   const { realm } = useContext(RealmContext);
 
+  const [rawData, setRawData] = useState<ClientRepresentation[]>();
+
   useEffect(() => {
     (async () => {
       const result = await httpClient.doGet<ClientRepresentation[]>(
@@ -57,7 +57,7 @@ export const UserFederationSection = () => {
   ];
 
   const ufCardDropdownItems = [
-    <DropdownItem key="itemDelete">Delete</DropdownItem>
+    <DropdownItem key="itemDelete">{t("common:delete")}</DropdownItem>
   ];
 
   return (
@@ -66,7 +66,7 @@ export const UserFederationSection = () => {
       <Title headingLevel="h3" size={TitleSizes["2xl"]}>
           {t("common:userFederation")}
         </Title>
-        <TextContent>{t("userFederation:userFederationInfo")}
+        <TextContent>{t("userFederationInfo")}
           <Button 
             variant="link"
             icon={<ExternalLinkAltIcon />}
@@ -81,7 +81,7 @@ export const UserFederationSection = () => {
           className="keycloak__user-federation__dropdown"
           toggle={
             <DropdownToggle onToggle={() => isProviderMenuOpen(!providerOpen)} isPrimary id="ufToggleId">
-              {t("userFederation:addNewProvider")}
+              {t("addNewProvider")}
             </DropdownToggle>
           }
           isOpen={providerOpen}
