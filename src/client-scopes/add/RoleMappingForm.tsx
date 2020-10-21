@@ -15,6 +15,8 @@ import {
   ActionGroup,
   Button,
   SelectGroup,
+  Split,
+  SplitItem,
 } from "@patternfly/react-core";
 
 import { useAlerts } from "../../components/alert/Alerts";
@@ -194,13 +196,14 @@ export const RoleMappingForm = ({ clientScopeId }: RoleMappingFormProps) => {
             helperTextInvalid={t("common:required")}
             fieldId="role"
           >
-            <Gallery hasGutter>
-              <GalleryItem>
+            <Split hasGutter>
+              <SplitItem>
                 <Select
+                  toggleId="role"
                   onToggle={() => setClientsOpen(!clientsOpen)}
                   isOpen={clientsOpen}
                   variant={SelectVariant.typeahead}
-                  aria-label={t("selectASourceOfRoles")}
+                  typeAheadAriaLabel={t("selectASourceOfRoles")}
                   placeholderText={t("selectASourceOfRoles")}
                   isGrouped
                   onFilter={(evt) => {
@@ -228,8 +231,8 @@ export const RoleMappingForm = ({ clientScopeId }: RoleMappingFormProps) => {
                 >
                   {createSelectGroup(clients)}
                 </Select>
-              </GalleryItem>
-              <GalleryItem>
+              </SplitItem>
+              <SplitItem>
                 <Controller
                   name="config.role"
                   defaultValue=""
@@ -246,7 +249,7 @@ export const RoleMappingForm = ({ clientScopeId }: RoleMappingFormProps) => {
                           : t("selectARole")
                       }
                       isDisabled={!selectedClient}
-                      aria-label="Select Input"
+                      typeAheadAriaLabel={t("selectARole")}
                       selections={value.name}
                       onSelect={(_, value) => {
                         onChange(value);
@@ -258,8 +261,8 @@ export const RoleMappingForm = ({ clientScopeId }: RoleMappingFormProps) => {
                     </Select>
                   )}
                 />
-              </GalleryItem>
-            </Gallery>
+              </SplitItem>
+            </Split>
           </FormGroup>
           <FormGroup
             label={t("newRoleName")}
