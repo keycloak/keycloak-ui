@@ -162,8 +162,6 @@ export const ClientSettings = () => {
           <CapabilityConfig form={form} />
           <Form isHorizontal>
             <ClientDescription form={form} />
-          </Form>
-          <Form isHorizontal>
             <FormGroup label={t("rootUrl")} fieldId="kc-root-url">
               <TextInput
                 type="text"
@@ -183,8 +181,6 @@ export const ClientSettings = () => {
                 ref={form.register}
               />
             </FormGroup>
-          </Form>
-          <Form isHorizontal>
             <FormGroup
               label={t("consentRequired")}
               fieldId="kc-consent"
