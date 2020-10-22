@@ -35,7 +35,7 @@ export const FormAccess = ({ children, role, fineGrainedAccess = true }: FormAcc
   return (
     <>
       {recursiveCloneChildren(children, {
-        isDisabled: !hasAccess(role),
+        isDisabled: !hasAccess(role) && !fineGrainedAccess,
       })}
     </>
   );
