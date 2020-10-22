@@ -1,12 +1,13 @@
-import { Form, FormProps } from "@patternfly/react-core";
 import React, {
   Children,
   cloneElement,
-  createElement,
   isValidElement,
   ReactElement,
 } from "react";
-import { Controller, useForm } from "react-hook-form";
+import { Controller } from "react-hook-form";
+import { useTranslation } from "react-i18next";
+import { Form, FormProps, Switch } from "@patternfly/react-core";
+
 import { useAccess } from "../../context/access/Access";
 import { AccessType } from "../../context/whoami/who-am-i-model";
 
@@ -26,9 +27,29 @@ export const FormAccess = ({
 }: FormAccessProps) => {
   const { hasAccess } = useAccess();
 
-  const ReadOnly = (props: any) => (
-    <input type="text" value={props.value} onChange={props.onChange} disabled />
-  );
+  const ReadOnly = (props: any) => {
+    const { t } = useTranslation();
+    if (typeof props.value === "boolean") {
+      return (
+        <Switch
+          id={props.name}
+          isDisabled
+          label={t("common:on")}
+          labelOff={t("common:off")}
+          isChecked={props.value}
+          onChange={props.onChange}
+        />
+      );
+    }
+    return (
+      <input
+        type="text"
+        value={props.value}
+        onChange={props.onChange}
+        disabled
+      />
+    );
+  };
 
   const recursiveCloneChildren = (children: ReactElement[], newProps: any) => {
     return Children.map(children, (child: ReactElement) => {
@@ -37,10 +58,13 @@ export const FormAccess = ({
       }
 
       if (child.props) {
-        if (child.type === Controller) {
+        if (child.type === Controller && newProps.isDisabled) {
           return cloneElement(child, {
             ...(child as ReactElement).props,
-            render: ReadOnly,
+            // eslint-disable-next-line react/display-name
+            render: (props: any) => (
+              <ReadOnly {...props} name={(child as ReactElement).props.name} />
+            ),
           });
         }
         newProps.children = recursiveCloneChildren(
@@ -58,12 +82,14 @@ export const FormAccess = ({
         <Form {...rest}>
           {recursiveCloneChildren(children, {
             isDisabled: !hasAccess(role) && !fineGrainedAccess,
+            readOnly: !hasAccess(role) && !fineGrainedAccess,
           })}
         </Form>
       )}
       {unWrap &&
         recursiveCloneChildren(children, {
           isDisabled: !hasAccess(role) && !fineGrainedAccess,
+          readOnly: !hasAccess(role) && !fineGrainedAccess,
         })}
     </>
   );
