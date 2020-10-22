@@ -12,7 +12,7 @@ export const ClientDescription = ({ form }: ClientDescriptionProps) => {
   const { t } = useTranslation("clients");
   const { register, errors } = form;
   return (
-    <FormAccess role="manage-clients">
+    <FormAccess role="manage-clients" unWrap>
       <FormGroup
         label={t("clientID")}
         fieldId="kc-client-id"

@@ -32,6 +32,7 @@ import { ViewHeader } from "../components/view-header/ViewHeader";
 import { exportClient } from "../util";
 import { useConfirmDialog } from "../components/confirm-dialog/ConfirmDialog";
 import { useDownloadDialog } from "../components/download-dialog/DownloadDialog";
+import { FormAccess } from "../components/form-access/FormAccess";
 
 export const ClientSettings = () => {
   const { t } = useTranslation("clients");
@@ -162,6 +163,8 @@ export const ClientSettings = () => {
           <CapabilityConfig form={form} />
           <Form isHorizontal>
             <ClientDescription form={form} />
+          </Form>
+          <FormAccess isHorizontal role="manage-clients">
             <FormGroup label={t("rootUrl")} fieldId="kc-root-url">
               <TextInput
                 type="text"
@@ -181,6 +184,8 @@ export const ClientSettings = () => {
                 ref={form.register}
               />
             </FormGroup>
+          </FormAccess>
+          <FormAccess isHorizontal role="manage-clients">
             <FormGroup
               label={t("consentRequired")}
               fieldId="kc-consent"
@@ -237,7 +242,7 @@ export const ClientSettings = () => {
               </Button>
               <Button variant="link">{t("common:cancel")}</Button>
             </ActionGroup>
-          </Form>
+          </FormAccess>
         </ScrollForm>
       </PageSection>
     </>
