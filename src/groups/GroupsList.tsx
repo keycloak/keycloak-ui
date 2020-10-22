@@ -39,8 +39,6 @@ export const GroupsList = ({
   const { addAlert } = useAlerts();
   const [formattedData, setFormattedData] = useState<FormattedData[]>([]);
 
-  console.log('tableRowSelectedArray' + tableRowSelectedArray)
-
   const formatData = (data: GroupRepresentation[]) =>
     data.map((group: { [key: string]: any }, index) => {
       const groupName = group[columnGroupName];

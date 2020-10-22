@@ -30,8 +30,7 @@ export const GroupsSection = () => {
   const { t } = useTranslation("groups");
   const httpClient = useContext(HttpClientContext)!;
   const [rawData, setRawData] = useState<{ [key: string]: any }[]>();
-  const [filteredData, setFilteredData] = useState<object[]>();
-  const [isFiltering, setIsFiltering] = useState(false);
+  const [filteredData, setFilteredData] = useState<{ [key: string]: any }[]>();
   const [isKebabOpen, setIsKebabOpen] = useState(false);
   const [createGroupName, setCreateGroupName] = useState("");
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
@@ -49,9 +48,6 @@ export const GroupsSection = () => {
       `/admin/realms/${realm}/groups`
     );
     const groupsData = groups.data!;
-    console.log(
-      "what is groupsData here" + groupsData + JSON.stringify(groupsData)
-    );
     const getMembers = async (id: number) => {
       const response = await httpClient.doGet<
         ServerGroupMembersRepresentation[]
@@ -79,9 +75,10 @@ export const GroupsSection = () => {
     loader();
   }, []);
 
+  console.log('what is filteredData' + filteredData);
+
   // Filter groups
   const filterGroups = (newInput: string) => {
-    console.log('does it get to first filter');
     const localRowData = rawData!.filter((obj: { [key: string]: string }) => {
       const groupName = obj[columnGroupName];
       return groupName.toLowerCase().includes(newInput.toLowerCase());
@@ -113,7 +110,7 @@ export const GroupsSection = () => {
           );
           loader();
         } catch (error) {
-          addAlert(`${t("clientDeleteError")} ${error}`, AlertVariant.danger);
+          addAlert(`${t("groupDeleteError")} ${error}`, AlertVariant.danger);
         }
       };
 
@@ -127,9 +124,6 @@ export const GroupsSection = () => {
       .then(() => 
         setTableRowSelectedArray([])
       )
-      // .then(() => 
-      //   setFilteredData([])
-      // )
     }
   };
 
