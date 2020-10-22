@@ -9,6 +9,7 @@ import { AccessType } from "../../context/whoami/who-am-i-model";
 
 export type FormAccessProps = {
   role: AccessType;
+  fineGrainedAccess?: boolean;
   children: ReactElement[];
 };
 
