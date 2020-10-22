@@ -39,6 +39,8 @@ export const GroupsList = ({
   const { addAlert } = useAlerts();
   const [formattedData, setFormattedData] = useState<FormattedData[]>([]);
 
+  console.log('tableRowSelectedArray' + tableRowSelectedArray)
+
   const formatData = (data: GroupRepresentation[]) =>
     data.map((group: { [key: string]: any }, index) => {
       const groupName = group[columnGroupName];
@@ -74,9 +76,25 @@ export const GroupsList = ({
       });
     } else {
       localRow = [...formattedData];
-      localRow[rowId].selected = isSelected;
+      var localTableRow = [...tableRowSelectedArray];
+      if (localRow[rowId].selected !== isSelected ) {
+        localRow[rowId].selected = isSelected;
+      }
+
+      if(localTableRow.includes(rowId)) {
+        var index = localTableRow.indexOf(rowId);
+        if(index === 0) {
+          localTableRow.shift();
+        }
+        else {
+          localTableRow.splice(index, 1);
+        }
+        setTableRowSelectedArray(localTableRow);
+      }
+      else {
+        setTableRowSelectedArray([rowId, ...tableRowSelectedArray]);
+      }
       setFormattedData(localRow);
-      setTableRowSelectedArray([rowId, ...tableRowSelectedArray]);
     }
   }
 

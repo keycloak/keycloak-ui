@@ -31,6 +31,7 @@ export const GroupsSection = () => {
   const httpClient = useContext(HttpClientContext)!;
   const [rawData, setRawData] = useState<{ [key: string]: any }[]>();
   const [filteredData, setFilteredData] = useState<object[]>();
+  const [isFiltering, setIsFiltering] = useState(false);
   const [isKebabOpen, setIsKebabOpen] = useState(false);
   const [createGroupName, setCreateGroupName] = useState("");
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
@@ -70,7 +71,7 @@ export const GroupsSection = () => {
         return object;
       }
     );
-
+    setFilteredData(updatedObject);
     setRawData(updatedObject);
   };
 
@@ -80,6 +81,7 @@ export const GroupsSection = () => {
 
   // Filter groups
   const filterGroups = (newInput: string) => {
+    console.log('does it get to first filter');
     const localRowData = rawData!.filter((obj: { [key: string]: string }) => {
       const groupName = obj[columnGroupName];
       return groupName.toLowerCase().includes(newInput.toLowerCase());
@@ -101,26 +103,34 @@ export const GroupsSection = () => {
   };
 
   const multiDelete = async () => {
-    const deleteGroup = async (rowId: number) => {
-      try {
-        await httpClient.doDelete(
-          `/admin/realms/${realm}/groups/${
-            filteredData ? filteredData : rawData![rowId].id
-          }`
-        );
-        loader();
-      } catch (error) {
-        addAlert(`${t("clientDeleteError")} ${error}`, AlertVariant.danger);
-      }
-    };
+    if (tableRowSelectedArray.length !== 0) {
+      const deleteGroup = async (rowId: number) => {
+        try {
+          await httpClient.doDelete(
+            `/admin/realms/${realm}/groups/${
+              filteredData ? filteredData![rowId].id : rawData![rowId].id
+            }`
+          );
+          loader();
+        } catch (error) {
+          addAlert(`${t("clientDeleteError")} ${error}`, AlertVariant.danger);
+        }
+      };
 
-    const chainedPromises = tableRowSelectedArray.map((rowId: number) => {
-      deleteGroup(rowId);
-    });
+      const chainedPromises = tableRowSelectedArray.map((rowId: number) => {
+        deleteGroup(rowId);
+      });
 
-    await Promise.all(chainedPromises).then(() =>
-      addAlert(t("groupsDeleted"), AlertVariant.success)
-    );
+      await Promise.all(chainedPromises).then(() =>
+        addAlert(t("groupsDeleted"), AlertVariant.success)
+      )
+      .then(() => 
+        setTableRowSelectedArray([])
+      )
+      // .then(() => 
+      //   setFilteredData([])
+      // )
+    }
   };
 
   return (
@@ -200,6 +210,7 @@ export const GroupsSection = () => {
             message={t("noGroupsInThisRealm")}
             instructions={t("noGroupsInThisRealmInstructions")}
             primaryActionText={t("createGroup")}
+            onPrimaryAction={() => handleModalToggle()}
           />
         )}
       </PageSection>
