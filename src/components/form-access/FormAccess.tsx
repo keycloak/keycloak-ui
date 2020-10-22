@@ -13,7 +13,7 @@ export type FormAccessProps = {
   children: ReactElement[];
 };
 
-export const FormAccess = ({ children, role }: FormAccessProps) => {
+export const FormAccess = ({ children, role, fineGrainedAccess = true }: FormAccessProps) => {
   const { hasAccess } = useAccess();
 
   const recursiveCloneChildren = (children: ReactElement[], newProps: any) => {
