@@ -6,6 +6,7 @@ import {
   SplitItem,
   Button,
   ButtonVariant,
+  TextInputProps,
 } from "@patternfly/react-core";
 import { MinusIcon, PlusIcon } from "@patternfly/react-icons";
 
@@ -23,12 +24,16 @@ export function toValue(formValue: MultiLine[]): string[] {
   return formValue.map((field) => field.value);
 }
 
-export type MultiLineInputProps = {
+export type MultiLineInputProps = TextInputProps & {
   form: UseFormMethods;
   name: string;
 };
 
-export const MultiLineInput = ({ name, form }: MultiLineInputProps) => {
+export const MultiLineInput = ({
+  name,
+  form,
+  ...rest
+}: MultiLineInputProps) => {
   const { register, control } = form;
   const { fields, append, remove } = useFieldArray({
     name,
@@ -49,6 +54,7 @@ export const MultiLineInput = ({ name, form }: MultiLineInputProps) => {
               ref={register()}
               name={`${name}[${index}].value`}
               defaultValue={value}
+              {...rest}
             />
           </SplitItem>
           <SplitItem>
