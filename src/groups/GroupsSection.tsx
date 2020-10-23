@@ -75,7 +75,7 @@ export const GroupsSection = () => {
     loader();
   }, []);
 
-  console.log('what is filteredData' + filteredData);
+  console.log("what is filteredData" + filteredData);
 
   // Filter groups
   const filterGroups = (newInput: string) => {
@@ -118,12 +118,9 @@ export const GroupsSection = () => {
         deleteGroup(rowId);
       });
 
-      await Promise.all(chainedPromises).then(() =>
-        addAlert(t("groupsDeleted"), AlertVariant.success)
-      )
-      .then(() => 
-        setTableRowSelectedArray([])
-      )
+      await Promise.all(chainedPromises)
+        .then(() => addAlert(t("groupsDeleted"), AlertVariant.success))
+        .then(() => setTableRowSelectedArray([]));
     }
   };
 

@@ -75,21 +75,19 @@ export const GroupsList = ({
     } else {
       localRow = [...formattedData];
       var localTableRow = [...tableRowSelectedArray];
-      if (localRow[rowId].selected !== isSelected ) {
+      if (localRow[rowId].selected !== isSelected) {
         localRow[rowId].selected = isSelected;
       }
 
-      if(localTableRow.includes(rowId)) {
+      if (localTableRow.includes(rowId)) {
         var index = localTableRow.indexOf(rowId);
-        if(index === 0) {
+        if (index === 0) {
           localTableRow.shift();
-        }
-        else {
+        } else {
           localTableRow.splice(index, 1);
         }
         setTableRowSelectedArray(localTableRow);
-      }
-      else {
+      } else {
         setTableRowSelectedArray([rowId, ...tableRowSelectedArray]);
       }
       setFormattedData(localRow);
