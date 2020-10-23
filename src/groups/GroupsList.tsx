@@ -74,13 +74,13 @@ export const GroupsList = ({
       });
     } else {
       localRow = [...formattedData];
-      var localTableRow = [...tableRowSelectedArray];
+      let localTableRow = [...tableRowSelectedArray];
       if (localRow[rowId].selected !== isSelected) {
         localRow[rowId].selected = isSelected;
       }
 
       if (localTableRow.includes(rowId)) {
-        var index = localTableRow.indexOf(rowId);
+        const index = localTableRow.indexOf(rowId);
         if (index === 0) {
           localTableRow.shift();
         } else {
