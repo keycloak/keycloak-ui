@@ -74,7 +74,7 @@ export const GroupsList = ({
       });
     } else {
       localRow = [...formattedData];
-      let localTableRow = [...tableRowSelectedArray];
+      const localTableRow = [...tableRowSelectedArray];
       if (localRow[rowId].selected !== isSelected) {
         localRow[rowId].selected = isSelected;
       }
