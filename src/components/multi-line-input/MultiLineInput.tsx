@@ -24,7 +24,7 @@ export function toValue(formValue: MultiLine[]): string[] {
   return formValue.map((field) => field.value);
 }
 
-export type MultiLineInputProps = TextInputProps & {
+export type MultiLineInputProps = Omit<TextInputProps, "form"> & {
   form: UseFormMethods;
   name: string;
 };
