@@ -75,8 +75,6 @@ export const GroupsSection = () => {
     loader();
   }, []);
 
-  console.log("what is filteredData" + filteredData);
-
   // Filter groups
   const filterGroups = (newInput: string) => {
     const localRowData = rawData!.filter((obj: { [key: string]: string }) => {
@@ -186,14 +184,6 @@ export const GroupsSection = () => {
                 />
               )}
             </TableToolbar>
-            <GroupsCreateModal
-              isCreateModalOpen={isCreateModalOpen}
-              handleModalToggle={handleModalToggle}
-              setIsCreateModalOpen={setIsCreateModalOpen}
-              createGroupName={createGroupName}
-              setCreateGroupName={setCreateGroupName}
-              refresh={loader}
-            />
           </>
         ) : (
           <ListEmptyState
@@ -204,6 +194,14 @@ export const GroupsSection = () => {
             onPrimaryAction={() => handleModalToggle()}
           />
         )}
+        <GroupsCreateModal
+          isCreateModalOpen={isCreateModalOpen}
+          handleModalToggle={handleModalToggle}
+          setIsCreateModalOpen={setIsCreateModalOpen}
+          createGroupName={createGroupName}
+          setCreateGroupName={setCreateGroupName}
+          refresh={loader}
+        />
       </PageSection>
     </>
   );
