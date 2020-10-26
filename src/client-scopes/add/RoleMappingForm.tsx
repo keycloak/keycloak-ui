@@ -3,8 +3,6 @@ import { useHistory } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { Controller, useForm } from "react-hook-form";
 import {
-  Gallery,
-  GalleryItem,
   Form,
   FormGroup,
   PageSection,
@@ -17,6 +15,7 @@ import {
   SelectGroup,
   Split,
   SplitItem,
+  Divider,
 } from "@patternfly/react-core";
 
 import { useAlerts } from "../../components/alert/Alerts";
@@ -99,7 +98,7 @@ export const RoleMappingForm = ({ clientScopeId }: RoleMappingFormProps) => {
 
   const createSelectGroup = (clients: ClientRepresentation[]) => {
     return [
-      <>
+      <SelectGroup key="role" label={t("roleGroup")}>
         <SelectOption
           key="realmRoles"
           value={
@@ -111,8 +110,9 @@ export const RoleMappingForm = ({ clientScopeId }: RoleMappingFormProps) => {
         >
           {t("realmRoles")}
         </SelectOption>
-      </>,
-      <SelectGroup key="group" label={t("clients")}>
+      </SelectGroup>,
+      <Divider key="divider" />,
+      <SelectGroup key="group" label={t("clientGroup")}>
         {clients.map((client) => (
           <SelectOption key={client.id} value={client}>
             {client.name}
