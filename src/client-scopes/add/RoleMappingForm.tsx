@@ -108,7 +108,7 @@ export const RoleMappingForm = ({ clientScopeId }: RoleMappingFormProps) => {
             } as ClientRepresentation
           }
         >
-          {t("realmRoles")}
+          {realm}
         </SelectOption>
       </SelectGroup>,
       <Divider key="divider" />,
