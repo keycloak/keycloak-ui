@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, useState } from "react";
 import { useHistory } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import { Bullseye, Button, PageSection, Spinner } from "@patternfly/react-core";
+import { Button, PageSection } from "@patternfly/react-core";
 
 import { HttpClientContext } from "../context/http-service/HttpClientContext";
 import { RoleRepresentation } from "../model/role-model";
