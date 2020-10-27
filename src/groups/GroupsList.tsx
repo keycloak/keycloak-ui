@@ -111,6 +111,7 @@ export const GroupsList = ({
             `/admin/realms/${realm}/groups/${list![rowId].id}`
           );
           refresh();
+          setTableRowSelectedArray([]);
           addAlert(t("Group deleted"), AlertVariant.success);
         } catch (error) {
           addAlert(`${t("clientDeleteError")} ${error}`, AlertVariant.danger);
