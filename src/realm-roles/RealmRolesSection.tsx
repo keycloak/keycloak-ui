@@ -9,6 +9,7 @@ import { RolesList } from "./RoleList";
 import { RealmContext } from "../context/realm-context/RealmContext";
 import { ViewHeader } from "../components/view-header/ViewHeader";
 import { PaginatingTableToolbar } from "../components/table-toolbar/PaginatingTableToolbar";
+import { ListEmptyState } from "../components/list-empty-state/ListEmptyState";
 
 export const RealmRolesSection = () => {
   const [max, setMax] = useState(10);
@@ -37,12 +38,7 @@ export const RealmRolesSection = () => {
     <>
       <ViewHeader titleKey="roles:title" subKey="roles:roleExplain" />
       <PageSection variant="light">
-        {!roles && (
-          <Bullseye>
-            <Spinner />
-          </Bullseye>
-        )}
-        {roles && (
+        {roles && roles.length > 0 ? (
           <PaginatingTableToolbar
             count={roles!.length}
             first={first}
@@ -63,6 +59,14 @@ export const RealmRolesSection = () => {
           >
             <RolesList roles={roles} refresh={loader} />
           </PaginatingTableToolbar>
+        ) : (
+          <ListEmptyState
+            hasIcon={true}
+            message={t("noRolesInThisRealm")}
+            instructions={t("noRolesInThisRealmInstructions")}
+            primaryActionText={t("createRole")}
+            onPrimaryAction={() => history.push("/add-role")}
+          />
         )}
       </PageSection>
     </>
