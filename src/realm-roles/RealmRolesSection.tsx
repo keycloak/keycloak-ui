@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, useState } from "react";
 import { useHistory } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import { Bullseye, Button, PageSection, Spinner } from "@patternfly/react-core";
+import { Button, PageSection } from "@patternfly/react-core";
 
 import { HttpClientContext } from "../context/http-service/HttpClientContext";
 import { RoleRepresentation } from "../model/role-model";
@@ -18,10 +18,14 @@ export const RealmRolesSection = () => {
   const history = useHistory();
   const httpClient = useContext(HttpClientContext)!;
   const [roles, setRoles] = useState<RoleRepresentation[]>();
+  const [filteredData, setFilteredData] = useState<RoleRepresentation[]>();
   const { realm } = useContext(RealmContext);
 
   const loader = async () => {
     const params: { [name: string]: string | number } = { first, max };
+    if (filteredData) {
+      return filteredData;
+    }
 
     const result = await httpClient.doGet<RoleRepresentation[]>(
       `/admin/realms/${realm}/roles`,
@@ -31,8 +35,24 @@ export const RealmRolesSection = () => {
   };
 
   useEffect(() => {
-    loader();
+    (async () => {
+      if (filteredData) {
+        return filteredData;
+      }
+      const result = await httpClient.doGet<RoleRepresentation[]>(
+        `/admin/realms/${realm}/roles`,
+      );
+      setRoles(result.data!);
+    })();
   }, [first, max]);
+
+  const filterData = (search: string) => {
+    setFilteredData(
+      roles!.filter((role) =>
+        role.name?.toLowerCase().includes(search.toLowerCase())
+      )
+    );
+  };
 
   return (
     <>
@@ -40,6 +60,9 @@ export const RealmRolesSection = () => {
       <PageSection variant="light">
         {roles && roles.length > 0 ? (
           <PaginatingTableToolbar
+            inputGroupOnChange={filterData}
+            inputGroupName="rolesToolbarTextInput"
+            inputGroupPlaceholder={t("Search for role")}
             count={roles!.length}
             first={first}
             max={max}
@@ -57,7 +80,7 @@ export const RealmRolesSection = () => {
               </>
             }
           >
-            <RolesList roles={roles} refresh={loader} />
+            <RolesList roles={filteredData || roles} refresh={loader} />
           </PaginatingTableToolbar>
         ) : (
           <ListEmptyState
