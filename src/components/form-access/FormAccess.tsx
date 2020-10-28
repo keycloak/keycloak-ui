@@ -6,11 +6,13 @@ import React, {
 } from "react";
 import { Controller } from "react-hook-form";
 import {
+  ActionGroup,
   Form,
   FormGroup,
   FormProps,
   Grid,
   GridItem,
+  TextArea,
 } from "@patternfly/react-core";
 
 import { useAccess } from "../../context/access/Access";
@@ -60,11 +62,18 @@ export const FormAccess = ({
           element.props.children,
           newProps
         );
+        if (child.type === TextArea) {
+          return cloneElement(child, {
+            readOnly: newProps.isDisabled,
+            children,
+          } as any);
+        }
         return cloneElement(
           child,
           child.type === FormGroup ||
             child.type === GridItem ||
-            child.type === Grid
+            child.type === Grid ||
+            child.type === ActionGroup
             ? { children }
             : { ...newProps, children }
         );
@@ -78,14 +87,12 @@ export const FormAccess = ({
         <Form {...rest}>
           {recursiveCloneChildren(children, {
             isDisabled: !hasAccess(role) && !fineGrainedAccess,
-            readOnly: !hasAccess(role) && !fineGrainedAccess,
           })}
         </Form>
       )}
       {unWrap &&
         recursiveCloneChildren(children, {
           isDisabled: !hasAccess(role) && !fineGrainedAccess,
-          readOnly: !hasAccess(role) && !fineGrainedAccess,
         })}
     </>
   );
