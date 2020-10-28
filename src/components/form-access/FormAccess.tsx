@@ -19,12 +19,30 @@ import { useAccess } from "../../context/access/Access";
 import { AccessType } from "../../context/whoami/who-am-i-model";
 
 export type FormAccessProps = FormProps & {
+  /**
+   * One of the AccessType's that the user needs to have to view this form. Also see {@link useAccess}.
+   * @type {AccessType}
+   */
   role: AccessType;
+
+  /**
+   * An override property if fine grained access has been setup for this form.
+   * @type {boolean}
+   */
   fineGrainedAccess?: boolean;
+
+  /**
+   * Set unWrap when you don't want this component to wrap your "children" in a {@link Form} component.
+   * @type {boolean}
+   */
   unWrap?: boolean;
   children: ReactElement[];
 };
 
+/**
+ * Use this in place of a patternfly Form component and add the `role` and `fineGrainedAccess` properties.
+ * @param {FormAccessProps} param0 - all properties of Form + role and fineGrainedAccess
+ */
 export const FormAccess = ({
   children,
   role,
