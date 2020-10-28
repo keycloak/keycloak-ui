@@ -40,7 +40,7 @@ export const RealmRolesSection = () => {
         return filteredData;
       }
       const result = await httpClient.doGet<RoleRepresentation[]>(
-        `/admin/realms/${realm}/roles`,
+        `/admin/realms/${realm}/roles`
       );
       setRoles(result.data!);
     })();
