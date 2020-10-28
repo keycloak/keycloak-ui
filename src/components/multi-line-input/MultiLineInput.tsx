@@ -63,6 +63,7 @@ export const MultiLineInput = ({
                 variant={ButtonVariant.link}
                 onClick={() => append({})}
                 tabIndex={-1}
+                isDisabled={rest.isDisabled}
               >
                 <PlusIcon />
               </Button>

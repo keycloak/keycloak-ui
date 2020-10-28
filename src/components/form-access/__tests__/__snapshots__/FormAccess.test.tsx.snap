@@ -44,7 +44,6 @@ exports[`<FormAccess /> render normal form 1`] = `
                   isDisabled={false}
                   key=".0"
                   name="fieldName"
-                  readOnly={false}
                   type="text"
                 >
                   <TextInputBase
@@ -58,7 +57,6 @@ exports[`<FormAccess /> render normal form 1`] = `
                     isRequired={false}
                     name="fieldName"
                     onChange={[Function]}
-                    readOnly={false}
                     type="text"
                     validated="default"
                   >
@@ -196,7 +194,6 @@ exports[`<FormAccess /> render normal form 1`] = `
               label="on"
               labelOff="off"
               onChange={[Function]}
-              readOnly={false}
               value={false}
             >
               <label
@@ -214,7 +211,6 @@ exports[`<FormAccess /> render normal form 1`] = `
                   disabled={false}
                   id="kc-consent"
                   onChange={[Function]}
-                  readOnly={false}
                   type="checkbox"
                   value={false}
                 />
