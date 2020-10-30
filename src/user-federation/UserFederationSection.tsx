@@ -76,7 +76,7 @@ export const UserFederationSection = () => {
   let cards;
 
   if (userFederations) {
-    cards = userFederations.map((userFederation => {
+    cards = userFederations.map(userFederation => {
       const ufCardDropdownItems = [
         <DropdownItem key={`${userFederation.id}-cardDelete`}>
           {t("common:delete")}
