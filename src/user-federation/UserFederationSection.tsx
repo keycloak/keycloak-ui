@@ -1,6 +1,5 @@
 import React, { useContext, useEffect, useState } from "react";
 import {
-  Bullseye,
   Button,
   Card,
   CardTitle,
@@ -18,13 +17,14 @@ import {
   Label,
   PageSection,
   PageSectionVariants,
-  Spinner,
+  Split,
+  SplitItem,
   Title,
   TitleSizes,
   TextContent
 } from "@patternfly/react-core";
 
-import { ExternalLinkAltIcon } from "@patternfly/react-icons";
+import { DatabaseIcon, ExternalLinkAltIcon } from "@patternfly/react-icons";
 import { useTranslation } from "react-i18next";
 import "./user-federation.css";
 
@@ -33,7 +33,9 @@ import { HttpClientContext } from "../context/http-service/HttpClientContext";
 import { UserFederationRepresentation } from "./model/userFederation";
 
 export const UserFederationSection = () => {
-  const [userFederations, setUserFederations] = useState<UserFederationRepresentation[]>();
+  const [userFederations, setUserFederations] = useState<
+    UserFederationRepresentation[]
+  >();
 
   const loader = async () => {
     const testParams: { [name: string]: string | number } = {
@@ -56,6 +58,9 @@ export const UserFederationSection = () => {
   }, [0, 10]);
 
   const [providerOpen, isProviderMenuOpen] = useState(false);
+
+
+  // MF HERE
   const [cardOpen, isCardMenuOpen] = useState(false);
 
   const { t } = useTranslation("userFederation");
@@ -68,9 +73,53 @@ export const UserFederationSection = () => {
     <DropdownItem key="itemKerberos">Kerberos</DropdownItem>
   ];
 
-  const ufCardDropdownItems = [
-    <DropdownItem key="itemDelete">{t("common:delete")}</DropdownItem>
-  ];
+  let cards;
+
+  if (userFederations) {
+    cards = userFederations.map((userFederation => {
+      const ufCardDropdownItems = [
+        <DropdownItem key={`${userFederation.id}-cardDelete`}>
+          {t("common:delete")}
+        </DropdownItem>
+      ];
+      // const currentProgress = userProgress[walkthrough.id];
+      return (
+        <GalleryItem id={userFederation.id} key={userFederation.id}>
+          <Card>
+            <CardHeader>
+              <CardActions>
+                <Dropdown
+                  isPlain
+                  position={"right"}
+                  // onSelect={() => isCardMenuOpen(!cardOpen)}
+                  toggle={
+                    <KebabToggle onToggle={() => isCardMenuOpen(!cardOpen)} />
+                  }
+                  isOpen={cardOpen}
+                  dropdownItems={ufCardDropdownItems}
+                />
+              </CardActions>
+              <CardTitle>{userFederation.name}</CardTitle>
+            </CardHeader>
+
+            <CardBody></CardBody>
+            <CardFooter>
+              {userFederation.providerId === "ldap" ? "LDAP" : "Kerberos"}
+
+              <Label
+                color="blue"
+                className="keycloak__user-federation__provider-label"
+              >
+                {userFederation.config.enabled
+                  ? `${t("common:enabled")}`
+                  : `${t("common:disabled")}`}
+              </Label>
+            </CardFooter>
+          </Card>
+        </GalleryItem>
+      );
+    });
+  }
 
   return (
     <>
@@ -109,114 +158,35 @@ export const UserFederationSection = () => {
       <Divider />
 
       <PageSection>
-        {!userFederations && (
+        {/* {(userFederations) && (
           <Bullseye>
             <Spinner />
           </Bullseye>
-        )}
-        {userFederations && (
+        )} */}
+        {userFederations && userFederations.length > 0 ? (
+          <Gallery hasGutter>{cards}</Gallery>
+        ) : (
           <Gallery hasGutter>
-            <GalleryItem>
-              <Card>
-                <CardHeader>
-                  <CardActions>
-                    <Dropdown
-                      isPlain
-                      position={"right"}
-                      // onSelect={() => isCardMenuOpen(!cardOpen)}
-                      toggle={
-                        <KebabToggle
-                          onToggle={() => isCardMenuOpen(!cardOpen)}
-                        />
-                      }
-                      isOpen={cardOpen}
-                      dropdownItems={ufCardDropdownItems}
-                    />
-                  </CardActions>
-                  <CardTitle>{userFederations[0].name}</CardTitle>
-                </CardHeader>
-
-                <CardBody></CardBody>
-                <CardFooter>
-                  {userFederations[0].providerId === "ldap"
-                    ? "LDAP"
-                    : "Kerberos"}
-
-                  <Label
-                    color="blue"
-                    className="keycloak__user-federation__provider-label"
-                  >
-                    {userFederations[0].config.enabled ? `${t("common:enabled")}` : `${t("common:disabled")}`}
-                  </Label>
-                </CardFooter>
-              </Card>
-            </GalleryItem>
-            <GalleryItem>
-              <Card>
-                <CardHeader>
-                  <CardActions>
-                    <Dropdown
-                      // onSelect={() => isCardMenuOpen(!cardOpen)}
-                      toggle={
-                        <KebabToggle
-                          onToggle={() => isCardMenuOpen(!cardOpen)}
-                        />
-                      }
-                      isOpen={cardOpen}
-                      isPlain
-                      dropdownItems={ufCardDropdownItems}
-                      position={"right"}
-                    />
-                  </CardActions>
-                  <CardTitle>{userFederations[1].name}</CardTitle>
-                </CardHeader>
-                <CardBody></CardBody>
-                <CardFooter>
-                  {userFederations[1].providerId === "ldap"
-                    ? "LDAP"
-                    : "Kerberos"}
-                  <Label
-                    color="blue"
-                    className="keycloak__user-federation__provider-label"
-                  >
-                    {userFederations[1].config.enabled ? `${t("common:enabled")}` : `${t("common:disabled")}`}
-                  </Label>
-                </CardFooter>
-              </Card>
-            </GalleryItem>
-            <GalleryItem>
-              <Card>
-                <CardHeader>
-                  <CardActions>
-                    <Dropdown
-                      // onSelect={() => isCardMenuOpen(!cardOpen)}
-                      toggle={
-                        <KebabToggle
-                          onToggle={() => isCardMenuOpen(!cardOpen)}
-                        />
-                      }
-                      isOpen={cardOpen}
-                      isPlain
-                      dropdownItems={ufCardDropdownItems}
-                      position={"right"}
-                    />
-                  </CardActions>
-                  <CardTitle>{userFederations[2].name}</CardTitle>
-                </CardHeader>
-                <CardBody></CardBody>
-                <CardFooter>
-                  {userFederations[2].providerId === "ldap"
-                    ? "LDAP"
-                    : "Kerberos"}
-                  <Label
-                    color="blue"
-                    className="keycloak__user-federation__provider-label"
-                  >
-                    {userFederations[2].config.enabled ? `${t("common:enabled")}` : `${t("common:disabled")}`}
-                  </Label>
-                </CardFooter>
-              </Card>
-            </GalleryItem>
+            <Card isHoverable>
+              <CardTitle>
+                <Split hasGutter>
+                  <SplitItem>
+                    <DatabaseIcon size="lg" />
+                  </SplitItem>
+                  <SplitItem isFilled>{t("addKerberos")}</SplitItem>
+                </Split>
+              </CardTitle>
+            </Card>
+            <Card isHoverable>
+              <CardTitle>
+                <Split hasGutter>
+                  <SplitItem>
+                    <DatabaseIcon size="lg" />
+                  </SplitItem>
+                  <SplitItem isFilled>{t("addLdap")}</SplitItem>
+                </Split>
+              </CardTitle>
+            </Card>
           </Gallery>
         )}
       </PageSection>
