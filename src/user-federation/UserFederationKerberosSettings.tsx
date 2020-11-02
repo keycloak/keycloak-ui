@@ -1,13 +1,6 @@
-import {
-  PageSection,
-  Text,
-  TextContent,
-  TextVariants,
-  Title,
-} from "@patternfly/react-core";
+import { PageSection, Title } from "@patternfly/react-core";
 import { useTranslation } from "react-i18next";
 import React from "react";
-import { ScrollForm } from "../components/scroll-form/ScrollForm";
 import { KerberosSettingsRequired } from "./KerberosSettingsRequired";
 import { KerberosSettingsCache } from "./KerberosSettingsCache";
 

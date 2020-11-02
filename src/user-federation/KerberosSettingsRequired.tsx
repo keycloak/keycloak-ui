@@ -1,8 +1,6 @@
 import {
-  Button,
   Form,
   FormGroup,
-  InputGroup,
   Select,
   SelectOption,
   Switch,
@@ -11,7 +9,6 @@ import {
 import { useTranslation } from "react-i18next";
 import React from "react";
 import { HelpItem } from "../components/help-enabler/HelpItem";
-import { EyeIcon } from "@patternfly/react-icons";
 
 export const KerberosSettingsRequired = () => {
   const { t } = useTranslation("user-federation");
