@@ -48,7 +48,6 @@ export const UserFederationSection = () => {
       }
     );
     setUserFederations(result.data);
-    console.log(result.data);
   };
 
   useEffect(() => {
