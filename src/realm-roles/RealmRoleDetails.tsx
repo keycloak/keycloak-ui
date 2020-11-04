@@ -49,7 +49,7 @@ export const RolesForm = () => {
 
   const [open, isOpen] = useState(false);
   const { addAlert } = useAlerts();
-  const url = `/admin/realms/${realm}/roles/${id}`;
+  const url = `/admin/realms/${realm}/roles-by-id/${id}`;
 
   const form = useForm();
 
@@ -60,8 +60,7 @@ export const RolesForm = () => {
     (async () => {
       const fetchedRole = await httpClient.doGet<RoleRepresentation>(url);
       if (fetchedRole.data) {
-        // setRole(fetchedRole.data);
-        setName(fetchedRole.data.name!)
+        setName(fetchedRole.data.name!);
       }
     })();
   }, []);
