@@ -29,8 +29,6 @@ const columns: (keyof RoleRepresentation)[] = [
   "description",
 ];
 
-
-
 export const RolesList = ({ roles, refresh }: RolesListProps) => {
   const data1 = roles?.map((c) => {
     return {
@@ -48,6 +46,7 @@ export const RolesList = ({ roles, refresh }: RolesListProps) => {
       }),
     };
   });
+
   const { t } = useTranslation("roles");
   const adminClient = useAdminClient();
   const { addAlert } = useAlerts();
