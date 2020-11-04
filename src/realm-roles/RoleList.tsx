@@ -17,6 +17,7 @@ import { HttpClientContext } from "../context/http-service/HttpClientContext";
 import { useAlerts } from "../components/alert/Alerts";
 import { RealmContext } from "../context/realm-context/RealmContext";
 import { useConfirmDialog } from "../components/confirm-dialog/ConfirmDialog";
+import { Link } from "react-router-dom";
 
 type RolesListProps = {
   roles?: RoleRepresentation[];
@@ -29,7 +30,27 @@ const columns: (keyof RoleRepresentation)[] = [
   "description",
 ];
 
+
+
 export const RolesList = ({ roles, refresh }: RolesListProps) => {
+
+  const data1 = roles?.map((c) => {
+    return {
+      cells: columns.map((col) => {
+        if (col === "name") {
+          return (
+            <>
+              <Link key={c.id} to={`/roles/${c.id}`}>
+                {c[col]}
+              </Link>
+            </>
+          );
+        }
+        return c[col];
+      }),
+    };
+  });
+  
   const { t } = useTranslation("roles");
   const httpClient = useContext(HttpClientContext)!;
   const { realm } = useContext(RealmContext);
@@ -42,7 +63,7 @@ export const RolesList = ({ roles, refresh }: RolesListProps) => {
 
   const externalLink = (): IFormatter => (data?: IFormatterValueType) => {
     return (data ? (
-      <ExternalLink href={data.toString()} />
+      <ExternalLink href={"roles/" + data.toString()} />
     ) : undefined) as object;
   };
 
@@ -98,7 +119,7 @@ export const RolesList = ({ roles, refresh }: RolesListProps) => {
           },
           { title: t("description"), cellFormatters: [emptyFormatter()] },
         ]}
-        rows={data}
+        rows={data1}
         actions={[
           {
             title: t("common:Delete"),

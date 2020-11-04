@@ -10,6 +10,7 @@ import { GroupsSection } from "./groups/GroupsSection";
 import { IdentityProvidersSection } from "./identity-providers/IdentityProvidersSection";
 import { PageNotFoundSection } from "./PageNotFoundSection";
 import { NewRoleForm } from "./realm-roles/add/NewRoleForm";
+import { RolesForm } from "./realm-roles/RealmRoleDetails";
 import { RealmRolesSection } from "./realm-roles/RealmRolesSection";
 import { RealmSettingsSection } from "./realm-settings/RealmSettingsSection";
 import { NewRealmForm } from "./realm/add/NewRealmForm";
@@ -96,6 +97,12 @@ export const routes: RoutesFn = (t: TFunction) => [
     component: RealmRolesSection,
     breadcrumb: t("roles:roleList"),
     access: "view-realm",
+  },
+  {
+    path: "/roles/:id",
+    component: RolesForm,
+    breadcrumb: t("roles:roleDetails"),
+    access: "view-clients",
   },
   {
     path: "/add-role",
