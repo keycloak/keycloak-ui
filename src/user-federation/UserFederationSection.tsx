@@ -1,28 +1,26 @@
 import React, { useContext, useEffect, useState } from "react";
 import {
+  AlertVariant,
   Button,
   Card,
   CardTitle,
-  CardBody,
-  CardFooter,
-  CardHeader,
-  CardActions,
   Divider,
   Dropdown,
-  DropdownToggle,
   DropdownItem,
+  DropdownToggle,
   Gallery,
   GalleryItem,
-  KebabToggle,
-  Label,
   PageSection,
   PageSectionVariants,
   Split,
   SplitItem,
+  TextContent,
   Title,
-  TitleSizes,
-  TextContent
+  TitleSizes
 } from "@patternfly/react-core";
+
+import { UserFederationCard } from "./UserFederationCard";
+import { useAlerts } from "../components/alert/Alerts";
 
 import { DatabaseIcon, ExternalLinkAltIcon } from "@patternfly/react-icons";
 import { useTranslation } from "react-i18next";
@@ -36,13 +34,13 @@ export const UserFederationSection = () => {
   const [userFederations, setUserFederations] = useState<
     UserFederationRepresentation[]
   >();
+  const { addAlert } = useAlerts();
 
   const loader = async () => {
     const testParams: { [name: string]: string | number } = {
       parentId: `${realm}`,
       type: "org.keycloak.storage.UserStorageProvider" // MF note that this is providerType in the output, but API call is still type
     };
-
     const result = await httpClient.doGet<UserFederationRepresentation[]>(
       `/admin/realms/${realm}/components`,
       {
@@ -55,13 +53,9 @@ export const UserFederationSection = () => {
 
   useEffect(() => {
     loader();
-  }, [0, 10]);
+  }, []);
 
   const [providerOpen, isProviderMenuOpen] = useState(false);
-
-
-  // MF HERE
-  const [cardOpen, isCardMenuOpen] = useState(false);
 
   const { t } = useTranslation("userFederation");
 
@@ -76,46 +70,42 @@ export const UserFederationSection = () => {
   let cards;
 
   if (userFederations) {
-    cards = userFederations.map(userFederation => {
+    cards = userFederations.map((userFederation, index) => {
       const ufCardDropdownItems = [
-        <DropdownItem key={`${userFederation.id}-cardDelete`}>
+        <DropdownItem
+          key={`${index}-cardDelete`}
+          onClick={() => {
+            try {
+              httpClient
+                .doDelete(
+                  `/admin/realms/${realm}/components/${userFederation.id}`
+                )
+                .then(() => loader());
+              addAlert(
+                t("userFederation:userFedDeletedSuccess"),
+                AlertVariant.success
+              );
+            } catch (error) {
+              addAlert(
+                `${t("userFederation:userFedDeleteError")} ${error}`,
+                AlertVariant.danger
+              );
+            }
+          }}
+        >
           {t("common:delete")}
         </DropdownItem>
       ];
-      // const currentProgress = userProgress[walkthrough.id];
+
       return (
-        <GalleryItem id={userFederation.id} key={userFederation.id}>
-          <Card>
-            <CardHeader>
-              <CardActions>
-                <Dropdown
-                  isPlain
-                  position={"right"}
-                  // onSelect={() => isCardMenuOpen(!cardOpen)}
-                  toggle={
-                    <KebabToggle onToggle={() => isCardMenuOpen(!cardOpen)} />
-                  }
-                  isOpen={cardOpen}
-                  dropdownItems={ufCardDropdownItems}
-                />
-              </CardActions>
-              <CardTitle>{userFederation.name}</CardTitle>
-            </CardHeader>
-
-            <CardBody></CardBody>
-            <CardFooter>
-              {userFederation.providerId === "ldap" ? "LDAP" : "Kerberos"}
-
-              <Label
-                color="blue"
-                className="keycloak__user-federation__provider-label"
-              >
-                {userFederation.config.enabled
-                  ? `${t("common:enabled")}`
-                  : `${t("common:disabled")}`}
-              </Label>
-            </CardFooter>
-          </Card>
+        <GalleryItem key={index}>
+          <UserFederationCard
+            id={userFederation.id}
+            dropdownItems={ufCardDropdownItems}
+            title={userFederation.name}
+            providerId={userFederation.providerId}
+            configEnabled={userFederation.config.enabled}
+          />
         </GalleryItem>
       );
     });
@@ -140,7 +130,6 @@ export const UserFederationSection = () => {
           </Button>
         </TextContent>
         <Dropdown
-          // onSelect={this.onSelect}
           className="keycloak__user-federation__dropdown"
           toggle={
             <DropdownToggle
@@ -156,13 +145,7 @@ export const UserFederationSection = () => {
         />
       </PageSection>
       <Divider />
-
       <PageSection>
-        {/* {(userFederations) && (
-          <Bullseye>
-            <Spinner />
-          </Bullseye>
-        )} */}
         {userFederations && userFederations.length > 0 ? (
           <Gallery hasGutter>{cards}</Gallery>
         ) : (

@@ -74,6 +74,10 @@
     "addNewProvider": "Add new provider",
     "providers": "Add providers",
     "addKerberos": "Add Kerberos providers",
-    "addLdap": "Add LDAP providers"
+    "addLdap": "Add LDAP providers",
+    "userFedDeletedSuccess": "The user federation has been deleted",
+    "userFedDeleteError": "Could not delete user federation:",
+    "userFedDeleteConfirmTitle": "Delete user federation?",
+    "userFedDeleteConfirm": "If you delete this user federation, all associated data will be removed."
   }
 }

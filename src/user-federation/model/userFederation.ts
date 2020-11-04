@@ -4,5 +4,5 @@ export interface UserFederationRepresentation {
     providerId: string;
     providerType: string;
     parentId: string;
-    config: { [index: string]: string };
+    config: { [index: string]: any };
   }
