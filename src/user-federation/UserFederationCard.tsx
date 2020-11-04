@@ -8,7 +8,7 @@ import {
   CardFooter,
   Dropdown,
   KebabToggle,
-  Label
+  Label,
 } from "@patternfly/react-core";
 import { useTranslation } from "react-i18next";
 
@@ -24,7 +24,7 @@ export const UserFederationCard = ({
   dropdownItems,
   title,
   providerId,
-  configEnabled
+  configEnabled,
 }: UserFederationCardProps) => {
   const { t } = useTranslation();
   const [isDropdownOpen, setDropdownOpen] = useState(false);

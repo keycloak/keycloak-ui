@@ -16,7 +16,7 @@ import {
   SplitItem,
   TextContent,
   Title,
-  TitleSizes
+  TitleSizes,
 } from "@patternfly/react-core";
 
 import { UserFederationCard } from "./UserFederationCard";
@@ -39,12 +39,12 @@ export const UserFederationSection = () => {
   const loader = async () => {
     const testParams: { [name: string]: string | number } = {
       parentId: `${realm}`,
-      type: "org.keycloak.storage.UserStorageProvider" // MF note that this is providerType in the output, but API call is still type
+      type: "org.keycloak.storage.UserStorageProvider", // MF note that this is providerType in the output, but API call is still type
     };
     const result = await httpClient.doGet<UserFederationRepresentation[]>(
       `/admin/realms/${realm}/components`,
       {
-        params: testParams
+        params: testParams,
       }
     );
     setUserFederations(result.data);
@@ -63,7 +63,7 @@ export const UserFederationSection = () => {
 
   const ufAddProviderDropdownItems = [
     <DropdownItem key="itemLDAP">LDAP</DropdownItem>,
-    <DropdownItem key="itemKerberos">Kerberos</DropdownItem>
+    <DropdownItem key="itemKerberos">Kerberos</DropdownItem>,
   ];
 
   let cards;
@@ -93,7 +93,7 @@ export const UserFederationSection = () => {
           }}
         >
           {t("common:delete")}
-        </DropdownItem>
+        </DropdownItem>,
       ];
 
       return (
