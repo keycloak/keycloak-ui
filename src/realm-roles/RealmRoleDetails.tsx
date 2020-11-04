@@ -14,6 +14,7 @@ import {
   Tab,
   Tabs,
   TabTitleText,
+  TextArea,
   TextInput,
 } from "@patternfly/react-core";
 import { useTranslation } from "react-i18next";
@@ -28,6 +29,7 @@ import { useLoginProviders } from "../context/server-info/ServerInfoProvider";
 import { ViewHeader } from "../components/view-header/ViewHeader";
 import { convertFormValuesToObject, convertToFormValues } from "../util";
 import { RoleRepresentation } from "../model/role-model";
+import { convertToMultiline } from "../components/multi-line-input/MultiLineInput";
 // import { MapperList } from "../details/MapperList";
 
 export const RolesForm = () => {
@@ -60,13 +62,6 @@ export const RolesForm = () => {
       if (fetchedRole.data) {
         // setRole(fetchedRole.data);
         setName(fetchedRole.data.name!)
-        Object.entries(fetchedRole.data).map((entry) => {
-          if (entry[0] !== "redirectUris") {
-            form.setValue(entry[0], entry[1]);
-          } else if (entry[1] && entry[1].length > 0) {
-            form.setValue(entry[0], convertToMultiline(entry[1]));
-          }
-        });
       }
     })();
   }, []);
@@ -98,8 +93,7 @@ export const RolesForm = () => {
         titleKey={
           name!
         }
-        subKey="client-scopes:clientScopeExplain"
-        // badge={roles ? roles.protocol : undefined}
+        subKey=""
       />
 
       <PageSection variant="light">
@@ -115,13 +109,6 @@ export const RolesForm = () => {
             <Form isHorizontal onSubmit={handleSubmit(save)}>
               <FormGroup
                 label={t("Role name")}
-                labelIcon={
-                  <HelpItem
-                    helpText="client-scopes-help:name"
-                    forLabel={t("name")}
-                    forID="kc-name"
-                  />
-                }
                 fieldId="kc-name"
                 isRequired
                 validated={errors.name ? "error" : "default"}
@@ -132,20 +119,14 @@ export const RolesForm = () => {
                   type="text"
                   id="kc-name"
                   name="name"
+                  value={name}
                 />
               </FormGroup>
               <FormGroup
                 label={t("description")}
-                labelIcon={
-                  <HelpItem
-                    helpText="client-scopes-help:description"
-                    forLabel={t("description")}
-                    forID="kc-description"
-                  />
-                }
                 fieldId="kc-description"
               >
-                <TextInput
+                <TextArea
                   ref={register}
                   type="text"
                   id="kc-description"
@@ -203,108 +184,11 @@ export const RolesForm = () => {
                   variant="link"
                   onClick={() => history.push("/roles/")}
                 >
-                  {t("common:cancel")}
+                  {t("common:reload")}
                 </Button>
               </ActionGroup>
             </Form>
           </Tab>
-          <Tab eventKey={1} title={<TabTitleText>{t("Attributes")}</TabTitleText>}>
-          <Form isHorizontal onSubmit={handleSubmit(save)}>
-              <FormGroup
-                label={t("Key")}
-                labelIcon={
-                  <HelpItem
-                    helpText="client-scopes-help:name"
-                    forLabel={t("name")}
-                    forID="kc-name"
-                  />
-                }
-                fieldId="kc-name"
-                isRequired
-                validated={errors.name ? "error" : "default"}
-                helperTextInvalid={t("common:required")}
-              >
-                <TextInput
-                  ref={register({ required: true })}
-                  type="text"
-                  id="kc-name"
-                  name="name"
-                />
-              </FormGroup>
-              <FormGroup
-                label={t("Value")}
-                labelIcon={
-                  <HelpItem
-                    helpText="client-scopes-help:description"
-                    forLabel={t("description")}
-                    forID="kc-description"
-                  />
-                }
-                fieldId="kc-description"
-              >
-                <TextInput
-                  ref={register}
-                  type="text"
-                  id="kc-description"
-                  name="description"
-                />
-              </FormGroup>
-              {!id && (
-                <FormGroup
-                  label={t("protocol")}
-                  labelIcon={
-                    <HelpItem
-                      helpText="client-scopes-help:protocol"
-                      forLabel="protocol"
-                      forID="kc-protocol"
-                    />
-                  }
-                  fieldId="kc-protocol"
-                >
-                  <Controller
-                    name="protocol"
-                    defaultValue=""
-                    control={control}
-                    render={({ onChange, value }) => (
-                      <Select
-                        toggleId="kc-protocol"
-                        required
-                        onToggle={() => isOpen(!open)}
-                        onSelect={(_, value, isPlaceholder) => {
-                          onChange(isPlaceholder ? "" : (value as string));
-                          isOpen(false);
-                        }}
-                        selections={value}
-                        variant={SelectVariant.single}
-                        aria-label={t("selectEncryptionType")}
-                        placeholderText={t("common:selectOne")}
-                        isOpen={open}
-                      >
-                        {providers.map((option) => (
-                          <SelectOption
-                            selected={option === value}
-                            key={option}
-                            value={option}
-                          />
-                        ))}
-                      </Select>
-                    )}
-                  />
-                </FormGroup>
-              )}
-              <ActionGroup>
-                <Button variant="primary" type="submit">
-                  {t("common:save")}
-                </Button>
-                <Button
-                  variant="link"
-                  onClick={() => history.push("/roles/")}
-                >
-                  {t("common:cancel")}
-                </Button>
-              </ActionGroup>
-            </Form>            </Tab>
-            <Tab eventKey={2} title={<TabTitleText>{t("Users in Role")}</TabTitleText>} />
         </Tabs>
       </PageSection>
     </>
