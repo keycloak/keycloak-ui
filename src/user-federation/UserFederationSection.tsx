@@ -117,7 +117,8 @@ export const UserFederationSection = () => {
             icon={<ExternalLinkAltIcon />}
             iconPosition="right"
             component="a"
-            href="http://www.google.com"
+            href="https://www.keycloak.org/docs/latest/server_admin/index.html#_user-storage-federation"
+            target="_blank"
           >
             {t("common:learnMore")}
           </Button>
