@@ -38,7 +38,7 @@ export const UserFederationSection = () => {
 
   const loader = async () => {
     const testParams: { [name: string]: string | number } = {
-      parentId: `${realm}`,
+      parentId: realm,
       type: "org.keycloak.storage.UserStorageProvider", // MF note that this is providerType in the output, but API call is still type
     };
     const result = await httpClient.doGet<UserFederationRepresentation[]>(
@@ -56,7 +56,7 @@ export const UserFederationSection = () => {
 
   const [providerOpen, isProviderMenuOpen] = useState(false);
 
-  const { t } = useTranslation("userFederation");
+  const { t } = useTranslation("user-federation");
 
   const httpClient = useContext(HttpClientContext)!;
   const { realm } = useContext(RealmContext);
@@ -80,15 +80,9 @@ export const UserFederationSection = () => {
                   `/admin/realms/${realm}/components/${userFederation.id}`
                 )
                 .then(() => loader());
-              addAlert(
-                t("userFederation:userFedDeletedSuccess"),
-                AlertVariant.success
-              );
+              addAlert(t("userFedDeletedSuccess"), AlertVariant.success);
             } catch (error) {
-              addAlert(
-                `${t("userFederation:userFedDeleteError")} ${error}`,
-                AlertVariant.danger
-              );
+              addAlert(t("userFedDeleteError", { error }), AlertVariant.danger);
             }
           }}
         >
@@ -117,7 +111,7 @@ export const UserFederationSection = () => {
           {t("common:userFederation")}
         </Title>
         <TextContent>
-          {t("userFederationInfo")}
+          {t("userFederationExplanation")}
           <Button
             variant="link"
             icon={<ExternalLinkAltIcon />}

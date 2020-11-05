@@ -33,33 +33,29 @@ export const UserFederationCard = ({
   };
 
   return (
-    <>
-      <Card>
-        <CardHeader>
-          <CardActions>
-            <Dropdown
-              isPlain
-              position={"right"}
-              toggle={<KebabToggle onToggle={onDropdownToggle} />}
-              isOpen={isDropdownOpen}
-              dropdownItems={dropdownItems}
-            />
-          </CardActions>
-          <CardTitle>{title}</CardTitle>
-        </CardHeader>
-        <CardBody />
-        <CardFooter>
-          {providerId === "ldap" ? "LDAP" : "Kerberos"}
-          <Label
-            color="blue"
-            className="keycloak__user-federation__provider-label"
-          >
-            {configEnabled
-              ? `${t("common:enabled")}`
-              : `${t("common:disabled")}`}
-          </Label>
-        </CardFooter>
-      </Card>
-    </>
+    <Card>
+      <CardHeader>
+        <CardActions>
+          <Dropdown
+            isPlain
+            position={"right"}
+            toggle={<KebabToggle onToggle={onDropdownToggle} />}
+            isOpen={isDropdownOpen}
+            dropdownItems={dropdownItems}
+          />
+        </CardActions>
+        <CardTitle>{title}</CardTitle>
+      </CardHeader>
+      <CardBody />
+      <CardFooter>
+        {providerId === "ldap" ? "LDAP" : "Kerberos"}
+        <Label
+          color="blue"
+          className="keycloak__user-federation__provider-label"
+        >
+          {configEnabled ? `${t("common:enabled")}` : `${t("common:disabled")}`}
+        </Label>
+      </CardFooter>
+    </Card>
   );
 };
