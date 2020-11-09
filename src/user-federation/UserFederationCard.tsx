@@ -27,9 +27,9 @@ export const UserFederationCard = ({
   configEnabled,
 }: UserFederationCardProps) => {
   const { t } = useTranslation();
-  const [isDropdownOpen, setDropdownOpen] = useState(false);
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const onDropdownToggle = () => {
-    setDropdownOpen(!isDropdownOpen);
+    setIsDropdownOpen(!isDropdownOpen);
   };
 
   return (

@@ -54,7 +54,7 @@ export const UserFederationSection = () => {
     loader();
   }, []);
 
-  const [providerOpen, isProviderMenuOpen] = useState(false);
+  const [isProviderMenuOpen, setIsProviderMenuOpen] = useState(false);
 
   const { t } = useTranslation("user-federation");
 
@@ -127,14 +127,14 @@ export const UserFederationSection = () => {
           className="keycloak__user-federation__dropdown"
           toggle={
             <DropdownToggle
-              onToggle={() => isProviderMenuOpen(!providerOpen)}
+              onToggle={() => setIsProviderMenuOpen(!isProviderMenuOpen)}
               isPrimary
               id="ufToggleId"
             >
               {t("addNewProvider")}
             </DropdownToggle>
           }
-          isOpen={providerOpen}
+          isOpen={isProviderMenuOpen}
           dropdownItems={ufAddProviderDropdownItems}
         />
       </PageSection>
