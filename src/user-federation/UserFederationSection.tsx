@@ -11,15 +11,15 @@ import {
   SplitItem,
 } from "@patternfly/react-core";
 
-import { UserFederationCard } from "./UserFederationCard";
+import { KeycloakCard } from "../components/keycloak-card/KeycloakCard";
 import { useAlerts } from "../components/alert/Alerts";
 import { ViewHeader } from "../components/view-header/ViewHeader";
 import { DatabaseIcon } from "@patternfly/react-icons";
 import { useTranslation } from "react-i18next";
-import "./user-federation.css";
 import { RealmContext } from "../context/realm-context/RealmContext";
 import { HttpClientContext } from "../context/http-service/HttpClientContext";
 import { UserFederationRepresentation } from "./model/userFederation";
+import "./user-federation.css";
 
 export const UserFederationSection = () => {
   const [userFederations, setUserFederations] = useState<
@@ -83,15 +83,20 @@ export const UserFederationSection = () => {
           {t("common:delete")}
         </DropdownItem>,
       ];
-
       return (
         <GalleryItem key={index}>
-          <UserFederationCard
+          <KeycloakCard
             id={userFederation.id}
             dropdownItems={ufCardDropdownItems}
             title={userFederation.name}
-            providerId={userFederation.providerId}
-            configEnabled={userFederation.config.enabled}
+            footerText={
+              userFederation.providerId === "ldap" ? "LDAP" : "Kerberos"
+            }
+            labelText={
+              userFederation.config.enabled
+                ? `${t("common:enabled")}`
+                : `${t("common:disabled")}`
+            }
           />
         </GalleryItem>
       );

@@ -1,7 +1,3 @@
 .keycloak__user-federation__dropdown {
     margin-top: var(--pf-global--spacer--lg);
   }
-
-  .keycloak__user-federation__provider-label {
-    margin-left: var(--pf-global--spacer--lg);
-  }
