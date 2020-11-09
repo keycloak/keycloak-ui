@@ -26,7 +26,7 @@ export type ViewHeaderProps = {
   subKey: string;
   subKeyLinkProps?: ButtonProps;
   dropdownItems?: ReactElement[];
-  lowerDropdownItems?: ReactElement[];
+  lowerDropdownItems?: any;
   lowerDropdownMenuTitle?: any;
   isEnabled?: boolean;
   onToggle?: (value: boolean) => void;

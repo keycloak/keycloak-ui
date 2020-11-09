@@ -9,6 +9,9 @@ import {
   PageSection,
   Split,
   SplitItem,
+  Text,
+  TextContent,
+  TextVariants,
 } from "@patternfly/react-core";
 
 import { KeycloakCard } from "../components/keycloak-card/KeycloakCard";
@@ -108,36 +111,51 @@ export const UserFederationSection = () => {
       <ViewHeader
         titleKey="userFederation"
         subKey="user-federation:userFederationExplanation"
-        lowerDropdownItems={ufAddProviderDropdownItems}
-        lowerDropdownMenuTitle="user-federation:addNewProvider"
         subKeyLinkProps={learnMoreLinkProps}
+        {...(userFederations && userFederations.length > 0
+          ? {
+              lowerDropdownItems: { ufAddProviderDropdownItems },
+              lowerDropdownMenuTitle: "user-federation:addNewProvider",
+            }
+          : {})}
       />
       <PageSection>
         {userFederations && userFederations.length > 0 ? (
           <Gallery hasGutter>{cards}</Gallery>
         ) : (
-          <Gallery hasGutter>
-            <Card isHoverable>
-              <CardTitle>
-                <Split hasGutter>
-                  <SplitItem>
-                    <DatabaseIcon size="lg" />
-                  </SplitItem>
-                  <SplitItem isFilled>{t("addKerberos")}</SplitItem>
-                </Split>
-              </CardTitle>
-            </Card>
-            <Card isHoverable>
-              <CardTitle>
-                <Split hasGutter>
-                  <SplitItem>
-                    <DatabaseIcon size="lg" />
-                  </SplitItem>
-                  <SplitItem isFilled>{t("addLdap")}</SplitItem>
-                </Split>
-              </CardTitle>
-            </Card>
-          </Gallery>
+          <>
+            <TextContent>
+              <Text component={TextVariants.p}>{t("getStarted")}</Text>
+            </TextContent>
+            <TextContent>
+              <Text className="pf-u-mt-lg" component={TextVariants.h2}>
+                {t("providers")}
+              </Text>
+            </TextContent>
+            <hr className="pf-u-mb-lg" />
+            <Gallery hasGutter>
+              <Card isHoverable>
+                <CardTitle>
+                  <Split hasGutter>
+                    <SplitItem>
+                      <DatabaseIcon size="lg" />
+                    </SplitItem>
+                    <SplitItem isFilled>{t("addKerberos")}</SplitItem>
+                  </Split>
+                </CardTitle>
+              </Card>
+              <Card isHoverable>
+                <CardTitle>
+                  <Split hasGutter>
+                    <SplitItem>
+                      <DatabaseIcon size="lg" />
+                    </SplitItem>
+                    <SplitItem isFilled>{t("addLdap")}</SplitItem>
+                  </Split>
+                </CardTitle>
+              </Card>
+            </Gallery>
+          </>
         )}
       </PageSection>
     </>
