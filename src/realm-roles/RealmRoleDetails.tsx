@@ -118,7 +118,7 @@ export const RolesForm = () => {
                   type="text"
                   id="kc-name"
                   name="name"
-                  value={name}
+                  // value={name}
                 />
               </FormGroup>
               <FormGroup
