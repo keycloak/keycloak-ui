@@ -53,8 +53,7 @@ export const RolesForm = () => {
 
   const form = useForm();
 
-  console.log("name", name)
-
+  console.log("name", name);
 
   useEffect(() => {
     (async () => {
@@ -67,9 +66,7 @@ export const RolesForm = () => {
 
   const save = async (roles: RoleRepresentation) => {
     try {
-      roles.attributes = convertFormValuesToObject(
-        roles.attributes!
-      );
+      roles.attributes = convertFormValuesToObject(roles.attributes!);
 
       const url = `/admin/realms/${realm}/roles/`;
       if (id) {
@@ -88,12 +85,7 @@ export const RolesForm = () => {
 
   return (
     <>
-      <ViewHeader
-        titleKey={
-          name!
-        }
-        subKey=""
-      />
+      <ViewHeader titleKey={name!} subKey="" />
 
       <PageSection variant="light">
         <Tabs
@@ -101,10 +93,7 @@ export const RolesForm = () => {
           onSelect={(_, key) => setActiveTab(key as number)}
           isBox
         >
-          <Tab
-            eventKey={0}
-            title={<TabTitleText>{t("Details")}</TabTitleText>}
-          >
+          <Tab eventKey={0} title={<TabTitleText>{t("Details")}</TabTitleText>}>
             <Form isHorizontal onSubmit={handleSubmit(save)}>
               <FormGroup
                 label={t("Role name")}
@@ -121,10 +110,7 @@ export const RolesForm = () => {
                   // value={name}
                 />
               </FormGroup>
-              <FormGroup
-                label={t("description")}
-                fieldId="kc-description"
-              >
+              <FormGroup label={t("description")} fieldId="kc-description">
                 <TextArea
                   ref={register}
                   type="text"
@@ -179,10 +165,7 @@ export const RolesForm = () => {
                 <Button variant="primary" type="submit">
                   {t("common:save")}
                 </Button>
-                <Button
-                  variant="link"
-                  onClick={() => history.push("/roles/")}
-                >
+                <Button variant="link" onClick={() => history.push("/roles/")}>
                   {t("common:reload")}
                 </Button>
               </ActionGroup>
