@@ -1,31 +1,22 @@
 import React, { useContext, useEffect, useState } from "react";
 import {
   AlertVariant,
-  Button,
   Card,
   CardTitle,
-  Divider,
-  Dropdown,
   DropdownItem,
-  DropdownToggle,
   Gallery,
   GalleryItem,
   PageSection,
-  PageSectionVariants,
   Split,
   SplitItem,
-  TextContent,
-  Title,
-  TitleSizes,
 } from "@patternfly/react-core";
 
 import { UserFederationCard } from "./UserFederationCard";
 import { useAlerts } from "../components/alert/Alerts";
-
-import { DatabaseIcon, ExternalLinkAltIcon } from "@patternfly/react-icons";
+import { ViewHeader } from "../components/view-header/ViewHeader";
+import { DatabaseIcon } from "@patternfly/react-icons";
 import { useTranslation } from "react-i18next";
 import "./user-federation.css";
-
 import { RealmContext } from "../context/realm-context/RealmContext";
 import { HttpClientContext } from "../context/http-service/HttpClientContext";
 import { UserFederationRepresentation } from "./model/userFederation";
@@ -54,10 +45,7 @@ export const UserFederationSection = () => {
     loader();
   }, []);
 
-  const [isProviderMenuOpen, setIsProviderMenuOpen] = useState(false);
-
   const { t } = useTranslation("user-federation");
-
   const httpClient = useContext(HttpClientContext)!;
   const { realm } = useContext(RealmContext);
 
@@ -65,6 +53,12 @@ export const UserFederationSection = () => {
     <DropdownItem key="itemLDAP">LDAP</DropdownItem>,
     <DropdownItem key="itemKerberos">Kerberos</DropdownItem>,
   ];
+
+  const learnMoreLinkProps = {
+    title: `${t("common:learnMore")}`,
+    href:
+      "https://www.keycloak.org/docs/latest/server_admin/index.html#_user-storage-federation",
+  };
 
   let cards;
 
@@ -106,39 +100,13 @@ export const UserFederationSection = () => {
 
   return (
     <>
-      <PageSection variant={PageSectionVariants.light}>
-        <Title headingLevel="h3" size={TitleSizes["2xl"]}>
-          {t("common:userFederation")}
-        </Title>
-        <TextContent>
-          {t("userFederationExplanation")}
-          <Button
-            variant="link"
-            icon={<ExternalLinkAltIcon />}
-            iconPosition="right"
-            component="a"
-            href="https://www.keycloak.org/docs/latest/server_admin/index.html#_user-storage-federation"
-            target="_blank"
-          >
-            {t("common:learnMore")}
-          </Button>
-        </TextContent>
-        <Dropdown
-          className="keycloak__user-federation__dropdown"
-          toggle={
-            <DropdownToggle
-              onToggle={() => setIsProviderMenuOpen(!isProviderMenuOpen)}
-              isPrimary
-              id="ufToggleId"
-            >
-              {t("addNewProvider")}
-            </DropdownToggle>
-          }
-          isOpen={isProviderMenuOpen}
-          dropdownItems={ufAddProviderDropdownItems}
-        />
-      </PageSection>
-      <Divider />
+      <ViewHeader
+        titleKey="userFederation"
+        subKey="user-federation:userFederationExplanation"
+        lowerDropdownItems={ufAddProviderDropdownItems}
+        lowerDropdownMenuTitle="user-federation:addNewProvider"
+        subKeyLinkProps={learnMoreLinkProps}
+      />
       <PageSection>
         {userFederations && userFederations.length > 0 ? (
           <Gallery hasGutter>{cards}</Gallery>
