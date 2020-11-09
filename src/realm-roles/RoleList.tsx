@@ -30,10 +30,7 @@ const columns: (keyof RoleRepresentation)[] = [
   "description",
 ];
 
-
-
 export const RolesList = ({ roles, refresh }: RolesListProps) => {
-
   const data1 = roles?.map((c) => {
     return {
       cells: columns.map((col) => {
@@ -50,7 +47,7 @@ export const RolesList = ({ roles, refresh }: RolesListProps) => {
       }),
     };
   });
-  
+
   const { t } = useTranslation("roles");
   const httpClient = useContext(HttpClientContext)!;
   const { realm } = useContext(RealmContext);
