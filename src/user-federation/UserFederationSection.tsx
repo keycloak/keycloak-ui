@@ -1,6 +1,7 @@
 import React, { useContext, useEffect, useState } from "react";
 import {
   AlertVariant,
+  ButtonVariant,
   Card,
   CardTitle,
   DropdownItem,
@@ -22,6 +23,7 @@ import { useTranslation } from "react-i18next";
 import { RealmContext } from "../context/realm-context/RealmContext";
 import { HttpClientContext } from "../context/http-service/HttpClientContext";
 import { UserFederationRepresentation } from "./model/userFederation";
+import { useConfirmDialog } from "../components/confirm-dialog/ConfirmDialog";
 import "./user-federation.css";
 
 export const UserFederationSection = () => {
@@ -65,22 +67,36 @@ export const UserFederationSection = () => {
 
   let cards;
 
+  const [currentCard, setCurrentCard] = useState("");
+  const [toggleDeleteDialog, DeleteConfirm] = useConfirmDialog({
+    titleKey: t("userFedDeleteConfirmTitle"),
+    messageKey: t("userFedDeleteConfirm"),
+    continueButtonLabel: "common:delete",
+    continueButtonVariant: ButtonVariant.danger,
+    onConfirm: async () => {
+      try {
+        httpClient
+          .doDelete(`/admin/realms/${realm}/components/${currentCard}`)
+          .then(() => loader());
+        addAlert(t("userFedDeletedSuccess"), AlertVariant.success);
+      } catch (error) {
+        addAlert(t("userFedDeleteError", { error }), AlertVariant.danger);
+      }
+    },
+  });
+
+  const toggleDeleteForCard = (id: string) => {
+    setCurrentCard(id);
+    toggleDeleteDialog();
+  };
+
   if (userFederations) {
     cards = userFederations.map((userFederation, index) => {
       const ufCardDropdownItems = [
         <DropdownItem
           key={`${index}-cardDelete`}
           onClick={() => {
-            try {
-              httpClient
-                .doDelete(
-                  `/admin/realms/${realm}/components/${userFederation.id}`
-                )
-                .then(() => loader());
-              addAlert(t("userFedDeletedSuccess"), AlertVariant.success);
-            } catch (error) {
-              addAlert(t("userFedDeleteError", { error }), AlertVariant.danger);
-            }
+            toggleDeleteForCard(userFederation.id);
           }}
         >
           {t("common:delete")}
@@ -121,7 +137,10 @@ export const UserFederationSection = () => {
       />
       <PageSection>
         {userFederations && userFederations.length > 0 ? (
-          <Gallery hasGutter>{cards}</Gallery>
+          <>
+            <DeleteConfirm />
+            <Gallery hasGutter>{cards}</Gallery>
+          </>
         ) : (
           <>
             <TextContent>

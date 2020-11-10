@@ -68,9 +68,9 @@
 
     "learnMore": "Learn more",
     "addNewProvider": "Add new provider",
-    "userFedDeletedSuccess": "The user federation has been deleted.",
-    "userFedDeleteError": "Could not delete user federation: '{{error}}'",
-    "userFedDeleteConfirmTitle": "Delete user federation?",
-    "userFedDeleteConfirm": "If you delete this user federation, all associated data will be removed."
+    "userFedDeletedSuccess": "The user federation provider has been deleted.",
+    "userFedDeleteError": "Could not delete user federation provider: '{{error}}'",
+    "userFedDeleteConfirmTitle": "Delete user federation provider?",
+    "userFedDeleteConfirm": "If you delete this user federation provider, all associated data will be removed."
   }
 }
