@@ -115,8 +115,8 @@ export const UserFederationSection = () => {
             }
             labelColor={
               (userFederation.config as Config)!.enabled[0] !== "false"
-              ? "blue"
-              : "gray"
+                ? "blue"
+                : "gray"
             }
           />
         </GalleryItem>

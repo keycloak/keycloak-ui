@@ -55,7 +55,10 @@ export const KeycloakCard = ({
       <CardFooter>
         {footerText && footerText}
         {labelText && (
-          <Label color={labelColor || "gray"} className="keycloak__keycloak-card__footer-label">
+          <Label
+            color={labelColor || "gray"}
+            className="keycloak__keycloak-card__footer-label"
+          >
             {labelText}
           </Label>
         )}
