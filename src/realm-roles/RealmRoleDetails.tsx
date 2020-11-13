@@ -29,7 +29,7 @@ import { useLoginProviders } from "../context/server-info/ServerInfoProvider";
 import { ViewHeader } from "../components/view-header/ViewHeader";
 import { convertFormValuesToObject, convertToFormValues } from "../util";
 import { RoleRepresentation } from "../model/role-model";
-import { convertToMultiline } from "../components/multi-line-input/MultiLineInput";
+import { convertToMultiline, toValue } from "../components/multi-line-input/MultiLineInput";
 // import { MapperList } from "../details/MapperList";
 
 export const RolesForm = () => {
@@ -60,26 +60,33 @@ export const RolesForm = () => {
       const fetchedRole = await httpClient.doGet<RoleRepresentation>(url);
       if (fetchedRole.data) {
         setName(fetchedRole.data.name!);
+        setupForm(fetchedRole.data);
       }
     })();
   }, []);
 
-  const save = async (roles: RoleRepresentation) => {
-    try {
-      roles.attributes = convertFormValuesToObject(roles.attributes!);
+  const setupForm = (role: RoleRepresentation) => {
+    form.reset(role);
+    Object.entries(role).map((entry) => {
+        form.setValue(entry[0], entry[1]);
+    });
+  };
 
-      const url = `/admin/realms/${realm}/roles/`;
-      if (id) {
-        await httpClient.doPut(url + id, roles);
-      } else {
-        await httpClient.doPost(url, roles);
+  const save = async () => {
+    if (await form.trigger()) {
+      try {
+        const role = {
+          ...form.getValues()
+        };
+
+        console.log("getvalues", form.getValues());
+        //await httpClient.doPut(url, role);
+        
+        setupForm(role as RoleRepresentation);
+        addAlert(t("roleSaveSuccess"), AlertVariant.success);
+      } catch (error) {
+        addAlert(`${t("roleSaveError")} '${error}'`, AlertVariant.danger);
       }
-      addAlert(t((id ? "update" : "create") + "Success"), AlertVariant.success);
-    } catch (error) {
-      addAlert(
-        t((id ? "update" : "create") + "Error", { error }),
-        AlertVariant.danger
-      );
     }
   };
 
@@ -107,8 +114,7 @@ export const RolesForm = () => {
                   type="text"
                   id="kc-name"
                   name="name"
-                  // value={name}
-                />
+                  />
               </FormGroup>
               <FormGroup label={t("description")} fieldId="kc-description">
                 <TextArea
