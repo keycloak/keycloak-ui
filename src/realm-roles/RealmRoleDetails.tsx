@@ -29,7 +29,11 @@ import { useLoginProviders } from "../context/server-info/ServerInfoProvider";
 import { ViewHeader } from "../components/view-header/ViewHeader";
 import { convertFormValuesToObject, convertToFormValues } from "../util";
 import { RoleRepresentation } from "../model/role-model";
-import { convertToMultiline, toValue } from "../components/multi-line-input/MultiLineInput";
+import {
+  convertToMultiline,
+  toValue,
+} from "../components/multi-line-input/MultiLineInput";
+import { useAdminClient } from "../context/auth/AdminClient";
 // import { MapperList } from "../details/MapperList";
 
 export const RolesForm = () => {
@@ -40,35 +44,43 @@ export const RolesForm = () => {
   const history = useHistory();
   const [role, setRole] = useState<RoleRepresentation>();
   const [name, setName] = useState("");
+  const [description, setDescription] = useState("");
+  const [value, setValue] = React.useState({ name });
   const [activeTab, setActiveTab] = useState(0);
 
-  const httpClient = useContext(HttpClientContext)!;
+  // const httpClient = useContext(HttpClientContext)!;
+  const adminClient = useAdminClient();
+
   const { realm } = useContext(RealmContext);
   const providers = useLoginProviders();
   const { id } = useParams<{ id: string }>();
 
   const [open, isOpen] = useState(false);
   const { addAlert } = useAlerts();
-  const url = `/admin/realms/${realm}/roles-by-id/${id}`;
+  // const url = `/admin/realms/${realm}/roles-by-id/${id}`;
 
   const form = useForm();
 
-  console.log("name", name);
-
   useEffect(() => {
     (async () => {
-      const fetchedRole = await httpClient.doGet<RoleRepresentation>(url);
-      if (fetchedRole.data) {
-        setName(fetchedRole.data.name!);
-        setupForm(fetchedRole.data);
+      // const fetchedRole = await httpClient.doGet<RoleRepresentation>(url);
+      const fetchedRole = await adminClient.roles.findOneById({ id });
+      const fetchedDescription = fetchedRole?.description;
+      if (fetchedRole) {
+        setName(fetchedRole.name!);
+        setupForm(fetchedRole);
+        setDescription(fetchedDescription!);
       }
     })();
   }, []);
 
+  console.log("name", name);
+  console.log("description", description);
+
   const setupForm = (role: RoleRepresentation) => {
     form.reset(role);
     Object.entries(role).map((entry) => {
-        form.setValue(entry[0], entry[1]);
+      form.setValue(entry[0], entry[1]);
     });
   };
 
@@ -76,12 +88,12 @@ export const RolesForm = () => {
     if (await form.trigger()) {
       try {
         const role = {
-          ...form.getValues()
+          ...form.getValues(),
         };
 
         console.log("getvalues", form.getValues());
         //await httpClient.doPut(url, role);
-        
+
         setupForm(role as RoleRepresentation);
         addAlert(t("roleSaveSuccess"), AlertVariant.success);
       } catch (error) {
@@ -92,7 +104,7 @@ export const RolesForm = () => {
 
   return (
     <>
-      <ViewHeader titleKey={name!} subKey="" />
+      <ViewHeader titleKey={name} subKey="" />
 
       <PageSection variant="light">
         <Tabs
@@ -114,59 +126,18 @@ export const RolesForm = () => {
                   type="text"
                   id="kc-name"
                   name="name"
-                  />
+                  value={name}
+                  onChange={(value) => setValue(value)}
+                />
               </FormGroup>
               <FormGroup label={t("description")} fieldId="kc-description">
                 <TextArea
                   ref={register}
                   type="text"
                   id="kc-description"
-                  name="description"
+                  defaultValue={description}
                 />
               </FormGroup>
-              {!id && (
-                <FormGroup
-                  label={t("protocol")}
-                  labelIcon={
-                    <HelpItem
-                      helpText="client-scopes-help:protocol"
-                      forLabel="protocol"
-                      forID="kc-protocol"
-                    />
-                  }
-                  fieldId="kc-protocol"
-                >
-                  <Controller
-                    name="protocol"
-                    defaultValue=""
-                    control={control}
-                    render={({ onChange, value }) => (
-                      <Select
-                        toggleId="kc-protocol"
-                        required
-                        onToggle={() => isOpen(!open)}
-                        onSelect={(_, value, isPlaceholder) => {
-                          onChange(isPlaceholder ? "" : (value as string));
-                          isOpen(false);
-                        }}
-                        selections={value}
-                        variant={SelectVariant.single}
-                        aria-label={t("selectEncryptionType")}
-                        placeholderText={t("common:selectOne")}
-                        isOpen={open}
-                      >
-                        {providers.map((option) => (
-                          <SelectOption
-                            selected={option === value}
-                            key={option}
-                            value={option}
-                          />
-                        ))}
-                      </Select>
-                    )}
-                  />
-                </FormGroup>
-              )}
               <ActionGroup>
                 <Button variant="primary" type="submit">
                   {t("common:save")}
