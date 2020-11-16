@@ -3,7 +3,6 @@ import { useHistory } from "react-router-dom";
 import {
   ActionGroup,
   Button,
-  Form,
   FormGroup,
   PageSection,
   Tab,
@@ -17,6 +16,7 @@ import { useForm } from "react-hook-form";
 
 import { ViewHeader } from "../components/view-header/ViewHeader";
 import { RoleRepresentation } from "../model/role-model";
+import { FormAccess } from "../components/form-access/FormAccess";
 
 export const RolesForm = () => {
   const { t } = useTranslation("client-scopes");
@@ -36,7 +36,11 @@ export const RolesForm = () => {
           isBox
         >
           <Tab eventKey={0} title={<TabTitleText>{t("Details")}</TabTitleText>}>
-            <Form isHorizontal onSubmit={() => {}}>
+            <FormAccess
+              isHorizontal
+              role="manage-clients"
+              className="pf-u-mt-lg"
+            >
               <FormGroup
                 label={t("Role name")}
                 fieldId="kc-name"
@@ -67,7 +71,7 @@ export const RolesForm = () => {
                   {t("common:reload")}
                 </Button>
               </ActionGroup>
-            </Form>
+            </FormAccess>
           </Tab>
         </Tabs>
       </PageSection>
