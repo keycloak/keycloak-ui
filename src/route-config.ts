@@ -109,7 +109,7 @@ export const routes: RoutesFn = (t: TFunction) => [
     path: "/roles/:id",
     component: RolesForm,
     breadcrumb: t("roles:roleDetails"),
-    access: ["view-realm", "view-users"],
+    access: "view-realm",
   },
   {
     path: "/add-role",

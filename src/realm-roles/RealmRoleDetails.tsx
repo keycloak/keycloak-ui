@@ -19,6 +19,7 @@ import {
 } from "@patternfly/react-core";
 import { useTranslation } from "react-i18next";
 import { Controller, useForm } from "react-hook-form";
+import { FormAccess } from "../components/form-access/FormAccess";
 
 // import { ClientScopeRepresentation } from "../models/client-scope";
 import { HelpItem } from "../components/help-enabler/HelpItem";
@@ -45,7 +46,7 @@ export const RolesForm = () => {
   const [role, setRole] = useState<RoleRepresentation>();
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
-  const [value, setValue] = React.useState({ name });
+  const [value, setValue2] = React.useState({ name });
   const [activeTab, setActiveTab] = useState(0);
 
   // const httpClient = useContext(HttpClientContext)!;
@@ -113,7 +114,11 @@ export const RolesForm = () => {
           isBox
         >
           <Tab eventKey={0} title={<TabTitleText>{t("Details")}</TabTitleText>}>
-            <Form isHorizontal onSubmit={handleSubmit(save)}>
+            <FormAccess
+              isHorizontal
+              role="manage-clients"
+              className="pf-u-mt-lg"
+            >
               <FormGroup
                 label={t("Role name")}
                 fieldId="kc-name"
@@ -127,7 +132,7 @@ export const RolesForm = () => {
                   id="kc-name"
                   name="name"
                   value={name}
-                  onChange={(value) => setValue(value)}
+                  onChange={(value) => setValue2(value)}
                 />
               </FormGroup>
               <FormGroup label={t("description")} fieldId="kc-description">
@@ -146,7 +151,7 @@ export const RolesForm = () => {
                   {t("common:reload")}
                 </Button>
               </ActionGroup>
-            </Form>
+            </FormAccess>
           </Tab>
         </Tabs>
       </PageSection>
