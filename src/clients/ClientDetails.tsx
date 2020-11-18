@@ -90,6 +90,7 @@ export const ClientDetails = () => {
   }, []);
 
   const save = async () => {
+
     if (await form.trigger()) {
       const redirectUris = toValue(form.getValues()["redirectUris"]);
       const attributes = form.getValues()["attributes"]

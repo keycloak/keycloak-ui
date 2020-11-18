@@ -43,7 +43,7 @@ export const RolesForm = () => {
     RoleRepresentation
   >();
   const history = useHistory();
-  const [role, setRole] = useState<RoleRepresentation>();
+  // const [role, setRole] = useState<RoleRepresentation>();
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
   const [activeTab, setActiveTab] = useState(0);
@@ -51,11 +51,11 @@ export const RolesForm = () => {
   // const httpClient = useContext(HttpClientContext)!;
   const adminClient = useAdminClient();
 
-  const { realm } = useContext(RealmContext);
-  const providers = useLoginProviders();
+  // const { realm } = useContext(RealmContext);
+  // const providers = useLoginProviders();
   const { id } = useParams<{ id: string }>();
 
-  const [open, isOpen] = useState(false);
+  // const [open, isOpen] = useState(false);
   const { addAlert } = useAlerts();
   // const url = `/admin/realms/${realm}/roles-by-id/${id}`;
 
@@ -78,23 +78,36 @@ export const RolesForm = () => {
   console.log("description", description);
 
   const setupForm = (role: RoleRepresentation) => {
+
+
     form.reset(role);
     Object.entries(role).map((entry) => {
-      form.setValue(entry[0], entry[1]);
+
+     if (entry[0] === "attributes") {
+        convertToFormValues(entry[1], "attributes", form.setValue);
+      } else {
+        form.setValue(entry[0], entry[1]);
+      }
     });
   };
 
   const save = async () => {
     if (await form.trigger()) {
+
+      const attributes = form.getValues()["attributes"]
+      ? convertFormValuesToObject(form.getValues()["attributes"])
+      : {};
+
       try {
         const role = {
           ...form.getValues(),
+          attributes
         };
 
         console.log("getvalues", form.getValues());
         //await httpClient.doPut(url, role);
 
-        await adminClient.roles.updateByName({ name }, role);
+        // await adminClient.roles.updateByName({ name }, role);
         setupForm(role as RoleRepresentation);
         addAlert(t("roleSaveSuccess"), AlertVariant.success);
       } catch (error) {
