@@ -36,11 +36,7 @@ export const RolesForm = () => {
           isBox
         >
           <Tab eventKey={0} title={<TabTitleText>{t("Details")}</TabTitleText>}>
-            <FormAccess
-              isHorizontal
-              role="manage-realm"
-              className="pf-u-mt-lg"
-            >
+            <FormAccess isHorizontal role="manage-realm" className="pf-u-mt-lg">
               <FormGroup
                 label={t("Role name")}
                 fieldId="kc-name"
