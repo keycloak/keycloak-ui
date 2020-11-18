@@ -46,7 +46,6 @@ export const RolesForm = () => {
   const [role, setRole] = useState<RoleRepresentation>();
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
-  const [value, setValue2] = React.useState({ name });
   const [activeTab, setActiveTab] = useState(0);
 
   // const httpClient = useContext(HttpClientContext)!;
@@ -95,6 +94,7 @@ export const RolesForm = () => {
         console.log("getvalues", form.getValues());
         //await httpClient.doPut(url, role);
 
+        await adminClient.roles.updateByName({ name }, role);
         setupForm(role as RoleRepresentation);
         addAlert(t("roleSaveSuccess"), AlertVariant.success);
       } catch (error) {
@@ -126,14 +126,13 @@ export const RolesForm = () => {
                 validated={errors.name ? "error" : "default"}
                 helperTextInvalid={t("common:required")}
               >
-                <TextInput
+                {name ? <TextInput
                   ref={register({ required: true })}
                   type="text"
                   id="kc-name"
                   name="name"
-                  value={name}
-                  onChange={(value) => setValue2(value)}
-                />
+                  defaultValue={name}
+                /> : undefined}
               </FormGroup>
               <FormGroup label={t("description")} fieldId="kc-description">
                 <TextArea
@@ -144,7 +143,7 @@ export const RolesForm = () => {
                 />
               </FormGroup>
               <ActionGroup>
-                <Button variant="primary" type="submit">
+                <Button variant="primary" type="submit" onClick={() => save()}>
                   {t("common:save")}
                 </Button>
                 <Button variant="link" onClick={() => history.push("/roles/")}>
