@@ -4,44 +4,29 @@ import {
   ActionGroup,
   AlertVariant,
   Button,
-  Form,
   FormGroup,
   PageSection,
-  Select,
-  SelectOption,
-  SelectVariant,
-  Switch,
   Tab,
   Tabs,
   TabTitleText,
   TextArea,
   TextInput,
+  ValidatedOptions,
 } from "@patternfly/react-core";
 import { useTranslation } from "react-i18next";
 import { Controller, useForm } from "react-hook-form";
 import { FormAccess } from "../components/form-access/FormAccess";
 
-// import { ClientScopeRepresentation } from "../models/client-scope";
-import { HelpItem } from "../components/help-enabler/HelpItem";
-import { HttpClientContext } from "../context/http-service/HttpClientContext";
-import { RealmContext } from "../context/realm-context/RealmContext";
 import { useAlerts } from "../components/alert/Alerts";
-import { useLoginProviders } from "../context/server-info/ServerInfoProvider";
 import { ViewHeader } from "../components/view-header/ViewHeader";
-import { convertFormValuesToObject, convertToFormValues } from "../util";
+import { convertToFormValues } from "../util";
 import { RoleRepresentation } from "../model/role-model";
-import {
-  convertToMultiline,
-  toValue,
-} from "../components/multi-line-input/MultiLineInput";
 import { useAdminClient } from "../context/auth/AdminClient";
 // import { MapperList } from "../details/MapperList";
 
 export const RolesForm = () => {
   const { t } = useTranslation("client-scopes");
-  const { register, control, handleSubmit, errors, setValue } = useForm<
-    RoleRepresentation
-  >();
+  const { register, handleSubmit, errors } = useForm<RoleRepresentation>();
   const history = useHistory();
   // const [role, setRole] = useState<RoleRepresentation>();
   const [name, setName] = useState("");
@@ -78,36 +63,23 @@ export const RolesForm = () => {
   console.log("description", description);
 
   const setupForm = (role: RoleRepresentation) => {
-
-
     form.reset(role);
     Object.entries(role).map((entry) => {
-
-     if (entry[0] === "attributes") {
-        convertToFormValues(entry[1], "attributes", form.setValue);
-      } else {
         form.setValue(entry[0], entry[1]);
-      }
     });
   };
 
-  const save = async () => {
+  const save = async (role: RoleRepresentation) => {
     if (await form.trigger()) {
-
-      const attributes = form.getValues()["attributes"]
-      ? convertFormValuesToObject(form.getValues()["attributes"])
-      : {};
-
       try {
         const role = {
           ...form.getValues(),
-          attributes
+          // attributes
         };
 
         console.log("getvalues", form.getValues());
-        //await httpClient.doPut(url, role);
 
-        // await adminClient.roles.updateByName({ name }, role);
+        await adminClient.roles.updateByName({ name }, role);
         setupForm(role as RoleRepresentation);
         addAlert(t("roleSaveSuccess"), AlertVariant.success);
       } catch (error) {
@@ -129,7 +101,8 @@ export const RolesForm = () => {
           <Tab eventKey={0} title={<TabTitleText>{t("Details")}</TabTitleText>}>
             <FormAccess
               isHorizontal
-              role="manage-clients"
+              onSubmit={handleSubmit(save)}
+              role="manage-realm"
               className="pf-u-mt-lg"
             >
               <FormGroup
@@ -139,24 +112,39 @@ export const RolesForm = () => {
                 validated={errors.name ? "error" : "default"}
                 helperTextInvalid={t("common:required")}
               >
-                {name ? <TextInput
-                  ref={register({ required: true })}
-                  type="text"
-                  id="kc-name"
-                  name="name"
-                  defaultValue={name}
-                /> : undefined}
+                {name ? (
+                  <TextInput
+                    ref={register({ required: true })}
+                    type="text"
+                    id="kc-name"
+                    name="name"
+                    defaultValue={name}
+                  />
+                ) : undefined}
               </FormGroup>
               <FormGroup label={t("description")} fieldId="kc-description">
-                <TextArea
-                  ref={register}
-                  type="text"
-                  id="kc-description"
-                  defaultValue={description}
+                <Controller
+                  name="description"
+                  defaultValue=""
+                  control={form.control}
+                  rules={{ maxLength: 255 }}
+                  render={({ onChange, value }) => (
+                    <TextArea
+                      type="text"
+                      validated={
+                        errors.description
+                          ? ValidatedOptions.error
+                          : ValidatedOptions.default
+                      }
+                      id="kc-role-description"
+                      value={value}
+                      onChange={onChange}
+                    />
+                  )}
                 />
               </FormGroup>
               <ActionGroup>
-                <Button variant="primary" type="submit" onClick={() => save()}>
+                <Button variant="primary" type="submit">
                   {t("common:save")}
                 </Button>
                 <Button variant="link" onClick={() => history.push("/roles/")}>
