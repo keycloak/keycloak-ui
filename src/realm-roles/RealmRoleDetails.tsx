@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useHistory, useParams } from "react-router-dom";
 import {
   ActionGroup,
@@ -19,36 +19,28 @@ import { FormAccess } from "../components/form-access/FormAccess";
 
 import { useAlerts } from "../components/alert/Alerts";
 import { ViewHeader } from "../components/view-header/ViewHeader";
-import { convertToFormValues } from "../util";
-import { RoleRepresentation } from "../model/role-model";
+
 import { useAdminClient } from "../context/auth/AdminClient";
-// import { MapperList } from "../details/MapperList";
+import RoleRepresentation from "keycloak-admin/lib/defs/roleRepresentation";
 
 export const RolesForm = () => {
   const { t } = useTranslation("client-scopes");
-  const { register, handleSubmit, errors } = useForm<RoleRepresentation>();
+  const { register, handleSubmit, errors, control, setValue } = useForm<
+    RoleRepresentation
+  >();
   const history = useHistory();
-  // const [role, setRole] = useState<RoleRepresentation>();
   const [name, setName] = useState("");
-  const [description, setDescription] = useState("");
+  const [, setDescription] = useState("");
   const [activeTab, setActiveTab] = useState(0);
 
-  // const httpClient = useContext(HttpClientContext)!;
   const adminClient = useAdminClient();
 
-  // const { realm } = useContext(RealmContext);
-  // const providers = useLoginProviders();
   const { id } = useParams<{ id: string }>();
 
-  // const [open, isOpen] = useState(false);
   const { addAlert } = useAlerts();
-  // const url = `/admin/realms/${realm}/roles-by-id/${id}`;
-
-  const form = useForm();
 
   useEffect(() => {
     (async () => {
-      // const fetchedRole = await httpClient.doGet<RoleRepresentation>(url);
       const fetchedRole = await adminClient.roles.findOneById({ id });
       const fetchedDescription = fetchedRole?.description;
       if (fetchedRole) {
@@ -59,32 +51,19 @@ export const RolesForm = () => {
     })();
   }, []);
 
-  console.log("name", name);
-  console.log("description", description);
-
   const setupForm = (role: RoleRepresentation) => {
-    form.reset(role);
     Object.entries(role).map((entry) => {
-        form.setValue(entry[0], entry[1]);
+      setValue(entry[0], entry[1]);
     });
   };
 
   const save = async (role: RoleRepresentation) => {
-    if (await form.trigger()) {
-      try {
-        const role = {
-          ...form.getValues(),
-          // attributes
-        };
-
-        console.log("getvalues", form.getValues());
-
-        await adminClient.roles.updateByName({ name }, role);
-        setupForm(role as RoleRepresentation);
-        addAlert(t("roleSaveSuccess"), AlertVariant.success);
-      } catch (error) {
-        addAlert(`${t("roleSaveError")} '${error}'`, AlertVariant.danger);
-      }
+    try {
+      await adminClient.roles.updateById({ id }, role);
+      setupForm(role as RoleRepresentation);
+      addAlert(t("roleSaveSuccess"), AlertVariant.success);
+    } catch (error) {
+      addAlert(`${t("roleSaveError")} '${error}'`, AlertVariant.danger);
     }
   };
 
@@ -126,7 +105,7 @@ export const RolesForm = () => {
                 <Controller
                   name="description"
                   defaultValue=""
-                  control={form.control}
+                  control={control}
                   rules={{ maxLength: 255 }}
                   render={({ onChange, value }) => (
                     <TextArea
