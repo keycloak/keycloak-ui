@@ -30,7 +30,6 @@ const columns: (keyof RoleRepresentation)[] = [
 ];
 
 export const RolesList = ({ roles, refresh }: RolesListProps) => {
-  
   const data1 = roles?.map((c) => {
     return {
       cells: columns.map((col) => {
