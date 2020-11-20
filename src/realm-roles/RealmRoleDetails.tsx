@@ -30,7 +30,6 @@ export const RolesForm = () => {
   >();
   const history = useHistory();
   const [name, setName] = useState("");
-  // const [, setDescription] = useState("");
   const [activeTab, setActiveTab] = useState(0);
 
   const adminClient = useAdminClient();
