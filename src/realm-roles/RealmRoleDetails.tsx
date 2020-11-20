@@ -24,13 +24,13 @@ import { useAdminClient } from "../context/auth/AdminClient";
 import RoleRepresentation from "keycloak-admin/lib/defs/roleRepresentation";
 
 export const RolesForm = () => {
-  const { t } = useTranslation("client-scopes");
+  const { t } = useTranslation("roles");
   const { register, handleSubmit, errors, control, setValue } = useForm<
     RoleRepresentation
   >();
   const history = useHistory();
   const [name, setName] = useState("");
-  const [, setDescription] = useState("");
+  // const [, setDescription] = useState("");
   const [activeTab, setActiveTab] = useState(0);
 
   const adminClient = useAdminClient();
@@ -42,12 +42,8 @@ export const RolesForm = () => {
   useEffect(() => {
     (async () => {
       const fetchedRole = await adminClient.roles.findOneById({ id });
-      const fetchedDescription = fetchedRole?.description;
-      if (fetchedRole) {
-        setName(fetchedRole.name!);
-        setupForm(fetchedRole);
-        setDescription(fetchedDescription!);
-      }
+      setName(fetchedRole.name!);
+      setupForm(fetchedRole);
     })();
   }, []);
 
@@ -77,7 +73,7 @@ export const RolesForm = () => {
           onSelect={(_, key) => setActiveTab(key as number)}
           isBox
         >
-          <Tab eventKey={0} title={<TabTitleText>{t("Details")}</TabTitleText>}>
+          <Tab eventKey={0} title={<TabTitleText>{t("details")}</TabTitleText>}>
             <FormAccess
               isHorizontal
               onSubmit={handleSubmit(save)}
@@ -85,7 +81,7 @@ export const RolesForm = () => {
               className="pf-u-mt-lg"
             >
               <FormGroup
-                label={t("Role name")}
+                label={t("roleName")}
                 fieldId="kc-name"
                 isRequired
                 validated={errors.name ? "error" : "default"}
