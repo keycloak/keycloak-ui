@@ -11,24 +11,20 @@ import { useTranslation } from "react-i18next";
 import { HelpItem } from "../components/help-enabler/HelpItem";
 import React, { useState } from "react";
 import { useForm, Controller } from "react-hook-form";
-import { UserFederationKerberosRequiredRepresentation } from "./models/user-federation";
+import ComponentRepresentation from "keycloak-admin/lib/defs/componentRepresentation";
+import { FormAccess } from "../components/form-access/FormAccess";
 
 export const KerberosSettingsRequired = () => {
   const { t } = useTranslation("user-federation");
   const helpText = useTranslation("user-federation-help").t;
 
   const [isEditModeDropdownOpen, setIsEditModeDropdownOpen] = useState(false);
-  const { register, handleSubmit, control } = useForm<
-    UserFederationKerberosRequiredRepresentation
-  >();
-  const onSubmit = (data: UserFederationKerberosRequiredRepresentation) => {
-    console.log(data);
-  };
+  const { register, control } = useForm<ComponentRepresentation>();
 
   return (
     <>
       {/* Required settings */}
-      <Form isHorizontal onSubmit={handleSubmit(onSubmit)}>
+      <FormAccess role="manage-realm" isHorizontal>
         <FormGroup
           label={t("consoleDisplayName")}
           labelIcon={
@@ -204,7 +200,11 @@ export const KerberosSettingsRequired = () => {
                 selections={value}
                 variant={SelectVariant.single}
               >
-                <SelectOption key={0} value="Choose..." isPlaceholder />
+                <SelectOption
+                  key={0}
+                  value={t("common:selectOne")}
+                  isPlaceholder
+                />
                 <SelectOption key={1} value="UNSYNCED" />
               </Select>
             )}
@@ -239,9 +239,7 @@ export const KerberosSettingsRequired = () => {
             )}
           ></Controller>
         </FormGroup>
-        {/* Use this button to test for submit */}
-        {/* <button type="submit">Test submit</button> */}
-      </Form>
+      </FormAccess>
     </>
   );
 };
