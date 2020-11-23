@@ -92,7 +92,8 @@ export const RolesForm = () => {
                     type="text"
                     id="kc-name"
                     name="name"
-                    defaultValue={name}
+                    // defaultValue={name}
+                    isReadOnly
                   />
                 ) : undefined}
               </FormGroup>
