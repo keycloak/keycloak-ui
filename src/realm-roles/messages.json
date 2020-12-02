@@ -1,5 +1,6 @@
 {
   "roles": {
+    "attributes": "Attributes",
     "title": "Realm roles",
     "createRole": "Create role",
     "importRole": "Import role",
