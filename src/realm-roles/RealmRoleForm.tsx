@@ -21,7 +21,6 @@ export type RealmRoleFormProps = {
 
 export const RealmRoleForm = ({ form, save, editMode }: RealmRoleFormProps) => {
   const { t } = useTranslation("roles");
-
   return (
     <FormAccess
       isHorizontal

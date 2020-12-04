@@ -1,8 +1,14 @@
-import React from "react";
-import { ActionGroup, Button, TextInput } from "@patternfly/react-core";
-import { SubmitHandler, useFieldArray, UseFormMethods } from "react-hook-form";
+import React, { useState } from "react";
+import {
+  ActionGroup,
+  Button,
+  // FormGroup,
+  TextInput,
+  ValidatedOptions,
+} from "@patternfly/react-core";
+import { useFieldArray, UseFormMethods } from "react-hook-form";
 import "./RealmRolesSection.css";
-import RoleRepresentation from "keycloak-admin/lib/defs/roleRepresentation";
+// import RoleRepresentation from "keycloak-admin/lib/defs/roleRepresentation";
 
 import {
   TableComposable,
@@ -15,31 +21,114 @@ import {
 import { MinusCircleIcon, PlusCircleIcon } from "@patternfly/react-icons";
 import { useTranslation } from "react-i18next";
 import { FormAccess } from "../components/form-access/FormAccess";
+import { useParams } from "react-router-dom";
+import { useAdminClient } from "../context/auth/AdminClient";
+import RoleRepresentation from "keycloak-admin/lib/defs/roleRepresentation";
+
+
 
 export type KeyValueType = { key: string; value: string };
 
 type RoleAttributesProps = {
   form: UseFormMethods;
-  save: SubmitHandler<RoleRepresentation>;
+  save: any; // SubmitHandler<RoleRepresentation>;
 };
 
 export const RoleAttributes = ({ form, save }: RoleAttributesProps) => {
   const { t } = useTranslation("roles");
+  // const history = useHistory();
+  // const { url } = useRouteMatch();
+  // const [dirtyFields, setDirtyFields] = useState([] as any);
+
+  const { id } = useParams<{ id: string }>();
+
+  const [name, setName] = useState("");
+  const adminClient = useAdminClient();
+
+  const [key, setKey] = useState("");
+  const reload = () => {
+    setKey(`${new Date().getTime()}`)
+    console.log(key)
+  };
+
+
+  React.useEffect(() => {
+    console.log("reloaded"); 
+  }, [key]);
 
   const { fields, append, remove } = useFieldArray({
     control: form.control,
     name: "attributes",
-  });
+  }); 
+  const formSubmitted = form.formState?.isSubmitted;
 
-  const columns = ["Key", "Value"];
+  // const attributesRed = React.useRef(defaultAttributeValues);
+
+
 
   const onAdd = () => {
+    
     append({ key: "", value: "" });
   };
 
+  // On Init, append a row
+  React.useEffect(() => {
+
+    console.log(form.getValues())
+    
+      append({ key: "test1444", value: "" })
+
+  
+    console.log(`Adding initial empty row`);
+  }, [append]);
+
+  // see if theres a way to tell if the forn has initially been 
+  // loaded/updated... use that to append that value and not use useffect bc vale isn;t being set until later on
+
+  React.useEffect(() => {
+    console.log(`------------ Fields Updated: ${fields.length} -------------`);
+  }, [fields]); 
+
+  // ON SAVE, append a row
+  // React.useEffect(() => {
+  //   console.log(`======== Submitted: ${formSubmitted}`);
+  //   // if (form.formState.submitCount) {
+  //     console.log(`Adding new empty row after save`);
+  //     append({ key: "", value: "" });
+  //   // }
+  // }, [form.formState.submitCount]);
+
+  React.useEffect(() => {
+    console.log(`=========== Dirty Fields ===========`);
+    console.dir(form.formState.dirtyFields);
+  }, [form.formState.dirtyFields]);
+
+  // React.useEffect(() => {
+  //   console.log(
+  //     ` ============ FORM SUBMITTED: ${
+  //       form.formState.isSubmitted === true ? "TRUE" : "FALSE"
+  //     } =============`
+  //   );
+  //   console.dir(form.formState.dirtyFields?.attributes);
+  //   fields.forEach((attribute, rowIndex) => {
+  //     console.dir(form.formState.dirtyFields?.attributes?.[rowIndex]);
+  //     console.log(
+  //       `Attriubute: ${attribute.key}  Index: ${rowIndex} Dirty: ${form.formState.dirtyFields?.attributes?.[rowIndex]?.key}`
+  //     );
+  //   });
+  // }, [form]);
+
+  const columns = ["Key", "Value"];
+
   return (
     <>
-      <FormAccess role="manage-realm" onSubmit={form.handleSubmit(save)}>
+      <FormAccess
+        role="manage-realm"
+        onSubmit={form.handleSubmit(async (role) => {
+          await save(role);
+          // form.formState.dirtyFields.attributes ? onAdd() : "";
+        })}
+      >
         <TableComposable
           className="kc-role-attributes__table"
           aria-label="Role attribute keys and values"
@@ -67,8 +156,20 @@ export const RoleAttributes = ({ form, save }: RoleAttributesProps) => {
                   <TextInput
                     name={`attributes[${rowIndex}].key`}
                     ref={form.register({ required: true })}
+                    validated={
+                      form.errors.name
+                        ? ValidatedOptions.error
+                        : ValidatedOptions.default
+                    }
                     aria-label="key-input"
                     defaultValue={attribute.key}
+                    // isReadOnly={!dirtyFields.includes(rowIndex)}
+                    isReadOnly={
+                      attribute.key &&
+                      (form.formState?.isSubmitted ||
+                        form.formState.dirtyFields?.attributes?.[rowIndex]
+                          ?.key === undefined)
+                    }
                   />
                 </Td>
                 <Td
@@ -79,10 +180,11 @@ export const RoleAttributes = ({ form, save }: RoleAttributesProps) => {
                   <TextInput
                     name={`attributes[${rowIndex}].value`}
                     ref={form.register({
-                      required: true,
+                      required: false,
                     })}
                     aria-label="value-input"
                     defaultValue={attribute.value}
+                    validated={form.errors.description}
                   />
                 </Td>
                 {rowIndex !== fields.length - 1 && fields.length - 1 !== 0 && (
@@ -127,7 +229,7 @@ export const RoleAttributes = ({ form, save }: RoleAttributesProps) => {
           >
             {t("common:save")}
           </Button>
-          <Button variant="link">{t("common:reload")}</Button>
+          <Button variant="link" onClick={() => reload()}>{t("common:reload")}</Button>
         </ActionGroup>
       </FormAccess>
     </>

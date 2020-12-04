@@ -21,6 +21,7 @@ import { RealmRoleForm } from "./RealmRoleForm";
 import { useRealm } from "../context/realm-context/RealmContext";
 import { KeycloakTabs } from "../components/keycloak-tabs/KeycloakTabs";
 
+
 const arrayToAttributes = (attributeArray: KeyValueType[]) => {
   const initValue: { [index: string]: string[] } = {};
   return attributeArray.reduce((acc, attribute) => {
@@ -51,6 +52,7 @@ export const RealmRoleTabs = () => {
   const [name, setName] = useState("");
   const adminClient = useAdminClient();
   const { realm } = useRealm();
+ 
 
   const { id } = useParams<{ id: string }>();
 
@@ -94,6 +96,7 @@ export const RealmRoleTabs = () => {
           name: role.name!,
         });
         history.push(`/${realm}/roles/${createdRole.id}`);
+
       }
       addAlert(t(id ? "roleSaveSuccess" : "roleCreated"), AlertVariant.success);
     } catch (error) {
@@ -101,6 +104,7 @@ export const RealmRoleTabs = () => {
         t((id ? "roleSave" : "roleCreate") + "Error", {
           error: error.response.data?.errorMessage || error,
         }),
+
         AlertVariant.danger
       );
     }
@@ -116,6 +120,7 @@ export const RealmRoleTabs = () => {
         await adminClient.roles.delById({ id });
         addAlert(t("roleDeletedSuccess"), AlertVariant.success);
         history.replace(`/${realm}/roles`);
+
       } catch (error) {
         addAlert(`${t("roleDeleteError")} ${error}`, AlertVariant.danger);
       }
