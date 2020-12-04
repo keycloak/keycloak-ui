@@ -2,26 +2,15 @@ import React, { useEffect, useState } from "react";
 import { useHistory, useParams } from "react-router-dom";
 import {
   ActionGroup,
-  AlertVariant,
   Button,
-  FormGroup,
-  PageSection,
-  Tab,
-  Tabs,
-  TabTitleText,
-  TextArea,
-  TextInput,
-  ValidatedOptions,
 } from "@patternfly/react-core";
 import { useTranslation } from "react-i18next";
-import { Controller, useForm, UseFormMethods } from "react-hook-form";
+import { useForm, UseFormMethods } from "react-hook-form";
 import { FormAccess } from "../components/form-access/FormAccess";
-
-import { useAlerts } from "../components/alert/Alerts";
-
+import "./RealmRolesSection.css";
 import { useAdminClient } from "../context/auth/AdminClient";
 import RoleRepresentation from "keycloak-admin/lib/defs/roleRepresentation";
-import { MultiLineInput } from "../components/multi-line-input/MultiLineInput";
+import { KeyValueInput } from "./KeyValueInput";
 
 type RoleAttributesProps = {
     form: UseFormMethods;
@@ -30,21 +19,15 @@ type RoleAttributesProps = {
 
 export const RoleAttributes = ({form, save}: RoleAttributesProps) => {
   const { t } = useTranslation("roles");
-  const { register, handleSubmit, errors, control, setValue } = useForm<
+  const {  handleSubmit, setValue } = useForm<
     RoleRepresentation
   >();
   const history = useHistory();
-  const [name, setName] = useState("");
-  const [activeTab, setActiveTab] = useState(0);
+  const [, setName] = useState("");
 
   const adminClient = useAdminClient();
 
   const { id } = useParams<{ id: string }>();
-
-  const { addAlert } = useAlerts();
-  const form = useForm();
-
-
 
   useEffect(() => {
     (async () => {
@@ -60,64 +43,14 @@ export const RoleAttributes = ({form, save}: RoleAttributesProps) => {
     });
   };
 
-//   const save = async (role: RoleRepresentation) => {
-//     try {
-//       await adminClient.roles.updateById({ id }, role);
-//       setupForm(role as RoleRepresentation);
-//       addAlert(t("roleSaveSuccess"), AlertVariant.success);
-//     } catch (error) {
-//       addAlert(`${t("roleSaveError")} '${error}'`, AlertVariant.danger);
-//     }
-//   };
-
   return (
     <>
             <FormAccess
-              isHorizontal
               onSubmit={handleSubmit(save)}
               role="manage-realm"
               className="pf-u-mt-lg"
             >
-          <FormGroup label={t("validRedirectUri")} fieldId="kc-redirect">
-            <MultiLineInput form={form} name="redirectUris" />
-          </FormGroup>              {/* <FormGroup
-                label={t("roleName")}
-                fieldId="kc-name"
-                isRequired
-                validated={errors.name ? "error" : "default"}
-                helperTextInvalid={t("common:required")}
-              >
-                {name ? (
-                  <TextInput
-                    ref={register({ required: true })}
-                    type="text"
-                    id="kc-name"
-                    name="name"
-                    isReadOnly
-                  />
-                ) : undefined}
-              </FormGroup>
-              <FormGroup label={t("description")} fieldId="kc-description">
-                <Controller
-                  name="description"
-                  defaultValue=""
-                  control={control}
-                  rules={{ maxLength: 255 }}
-                  render={({ onChange, value }) => (
-                    <TextArea
-                      type="text"
-                      validated={
-                        errors.description
-                          ? ValidatedOptions.error
-                          : ValidatedOptions.default
-                      }
-                      id="kc-role-description"
-                      value={value}
-                      onChange={onChange}
-                    />
-                  )}
-                />
-              </FormGroup> */}
+            <KeyValueInput form={form} name="redirectUris" />
               <ActionGroup>
                 <Button variant="primary" type="submit">
                   {t("common:save")}

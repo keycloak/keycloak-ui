@@ -1,0 +1,7 @@
+.pf-c-form-control:not(textarea) {
+    width: 600px;
+}
+
+.pf-u-mt-lg {
+    grid-gap: 16px;
+}
