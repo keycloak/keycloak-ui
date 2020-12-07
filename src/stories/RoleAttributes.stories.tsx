@@ -1,23 +1,24 @@
 import React from "react";
 import { Meta } from "@storybook/react";
-import { Page } from "@patternfly/react-core";
-import { RoleAttributes } from "../realm-roles/RoleAttributes";
-import { useForm } from "react-hook-form";
+import { MockAdminClient } from "./MockAdminClient";
+import { MemoryRouter, Route } from "react-router-dom";
+import rolesMock from "../realm-roles/__tests__/mock-roles.json";
+import { RolesForm } from "../realm-roles/RealmRoleDetails";
+
 
 export default {
   title: "Role attributes tab",
-  component: RoleAttributes,
+  component: RolesForm,
 } as Meta;
 
-
-
 export const RoleAttributesExample = () => {
-
-    const form = useForm();
-
   return (
-    <Page>
-      <RoleAttributes form={form} save={() => {}} />
-    </Page>
+      <MockAdminClient mock={{ roles: { findOneById: () => rolesMock[0] } }}>
+        <MemoryRouter initialEntries={["/roles/1"]}>
+          <Route path="/roles/:id">
+            <RolesForm activeTab={1} />
+          </Route>
+        </MemoryRouter>
+      </MockAdminClient>
   );
 };

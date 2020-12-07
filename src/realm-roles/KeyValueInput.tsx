@@ -7,7 +7,7 @@ import {
   TextInputProps,
   Flex,
   FlexItem,
-  Text
+  Text,
 } from "@patternfly/react-core";
 import { MinusCircleIcon, PlusCircleIcon } from "@patternfly/react-icons";
 
@@ -30,11 +30,7 @@ export type MultiLineInputProps = Omit<TextInputProps, "form"> & {
   name: string;
 };
 
-export const KeyValueInput = ({
-  name,
-  form,
-  ...rest
-}: MultiLineInputProps) => {
+export const KeyValueInput = ({ name, form, ...rest }: MultiLineInputProps) => {
   const { register, control } = form;
   const { fields, append, remove } = useFieldArray({
     name,
@@ -47,7 +43,6 @@ export const KeyValueInput = ({
   }, []);
   return (
     <>
-
       {fields.map(({ id, value }, index) => (
         <Flex key={id}>
           <FlexItem>
@@ -61,7 +56,6 @@ export const KeyValueInput = ({
             <Text>Key</Text>
           </FlexItem>
           <FlexItem>
-
             <TextInput
               id={id}
               ref={register()}
@@ -79,7 +73,7 @@ export const KeyValueInput = ({
                 tabIndex={-1}
                 isDisabled={rest.isDisabled}
               >
-                <PlusCircleIcon className="co-icon-space-r"/>
+                <PlusCircleIcon className="co-icon-space-r" />
               </Button>
             )}
             {index !== fields.length - 1 && (

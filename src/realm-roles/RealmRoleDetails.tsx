@@ -24,18 +24,19 @@ import { useAdminClient } from "../context/auth/AdminClient";
 import RoleRepresentation from "keycloak-admin/lib/defs/roleRepresentation";
 import { RoleAttributes } from "./RoleAttributes";
 
-export const RolesForm = () => {
+type RolesFormProps = {
+  activeTab: number;
+};
+
+export const RolesForm = ({ activeTab }: RolesFormProps) => {
   const { t } = useTranslation("roles");
   const { register, handleSubmit, errors, control, setValue } = useForm<
     RoleRepresentation
   >();
   const history = useHistory();
   const [name, setName] = useState("");
-  const [activeTab, setActiveTab] = useState(0);
-
   const adminClient = useAdminClient();
   const form = useForm();
-
 
   const { id } = useParams<{ id: string }>();
 
@@ -70,11 +71,7 @@ export const RolesForm = () => {
       <ViewHeader titleKey={name} subKey="" />
 
       <PageSection variant="light">
-        <Tabs
-          activeKey={activeTab}
-          onSelect={(_, key) => setActiveTab(key as number)}
-          isBox
-        >
+        <Tabs activeKey={activeTab} onSelect={(_, key) => this.setState} isBox>
           <Tab eventKey={0} title={<TabTitleText>{t("details")}</TabTitleText>}>
             <FormAccess
               isHorizontal
@@ -130,7 +127,10 @@ export const RolesForm = () => {
               </ActionGroup>
             </FormAccess>
           </Tab>
-          <Tab eventKey={1} title={<TabTitleText>{t("attributes")}</TabTitleText>}>
+          <Tab
+            eventKey={1}
+            title={<TabTitleText>{t("attributes")}</TabTitleText>}
+          >
             <RoleAttributes form={form} />
           </Tab>
         </Tabs>
