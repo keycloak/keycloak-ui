@@ -20,7 +20,6 @@ type GroupsCreateModalProps = {
   setIsCreateModalOpen: (isCreateModalOpen: boolean) => void;
   createGroupName: string;
   setCreateGroupName: (createGroupName: string) => void;
-  refresh: () => void;
 };
 
 export const GroupsCreateModal = ({
@@ -29,7 +28,6 @@ export const GroupsCreateModal = ({
   setIsCreateModalOpen,
   createGroupName,
   setCreateGroupName,
-  refresh,
 }: GroupsCreateModalProps) => {
   const { t } = useTranslation("groups");
   const adminClient = useAdminClient();
@@ -45,7 +43,6 @@ export const GroupsCreateModal = ({
     if (await form.trigger()) {
       try {
         await adminClient.groups.create({ name: createGroupName });
-        refresh();
         setIsCreateModalOpen(false);
         setCreateGroupName("");
         addAlert(t("groupCreated"), AlertVariant.success);
