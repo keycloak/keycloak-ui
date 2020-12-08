@@ -16,6 +16,7 @@ import _ from "lodash";
 
 type Row<T> = {
   data: T;
+  selected: boolean;
   cells: (keyof T)[];
 };
 
@@ -24,6 +25,8 @@ type DataTableProps<T> = {
   columns: Field<T>[];
   rows: Row<T>[];
   actions?: IActions;
+  onSelect?: (isSelected: boolean, rowIndex: number) => void;
+  canSelectAll: boolean;
 };
 
 function DataTable<T>({
@@ -31,11 +34,19 @@ function DataTable<T>({
   rows,
   actions,
   ariaLabelKey,
+  onSelect,
+  canSelectAll,
 }: DataTableProps<T>) {
   const { t } = useTranslation();
   return (
     <Table
       variant={TableVariant.compact}
+      onSelect={
+        onSelect
+          ? (_, isSelected, rowIndex) => onSelect(isSelected, rowIndex)
+          : undefined
+      }
+      canSelectAll={canSelectAll}
       cells={columns.map((column) => {
         return { ...column, title: t(column.displayKey || column.name) };
       })}
@@ -62,6 +73,8 @@ export type Action<T> = IAction & {
 
 export type DataListProps<T> = {
   loader: (first?: number, max?: number, search?: string) => Promise<T[]>;
+  onSelect?: (value: T[]) => void;
+  canSelectAll?: boolean;
   isPaginated?: boolean;
   ariaLabelKey: string;
   searchPlaceholderKey: string;
@@ -96,6 +109,8 @@ export function KeycloakDataTable<T>({
   ariaLabelKey,
   searchPlaceholderKey,
   isPaginated = false,
+  onSelect,
+  canSelectAll = false,
   loader,
   columns,
   actions,
@@ -119,6 +134,7 @@ export function KeycloakDataTable<T>({
       data!.map((value) => {
         return {
           data: value,
+          selected: false,
           cells: columns.map((col) => {
             if (col.cellRenderer) {
               return col.cellRenderer(value);
@@ -173,6 +189,21 @@ export function KeycloakDataTable<T>({
     </div>
   );
 
+  const _onSelect = (isSelected: boolean, rowIndex: number) => {
+    if (rowIndex === -1) {
+      setRows(
+        rows!.map((row) => {
+          row.selected = isSelected;
+          return row;
+        })
+      );
+    } else {
+      rows![rowIndex].selected = isSelected;
+      setRows([...rows!]);
+    }
+    onSelect!(rows!.filter((row) => row.selected).map((row) => row.data));
+  };
+
   return (
     <>
       {!rows && <Loading />}
@@ -195,6 +226,8 @@ export function KeycloakDataTable<T>({
         >
           {!loading && (emptyState === undefined || rows.length !== 0) && (
             <DataTable
+              canSelectAll={canSelectAll}
+              onSelect={onSelect ? _onSelect : undefined}
               actions={convertAction()}
               rows={rows}
               columns={columns}
@@ -215,6 +248,8 @@ export function KeycloakDataTable<T>({
         >
           {(emptyState === undefined || rows.length !== 0) && (
             <DataTable
+              canSelectAll={canSelectAll}
+              onSelect={onSelect ? _onSelect : undefined}
               actions={convertAction()}
               rows={filteredData || rows}
               columns={columns}
