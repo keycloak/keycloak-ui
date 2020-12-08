@@ -24,7 +24,6 @@ import {
 } from "@patternfly/react-table";
 import { PlusCircleIcon } from "@patternfly/react-icons";
 
-
 export const RoleAttributes = () => {
   const { t } = useTranslation("roles");
   const { setValue } = useForm<RoleRepresentation>();
@@ -71,28 +70,28 @@ export const RoleAttributes = () => {
   };
 
   return (
-        <TableComposable className="keyValueTable" aria-label="Table text">
-          <Thead>
-            <Tr className="labels">
-              <Th width={30}>{columns[0]}</Th>
-              <Th>{columns[1]}</Th>
-            </Tr>
-          </Thead>
-          <Tbody>
-            {rows.map((row, rowIndex) => (
-              <Tr key={rowIndex} className="tableRow">
-                {row.map((cell, cellIndex) => (
-                  <Td
-                    key={`${rowIndex}_${cellIndex}`}
-                    id={`text-input-${rowIndex}-${cellIndex}`}
-                    dataLabel={columns[cellIndex]}
-                  >
-                    {cell}
-                  </Td>
-                ))}
-              </Tr>
+    <TableComposable className="keyValueTable" aria-label="Table text">
+      <Thead>
+        <Tr className="labels">
+          <Th width={30}>{columns[0]}</Th>
+          <Th>{columns[1]}</Th>
+        </Tr>
+      </Thead>
+      <Tbody>
+        {rows.map((row, rowIndex) => (
+          <Tr key={rowIndex} className="tableRow">
+            {row.map((cell, cellIndex) => (
+              <Td
+                key={`${rowIndex}_${cellIndex}`}
+                id={`text-input-${rowIndex}-${cellIndex}`}
+                dataLabel={columns[cellIndex]}
+              >
+                {cell}
+              </Td>
             ))}
-          </Tbody>
-        </TableComposable>
+          </Tr>
+        ))}
+      </Tbody>
+    </TableComposable>
   );
 };

@@ -72,7 +72,11 @@ export const RolesForm = ({ activeTab }: RolesFormProps) => {
       <ViewHeader titleKey={name} subKey="" />
 
       <PageSection variant="light">
-        <Tabs activeKey={activeTab} onSelect={(_, key) => setActiveKey(key as number)} isBox>
+        <Tabs
+          activeKey={activeTab}
+          onSelect={(_, key) => setActiveKey(key as number)}
+          isBox
+        >
           <Tab eventKey={0} title={<TabTitleText>{t("details")}</TabTitleText>}>
             <FormAccess
               isHorizontal
