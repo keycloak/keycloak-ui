@@ -9,15 +9,16 @@ import {
   TableHeader,
   TableVariant,
 } from "@patternfly/react-table";
-import { PaginatingTableToolbar } from "./PaginatingTableToolbar";
 import { Spinner } from "@patternfly/react-core";
-import { TableToolbar } from "./TableToolbar";
 import _ from "lodash";
+
+import { PaginatingTableToolbar } from "./PaginatingTableToolbar";
+import { TableToolbar } from "./TableToolbar";
 
 type Row<T> = {
   data: T;
   selected: boolean;
-  cells: (keyof T)[];
+  cells: (keyof T | JSX.Element)[];
 };
 
 type DataTableProps<T> = {
@@ -151,12 +152,26 @@ export function KeycloakDataTable<T>({
     load();
   }, [first, max]);
 
+  const getNodeText = (node: keyof T | JSX.Element): string => {
+    if (["string", "number"].includes(typeof node)) {
+      return node!.toString();
+    }
+    if (node instanceof Array) {
+      return node.map(getNodeText).join("");
+    }
+    if (typeof node === "object" && node) {
+      return getNodeText(node.props.children);
+    }
+    return "";
+  };
+
   const filter = (search: string) => {
     setFilteredData(
       rows!.filter((row) =>
         row.cells.some(
           (cell) =>
-            cell && cell.toString().toLowerCase().includes(search.toLowerCase())
+            cell &&
+            getNodeText(cell).toLowerCase().includes(search.toLowerCase())
         )
       )
     );

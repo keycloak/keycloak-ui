@@ -21,6 +21,7 @@ import { useAlerts } from "../components/alert/Alerts";
 import { DataList } from "../components/table-toolbar/DataList";
 
 import "./GroupsSection.css";
+import { Link } from "react-router-dom";
 
 type GroupTableData = GroupRepresentation & {
   membersLength?: number;
@@ -80,7 +81,9 @@ export const GroupsSection = () => {
 
   const GroupNameCell = (group: GroupTableData) => (
     <>
-      <Button variant="link">{group.name}</Button>
+      <Link key={group.id} to={`/groups/${group.id}`}>
+        {group.name}
+      </Link>
     </>
   );
 
