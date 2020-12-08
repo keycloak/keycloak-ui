@@ -7,23 +7,12 @@ import {
   TextInputProps,
   Flex,
   FlexItem,
-  Text,
 } from "@patternfly/react-core";
 import { MinusCircleIcon, PlusCircleIcon } from "@patternfly/react-icons";
 
 type KeyValue = {
   value: string;
 };
-
-export function convertToMultiline(fields: string[]): KeyValue[] {
-  return (fields && fields.length > 0 ? fields : [""]).map((field) => {
-    return { value: field };
-  });
-}
-
-export function toValue(formValue: KeyValue[]): string[] {
-  return formValue.map((field) => field.value);
-}
 
 export type MultiLineInputProps = Omit<TextInputProps, "form"> & {
   form: UseFormMethods;
@@ -53,7 +42,6 @@ export const KeyValueInput = ({ name, form, ...rest }: MultiLineInputProps) => {
               defaultValue={value}
               {...rest}
             />
-            <Text>Key</Text>
           </FlexItem>
           <FlexItem>
             <TextInput
@@ -63,7 +51,6 @@ export const KeyValueInput = ({ name, form, ...rest }: MultiLineInputProps) => {
               defaultValue={value}
               {...rest}
             />
-            <Text>Value</Text>
           </FlexItem>
           <FlexItem>
             {index === fields.length - 1 && (

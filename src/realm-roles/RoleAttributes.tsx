@@ -1,28 +1,60 @@
+/* eslint-disable react/jsx-key */
+/* eslint-disable react/display-name */
 import React, { useEffect, useState } from "react";
 import { useHistory, useParams } from "react-router-dom";
-import { ActionGroup, Button } from "@patternfly/react-core";
+import {
+  ActionGroup,
+  Button,
+  ButtonVariant,
+  TextInput,
+} from "@patternfly/react-core";
 import { useTranslation } from "react-i18next";
-import { useForm, UseFormMethods } from "react-hook-form";
-import { FormAccess } from "../components/form-access/FormAccess";
+import { useForm } from "react-hook-form";
 import "./RealmRolesSection.css";
 import { useAdminClient } from "../context/auth/AdminClient";
 import RoleRepresentation from "keycloak-admin/lib/defs/roleRepresentation";
-import { KeyValueInput } from "./KeyValueInput";
 
-type RoleAttributesProps = {
-  form?: UseFormMethods;
-  save?: () => void;
-};
+import {
+  TableComposable,
+  Tbody,
+  Td,
+  Th,
+  Thead,
+  Tr,
+} from "@patternfly/react-table";
+import { PlusCircleIcon } from "@patternfly/react-icons";
 
-export const RoleAttributes = ({ form, save }: RoleAttributesProps) => {
+
+export const RoleAttributes = () => {
   const { t } = useTranslation("roles");
-  const { handleSubmit, setValue } = useForm<RoleRepresentation>();
+  const { setValue } = useForm<RoleRepresentation>();
   const history = useHistory();
   const [, setName] = useState("");
 
   const adminClient = useAdminClient();
 
   const { id } = useParams<{ id: string }>();
+
+  const columns = ["Key", "Value"];
+  const rows = [
+    [
+      <TextInput />,
+      <TextInput />,
+      <Button variant={ButtonVariant.link} tabIndex={-1}>
+        <PlusCircleIcon className="co-icon-space-r" />
+      </Button>,
+    ],
+    [
+      <ActionGroup>
+        <Button variant="primary" type="submit">
+          {t("common:save")}
+        </Button>
+        <Button variant="link" onClick={() => history.push("/roles/")}>
+          {t("common:reload")}
+        </Button>
+      </ActionGroup>,
+    ],
+  ];
 
   useEffect(() => {
     (async () => {
@@ -39,22 +71,28 @@ export const RoleAttributes = ({ form, save }: RoleAttributesProps) => {
   };
 
   return (
-    <>
-      <FormAccess
-        onSubmit={handleSubmit(save!)}
-        role="manage-realm"
-        className="pf-u-mt-lg"
-      >
-        <KeyValueInput form={form!} name="redirectUris" />
-        <ActionGroup>
-          <Button variant="primary" type="submit">
-            {t("common:save")}
-          </Button>
-          <Button variant="link" onClick={() => history.push("/roles/")}>
-            {t("common:reload")}
-          </Button>
-        </ActionGroup>
-      </FormAccess>
-    </>
+        <TableComposable className="keyValueTable" aria-label="Table text">
+          <Thead>
+            <Tr className="labels">
+              <Th width={30}>{columns[0]}</Th>
+              <Th>{columns[1]}</Th>
+            </Tr>
+          </Thead>
+          <Tbody>
+            {rows.map((row, rowIndex) => (
+              <Tr key={rowIndex} className="tableRow">
+                {row.map((cell, cellIndex) => (
+                  <Td
+                    key={`${rowIndex}_${cellIndex}`}
+                    id={`text-input-${rowIndex}-${cellIndex}`}
+                    dataLabel={columns[cellIndex]}
+                  >
+                    {cell}
+                  </Td>
+                ))}
+              </Tr>
+            ))}
+          </Tbody>
+        </TableComposable>
   );
 };

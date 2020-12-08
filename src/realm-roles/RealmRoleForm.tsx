@@ -201,7 +201,7 @@ export const RealmRolesForm = () => {
               eventKey={1}
               title={<TabTitleText>{t("attributes")}</TabTitleText>}
             >
-              <RoleAttributes form={form} save={() => {}} />
+              <RoleAttributes />
             </Tab>
           </Tabs>
         )}
