@@ -37,7 +37,6 @@ export const RolesForm = ({ activeTab }: RolesFormProps) => {
   const history = useHistory();
   const [name, setName] = useState("");
   const adminClient = useAdminClient();
-  const form = useForm();
   const [, setActiveKey] = useState(0);
 
   const { id } = useParams<{ id: string }>();
@@ -137,7 +136,7 @@ export const RolesForm = ({ activeTab }: RolesFormProps) => {
             eventKey={1}
             title={<TabTitleText>{t("attributes")}</TabTitleText>}
           >
-            <RoleAttributes form={form} />
+            <RoleAttributes />
             <ActionGroup className="kc-role-attributes__action-group">
               <Button variant="primary" type="submit">
                 {t("common:save")}
