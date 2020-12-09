@@ -8,6 +8,7 @@
     "lastName": "Last name",
     "firstName": "First name",
     "status": "Status",
+    "disabled": "Disabled",
     "addUser": "Add user",
     "deleteUser": "Delete user",
     "userDeletedSuccess": "The user has been deleted",

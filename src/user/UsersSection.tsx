@@ -4,9 +4,11 @@ import {
   AlertVariant,
   Button,
   ButtonVariant,
+  Label,
   PageSection,
   ToolbarItem,
 } from "@patternfly/react-core";
+import { InfoCircleIcon } from "@patternfly/react-icons";
 import UserRepresentation from "keycloak-admin/lib/defs/userRepresentation";
 
 import { useAdminClient } from "../context/auth/AdminClient";
@@ -40,6 +42,18 @@ export const UsersSection = () => {
     } catch (error) {
       addAlert(t("userDeletedError", { error }), AlertVariant.danger);
     }
+  };
+
+  const StatusRow = (user: UserRepresentation) => {
+    return (
+      <>
+        {!user.enabled && (
+          <Label color="red" icon={<InfoCircleIcon />}>
+            {t("disabled")}
+          </Label>
+        )}
+      </>
+    );
   };
 
   return (
@@ -90,6 +104,7 @@ export const UsersSection = () => {
             {
               name: "status",
               displayKey: "users:status",
+              cellRenderer: StatusRow,
             },
           ]}
         />
