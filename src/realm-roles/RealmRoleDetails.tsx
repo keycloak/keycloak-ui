@@ -23,6 +23,7 @@ import { ViewHeader } from "../components/view-header/ViewHeader";
 import { useAdminClient } from "../context/auth/AdminClient";
 import RoleRepresentation from "keycloak-admin/lib/defs/roleRepresentation";
 import { RoleAttributes } from "./RoleAttributes";
+import "./RealmRolesSection.css";
 
 type RolesFormProps = {
   activeTab: number;
@@ -137,6 +138,14 @@ export const RolesForm = ({ activeTab }: RolesFormProps) => {
             title={<TabTitleText>{t("attributes")}</TabTitleText>}
           >
             <RoleAttributes form={form} />
+            <ActionGroup className="kc-role-attributes__action-group">
+              <Button variant="primary" type="submit">
+                {t("common:save")}
+              </Button>
+              <Button variant="link" onClick={() => history.push("/roles/")}>
+                {t("common:reload")}
+              </Button>
+            </ActionGroup>
           </Tab>
         </Tabs>
       </PageSection>

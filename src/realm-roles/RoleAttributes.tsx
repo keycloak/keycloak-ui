@@ -39,19 +39,14 @@ export const RoleAttributes = () => {
     [
       <TextInput />,
       <TextInput />,
-      <Button id="plus-icon" variant={ButtonVariant.link} tabIndex={-1}>
-        <PlusCircleIcon className="co-icon-space-r" />
+      <Button
+        id="plus-icon"
+        variant={ButtonVariant.link}
+        tabIndex={-1}
+        className="kc-role-attributes__plus-icon"
+      >
+        <PlusCircleIcon />
       </Button>,
-    ],
-    [
-      <ActionGroup>
-        <Button variant="primary" type="submit">
-          {t("common:save")}
-        </Button>
-        <Button variant="link" onClick={() => history.push("/roles/")}>
-          {t("common:reload")}
-        </Button>
-      </ActionGroup>,
     ],
   ];
 
@@ -70,18 +65,25 @@ export const RoleAttributes = () => {
   };
 
   return (
-    <TableComposable className="keyValueTable" aria-label="Table text">
+    <TableComposable
+      className="kc-role-attributes__table"
+      aria-label="Role attribute keys and values"
+      variant="compact"
+      borders={false}
+    >
       <Thead>
-        <Tr className="labels">
-          <Th id="key" width={30}>
+        <Tr>
+          <Th id="key" width={40}>
             {columns[0]}
           </Th>
-          <Th id="value">{columns[1]}</Th>
+          <Th id="value" width={40}>
+            {columns[1]}
+          </Th>
         </Tr>
       </Thead>
       <Tbody>
         {rows.map((row, rowIndex) => (
-          <Tr key={rowIndex} className="tableRow">
+          <Tr key={rowIndex}>
             {row.map((cell, cellIndex) => (
               <Td
                 key={`${rowIndex}_${cellIndex}`}
