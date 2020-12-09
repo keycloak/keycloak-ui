@@ -1,14 +1,12 @@
 /* eslint-disable react/jsx-key */
 /* eslint-disable react/display-name */
 import React, { useEffect, useState } from "react";
-import { useHistory, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import {
-  ActionGroup,
   Button,
   ButtonVariant,
   TextInput,
 } from "@patternfly/react-core";
-import { useTranslation } from "react-i18next";
 import { useForm } from "react-hook-form";
 import "./RealmRolesSection.css";
 import { useAdminClient } from "../context/auth/AdminClient";
@@ -25,9 +23,7 @@ import {
 import { PlusCircleIcon } from "@patternfly/react-icons";
 
 export const RoleAttributes = () => {
-  const { t } = useTranslation("roles");
   const { setValue } = useForm<RoleRepresentation>();
-  const history = useHistory();
   const [, setName] = useState("");
 
   const adminClient = useAdminClient();
