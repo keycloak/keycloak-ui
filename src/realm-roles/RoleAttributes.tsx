@@ -39,7 +39,7 @@ export const RoleAttributes = () => {
     [
       <TextInput />,
       <TextInput />,
-      <Button variant={ButtonVariant.link} tabIndex={-1}>
+      <Button id="plus-icon" variant={ButtonVariant.link} tabIndex={-1}>
         <PlusCircleIcon className="co-icon-space-r" />
       </Button>,
     ],
@@ -73,8 +73,10 @@ export const RoleAttributes = () => {
     <TableComposable className="keyValueTable" aria-label="Table text">
       <Thead>
         <Tr className="labels">
-          <Th width={30}>{columns[0]}</Th>
-          <Th>{columns[1]}</Th>
+          <Th id="key" width={30}>
+            {columns[0]}
+          </Th>
+          <Th id="value">{columns[1]}</Th>
         </Tr>
       </Thead>
       <Tbody>

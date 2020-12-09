@@ -6,14 +6,35 @@
   grid-gap: 16px;
 }
 
-tr.labels, tr.tableRow {
+tr.labels,
+tr.tableRow {
   border-bottom: none !important;
 }
 
 td#text-input-0-1 {
-    width: 30px;
+  width: 30px;
+}
+
+input#kc-name {
+  width: 1172px;
+}
+
+textarea#kc-role-description {
+  width: 1172px;
 }
 
 table.keyValueTable {
-    margin-top: 50px;
+  margin-top: 50px;
+}
+
+th#key {
+  padding-bottom: 0px;
+}
+
+th#value {
+  padding-bottom: 0px;
+}
+
+button#plus-icon {
+  padding: 0px;
 }
