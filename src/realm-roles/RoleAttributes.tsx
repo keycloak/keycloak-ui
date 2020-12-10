@@ -2,11 +2,7 @@
 /* eslint-disable react/display-name */
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import {
-  Button,
-  ButtonVariant,
-  TextInput,
-} from "@patternfly/react-core";
+import { Button, ButtonVariant, TextInput } from "@patternfly/react-core";
 import { useForm } from "react-hook-form";
 import "./RealmRolesSection.css";
 import { useAdminClient } from "../context/auth/AdminClient";
