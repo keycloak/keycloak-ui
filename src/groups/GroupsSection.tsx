@@ -18,7 +18,7 @@ import { ViewHeader } from "../components/view-header/ViewHeader";
 import { ListEmptyState } from "../components/list-empty-state/ListEmptyState";
 import { useAdminClient } from "../context/auth/AdminClient";
 import { useAlerts } from "../components/alert/Alerts";
-import { DataList } from "../components/table-toolbar/DataList";
+import { KeycloakDataTable } from "../components/table-toolbar/KeycloakDataTable";
 
 import "./GroupsSection.css";
 import { Link } from "react-router-dom";
@@ -33,10 +33,10 @@ export const GroupsSection = () => {
   const [isKebabOpen, setIsKebabOpen] = useState(false);
   const [createGroupName, setCreateGroupName] = useState("");
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
-  const [selectedRows, setSelectedRows] = useState<
-    GroupRepresentation[] | undefined
-  >([]);
+  const [selectedRows, setSelectedRows] = useState<GroupRepresentation[]>([]);
   const { addAlert } = useAlerts();
+  const [key, setKey] = useState("");
+  const refresh = () => setKey(`${new Date().getTime()}`);
 
   const getMembers = async (id: string) => {
     const response = await adminClient.groups.listMembers({ id });
@@ -75,7 +75,8 @@ export const GroupsSection = () => {
 
       await Promise.all(chainedPromises);
       addAlert(t("groupsDeleted"), AlertVariant.success);
-      setSelectedRows(undefined);
+      setSelectedRows([]);
+      refresh();
     }
   };
 
@@ -98,8 +99,8 @@ export const GroupsSection = () => {
     <>
       <ViewHeader titleKey="groups:groups" subKey="groups:groupsDescription" />
       <PageSection variant={PageSectionVariants.light}>
-        <DataList
-          key={`data-list-${isCreateModalOpen}${selectedRows === undefined}`}
+        <KeycloakDataTable
+          key={key}
           onSelect={(rows) => setSelectedRows([...rows])}
           canSelectAll={false}
           loader={loader}
@@ -145,7 +146,7 @@ export const GroupsSection = () => {
             {
               title: t("common:delete"),
               onRowClick: async (group: GroupRepresentation) => {
-                deleteGroup(group);
+                await deleteGroup(group);
                 return true;
               },
             },
@@ -179,6 +180,7 @@ export const GroupsSection = () => {
           setIsCreateModalOpen={setIsCreateModalOpen}
           createGroupName={createGroupName}
           setCreateGroupName={setCreateGroupName}
+          refresh={refresh}
         />
       </PageSection>
     </>
