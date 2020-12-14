@@ -32,7 +32,7 @@ export const RoleAttributes = () => {
       <TextInput />,
       <TextInput />,
       <Button
-        id="plus-icon"
+        id="kc-plus-icon"
         variant={ButtonVariant.link}
         tabIndex={-1}
         className="kc-role-attributes__plus-icon"
@@ -65,10 +65,10 @@ export const RoleAttributes = () => {
     >
       <Thead>
         <Tr>
-          <Th id="key" width={40}>
+          <Th id="kc-key-label" width={40}>
             {columns[0]}
           </Th>
-          <Th id="value" width={40}>
+          <Th id="kc-value-label" width={40}>
             {columns[1]}
           </Th>
         </Tr>
