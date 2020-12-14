@@ -7,6 +7,7 @@ import { useForm } from "react-hook-form";
 import "./RealmRolesSection.css";
 import { useAdminClient } from "../context/auth/AdminClient";
 import RoleRepresentation from "keycloak-admin/lib/defs/roleRepresentation";
+import { useTranslation } from "react-i18next";
 
 import {
   TableComposable,
@@ -19,6 +20,7 @@ import {
 import { PlusCircleIcon } from "@patternfly/react-icons";
 
 export const RoleAttributes = () => {
+  const { t } = useTranslation("roles");
   const { setValue } = useForm<RoleRepresentation>();
   const [, setName] = useState("");
 
@@ -36,6 +38,7 @@ export const RoleAttributes = () => {
         variant={ButtonVariant.link}
         tabIndex={-1}
         className="kc-role-attributes__plus-icon"
+        aria-label={t("roles:addAttributeText")}
       >
         <PlusCircleIcon />
       </Button>,
