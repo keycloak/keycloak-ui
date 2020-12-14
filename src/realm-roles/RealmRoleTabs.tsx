@@ -37,7 +37,6 @@ export const RolesTabs = () => {
   useEffect(() => {
     (async () => {
       const fetchedRole = await adminClient.roles.findOneById({ id });
-      // setAttributes(fetchedRole.attributes!);
       setName(fetchedRole.name!);
       setupForm(fetchedRole);
     })();
