@@ -29,7 +29,6 @@ export const RolesTabs = () => {
   const [name, setName] = useState("");
   const adminClient = useAdminClient();
   const [activeTab, setActiveTab] = useState(0);
-  // const [attributes, setAttributes] = useState({});
 
   const { id } = useParams<{ id: string }>();
 
@@ -60,29 +59,6 @@ export const RolesTabs = () => {
     }
   };
 
-  // const save2 = async (role: RoleRepresentation) => {
-  //   try {
-  //     if (id) {
-  //       await adminClient.roles.updateById({ id }, role);
-  //     } else {
-  //       await adminClient.roles.create(role);
-  //       const createdRole = await adminClient.roles.findOneByName({
-  //         name: role.name!,
-  //       });
-  //       history.push(`/roles/${createdRole.id}`);
-  //     }
-  //     addAlert(t(id ? "roleSaveSuccess" : "roleCreated"), AlertVariant.success);
-  //   } catch (error) {
-  //     addAlert(
-  //       t((id ? "roleSave" : "roleCreate") + "Error", { error }),
-  //       AlertVariant.danger
-  //     );
-  //   }
-  // };
-
-  // const onAttributesChange = (attributes: { [index: string]: string[] }) => {
-  //   setAttributes(attributes);
-  // };
 
   const form = useForm<RoleRepresentation>();
 
