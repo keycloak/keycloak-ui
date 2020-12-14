@@ -63,11 +63,11 @@ export const RoleForm = ({ form, save, editMode }: RoleFormType) => {
         label={t("description")}
         fieldId="kc-description"
         validated={
-          form.errors.description
+          form!.errors.description
             ? ValidatedOptions.error
             : ValidatedOptions.default
         }
-        helperTextInvalid={form.errors.description?.message}
+        helperTextInvalid={form!.errors.description?.message}
       >
         <TextArea
           name="description"
