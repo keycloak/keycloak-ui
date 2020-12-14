@@ -1,6 +1,6 @@
 .kc-role-attributes__table {
   /* even though the table is borderless, make the border under the th transparent */
-  --pf-c-table--BorderColor: transparent;
+  --pf-c-table--border-width--base: 0;
   --pf-c-table--m-compact--cell--first-last-child--PaddingLeft: 0;
 }
 
