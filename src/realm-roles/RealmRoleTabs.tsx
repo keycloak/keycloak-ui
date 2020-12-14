@@ -58,7 +58,6 @@ export const RolesTabs = () => {
     }
   };
 
-
   const form = useForm<RoleRepresentation>();
 
   return (
