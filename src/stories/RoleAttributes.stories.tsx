@@ -3,19 +3,19 @@ import { Meta } from "@storybook/react";
 import { MockAdminClient } from "./MockAdminClient";
 import { MemoryRouter, Route } from "react-router-dom";
 import rolesMock from "../realm-roles/__tests__/mock-roles.json";
-import { RolesForm } from "../realm-roles/RealmRoleDetails";
+import { RolesTabs } from "../realm-roles/RealmRoleTabs";
 
 export default {
-  title: "Role attributes tab",
-  component: RolesForm,
+  title: "Roles tabs",
+  component: RolesTabs,
 } as Meta;
 
-export const RoleAttributesExample = () => {
+export const RoleTabsExample = () => {
   return (
     <MockAdminClient mock={{ roles: { findOneById: () => rolesMock[0] } }}>
       <MemoryRouter initialEntries={["/roles/1"]}>
         <Route path="/roles/:id">
-          <RolesForm activeTab={1} />
+          <RolesTabs />
         </Route>
       </MemoryRouter>
     </MockAdminClient>
