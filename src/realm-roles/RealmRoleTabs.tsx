@@ -21,6 +21,7 @@ import { useAdminClient } from "../context/auth/AdminClient";
 import RoleRepresentation from "keycloak-admin/lib/defs/roleRepresentation";
 import { RoleAttributes } from "./RoleAttributes";
 import "./RealmRolesSection.css";
+import { useRealm } from "../context/realm-context/RealmContext";
 
 export const RolesTabs = () => {
   const { t } = useTranslation("roles");
@@ -29,6 +30,7 @@ export const RolesTabs = () => {
   const [name, setName] = useState("");
   const adminClient = useAdminClient();
   const [activeTab, setActiveTab] = useState(0);
+  const { realm } = useRealm();
 
   const { id } = useParams<{ id: string }>();
 
@@ -116,7 +118,10 @@ export const RolesTabs = () => {
               <Button variant="primary" type="submit">
                 {t("common:save")}
               </Button>
-              <Button variant="link" onClick={() => history.push("/roles/")}>
+              <Button
+                variant="link"
+                onClick={() => history.push(`/${realm}/roles`)}
+              >
                 {t("common:reload")}
               </Button>
             </ActionGroup>
@@ -131,7 +136,10 @@ export const RolesTabs = () => {
             <Button variant="primary" type="submit">
               {t("common:save")}
             </Button>
-            <Button variant="link" onClick={() => history.push("/roles/")}>
+            <Button
+              variant="link"
+              onClick={() => history.push(`/${realm}/roles`)}
+            >
               {t("common:reload")}
             </Button>
           </ActionGroup>

@@ -41,28 +41,28 @@ export const routes: RoutesFn = (t) => [
     access: "manage-realm",
   },
   {
-    path: "/:realm/clients/:id",
-    component: ClientDetails,
-    breadcrumb: t("clients:clientSettings"),
-    access: "view-clients",
-  },
-  {
     path: "/:realm/clients",
     component: ClientsSection,
     breadcrumb: t("clients:clientList"),
     access: "query-clients",
   },
   {
-    path: "/:realm/add-client",
+    path: "/:realm/clients/add-client",
     component: NewClientForm,
     breadcrumb: t("clients:createClient"),
     access: "manage-clients",
   },
   {
-    path: "/:realm/import-client",
+    path: "/:realm/clients/import-client",
     component: ImportForm,
     breadcrumb: t("clients:importClient"),
     access: "manage-clients",
+  },
+  {
+    path: "/:realm/clients/:id",
+    component: ClientDetails,
+    breadcrumb: t("clients:clientSettings"),
+    access: "view-clients",
   },
   {
     path: "/:realm/client-scopes/new",

@@ -1,5 +1,5 @@
 import React, { useState, useContext, useEffect } from "react";
-import { useHistory, useParams } from "react-router-dom";
+import { useHistory, useParams, useRouteMatch } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 
 import {
@@ -33,11 +33,7 @@ export const RealmSelector = ({ realmList }: RealmSelectorProps) => {
   const [filteredItems, setFilteredItems] = useState(realmList);
   const history = useHistory();
   const { t } = useTranslation("common");
-
-  const params = useParams<{ realm: string }>();
-  useEffect(() => {
-    setRealm(params.realm);
-  }, []);
+  const { url } = useRouteMatch();
 
   const toUpperCase = (realmName: string) =>
     realmName.charAt(0).toUpperCase() + realmName.slice(1);
@@ -53,7 +49,7 @@ export const RealmSelector = ({ realmList }: RealmSelectorProps) => {
     <Button
       component="div"
       isBlock
-      onClick={() => history.push("/add-realm")}
+      onClick={() => history.push(`${url}/add-realm"`)}
       className={className}
     >
       {t("createRealm")}
