@@ -23,11 +23,10 @@ import { ClientDetails } from "./clients/ClientDetails";
 import { UserFederationKerberosSettings } from "./user-federation/UserFederationKerberosSettings";
 import { UserFederationLdapSettings } from "./user-federation/UserFederationLdapSettings";
 import { RoleMappingForm } from "./client-scopes/add/RoleMappingForm";
+import { BreadcrumbsRoute } from "use-react-router-breadcrumbs";
 
-export type RouteDef = {
-  path: string;
+export type RouteDef = BreadcrumbsRoute & {
   component: () => JSX.Element;
-  breadcrumb: TFunction | null;
   access: AccessType;
 };
 
