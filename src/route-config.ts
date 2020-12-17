@@ -27,7 +27,7 @@ import { RoleMappingForm } from "./client-scopes/add/RoleMappingForm";
 export type RouteDef = {
   path: string;
   component: () => JSX.Element;
-  breadcrumb?: TFunction;
+  breadcrumb: TFunction | null;
   access: AccessType;
 };
 
@@ -169,11 +169,13 @@ export const routes: RoutesFn = (t) => [
   {
     path: "/:realm/user-federation/kerberos",
     component: UserFederationSection,
+    breadcrumb: null,
     access: "view-realm",
   },
   {
     path: "/:realm/user-federation/ldap",
     component: UserFederationSection,
+    breadcrumb: null,
     access: "view-realm",
   },
   {
@@ -197,6 +199,7 @@ export const routes: RoutesFn = (t) => [
   {
     path: "*",
     component: PageNotFoundSection,
+    breadcrumb: null,
     access: "anyone",
   },
 ];
