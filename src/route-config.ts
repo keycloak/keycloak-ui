@@ -196,6 +196,12 @@ export const routes: RoutesFn = (t) => [
     access: "anyone",
   },
   {
+    path: "/",
+    component: ClientsSection,
+    breadcrumb: t("common:home"),
+    access: "anyone",
+  },
+  {
     path: "*",
     component: PageNotFoundSection,
     breadcrumb: null,
