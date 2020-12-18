@@ -59,14 +59,16 @@ export const GroupsSection = () => {
     setIsCreateModalOpen(!isCreateModalOpen);
   };
 
-  const deleteGroup = (group: GroupRepresentation) => {
+  const deleteGroup = async (group: GroupRepresentation) => {
     try {
-      return adminClient.groups.del({
+      await adminClient.groups.del({
         id: group.id!,
       });
+      addAlert(t("groupDelete"), AlertVariant.success);
     } catch (error) {
       addAlert(t("groupDeleteError", { error }), AlertVariant.danger);
     }
+    return true;
   };
 
   const multiDelete = async () => {
@@ -146,8 +148,7 @@ export const GroupsSection = () => {
             {
               title: t("common:delete"),
               onRowClick: async (group: GroupRepresentation) => {
-                await deleteGroup(group);
-                return true;
+                return deleteGroup(group);
               },
             },
           ]}
