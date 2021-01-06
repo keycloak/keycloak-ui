@@ -35,31 +35,25 @@ type RoutesFn = (t: TFunction) => RouteDef[];
 
 export const routes: RoutesFn = (t: TFunction) => [
   {
-    path: "/add-realm",
+    path: "/:realm/add-realm",
     component: NewRealmForm,
     breadcrumb: t("realm:createRealm"),
     access: "manage-realm",
   },
   {
-    path: "/clients/:id",
-    component: ClientDetails,
-    breadcrumb: t("clients:clientSettings"),
-    access: "view-clients",
-  },
-  {
-    path: "/clients",
+    path: "/:realm/clients",
     component: ClientsSection,
     breadcrumb: t("clients:clientList"),
     access: "query-clients",
   },
   {
-    path: "/add-client",
+    path: "/:realm/clients/add-client",
     component: NewClientForm,
     breadcrumb: t("clients:createClient"),
     access: "manage-clients",
   },
   {
-    path: "/import-client",
+    path: "/:realm/clients/import-client",
     component: ImportForm,
     breadcrumb: t("clients:importClient"),
     access: "manage-clients",
@@ -83,7 +77,7 @@ export const routes: RoutesFn = (t: TFunction) => [
     access: "manage-clients",
   },
   {
-    path: "/client-scopes/:id",
+    path: "/:realm/client-scopes/:id",
     component: ClientScopeForm,
     breadcrumb: t("client-scopes:clientScopeDetails"),
     access: "view-clients",
@@ -101,25 +95,25 @@ export const routes: RoutesFn = (t: TFunction) => [
     access: "view-clients",
   },
   {
-    path: "/client-scopes/:scopeId/:id",
+    path: "/:realm/client-scopes/:scopeId/:id",
     component: MappingDetails,
     breadcrumb: t("client-scopes:mappingDetails"),
     access: "view-clients",
   },
   {
-    path: "/client-scopes/:id",
+    path: "/:realm/client-scopes/:id",
     component: ClientScopeForm,
     breadcrumb: t("client-scopes:clientScopeDetails"),
     access: "view-clients",
   },
   {
-    path: "/client-scopes",
+    path: "/:realm/client-scopes",
     component: ClientScopesSection,
     breadcrumb: t("client-scopes:clientScopeList"),
     access: "view-clients",
   },
   {
-    path: "/roles",
+    path: "/:realm/roles",
     component: RealmRolesSection,
     breadcrumb: t("roles:roleList"),
     access: "view-realm",
@@ -149,7 +143,7 @@ export const routes: RoutesFn = (t: TFunction) => [
     access: "query-users",
   },
   {
-    path: "/groups",
+    path: "/:realm/groups",
     component: GroupsSection,
     breadcrumb: null,
     matchOptions: {
@@ -158,13 +152,13 @@ export const routes: RoutesFn = (t: TFunction) => [
     access: "query-groups",
   },
   {
-    path: "/sessions",
+    path: "/:realm/sessions",
     component: SessionsSection,
     breadcrumb: t("sessions:title"),
     access: "view-realm",
   },
   {
-    path: "/events",
+    path: "/:realm/events",
     component: EventsSection,
     breadcrumb: t("events:title"),
     access: "view-events",
@@ -182,43 +176,43 @@ export const routes: RoutesFn = (t: TFunction) => [
     access: "view-realm",
   },
   {
-    path: "/authentication",
+    path: "/:realm/authentication",
     component: AuthenticationSection,
     breadcrumb: t("authentication"),
     access: "view-realm",
   },
   {
-    path: "/identity-providers",
+    path: "/:realm/identity-providers",
     component: IdentityProvidersSection,
     breadcrumb: t("identityProviders"),
     access: "view-identity-providers",
   },
   {
-    path: "/user-federation",
+    path: "/:realm/user-federation",
     component: UserFederationSection,
     breadcrumb: t("userFederation"),
     access: "view-realm",
   },
   {
-    path: "/user-federation/kerberos",
+    path: "/:realm/user-federation/kerberos",
     component: UserFederationSection,
     breadcrumb: null,
     access: "view-realm",
   },
   {
-    path: "/user-federation/ldap",
+    path: "/:realm/user-federation/ldap",
     component: UserFederationSection,
     breadcrumb: null,
     access: "view-realm",
   },
   {
-    path: "/user-federation/kerberos/:id",
+    path: "/:realm/user-federation/kerberos/:id",
     component: UserFederationKerberosSettings,
     breadcrumb: t("common:settings"),
     access: "view-realm",
   },
   {
-    path: "/user-federation/ldap/:id",
+    path: "/:realm/user-federation/ldap/:id",
     component: UserFederationLdapSettings,
     breadcrumb: t("common:settings"),
     access: "view-realm",
@@ -238,7 +232,7 @@ export const routes: RoutesFn = (t: TFunction) => [
   {
     path: "*",
     component: PageNotFoundSection,
-    breadcrumb: "",
+    breadcrumb: null,
     access: "anyone",
   },
 ];
