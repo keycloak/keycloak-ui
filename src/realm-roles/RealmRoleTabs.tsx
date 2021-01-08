@@ -9,7 +9,7 @@ import {
   TabTitleText,
 } from "@patternfly/react-core";
 import { useTranslation } from "react-i18next";
-import { useFieldArray, useForm } from "react-hook-form";
+import { useForm } from "react-hook-form";
 
 import { useAlerts } from "../components/alert/Alerts";
 import { useAdminClient } from "../context/auth/AdminClient";
@@ -32,32 +32,30 @@ const arrayToAttributes = (attributeArray: KeyValueType[]) => {
   }, initValue);
 };
 
-const attributesToArray = (attributes?: {
-  [key: string]: string[];
-}): KeyValueType[] => {
+const attributesToArray = (attributes: { [key: string]: string }): any => {
   if (!attributes || Object.keys(attributes).length == 0) {
-    return [];
+    return [
+      {
+        key: "",
+        value: "",
+      },
+    ];
   }
   return Object.keys(attributes).map((key) => ({
     key: key,
-    value: attributes[key][0],
+    value: attributes[key],
   }));
-};
-
-export type RoleFormType = Omit<RoleRepresentation, "attributes"> & {
-  attributes: KeyValueType[];
 };
 
 export const RealmRoleTabs = () => {
   const { t } = useTranslation("roles");
-  const form = useForm<RoleFormType>({ mode: "onChange" });
+  const form = useForm<RoleRepresentation>({ mode: "onChange" });
   const history = useHistory();
   // const [name, setName] = useState("");
 
   const adminClient = useAdminClient();
-  const [role, setRole] = useState<RoleFormType>();
-
-  const { id, clientId } = useParams<{ id: string; clientId: string }>();
+  const { realm } = useRealm();
+  const [role, setRole] = useState<RoleRepresentation>();
   const { url } = useRouteMatch();
 
   const { realm } = useRealm();
@@ -74,13 +72,6 @@ export const RealmRoleTabs = () => {
   const { addAlert } = useAlerts();
 
   const [open, setOpen] = useState(false);
-  const convert = (role: RoleRepresentation) => {
-    const { attributes, ...rest } = role;
-    return {
-      attributes: attributesToArray(attributes),
-      ...rest,
-    };
-  };
 
   useEffect(() => {
     const update = async () => {
@@ -95,33 +86,40 @@ export const RealmRoleTabs = () => {
         Object.entries(convertedRole).map((entry) => {
           form.setValue(entry[0], entry[1]);
         });
-        setRole(convertedRole);
+        setAdditionalRoles(allAdditionalRoles);
+
+        setName(fetchedRole.name!);
+        setupForm(fetchedRole);
+        setRole(fetchedRole);
+      } else {
+        setName(t("createRole"));
       }
     };
     setTimeout(update, 100);
   }, [key]);
 
-  const { fields, append, remove } = useFieldArray({
-    control: form.control,
-    name: "attributes",
-  });
+  const setupForm = (role: RoleRepresentation) => {
+    Object.entries(role).map((entry) => {
+      if (entry[0] === "attributes") {
+        form.setValue(entry[0], attributesToArray(entry[1]));
+      } else {
+        form.setValue(entry[0], entry[1]);
+      }
+    });
+  };
 
-  useEffect(() => append({ key: "", value: "" }), [append, role]);
+  // reset form to default values
+  const reset = () => {
+    setupForm(role!);
+  };
 
-  const save = async (role: RoleFormType) => {
+  const save = async (updatedRole: RoleRepresentation) => {
     try {
-      const { attributes, ...rest } = role;
-      const roleRepresentation: RoleRepresentation = rest;
       if (id) {
-        if (attributes) {
-          roleRepresentation.attributes = arrayToAttributes(attributes);
-        }
-        if (!clientId) {
-          await adminClient.roles.updateById({ id }, roleRepresentation);
-        } else {
-          await adminClient.clients.updateRole(
-            { id: clientId, roleName: role.name! },
-            roleRepresentation
+        if (updatedRole.attributes) {
+          // react-hook-form will use `KeyValueType[]` here we convert it back into an indexed property of string[]
+          updatedRole.attributes = arrayToAttributes(
+            (updatedRole.attributes as unknown) as KeyValueType[]
           );
         }
 
@@ -189,9 +187,7 @@ export const RealmRoleTabs = () => {
 
   const [toggleDeleteDialog, DeleteConfirm] = useConfirmDialog({
     titleKey: "roles:roleDeleteConfirm",
-    messageKey: t("roles:roleDeleteConfirmDialog", {
-      name: role?.name || t("createRole"),
-    }),
+    messageKey: t("roles:roleDeleteConfirmDialog", { name }),
     continueButtonLabel: "common:delete",
     continueButtonVariant: ButtonVariant.danger,
     onConfirm: async () => {
@@ -205,8 +201,7 @@ export const RealmRoleTabs = () => {
           });
         }
         addAlert(t("roleDeletedSuccess"), AlertVariant.success);
-        const loc = url.replace(/\/attributes/g, "");
-        history.replace(`${loc.substr(0, loc.lastIndexOf("/"))}`);
+        history.replace(`/${realm}/roles`);
       } catch (error) {
         addAlert(`${t("roleDeleteError")} ${error}`, AlertVariant.danger);
       }
@@ -280,7 +275,7 @@ export const RealmRoleTabs = () => {
             : id
             ? [
                 <DropdownItem
-                  key="delete-role"
+                  key="action"
                   component="button"
                   onClick={() => toggleDeleteDialog()}
                 >
@@ -306,7 +301,7 @@ export const RealmRoleTabs = () => {
               title={<TabTitleText>{t("details")}</TabTitleText>}
             >
               <RealmRoleForm
-                reset={() => form.reset(role)}
+                reset={reset}
                 form={form}
                 save={save}
                 editMode={true}
@@ -329,18 +324,13 @@ export const RealmRoleTabs = () => {
               eventKey="attributes"
               title={<TabTitleText>{t("attributes")}</TabTitleText>}
             >
-              <RoleAttributes
-                form={form}
-                save={save}
-                array={{ fields, append, remove }}
-                reset={() => form.reset(role)}
-              />
+              <RoleAttributes form={form} save={save} reset={reset} />
             </Tab>
           </KeycloakTabs>
         )}
         {!id && (
           <RealmRoleForm
-            reset={() => form.reset()}
+            reset={reset}
             form={form}
             save={save}
             editMode={false}
