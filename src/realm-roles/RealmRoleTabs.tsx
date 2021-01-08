@@ -6,6 +6,7 @@ import {
   DropdownItem,
   PageSection,
   Tab,
+  Tabs,
   TabTitleText,
 } from "@patternfly/react-core";
 import { useTranslation } from "react-i18next";
@@ -19,8 +20,6 @@ import { ViewHeader } from "../components/view-header/ViewHeader";
 import { useConfirmDialog } from "../components/confirm-dialog/ConfirmDialog";
 import { RealmRoleForm } from "./RealmRoleForm";
 import { useRealm } from "../context/realm-context/RealmContext";
-import { KeycloakTabs } from "../components/keycloak-tabs/KeycloakTabs";
-
 
 const arrayToAttributes = (attributeArray: KeyValueType[]) => {
   const initValue: { [index: string]: string[] } = {};
@@ -52,7 +51,8 @@ export const RealmRoleTabs = () => {
   const [name, setName] = useState("");
   const adminClient = useAdminClient();
   const { realm } = useRealm();
- 
+  const [activeTab, setActiveTab] = useState(0);
+  // const [defaultValues, setDefaultValues] = useState({key: "", value: ''});
 
   const { id } = useParams<{ id: string }>();
 
@@ -64,6 +64,13 @@ export const RealmRoleTabs = () => {
         const fetchedRole = await adminClient.roles.findOneById({ id });
         setName(fetchedRole.name!);
         setupForm(fetchedRole);
+        console.log("form loaded", form.getValues())
+        const atts = form.getValues().attributes
+        console.log("aaaa", atts)
+        const x = atts;
+        console.log("x", x)
+        // setDefaultValues(x)
+        // setDefaultValues(atts);
       } else {
         setName(t("createRole"));
       }
@@ -79,6 +86,8 @@ export const RealmRoleTabs = () => {
       }
     });
   };
+
+  // const [defaultValues, setDefaultValues] = 
 
   const save = async (role: RoleRepresentation) => {
     try {
@@ -96,7 +105,6 @@ export const RealmRoleTabs = () => {
           name: role.name!,
         });
         history.push(`/${realm}/roles/${createdRole.id}`);
-
       }
       addAlert(t(id ? "roleSaveSuccess" : "roleCreated"), AlertVariant.success);
     } catch (error) {
@@ -104,7 +112,6 @@ export const RealmRoleTabs = () => {
         t((id ? "roleSave" : "roleCreate") + "Error", {
           error: error.response.data?.errorMessage || error,
         }),
-
         AlertVariant.danger
       );
     }
@@ -120,7 +127,6 @@ export const RealmRoleTabs = () => {
         await adminClient.roles.delById({ id });
         addAlert(t("roleDeletedSuccess"), AlertVariant.success);
         history.replace(`/${realm}/roles`);
-
       } catch (error) {
         addAlert(`${t("roleDeleteError")} ${error}`, AlertVariant.danger);
       }
@@ -149,20 +155,24 @@ export const RealmRoleTabs = () => {
       />
       <PageSection variant="light">
         {id && (
-          <KeycloakTabs isBox>
+          <Tabs
+            activeKey={activeTab}
+            onSelect={(_, key) => setActiveTab(key as number)}
+            isBox
+          >
             <Tab
-              eventKey="details"
+              eventKey={0}
               title={<TabTitleText>{t("details")}</TabTitleText>}
             >
               <RealmRoleForm form={form} save={save} editMode={true} />
             </Tab>
             <Tab
-              eventKey="attributes"
+              eventKey={1}
               title={<TabTitleText>{t("attributes")}</TabTitleText>}
             >
               <RoleAttributes form={form} save={save} />
             </Tab>
-          </KeycloakTabs>
+          </Tabs>
         )}
         {!id && <RealmRoleForm form={form} save={save} editMode={false} />}
       </PageSection>

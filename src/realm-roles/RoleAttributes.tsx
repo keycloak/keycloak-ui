@@ -21,9 +21,9 @@ import {
 import { MinusCircleIcon, PlusCircleIcon } from "@patternfly/react-icons";
 import { useTranslation } from "react-i18next";
 import { FormAccess } from "../components/form-access/FormAccess";
-import { useParams } from "react-router-dom";
-import { useAdminClient } from "../context/auth/AdminClient";
-import RoleRepresentation from "keycloak-admin/lib/defs/roleRepresentation";
+// import { useParams } from "react-router-dom";
+// import { useAdminClient } from "../context/auth/AdminClient";
+// import RoleRepresentation from "keycloak-admin/lib/defs/roleRepresentation";
 
 
 
@@ -40,10 +40,10 @@ export const RoleAttributes = ({ form, save }: RoleAttributesProps) => {
   // const { url } = useRouteMatch();
   // const [dirtyFields, setDirtyFields] = useState([] as any);
 
-  const { id } = useParams<{ id: string }>();
+  // const { id } = useParams<{ id: string }>();
 
-  const [name, setName] = useState("");
-  const adminClient = useAdminClient();
+  // const [name, setName] = useState("");
+  // const adminClient = useAdminClient();
 
   const [key, setKey] = useState("");
   const reload = () => {
