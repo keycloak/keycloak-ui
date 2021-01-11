@@ -42,6 +42,7 @@ export const RealmRoleForm = ({ form, save, editMode }: RealmRoleFormProps) => {
           name="name"
           isReadOnly={editMode}
         />
+
       </FormGroup>
       <FormGroup
         label={t("description")}

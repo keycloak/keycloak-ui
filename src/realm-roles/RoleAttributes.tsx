@@ -21,8 +21,8 @@ import {
 import { MinusCircleIcon, PlusCircleIcon } from "@patternfly/react-icons";
 import { useTranslation } from "react-i18next";
 import { FormAccess } from "../components/form-access/FormAccess";
-// import { useParams } from "react-router-dom";
-// import { useAdminClient } from "../context/auth/AdminClient";
+import { useParams } from "react-router-dom";
+import { useAdminClient } from "../context/auth/AdminClient";
 // import RoleRepresentation from "keycloak-admin/lib/defs/roleRepresentation";
 
 
@@ -32,6 +32,7 @@ export type KeyValueType = { key: string; value: string };
 type RoleAttributesProps = {
   form: UseFormMethods;
   save: any; // SubmitHandler<RoleRepresentation>;
+  // defaultValues: []
 };
 
 export const RoleAttributes = ({ form, save }: RoleAttributesProps) => {
@@ -40,27 +41,16 @@ export const RoleAttributes = ({ form, save }: RoleAttributesProps) => {
   // const { url } = useRouteMatch();
   // const [dirtyFields, setDirtyFields] = useState([] as any);
 
-  // const { id } = useParams<{ id: string }>();
+  const { id } = useParams<{ id: string }>();
 
-  // const [name, setName] = useState("");
-  // const adminClient = useAdminClient();
-
-  const [key, setKey] = useState("");
-  const reload = () => {
-    setKey(`${new Date().getTime()}`)
-    console.log(key)
-  };
-
-
-  React.useEffect(() => {
-    console.log("reloaded"); 
-  }, [key]);
+  const [name, setName] = useState("");
+  const adminClient = useAdminClient();
 
   const { fields, append, remove } = useFieldArray({
     control: form.control,
     name: "attributes",
   }); 
-  const formSubmitted = form.formState?.isSubmitted;
+  // const formSubmitted = form.formState?.isSubmitted;
 
   // const attributesRed = React.useRef(defaultAttributeValues);
 
@@ -70,6 +60,19 @@ export const RoleAttributes = ({ form, save }: RoleAttributesProps) => {
     
     append({ key: "", value: "" });
   };
+
+  React.useEffect(() => {
+    (async () => {
+      if (id) {
+        const fetchedRole = await adminClient.roles.findOneById({ id });
+        setName(fetchedRole.name!);
+        // setupForm(fetchedRole);
+        console.log("form loaded", )
+      } else {
+        setName(t("createRole"));
+      }
+    })();
+  }, []);
 
   // On Init, append a row
   React.useEffect(() => {
@@ -229,7 +232,7 @@ export const RoleAttributes = ({ form, save }: RoleAttributesProps) => {
           >
             {t("common:save")}
           </Button>
-          <Button variant="link" onClick={() => reload()}>{t("common:reload")}</Button>
+          <Button variant="link">{t("common:reload")}</Button>
         </ActionGroup>
       </FormAccess>
     </>
