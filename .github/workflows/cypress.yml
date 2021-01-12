@@ -36,4 +36,18 @@ jobs:
       run: cd tests && npx cypress run --headless --browser chrome --spec cypress/integration/00_set_new_admin_console.spec.js && cd ..
 
     - name: Cypress run
-      run: cd tests && npx cypress run --headless --browser chrome --config ignoreTestFiles=00_set_new_admin_console.spec.js
+      run: cd tests && npx cypress run --headless --browser chrome --config ignoreTestFiles=00_set_new_admin_console.spec.js && cd ..
+
+    - name: Add Cypress videos artifacts
+    - uses: actions/upload-artifact@v1
+      if: always()
+      with:
+        name: cypress-videos
+        path: tests/assets/videos
+
+    - name: Add Cypress screenshots artifacts
+    - uses: actions/upload-artifact@v1
+      if: always()
+      with:
+        name: cypress-screenshots
+        path: tests/assets/screenshots
