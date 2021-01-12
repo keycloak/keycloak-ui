@@ -27,9 +27,15 @@ jobs:
     - run: yarn build
 
     - name: Run Keycloak
-      run: (./start.js & sleep 50) && (npx http-server ./build & sleep 90) #&& yarn start:cypress-tests
+      run: ./start.js & sleep 40
+
+    - name: Run Admin Console
+      run:  yarn start & sleep 30 #npx http-server ./build
+
+    - name: Create admin user and add Admin Console client
+      run: cd tests && npx cypress run --spec cypress/integration/00_set_new_admin_console.spec.js && cd ..
 
     - name: Cypress run
-      uses: cypress-io/github-action@v1
-      with:
-        project: ./tests
+      uses: cd tests && npx cypress run --config ignoreTestFiles=00_set_new_admin_console.spec.js #cypress-io/github-action@v1
+      #with:
+        #project: ./tests
