@@ -26,7 +26,7 @@ jobs:
     - run: yarn install
 
     - name: Run Keycloak
-      run: ./start.js & sleep 40 && yarn start & sleep 60 && yarn start:cypress-tests
+      run: (./start.js & sleep 40) && (yarn start & sleep 90) && yarn start:cypress-tests
 
     #- name: Cypress run
     #  uses: cypress-io/github-action@v1
