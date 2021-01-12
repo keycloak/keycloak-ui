@@ -26,7 +26,7 @@ jobs:
     - run: yarn install
 
     - name: Run Keycloak
-      run: bash ./start.js
+      run: ./start.js
     - run: yarn start
 
     - name: Cypress run
