@@ -30,7 +30,7 @@ jobs:
       run: ./start.js & sleep 40
 
     - name: Run Admin Console
-      run:  yarn start & sleep 30 #npx http-server ./build
+      run:  npx http-server ./build & sleep 30 # yarn start
 
     - name: Create admin user and add Admin Console client
       run: cd tests && npx cypress run --spec cypress/integration/00_set_new_admin_console.spec.js && cd ..
