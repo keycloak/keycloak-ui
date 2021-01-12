@@ -34,7 +34,7 @@ describe('Realm roles test', function () {
             .save();
               
         // The error should inform about duplicated name/id (THIS MESSAGE DOES NOT HAVE QUOTES AS THE OTHERS)
-        headerPage.checkNotificationMessage('Could not create role: Error: Request failed with status code 409');
+        headerPage.checkNotificationMessage('Could not create role: Role with name admin already exists');
       });
 
       it('should create realm role', function () {
