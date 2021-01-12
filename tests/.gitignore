@@ -1,0 +1,71 @@
+# OS stuff #
+############
+.DS_Store
+
+# Cypress #
+###########
+assets
+cypress.env.json
+
+# nodejs #
+##########
+node_modules
+
+# VS Code #
+###########
+*.code-workspace
+
+# Intellij IDEA
+###############
+.idea
+*.iml
+
+# Eclipse #
+###########
+.project
+.settings
+.classpath
+.factorypath
+
+# NetBeans #
+############
+nbactions.xml
+nb-configuration.xml
+catalog.xml
+nbproject
+
+# Compiled source #
+###################
+*.com
+*.class
+*.dll
+*.exe
+*.o
+*.so
+
+# Packages #
+############
+*.7z
+*.dmg
+*.gz
+*.iso
+*.jar
+*.rar
+*.tar
+*.zip
+
+# Logs #
+########
+*.log
+
+# Maven #
+#########
+target
+
+# Maven shade #
+###############
+*dependency-reduced-pom.xml
+
+# testsuite #
+#############
+*offline-token.txt
