@@ -36,6 +36,6 @@ jobs:
       run: cd tests && npx cypress run --spec cypress/integration/00_set_new_admin_console.spec.js && cd ..
 
     - name: Cypress run
-      uses: cd tests && npx cypress run --config ignoreTestFiles=00_set_new_admin_console.spec.js #cypress-io/github-action@v1
+      run: cd tests && npx cypress run --config ignoreTestFiles=00_set_new_admin_console.spec.js #cypress-io/github-action@v1
       #with:
         #project: ./tests
