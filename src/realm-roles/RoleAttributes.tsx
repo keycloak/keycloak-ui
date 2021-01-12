@@ -23,7 +23,7 @@ import { useTranslation } from "react-i18next";
 import { FormAccess } from "../components/form-access/FormAccess";
 import { useParams } from "react-router-dom";
 import { useAdminClient } from "../context/auth/AdminClient";
-// import RoleRepresentation from "keycloak-admin/lib/defs/roleRepresentation";
+import RoleRepresentation from "keycloak-admin/lib/defs/roleRepresentation";
 
 
 
@@ -32,7 +32,7 @@ export type KeyValueType = { key: string; value: string };
 type RoleAttributesProps = {
   form: UseFormMethods;
   save: any; // SubmitHandler<RoleRepresentation>;
-  // defaultValues: []
+  defaultValues: []
 };
 
 export const RoleAttributes = ({ form, save }: RoleAttributesProps) => {
@@ -50,7 +50,7 @@ export const RoleAttributes = ({ form, save }: RoleAttributesProps) => {
     control: form.control,
     name: "attributes",
   }); 
-  // const formSubmitted = form.formState?.isSubmitted;
+  const formSubmitted = form.formState?.isSubmitted;
 
   // const attributesRed = React.useRef(defaultAttributeValues);
 
@@ -66,7 +66,7 @@ export const RoleAttributes = ({ form, save }: RoleAttributesProps) => {
       if (id) {
         const fetchedRole = await adminClient.roles.findOneById({ id });
         setName(fetchedRole.name!);
-        // setupForm(fetchedRole);
+        setupForm(fetchedRole);
         console.log("form loaded", )
       } else {
         setName(t("createRole"));
