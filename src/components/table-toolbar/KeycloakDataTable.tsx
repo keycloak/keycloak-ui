@@ -89,6 +89,7 @@ export type DataListProps<T> = {
   columns: Field<T>[];
   actions?: Action<T>[];
   actionResolver?: IActionsResolver;
+  filterToolbarDropdown?: ReactNode;
   toolbarItem?: ReactNode;
   emptyState?: ReactNode;
 };
@@ -126,6 +127,7 @@ export function KeycloakDataTable<T>({
   columns,
   actions,
   actionResolver,
+  filterToolbarDropdown,
   toolbarItem,
   emptyState,
 }: DataListProps<T>) {
@@ -151,6 +153,8 @@ export function KeycloakDataTable<T>({
       async () => {
         setLoading(true);
         const data = await loader(first, max, search);
+        // console.log(`============ DATA: ${data.length} ===================`);
+        // console.dir(data);
 
         const result = data!.map((value) => {
           return {
@@ -262,6 +266,7 @@ export function KeycloakDataTable<T>({
           inputGroupOnChange={searchOnChange}
           inputGroupOnClick={refresh}
           inputGroupPlaceholder={t(searchPlaceholderKey)}
+          filterToolbarDropdown={filterToolbarDropdown}
           toolbarItem={toolbarItem}
         >
           {!loading && (emptyState === undefined || rows.length !== 0) && (
@@ -286,6 +291,7 @@ export function KeycloakDataTable<T>({
           inputGroupOnClick={() => {}}
           inputGroupPlaceholder={t(searchPlaceholderKey)}
           toolbarItem={toolbarItem}
+          filterToolbarDropdown={filterToolbarDropdown}
         >
           {(emptyState === undefined || rows.length !== 0) && (
             <DataTable
