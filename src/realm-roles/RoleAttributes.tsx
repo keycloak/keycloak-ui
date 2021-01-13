@@ -43,10 +43,11 @@ export const RoleAttributes = ({ form, save }: RoleAttributesProps) => {
         role="manage-realm"
         onSubmit={form.handleSubmit(async (role) => {
           await save(role);
-          onAdd();
+          {
+            form.formState.dirtyFields.attributes ? onAdd() : "";
+          }
         })}
       >
-        {" "}
         <TableComposable
           className="kc-role-attributes__table"
           aria-label="Role attribute keys and values"
