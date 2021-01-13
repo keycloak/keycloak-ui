@@ -9,6 +9,7 @@ import {
   DropdownToggle,
   ModalVariant,
   PageSection,
+  Pagination,
   Tab,
   Tabs,
   TabTitleText,
@@ -168,6 +169,7 @@ export const RealmRoleTabs = () => {
         canSelectAll={true}
         onSelect={(rows) => setSelectedRows([...rows])}
         toolbarItem={
+          <>
           <Dropdown
             isPlain
             position="left"
@@ -184,6 +186,15 @@ export const RealmRoleTabs = () => {
             placeholder="Filter by client"
             dropdownItems={dropdownItems}
           />
+          <Pagination
+          itemCount={15}
+          perPage={10}
+          page={1}
+          // onSetPage={1}
+          widgetId="pagination-options-menu-top"
+          // onPerPageSelect={2}
+        />
+        </>
           
         }
         searchPlaceholderKey="roles:searchFor"
