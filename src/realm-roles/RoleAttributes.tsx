@@ -39,7 +39,14 @@ export const RoleAttributes = ({ form, save }: RoleAttributesProps) => {
 
   return (
     <>
-      <FormAccess role="manage-realm" onSubmit={form.handleSubmit(save)}>
+      <FormAccess
+        role="manage-realm"
+        onSubmit={form.handleSubmit(async (role) => {
+          await save(role);
+          onAdd();
+        })}
+      >
+        {" "}
         <TableComposable
           className="kc-role-attributes__table"
           aria-label="Role attribute keys and values"
@@ -79,7 +86,7 @@ export const RoleAttributes = ({ form, save }: RoleAttributesProps) => {
                   <TextInput
                     name={`attributes[${rowIndex}].value`}
                     ref={form.register({
-                      required: true,
+                      required: false,
                     })}
                     aria-label="value-input"
                     defaultValue={attribute.value}
