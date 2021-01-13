@@ -1,7 +1,9 @@
 import React from "react";
-import { useTranslation } from "react-i18next";
-import { ArrayField, UseFormMethods } from "react-hook-form";
 import { ActionGroup, Button, TextInput } from "@patternfly/react-core";
+import { useFieldArray, UseFormMethods } from "react-hook-form";
+import "./RealmRolesSection.css";
+import RoleRepresentation from "keycloak-admin/lib/defs/roleRepresentation";
+
 import {
   TableComposable,
   Tbody,
@@ -11,42 +13,34 @@ import {
   Tr,
 } from "@patternfly/react-table";
 import { MinusCircleIcon, PlusCircleIcon } from "@patternfly/react-icons";
-
+import { useTranslation } from "react-i18next";
 import { FormAccess } from "../components/form-access/FormAccess";
-import { RoleFormType } from "./RealmRoleTabs";
-
-import "./RealmRolesSection.css";
 
 export type KeyValueType = { key: string; value: string };
 
 type RoleAttributesProps = {
-  form: UseFormMethods<RoleFormType>;
-  save: (role: RoleFormType) => void;
+  form: UseFormMethods;
+  save: (role: RoleRepresentation) => void;
   reset: () => void;
-  array: {
-    fields: Partial<ArrayField<Record<string, any>, "id">>[];
-    append: (
-      value: Partial<Record<string, any>> | Partial<Record<string, any>>[],
-      shouldFocus?: boolean | undefined
-    ) => void;
-    remove: (index?: number | number[] | undefined) => void;
-  };
 };
 
-export const RoleAttributes = ({
-  form: { handleSubmit, register, formState, errors, watch },
-  save,
-  array: { fields, append, remove },
-  reset,
-}: RoleAttributesProps) => {
+export const RoleAttributes = ({ form, save, reset }: RoleAttributesProps) => {
   const { t } = useTranslation("roles");
 
+  const { fields, append, remove } = useFieldArray({
+    control: form.control,
+    name: "attributes",
+  });
+
   const columns = ["Key", "Value"];
-  const watchFirstKey = watch("attributes[0].key");
+
+  const onAdd = () => {
+    append({ key: "", value: "" });
+  };
 
   return (
     <>
-      <FormAccess role="manage-realm" onSubmit={handleSubmit(save)}>
+      <FormAccess role="manage-realm" onSubmit={form.handleSubmit(save)}>
         <TableComposable
           className="kc-role-attributes__table"
           aria-label="Role attribute keys and values"
@@ -73,14 +67,9 @@ export const RoleAttributes = ({
                 >
                   <TextInput
                     name={`attributes[${rowIndex}].key`}
-                    ref={register({ required: true })}
+                    ref={form.register({ required: true })}
                     aria-label="key-input"
                     defaultValue={attribute.key}
-                    validated={
-                      errors.attributes && errors.attributes[rowIndex]
-                        ? "error"
-                        : "default"
-                    }
                   />
                 </Td>
                 <Td
@@ -90,10 +79,9 @@ export const RoleAttributes = ({
                 >
                   <TextInput
                     name={`attributes[${rowIndex}].value`}
-                    ref={register()}
+                    ref={form.register({})}
                     aria-label="value-input"
                     defaultValue={attribute.value}
-                    validated={errors.description ? "error" : "default"}
                   />
                 </Td>
                 {rowIndex !== fields.length - 1 && fields.length - 1 !== 0 && (
@@ -115,25 +103,14 @@ export const RoleAttributes = ({
                 )}
                 {rowIndex === fields.length - 1 && (
                   <Td key="add-button" id="add-button" dataLabel={columns[2]}>
-                    {fields[rowIndex].key === "" && (
-                      <Button
-                        id={`minus-button-${rowIndex}`}
-                        aria-label={`remove ${attribute.key} with value ${attribute.value} `}
-                        variant="link"
-                        className="kc-role-attributes__minus-icon"
-                        onClick={() => remove(rowIndex)}
-                      >
-                        <MinusCircleIcon />
-                      </Button>
-                    )}
                     <Button
                       aria-label={t("roles:addAttributeText")}
                       id="plus-icon"
                       variant="link"
                       className="kc-role-attributes__plus-icon"
-                      onClick={() => append({ key: "", value: "" })}
+                      onClick={onAdd}
                       icon={<PlusCircleIcon />}
-                      isDisabled={!formState.isValid}
+                      isDisabled={!form.formState.isValid}
                     />
                   </Td>
                 )}
@@ -142,11 +119,15 @@ export const RoleAttributes = ({
           </Tbody>
         </TableComposable>
         <ActionGroup className="kc-role-attributes__action-group">
-          <Button variant="primary" type="submit" isDisabled={!watchFirstKey}>
+          <Button
+            variant="primary"
+            type="submit"
+            isDisabled={!form.formState.isValid}
+          >
             {t("common:save")}
           </Button>
-          <Button onClick={reset} variant="link">
-            {t("common:reload")}
+          <Button variant="link" onClick={reset}>
+            {t("common:reload")}{" "}
           </Button>
         </ActionGroup>
       </FormAccess>
