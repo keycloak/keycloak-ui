@@ -33,6 +33,7 @@ export const RoleAttributes = ({ form, save }: RoleAttributesProps) => {
 
   const columns = ["Key", "Value"];
 
+
   const onAdd = () => {
     append({ key: "", value: "" });
   };

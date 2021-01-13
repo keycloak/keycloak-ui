@@ -22,7 +22,7 @@
     "description": "Description",
     "details": "Details",
     "roleList": "Role list",
-    "searchFor": "Search for role",
+    "searchFor": "Search role by name",
     "generalSettings": "General Settings",
     "capabilityConfig": "Capability config",
     "roleImportError": "Could not import role",

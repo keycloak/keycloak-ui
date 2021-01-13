@@ -3,7 +3,11 @@ import { useHistory, useParams } from "react-router-dom";
 import {
   AlertVariant,
   ButtonVariant,
+  Dropdown,
+  DropdownGroup,
   DropdownItem,
+  DropdownToggle,
+  ModalVariant,
   PageSection,
   Tab,
   Tabs,
@@ -20,6 +24,8 @@ import { ViewHeader } from "../components/view-header/ViewHeader";
 import { useConfirmDialog } from "../components/confirm-dialog/ConfirmDialog";
 import { RealmRoleForm } from "./RealmRoleForm";
 import { useRealm } from "../context/realm-context/RealmContext";
+import { KeycloakDataTable } from "../components/table-toolbar/KeycloakDataTable";
+import { CaretDownIcon, FilterIcon } from "@patternfly/react-icons";
 
 const arrayToAttributes = (attributeArray: KeyValueType[]) => {
   const initValue: { [index: string]: string[] } = {};
@@ -52,10 +58,13 @@ export const RealmRoleTabs = () => {
   const adminClient = useAdminClient();
   const [activeTab, setActiveTab] = useState(0);
   const { realm } = useRealm();
+  const [selectedRows, setSelectedRows] = useState<RoleRepresentation[]>([]);
 
   const { id } = useParams<{ id: string }>();
 
   const { addAlert } = useAlerts();
+
+  const loader = async () => await adminClient.roles.find();
 
   useEffect(() => {
     (async () => {
@@ -123,9 +132,76 @@ export const RealmRoleTabs = () => {
     },
   });
 
+  console.log("selected rows", selectedRows);
+
+  const [isDropdownOpen, setDropdownOpen] = useState(false);
+  const dropdownItems = [
+    <DropdownGroup key="group 1">
+      <DropdownItem key="group 1 plaintext" component="div" isPlainText>Text</DropdownItem>
+      <DropdownItem key="group 1 plaintext2" component="div" isPlainText>More text</DropdownItem>
+    </DropdownGroup>,
+  ]; 
+
+  const onDropdownToggle = () => {
+    setDropdownOpen(!isDropdownOpen);
+  };
+
+  const [toggleModalDialog, AssociatedRolesModal] = useConfirmDialog({
+    titleKey: t("roles:associatedRolesModalTitle", { name }),
+    // messageKey: t("roles:roleDeleteConfirmDialog", { name }),
+    continueButtonLabel: "common:add",
+    continueButtonVariant: ButtonVariant.primary,
+    variant: ModalVariant.large,
+    onConfirm: async () => {
+      try {
+        // await adminClient.roles.delById({ id });
+        // addAlert(t("roleDeletedSuccess"), AlertVariant.success);
+        // history.replace(`/${realm}/roles`);
+      } catch (error) {
+        // addAlert(`${t("roleDeleteError")} ${error}`, AlertVariant.danger);
+      }
+    },
+    children: (
+      <KeycloakDataTable
+        loader={loader}
+        ariaLabelKey="client-scopes:clientScopeList"
+        canSelectAll={true}
+        onSelect={(rows) => setSelectedRows([...rows])}
+        toolbarItem={
+          <Dropdown
+            isPlain
+            position="left"
+            toggle={
+              <DropdownToggle
+                id="toggle-id-9"
+                onToggle={onDropdownToggle}
+                toggleIndicator={CaretDownIcon}
+                icon={<FilterIcon />}
+              >
+                Filter by client
+              </DropdownToggle>
+            }            isOpen={isDropdownOpen}
+            placeholder="Filter by client"
+            dropdownItems={dropdownItems}
+          />
+          
+        }
+        searchPlaceholderKey="roles:searchFor"
+        columns={[
+          {
+            name: t("roles:name"),
+            // cellRenderer: ClientScopeDetailLink,
+          },
+          { name: t("common:description") },
+        ]}
+      />
+    ),
+  });
+
   return (
     <>
       <DeleteConfirm />
+      <AssociatedRolesModal />
       <ViewHeader
         titleKey={name}
         subKey={id ? "" : "roles:roleCreateExplain"}
@@ -138,6 +214,13 @@ export const RealmRoleTabs = () => {
                   onClick={() => toggleDeleteDialog()}
                 >
                   {t("deleteRole")}
+                </DropdownItem>,
+                <DropdownItem
+                  key="action"
+                  component="button"
+                  onClick={() => toggleModalDialog()}
+                >
+                  {t("addAssociatedRolesText")}
                 </DropdownItem>,
               ]
             : undefined
