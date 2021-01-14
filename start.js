@@ -39,7 +39,7 @@ const run = () => {
 if (!fs.existsSync(fileName)) {
   const file = fs.createWriteStream(fileName);
   http.get(
-    `https://downloads.jboss.org/keycloak/${version}/keycloak-${version}.tar.gz`,
+    `https://github.com/keycloak/keycloak/releases/download/${version}/keycloak-${version}.tar.gz`,
     (response) => {
       response.pipe(file);
       response.on("end", () => {
