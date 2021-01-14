@@ -29,6 +29,7 @@ export const Header = () => {
         {adminClient.keycloak && (
           <DropdownItem
             key="manage account"
+            id="manage-account"
             onClick={() => adminClient.keycloak.accountManagement()}
           >
             {t("manageAccount")}
@@ -43,6 +44,7 @@ export const Header = () => {
       <>
         {adminClient.keycloak && (
           <DropdownItem
+            id="sign-out"
             key="sign out"
             onClick={() => adminClient.keycloak.logout({ redirectUri: "" })}
           >
@@ -123,6 +125,7 @@ export const Header = () => {
 
     return (
       <Dropdown
+        id="user-dropdown-kebab"
         isPlain
         position="right"
         toggle={<KebabToggle onToggle={onDropdownToggle} />}
@@ -144,6 +147,7 @@ export const Header = () => {
       <Dropdown
         isPlain
         position="right"
+        id="user-dropdown"
         isOpen={isDropdownOpen}
         toggle={
           <DropdownToggle onToggle={onDropdownToggle}>
