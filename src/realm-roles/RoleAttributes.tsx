@@ -37,15 +37,20 @@ export const RoleAttributes = ({ form, save }: RoleAttributesProps) => {
     append({ key: "", value: "" });
   };
 
+  React.useEffect(() => {
+    append({ key: "useEffect", value: "works" });
+  }, []);
+
+  console.dir(form.formState.dirtyFields.attributes);
+
   return (
     <>
       <FormAccess
         role="manage-realm"
         onSubmit={form.handleSubmit(async (role) => {
           await save(role);
-          {
-            form.formState.dirtyFields.attributes ? onAdd() : "";
-          }
+
+          onAdd();
         })}
       >
         <TableComposable
