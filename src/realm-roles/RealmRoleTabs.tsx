@@ -61,11 +61,21 @@ export const RealmRoleTabs = () => {
   const { realm } = useRealm();
   const [selectedRows, setSelectedRows] = useState<RoleRepresentation[]>([]);
 
+  // const mapperList = clientScope.protocolMappers!;
+  const rolesList = adminClient.roles.find();
+
+  // const [filter, setFilter] = useState<ProtocolMapperRepresentation[]>([]);
+
   const { id } = useParams<{ id: string }>();
 
   const { addAlert } = useAlerts();
 
-  const loader = async () => await adminClient.roles.find();
+  // const loader = async () => await adminClient.roles.find();
+
+  const toggleAddMapperDialog = async () => {
+    setSelectedRows(await rolesList);
+    setAddMapperDialogOpen(!addMapperDialogOpen);
+  };
 
   useEffect(() => {
     (async () => {
@@ -135,84 +145,23 @@ export const RealmRoleTabs = () => {
 
   console.log("selected rows", selectedRows);
 
-  const [isDropdownOpen, setDropdownOpen] = useState(false);
-  const dropdownItems = [
-    <DropdownGroup key="group 1">
-      <DropdownItem key="group 1 plaintext" component="div" isPlainText>Text</DropdownItem>
-      <DropdownItem key="group 1 plaintext2" component="div" isPlainText>More text</DropdownItem>
-    </DropdownGroup>,
-  ]; 
+  // const [isDropdownOpen, setDropdownOpen] = useState(false);
 
-  const onDropdownToggle = () => {
-    setDropdownOpen(!isDropdownOpen);
-  };
+  // const dropdownItems = [
+  //   <DropdownGroup key="group 1">
+  //     <DropdownItem key="group 1 plaintext" component="div" isPlainText>Text</DropdownItem>
+  //     <DropdownItem key="group 1 plaintext2" component="div" isPlainText>More text</DropdownItem>
+  //   </DropdownGroup>,
+  // ];
 
-  const [toggleModalDialog, AssociatedRolesModal] = useConfirmDialog({
-    titleKey: t("roles:associatedRolesModalTitle", { name }),
-    // messageKey: t("roles:roleDeleteConfirmDialog", { name }),
-    continueButtonLabel: "common:add",
-    continueButtonVariant: ButtonVariant.primary,
-    variant: ModalVariant.large,
-    onConfirm: async () => {
-      try {
-        // await adminClient.roles.delById({ id });
-        // addAlert(t("roleDeletedSuccess"), AlertVariant.success);
-        // history.replace(`/${realm}/roles`);
-      } catch (error) {
-        // addAlert(`${t("roleDeleteError")} ${error}`, AlertVariant.danger);
-      }
-    },
-    children: (
-      <KeycloakDataTable
-        loader={loader}
-        ariaLabelKey="client-scopes:clientScopeList"
-        canSelectAll={true}
-        onSelect={(rows) => setSelectedRows([...rows])}
-        toolbarItem={
-          <>
-          <Dropdown
-            isPlain
-            position="left"
-            toggle={
-              <DropdownToggle
-                id="toggle-id-9"
-                onToggle={onDropdownToggle}
-                toggleIndicator={CaretDownIcon}
-                icon={<FilterIcon />}
-              >
-                Filter by client
-              </DropdownToggle>
-            }            isOpen={isDropdownOpen}
-            placeholder="Filter by client"
-            dropdownItems={dropdownItems}
-          />
-          <Pagination
-          itemCount={15}
-          perPage={10}
-          page={1}
-          // onSetPage={1}
-          widgetId="pagination-options-menu-top"
-          // onPerPageSelect={2}
-        />
-        </>
-          
-        }
-        searchPlaceholderKey="roles:searchFor"
-        columns={[
-          {
-            name: t("roles:name"),
-            // cellRenderer: ClientScopeDetailLink,
-          },
-          { name: t("common:description") },
-        ]}
-      />
-    ),
-  });
+  // const onDropdownToggle = () => {
+  //   setDropdownOpen(!isDropdownOpen);
+  // };
 
   return (
     <>
       <DeleteConfirm />
-      <AssociatedRolesModal />
+      {/* <AssociatedRolesModal /> */}
       <ViewHeader
         titleKey={name}
         subKey={id ? "" : "roles:roleCreateExplain"}
@@ -229,7 +178,7 @@ export const RealmRoleTabs = () => {
                 <DropdownItem
                   key="action"
                   component="button"
-                  onClick={() => toggleModalDialog()}
+                  onClick={() => toggleAddMapperDialog(true)}
                 >
                   {t("addAssociatedRolesText")}
                 </DropdownItem>,
