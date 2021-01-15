@@ -91,9 +91,7 @@ export const RoleAttributes = ({ form, save }: RoleAttributesProps) => {
                 >
                   <TextInput
                     name={`attributes[${rowIndex}].value`}
-ref={form.register()}
-                      required: false,
-                    })}
+                    ref={form.register()}
                     aria-label="value-input"
                     defaultValue={attribute.value}
                   />
