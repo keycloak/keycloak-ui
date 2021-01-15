@@ -11,7 +11,7 @@ const args = process.argv.slice(2);
 const version = args[0] || "12.0.1";
 
 const folder = "server";
-const fileName = path.join(folder, "keycloak.tar.gz");
+const fileName = path.join(folder, `keycloak-${version}.tar.gz`);
 const serverPath = path.join(folder, `keycloak-${version}`);
 const extension = process.platform === "win32" ? ".bat" : ".sh";
 
