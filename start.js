@@ -36,17 +36,25 @@ const run = () => {
   });
 };
 
-if (!fs.existsSync(fileName)) {
-  const file = fs.createWriteStream(fileName);
-  http.get(
-    `https://github.com/keycloak/keycloak/releases/download/${version}/keycloak-${version}.tar.gz`,
-    (response) => {
+const request = (url, file) => {
+  http.get(url, (response) => {
+    if (response.statusCode == 302) {
+      request(response.headers.location, file);
+    } else {
       response.pipe(file);
       response.on("end", () => {
         console.log("Downloaded keycloak");
         decompressKeycloak().then(() => run());
       });
     }
+  });
+};
+
+if (!fs.existsSync(fileName)) {
+  const file = fs.createWriteStream(fileName);
+  request(
+    `https://github.com/keycloak/keycloak/releases/download/${version}/keycloak-${version}.tar.gz`,
+    file
   );
 } else if (!fs.existsSync(serverPath)) {
   decompressKeycloak().then(() => run());
