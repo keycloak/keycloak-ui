@@ -2,11 +2,14 @@ import React, { useEffect, useState } from "react";
 import { useHistory, useParams } from "react-router-dom";
 import {
   AlertVariant,
+  Button,
   ButtonVariant,
+  DataList,
   Dropdown,
   DropdownGroup,
   DropdownItem,
   DropdownToggle,
+  Modal,
   ModalVariant,
   PageSection,
   Pagination,
@@ -60,22 +63,22 @@ export const RealmRoleTabs = () => {
   const [activeTab, setActiveTab] = useState(0);
   const { realm } = useRealm();
   const [selectedRows, setSelectedRows] = useState<RoleRepresentation[]>([]);
-
-  // const mapperList = clientScope.protocolMappers!;
-  const rolesList = adminClient.roles.find();
-
-  // const [filter, setFilter] = useState<ProtocolMapperRepresentation[]>([]);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const { id } = useParams<{ id: string }>();
 
   const { addAlert } = useAlerts();
 
-  // const loader = async () => await adminClient.roles.find();
-
-  const toggleAddMapperDialog = async () => {
-    setSelectedRows(await rolesList);
-    setAddMapperDialogOpen(!addMapperDialogOpen);
+  const loader = async () => {
+    return await adminClient.roles.find().then((res) => {console.log(res); return res});
   };
+
+  console.log("load", loader());
+
+  // const toggleAddMapperDialog = async () => {
+  //   setSelectedRows(await rolesList);
+  //   setAddMapperDialogOpen(!addMapperDialogOpen);
+  // };
 
   useEffect(() => {
     (async () => {
@@ -158,10 +161,35 @@ export const RealmRoleTabs = () => {
   //   setDropdownOpen(!isDropdownOpen);
   // };
 
+  const AssociatedRolesModal = () => (
+    <Modal
+          title="Simple modal header"
+          isOpen={isModalOpen}
+          onClose={() => setIsModalOpen(false)}
+          actions={[
+            <Button key="confirm" variant="primary" onClick={() => setIsModalOpen(false)}>
+              Confirm
+            </Button>,
+            <Button key="cancel" variant="link" onClick={() => setIsModalOpen(false)}>
+              Cancel
+            </Button>
+          ]}
+        >
+      <DataList
+              canSelectAll={canSelectAll}
+              onSelect={onSelect ? _onSelect : undefined}
+              actions={convertAction()}
+              rows={rows}
+              columns={columns}
+              ariaLabelKey={ariaLabelKey}
+            />
+        </Modal>
+  )
+
   return (
     <>
       <DeleteConfirm />
-      {/* <AssociatedRolesModal /> */}
+      <AssociatedRolesModal />
       <ViewHeader
         titleKey={name}
         subKey={id ? "" : "roles:roleCreateExplain"}
@@ -178,7 +206,7 @@ export const RealmRoleTabs = () => {
                 <DropdownItem
                   key="action"
                   component="button"
-                  onClick={() => toggleAddMapperDialog(true)}
+                  onClick={() => setIsModalOpen(true)}
                 >
                   {t("addAssociatedRolesText")}
                 </DropdownItem>,
