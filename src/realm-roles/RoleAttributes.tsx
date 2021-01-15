@@ -91,7 +91,7 @@ export const RoleAttributes = ({ form, save }: RoleAttributesProps) => {
                 >
                   <TextInput
                     name={`attributes[${rowIndex}].value`}
-                    ref={form.register({
+ref={form.register()}
                       required: false,
                     })}
                     aria-label="value-input"
