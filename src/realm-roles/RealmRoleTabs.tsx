@@ -20,6 +20,7 @@ import { ViewHeader } from "../components/view-header/ViewHeader";
 import { useConfirmDialog } from "../components/confirm-dialog/ConfirmDialog";
 import { RealmRoleForm } from "./RealmRoleForm";
 import { useRealm } from "../context/realm-context/RealmContext";
+import { KeycloakTabs } from "../components/keycloak-tabs/KeycloakTabs";
 
 const arrayToAttributes = (attributeArray: KeyValueType[]) => {
   const initValue: { [index: string]: string[] } = {};
@@ -155,24 +156,24 @@ export const RealmRoleTabs = () => {
       />
       <PageSection variant="light">
         {id && (
-          <Tabs
-            activeKey={activeTab}
-            onSelect={(_, key) => setActiveTab(key as number)}
+          <KeycloakTabs
+            // activeKey={activeTab}
+            // onSelect={(_, key) => setActiveTab(key as number)}
             isBox
           >
             <Tab
-              eventKey={0}
+              eventKey="details"
               title={<TabTitleText>{t("details")}</TabTitleText>}
             >
               <RealmRoleForm form={form} save={save} editMode={true} />
             </Tab>
             <Tab
-              eventKey={1}
+              eventKey="attributes"
               title={<TabTitleText>{t("attributes")}</TabTitleText>}
             >
               <RoleAttributes form={form} save={save} defaultValues={defaultValues} />
             </Tab>
-          </Tabs>
+          </KeycloakTabs>
         )}
         {!id && <RealmRoleForm form={form} save={save} editMode={false} />}
       </PageSection>
