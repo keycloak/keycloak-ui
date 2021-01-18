@@ -66,7 +66,7 @@ export const RealmRoleTabs = () => {
         setupForm(fetchedRole);
         console.log("form loaded", form.getValues());
         const attributes = form.getValues().attributes;
-        console.log("aaaa", attributes);
+        console.log("attributes", attributes);
         setDefaultValues(attributes!); 
       } else {
         setName(t("createRole"));
