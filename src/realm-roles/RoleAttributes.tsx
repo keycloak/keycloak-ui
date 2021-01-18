@@ -61,29 +61,32 @@ export const RoleAttributes = ({ form, save }: RoleAttributesProps) => {
     append({ key: "", value: "" });
   };
 
-  React.useEffect(() => {
-    (async () => {
-      if (id) {
-        const fetchedRole = await adminClient.roles.findOneById({ id });
-        setName(fetchedRole.name!);
-        setupForm(fetchedRole);
-        console.log("form loaded", )
-      } else {
-        setName(t("createRole"));
-      }
-    })();
-  }, []);
+  // React.useEffect(() => {
+  //   (async () => {
+  //     if (id) {
+  //       const fetchedRole = await adminClient.roles.findOneById({ id });
+  //       setName(fetchedRole.name!);
+  //       setupForm(fetchedRole);
+  //       console.log("form loaded", )
+  //     } else {
+  //       setName(t("createRole"));
+  //     }
+  //   })();
+  // }, []);
 
   // On Init, append a row
   React.useEffect(() => {
 
     console.log(form.getValues())
     
-      append({ key: "test1444", value: "" })
+      setTimeout(() => append({ key: "", value: "" }), 25);
+  
+  }, [append]);
 
   
-    console.log(`Adding initial empty row`);
-  }, [append]);
+  console.log("values", form.getValues())
+  console.log("dirt", form.formState.dirtyFields)
+
 
   // see if theres a way to tell if the forn has initially been 
   // loaded/updated... use that to append that value and not use useffect bc vale isn;t being set until later on
@@ -129,7 +132,7 @@ export const RoleAttributes = ({ form, save }: RoleAttributesProps) => {
         role="manage-realm"
         onSubmit={form.handleSubmit(async (role) => {
           await save(role);
-          // form.formState.dirtyFields.attributes ? onAdd() : "";
+          form.formState.dirtyFields.attributes ? onAdd() : "";
         })}
       >
         <TableComposable
@@ -166,7 +169,7 @@ export const RoleAttributes = ({ form, save }: RoleAttributesProps) => {
                     }
                     aria-label="key-input"
                     defaultValue={attribute.key}
-                    // isReadOnly={!dirtyFields.includes(rowIndex)}
+                    // isReadOnly={form.formState.dirtyFields?.attributes?.[rowIndex]?.key === undefined}
                     isReadOnly={
                       attribute.key &&
                       (form.formState?.isSubmitted ||
@@ -182,9 +185,7 @@ export const RoleAttributes = ({ form, save }: RoleAttributesProps) => {
                 >
                   <TextInput
                     name={`attributes[${rowIndex}].value`}
-                    ref={form.register({
-                      required: false,
-                    })}
+                    ref={form.register()}
                     aria-label="value-input"
                     defaultValue={attribute.value}
                     validated={form.errors.description}

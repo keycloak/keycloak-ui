@@ -52,8 +52,11 @@ export const RealmRoleTabs = () => {
   const [name, setName] = useState("");
   const adminClient = useAdminClient();
   const { realm } = useRealm();
-  const [activeTab, setActiveTab] = useState(0);
-  const [defaultValues, setDefaultValues] = useState({key: "", value: ''});
+  const [defaultValues, setDefaultValues] = useState<any[]>([])
+
+  // const [defaultValues, setDefaultValues] = (attributes: { [key: string]: string }) => {
+  //   useState({key: "", value: ""})
+  // };
 
   const { id } = useParams<{ id: string }>();
 
@@ -65,13 +68,11 @@ export const RealmRoleTabs = () => {
         const fetchedRole = await adminClient.roles.findOneById({ id });
         setName(fetchedRole.name!);
         setupForm(fetchedRole);
-        console.log("form loaded", form.getValues())
-        const atts = form.getValues().attributes
-        console.log("aaaa", atts)
-        const x = atts;
-        console.log("x", x)
-        setDefaultValues(x)
-        // setDefaultValues(atts);
+        console.log("form loaded", form.getValues());
+        const attributes = form.getValues().attributes;
+        console.log("aaaa", attributes);
+        setDefaultValues([attributes]); 
+        console.log("defaultValues", defaultValues)       
       } else {
         setName(t("createRole"));
       }
@@ -88,7 +89,7 @@ export const RealmRoleTabs = () => {
     });
   };
 
-  // const [defaultValues, setDefaultValues] = 
+  // const [defaultValues, setDefaultValues] =
 
   const save = async (role: RoleRepresentation) => {
     try {
@@ -156,11 +157,7 @@ export const RealmRoleTabs = () => {
       />
       <PageSection variant="light">
         {id && (
-          <KeycloakTabs
-            // activeKey={activeTab}
-            // onSelect={(_, key) => setActiveTab(key as number)}
-            isBox
-          >
+          <KeycloakTabs isBox>
             <Tab
               eventKey="details"
               title={<TabTitleText>{t("details")}</TabTitleText>}
@@ -171,7 +168,11 @@ export const RealmRoleTabs = () => {
               eventKey="attributes"
               title={<TabTitleText>{t("attributes")}</TabTitleText>}
             >
-              <RoleAttributes form={form} save={save} defaultValues={defaultValues} />
+              <RoleAttributes
+                form={form}
+                save={save}
+                defaultValues={defaultValues}
+              />
             </Tab>
           </KeycloakTabs>
         )}
