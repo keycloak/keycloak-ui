@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { ActionGroup, Button, TextInput } from "@patternfly/react-core";
 import { SubmitHandler, useFieldArray, UseFormMethods } from "react-hook-form";
 import "./RealmRolesSection.css";
@@ -25,6 +25,13 @@ type RoleAttributesProps = {
 
 export const RoleAttributes = ({ form, save }: RoleAttributesProps) => {
   const { t } = useTranslation("roles");
+  const [key, setKey] = useState("");
+  const reload = () => setKey(`${new Date().getTime()}`);
+
+  useEffect(() => {
+    console.log("reloaded");
+  }, [key]);
+
 
   const { fields, append, remove } = useFieldArray({
     control: form.control,
@@ -36,6 +43,8 @@ export const RoleAttributes = ({ form, save }: RoleAttributesProps) => {
   const onAdd = () => {
     append({ key: "", value: "" });
   };
+
+
 
   return (
     <>
@@ -127,7 +136,7 @@ export const RoleAttributes = ({ form, save }: RoleAttributesProps) => {
           >
             {t("common:save")}
           </Button>
-          <Button variant="link">{t("common:reload")}</Button>
+          <Button variant="link" onClick={reload}>{t("common:reload")} </Button>
         </ActionGroup>
       </FormAccess>
     </>
