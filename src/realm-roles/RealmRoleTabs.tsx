@@ -66,7 +66,6 @@ export const RealmRoleTabs = () => {
         setupForm(fetchedRole);
         console.log("form loaded", form.getValues());
         const attributes = form.getValues().attributes;
-        console.log("attributes", attributes);
         setDefaultValues(attributes!); 
       } else {
         setName(t("createRole"));
@@ -158,7 +157,7 @@ export const RealmRoleTabs = () => {
               eventKey="details"
               title={<TabTitleText>{t("details")}</TabTitleText>}
             >
-              <RealmRoleForm form={form} save={save} editMode={true} />
+              <RealmRoleForm defaultValues={defaultValues} form={form} save={save} editMode={true} />
             </Tab>
             <Tab
               eventKey="attributes"
@@ -172,7 +171,7 @@ export const RealmRoleTabs = () => {
             </Tab>
           </KeycloakTabs>
         )}
-        {!id && <RealmRoleForm form={form} save={save} editMode={false} />}
+        {!id && <RealmRoleForm defaultValues={defaultValues} form={form} save={save} editMode={false} />}
       </PageSection>
     </>
   );

@@ -45,6 +45,8 @@ export const RoleAttributes = ({ form, save, defaultValues }: RoleAttributesProp
     append({ key: "", value: "" });
   };
 
+console.log("lalala", defaultValues)
+console.log("lalala2", fields)
 
 
   return (
@@ -135,7 +137,7 @@ export const RoleAttributes = ({ form, save, defaultValues }: RoleAttributesProp
           >
             {t("common:save")}
           </Button>
-          <Button variant="link" onClick={() => form.reset(defaultValues)}>{t("common:reload")} </Button>
+          <Button variant="link" onClick={() => form.reset()}>{t("common:reload")} </Button>
         </ActionGroup>
       </FormAccess>
     </>
