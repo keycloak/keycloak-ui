@@ -35,7 +35,7 @@ type RoleAttributesProps = {
   defaultValues: []
 };
 
-export const RoleAttributes = ({ form, save }: RoleAttributesProps) => {
+export const RoleAttributes = ({ form, save, defaultValues }: RoleAttributesProps) => {
   const { t } = useTranslation("roles");
   // const history = useHistory();
   // const { url } = useRouteMatch();
@@ -233,7 +233,7 @@ export const RoleAttributes = ({ form, save }: RoleAttributesProps) => {
           >
             {t("common:save")}
           </Button>
-          <Button variant="link">{t("common:reload")}</Button>
+          <Button onClick={() => form.reset(defaultValues)} variant="link">{t("common:reload")}</Button>
         </ActionGroup>
       </FormAccess>
     </>

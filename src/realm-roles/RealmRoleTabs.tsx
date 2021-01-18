@@ -52,7 +52,7 @@ export const RealmRoleTabs = () => {
   const [name, setName] = useState("");
   const adminClient = useAdminClient();
   const { realm } = useRealm();
-  const [defaultValues, setDefaultValues] = useState<any[]>([])
+  const [defaultValues, setDefaultValues] = useState<{ [index: string]: string[] }>({})
 
   // const [defaultValues, setDefaultValues] = (attributes: { [key: string]: string }) => {
   //   useState({key: "", value: ""})
@@ -71,13 +71,15 @@ export const RealmRoleTabs = () => {
         console.log("form loaded", form.getValues());
         const attributes = form.getValues().attributes;
         console.log("aaaa", attributes);
-        setDefaultValues([attributes]); 
-        console.log("defaultValues", defaultValues)       
+        setDefaultValues(attributes!); 
       } else {
         setName(t("createRole"));
       }
     })();
   }, []);
+
+  console.log("defaultValues", defaultValues)       
+
 
   const setupForm = (role: RoleRepresentation) => {
     Object.entries(role).map((entry) => {
