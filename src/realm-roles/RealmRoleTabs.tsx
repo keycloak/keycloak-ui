@@ -49,6 +49,8 @@ export const RealmRoleTabs = () => {
   const form = useForm<RoleRepresentation>({ mode: "onChange" });
   const history = useHistory();
   const [name, setName] = useState("");
+
+  const [defaultValues, setDefaultValues] = useState<any[]>([]);
   const adminClient = useAdminClient();
   const { realm } = useRealm();
 
@@ -62,11 +64,18 @@ export const RealmRoleTabs = () => {
         const fetchedRole = await adminClient.roles.findOneById({ id });
         setName(fetchedRole.name!);
         setupForm(fetchedRole);
+
+        const attributes = form.getValues().attributes;
+        console.log("aaaa", attributes);
+        setDefaultValues([attributes]); 
       } else {
         setName(t("createRole"));
       }
     })();
   }, []);
+
+  console.log("defaultValues", defaultValues)  
+
 
   const setupForm = (role: RoleRepresentation) => {
     Object.entries(role).map((entry) => {
