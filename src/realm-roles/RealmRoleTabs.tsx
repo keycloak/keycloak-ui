@@ -6,6 +6,7 @@ import {
   DropdownItem,
   PageSection,
   Tab,
+  Tabs,
   TabTitleText,
 } from "@patternfly/react-core";
 import { useTranslation } from "react-i18next";
@@ -49,10 +50,9 @@ export const RealmRoleTabs = () => {
   const form = useForm<RoleRepresentation>({ mode: "onChange" });
   const history = useHistory();
   const [name, setName] = useState("");
-
-  const [defaultValues, setDefaultValues] = useState<any[]>([]);
   const adminClient = useAdminClient();
   const { realm } = useRealm();
+  const [defaultValues, setDefaultValues] = useState<{ [index: string]: string[] }>({})
 
   const { id } = useParams<{ id: string }>();
 
@@ -64,17 +64,17 @@ export const RealmRoleTabs = () => {
         const fetchedRole = await adminClient.roles.findOneById({ id });
         setName(fetchedRole.name!);
         setupForm(fetchedRole);
-
+        console.log("form loaded", form.getValues());
         const attributes = form.getValues().attributes;
         console.log("aaaa", attributes);
-        setDefaultValues([attributes]); 
+        setDefaultValues(attributes!); 
       } else {
         setName(t("createRole"));
       }
     })();
   }, []);
 
-  console.log("defaultValues", defaultValues)  
+  console.log("defaultValues", defaultValues)       
 
 
   const setupForm = (role: RoleRepresentation) => {
@@ -164,7 +164,11 @@ export const RealmRoleTabs = () => {
               eventKey="attributes"
               title={<TabTitleText>{t("attributes")}</TabTitleText>}
             >
-              <RoleAttributes form={form} save={save} />
+              <RoleAttributes
+                form={form}
+                save={save}
+                defaultValues={defaultValues}
+              />
             </Tab>
           </KeycloakTabs>
         )}

@@ -21,6 +21,7 @@ export type KeyValueType = { key: string; value: string };
 type RoleAttributesProps = {
   form: UseFormMethods;
   save: SubmitHandler<RoleRepresentation>;
+  defaultValues: any;
 };
 
 export const RoleAttributes = ({ form, save }: RoleAttributesProps) => {
