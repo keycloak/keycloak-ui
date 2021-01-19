@@ -81,8 +81,7 @@ export const RealmRoleTabs = () => {
     });
   };
 
-
-  // reset form to default values 
+  // reset form to default values
   const reset = () => {
     setupForm(role!);
   };
