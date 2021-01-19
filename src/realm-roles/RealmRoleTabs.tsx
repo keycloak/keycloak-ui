@@ -94,6 +94,8 @@ export const RealmRoleTabs = () => {
             (role.attributes as unknown) as KeyValueType[]
           );
         }
+        setRole(role!);
+        setupForm(role!);
         await adminClient.roles.updateById({ id }, role);
       } else {
         await adminClient.roles.create(role);
