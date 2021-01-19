@@ -63,6 +63,7 @@ export const DuplicateFlowModal = ({
     } catch (error) {
       addAlert(t("copyFlowError", { error }), AlertVariant.danger);
     }
+    toggleDialog();
   };
 
   return (
