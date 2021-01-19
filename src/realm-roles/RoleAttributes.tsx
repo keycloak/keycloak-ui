@@ -79,7 +79,8 @@ export const RoleAttributes = ({ form, save, defaultValues }: RoleAttributesProp
 
     console.log(form.getValues())
     
-      setTimeout(() => append({ key: "", value: "" }), 25);
+    const timer = setTimeout(() => append({ key: "", value: "" }), 5000);
+    return () => clearTimeout(timer);
   
   }, [append]);
 
