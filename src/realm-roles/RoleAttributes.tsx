@@ -20,19 +20,12 @@ export type KeyValueType = { key: string; value: string };
 
 type RoleAttributesProps = {
   form: UseFormMethods;
-  save: SubmitHandler<RoleRepresentation>;
-  defaultValues: any;
+  save: (role: RoleRepresentation) => void;
+  reset: () => void;
 };
 
-export const RoleAttributes = ({ form, save, defaultValues }: RoleAttributesProps) => {
+export const RoleAttributes = ({ form, save, reset }: RoleAttributesProps) => {
   const { t } = useTranslation("roles");
-  const [key, setKey] = useState("");
-  const reload = () => setKey(`${new Date().getTime()}`);
-
-  useEffect(() => {
-    console.log("reloaded");
-  }, [key]);
-
 
   const { fields, append, remove } = useFieldArray({
     control: form.control,
@@ -44,10 +37,6 @@ export const RoleAttributes = ({ form, save, defaultValues }: RoleAttributesProp
   const onAdd = () => {
     append({ key: "", value: "" });
   };
-
-console.log("lalala", defaultValues)
-console.log("lalala2", fields)
-
 
   return (
     <>
@@ -137,7 +126,7 @@ console.log("lalala2", fields)
           >
             {t("common:save")}
           </Button>
-          <Button variant="link" onClick={() => form.reset()}>{t("common:reload")} </Button>
+          <Button variant="link" onClick={reset}>{t("common:reload")} </Button>
         </ActionGroup>
       </FormAccess>
     </>

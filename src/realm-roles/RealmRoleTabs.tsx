@@ -52,7 +52,7 @@ export const RealmRoleTabs = () => {
   const [name, setName] = useState("");
   const adminClient = useAdminClient();
   const { realm } = useRealm();
-  const [defaultValues, setDefaultValues] = useState<{ [index: string]: string[] }>({})
+  const [role, setRole] = useState<RoleRepresentation>()
 
   const { id } = useParams<{ id: string }>();
 
@@ -64,17 +64,12 @@ export const RealmRoleTabs = () => {
         const fetchedRole = await adminClient.roles.findOneById({ id });
         setName(fetchedRole.name!);
         setupForm(fetchedRole);
-        console.log("form loaded", form.getValues());
-        const attributes = form.getValues().attributes;
-        setDefaultValues(attributes!); 
+        setRole(fetchedRole);
       } else {
         setName(t("createRole"));
       }
     })();
   }, []);
-
-  console.log("defaultValues", defaultValues)       
-
 
   const setupForm = (role: RoleRepresentation) => {
     Object.entries(role).map((entry) => {
@@ -85,6 +80,10 @@ export const RealmRoleTabs = () => {
       }
     });
   };
+
+  const reset = () => {
+    setupForm(role!);
+  }
 
   const save = async (role: RoleRepresentation) => {
     try {
@@ -157,7 +156,7 @@ export const RealmRoleTabs = () => {
               eventKey="details"
               title={<TabTitleText>{t("details")}</TabTitleText>}
             >
-              <RealmRoleForm defaultValues={defaultValues} form={form} save={save} editMode={true} />
+              <RealmRoleForm reset={reset} form={form} save={save} editMode={true} />
             </Tab>
             <Tab
               eventKey="attributes"
@@ -166,12 +165,12 @@ export const RealmRoleTabs = () => {
               <RoleAttributes
                 form={form}
                 save={save}
-                defaultValues={defaultValues}
+                reset={reset}
               />
             </Tab>
           </KeycloakTabs>
         )}
-        {!id && <RealmRoleForm defaultValues={defaultValues} form={form} save={save} editMode={false} />}
+        {!id && <RealmRoleForm reset={reset} form={form} save={save} editMode={false} />}
       </PageSection>
     </>
   );

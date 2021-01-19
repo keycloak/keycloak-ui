@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import {
   ActionGroup,
   Button,
@@ -17,28 +17,20 @@ export type RealmRoleFormProps = {
   form: UseFormMethods;
   save: SubmitHandler<RoleRepresentation>;
   editMode: boolean;
-  defaultValues: any;
+  reset: () => void;
 };
 
 export const RealmRoleForm = ({
   form,
   save,
   editMode,
-  defaultValues,
+  reset,
 }: RealmRoleFormProps) => {
   const { t } = useTranslation("roles");
 
-  const [defaultName, setDefaultName] = useState(form.getValues().name);
-  const [defaultDescription, setDefaultDescription] = useState(
-    form.getValues().description
-  );
-
-  useEffect(() => {
-    setDefaultName(form.getValues().name);
-    setDefaultDescription(form.getValues().description);
-  });
-
   // const info = await adminClient.roles.find()
+
+  
 
   return (
     <FormAccess
@@ -94,9 +86,7 @@ export const RealmRoleForm = ({
           {t("common:save")}
         </Button>
         <Button
-          onClick={() =>
-            form.reset({ name: defaultName, description: defaultDescription })
-          }
+          onClick={reset}
           variant="link"
         >
           {editMode ? t("common:reload") : t("common:cancel")}
