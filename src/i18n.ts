@@ -4,6 +4,7 @@ import { initReactI18next } from "react-i18next";
 
 import common from "./common-messages.json";
 import help from "./common-help.json";
+import dashboard from "./dashboard/messages.json";
 import clients from "./clients/messages.json";
 import clientsHelp from "./clients/help.json";
 import clientScopes from "./client-scopes/messages.json";
@@ -14,6 +15,8 @@ import roles from "./realm-roles/messages.json";
 import users from "./user/messages.json";
 import sessions from "./sessions/messages.json";
 import events from "./events/messages.json";
+import realmSettings from "./realm-settings/messages.json";
+import realmSettingsHelp from "./realm-settings/help.json";
 import storybook from "./stories/messages.json";
 import userFederation from "./user-federation/messages.json";
 import userFederationHelp from "./user-federation/help.json";
@@ -24,6 +27,7 @@ const initOptions = {
     en: {
       ...common,
       ...help,
+      ...dashboard,
       ...clients,
       ...clientsHelp,
       ...clientScopes,
@@ -36,6 +40,8 @@ const initOptions = {
       ...sessions,
       ...userFederation,
       ...events,
+      ...realmSettings,
+      ...realmSettingsHelp,
       ...storybook,
       ...userFederation,
       ...userFederationHelp,
