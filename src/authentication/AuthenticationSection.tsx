@@ -1,9 +1,11 @@
 import React, { useState } from "react";
+import { Link, useRouteMatch } from "react-router-dom";
 import { Trans, useTranslation } from "react-i18next";
 import {
   AlertVariant,
   Button,
   ButtonVariant,
+  Label,
   PageSection,
   Popover,
   Tab,
@@ -47,6 +49,8 @@ export const AuthenticationSection = () => {
   const [key, setKey] = useState(0);
   const refresh = () => setKey(new Date().getTime());
   const { addAlert } = useAlerts();
+  const { url } = useRouteMatch();
+
   const [selectedFlow, setSelectedFlow] = useState<AuthenticationType>();
   const [open, setOpen] = useState(false);
 
@@ -138,7 +142,10 @@ export const AuthenticationSection = () => {
       )}
       {type === "default" && (
         <Button key={id} variant={ButtonVariant.link} isDisabled>
-          <CheckCircleIcon className="keycloak_authentication-section__usedby" />{" "}
+          <CheckCircleIcon
+            className="keycloak_authentication-section__usedby"
+            key={`icon-${id}`}
+          />{" "}
           {t("default")}
         </Button>
       )}
@@ -147,6 +154,15 @@ export const AuthenticationSection = () => {
           {t("notInUse")}
         </Button>
       )}
+    </>
+  );
+
+  const AliasRenderer = ({ id, alias, builtIn }: AuthenticationType) => (
+    <>
+      <Link to={`${url}/${id}`} key={id}>
+        {toUpperCase(alias!)}
+      </Link>{" "}
+      {builtIn && <Label>{t("buildIn")}</Label>}
     </>
   );
 
@@ -177,8 +193,6 @@ export const AuthenticationSection = () => {
                   {
                     title: t("duplicate"),
                     onClick: () => {
-                      // setValue("name", t("copyOf", { name: row.data.alias }));
-                      // toggleDuplicateDialog();
                       setOpen(true);
                       setSelectedFlow(row.data);
                     },
@@ -203,7 +217,7 @@ export const AuthenticationSection = () => {
                 {
                   name: "alias",
                   displayKey: "authentication:flowName",
-                  cellRenderer: (data) => toUpperCase(data.alias!),
+                  cellRenderer: AliasRenderer,
                 },
                 {
                   name: "usedBy",

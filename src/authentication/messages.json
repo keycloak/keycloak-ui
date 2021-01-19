@@ -4,6 +4,7 @@
     "flows": "Flows",
     "flowName": "Flow name",
     "usedBy": "Used by",
+    "buildIn": "Build in",
     "appliedByProviders": "Applied by the following providers",
     "appliedByClients": "Applied by the following clients",
     "specificProviders": "Specific providers",
