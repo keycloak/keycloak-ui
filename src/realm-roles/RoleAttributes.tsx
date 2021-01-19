@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import { ActionGroup, Button, TextInput } from "@patternfly/react-core";
-import { SubmitHandler, useFieldArray, UseFormMethods } from "react-hook-form";
+import { useFieldArray, UseFormMethods } from "react-hook-form";
 import "./RealmRolesSection.css";
 import RoleRepresentation from "keycloak-admin/lib/defs/roleRepresentation";
 

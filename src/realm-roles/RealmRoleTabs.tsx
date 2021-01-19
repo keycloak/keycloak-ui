@@ -6,7 +6,6 @@ import {
   DropdownItem,
   PageSection,
   Tab,
-  Tabs,
   TabTitleText,
 } from "@patternfly/react-core";
 import { useTranslation } from "react-i18next";
