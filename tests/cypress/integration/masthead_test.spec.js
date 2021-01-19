@@ -1,24 +1,24 @@
 import ListingPage from "../support/pages/admin_console/ListingPage.js";
 import LoginPage from "../support/pages/LoginPage.js";
 import SidebarPage from "../support/pages/admin_console/SidebarPage.js";
+import Masthead from "../support/pages/admin_console/Masthead.js";
 
 const loginPage = new LoginPage();
+const masthead = new Masthead();
 
-const logOutTest = (userDropdown) => {
+const logOutTest = () => {
   it("logs out", () => {
-    cy.get(userDropdown).click();
-    cy.get("#sign-out").click();
+    masthead.signOut();
     loginPage.isLogInPage();
   });
 };
 
 const goToAcctMgtTest = (userDropdown) => {
   it("opens manage account and returns to admin console", () => {
-    cy.get(userDropdown).click();
-    cy.get("#manage-account").click();
+    masthead.accountManagement();
     cy.contains("Welcome to Keycloak Account Management");
     cy.get("#landingReferrerLink").click({ force: true });
-    cy.get(userDropdown);
+    masthead.isAdminConsole();
   });
 };
 
@@ -40,8 +40,7 @@ describe("Masthead tests", () => {
     cy.get("#view-header-subkey").should("exist");
     cy.get(`#${CSS.escape("client-scopes-help:name")}`).should("exist");
 
-    cy.get("#help").click();
-    cy.get("#enableHelp").click({ force: true });
+    masthead.toggleGlobalHelp();
 
     cy.get("#view-header-subkey").should("not.exist");
     cy.get(`#${CSS.escape("client-scopes-help:name")}`).should("not.exist");
@@ -52,9 +51,9 @@ describe("Masthead tests", () => {
 
 describe("Masthead tests with kebab menu", () => {
   beforeEach(() => {
-    cy.viewport("iphone-6");
     cy.visit("");
     loginPage.logIn();
+    masthead.setMobileMode(true);
   });
 
   it("shows kabab and hides regular menu", () => {
@@ -66,5 +65,5 @@ describe("Masthead tests with kebab menu", () => {
   //       Feature not yet implemented for kebab.
 
   goToAcctMgtTest("#user-dropdown-kebab");
-  logOutTest("#user-dropdown-kebab");
+  logOutTest();
 });

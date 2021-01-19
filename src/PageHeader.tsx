@@ -164,7 +164,7 @@ export const Header = () => {
       showNavToggle
       logo={
         <Link to="/">
-          <Brand src="/logo.svg" alt="Logo" />
+          <Brand src="/logo.svg" id="masthead-logo" alt="Logo" />
         </Link>
       }
       logoComponent="div"
