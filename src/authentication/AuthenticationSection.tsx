@@ -123,19 +123,22 @@ export const AuthenticationSection = () => {
           key={id}
           aria-label="Basic popover"
           bodyContent={
-            <>
+            <div key={`usedBy-${id}-${values}`}>
               {t("appliedBy" + (type === "client" ? "Clients" : "Providers"))}{" "}
               {values.map((used, index) => (
-                <div key={index}>
+                <>
                   <strong>{used}</strong>
                   {index < values.length - 1 ? ", " : ""}
-                </div>
+                </>
               ))}
-            </>
+            </div>
           }
         >
-          <Button variant={ButtonVariant.link}>
-            <CheckCircleIcon className="keycloak_authentication-section__usedby" />{" "}
+          <Button variant={ButtonVariant.link} key={`button-${id}`}>
+            <CheckCircleIcon
+              className="keycloak_authentication-section__usedby"
+              key={`icon-${id}`}
+            />{" "}
             {t("specific" + (type === "client" ? "Clients" : "Providers"))}
           </Button>
         </Popover>
@@ -159,10 +162,10 @@ export const AuthenticationSection = () => {
 
   const AliasRenderer = ({ id, alias, builtIn }: AuthenticationType) => (
     <>
-      <Link to={`${url}/${id}`} key={id}>
+      <Link to={`${url}/${id}`} key={`link-{id}`}>
         {toUpperCase(alias!)}
       </Link>{" "}
-      {builtIn && <Label>{t("buildIn")}</Label>}
+      {builtIn && <Label key={`label-${id}`}>{t("buildIn")}</Label>}
     </>
   );
 
