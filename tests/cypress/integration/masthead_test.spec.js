@@ -22,7 +22,7 @@ const goToAcctMgtTest = (userDropdown) => {
   });
 };
 
-describe("Masthead tests", () => {
+describe("Masthead tests in desktop mode", () => {
   beforeEach(() => {
     cy.visit("");
     loginPage.logIn();
