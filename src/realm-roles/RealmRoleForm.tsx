@@ -17,9 +17,15 @@ export type RealmRoleFormProps = {
   form: UseFormMethods;
   save: SubmitHandler<RoleRepresentation>;
   editMode: boolean;
+  reset: () => void;
 };
 
-export const RealmRoleForm = ({ form, save, editMode }: RealmRoleFormProps) => {
+export const RealmRoleForm = ({
+  form,
+  save,
+  editMode,
+  reset,
+}: RealmRoleFormProps) => {
   const { t } = useTranslation("roles");
 
   return (
@@ -45,7 +51,7 @@ export const RealmRoleForm = ({ form, save, editMode }: RealmRoleFormProps) => {
         />
       </FormGroup>
       <FormGroup
-        label={t("description")}
+        label={t("common:description")}
         fieldId="kc-description"
         validated={
           form.errors.description
@@ -75,7 +81,7 @@ export const RealmRoleForm = ({ form, save, editMode }: RealmRoleFormProps) => {
         <Button variant="primary" type="submit">
           {t("common:save")}
         </Button>
-        <Button variant="link">
+        <Button onClick={reset} variant="link">
           {editMode ? t("common:reload") : t("common:cancel")}
         </Button>
       </ActionGroup>
