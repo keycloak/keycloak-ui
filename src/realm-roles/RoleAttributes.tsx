@@ -126,7 +126,9 @@ export const RoleAttributes = ({ form, save, reset }: RoleAttributesProps) => {
           >
             {t("common:save")}
           </Button>
-          <Button variant="link" onClick={reset}>{t("common:reload")} </Button>
+          <Button variant="link" onClick={reset}>
+            {t("common:reload")}{" "}
+          </Button>
         </ActionGroup>
       </FormAccess>
     </>

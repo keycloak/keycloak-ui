@@ -28,10 +28,6 @@ export const RealmRoleForm = ({
 }: RealmRoleFormProps) => {
   const { t } = useTranslation("roles");
 
-  // const info = await adminClient.roles.find()
-
-  
-
   return (
     <FormAccess
       isHorizontal
@@ -85,10 +81,7 @@ export const RealmRoleForm = ({
         <Button variant="primary" type="submit">
           {t("common:save")}
         </Button>
-        <Button
-          onClick={reset}
-          variant="link"
-        >
+        <Button onClick={reset} variant="link">
           {editMode ? t("common:reload") : t("common:cancel")}
         </Button>
       </ActionGroup>
