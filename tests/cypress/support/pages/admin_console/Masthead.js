@@ -18,7 +18,7 @@ export default class Masthead {
   }
 
   isMobileMode() {
-    return this.isMobileMode;
+    return cy.window().specWindow.parent[0].innerWidth < 768;
   }
 
   setMobileMode(isMobileMode) {
@@ -27,8 +27,6 @@ export default class Masthead {
     } else {
       cy.viewport();
     }
-
-    this.isMobileMode = isMobileMode;
   }
 
   toggleGlobalHelp() {
