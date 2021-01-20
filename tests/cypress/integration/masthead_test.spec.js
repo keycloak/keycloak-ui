@@ -13,7 +13,7 @@ const logOutTest = () => {
   });
 };
 
-const goToAcctMgtTest = (userDropdown) => {
+const goToAcctMgtTest = () => {
   it("opens manage account and returns to admin console", () => {
     masthead.accountManagement();
     cy.contains("Welcome to Keycloak Account Management");
@@ -28,7 +28,7 @@ describe("Masthead tests in desktop mode", () => {
     loginPage.logIn();
   });
 
-  goToAcctMgtTest("#user-dropdown");
+  goToAcctMgtTest();
 
   it("disables header help and form field help", () => {
     const sidebarPage = new SidebarPage();
@@ -64,6 +64,6 @@ describe("Masthead tests with kebab menu", () => {
   // TODO: Add test for help when using kebab menu.
   //       Feature not yet implemented for kebab.
 
-  goToAcctMgtTest("#user-dropdown-kebab");
+  goToAcctMgtTest();
   logOutTest();
 });
