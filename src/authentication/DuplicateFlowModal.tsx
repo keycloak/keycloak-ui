@@ -28,17 +28,16 @@ export const DuplicateFlowModal = ({
   toggleDialog,
 }: DuplicateFlowModalProps) => {
   const { t } = useTranslation("authentication");
-  const { register, errors, setValue, trigger, getValues } = useForm();
+  const { register, errors, setValue, trigger, getValues } = useForm({
+    shouldUnregister: false,
+  });
   const adminClient = useAdminClient();
   const { addAlert } = useAlerts();
 
   useEffect(() => {
-    const timer = setTimeout(() => {
-      setValue("description", description);
-      setValue("name", t("copyOf", { name }));
-    }, 10);
-    return () => clearTimeout(timer);
-  }, [name]);
+    setValue("description", description);
+    setValue("name", t("copyOf", { name }));
+  }, [name, description, setValue]);
 
   const save = async () => {
     await trigger();
