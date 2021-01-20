@@ -1,36 +1,21 @@
 import React, { useEffect, useState } from "react";
-<<<<<<< HEAD
 import { useParams } from "react-router-dom";
 import { Button, Modal, ModalVariant } from "@patternfly/react-core";
-=======
-import { useHistory, useParams } from "react-router-dom";
-import {
-  Button,
-  Modal,
-  ModalVariant,
-} from "@patternfly/react-core";
->>>>>>> place modal in separate file
 import { useTranslation } from "react-i18next";
 import { useForm } from "react-hook-form";
 import { useAdminClient } from "../context/auth/AdminClient";
 import RoleRepresentation from "keycloak-admin/lib/defs/roleRepresentation";
 import { KeycloakDataTable } from "../components/table-toolbar/KeycloakDataTable";
 import { ListEmptyState } from "../components/list-empty-state/ListEmptyState";
-<<<<<<< HEAD
 import { boolFormatter } from "../util";
-=======
-import { IFormatter, IFormatterValueType } from "@patternfly/react-table";
->>>>>>> place modal in separate file
 
 export type AssociatedRolesModalProps = {
   open: boolean;
   toggleDialog: () => void;
+  onConfirm: (newReps: RoleRepresentation[]) => void;
+  existingCompositeRoles: RoleRepresentation[];
 };
 
-<<<<<<< HEAD
-=======
-
->>>>>>> place modal in separate file
 const attributesToArray = (attributes: { [key: string]: string }): any => {
   if (!attributes || Object.keys(attributes).length == 0) {
     return [
@@ -51,24 +36,24 @@ export const AssociatedRolesModal = (props: AssociatedRolesModalProps) => {
   const form = useForm<RoleRepresentation>({ mode: "onChange" });
   const [name, setName] = useState("");
   const adminClient = useAdminClient();
-<<<<<<< HEAD
   const [selectedRows, setSelectedRows] = useState<RoleRepresentation[]>([]);
 
   const { id } = useParams<{ id: string }>();
 
   const loader = async () => {
     const allRoles = await adminClient.roles.find();
-    const roles = allRoles.filter((x) => x.name != name);
+    const existingAdditionalRoles = await adminClient.roles.getCompositeRoles({
+      id,
+    });
 
-    return roles;
+    return allRoles.filter((role: RoleRepresentation) => {
+      return (
+        existingAdditionalRoles.find(
+          (existing: RoleRepresentation) => existing.name === role.name
+        ) === undefined && role.name !== name
+      );
+    });
   };
-=======
-  const [, setSelectedRows] = useState<RoleRepresentation[]>([]);
-
-  const { id } = useParams<{ id: string }>();
-
-  const loader = async () => await adminClient.roles.find();
->>>>>>> place modal in separate file
 
   useEffect(() => {
     (async () => {
@@ -92,17 +77,6 @@ export const AssociatedRolesModal = (props: AssociatedRolesModalProps) => {
     });
   };
 
-<<<<<<< HEAD
-=======
-  const boolFormatter = (): IFormatter => (data?: IFormatterValueType) => {
-    const boolVal = data?.toString();
-
-    return (boolVal
-      ? boolVal.charAt(0).toUpperCase() + boolVal.slice(1)
-      : undefined) as string;
-  };
-
->>>>>>> place modal in separate file
   return (
     <Modal
       title={t("roles:associatedRolesModalTitle", { name })}
@@ -111,23 +85,15 @@ export const AssociatedRolesModal = (props: AssociatedRolesModalProps) => {
       variant={ModalVariant.large}
       actions={[
         <Button
-<<<<<<< HEAD
-          key="add"
-          variant="primary"
-          isDisabled={selectedRows.length === 0}
-=======
           key="confirm"
           variant="primary"
->>>>>>> place modal in separate file
+          isDisabled={!selectedRows?.length}
           onClick={() => {
             props.toggleDialog();
+            props.onConfirm(selectedRows);
           }}
         >
-<<<<<<< HEAD
-          {t("common:add")}
-=======
           Add
->>>>>>> place modal in separate file
         </Button>,
         <Button
           key="cancel"
@@ -136,11 +102,7 @@ export const AssociatedRolesModal = (props: AssociatedRolesModalProps) => {
             props.toggleDialog();
           }}
         >
-<<<<<<< HEAD
-          {t("common:cancel")}
-=======
           Cancel
->>>>>>> place modal in separate file
         </Button>,
       ]}
     >
