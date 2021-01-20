@@ -30,7 +30,7 @@ export default class Masthead {
   }
 
   toggleGlobalHelp() {
-    cy.get("#help").click();
+    cy.get(this.helpBtn).click();
     cy.get("#enableHelp").click({ force: true });
   }
 
