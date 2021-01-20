@@ -79,7 +79,7 @@ export const RoleAttributes = ({ form, save, defaultValues }: RoleAttributesProp
 
     console.log(form.getValues())
     
-    const timer = setTimeout(() => append({ key: "", value: "" }), 5000);
+    const timer = setTimeout(() => append({ key: "", value: "" }), 25);
     return () => clearTimeout(timer);
   
   }, [append]);
@@ -234,7 +234,7 @@ export const RoleAttributes = ({ form, save, defaultValues }: RoleAttributesProp
           >
             {t("common:save")}
           </Button>
-          <Button onClick={() => form.reset(defaultValues)} variant="link">{t("common:reload")}</Button>
+          <Button onClick={() => {}} variant="link">{t("common:reload")}</Button>
         </ActionGroup>
       </FormAccess>
     </>

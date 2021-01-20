@@ -47,7 +47,7 @@ const attributesToArray = (attributes: { [key: string]: string }): any => {
 
 export const RealmRoleTabs = () => {
   const { t } = useTranslation("roles");
-  const form = useForm<RoleRepresentation>({ mode: "onChange" });
+  const form = useForm<RoleRepresentation>({ mode: "onChange", shouldUnregister: false });
   const history = useHistory();
   const [name, setName] = useState("");
   const adminClient = useAdminClient();
