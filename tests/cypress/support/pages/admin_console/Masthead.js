@@ -1,7 +1,5 @@
 export default class Masthead {
   constructor() {
-    this.isMobileMode = false;
-
     this.menuBtn = "#nav-toggle";
     this.logoBtn = "#masthead-logo";
     this.helpBtn = "#help";
@@ -35,7 +33,7 @@ export default class Masthead {
   }
 
   userDropdown() {
-    if (this.isMobileMode) {
+    if (this.isMobileMode()) {
       return cy.get(this.userDrpDwnKebab);
     } else {
       return cy.get(this.userDrpDwn);
