@@ -46,7 +46,7 @@ describe("Masthead tests in desktop mode", () => {
     cy.get(`#${CSS.escape("client-scopes-help:name")}`).should("not.exist");
   });
 
-  logOutTest("#user-dropdown");
+  logOutTest();
 });
 
 describe("Masthead tests with kebab menu", () => {
