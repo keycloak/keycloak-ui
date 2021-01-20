@@ -34,6 +34,7 @@ import { EvaluateScopes } from "./scopes/EvaluateScopes";
 import { RolesList } from "../realm-roles/RolesList";
 import { ServiceAccount } from "./service-account/ServiceAccount";
 import { KeycloakTabs } from "../components/keycloak-tabs/KeycloakTabs";
+import { Advanced } from "./Advanced";
 
 type ClientDetailHeaderProps = {
   onChange: (...event: any[]) => void;
@@ -266,6 +267,12 @@ export const ClientDetails = () => {
               <ServiceAccount clientId={id} />
             </Tab>
           )}
+          <Tab
+            eventKey="advanced"
+            title={<TabTitleText>{t("advanced")}</TabTitleText>}
+          >
+            <Advanced form={form} save={save} />
+          </Tab>
         </KeycloakTabs>
       </PageSection>
     </>

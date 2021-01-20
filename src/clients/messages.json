@@ -97,6 +97,15 @@
     "accessTokenError": "Could not regenerate access token due to: {{error}}",
     "signatureAlgorithm": "Signature algorithm",
     "subject": "Subject DN",
-    "searchForClient": "Search for client"
+    "searchForClient": "Search for client",
+    "advanced": "Advanced",
+    "revocation": "Revocation",
+    "clustering": "Clustering",
+    "notBefore": "Not before",
+    "setToNow": "Set to now",
+    "push": "Push",
+    "clear": "Clear",
+    "none": "None",
+    "nodeReRegistrationTimeout": "Node Re-registration timeout"
   }
 }
