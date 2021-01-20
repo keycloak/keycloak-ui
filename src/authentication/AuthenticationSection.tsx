@@ -68,7 +68,9 @@ export const AuthenticationSection = () => {
       const client = clients.find(
         (client) =>
           client.authenticationFlowBindingOverrides &&
-          client.authenticationFlowBindingOverrides["direct_grant"] === flow.id
+          (client.authenticationFlowBindingOverrides["direct_grant"] ===
+            flow.id ||
+            client.authenticationFlowBindingOverrides["browser"] === flow.id)
       );
       if (client) {
         flow.usedBy.type = "client";
@@ -191,24 +193,25 @@ export const AuthenticationSection = () => {
               loader={loader}
               ariaLabelKey="authentication:title"
               searchPlaceholderKey="authentication:searchForEvent"
-              actionResolver={(row) => {
+              actionResolver={({ data }) => {
                 const defaultActions = [
                   {
                     title: t("duplicate"),
                     onClick: () => {
                       setOpen(true);
-                      setSelectedFlow(row.data);
+                      setSelectedFlow(data);
                     },
                   },
                 ];
-                if (row.data.builtIn) {
+                // remove delete when it's in use or default flow
+                if (data.builtIn || data.usedBy.values.length > 0) {
                   return defaultActions;
                 } else {
                   return [
                     {
                       title: t("common:delete"),
                       onClick: () => {
-                        setSelectedFlow(row.data);
+                        setSelectedFlow(data);
                         toggleDeleteDialog();
                       },
                     },
