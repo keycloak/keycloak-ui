@@ -57,8 +57,8 @@ describe("Masthead tests with kebab menu", () => {
   });
 
   it("shows kabab and hides regular menu", () => {
-    cy.get("#user-dropdown").should("not.exist");
-    cy.get("#user-dropdown-kebab").should("exist");
+    cy.get(masthead.userDrpDwn).should("not.exist");
+    cy.get(masthead.userDrpDwnKebab).should("exist");
   });
 
   // TODO: Add test for help when using kebab menu.
