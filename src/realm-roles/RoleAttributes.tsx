@@ -139,13 +139,7 @@ export const RoleAttributes = ({
           >
             {t("common:save")}
           </Button>
-          <Button
-            onClick={async () => {
-              console.log(await trigger());
-              console.log(errors);
-            }}
-            variant="link"
-          >
+          <Button onClick={() => {}} variant="link">
             {t("common:reload")}
           </Button>
         </ActionGroup>
