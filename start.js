@@ -8,7 +8,7 @@ const decompress = require("decompress");
 const decompressTargz = require("decompress-targz");
 
 const args = process.argv.slice(2);
-const version = args[0] || "12.0.1";
+const version = args[0] || "12.0.2";
 
 const folder = "server";
 const fileName = path.join(folder, `keycloak-${version}.tar.gz`);
