@@ -57,21 +57,23 @@ export const RealmRoleTabs = () => {
   const { id } = useParams<{ id: string }>();
   const { addAlert } = useAlerts();
 
-  const setup = (role: RoleRepresentation) => {
+  const convert = (role: RoleRepresentation) => {
     const { attributes, ...rest } = role;
-    const convertedRole = {
+    return {
       attributes: attributesToArray(attributes),
       ...rest,
     };
-    form.reset(convertedRole);
-    setRole(convertedRole);
   };
 
   useEffect(() => {
     (async () => {
       if (id) {
         const fetchedRole = await adminClient.roles.findOneById({ id });
-        setup(fetchedRole);
+        const convertedRole = convert(fetchedRole);
+        Object.entries(convertedRole).map((entry) => {
+          form.setValue(entry[0], entry[1]);
+        });
+        setRole(convertedRole);
       }
     })();
   }, []);
@@ -92,7 +94,9 @@ export const RealmRoleTabs = () => {
           roleRepresentation.attributes = arrayToAttributes(attributes);
         }
         await adminClient.roles.updateById({ id }, roleRepresentation);
-        setup(roleRepresentation);
+        const convertedRole = convert(roleRepresentation);
+        form.reset(convertedRole, { dirtyFields: false, isDirty: false });
+        setRole(convertedRole);
       } else {
         await adminClient.roles.create(roleRepresentation);
         const createdRole = await adminClient.roles.findOneByName({

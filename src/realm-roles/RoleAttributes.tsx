@@ -38,7 +38,7 @@ type RoleAttributesProps = {
 };
 
 export const RoleAttributes = ({
-  form: { handleSubmit, register, formState, errors, trigger },
+  form: { handleSubmit, register, formState, errors },
   save,
   array: { fields, append, remove },
 }: RoleAttributesProps) => {
@@ -75,12 +75,18 @@ export const RoleAttributes = ({
                 >
                   <TextInput
                     name={`attributes[${rowIndex}].key`}
-                    ref={register()}
+                    ref={register({ required: true })}
                     aria-label="key-input"
                     defaultValue={attribute.key}
+                    validated={
+                      errors.attributes && errors.attributes[rowIndex]
+                        ? "error"
+                        : "default"
+                    }
                     isReadOnly={
+                      !(errors.attributes && errors.attributes[rowIndex]) &&
                       formState.dirtyFields?.attributes?.[rowIndex]?.key ===
-                      undefined
+                        undefined
                     }
                   />
                 </Td>
