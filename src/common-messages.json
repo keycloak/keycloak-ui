@@ -78,6 +78,13 @@
     "Wednesday": "Wednesday",
     "Thursday": "Thursday",
     "Friday": "Friday",
-    "Saturday": "Saturday"
+    "Saturday": "Saturday",
+
+    "times": {
+      "seconds": "Seconds",
+      "minutes": "Minutes",
+      "hours": "Hours",
+      "days": "Days"
+    }
   }
 }

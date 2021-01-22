@@ -83,7 +83,7 @@ export type DataListProps<T> = {
   canSelectAll?: boolean;
   isPaginated?: boolean;
   ariaLabelKey: string;
-  searchPlaceholderKey: string;
+  searchPlaceholderKey?: string;
   setRefresher?: (refresher: () => void) => void;
   columns: Field<T>[];
   actions?: Action<T>[];
@@ -255,10 +255,12 @@ export function KeycloakDataTable<T>({
             setFirst(first);
             setMax(max);
           }}
-          inputGroupName={`${ariaLabelKey}input`}
+          inputGroupName={
+            searchPlaceholderKey ? `${ariaLabelKey}input` : undefined
+          }
           inputGroupOnChange={searchOnChange}
           inputGroupOnClick={refresh}
-          inputGroupPlaceholder={t(searchPlaceholderKey)}
+          inputGroupPlaceholder={t(searchPlaceholderKey || "")}
           toolbarItem={toolbarItem}
         >
           {!loading && (emptyState === undefined || rows.length !== 0) && (
@@ -278,10 +280,12 @@ export function KeycloakDataTable<T>({
       )}
       {rows && !isPaginated && (
         <TableToolbar
-          inputGroupName={`${ariaLabelKey}input`}
+          inputGroupName={
+            searchPlaceholderKey ? `${ariaLabelKey}input` : undefined
+          }
           inputGroupOnChange={searchOnChange}
           inputGroupOnClick={() => {}}
-          inputGroupPlaceholder={t(searchPlaceholderKey)}
+          inputGroupPlaceholder={t(searchPlaceholderKey || "")}
           toolbarItem={toolbarItem}
         >
           {(emptyState === undefined || rows.length !== 0) && (

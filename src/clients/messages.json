@@ -106,6 +106,9 @@
     "push": "Push",
     "clear": "Clear",
     "none": "None",
-    "nodeReRegistrationTimeout": "Node Re-registration timeout"
+    "nodeReRegistrationTimeout": "Node Re-registration timeout",
+    "registeredClusterNodes": "Registered clusters nodes",
+    "nodeHost": "Node host",
+    "lastRegistration": "Last registration"
   }
 }

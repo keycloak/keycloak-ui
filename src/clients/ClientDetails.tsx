@@ -271,7 +271,11 @@ export const ClientDetails = () => {
             eventKey="advanced"
             title={<TabTitleText>{t("advanced")}</TabTitleText>}
           >
-            <Advanced form={form} save={save} />
+            <Advanced
+              form={form}
+              save={save}
+              registeredNodes={client.registeredNodes}
+            />
           </Tab>
         </KeycloakTabs>
       </PageSection>

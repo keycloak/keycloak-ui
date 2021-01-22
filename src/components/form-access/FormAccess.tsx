@@ -39,7 +39,7 @@ export type FormAccessProps = FormProps & {
    * @type {boolean}
    */
   unWrap?: boolean;
-  children: ReactElement[];
+  children: ReactElement[] | ReactElement;
 };
 
 /**
