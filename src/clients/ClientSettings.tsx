@@ -95,8 +95,8 @@ export const ClientSettings = ({ form, save }: ClientSettingsProps) => {
                   id="kc-display-on-client"
                   label={t("common:on")}
                   labelOff={t("common:off")}
-                  isChecked={value}
-                  onChange={onChange}
+                  isChecked={value === "true"}
+                  onChange={(value) => onChange("" + value)}
                 />
               )}
             />

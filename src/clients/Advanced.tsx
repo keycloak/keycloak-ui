@@ -26,6 +26,7 @@ import { HelpItem } from "../components/help-enabler/HelpItem";
 import { KeycloakDataTable } from "../components/table-toolbar/KeycloakDataTable";
 import { FineGrainOpenIdConnect } from "./advanced/FineGrainOpenIdConnect";
 import { OpenIdConnectCompatibilityModes } from "./advanced/OpenIdConnectCompatibilityModes";
+import { AdvancedSettings } from "./advanced/AdvancedSettings";
 
 type AdvancedProps = {
   form: UseFormMethods;
@@ -100,6 +101,7 @@ export const Advanced = ({
         t("clustering"),
         t("fineGrainOpenIdConnectConfiguration"),
         t("openIdConnectCompatibilityModes"),
+        t("advancedSettings"),
       ]}
     >
       <Card>
@@ -274,6 +276,14 @@ export const Advanced = ({
               )
             }
           />
+        </CardBody>
+      </Card>
+      <Card>
+        <CardBody>
+          <Text>{t("clients-help:advancedSettings")}</Text>
+        </CardBody>
+        <CardBody>
+          <AdvancedSettings control={control} save={save} reset={() => {}} />
         </CardBody>
       </Card>
     </ScrollForm>
