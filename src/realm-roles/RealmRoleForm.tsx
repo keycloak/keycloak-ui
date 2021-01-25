@@ -8,14 +8,14 @@ import {
   ValidatedOptions,
 } from "@patternfly/react-core";
 import { useTranslation } from "react-i18next";
-import { SubmitHandler, UseFormMethods } from "react-hook-form";
+import { UseFormMethods } from "react-hook-form";
 
-import RoleRepresentation from "keycloak-admin/lib/defs/roleRepresentation";
 import { FormAccess } from "../components/form-access/FormAccess";
+import { RoleFormType } from "./RealmRoleTabs";
 
 export type RealmRoleFormProps = {
-  form: UseFormMethods;
-  save: SubmitHandler<RoleRepresentation>;
+  form: UseFormMethods<RoleFormType>;
+  save: (role: RoleFormType) => void;
   editMode: boolean;
 };
 
@@ -42,7 +42,6 @@ export const RealmRoleForm = ({ form, save, editMode }: RealmRoleFormProps) => {
           name="name"
           isReadOnly={editMode}
         />
-
       </FormGroup>
       <FormGroup
         label={t("description")}

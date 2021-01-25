@@ -10,7 +10,7 @@ import {
   TabTitleText,
 } from "@patternfly/react-core";
 import { useTranslation } from "react-i18next";
-import { useForm } from "react-hook-form";
+import { useFieldArray, useForm } from "react-hook-form";
 
 import { useAlerts } from "../components/alert/Alerts";
 import { useAdminClient } from "../context/auth/AdminClient";
@@ -30,81 +30,75 @@ const arrayToAttributes = (attributeArray: KeyValueType[]) => {
   }, initValue);
 };
 
-const attributesToArray = (attributes: { [key: string]: string }): any => {
+const attributesToArray = (attributes?: {
+  [key: string]: string[];
+}): KeyValueType[] => {
   if (!attributes || Object.keys(attributes).length == 0) {
-    return [
-      {
-        key: "",
-        value: "",
-      },
-    ];
+    return [];
   }
   return Object.keys(attributes).map((key) => ({
     key: key,
-    value: attributes[key],
+    value: attributes[key][0],
   }));
+};
+
+export type RoleFormType = Omit<RoleRepresentation, "attributes"> & {
+  attributes: KeyValueType[];
 };
 
 export const RealmRoleTabs = () => {
   const { t } = useTranslation("roles");
-  const form = useForm<RoleRepresentation>({ mode: "onChange", shouldUnregister: false });
+  const form = useForm<RoleFormType>({ mode: "onChange" });
   const history = useHistory();
-  const [name, setName] = useState("");
   const adminClient = useAdminClient();
   const { realm } = useRealm();
-  const [defaultValues, setDefaultValues] = useState<{ [index: string]: string[] }>({})
-
-  // const [defaultValues, setDefaultValues] = (attributes: { [key: string]: string }) => {
-  //   useState({key: "", value: ""})
-  // };
+  const [role, setRole] = useState<RoleFormType>();
 
   const { id } = useParams<{ id: string }>();
-
   const { addAlert } = useAlerts();
+
+  const convert = (role: RoleRepresentation) => {
+    const { attributes, ...rest } = role;
+    return {
+      attributes: attributesToArray(attributes),
+      ...rest,
+    };
+  };
 
   useEffect(() => {
     (async () => {
       if (id) {
         const fetchedRole = await adminClient.roles.findOneById({ id });
-        setName(fetchedRole.name!);
-        setupForm(fetchedRole);
-        console.log("form loaded", form.getValues());
-        const attributes = form.getValues().attributes;
-        console.log("aaaa", attributes);
-        setDefaultValues(attributes!); 
-      } else {
-        setName(t("createRole"));
+        const convertedRole = convert(fetchedRole);
+        Object.entries(convertedRole).map((entry) => {
+          form.setValue(entry[0], entry[1]);
+        });
+        setRole(convertedRole);
       }
     })();
   }, []);
 
-  console.log("defaultValues", defaultValues)       
+  const { fields, append, remove } = useFieldArray({
+    control: form.control,
+    name: "attributes",
+  });
 
+  useEffect(() => append({ key: "", value: "" }), [append, role]);
 
-  const setupForm = (role: RoleRepresentation) => {
-    Object.entries(role).map((entry) => {
-      if (entry[0] === "attributes") {
-        form.setValue(entry[0], attributesToArray(entry[1]));
-      } else {
-        form.setValue(entry[0], entry[1]);
-      }
-    });
-  };
-
-  // const [defaultValues, setDefaultValues] =
-
-  const save = async (role: RoleRepresentation) => {
+  const save = async (role: RoleFormType) => {
     try {
+      const { attributes, ...rest } = role;
+      const roleRepresentation: RoleRepresentation = rest;
       if (id) {
-        if (role.attributes) {
-          // react-hook-form will use `KeyValueType[]` here we convert it back into an indexed property of string[]
-          role.attributes = arrayToAttributes(
-            (role.attributes as unknown) as KeyValueType[]
-          );
+        if (attributes) {
+          roleRepresentation.attributes = arrayToAttributes(attributes);
         }
-        await adminClient.roles.updateById({ id }, role);
+        await adminClient.roles.updateById({ id }, roleRepresentation);
+        const convertedRole = convert(roleRepresentation);
+        form.reset(convertedRole, { dirtyFields: false, isDirty: false });
+        setRole(convertedRole);
       } else {
-        await adminClient.roles.create(role);
+        await adminClient.roles.create(roleRepresentation);
         const createdRole = await adminClient.roles.findOneByName({
           name: role.name!,
         });
@@ -123,7 +117,9 @@ export const RealmRoleTabs = () => {
 
   const [toggleDeleteDialog, DeleteConfirm] = useConfirmDialog({
     titleKey: "roles:roleDeleteConfirm",
-    messageKey: t("roles:roleDeleteConfirmDialog", { name }),
+    messageKey: t("roles:roleDeleteConfirmDialog", {
+      name: role?.name || t("createRole"),
+    }),
     continueButtonLabel: "common:delete",
     continueButtonVariant: ButtonVariant.danger,
     onConfirm: async () => {
@@ -141,7 +137,7 @@ export const RealmRoleTabs = () => {
     <>
       <DeleteConfirm />
       <ViewHeader
-        titleKey={name}
+        titleKey={role?.name || t("createRole")}
         subKey={id ? "" : "roles:roleCreateExplain"}
         dropdownItems={
           id
@@ -173,7 +169,7 @@ export const RealmRoleTabs = () => {
               <RoleAttributes
                 form={form}
                 save={save}
-                defaultValues={defaultValues}
+                array={{ fields, append, remove }}
               />
             </Tab>
           </KeycloakTabs>
