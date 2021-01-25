@@ -274,6 +274,7 @@ export const ClientDetails = () => {
             <Advanced
               form={form}
               save={save}
+              attributes={client.attributes}
               registeredNodes={client.registeredNodes}
             />
           </Tab>

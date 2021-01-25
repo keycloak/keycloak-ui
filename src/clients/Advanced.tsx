@@ -15,24 +15,29 @@ import {
   SelectVariant,
   Split,
   SplitItem,
+  Text,
   TextInput,
 } from "@patternfly/react-core";
 
+import { convertToFormValues } from "../util";
 import { FormAccess } from "../components/form-access/FormAccess";
 import { ScrollForm } from "../components/scroll-form/ScrollForm";
 import { HelpItem } from "../components/help-enabler/HelpItem";
 import { KeycloakDataTable } from "../components/table-toolbar/KeycloakDataTable";
+import { FineGrainOpenIdConnect } from "./advanced/FineGrainOpenIdConnect";
 
 type AdvancedProps = {
   form: UseFormMethods;
   save: () => void;
   registeredNodes?: { [key: string]: string };
+  attributes: Record<string, any>;
 };
 
 export const Advanced = ({
-  form: { getValues, setValue, register },
+  form: { getValues, setValue, register, control },
   save,
   registeredNodes,
+  attributes,
 }: AdvancedProps) => {
   const { t } = useTranslation("clients");
   const revocationFieldName = "notBefore";
@@ -88,7 +93,13 @@ export const Advanced = ({
   };
 
   return (
-    <ScrollForm sections={[t("revocation"), t("clustering")]}>
+    <ScrollForm
+      sections={[
+        t("revocation"),
+        t("clustering"),
+        t("fineGrainOpenIdConnectConfiguration"),
+      ]}
+    >
       <Card>
         <CardBody>
           <FormAccess role="manage-clients" isHorizontal>
@@ -192,6 +203,16 @@ export const Advanced = ({
                   })
                 )
               }
+              toolbarItem={
+                <>
+                  <Button onClick={() => {}} variant={ButtonVariant.tertiary}>
+                    {t("testClusterAvailability")}
+                  </Button>
+                  <Button onClick={() => {}} variant={ButtonVariant.secondary}>
+                    {t("registerNodeManually")}
+                  </Button>
+                </>
+              }
               actions={[
                 {
                   title: t("common:delete"),
@@ -216,8 +237,22 @@ export const Advanced = ({
                   ],
                 },
               ]}
-            ></KeycloakDataTable>
+            />
           </ExpandableSection>
+        </CardBody>
+      </Card>
+      <Card>
+        <CardBody>
+          <Text>{t("clients-help:fineGrainOpenIdConnectConfiguration")}</Text>
+        </CardBody>
+        <CardBody>
+          <FineGrainOpenIdConnect
+            control={control}
+            save={save}
+            reset={() =>
+              convertToFormValues(attributes, "attributes", setValue)
+            }
+          />
         </CardBody>
       </Card>
     </ScrollForm>

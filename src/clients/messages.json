@@ -106,9 +106,26 @@
     "push": "Push",
     "clear": "Clear",
     "none": "None",
+    "any": "Any",
     "nodeReRegistrationTimeout": "Node Re-registration timeout",
     "registeredClusterNodes": "Registered clusters nodes",
     "nodeHost": "Node host",
-    "lastRegistration": "Last registration"
+    "lastRegistration": "Last registration",
+    "testClusterAvailability": "Test cluster availability",
+    "registerNodeManually": "Register node manually",
+    "fineGrainOpenIdConnectConfiguration": "Fine grain OpenID connect configuration",
+    "accessTokenSignatureAlgorithm": "Access token signature algorithm",
+    "idTokenSignatureAlgorithm": "ID token signature algorithm",
+    "idTokenEncryptionKeyManagementAlgorithm": "ID token encryption key management algorithm",
+    "idTokenEncryptionContentEncryptionAlgorithm": "ID token encryption content encryption algorithm",
+    "userInfoSignedResponseAlgorithm": "User info signed response algorithm",
+    "requestObjectSignatureAlgorithm": "Request object signature algorithm",
+    "requestObjectRequired": "Request object required",
+    "requestObject": {
+      "not required": "Not required",
+      "request or request_uri": "Request or Request URI",
+      "request only": "Request only",
+      "request_uri only": "Request URI only"
+    }
   }
 }
