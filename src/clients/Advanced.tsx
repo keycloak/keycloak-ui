@@ -25,12 +25,13 @@ import { ScrollForm } from "../components/scroll-form/ScrollForm";
 import { HelpItem } from "../components/help-enabler/HelpItem";
 import { KeycloakDataTable } from "../components/table-toolbar/KeycloakDataTable";
 import { FineGrainOpenIdConnect } from "./advanced/FineGrainOpenIdConnect";
+import { OpenIdConnectCompatibilityModes } from "./advanced/OpenIdConnectCompatibilityModes";
 
 type AdvancedProps = {
   form: UseFormMethods;
   save: () => void;
   registeredNodes?: { [key: string]: string };
-  attributes: Record<string, any>;
+  attributes?: Record<string, any>;
 };
 
 export const Advanced = ({
@@ -98,6 +99,7 @@ export const Advanced = ({
         t("revocation"),
         t("clustering"),
         t("fineGrainOpenIdConnectConfiguration"),
+        t("openIdConnectCompatibilityModes"),
       ]}
     >
       <Card>
@@ -251,6 +253,25 @@ export const Advanced = ({
             save={save}
             reset={() =>
               convertToFormValues(attributes, "attributes", setValue)
+            }
+          />
+        </CardBody>
+      </Card>
+      <Card>
+        <CardBody>
+          <Text>{t("clients-help:openIdConnectCompatibilityModes")}</Text>
+        </CardBody>
+        <CardBody>
+          <OpenIdConnectCompatibilityModes
+            control={control}
+            save={save}
+            reset={() =>
+              setValue(
+                "attributes.exclude_session_state_from_auth_response",
+                attributes
+                  ? attributes["exclude.session.state.from.auth.response"]
+                  : ""
+              )
             }
           />
         </CardBody>

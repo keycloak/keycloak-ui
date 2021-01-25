@@ -126,6 +126,8 @@
       "request or request_uri": "Request or Request URI",
       "request only": "Request only",
       "request_uri only": "Request URI only"
-    }
+    },
+    "openIdConnectCompatibilityModes": "Open ID Connect Compatibly Modes",
+    "excludeSessionStateFromAuthenticationResponse": "Exclude Session State From Authentication Response"
   }
 }
