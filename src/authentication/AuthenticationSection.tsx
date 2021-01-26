@@ -179,6 +179,10 @@ export const AuthenticationSection = () => {
           name={selectedFlow ? selectedFlow.alias! : ""}
           description={selectedFlow?.description!}
           toggleDialog={() => setOpen(!open)}
+          onComplete={() => {
+            refresh();
+            setOpen(false);
+          }}
         />
       )}
       <ViewHeader titleKey="authentication:title" subKey="" />

@@ -20,12 +20,14 @@ type DuplicateFlowModalProps = {
   name: string;
   description: string;
   toggleDialog: () => void;
+  onComplete: () => void;
 };
 
 export const DuplicateFlowModal = ({
   name,
   description,
   toggleDialog,
+  onComplete,
 }: DuplicateFlowModalProps) => {
   const { t } = useTranslation("authentication");
   const { register, errors, setValue, trigger, getValues } = useForm({
@@ -62,7 +64,7 @@ export const DuplicateFlowModal = ({
     } catch (error) {
       addAlert(t("copyFlowError", { error }), AlertVariant.danger);
     }
-    toggleDialog();
+    onComplete();
   };
 
   return (
