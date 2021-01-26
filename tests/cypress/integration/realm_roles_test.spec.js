@@ -16,7 +16,6 @@ describe("Realm roles test", function () {
 
   describe("Realm roles creation", function () {
     beforeEach(function () {
-      cy.clearCookies();
       cy.visit("");
       loginPage.logIn();
       sidebarPage.goToRealmRoles();

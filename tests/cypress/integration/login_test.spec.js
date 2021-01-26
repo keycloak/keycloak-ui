@@ -15,8 +15,9 @@ describe("Logging In", function () {
 
     it("displays errors on login", function () {
       loginPage
-        .logIn("wrong", "user{enter}")
-        .checkErrorMessage("Invalid username or password.")
+        .logIn("wrong", "user{enter}");
+
+      loginPage.checkErrorMessage("Invalid username or password.")
         .isLogInPage();
     });
 

@@ -11,7 +11,6 @@ describe("Realms test", function () {
 
   describe("Realm creation", function () {
     beforeEach(function () {
-      cy.clearCookies();
       cy.visit("");
       loginPage.logIn();
     });

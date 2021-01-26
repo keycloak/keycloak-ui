@@ -14,7 +14,6 @@ describe("Clients test", function () {
 
   describe("Client creation", function () {
     beforeEach(function () {
-      cy.clearCookies();
       cy.visit("");
       loginPage.logIn();
       sidebarPage.goToClients();

@@ -14,7 +14,6 @@ describe("Client Scopes test", function () {
 
   describe("Client Scope creation", function () {
     beforeEach(function () {
-      cy.clearCookies();
       cy.visit("");
       loginPage.logIn();
       sidebarPage.goToClientScopes();

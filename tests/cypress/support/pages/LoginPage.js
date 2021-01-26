@@ -16,12 +16,14 @@ export default class LoginPage {
     }
 
     logIn(userName = "admin", password = "admin") {
-        cy.get(this.userNameInput).type(userName);
-        cy.get(this.passwordInput).type(password);
-
-        cy.get(this.submitBtn).click();
-
-        return this;
+        cy.getCookie("KEYCLOAK_SESSION_LEGACY").then((cookie) => {
+            if(!cookie) {
+                cy.get(this.userNameInput).type(userName);
+                cy.get(this.passwordInput).type(password);
+        
+                cy.get(this.submitBtn).click();
+            }
+        });
     }
 
     checkErrorIsDisplayed() {
