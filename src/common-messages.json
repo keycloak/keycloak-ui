@@ -80,6 +80,7 @@
     "Friday": "Friday",
     "Saturday": "Saturday",
 
+    "unitLabel": "Select a time unit",
     "times": {
       "seconds": "Seconds",
       "minutes": "Minutes",

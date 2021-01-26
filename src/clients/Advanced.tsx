@@ -1,24 +1,24 @@
 import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { UseFormMethods } from "react-hook-form";
+import { Controller, UseFormMethods } from "react-hook-form";
 import moment from "moment";
 import {
   ActionGroup,
+  AlertVariant,
   Button,
   ButtonVariant,
   Card,
   CardBody,
   ExpandableSection,
   FormGroup,
-  Select,
-  SelectOption,
-  SelectVariant,
   Split,
   SplitItem,
   Text,
   TextInput,
 } from "@patternfly/react-core";
 
+import GlobalRequestResult from "keycloak-admin/lib/defs/globalRequestResult";
+import ClientRepresentation from "keycloak-admin/lib/defs/clientRepresentation";
 import { convertToFormValues } from "../util";
 import { FormAccess } from "../components/form-access/FormAccess";
 import { ScrollForm } from "../components/scroll-form/ScrollForm";
@@ -27,63 +27,109 @@ import { KeycloakDataTable } from "../components/table-toolbar/KeycloakDataTable
 import { FineGrainOpenIdConnect } from "./advanced/FineGrainOpenIdConnect";
 import { OpenIdConnectCompatibilityModes } from "./advanced/OpenIdConnectCompatibilityModes";
 import { AdvancedSettings } from "./advanced/AdvancedSettings";
+import { TimeSelector } from "../components/time-selector/TimeSelector";
+import { useAdminClient } from "../context/auth/AdminClient";
+import { useAlerts } from "../components/alert/Alerts";
+import { useConfirmDialog } from "../components/confirm-dialog/ConfirmDialog";
+import { AddHostDialog } from "./advanced/AddHostDialog";
 
 type AdvancedProps = {
   form: UseFormMethods;
   save: () => void;
-  registeredNodes?: { [key: string]: string };
-  attributes?: Record<string, any>;
+  client: ClientRepresentation;
 };
 
 export const Advanced = ({
   form: { getValues, setValue, register, control },
   save,
-  registeredNodes,
-  attributes,
+  client: { id, registeredNodes, attributes },
 }: AdvancedProps) => {
   const { t } = useTranslation("clients");
+  const adminClient = useAdminClient();
+  const { addAlert } = useAlerts();
   const revocationFieldName = "notBefore";
-  const nodeReRegistrationTimeoutName = "nodeReRegistrationTimeout";
-  const [timeoutValue, setTimeoutValue] = useState(1);
-  const [multiplier, setMultiplier] = useState(1);
-  const [open, setOpen] = useState(false);
   const [expanded, setExpanded] = useState(false);
-  const times = [
-    { label: t("common:times.seconds"), multiplier: 1 },
-    { label: t("common:times.minutes"), multiplier: 60 },
-    { label: t("common:times.hours"), multiplier: 3600 },
-    { label: t("common:times.days"), multiplier: 86400 },
-  ];
-
-  const updateReregistrationTimeout = (
-    timeout: number,
-    times: number | undefined = multiplier
-  ) => {
-    setValue(nodeReRegistrationTimeoutName, timeout * times);
-  };
+  const [selectedNode, setSelectedNode] = useState("");
+  const [addNodeOpen, setAddNodeOpen] = useState(false);
+  const [key, setKey] = useState(0);
+  const refresh = () => setKey(new Date().getTime());
+  const [nodes, setNodes] = useState(registeredNodes || {});
 
   const setNotBefore = (time: number) => {
     setValue(revocationFieldName, time);
     save();
   };
 
-  useEffect(() => {
-    register(nodeReRegistrationTimeoutName);
-    register(revocationFieldName);
+  const parseResult = (result: GlobalRequestResult, prefixKey: string) => {
+    const successCount = result.successRequests?.length || 0;
+    const failedCount = result.failedRequests?.length || 0;
 
-    const timeout = getValues(nodeReRegistrationTimeoutName);
-    const x = times.reduce(
-      (value, time) =>
-        timeout % time.multiplier === 0 && value < time.multiplier
-          ? time.multiplier
-          : value,
-      0
-    );
-    if (timeout) {
-      setMultiplier(x);
-      setTimeoutValue(timeout / x);
+    if (successCount === 0 && failedCount === 0) {
+      addAlert(t("noAdminUrlSet"), AlertVariant.warning);
+    } else if (failedCount > 0) {
+      addAlert(
+        t(prefixKey + "Success", { successNodes: result.successRequests }),
+        AlertVariant.success
+      );
+      addAlert(
+        t(prefixKey + "Fail", { failedNodes: result.failedRequests }),
+        AlertVariant.danger
+      );
+    } else {
+      addAlert(
+        t(prefixKey + "Success", { successNodes: result.successRequests }),
+        AlertVariant.success
+      );
     }
-  }, [register, timeoutValue, multiplier]);
+  };
+
+  const push = async () => {
+    const result = ((await adminClient.clients.pushRevocation({
+      id: id!,
+    })) as unknown) as GlobalRequestResult;
+    parseResult(result, "notBeforePush");
+  };
+
+  const testCluster = async () => {
+    const result = await adminClient.clients.testNodesAvailable({ id: id! });
+    parseResult(result, "testCluster");
+  };
+
+  const [toggleDeleteNodeConfirm, DeleteNodeConfirm] = useConfirmDialog({
+    titleKey: "clients:deleteNode",
+    messageKey: t("deleteNodeBody", {
+      node: selectedNode,
+    }),
+    continueButtonLabel: "common:delete",
+    continueButtonVariant: ButtonVariant.danger,
+    onConfirm: async () => {
+      try {
+        await adminClient.clients.deleteClusterNode({
+          id: id!,
+          node: selectedNode,
+        });
+        setNodes({
+          ...Object.keys(nodes).reduce((object: any, key) => {
+            if (key !== selectedNode) {
+              object[key] = nodes[key];
+            }
+            return object;
+          }, {}),
+        });
+        refresh();
+        addAlert(t("deleteNodeSuccess"), AlertVariant.success);
+      } catch (error) {
+        addAlert(
+          t("deleteNodeFail", { error: error.response?.data?.error || error }),
+          AlertVariant.danger
+        );
+      }
+    },
+  });
+
+  useEffect(() => {
+    register(revocationFieldName);
+  }, [register]);
 
   const formatDate = () => {
     const date = getValues(revocationFieldName);
@@ -126,7 +172,9 @@ export const Advanced = ({
               <Button variant="tertiary" onClick={() => setNotBefore(0)}>
                 {t("clear")}
               </Button>
-              <Button variant="secondary">{t("push")}</Button>
+              <Button variant="secondary" onClick={push}>
+                {t("push")}
+              </Button>
             </ActionGroup>
           </FormAccess>
         </CardBody>
@@ -147,41 +195,14 @@ export const Advanced = ({
             >
               <Split hasGutter>
                 <SplitItem>
-                  <TextInput
-                    type="number"
-                    id="kc-node-reregistration-timeout"
-                    value={timeoutValue}
-                    onChange={(value) => {
-                      const timeOut = parseInt(value);
-                      setTimeoutValue(timeOut);
-                      updateReregistrationTimeout(timeOut);
-                    }}
+                  <Controller
+                    name="nodeReRegistrationTimeout"
+                    defaultValue=""
+                    control={control}
+                    render={({ onChange, value }) => (
+                      <TimeSelector value={value} onChange={onChange} />
+                    )}
                   />
-                </SplitItem>
-                <SplitItem>
-                  <Select
-                    variant={SelectVariant.single}
-                    aria-label="Select time"
-                    onSelect={(_, value) => {
-                      setMultiplier(value as number);
-                      updateReregistrationTimeout(
-                        timeoutValue,
-                        value as number
-                      );
-                      setOpen(false);
-                    }}
-                    selections={[multiplier]}
-                    onToggle={() => {
-                      setOpen(!open);
-                    }}
-                    isOpen={open}
-                  >
-                    {times.map((time) => (
-                      <SelectOption key={time.label} value={time.multiplier}>
-                        {time.label}
-                      </SelectOption>
-                    ))}
-                  </Select>
                 </SplitItem>
                 <SplitItem>
                   <Button variant={ButtonVariant.secondary} onClick={save}>
@@ -193,26 +214,44 @@ export const Advanced = ({
           </FormAccess>
         </CardBody>
         <CardBody>
+          <DeleteNodeConfirm />
+          <AddHostDialog
+            clientId={id!}
+            isOpen={addNodeOpen}
+            onAdded={(node) => {
+              nodes[node] = moment.now() / 1000;
+              refresh();
+            }}
+            onClose={() => setAddNodeOpen(false)}
+          />
           <ExpandableSection
             toggleText={t("registeredClusterNodes")}
             onToggle={() => setExpanded(!expanded)}
             isExpanded={expanded}
           >
             <KeycloakDataTable
+              key={key}
               ariaLabelKey="registeredClusterNodes"
               loader={() =>
                 Promise.resolve(
-                  Object.entries(registeredNodes || {}).map((entry) => {
+                  Object.entries(nodes || {}).map((entry) => {
                     return { host: entry[0], registration: entry[1] };
                   })
                 )
               }
               toolbarItem={
                 <>
-                  <Button onClick={() => {}} variant={ButtonVariant.tertiary}>
+                  <Button
+                    onClick={testCluster}
+                    variant={ButtonVariant.tertiary}
+                    isDisabled={Object.keys(nodes).length === 0}
+                  >
                     {t("testClusterAvailability")}
                   </Button>
-                  <Button onClick={() => {}} variant={ButtonVariant.secondary}>
+                  <Button
+                    onClick={() => setAddNodeOpen(true)}
+                    variant={ButtonVariant.secondary}
+                  >
                     {t("registerNodeManually")}
                   </Button>
                 </>
@@ -220,7 +259,10 @@ export const Advanced = ({
               actions={[
                 {
                   title: t("common:delete"),
-                  onRowClick: () => {},
+                  onRowClick: (node) => {
+                    setSelectedNode(node.host);
+                    toggleDeleteNodeConfirm();
+                  },
                 },
               ]}
               columns={[

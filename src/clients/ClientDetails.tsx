@@ -267,17 +267,14 @@ export const ClientDetails = () => {
               <ServiceAccount clientId={id} />
             </Tab>
           )}
-          <Tab
-            eventKey="advanced"
-            title={<TabTitleText>{t("advanced")}</TabTitleText>}
-          >
-            <Advanced
-              form={form}
-              save={save}
-              attributes={client.attributes}
-              registeredNodes={client.registeredNodes}
-            />
-          </Tab>
+          {client && (
+            <Tab
+              eventKey="advanced"
+              title={<TabTitleText>{t("advanced")}</TabTitleText>}
+            >
+              <Advanced form={form} save={save} client={client} />
+            </Tab>
+          )}
         </KeycloakTabs>
       </PageSection>
     </>

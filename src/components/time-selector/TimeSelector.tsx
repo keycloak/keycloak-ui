@@ -63,7 +63,7 @@ export const TimeSelector = ({
       <SplitItem>
         <TextInput
           type="number"
-          id="kc-time"
+          id={`kc-time-${new Date().getTime()}`}
           value={timeValue}
           onChange={(value) => {
             const timeOut = parseInt(value);
@@ -75,7 +75,7 @@ export const TimeSelector = ({
       <SplitItem>
         <Select
           variant={SelectVariant.single}
-          aria-label="Select time"
+          aria-label={t("unitLabel")}
           onSelect={(_, value) => {
             setMultiplier(value as number);
             updateTimeout(timeValue, value as number);
