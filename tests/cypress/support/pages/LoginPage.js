@@ -11,8 +11,8 @@ export default class LoginPage {
   }
 
   isLogInPage() {
-    cy.get(this.userNameInput).should('exist');
-    cy.url().should('include', '/auth');
+    cy.get(this.userNameInput).should("exist");
+    cy.url().should("include", "/auth");
 
     return this;
   }
@@ -34,13 +34,13 @@ export default class LoginPage {
   }
 
   checkErrorIsDisplayed() {
-    cy.get(this.userDrpDwn).should('exist');
+    cy.get(this.userDrpDwn).should("exist");
 
     return this;
   }
 
   checkErrorMessage(message) {
-    cy.get(this.errorText).invoke('text').should('contain', message);
+    cy.get(this.errorText).invoke("text").should("contain", message);
 
     return this;
   }
