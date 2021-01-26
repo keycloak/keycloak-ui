@@ -1,40 +1,44 @@
 export default class LoginPage {
 
-    constructor() {
-        this.userNameInput = "#username";
-        this.passwordInput = "#password";
-        this.submitBtn = "#kc-login";
+  constructor() {
+    this.userNameInput = "#username";
+    this.passwordInput = "#password";
+    this.submitBtn = "#kc-login";
 
-        this.errorText = ".kc-feedback-text";
-    }
+    this.errorText = ".kc-feedback-text";
+  }
 
-    isLogInPage() {
-        cy.get(this.userNameInput).should('exist');
-        cy.url().should('include', '/auth');
+  isLogInPage() {
+    cy.get(this.userNameInput).should('exist');
+    cy.url().should('include', '/auth');
 
-        return this;
-    }
+    return this;
+  }
 
-    logIn(userName = "admin", password = "admin") {
-        cy.getCookie("KEYCLOAK_SESSION_LEGACY").then((cookie) => {
-            if(!cookie) {
-                cy.get(this.userNameInput).type(userName);
-                cy.get(this.passwordInput).type(password);
-        
-                cy.get(this.submitBtn).click();
-            }
-        });
-    }
+  logIn(userName = "admin", password = "admin") {
+    cy.get("div.keycloak__loading-container").should("not.be.visible");
 
-    checkErrorIsDisplayed() {
-        cy.get(this.userDrpDwn).should('exist');
+    cy.get("body").children().then((children) => {
+      if(children.length == 1) {
+        cy.get(this.userNameInput).type(userName);
+        cy.get(this.passwordInput).type(password);
+    
+        cy.get(this.submitBtn).click();
+      }
+    });
 
-        return this;
-    }
+    return this;
+  }
 
-    checkErrorMessage(message) {
-        cy.get(this.errorText).invoke('text').should('contain', message);
+  checkErrorIsDisplayed() {
+    cy.get(this.userDrpDwn).should('exist');
 
-        return this;
-    }
+    return this;
+  }
+
+  checkErrorMessage(message) {
+    cy.get(this.errorText).invoke('text').should('contain', message);
+
+    return this;
+  }
 }
