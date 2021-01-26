@@ -4,13 +4,14 @@ import ListingPage from "../support/pages/admin_console/ListingPage.js";
 import SidebarPage from "../support/pages/admin_console/SidebarPage.js";
 import CreateClientPage from "../support/pages/admin_console/manage/clients/CreateClientPage.js";
 
+let itemId = "client_crud";
+const loginPage = new LoginPage();
+const masthead = new Masthead();
+const sidebarPage = new SidebarPage();
+const listingPage = new ListingPage();
+const createClientPage = new CreateClientPage();
+
 describe("Clients test", function () {
-  let itemId = "client_crud";
-  const loginPage = new LoginPage();
-  const masthead = new Masthead();
-  const sidebarPage = new SidebarPage();
-  const listingPage = new ListingPage();
-  const createClientPage = new CreateClientPage();
 
   describe("Client creation", function () {
     beforeEach(function () {

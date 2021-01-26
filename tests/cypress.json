@@ -1,7 +1,6 @@
 {
     "screenshotsFolder": "assets/screenshots",
     "videosFolder": "assets/videos",
-    "video": false,
     "baseUrl": "http://localhost:8080",
     "chromeWebSecurity": false,
     "viewportWidth": 1360,

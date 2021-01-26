@@ -1,12 +1,13 @@
 import LoginPage from "./../support/pages/LoginPage.js";
 import Masthead from "./../support/pages/admin_console/Masthead.js";
 
-describe("Logging In", function () {
-  const username = "admin";
-  const password = "admin";
+const username = "admin";
+const password = "admin";
 
-  const loginPage = new LoginPage();
-  const masthead = new Masthead();
+const loginPage = new LoginPage();
+const masthead = new Masthead();
+
+describe("Logging In", function () {
 
   beforeEach(function () {
     cy.visit("");
@@ -14,7 +15,9 @@ describe("Logging In", function () {
 
   it("displays errors on wrong credentials", function () {
     loginPage
-      .logIn("wrong", "user{enter}")
+      .logIn("wrong", "user{enter}");
+      
+    loginPage
       .checkErrorMessage("Invalid username or password.")
       .isLogInPage();
   });

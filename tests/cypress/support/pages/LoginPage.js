@@ -29,8 +29,6 @@ export default class LoginPage {
         cy.get(this.submitBtn).click();
       }
     });
-
-    return this;
   }
 
   checkErrorIsDisplayed() {
