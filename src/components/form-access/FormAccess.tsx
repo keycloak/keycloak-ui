@@ -56,7 +56,7 @@ export const FormAccess = ({
   const { hasAccess } = useAccess();
 
   const recursiveCloneChildren = (
-    children: ReactElement[],
+    children: ReactElement[] | ReactElement,
     newProps: any
   ): ReactElement[] => {
     return Children.map(children, (child) => {
