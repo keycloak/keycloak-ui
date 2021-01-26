@@ -47,7 +47,7 @@ describe("Client Scopes test", function () {
         .fillClientScopeData(itemId)
         .save();
 
-        masthead.checkNotificationMessage('Client scope created');
+        masthead.checkNotificationMessage("Client scope created");
 
       sidebarPage.goToClientScopes();
 
@@ -56,7 +56,7 @@ describe("Client Scopes test", function () {
         .itemExist(itemId)
         .deleteItem(itemId); // There should be a confirmation pop-up
 
-        masthead.checkNotificationMessage('The client scope has been deleted');
+        masthead.checkNotificationMessage("The client scope has been deleted");
 
       listingPage // It is not refreshing after delete
         .itemExist(itemId, false);
