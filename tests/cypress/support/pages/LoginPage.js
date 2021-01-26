@@ -6,7 +6,8 @@ export default class LoginPage {
     this.submitBtn = "#kc-login";
 
     this.errorText = ".kc-feedback-text";
-    this.loadingContainer = "div.keycloak__loading-container";
+    this.oldLoadContainer = "#loading";
+    this.loadContainer = "div.keycloak__loading-container";
   }
 
   isLogInPage() {
@@ -17,7 +18,8 @@ export default class LoginPage {
   }
 
   logIn(userName = "admin", password = "admin") {
-    cy.get(this.loadingContainer).should("not.exist");
+    cy.get(this.oldLoadContainer).should("not.exist");
+    cy.get(this.loadContainer).should("not.exist");
 
     cy.get("body").children().then((children) => {
       if(children.length == 1) {
