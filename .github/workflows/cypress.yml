@@ -36,7 +36,7 @@ jobs:
       run: cd tests && npx cypress@6.2.1 run --headless --browser chrome --spec cypress/integration/00_set_new_admin_console.spec.js && cd ..
 
     - name: Cypress run
-      run: cd tests && npx cypress@6.2.1 run --headless --browser chrome --config ignoreTestFiles=00_set_new_admin_console.spec.js && cd ..
+      run: yarn start:cypress-test
 
     - name: Add Cypress videos artifacts
       uses: actions/upload-artifact@v2

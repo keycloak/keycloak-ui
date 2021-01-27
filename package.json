@@ -14,8 +14,8 @@
     "start": "snowpack dev",
     "storybook": "start-storybook -p 6006 -s public",
     "test": "jest",
-    "start:cypress": "cd tests && npx cypress open",
-    "start:cypress-tests": "cd tests && npx cypress run --config ignoreTestFiles=00_set_new_admin_console.spec.js"
+    "start:cypress": "cd tests && npx cypress@6.2.1 open",
+    "start:cypress-tests": "cd tests && npx cypress@6.2.1 run --headless --browser chrome --config ignoreTestFiles=00_set_new_admin_console.spec.js"
   },
   "dependencies": {
     "@patternfly/patternfly": "^4.65.6",
