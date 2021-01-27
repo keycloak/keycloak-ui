@@ -24,6 +24,7 @@
       "react",
       "@typescript-eslint"
   ],
+  "ignorePatterns": ["**/tests/**/*.js"],
   "rules": {
       "no-unused-vars": "off",
       "@typescript-eslint/no-unused-vars": [
