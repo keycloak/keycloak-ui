@@ -13,8 +13,6 @@ import {
 } from "@patternfly/react-core";
 import { useTranslation } from "react-i18next";
 import { useForm } from "react-hook-form";
-
-import { useAlerts } from "../components/alert/Alerts";
 import { useAdminClient } from "../context/auth/AdminClient";
 import RoleRepresentation from "keycloak-admin/lib/defs/roleRepresentation";
 import Composites from "keycloak-admin/lib/defs/roleRepresentation";
@@ -54,44 +52,36 @@ const attributesToArray = (attributes: { [key: string]: string }): any => {
   }));
 };
 
-export const RealmRoleTabs = () => {
+export const AssociatedRolesModal = (props: AssociatedRolesModalProps) => {
   const { t } = useTranslation("roles");
   const form = useForm<RoleRepresentation>({ mode: "onChange" });
-  const history = useHistory();
   const [name, setName] = useState("");
   const adminClient = useAdminClient();
-  const { realm } = useRealm();
-  const [role, setRole] = useState<RoleRepresentation>();
-  const { url } = useRouteMatch();
-
-  // make a list using this
-  const [roleComposites, setRoleComposites] = useState<RoleRepresentation[]>(
-    []
-  );
-
-  const [additionalRoles, setAdditionalRoles] = useState<RoleRepresentation[]>(
-    []
-  );
+  const [selectedRows, setSelectedRows] = useState<RoleRepresentation[]>([]);
 
   const { id } = useParams<{ id: string }>();
 
-  const { addAlert } = useAlerts();
+  const loader = async () => {
+    const allRoles = await adminClient.roles.find();
+    const existingAdditionalRoles = await adminClient.roles.getCompositeRoles({
+      id,
+    });
 
-  const [open, setOpen] = useState(false);
+    return allRoles.filter((role: RoleRepresentation) => {
+      return (
+        existingAdditionalRoles.find(
+          (existing: RoleRepresentation) => existing.name === role.name
+        ) === undefined && role.name !== name
+      );
+    });
+  };
 
   useEffect(() => {
     (async () => {
       if (id) {
         const fetchedRole = await adminClient.roles.findOneById({ id });
-
-        const allAdditionalRoles = await adminClient.roles.getCompositeRoles({
-          id,
-        });
-        setAdditionalRoles(allAdditionalRoles);
-
         setName(fetchedRole.name!);
         setupForm(fetchedRole);
-        setRole(fetchedRole);
       } else {
         setName(t("createRole"));
       }
@@ -107,87 +97,6 @@ export const RealmRoleTabs = () => {
       }
     });
   };
-
-  // reset form to default values
-  const reset = () => {
-    setupForm(role!);
-  };
-
-  const save = async (updatedRole: RoleRepresentation) => {
-    try {
-      if (id) {
-        if (updatedRole.attributes) {
-          // react-hook-form will use `KeyValueType[]` here we convert it back into an indexed property of string[]
-          updatedRole.attributes = arrayToAttributes(
-            (updatedRole.attributes as unknown) as KeyValueType[]
-          );
-        }
-        await adminClient.roles.createComposite(
-          { roleId: id, realm },
-          roleComposites
-        );
-
-        setRole(updatedRole);
-        setupForm(updatedRole);
-        await adminClient.roles.updateById({ id }, updatedRole);
-      } else {
-        await adminClient.roles.create(role);
-
-        const createdRole = await adminClient.roles.findOneByName({
-          name: updatedRole.name!,
-        });
-
-        await adminClient.roles.createComposite(
-          { roleId: createdRole.id!, realm },
-          roleComposites
-        );
-
-        history.push(`/${realm}/roles/${createdRole.id}`);
-      }
-      addAlert(t(id ? "roleSaveSuccess" : "roleCreated"), AlertVariant.success);
-    } catch (error) {
-      addAlert(
-        t((id ? "roleSave" : "roleCreate") + "Error", {
-          error: error.response.data?.errorMessage || error,
-        }),
-        AlertVariant.danger
-      );
-    }
-  };
-
-  const addComposites = async (composites: Composites[]): Promise<void> => {
-    const compositeArray = composites;
-    setAdditionalRoles([...additionalRoles, ...compositeArray]);
-
-    try {
-      await adminClient.roles.createComposite(
-        { roleId: id, realm: realm },
-        compositeArray
-      );
-      // refresh();
-      addAlert(t("addAssociatedRolesSuccess"), AlertVariant.success);
-    } catch (error) {
-      addAlert(t("addAssociatedRolesError", { error }), AlertVariant.danger);
-    }
-  };
-
-  const [toggleDeleteDialog, DeleteConfirm] = useConfirmDialog({
-    titleKey: "roles:roleDeleteConfirm",
-    messageKey: t("roles:roleDeleteConfirmDialog", { name }),
-    continueButtonLabel: "common:delete",
-    continueButtonVariant: ButtonVariant.danger,
-    onConfirm: async () => {
-      try {
-        await adminClient.roles.delById({ id });
-        addAlert(t("roleDeletedSuccess"), AlertVariant.success);
-        history.replace(`/${realm}/roles`);
-      } catch (error) {
-        addAlert(`${t("roleDeleteError")} ${error}`, AlertVariant.danger);
-      }
-    },
-  });
-
-  const toggleModal = () => setOpen(!open);
 
   return (
     <Modal
@@ -254,45 +163,6 @@ export const RealmRoleTabs = () => {
           />
         }
       />
-      <PageSection variant="light">
-        {id && (
-          <KeycloakTabs isBox>
-            <Tab
-              eventKey="details"
-              title={<TabTitleText>{t("details")}</TabTitleText>}
-            >
-              <RealmRoleForm
-                reset={reset}
-                form={form}
-                save={save}
-                editMode={true}
-              />
-            </Tab>
-            {additionalRoles.length > 0 ? (
-              <Tab
-                eventKey="AssociatedRoles"
-                title={<TabTitleText>{t("associatedRolesText")}</TabTitleText>}
-              >
-                <AssociatedRolesTab />
-              </Tab>
-            ) : null}
-            <Tab
-              eventKey="attributes"
-              title={<TabTitleText>{t("attributes")}</TabTitleText>}
-            >
-              <RoleAttributes form={form} save={save} reset={reset} />
-            </Tab>
-          </KeycloakTabs>
-        )}
-        {!id && (
-          <RealmRoleForm
-            reset={reset}
-            form={form}
-            save={save}
-            editMode={false}
-          />
-        )}
-      </PageSection>
-    </>
+    </Modal>
   );
 };
