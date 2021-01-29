@@ -160,6 +160,7 @@ export function KeycloakDataTable<T>({
       },
       (result) => {
         setRows(result);
+        setFilteredData(result);
         setLoading(false);
       }
     );
