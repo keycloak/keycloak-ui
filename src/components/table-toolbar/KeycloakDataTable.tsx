@@ -196,7 +196,9 @@ export function KeycloakDataTable<T>({
     _.cloneDeep(actions).map((action: Action<T>, index: number) => {
       delete action.onRowClick;
       action.onClick = async (_, rowIndex) => {
-        const result = await actions[index].onRowClick!(rows![rowIndex].data);
+        const result = await actions[index].onRowClick!(
+          (filteredData || rows)![rowIndex].data
+        );
         if (result) {
           refresh();
         }
