@@ -1,8 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { useHistory, useParams, useRouteMatch } from "react-router-dom";
-import { AlertVariant, Button, ButtonVariant, Modal, ModalVariant } from "@patternfly/react-core";
+import { AlertVariant, Button, ButtonVariant, DropdownItem, Modal, ModalVariant, PageSection, Tab, TabTitleText } from "@patternfly/react-core";
 import { useTranslation } from "react-i18next";
 import { useForm } from "react-hook-form";
+
+import { useAlerts } from "../components/alert/Alerts";
 import { useAdminClient } from "../context/auth/AdminClient";
 import RoleRepresentation from "keycloak-admin/lib/defs/roleRepresentation";
 import Composites from "keycloak-admin/lib/defs/roleRepresentation";
@@ -39,11 +41,10 @@ const attributesToArray = (attributes: { [key: string]: string }): any => {
   }));
 };
 
-export const AssociatedRolesModal = (props: AssociatedRolesModalProps) => {
+export const RealmRoleTabs = () => {
   const { t } = useTranslation("roles");
   const form = useForm<RoleRepresentation>({ mode: "onChange" });
   const history = useHistory();
-
   const adminClient = useAdminClient();
   const { realm } = useRealm();
   const [role, setRole] = useState<RoleRepresentation>();
@@ -60,14 +61,7 @@ export const AssociatedRolesModal = (props: AssociatedRolesModalProps) => {
   );
   const { addAlert } = useAlerts();
 
-    return allRoles.filter((role: RoleRepresentation) => {
-      return (
-        existingAdditionalRoles.find(
-          (existing: RoleRepresentation) => existing.name === role.name
-        ) === undefined && role.name !== name
-      );
-    });
-  };
+  const [open, setOpen] = useState(false);
 
   useEffect(() => {
     const update = async () => {
@@ -86,6 +80,7 @@ export const AssociatedRolesModal = (props: AssociatedRolesModalProps) => {
 
         setName(fetchedRole.name!);
         setupForm(fetchedRole);
+        setRole(fetchedRole);
       } else {
         setName(t("createRole"));
       }
