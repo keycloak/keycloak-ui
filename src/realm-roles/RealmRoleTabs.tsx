@@ -58,8 +58,6 @@ export const RealmRoleTabs = () => {
   const [role, setRole] = useState<RoleRepresentation>();
   const { url } = useRouteMatch();
 
-  const { realm } = useRealm();
-
   const [key, setKey] = useState("");
 
   const refresh = () => {
