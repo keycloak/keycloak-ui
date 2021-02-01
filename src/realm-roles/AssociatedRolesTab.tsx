@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Link, useHistory, useRouteMatch } from "react-router-dom";
+import { Link, useHistory, useParams, useRouteMatch } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import {
   AlertVariant,
@@ -7,7 +7,8 @@ import {
   ButtonVariant,
   PageSection,
 } from "@patternfly/react-core";
-import { boolFormatter } from "../util";
+import { IFormatter, IFormatterValueType } from "@patternfly/react-table";
+
 import { useAdminClient } from "../context/auth/AdminClient";
 import { ViewHeader } from "../components/view-header/ViewHeader";
 import RoleRepresentation from "keycloak-admin/lib/defs/roleRepresentation";
@@ -18,14 +19,24 @@ import { useAlerts } from "../components/alert/Alerts";
 import { useConfirmDialog } from "../components/confirm-dialog/ConfirmDialog";
 import { emptyFormatter, toUpperCase } from "../util";
 
-export const RealmRolesSection = () => {
+export const AssociatedRolesTab = () => {
   const { t } = useTranslation("roles");
   const history = useHistory();
   const adminClient = useAdminClient();
   const { addAlert } = useAlerts();
   const { url } = useRouteMatch();
+  const { id } = useParams<{ id: string }>();
+
 
   const [selectedRole, setSelectedRole] = useState<RoleRepresentation>();
+
+//   const test = async () => {
+//       const compies = await adminClient.roles.getCompositeRoles({ id: roleId });
+//       console.log("compies", compies)
+
+//   }
+
+//   test();
 
   const loader = async (to?: number, max?: number, search?: string) => {
     const params: { [name: string]: string | number } = {
@@ -43,6 +54,12 @@ export const RealmRolesSection = () => {
       </Link>
     </>
   );
+
+  const boolFormatter = (): IFormatter => (data?: IFormatterValueType) => {
+    const boolVal = data?.toString();
+
+    return (boolVal ? toUpperCase(boolVal) : undefined) as string;
+  };
 
   const [toggleDeleteDialog, DeleteConfirm] = useConfirmDialog({
     titleKey: "roles:roleDeleteConfirm",
@@ -64,30 +81,9 @@ export const RealmRolesSection = () => {
     },
   });
 
-  // const [toggleAssociatedRoleDialog, associatedRolesList] = useConfirmDialog({
-  //   titleKey: "roles:associatedRolesModalTitle",
-  //   messageKey: t("roles:roleDeleteConfirmDialog", {
-  //     selectedRoleName: selectedRole ? selectedRole!.name : "",
-  //   }),
-  //   continueButtonLabel: t("Add"),
-  //   continueButtonVariant: ButtonVariant.danger,
-  //   onConfirm: async () => {
-  //     try {
-  //       await adminClient.roles.delById({
-  //         id: selectedRole!.id!,
-  //       });
-  //       setSelectedRole(undefined);
-  //       addAlert(t("roleDeletedSuccess"), AlertVariant.success);
-  //     } catch (error) {
-  //       addAlert(`${t("roleDeleteError")} ${error}`, AlertVariant.danger);
-  //     }
-  //   },
-  // });
-
   const goToCreate = () => history.push(`${url}/add-role`);
   return (
     <>
-      <ViewHeader titleKey="roles:title" subKey="roles:roleExplain" />
       <PageSection variant="light">
         <DeleteConfirm />
         <KeycloakDataTable
@@ -108,7 +104,7 @@ export const RealmRolesSection = () => {
                 setSelectedRole(role);
                 toggleDeleteDialog();
               },
-            },
+            }
           ]}
           columns={[
             {
