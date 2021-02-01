@@ -18,6 +18,7 @@ import { formattedLinkTableCell } from "../components/external-link/FormattedLin
 import { useAlerts } from "../components/alert/Alerts";
 import { useConfirmDialog } from "../components/confirm-dialog/ConfirmDialog";
 import { emptyFormatter, toUpperCase } from "../util";
+import { useEffect } from "@storybook/addons";
 
 export const AssociatedRolesTab = () => {
   const { t } = useTranslation("roles");
@@ -27,24 +28,11 @@ export const AssociatedRolesTab = () => {
   const { url } = useRouteMatch();
   const { id } = useParams<{ id: string }>();
 
-
   const [selectedRole, setSelectedRole] = useState<RoleRepresentation>();
 
-//   const test = async () => {
-//       const compies = await adminClient.roles.getCompositeRoles({ id: roleId });
-//       console.log("compies", compies)
-
-//   }
-
-//   test();
-
-  const loader = async (to?: number, max?: number, search?: string) => {
-    const params: { [name: string]: string | number } = {
-      to: to!,
-      max: max!,
-      search: search!,
-    };
-    return await adminClient.roles.find(params);
+  const loader = async () => {
+    const compositeRoles = await adminClient.roles.getCompositeRoles({ id });
+    return compositeRoles;
   };
 
   const RoleDetailLink = (role: RoleRepresentation) => (
@@ -70,9 +58,9 @@ export const AssociatedRolesTab = () => {
     continueButtonVariant: ButtonVariant.danger,
     onConfirm: async () => {
       try {
-        await adminClient.roles.delById({
-          id: selectedRole!.id!,
-        });
+        // await adminClient.roles.delById({
+        //   id: selectedRole!.id!,
+        // });
         setSelectedRole(undefined);
         addAlert(t("roleDeletedSuccess"), AlertVariant.success);
       } catch (error) {
@@ -99,12 +87,12 @@ export const AssociatedRolesTab = () => {
           }
           actions={[
             {
-              title: t("addAssociatedRolesText"),
+              title: t("common:delete"),
               onRowClick: (role) => {
                 setSelectedRole(role);
                 toggleDeleteDialog();
               },
-            }
+            },
           ]}
           columns={[
             {
