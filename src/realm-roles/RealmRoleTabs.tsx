@@ -1,17 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { useHistory, useParams, useRouteMatch } from "react-router-dom";
-import {
-  AlertVariant,
-  ButtonVariant,
-  DropdownItem,
-  PageSection,
-  Tab,
-  TabTitleText,
-} from "@patternfly/react-core";
+import { AlertVariant, Button, ButtonVariant, Modal, ModalVariant } from "@patternfly/react-core";
 import { useTranslation } from "react-i18next";
 import { useForm } from "react-hook-form";
-
-import { useAlerts } from "../components/alert/Alerts";
 import { useAdminClient } from "../context/auth/AdminClient";
 import RoleRepresentation from "keycloak-admin/lib/defs/roleRepresentation";
 import Composites from "keycloak-admin/lib/defs/roleRepresentation";
@@ -23,6 +14,7 @@ import { useRealm } from "../context/realm-context/RealmContext";
 import { AssociatedRolesModal } from "./AssociatedRolesModal";
 import { KeycloakTabs } from "../components/keycloak-tabs/KeycloakTabs";
 import { AssociatedRolesTab } from "./AssociatedRolesTab";
+import { useAlerts } from "../components/alert/Alerts";
 
 const arrayToAttributes = (attributeArray: KeyValueType[]) => {
   const initValue: { [index: string]: string[] } = {};
@@ -47,11 +39,10 @@ const attributesToArray = (attributes: { [key: string]: string }): any => {
   }));
 };
 
-export const RealmRoleTabs = () => {
+export const AssociatedRolesModal = (props: AssociatedRolesModalProps) => {
   const { t } = useTranslation("roles");
   const form = useForm<RoleRepresentation>({ mode: "onChange" });
   const history = useHistory();
-  // const [name, setName] = useState("");
 
   const adminClient = useAdminClient();
   const { realm } = useRealm();
@@ -69,7 +60,14 @@ export const RealmRoleTabs = () => {
   );
   const { addAlert } = useAlerts();
 
-  const [open, setOpen] = useState(false);
+    return allRoles.filter((role: RoleRepresentation) => {
+      return (
+        existingAdditionalRoles.find(
+          (existing: RoleRepresentation) => existing.name === role.name
+        ) === undefined && role.name !== name
+      );
+    });
+  };
 
   useEffect(() => {
     const update = async () => {
@@ -88,7 +86,6 @@ export const RealmRoleTabs = () => {
 
         setName(fetchedRole.name!);
         setupForm(fetchedRole);
-        setRole(fetchedRole);
       } else {
         setName(t("createRole"));
       }
