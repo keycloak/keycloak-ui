@@ -63,15 +63,10 @@ export const AssociatedRolesModal = (props: AssociatedRolesModalProps) => {
 
   const loader = async () => {
     const allRoles = await adminClient.roles.find();
-<<<<<<< HEAD
     const existingAdditionalRoles = await adminClient.roles.getCompositeRoles({
       id,
     });
 
-=======
-    
-    // console.log("existingCompies", props.existingCompositeRoles)
->>>>>>> addComposites function WIP
     return allRoles.filter((role: RoleRepresentation) => {
       return (
         existingAdditionalRoles.find(
