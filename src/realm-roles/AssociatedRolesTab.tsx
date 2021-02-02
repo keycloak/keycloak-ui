@@ -33,12 +33,6 @@ export const AssociatedRolesTab = () => {
     return compositeRoles;
   };
 
-  const [key, setKey] = useState("");
-  const refresh = () => {
-    console.log("refresh?");
-    setKey(`${new Date().getTime()}`);
-  };
-
   const RoleDetailLink = (role: RoleRepresentation) => (
     <>
       <Link key={role.id} to={`${url}/${role.id}`}>
