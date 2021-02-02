@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useHistory, useRouteMatch } from "react-router-dom";
+import { useHistory, useParams, useRouteMatch } from "react-router-dom";
 import { AlertVariant, ButtonVariant, DropdownItem, Modal, ModalVariant, PageSection, Tab, TabTitleText } from "@patternfly/react-core";
 import { useTranslation } from "react-i18next";
 import { useForm } from "react-hook-form";
@@ -24,29 +24,33 @@ const arrayToAttributes = (attributeArray: KeyValueType[]) => {
   }, initValue);
 };
 
-const attributesToArray = (attributes: { [key: string]: string }): any => {
+const attributesToArray = (attributes?: {
+  [key: string]: string[];
+}): KeyValueType[] => {
   if (!attributes || Object.keys(attributes).length == 0) {
-    return [
-      {
-        key: "",
-        value: "",
-      },
-    ];
+    return [];
   }
   return Object.keys(attributes).map((key) => ({
     key: key,
-    value: attributes[key],
+    value: attributes[key][0],
   }));
+};
+
+export type RoleFormType = Omit<RoleRepresentation, "attributes"> & {
+  attributes: KeyValueType[];
 };
 
 export const RealmRoleTabs = () => {
   const { t } = useTranslation("roles");
-  const form = useForm<RoleRepresentation>({ mode: "onChange" });
+  const form = useForm<RoleFormType>({ mode: "onChange" });
   const history = useHistory();
   const adminClient = useAdminClient();
-  const { realm } = useRealm();
-  const [role, setRole] = useState<RoleRepresentation>();
+  const [role, setRole] = useState<RoleFormType>();
+
+  const { id, clientId } = useParams<{ id: string; clientId: string }>();
   const { url } = useRouteMatch();
+
+  const { realm } = useRealm();
 
   const [key, setKey] = useState("");
 
@@ -60,6 +64,13 @@ export const RealmRoleTabs = () => {
   const { addAlert } = useAlerts();
 
   const [open, setOpen] = useState(false);
+  const convert = (role: RoleRepresentation) => {
+    const { attributes, ...rest } = role;
+    return {
+      attributes: attributesToArray(attributes),
+      ...rest,
+    };
+  };
 
   useEffect(() => {
     const update = async () => {
@@ -96,18 +107,22 @@ export const RealmRoleTabs = () => {
     });
   };
 
-  // reset form to default values
-  const reset = () => {
-    setupForm(role!);
-  };
+  useEffect(() => append({ key: "", value: "" }), [append, role]);
 
-  const save = async (updatedRole: RoleRepresentation) => {
+  const save = async (role: RoleFormType) => {
     try {
+      const { attributes, ...rest } = role;
+      const roleRepresentation: RoleRepresentation = rest;
       if (id) {
-        if (updatedRole.attributes) {
-          // react-hook-form will use `KeyValueType[]` here we convert it back into an indexed property of string[]
-          updatedRole.attributes = arrayToAttributes(
-            (updatedRole.attributes as unknown) as KeyValueType[]
+        if (attributes) {
+          roleRepresentation.attributes = arrayToAttributes(attributes);
+        }
+        if (!clientId) {
+          await adminClient.roles.updateById({ id }, roleRepresentation);
+        } else {
+          await adminClient.clients.updateRole(
+            { id: clientId, roleName: role.name! },
+            roleRepresentation
           );
         }
 
@@ -175,7 +190,9 @@ export const RealmRoleTabs = () => {
 
   const [toggleDeleteDialog, DeleteConfirm] = useConfirmDialog({
     titleKey: "roles:roleDeleteConfirm",
-    messageKey: t("roles:roleDeleteConfirmDialog", { name }),
+    messageKey: t("roles:roleDeleteConfirmDialog", {
+      name: role?.name || t("createRole"),
+    }),
     continueButtonLabel: "common:delete",
     continueButtonVariant: ButtonVariant.danger,
     onConfirm: async () => {
@@ -189,7 +206,8 @@ export const RealmRoleTabs = () => {
           });
         }
         addAlert(t("roleDeletedSuccess"), AlertVariant.success);
-        history.replace(`/${realm}/roles`);
+        const loc = url.replace(/\/attributes/g, "");
+        history.replace(`${loc.substr(0, loc.lastIndexOf("/"))}`);
       } catch (error) {
         addAlert(`${t("roleDeleteError")} ${error}`, AlertVariant.danger);
       }
@@ -208,14 +226,14 @@ export const RealmRoleTabs = () => {
         toggleDialog={() => setOpen(!open)}
       />
       <ViewHeader
-        titleKey={name}
+        titleKey={role?.name || t("createRole")}
         subKey={id ? "" : "roles:roleCreateExplain"}
         actionsDropdownId="roles-actions-dropdown"
         dropdownItems={
           id
             ? [
                 <DropdownItem
-                  key="action"
+                  key="delete-role"
                   component="button"
                   onClick={() => toggleDeleteDialog()}
                 >
@@ -241,7 +259,7 @@ export const RealmRoleTabs = () => {
               title={<TabTitleText>{t("details")}</TabTitleText>}
             >
               <RealmRoleForm
-                reset={reset}
+                reset={() => form.reset(role)}
                 form={form}
                 save={save}
                 editMode={true}
@@ -259,13 +277,18 @@ export const RealmRoleTabs = () => {
               eventKey="attributes"
               title={<TabTitleText>{t("attributes")}</TabTitleText>}
             >
-              <RoleAttributes form={form} save={save} reset={reset} />
+              <RoleAttributes
+                form={form}
+                save={save}
+                array={{ fields, append, remove }}
+                reset={() => form.reset(role)}
+              />
             </Tab>
           </KeycloakTabs>
         )}
         {!id && (
           <RealmRoleForm
-            reset={reset}
+            reset={() => form.reset()}
             form={form}
             save={save}
             editMode={false}
