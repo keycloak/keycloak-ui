@@ -16,7 +16,6 @@ import { formattedLinkTableCell } from "../components/external-link/FormattedLin
 import { useAlerts } from "../components/alert/Alerts";
 import { useConfirmDialog } from "../components/confirm-dialog/ConfirmDialog";
 import { emptyFormatter, toUpperCase } from "../util";
-import { useEffect } from "@storybook/addons";
 
 type AssociatedRolesTabProps = {
   additionalRoles: RoleRepresentation[];

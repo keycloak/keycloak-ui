@@ -1,10 +1,8 @@
 import React, { useEffect, useState } from "react";
-import { useHistory, useParams, useRouteMatch } from "react-router-dom";
-import { AlertVariant, Button, ButtonVariant, DropdownItem, Modal, ModalVariant, PageSection, Tab, TabTitleText } from "@patternfly/react-core";
+import { useHistory, useRouteMatch } from "react-router-dom";
+import { AlertVariant, ButtonVariant, DropdownItem, Modal, ModalVariant, PageSection, Tab, TabTitleText } from "@patternfly/react-core";
 import { useTranslation } from "react-i18next";
 import { useForm } from "react-hook-form";
-
-import { useAlerts } from "../components/alert/Alerts";
 import { useAdminClient } from "../context/auth/AdminClient";
 import RoleRepresentation from "keycloak-admin/lib/defs/roleRepresentation";
 import Composites from "keycloak-admin/lib/defs/roleRepresentation";
