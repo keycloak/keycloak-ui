@@ -85,7 +85,7 @@ export const AssociatedRolesModal = (props: AssociatedRolesModalProps) => {
       variant={ModalVariant.large}
       actions={[
         <Button
-          key="confirm"
+          key="add"
           variant="primary"
           isDisabled={!selectedRows?.length}
           onClick={() => {
@@ -93,7 +93,7 @@ export const AssociatedRolesModal = (props: AssociatedRolesModalProps) => {
             props.onConfirm(selectedRows);
           }}
         >
-          Add
+          {t("common:add")}
         </Button>,
         <Button
           key="cancel"
@@ -102,7 +102,7 @@ export const AssociatedRolesModal = (props: AssociatedRolesModalProps) => {
             props.toggleDialog();
           }}
         >
-          Cancel
+          {t("common:cancel")}
         </Button>,
       ]}
     >
