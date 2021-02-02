@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Link, useHistory, useParams, useRouteMatch } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import {
@@ -18,7 +18,6 @@ import { formattedLinkTableCell } from "../components/external-link/FormattedLin
 import { useAlerts } from "../components/alert/Alerts";
 import { useConfirmDialog } from "../components/confirm-dialog/ConfirmDialog";
 import { emptyFormatter, toUpperCase } from "../util";
-import { useEffect } from "@storybook/addons";
 
 export const AssociatedRolesTab = () => {
   const { t } = useTranslation("roles");
@@ -34,6 +33,12 @@ export const AssociatedRolesTab = () => {
     const compositeRoles = await adminClient.roles.getCompositeRoles({ id });
     return compositeRoles;
   };
+
+  const [key, setKey] = useState("");
+  const refresh = () => {
+    console.log("refresh?");
+    setKey(`${new Date().getTime()}`);
+  }
 
   const RoleDetailLink = (role: RoleRepresentation) => (
     <>

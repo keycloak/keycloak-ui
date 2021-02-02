@@ -58,6 +58,12 @@ export const RealmRoleTabs = () => {
   const [role, setRole] = useState<RoleRepresentation>();
   const { url } = useRouteMatch();
 
+  const [key, setKey] = useState("");
+  const refresh = () => {
+    console.log("refresh?");
+    setKey(`${new Date().getTime()}`);
+  }
+
   // make a list using this
   const [roleComposites, setRoleComposites] = useState<RoleRepresentation[]>(
     []
@@ -90,7 +96,12 @@ export const RealmRoleTabs = () => {
         setName(t("createRole"));
       }
     })();
-  }, []);
+  }, [key]);
+
+  // useEffect(() => {
+  //   console.log(additionalRoles)
+  //     refresh();
+  // }, [additionalRoles]);
 
   const setupForm = (role: RoleRepresentation) => {
     Object.entries(role).map((entry) => {
@@ -124,6 +135,7 @@ export const RealmRoleTabs = () => {
         setRole(updatedRole);
         setupForm(updatedRole);
         await adminClient.roles.updateById({ id }, updatedRole);
+        refresh();
       } else {
         await adminClient.roles.create(role);
 
