@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { Link, useHistory, useParams, useRouteMatch } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import {
@@ -10,7 +10,6 @@ import {
 import { IFormatter, IFormatterValueType } from "@patternfly/react-table";
 
 import { useAdminClient } from "../context/auth/AdminClient";
-import { ViewHeader } from "../components/view-header/ViewHeader";
 import RoleRepresentation from "keycloak-admin/lib/defs/roleRepresentation";
 import { ListEmptyState } from "../components/list-empty-state/ListEmptyState";
 import { KeycloakDataTable } from "../components/table-toolbar/KeycloakDataTable";
@@ -38,7 +37,7 @@ export const AssociatedRolesTab = () => {
   const refresh = () => {
     console.log("refresh?");
     setKey(`${new Date().getTime()}`);
-  }
+  };
 
   const RoleDetailLink = (role: RoleRepresentation) => (
     <>
