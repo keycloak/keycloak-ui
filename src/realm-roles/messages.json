@@ -29,7 +29,7 @@
     "roleCreateError": "Could not create role: {{error}}",
     "roleImportSuccess": "Role import successful",
     "roleDeleteConfirm": "Delete role?",
-    "roleDeleteConfirmDialog": "This action will permanently delete the role {{name}} and cannot be undone.",
+    "roleDeleteConfirmDialog": "This action will permanently delete the role {{selectedRoleName}} and cannot be undone.",
     "roleDeletedSuccess": "The role has been deleted",
     "roleDeleteError": "Could not delete role:",
     "roleSaveSuccess": "The role has been saved",
