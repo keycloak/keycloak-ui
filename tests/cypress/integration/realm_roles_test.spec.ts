@@ -60,7 +60,11 @@ describe("Realm roles test", function () {
       listingPage.itemExist(itemId, false);
     });
 
+<<<<<<< HEAD
     it("Associated roles modal test", function () {
+=======
+    it("Realm role attributes modal test", function () {
+>>>>>>> cypress tests, bump react-hook-form to remove console warnings
       itemId += "_" + (Math.random() + 1).toString(36).substring(7);
 
       // Create
