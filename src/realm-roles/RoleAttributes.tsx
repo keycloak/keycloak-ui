@@ -42,7 +42,7 @@ export const RoleAttributes = ({
   const { t } = useTranslation("roles");
 
   const columns = ["Key", "Value"];
-  const watchFirstKey = watch("attributes[0].key", fields);
+  const watchFirstKey = watch("attributes[0].key", "");
 
   return (
     <>

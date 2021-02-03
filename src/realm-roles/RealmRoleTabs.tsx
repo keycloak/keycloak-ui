@@ -233,6 +233,7 @@ export const RealmRoleTabs = () => {
                 </DropdownItem>,
                 <DropdownItem
                   key="toggle-modal"
+                  id="add-roles"
                   component="button"
                   onClick={() => toggleModal()}
                 >
