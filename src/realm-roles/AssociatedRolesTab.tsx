@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Link, useHistory, useParams, useRouteMatch } from "react-router-dom";
+import { Link, useHistory, useRouteMatch } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import {
   AlertVariant,
@@ -9,7 +9,6 @@ import {
 } from "@patternfly/react-core";
 import { IFormatter, IFormatterValueType } from "@patternfly/react-table";
 
-import { useAdminClient } from "../context/auth/AdminClient";
 import RoleRepresentation from "keycloak-admin/lib/defs/roleRepresentation";
 import { ListEmptyState } from "../components/list-empty-state/ListEmptyState";
 import { KeycloakDataTable } from "../components/table-toolbar/KeycloakDataTable";
@@ -18,20 +17,28 @@ import { useAlerts } from "../components/alert/Alerts";
 import { useConfirmDialog } from "../components/confirm-dialog/ConfirmDialog";
 import { emptyFormatter, toUpperCase } from "../util";
 
-export const AssociatedRolesTab = () => {
+type AssociatedRolesTabProps = {
+  additionalRoles: RoleRepresentation[];
+};
+
+export const AssociatedRolesTab = ({
+  additionalRoles,
+}: AssociatedRolesTabProps) => {
   const { t } = useTranslation("roles");
   const history = useHistory();
-  const adminClient = useAdminClient();
   const { addAlert } = useAlerts();
   const { url } = useRouteMatch();
-  const { id } = useParams<{ id: string }>();
+  const tableRefresher = React.useRef<() => void>();
 
   const [selectedRole, setSelectedRole] = useState<RoleRepresentation>();
 
   const loader = async () => {
-    const compositeRoles = await adminClient.roles.getCompositeRoles({ id });
-    return compositeRoles;
+    return Promise.resolve(additionalRoles);
   };
+
+  React.useEffect(() => {
+    tableRefresher.current && tableRefresher.current();
+  }, [additionalRoles]);
 
   const RoleDetailLink = (role: RoleRepresentation) => (
     <>
@@ -48,17 +55,16 @@ export const AssociatedRolesTab = () => {
   };
 
   const [toggleDeleteDialog, DeleteConfirm] = useConfirmDialog({
-    titleKey: "roles:roleDeleteConfirm",
-    messageKey: t("roles:roleDeleteConfirmDialog", {
+    titleKey: "roles:roleRemoveAssociatedRoleConfirm",
+    messageKey: t("roles:roleRemoveAssociatedText", {
       selectedRoleName: selectedRole ? selectedRole!.name : "",
     }),
     continueButtonLabel: "common:delete",
     continueButtonVariant: ButtonVariant.danger,
     onConfirm: async () => {
       try {
-        // await adminClient.roles.delById({
-        //   id: selectedRole!.id!,
-        // });
+        // await adminClient.roles.delCompositeRoles({ id: compID }, compies);
+
         setSelectedRole(undefined);
         addAlert(t("roleDeletedSuccess"), AlertVariant.success);
       } catch (error) {
@@ -66,6 +72,10 @@ export const AssociatedRolesTab = () => {
       }
     },
   });
+
+  const setRefresher = (refresher: () => void) => {
+    tableRefresher.current = refresher;
+  };
 
   const goToCreate = () => history.push(`${url}/add-role`);
   return (
@@ -78,6 +88,7 @@ export const AssociatedRolesTab = () => {
           ariaLabelKey="roles:roleList"
           searchPlaceholderKey="roles:searchFor"
           isPaginated
+          setRefresher={setRefresher}
           toolbarItem={
             <>
               <Button onClick={goToCreate}>{t("createRole")}</Button>
@@ -85,7 +96,7 @@ export const AssociatedRolesTab = () => {
           }
           actions={[
             {
-              title: t("common:delete"),
+              title: t("common:remove"),
               onRowClick: (role) => {
                 setSelectedRole(role);
                 toggleDeleteDialog();

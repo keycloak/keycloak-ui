@@ -84,7 +84,7 @@ export const RealmRoleTabs = () => {
   };
 
   useEffect(() => {
-    (async () => {
+    const update = async () => {
       if (id) {
         const fetchedRole = await adminClient.roles.findOneById({ id });
         const allAdditionalRoles = await adminClient.roles.getCompositeRoles({
@@ -98,7 +98,8 @@ export const RealmRoleTabs = () => {
         });
         setRole(convertedRole);
       }
-    })();
+    };
+    setTimeout(update, 100);
   }, [key]);
 
   const { fields, append, remove } = useFieldArray({
@@ -155,7 +156,9 @@ export const RealmRoleTabs = () => {
           });
         }
         setRole(convert(createdRole));
-        history.push(url.substr(0, url.lastIndexOf("/") + 1) + createdRole.id);
+        history.push(
+          url.substr(0, url.lastIndexOf("/") + 1) + createdRole.id + "/details"
+        );
       }
       addAlert(t(id ? "roleSaveSuccess" : "roleCreated"), AlertVariant.success);
     } catch (error) {
@@ -177,6 +180,7 @@ export const RealmRoleTabs = () => {
         { roleId: id, realm: realm },
         compositeArray
       );
+      history.push(url.substr(0, url.lastIndexOf("/") + 1) + "AssociatedRoles");
       refresh();
       addAlert(t("addAssociatedRolesSuccess"), AlertVariant.success);
     } catch (error) {
@@ -196,7 +200,10 @@ export const RealmRoleTabs = () => {
         if (!clientId) {
           await adminClient.roles.delById({ id });
         } else {
-          await adminClient.clients.delRole({ id: clientId, roleName: name });
+          await adminClient.clients.delRole({
+            id: clientId,
+            roleName: role!.name as string,
+          });
         }
         addAlert(t("roleDeletedSuccess"), AlertVariant.success);
         const loc = url.replace(/\/attributes/g, "");
@@ -221,6 +228,7 @@ export const RealmRoleTabs = () => {
       <ViewHeader
         titleKey={role?.name || t("createRole")}
         subKey={id ? "" : "roles:roleCreateExplain"}
+        actionsDropdownId="roles-actions-dropdown"
         dropdownItems={
           id
             ? [
@@ -262,7 +270,7 @@ export const RealmRoleTabs = () => {
                 eventKey="AssociatedRoles"
                 title={<TabTitleText>{t("associatedRolesText")}</TabTitleText>}
               >
-                <AssociatedRolesTab />
+                <AssociatedRolesTab additionalRoles={additionalRoles} />
               </Tab>
             ) : null}
             <Tab

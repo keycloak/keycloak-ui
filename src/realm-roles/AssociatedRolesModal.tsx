@@ -86,6 +86,7 @@ export const AssociatedRolesModal = (props: AssociatedRolesModalProps) => {
       actions={[
         <Button
           key="add"
+          id="add-associated-roles-button"
           variant="primary"
           isDisabled={!selectedRows?.length}
           onClick={() => {

@@ -35,6 +35,10 @@
     "roleSaveError": "Could not save role: {{error}}",
     "noRolesInThisRealm": "No roles in this realm",
     "noRolesInThisRealmInstructions": "You haven't created any roles in this realm. Create a role to get started.",
-    "roleAuthentication": "Role authentication"
+    "roleAuthentication": "Role authentication",
+    "roleRemoveAssociatedRoleConfirm": "Remove associated role?",
+    "roleRemoveAssociatedText": "This action will remove {{role}} from {{roleName}. All the associated roles of {{role}} will also be removed."
+
+
   }
 }

@@ -16,7 +16,11 @@ export const RealmRolesSection = () => {
   };
   return (
     <>
-      <ViewHeader titleKey="roles:title" subKey="roles:roleExplain" />
+      <ViewHeader
+        actionsDropdownId="realm-roles-section-dropdown"
+        titleKey="roles:title"
+        subKey="roles:roleExplain"
+      />
       <PageSection variant="light">
         <RolesList loader={loader} />
       </PageSection>

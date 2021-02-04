@@ -60,7 +60,7 @@ describe("Realm roles test", function () {
       listingPage.itemExist(itemId, false);
     });
 
-    it("Realm role attributes modal test", function () {
+    it("Associated roles modal test", function () {
       itemId += "_" + (Math.random() + 1).toString(36).substring(7);
 
       // Create
@@ -70,7 +70,7 @@ describe("Realm roles test", function () {
 
       masthead.checkNotificationMessage("Role created");
 
-      cy.get(".pf-c-dropdown__toggle").last().click();
+      cy.get("#roles-actions-dropdown").last().click();
 
       cy.get("#add-roles").click();
 
@@ -78,7 +78,7 @@ describe("Realm roles test", function () {
 
       cy.get('[type="checkbox"]').eq(1).check();
 
-      cy.get("button").contains("Add").click();
+      cy.get("#add-associated-roles-button").contains("Add").click();
     });
   });
 });
