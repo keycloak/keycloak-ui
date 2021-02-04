@@ -94,6 +94,7 @@ export const ClientScopeForm = () => {
   return (
     <>
       <ViewHeader
+        actionsDropdownId="client-scope-actions-dropdown"
         titleKey={
           clientScope ? clientScope.name! : "client-scopes:createClientScope"
         }
