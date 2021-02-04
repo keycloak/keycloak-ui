@@ -24,7 +24,7 @@ export type ViewHeaderProps = {
   titleKey: string;
   badge?: string;
   subKey: string;
-  actionsDropdownId: string;
+  actionsDropdownId?: string;
   subKeyLinkProps?: ButtonProps;
   dropdownItems?: ReactElement[];
   lowerDropdownItems?: any;
