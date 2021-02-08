@@ -1,8 +1,17 @@
 import React, { useEffect, useState } from "react";
 import { useHistory, useParams, useRouteMatch } from "react-router-dom";
-import { AlertVariant, ButtonVariant, DropdownItem, Modal, ModalVariant, PageSection, Tab, TabTitleText } from "@patternfly/react-core";
+import {
+  AlertVariant,
+  ButtonVariant,
+  DropdownItem,
+  PageSection,
+  Tab,
+  TabTitleText,
+} from "@patternfly/react-core";
 import { useTranslation } from "react-i18next";
-import { useForm } from "react-hook-form";
+import { useFieldArray, useForm } from "react-hook-form";
+
+import { useAlerts } from "../components/alert/Alerts";
 import { useAdminClient } from "../context/auth/AdminClient";
 import RoleRepresentation from "keycloak-admin/lib/defs/roleRepresentation";
 import Composites from "keycloak-admin/lib/defs/roleRepresentation";
@@ -14,7 +23,6 @@ import { useRealm } from "../context/realm-context/RealmContext";
 import { AssociatedRolesModal } from "./AssociatedRolesModal";
 import { KeycloakTabs } from "../components/keycloak-tabs/KeycloakTabs";
 import { AssociatedRolesTab } from "./AssociatedRolesTab";
-import { useAlerts } from "../components/alert/Alerts";
 
 const arrayToAttributes = (attributeArray: KeyValueType[]) => {
   const initValue: { [index: string]: string[] } = {};
@@ -44,6 +52,8 @@ export const RealmRoleTabs = () => {
   const { t } = useTranslation("roles");
   const form = useForm<RoleFormType>({ mode: "onChange" });
   const history = useHistory();
+  // const [name, setName] = useState("");
+
   const adminClient = useAdminClient();
   const [role, setRole] = useState<RoleFormType>();
 
@@ -85,27 +95,16 @@ export const RealmRoleTabs = () => {
         Object.entries(convertedRole).map((entry) => {
           form.setValue(entry[0], entry[1]);
         });
-        setAdditionalRoles(allAdditionalRoles);
-
-        setName(fetchedRole.name!);
-        setupForm(fetchedRole);
-        setRole(fetchedRole);
-      } else {
-        setName(t("createRole"));
+        setRole(convertedRole);
       }
     };
     setTimeout(update, 100);
   }, [key]);
 
-  const setupForm = (role: RoleRepresentation) => {
-    Object.entries(role).map((entry) => {
-      if (entry[0] === "attributes") {
-        form.setValue(entry[0], attributesToArray(entry[1]));
-      } else {
-        form.setValue(entry[0], entry[1]);
-      }
-    });
-  };
+  const { fields, append, remove } = useFieldArray({
+    control: form.control,
+    name: "attributes",
+  });
 
   useEffect(() => append({ key: "", value: "" }), [append, role]);
 

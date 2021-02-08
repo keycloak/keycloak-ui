@@ -1,40 +1,19 @@
 import React, { useEffect, useState } from "react";
-import { useHistory, useParams, useRouteMatch } from "react-router-dom";
-import {
-  AlertVariant,
-  Button,
-  ButtonVariant,
-  DropdownItem,
-  Modal,
-  ModalVariant,
-  PageSection,
-  Tab,
-  TabTitleText,
-} from "@patternfly/react-core";
+import { useParams } from "react-router-dom";
+import { Button, Modal, ModalVariant } from "@patternfly/react-core";
 import { useTranslation } from "react-i18next";
 import { useForm } from "react-hook-form";
 import { useAdminClient } from "../context/auth/AdminClient";
 import RoleRepresentation from "keycloak-admin/lib/defs/roleRepresentation";
-import Composites from "keycloak-admin/lib/defs/roleRepresentation";
-import { KeyValueType, RoleAttributes } from "./RoleAttributes";
-import { ViewHeader } from "../components/view-header/ViewHeader";
-import { useConfirmDialog } from "../components/confirm-dialog/ConfirmDialog";
-import { RealmRoleForm } from "./RealmRoleForm";
-import { useRealm } from "../context/realm-context/RealmContext";
-import { AssociatedRolesModal } from "./AssociatedRolesModal";
-import { KeycloakTabs } from "../components/keycloak-tabs/KeycloakTabs";
-import { AssociatedRolesTab } from "./AssociatedRolesTab";
-import AddMapperDialogStories from "../stories/AddMapperDialog.stories";
-import { ListEmptyState } from "../components/list-empty-state/ListEmptyState";
 import { KeycloakDataTable } from "../components/table-toolbar/KeycloakDataTable";
+import { ListEmptyState } from "../components/list-empty-state/ListEmptyState";
 import { boolFormatter } from "../util";
 
-const arrayToAttributes = (attributeArray: KeyValueType[]) => {
-  const initValue: { [index: string]: string[] } = {};
-  return attributeArray.reduce((acc, attribute) => {
-    acc[attribute.key] = [attribute.value];
-    return acc;
-  }, initValue);
+export type AssociatedRolesModalProps = {
+  open: boolean;
+  toggleDialog: () => void;
+  onConfirm: (newReps: RoleRepresentation[]) => void;
+  existingCompositeRoles: RoleRepresentation[];
 };
 
 const attributesToArray = (attributes: { [key: string]: string }): any => {
