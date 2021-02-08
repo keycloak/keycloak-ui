@@ -16,13 +16,17 @@ import { formattedLinkTableCell } from "../components/external-link/FormattedLin
 import { useAlerts } from "../components/alert/Alerts";
 import { useConfirmDialog } from "../components/confirm-dialog/ConfirmDialog";
 import { emptyFormatter, toUpperCase } from "../util";
+import { AssociatedRolesModal } from "./AssociatedRolesModal";
 
 type AssociatedRolesTabProps = {
   additionalRoles: RoleRepresentation[];
+  // addComposites: (composites: Composites[]) => Promise<void>;
+  addComposites: (newReps: RoleRepresentation[]) => void;
 };
 
 export const AssociatedRolesTab = ({
   additionalRoles,
+  addComposites,
 }: AssociatedRolesTabProps) => {
   const { t } = useTranslation("roles");
   const history = useHistory();
@@ -31,6 +35,7 @@ export const AssociatedRolesTab = ({
   const tableRefresher = React.useRef<() => void>();
 
   const [selectedRole, setSelectedRole] = useState<RoleRepresentation>();
+  const [open, setOpen] = useState(false);
 
   const loader = async () => {
     return Promise.resolve(additionalRoles);
@@ -53,6 +58,8 @@ export const AssociatedRolesTab = ({
 
     return (boolVal ? toUpperCase(boolVal) : undefined) as string;
   };
+
+  const toggleModal = () => setOpen(!open);
 
   const [toggleDeleteDialog, DeleteConfirm] = useConfirmDialog({
     titleKey: "roles:roleRemoveAssociatedRoleConfirm",
@@ -82,6 +89,12 @@ export const AssociatedRolesTab = ({
     <>
       <PageSection variant="light">
         <DeleteConfirm />
+        <AssociatedRolesModal
+          onConfirm={addComposites}
+          existingCompositeRoles={additionalRoles}
+          open={open}
+          toggleDialog={() => setOpen(!open)}
+        />
         <KeycloakDataTable
           key={selectedRole ? selectedRole.id : "roleList"}
           loader={loader}
@@ -91,7 +104,7 @@ export const AssociatedRolesTab = ({
           setRefresher={setRefresher}
           toolbarItem={
             <>
-              <Button onClick={goToCreate}>{t("createRole")}</Button>
+              <Button onClick={() => toggleModal()}>{t("addRole")}</Button>
             </>
           }
           actions={[
