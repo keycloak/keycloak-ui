@@ -218,22 +218,19 @@ export const RealmRoleTabs = () => {
     DeleteAllAssociatedRolesConfirm,
   ] = useConfirmDialog({
     titleKey: t("roles:removeAllAssociatedRoles") + "?",
-    messageKey: t("roles:roleDeleteConfirmDialog", {
+    messageKey: t("roles:removeAllAssociatedRolesConfirmDialog", {
       name: role?.name || t("createRole"),
     }),
     continueButtonLabel: "common:delete",
     continueButtonVariant: ButtonVariant.danger,
     onConfirm: async () => {
       try {
-        if (!clientId) {
-          await adminClient.roles.delById({ id });
-        } else {
-          await adminClient.clients.delRole({
-            id: clientId,
-            roleName: role!.name as string,
-          });
-        }
-        addAlert(t("roleDeletedSuccess"), AlertVariant.success);
+        await adminClient.roles.delCompositeRoles({ id }, additionalRoles);
+        addAlert(
+          t("compositesRemoved"),
+          AlertVariant.success,
+          t("compositesRemovedAlertDescription")
+        );
         const loc = url.replace(/\/attributes/g, "");
         history.replace(`${loc.substr(0, loc.lastIndexOf("/"))}`);
       } catch (error) {

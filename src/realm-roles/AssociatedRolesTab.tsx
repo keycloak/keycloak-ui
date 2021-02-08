@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Link, useHistory, useRouteMatch } from "react-router-dom";
+import { Link, useHistory, useParams, useRouteMatch } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import {
   AlertVariant,
@@ -18,10 +18,10 @@ import { useAlerts } from "../components/alert/Alerts";
 import { useConfirmDialog } from "../components/confirm-dialog/ConfirmDialog";
 import { emptyFormatter, toUpperCase } from "../util";
 import { AssociatedRolesModal } from "./AssociatedRolesModal";
+import { useAdminClient } from "../context/auth/AdminClient";
 
 type AssociatedRolesTabProps = {
   additionalRoles: RoleRepresentation[];
-  // addComposites: (composites: Composites[]) => Promise<void>;
   addComposites: (newReps: RoleRepresentation[]) => void;
 };
 
@@ -36,8 +36,11 @@ export const AssociatedRolesTab = ({
   const tableRefresher = React.useRef<() => void>();
 
   const [selectedRole, setSelectedRole] = useState<RoleRepresentation>();
-  const [selectedRows, setSelectedRows] = useState<RoleRepresentation[]>([]);
+  const [, setSelectedRows] = useState<RoleRepresentation[]>([]);
   const [open, setOpen] = useState(false);
+
+  const adminClient = useAdminClient();
+  const { id } = useParams<{ id: string; clientId: string }>();
 
   const loader = async () => {
     return Promise.resolve(additionalRoles);
@@ -72,10 +75,10 @@ export const AssociatedRolesTab = ({
     continueButtonVariant: ButtonVariant.danger,
     onConfirm: async () => {
       try {
-        // await adminClient.roles.delCompositeRoles({ id: compID }, compies);
+        await adminClient.roles.delCompositeRoles({ id: id }, additionalRoles);
 
         setSelectedRole(undefined);
-        addAlert(t("roleDeletedSuccess"), AlertVariant.success);
+        addAlert(t("roleDeleteSuccess"), AlertVariant.success);
       } catch (error) {
         addAlert(`${t("roleDeleteError")} ${error}`, AlertVariant.danger);
       }

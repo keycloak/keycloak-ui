@@ -10,6 +10,7 @@ export type AlertType = {
   key: number;
   message: string;
   variant: AlertVariant;
+  description?: string;
 };
 
 type AlertPanelProps = {
@@ -20,7 +21,8 @@ type AlertPanelProps = {
 export function AlertPanel({ alerts, onCloseAlert }: AlertPanelProps) {
   return (
     <AlertGroup isToast>
-      {alerts.map(({ key, variant, message }) => (
+      {alerts.map(({ key, variant, message, description }) => (
+        <>
         <Alert
           key={key}
           isLiveRegion
@@ -32,8 +34,10 @@ export function AlertPanel({ alerts, onCloseAlert }: AlertPanelProps) {
               title={message}
               onClose={() => onCloseAlert(key)}
             />
-          }
-        />
+          }>
+        {description && <p>{description}</p>}
+        </Alert>
+        </>
       ))}
     </AlertGroup>
   );
