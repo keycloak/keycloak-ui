@@ -5,6 +5,7 @@ import {
   AlertVariant,
   Button,
   ButtonVariant,
+  Checkbox,
   PageSection,
 } from "@patternfly/react-core";
 import { IFormatter, IFormatterValueType } from "@patternfly/react-table";
@@ -104,7 +105,17 @@ export const AssociatedRolesTab = ({
           setRefresher={setRefresher}
           toolbarItem={
             <>
-              <Button onClick={() => toggleModal()}>{t("addRole")}</Button>
+              <Checkbox
+                label="Hide inherited roles"
+                key="associated-roles-check"
+                id="kc-hide-inherited-roles-checkbox"
+              />
+              <Button className="kc-add-role-button" key="add-role-button" onClick={() => toggleModal()}>
+                {t("addRole")}
+              </Button>
+              <Button variant="link" key="remove-role-button" onClick={() => toggleModal()}>
+                {t("removeRole")}
+              </Button>
             </>
           }
           actions={[

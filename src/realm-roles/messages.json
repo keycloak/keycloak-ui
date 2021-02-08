@@ -38,6 +38,7 @@
     "noRolesInThisRealmInstructions": "You haven't created any roles in this realm. Create a role to get started.",
     "roleAuthentication": "Role authentication",
     "removeAllAssociatedRoles": "Remove all associated roles",
+    "removeRole": "Remove role",
     "removeAllAssociatedRolesConfirmDialog": "This action will remove the associated roles of {{role}}. Users who have permission to {{role}} will no longer have access to these roles.",
     "roleRemoveAssociatedRoleConfirm": "Remove associated role?",
     "roleRemoveAssociatedText": "This action will remove {{role}} from {{roleName}. All the associated roles of {{role}} will also be removed."
