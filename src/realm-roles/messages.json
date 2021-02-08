@@ -20,6 +20,7 @@
     "composite": "Composite",
     "deleteRole": "Delete this role",
     "details": "Details",
+    "inheritedFrom": "Inherited from",
     "roleList": "Role list",
     "searchFor": "Search role by name",
     "generalSettings": "General Settings",

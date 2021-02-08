@@ -36,6 +36,7 @@ export const AssociatedRolesTab = ({
   const tableRefresher = React.useRef<() => void>();
 
   const [selectedRole, setSelectedRole] = useState<RoleRepresentation>();
+  const [selectedRows, setSelectedRows] = useState<RoleRepresentation[]>([]);
   const [open, setOpen] = useState(false);
 
   const loader = async () => {
@@ -101,6 +102,10 @@ export const AssociatedRolesTab = ({
           loader={loader}
           ariaLabelKey="roles:roleList"
           searchPlaceholderKey="roles:searchFor"
+          canSelectAll
+          onSelect={(rows) => {
+            setSelectedRows([...rows]);
+          }}
           isPaginated
           setRefresher={setRefresher}
           toolbarItem={
@@ -110,10 +115,18 @@ export const AssociatedRolesTab = ({
                 key="associated-roles-check"
                 id="kc-hide-inherited-roles-checkbox"
               />
-              <Button className="kc-add-role-button" key="add-role-button" onClick={() => toggleModal()}>
+              <Button
+                className="kc-add-role-button"
+                key="add-role-button"
+                onClick={() => toggleModal()}
+              >
                 {t("addRole")}
               </Button>
-              <Button variant="link" key="remove-role-button" onClick={() => toggleModal()}>
+              <Button
+                variant="link"
+                key="remove-role-button"
+                onClick={() => {}}
+              >
                 {t("removeRole")}
               </Button>
             </>
@@ -135,8 +148,8 @@ export const AssociatedRolesTab = ({
               cellFormatters: [formattedLinkTableCell(), emptyFormatter()],
             },
             {
-              name: "composite",
-              displayKey: "roles:composite",
+              name: "inherited from",
+              displayKey: "roles:inheritedFrom",
               cellFormatters: [boolFormatter(), emptyFormatter()],
             },
             {
