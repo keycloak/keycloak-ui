@@ -39,7 +39,7 @@ type AdvancedProps = {
   client: ClientRepresentation;
 };
 
-export const Advanced = ({
+export const AdvancedTab = ({
   form: { getValues, setValue, register, control },
   save,
   client: { id, registeredNodes, attributes },
