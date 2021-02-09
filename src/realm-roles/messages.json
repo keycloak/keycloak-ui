@@ -39,11 +39,13 @@
     "noRolesInThisRealmInstructions": "You haven't created any roles in this realm. Create a role to get started.",
     "roleAuthentication": "Role authentication",
     "removeAllAssociatedRoles": "Remove all associated roles",
-    "removeRole": "Remove role",
+    "removeAssociatedRoles": "Remove associated roles",
+    "removeRoles": "Remove roles",
     "removeAllAssociatedRolesConfirmDialog": "This action will remove the associated roles of {{name}}. Users who have permission to {{name}} will no longer have access to these roles.",
     "roleRemoveAssociatedRoleConfirm": "Remove associated role?",
     "roleRemoveAssociatedText": "This action will remove {{role}} from {{roleName}. All the associated roles of {{role}} will also be removed.",
-    "compositesRemoved": "Composite role turned off",
+    "compositeRoleOff": "Composite role turned off",
+    "associatedRolesRemoved": "Associated roles have been removed",
     "compositesRemovedAlertDescription": "All the associated roles have been removed"
 
 

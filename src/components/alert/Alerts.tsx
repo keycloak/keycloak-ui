@@ -9,7 +9,11 @@ import { AlertType, AlertPanel } from "./AlertPanel";
 import { AlertVariant } from "@patternfly/react-core";
 
 type AlertProps = {
-  addAlert: (message: string, variant?: AlertVariant, description?: string) => void;
+  addAlert: (
+    message: string,
+    variant?: AlertVariant,
+    description?: string
+  ) => void;
 };
 
 export const AlertContext = createContext<AlertProps>({
@@ -49,7 +53,7 @@ export const AlertProvider = ({ children }: { children: ReactNode }) => {
   const addAlert = (
     message: string,
     variant: AlertVariant = AlertVariant.default,
-    description?: string,
+    description?: string
   ) => {
     setAlerts([...alerts, { key: createId(), message, variant, description }]);
   };

@@ -231,8 +231,9 @@ export const RealmRoleTabs = () => {
           AlertVariant.success,
           t("compositesRemovedAlertDescription")
         );
-        const loc = url.replace(/\/attributes/g, "");
-        history.replace(`${loc.substr(0, loc.lastIndexOf("/"))}`);
+        const loc = url.replace(/\/AssociatedRoles/g, "/details");
+        history.push(loc);
+        refresh();
       } catch (error) {
         addAlert(`${t("roleDeleteError")} ${error}`, AlertVariant.danger);
       }
@@ -318,6 +319,7 @@ export const RealmRoleTabs = () => {
                 <AssociatedRolesTab
                   additionalRoles={additionalRoles}
                   addComposites={addComposites}
+                  parentRole={role!}
                 />
               </Tab>
             ) : null}
