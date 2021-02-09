@@ -75,7 +75,9 @@ export const ViewHeader = ({
               </LevelItem>
               {badge && (
                 <LevelItem>
-                  <Badge id={badgeId} isRead={badgeIsRead}>{badge}</Badge>
+                  <Badge id={badgeId} isRead={badgeIsRead}>
+                    {badge}
+                  </Badge>
                 </LevelItem>
               )}
             </Level>
