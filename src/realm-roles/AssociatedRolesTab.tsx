@@ -23,12 +23,14 @@ type AssociatedRolesTabProps = {
   additionalRoles: RoleRepresentation[];
   addComposites: (newReps: RoleRepresentation[]) => void;
   parentRole: RoleFormType;
+  onRemove: (newReps: RoleRepresentation[]) => void;
 };
 
 export const AssociatedRolesTab = ({
   additionalRoles,
   addComposites,
   parentRole,
+  onRemove,
 }: AssociatedRolesTabProps) => {
   const { t } = useTranslation("roles");
   const history = useHistory();
@@ -38,7 +40,6 @@ export const AssociatedRolesTab = ({
 
   const [selectedRows, setSelectedRows] = useState<RoleRepresentation[]>([]);
   const [open, setOpen] = useState(false);
-  // const [k, setK] = useState(0);
 
   const adminClient = useAdminClient();
   const { id } = useParams<{ id: string; clientId: string }>();
@@ -73,7 +74,7 @@ export const AssociatedRolesTab = ({
 
         addAlert(t("associatedRolesRemoved"), AlertVariant.success);
       } catch (error) {
-        addAlert(`${t("roleDeleteError")} ${error}`, AlertVariant.danger);
+        addAlert(t("roleDeleteError", { error }), AlertVariant.danger);
       }
     },
   });
@@ -90,6 +91,12 @@ export const AssociatedRolesTab = ({
     continueButtonVariant: ButtonVariant.danger,
     onConfirm: async () => {
       try {
+        if (selectedRows.length === additionalRoles.length) {
+          onRemove(selectedRows);
+          const loc = url.replace(/\/AssociatedRoles/g, "/details");
+          history.push(loc);
+        }
+        onRemove(selectedRows);
         await adminClient.roles.delCompositeRoles({ id }, selectedRows);
         addAlert(t("associatedRolesRemoved"), AlertVariant.success);
       } catch (error) {
@@ -142,7 +149,9 @@ export const AssociatedRolesTab = ({
                 variant="link"
                 isDisabled={selectedRows.length == 0}
                 key="remove-role-button"
-                onClick={() => toggleDeleteAssociatedRolesDialog()}
+                onClick={() => {
+                  toggleDeleteAssociatedRolesDialog();
+                }}
               >
                 {t("removeRoles")}
               </Button>

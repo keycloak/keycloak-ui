@@ -32,7 +32,7 @@
     "roleDeleteConfirm": "Delete role?",
     "roleDeleteConfirmDialog": "This action will permanently delete the role {{selectedRoleName}} and cannot be undone.",
     "roleDeletedSuccess": "The role has been deleted",
-    "roleDeleteError": "Could not delete role:",
+    "roleDeleteError": "Could not delete role: {{error}}",
     "roleSaveSuccess": "The role has been saved",
     "roleSaveError": "Could not save role: {{error}}",
     "noRolesInThisRealm": "No roles in this realm",

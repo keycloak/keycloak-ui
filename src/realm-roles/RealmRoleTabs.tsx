@@ -227,7 +227,7 @@ export const RealmRoleTabs = () => {
       try {
         await adminClient.roles.delCompositeRoles({ id }, additionalRoles);
         addAlert(
-          t("compositesRemoved"),
+          t("compositeRoleOff"),
           AlertVariant.success,
           t("compositesRemovedAlertDescription")
         );
@@ -321,6 +321,7 @@ export const RealmRoleTabs = () => {
                   additionalRoles={additionalRoles}
                   addComposites={addComposites}
                   parentRole={role!}
+                  onRemove={() => refresh()}
                 />
               </Tab>
             ) : null}
