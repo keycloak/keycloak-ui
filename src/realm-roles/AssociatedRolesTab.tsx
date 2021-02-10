@@ -52,13 +52,7 @@ export const AssociatedRolesTab = ({
     tableRefresher.current && tableRefresher.current();
   }, [additionalRoles]);
 
-  const RoleDetailLink = (role: RoleRepresentation) => (
-    <>
-      <Link key={role.id} to={`${url}/${role.id}`}>
-        {role.name}
-      </Link>
-    </>
-  );
+  const RoleName = (role: RoleRepresentation) => <>{role.name}</>;
 
   const toggleModal = () => setOpen(!open);
 
@@ -170,7 +164,7 @@ export const AssociatedRolesTab = ({
             {
               name: "name",
               displayKey: "roles:roleName",
-              cellRenderer: RoleDetailLink,
+              cellRenderer: RoleName,
               cellFormatters: [formattedLinkTableCell(), emptyFormatter()],
             },
             {
