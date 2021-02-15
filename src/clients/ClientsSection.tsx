@@ -49,6 +49,7 @@ export const ClientsSection = () => {
       </Link>
     </>
   );
+
   return (
     <>
       <ViewHeader

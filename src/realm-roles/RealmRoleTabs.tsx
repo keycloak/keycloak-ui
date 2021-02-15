@@ -23,6 +23,7 @@ import { useRealm } from "../context/realm-context/RealmContext";
 import { AssociatedRolesModal } from "./AssociatedRolesModal";
 import { KeycloakTabs } from "../components/keycloak-tabs/KeycloakTabs";
 import { AssociatedRolesTab } from "./AssociatedRolesTab";
+import ClientRepresentation from "keycloak-admin/lib/defs/clientRepresentation";
 
 const arrayToAttributes = (attributeArray: KeyValueType[]) => {
   const initValue: { [index: string]: string[] } = {};
@@ -56,6 +57,7 @@ export const RealmRoleTabs = () => {
 
   const adminClient = useAdminClient();
   const [role, setRole] = useState<RoleFormType>();
+  const [client, setClient] = useState<ClientRepresentation>();
 
   const { id, clientId } = useParams<{ id: string; clientId: string }>();
   const { url } = useRouteMatch();
@@ -90,12 +92,20 @@ export const RealmRoleTabs = () => {
           id,
         });
         setAdditionalRoles(allAdditionalRoles);
+        console.log(additionalRoles);
 
         const convertedRole = convert(fetchedRole);
         Object.entries(convertedRole).map((entry) => {
           form.setValue(entry[0], entry[1]);
         });
         setRole(convertedRole);
+      }
+      if (clientId) {
+        const fetchedClient = await adminClient.clients.findOne({ id });
+        // const allAdditionalRoles = await adminClient.roles.getCompositeRoles({
+        //   id,
+        // });
+        setClient(fetchedClient);
       }
     };
     setTimeout(update, 100);
@@ -240,33 +250,6 @@ export const RealmRoleTabs = () => {
     },
   });
 
-  const [
-    toggleDeleteAllAssociatedRolesDialog,
-    DeleteAllAssociatedRolesConfirm,
-  ] = useConfirmDialog({
-    titleKey: t("roles:removeAllAssociatedRoles") + "?",
-    messageKey: t("roles:removeAllAssociatedRolesConfirmDialog", {
-      name: role?.name || t("createRole"),
-    }),
-    continueButtonLabel: "common:delete",
-    continueButtonVariant: ButtonVariant.danger,
-    onConfirm: async () => {
-      try {
-        await adminClient.roles.delCompositeRoles({ id }, additionalRoles);
-        addAlert(
-          t("compositeRoleOff"),
-          AlertVariant.success,
-          t("compositesRemovedAlertDescription")
-        );
-        const loc = url.replace(/\/AssociatedRoles/g, "/details");
-        history.push(loc);
-        refresh();
-      } catch (error) {
-        addAlert(`${t("roleDeleteError")} ${error}`, AlertVariant.danger);
-      }
-    },
-  });
-
   const toggleModal = () => setOpen(!open);
 
   return (
@@ -349,6 +332,7 @@ export const RealmRoleTabs = () => {
                   addComposites={addComposites}
                   parentRole={role!}
                   onRemove={() => refresh()}
+                  // client={client!}
                 />
               </Tab>
             ) : null}

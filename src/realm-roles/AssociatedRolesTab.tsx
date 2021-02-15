@@ -14,16 +14,18 @@ import { KeycloakDataTable } from "../components/table-toolbar/KeycloakDataTable
 import { formattedLinkTableCell } from "../components/external-link/FormattedLink";
 import { useAlerts } from "../components/alert/Alerts";
 import { useConfirmDialog } from "../components/confirm-dialog/ConfirmDialog";
-import { boolFormatter, emptyFormatter } from "../util";
+import { emptyFormatter } from "../util";
 import { AssociatedRolesModal } from "./AssociatedRolesModal";
 import { useAdminClient } from "../context/auth/AdminClient";
 import { RoleFormType } from "./RealmRoleTabs";
+import ClientRepresentation from "keycloak-admin/lib/defs/clientRepresentation";
 
 type AssociatedRolesTabProps = {
   additionalRoles: RoleRepresentation[];
   addComposites: (newReps: RoleRepresentation[]) => void;
   parentRole: RoleFormType;
   onRemove: (newReps: RoleRepresentation[]) => void;
+  client?: ClientRepresentation;
 };
 
 export const AssociatedRolesTab = ({
@@ -31,6 +33,7 @@ export const AssociatedRolesTab = ({
   addComposites,
   parentRole,
   onRemove,
+  client,
 }: AssociatedRolesTabProps) => {
   const { t } = useTranslation("roles");
   const history = useHistory();
@@ -42,17 +45,80 @@ export const AssociatedRolesTab = ({
   const [open, setOpen] = useState(false);
 
   const adminClient = useAdminClient();
-  const { id } = useParams<{ id: string; clientId: string }>();
+  const { id, clientId } = useParams<{ id: string; clientId: string }>();
+  const inheritanceMap = React.useRef<{ [key: string]: string }>({});
+
+  const getSubRoles = async (
+    role: RoleRepresentation,
+    allRoles: RoleRepresentation[]
+  ): Promise<RoleRepresentation[]> => {
+    // Fetch all composite roles
+    const allCompositeRoles = await await adminClient.roles.getCompositeRoles({
+      id: role.id!,
+    });
+
+    // Need to ensure we don't get into an infinite loop, do not add any role that is already there or the starting role
+    const newRoles: RoleRepresentation[] = await allCompositeRoles.reduce(
+      async (acc: RoleRepresentation[], newRole) => {
+        const resolvedRoles = await acc;
+        if (!allRoles.find((ar) => ar.id === newRole.id)) {
+          if (newRole.name === "manage-realm") {
+            console.log(`-------- Parent Role --------`);
+            console.dir(role);
+          }
+          inheritanceMap.current[newRole.id] = role.name;
+          console.log(inheritanceMap);
+          resolvedRoles.push(newRole);
+          const subRoles = await getSubRoles(newRole, [
+            ...allRoles,
+            ...resolvedRoles,
+          ]);
+          resolvedRoles.push(...subRoles);
+        }
+
+        return acc;
+      },
+      [] as RoleRepresentation[]
+    );
+
+    return Promise.resolve(newRoles);
+  };
 
   const loader = async () => {
-    return Promise.resolve(additionalRoles);
+    const allRoles: RoleRepresentation[] = await additionalRoles.reduce(
+      async (acc: RoleRepresentation[], role) => {
+        const resolvedRoles = await acc;
+        resolvedRoles.push(role);
+        const subRoles = await getSubRoles(role, resolvedRoles);
+        resolvedRoles.push(...subRoles);
+
+        return acc;
+      },
+      [] as RoleRepresentation[]
+    );
+
+    return Promise.resolve(allRoles);
   };
+
+  // console.log(loader())
 
   React.useEffect(() => {
     tableRefresher.current && tableRefresher.current();
   }, [additionalRoles]);
 
   const RoleName = (role: RoleRepresentation) => <>{role.name}</>;
+
+  const InheritedRoleName = (role: RoleRepresentation) => {
+    if (role.name === "manage-realm") {
+      console.log(`----- ROLE: ${role.containerId}`);
+      console.dir(role);
+    }
+    if (role.id === "4e3f5bbd-fa32-467e-a8ca-88f141317dc9") {
+      console.log(`----- PARENT ROLE: ${role.containerId}`);
+      console.dir(role);
+    }
+    return <>{inheritanceMap.current[role.id]}</>;
+  };
 
   const toggleModal = () => setOpen(!open);
 
@@ -102,6 +168,8 @@ export const AssociatedRolesTab = ({
   const setRefresher = (refresher: () => void) => {
     tableRefresher.current = refresher;
   };
+
+  // const beep = additionalRoles[0].containerId;
 
   const goToCreate = () => history.push(`${url}/add-role`);
   return (
@@ -169,9 +237,10 @@ export const AssociatedRolesTab = ({
               cellFormatters: [formattedLinkTableCell(), emptyFormatter()],
             },
             {
-              name: "inherited from",
+              name: "containerId",
               displayKey: "roles:inheritedFrom",
-              cellFormatters: [boolFormatter(), emptyFormatter()],
+              cellRenderer: InheritedRoleName,
+              cellFormatters: [emptyFormatter()],
             },
             {
               name: "description",

@@ -153,6 +153,8 @@ export function KeycloakDataTable<T>({
       async () => {
         setLoading(true);
         const data = await loader(first, max, search);
+        console.log(`============ DATA: ${data.length} ===================`);
+        console.dir(data);
 
         const result = data!.map((value) => {
           return {
