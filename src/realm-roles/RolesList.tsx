@@ -12,9 +12,16 @@ import { useAlerts } from "../components/alert/Alerts";
 import { useConfirmDialog } from "../components/confirm-dialog/ConfirmDialog";
 import { emptyFormatter, boolFormatter } from "../util";
 
+const adminClient = useAdminClient();
+
 type RolesListProps = {
   paginated?: boolean;
   parentRoleId?: string;
+  loader?: (
+    first?: number,
+    max?: number,
+    search?: string
+  ) => Promise<RoleRepresentation[]>;
 };
 
 export const RolesList = ({
@@ -24,20 +31,10 @@ export const RolesList = ({
 }: RolesListProps) => {
   const { t } = useTranslation("roles");
   const history = useHistory();
-  const adminClient = useAdminClient();
   const { addAlert } = useAlerts();
   const { url } = useRouteMatch();
 
-  const loader = async (first?: number, max?: number, search?: string) => {
-    const params: { [name: string]: string | number } = {
-      first: first!,
-      max: max!,
-    };
-    if (search) {
-      params.search = search;
-    }
-    return await adminClient.roles.find({ ...params });
-  };
+
 
   const [selectedRole, setSelectedRole] = useState<RoleRepresentation>();
 
@@ -81,7 +78,7 @@ export const RolesList = ({
       <DeleteConfirm />
       <KeycloakDataTable
         key={selectedRole ? selectedRole.id : "roleList"}
-        loader={loader}
+        loader={loader!}
         ariaLabelKey="roles:roleList"
         searchPlaceholderKey="roles:searchFor"
         isPaginated={paginated}
