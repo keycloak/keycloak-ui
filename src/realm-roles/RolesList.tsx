@@ -12,8 +12,6 @@ import { useAlerts } from "../components/alert/Alerts";
 import { useConfirmDialog } from "../components/confirm-dialog/ConfirmDialog";
 import { emptyFormatter, boolFormatter } from "../util";
 
-const adminClient = useAdminClient();
-
 type RolesListProps = {
   paginated?: boolean;
   parentRoleId?: string;
@@ -31,6 +29,7 @@ export const RolesList = ({
 }: RolesListProps) => {
   const { t } = useTranslation("roles");
   const history = useHistory();
+  const adminClient = useAdminClient();
   const { addAlert } = useAlerts();
   const { url } = useRouteMatch();
 
