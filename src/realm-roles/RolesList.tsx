@@ -34,8 +34,6 @@ export const RolesList = ({
   const { addAlert } = useAlerts();
   const { url } = useRouteMatch();
 
-
-
   const [selectedRole, setSelectedRole] = useState<RoleRepresentation>();
 
   const RoleDetailLink = (role: RoleRepresentation) => (
