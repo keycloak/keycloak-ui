@@ -36,7 +36,7 @@ import { HelpItem } from "../components/help-enabler/HelpItem";
 import { FormattedLink } from "../components/external-link/FormattedLink";
 
 type RealmSettingsHeaderProps = {
-  onChange: (...event: any[]) => void;
+  onChange: (value: boolean) => void;
   value: boolean;
   save: () => void;
   realmName: string;
@@ -74,7 +74,7 @@ const RealmSettingsHeader = ({
         await adminClient.realms.del({ realm: realmName });
         addAlert(t("deletedSuccess"), AlertVariant.success);
         setRealm("master");
-        history.push("/master");
+        history.push("/master/");
       } catch (error) {
         addAlert(t("deleteError", { error }), AlertVariant.danger);
       }
