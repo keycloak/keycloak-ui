@@ -69,12 +69,12 @@ export const HelpHeader = () => {
           />
         </SplitItem>
       </Split>
-      <span className="keycloak_help-header-description">
+      <TextContent className="keycloak_help-header-description">
         <Trans>
           This toggle will enable / disable part of the help info in the
           console. Includes any help text, links and popovers.
         </Trans>
-      </span>
+      </TextContent>
     </DropdownItem>,
   ];
   return (
