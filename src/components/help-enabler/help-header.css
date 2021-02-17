@@ -4,6 +4,7 @@
   padding-top: var(--pf-global--spacer--lg);
   overflow-wrap: break-word;
   white-space: normal;
+  color: var(--pf-global--Color--100)
 }
 
 .keycloak_help-header-switch {
