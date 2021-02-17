@@ -7,6 +7,7 @@ import {
   Split,
   SplitItem,
   Switch,
+  TextContent,
 } from "@patternfly/react-core";
 import { Trans, useTranslation } from "react-i18next";
 import { HelpIcon, ExternalLinkAltIcon } from "@patternfly/react-icons";
