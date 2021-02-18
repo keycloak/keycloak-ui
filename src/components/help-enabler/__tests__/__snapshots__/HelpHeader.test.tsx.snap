@@ -138,7 +138,7 @@ exports[`<HelpHeader /> enable help 1`] = `
           <div
             class="pf-c-content keycloak_help-header-description"
           >
-            This toggle will enable / disable part of the help info in the console. Includes any help text, links and popovers.
+            helpToggleInfo
           </div>
         </a>
       </li>
@@ -290,7 +290,7 @@ exports[`<HelpHeader /> open dropdown 1`] = `
           <div
             class="pf-c-content keycloak_help-header-description"
           >
-            This toggle will enable / disable part of the help info in the console. Includes any help text, links and popovers.
+            helpToggleInfo
           </div>
         </a>
       </li>
