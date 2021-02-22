@@ -57,7 +57,7 @@ export const RealmRoleTabs = () => {
 
   const adminClient = useAdminClient();
   const [role, setRole] = useState<RoleFormType>();
-  const [, setClient] = useState<ClientRepresentation>();
+  const [client, setClient] = useState<ClientRepresentation>();
 
   const { id, clientId } = useParams<{ id: string; clientId: string }>();
   const { url } = useRouteMatch();
@@ -222,6 +222,34 @@ export const RealmRoleTabs = () => {
       }
     },
   });
+
+  const [
+    toggleDeleteAllAssociatedRolesDialog,
+    DeleteAllAssociatedRolesConfirm,
+  ] = useConfirmDialog({
+    titleKey: t("roles:removeAllAssociatedRoles") + "?",
+    messageKey: t("roles:removeAllAssociatedRolesConfirmDialog", {
+      name: role?.name || t("createRole"),
+    }),
+    continueButtonLabel: "common:delete",
+    continueButtonVariant: ButtonVariant.danger,
+    onConfirm: async () => {
+      try {
+        await adminClient.roles.delCompositeRoles({ id }, additionalRoles);
+        addAlert(
+          t("compositeRoleOff"),
+          AlertVariant.success,
+          t("compositesRemovedAlertDescription")
+        );
+        const loc = url.replace(/\/AssociatedRoles/g, "/details");
+        history.push(loc);
+        refresh();
+      } catch (error) {
+        addAlert(`${t("roleDeleteError")} ${error}`, AlertVariant.danger);
+      }
+    },
+  });
+
 
   const toggleModal = () => setOpen(!open);
 

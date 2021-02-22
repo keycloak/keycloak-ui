@@ -19,6 +19,7 @@ import { AssociatedRolesModal } from "./AssociatedRolesModal";
 import { useAdminClient } from "../context/auth/AdminClient";
 import { RoleFormType } from "./RealmRoleTabs";
 import ClientRepresentation from "keycloak-admin/lib/defs/clientRepresentation";
+import { AliasRendererComponent } from "./AliasRendererComponent";
 
 type AssociatedRolesTabProps = {
   additionalRoles: RoleRepresentation[];
@@ -108,6 +109,22 @@ export const AssociatedRolesTab = ({
   const InheritedRoleName = (role: RoleRepresentation) => {
     return <>{inheritanceMap.current[role.id!]}</>;
   };
+
+  const AliasRenderer = (role: RoleRepresentation) => {
+    return (
+      <>
+        <AliasRendererComponent
+          id={id}
+          name={role.name}
+          adminClient={adminClient}
+          // filterType={filterType}
+          containerId={role.containerId}
+        />
+      </>
+    );
+  };
+
+  console.log(inheritanceMap)
 
   const toggleModal = () => setOpen(!open);
 
@@ -222,7 +239,7 @@ export const AssociatedRolesTab = ({
             {
               name: "name",
               displayKey: "roles:roleName",
-              cellRenderer: RoleName,
+              cellRenderer: AliasRenderer,
               cellFormatters: [formattedLinkTableCell(), emptyFormatter()],
             },
             {

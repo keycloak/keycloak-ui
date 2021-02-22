@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import {
   Button,
@@ -16,50 +16,7 @@ import RoleRepresentation from "keycloak-admin/lib/defs/roleRepresentation";
 import { KeycloakDataTable } from "../components/table-toolbar/KeycloakDataTable";
 import { ListEmptyState } from "../components/list-empty-state/ListEmptyState";
 import { CaretDownIcon, FilterIcon } from "@patternfly/react-icons";
-import KeycloakAdminClient from "keycloak-admin";
-
-type AliasRendererComponentProps = {
-  name?: string;
-  containerId?: string;
-  filterType: string;
-  adminClient: KeycloakAdminClient;
-  id: string;
-};
-
-const AliasRendererComponent = ({
-  name,
-  containerId,
-  filterType,
-  adminClient,
-  id,
-}: AliasRendererComponentProps) => {
-  const [containerName, setContainerName] = useState<string>("");
-
-  useEffect(() => {
-    adminClient.clients
-      .findOne({ id: containerId! })
-      .then((client) => setContainerName(client.clientId as string));
-  }, [containerId]);
-
-  if (filterType === "roles") {
-    return <>{name}</>;
-  }
-
-  if (filterType === "clients") {
-    return (
-      <>
-        {containerId && (
-          <Label color="blue" key={`label-${id}`}>
-            {containerName}
-          </Label>
-        )}{" "}
-        {name}
-      </>
-    );
-  }
-
-  return null;
-};
+import { AliasRendererComponent } from "./AliasRendererComponent";
 
 export type AssociatedRolesModalProps = {
   open: boolean;
