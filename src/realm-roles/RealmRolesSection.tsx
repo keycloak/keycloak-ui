@@ -6,10 +6,6 @@ import { RolesList } from "./RolesList";
 
 export const RealmRolesSection = () => {
   const adminClient = useAdminClient();
-  const { addAlert } = useAlerts();
-  const { url } = useRouteMatch();
-
-  const [selectedRole, setSelectedRole] = useState<RoleRepresentation>();
 
   const loader = async (first?: number, max?: number, search?: string) => {
     const params: { [name: string]: string | number } = {
