@@ -92,7 +92,6 @@ export const RealmRoleTabs = () => {
           id,
         });
         setAdditionalRoles(allAdditionalRoles);
-        console.log(additionalRoles);
 
         const convertedRole = convert(fetchedRole);
         Object.entries(convertedRole).map((entry) => {
@@ -102,9 +101,6 @@ export const RealmRoleTabs = () => {
       }
       if (clientId) {
         const fetchedClient = await adminClient.clients.findOne({ id });
-        // const allAdditionalRoles = await adminClient.roles.getCompositeRoles({
-        //   id,
-        // });
         setClient(fetchedClient);
       }
     };
