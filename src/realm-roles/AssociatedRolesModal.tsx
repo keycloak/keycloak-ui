@@ -251,7 +251,7 @@ export const AssociatedRolesModal = (props: AssociatedRolesModalProps) => {
         ariaLabelKey="roles:roleList"
         searchPlaceholderKey="roles:searchFor"
         setRefresher={setRefresher}
-        filterToolbarDropdown={
+        searchTypeComponent={
           <Dropdown
             onSelect={() => onFilterDropdownSelect(filterType)}
             data-cy="filter-type-dropdown"
