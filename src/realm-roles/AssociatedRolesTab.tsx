@@ -33,7 +33,6 @@ export const AssociatedRolesTab = ({
   addComposites,
   parentRole,
   onRemove,
-  client,
 }: AssociatedRolesTabProps) => {
   const { t } = useTranslation("roles");
   const history = useHistory();
@@ -42,13 +41,12 @@ export const AssociatedRolesTab = ({
   const tableRefresher = React.useRef<() => void>();
 
   const [selectedRows, setSelectedRows] = useState<RoleRepresentation[]>([]);
-  const [associatedRoles, setAssociatedRoles] = useState<RoleRepresentation[]>([]);
-  const [ isInheritedHidden, setIsInheritedHidden ] = useState(false);
+  const [isInheritedHidden, setIsInheritedHidden] = useState(false);
 
   const [open, setOpen] = useState(false);
 
   const adminClient = useAdminClient();
-  const { id, clientId } = useParams<{ id: string; clientId: string }>();
+  const { id } = useParams<{ id: string }>();
   const inheritanceMap = React.useRef<{ [key: string]: string }>({});
 
   const getSubRoles = async (
@@ -60,18 +58,12 @@ export const AssociatedRolesTab = ({
       id: role.id!,
     });
 
-
     // Need to ensure we don't get into an infinite loop, do not add any role that is already there or the starting role
     const newRoles: RoleRepresentation[] = allCompositeRoles.reduce(
       async (acc: RoleRepresentation[], newRole) => {
         const resolvedRoles = await acc;
         if (!allRoles.find((ar) => ar.id === newRole.id)) {
-          if (newRole.name === "manage-realm") {
-            console.log(`-------- Parent Role --------`);
-            console.dir(role);
-          }
-          inheritanceMap.current[newRole!.id] = role.name;
-          console.log(inheritanceMap);
+          inheritanceMap.current[newRole.id] = role.name;
           resolvedRoles.push(newRole);
           const subRoles = await getSubRoles(newRole, [
             ...allRoles,
@@ -89,13 +81,12 @@ export const AssociatedRolesTab = ({
   };
 
   const loader = async () => {
-
     if (isInheritedHidden) {
       return additionalRoles;
     }
 
-    const allRoles: RoleRepresentation[] = await additionalRoles.reduce(
-      async (acc: RoleRepresentation[], role) => {
+    const allRoles: RoleRepresentation[] = additionalRoles.reduce(
+      async (acc: RoleRepresentation[], role: RoleRepresentation) => {
         const resolvedRoles = await acc;
         resolvedRoles.push(role);
         const subRoles = await getSubRoles(role, resolvedRoles);
@@ -108,9 +99,6 @@ export const AssociatedRolesTab = ({
     return Promise.resolve(allRoles);
   };
 
-  // console.log(loader())
-  // console.log("associated roles", getSubRoles())
-
   React.useEffect(() => {
     tableRefresher.current && tableRefresher.current();
   }, [additionalRoles, isInheritedHidden]);
@@ -118,14 +106,6 @@ export const AssociatedRolesTab = ({
   const RoleName = (role: RoleRepresentation) => <>{role.name}</>;
 
   const InheritedRoleName = (role: RoleRepresentation) => {
-    // if (role.name === "manage-realm") {
-    //   console.log(`----- ROLE: ${role.containerId}`);
-    //   console.dir(role);
-    // }
-    // if (role.id === "4e3f5bbd-fa32-467e-a8ca-88f141317dc9") {
-    //   console.log(`----- PARENT ROLE: ${role.containerId}`);
-    //   console.dir(role);
-    // }
     return <>{inheritanceMap.current[role.id!]}</>;
   };
 
@@ -177,14 +157,6 @@ export const AssociatedRolesTab = ({
   const setRefresher = (refresher: () => void) => {
     tableRefresher.current = refresher;
   };
-
-  // const beep = additionalRoles[0].containerId;
-
-  console.log("inheritance");
-  console.log("inheritance!", typeof inheritanceMap.current);
-
-  console.log("lalala", additionalRoles);
-
 
   const goToCreate = () => history.push(`${url}/add-role`);
   return (
