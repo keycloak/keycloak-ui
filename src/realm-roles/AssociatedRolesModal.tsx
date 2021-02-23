@@ -5,7 +5,6 @@ import {
   Dropdown,
   DropdownItem,
   DropdownToggle,
-  Label,
   Modal,
   ModalVariant,
 } from "@patternfly/react-core";

@@ -57,7 +57,7 @@ export const RealmRoleTabs = () => {
 
   const adminClient = useAdminClient();
   const [role, setRole] = useState<RoleFormType>();
-  const [client, setClient] = useState<ClientRepresentation>();
+  const [, setClient] = useState<ClientRepresentation>();
 
   const { id, clientId } = useParams<{ id: string; clientId: string }>();
   const { url } = useRouteMatch();

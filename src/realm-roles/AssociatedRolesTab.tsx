@@ -104,8 +104,6 @@ export const AssociatedRolesTab = ({
     tableRefresher.current && tableRefresher.current();
   }, [additionalRoles, isInheritedHidden]);
 
-  const RoleName = (role: RoleRepresentation) => <>{role.name}</>;
-
   const InheritedRoleName = (role: RoleRepresentation) => {
     return <>{inheritanceMap.current[role.id!]}</>;
   };
@@ -117,7 +115,6 @@ export const AssociatedRolesTab = ({
           id={id}
           name={role.name}
           adminClient={adminClient}
-          // filterType={filterType}
           containerId={role.containerId}
         />
       </>
