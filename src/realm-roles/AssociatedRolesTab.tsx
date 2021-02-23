@@ -60,11 +60,11 @@ export const AssociatedRolesTab = ({
     });
 
     // Need to ensure we don't get into an infinite loop, do not add any role that is already there or the starting role
-    const newRoles: RoleRepresentation[] = allCompositeRoles.reduce(
-      async (acc: RoleRepresentation[], newRole) => {
+    const newRoles: Promise<RoleRepresentation[]> = allCompositeRoles.reduce(
+      async (acc: Promise<RoleRepresentation[]>, newRole) => {
         const resolvedRoles = await acc;
         if (!allRoles.find((ar) => ar.id === newRole.id)) {
-          inheritanceMap.current[newRole.id] = role.name;
+          inheritanceMap.current[newRole.id!] = role.name!;
           resolvedRoles.push(newRole);
           const subRoles = await getSubRoles(newRole, [
             ...allRoles,
@@ -75,10 +75,10 @@ export const AssociatedRolesTab = ({
 
         return acc;
       },
-      [] as RoleRepresentation[]
+      Promise.resolve([] as RoleRepresentation[])
     );
 
-    return Promise.resolve(newRoles);
+    return newRoles;
   };
 
   const loader = async () => {
@@ -86,18 +86,18 @@ export const AssociatedRolesTab = ({
       return additionalRoles;
     }
 
-    const allRoles: RoleRepresentation[] = additionalRoles.reduce(
-      async (acc: RoleRepresentation[], role: RoleRepresentation) => {
+    const allRoles: Promise<RoleRepresentation[]> = additionalRoles.reduce(
+      async (acc: Promise<RoleRepresentation[]>, role) => {
         const resolvedRoles = await acc;
         resolvedRoles.push(role);
         const subRoles = await getSubRoles(role, resolvedRoles);
         resolvedRoles.push(...subRoles);
         return acc;
       },
-      [] as RoleRepresentation[]
+      Promise.resolve([] as RoleRepresentation[])
     );
 
-    return Promise.resolve(allRoles);
+    return allRoles;
   };
 
   React.useEffect(() => {
