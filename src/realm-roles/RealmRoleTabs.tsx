@@ -246,7 +246,6 @@ export const RealmRoleTabs = () => {
     },
   });
 
-
   const toggleModal = () => setOpen(!open);
 
   return (

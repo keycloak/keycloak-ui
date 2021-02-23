@@ -124,7 +124,7 @@ export const AssociatedRolesTab = ({
     );
   };
 
-  console.log(inheritanceMap)
+  console.log(inheritanceMap);
 
   const toggleModal = () => setOpen(!open);
 
