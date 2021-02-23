@@ -85,7 +85,6 @@ export type DataListProps<T> = {
   isPaginated?: boolean;
   ariaLabelKey: string;
   searchPlaceholderKey: string;
-  setRefresher?: (refresher: () => void) => void;
   columns: Field<T>[];
   actions?: Action<T>[];
   actionResolver?: IActionsResolver;
@@ -120,7 +119,6 @@ export function KeycloakDataTable<T>({
   searchPlaceholderKey,
   isPaginated = false,
   onSelect,
-  setRefresher,
   canSelectAll = false,
   loader,
   columns,
@@ -141,10 +139,6 @@ export function KeycloakDataTable<T>({
   const [key, setKey] = useState(0);
   const refresh = () => setKey(new Date().getTime());
   const handleError = useErrorHandler();
-
-  useEffect(() => {
-    setRefresher && setRefresher(refresh);
-  }, []);
 
   useEffect(() => {
     return asyncStateFetch(
