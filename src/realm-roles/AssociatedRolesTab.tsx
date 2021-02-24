@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useHistory, useParams, useRouteMatch } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import {
@@ -39,7 +39,8 @@ export const AssociatedRolesTab = ({
   const history = useHistory();
   const { addAlert } = useAlerts();
   const { url } = useRouteMatch();
-  const tableRefresher = React.useRef<() => void>();
+  const [key, setKey] = useState(0);
+  const refresh = () => setKey(new Date().getTime());
 
   const [selectedRows, setSelectedRows] = useState<RoleRepresentation[]>([]);
   const [isInheritedHidden, setIsInheritedHidden] = useState(false);
@@ -100,9 +101,9 @@ export const AssociatedRolesTab = ({
     return allRoles;
   };
 
-  React.useEffect(() => {
-    tableRefresher.current && tableRefresher.current();
-  }, [additionalRoles, isInheritedHidden]);
+  useEffect(() => {
+    refresh();
+  }, [additionalRoles]);
 
   const InheritedRoleName = (role: RoleRepresentation) => {
     return <>{inheritanceMap.current[role.id!]}</>;
@@ -168,10 +169,6 @@ export const AssociatedRolesTab = ({
     },
   });
 
-  const setRefresher = (refresher: () => void) => {
-    tableRefresher.current = refresher;
-  };
-
   const goToCreate = () => history.push(`${url}/add-role`);
   return (
     <>
@@ -185,6 +182,7 @@ export const AssociatedRolesTab = ({
           toggleDialog={() => setOpen(!open)}
         />
         <KeycloakDataTable
+          key={key}
           loader={loader}
           ariaLabelKey="roles:roleList"
           searchPlaceholderKey="roles:searchFor"
@@ -193,7 +191,6 @@ export const AssociatedRolesTab = ({
             setSelectedRows([...rows]);
           }}
           isPaginated
-          setRefresher={setRefresher}
           toolbarItem={
             <>
               <Checkbox
