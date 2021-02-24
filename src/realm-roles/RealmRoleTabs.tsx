@@ -23,7 +23,6 @@ import { useRealm } from "../context/realm-context/RealmContext";
 import { AssociatedRolesModal } from "./AssociatedRolesModal";
 import { KeycloakTabs } from "../components/keycloak-tabs/KeycloakTabs";
 import { AssociatedRolesTab } from "./AssociatedRolesTab";
-import ClientRepresentation from "keycloak-admin/lib/defs/clientRepresentation";
 
 const arrayToAttributes = (attributeArray: KeyValueType[]) => {
   const initValue: { [index: string]: string[] } = {};
