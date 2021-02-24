@@ -51,7 +51,8 @@ export const AssociatedRolesModal = (props: AssociatedRolesModalProps) => {
 
   const [isFilterDropdownOpen, setIsFilterDropdownOpen] = useState(false);
   const [filterType, setFilterType] = useState("roles");
-  const tableRefresher = React.useRef<() => void>();
+  const [key, setKey] = useState(0);
+  const refresh = () => setKey(new Date().getTime());
 
   const { id } = useParams<{ id: string }>();
 
@@ -127,8 +128,8 @@ export const AssociatedRolesModal = (props: AssociatedRolesModalProps) => {
     });
   };
 
-  React.useEffect(() => {
-    tableRefresher.current && tableRefresher.current();
+  useEffect(() => {
+    refresh();
   }, [filterType]);
 
   useEffect(() => {
@@ -167,9 +168,9 @@ export const AssociatedRolesModal = (props: AssociatedRolesModalProps) => {
     setIsFilterDropdownOpen(!isFilterDropdownOpen);
   };
 
-  const setRefresher = (refresher: () => void) => {
-    tableRefresher.current = refresher;
-  };
+  // const setRefresher = (refresher: () => void) => {
+  //   tableRefresher.current = refresher;
+  // };
 
   return (
     <Modal
@@ -202,11 +203,10 @@ export const AssociatedRolesModal = (props: AssociatedRolesModalProps) => {
       ]}
     >
       <KeycloakDataTable
-        key="role-list-modal"
+        key={key}
         loader={filterType == "roles" ? loader : clientRolesLoader}
         ariaLabelKey="roles:roleList"
         searchPlaceholderKey="roles:searchFor"
-        setRefresher={setRefresher}
         searchTypeComponent={
           <Dropdown
             onSelect={() => onFilterDropdownSelect(filterType)}
