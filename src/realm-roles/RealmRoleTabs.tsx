@@ -53,11 +53,9 @@ export const RealmRoleTabs = () => {
   const { t } = useTranslation("roles");
   const form = useForm<RoleFormType>({ mode: "onChange" });
   const history = useHistory();
-  // const [name, setName] = useState("");
 
   const adminClient = useAdminClient();
   const [role, setRole] = useState<RoleFormType>();
-  const [, setClient] = useState<ClientRepresentation>();
 
   const { id, clientId } = useParams<{ id: string; clientId: string }>();
   const { url } = useRouteMatch();
@@ -98,10 +96,6 @@ export const RealmRoleTabs = () => {
           form.setValue(entry[0], entry[1]);
         });
         setRole(convertedRole);
-      }
-      if (clientId) {
-        const fetchedClient = await adminClient.clients.findOne({ id });
-        setClient(fetchedClient);
       }
     };
     setTimeout(update, 100);
