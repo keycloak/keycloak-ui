@@ -168,10 +168,6 @@ export const AssociatedRolesModal = (props: AssociatedRolesModalProps) => {
     setIsFilterDropdownOpen(!isFilterDropdownOpen);
   };
 
-  // const setRefresher = (refresher: () => void) => {
-  //   tableRefresher.current = refresher;
-  // };
-
   return (
     <Modal
       title={t("roles:associatedRolesModalTitle", { name })}
