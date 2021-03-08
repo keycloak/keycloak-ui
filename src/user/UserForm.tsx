@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   ActionGroup,
   Button,
@@ -10,20 +10,34 @@ import {
 } from "@patternfly/react-core";
 import { useTranslation } from "react-i18next";
 import { Controller, UseFormMethods } from "react-hook-form";
-import { useHistory } from "react-router-dom";
+import { useHistory, useParams } from "react-router-dom";
 import { FormAccess } from "../components/form-access/FormAccess";
 import UserRepresentation from "keycloak-admin/lib/defs/userRepresentation";
 import { HelpItem } from "../components/help-enabler/HelpItem";
 import { useRealm } from "../context/realm-context/RealmContext";
+import { asyncStateFetch, useAdminClient } from "../context/auth/AdminClient";
+import { useErrorHandler } from "react-error-boundary";
+import moment from "moment";
 
 export type UserFormProps = {
   form: UseFormMethods<UserRepresentation>;
   save: (user: UserRepresentation) => void;
+  editMode: boolean;
+  timestamp?: number;
 };
 
 export const UserForm = ({
-  form: { handleSubmit, register, errors, watch, control },
+  form: {
+    handleSubmit,
+    register,
+    errors,
+    watch,
+    control,
+    setValue,
+    reset,
+  },
   save,
+  editMode,
 }: UserFormProps) => {
   const { t } = useTranslation("users");
   const { realm } = useRealm();
@@ -34,8 +48,42 @@ export const UserForm = ({
   ] = useState(false);
   const [selected, setSelected] = useState<string[]>([]);
   const history = useHistory();
+  const adminClient = useAdminClient();
+  const { id } = useParams<{ id: string }>();
+  const handleError = useErrorHandler();
 
   const watchUsernameInput = watch("username");
+  const [ timestamp, setTimestamp ] = useState(null)
+
+  const convertTimestamp = (timestamp: number) => {
+    return moment(timestamp).format("MM/DD/YY hh:MM:ss A");
+  };
+
+  useEffect(() => {
+    if (editMode) {
+      return asyncStateFetch(
+        () => adminClient.users.find({ username: id }),
+        (user) => {
+          setupForm(user[0]);
+        },
+        handleError
+      );
+    }
+  }, []);
+
+  const setupForm = (user: UserRepresentation) => {
+    reset();
+    Object.entries(user).map((entry) => {
+      console.log(entry[0], entry[1]);
+      if (entry[0] == "createdTimestamp") {
+        setTimestamp(entry[1]);
+        console.log(timestamp)
+        setValue(entry[0], convertTimestamp(entry[1]));
+      } else {
+        setValue(entry[0], entry[1]);
+      }
+    });
+  };
 
   const emailRegexPattern = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 
@@ -69,20 +117,56 @@ export const UserForm = ({
       role="manage-users"
       className="pf-u-mt-lg"
     >
-      <FormGroup
-        label={t("username")}
-        fieldId="kc-username"
-        isRequired
-        validated={errors.username ? "error" : "default"}
-        helperTextInvalid={t("common:required")}
-      >
-        <TextInput
-          ref={register({ required: true })}
-          type="text"
-          id="kc-username"
-          name="username"
-        />
-      </FormGroup>
+      {editMode ? (
+        <>
+          <FormGroup
+            label={t("id")}
+            fieldId="kc-id"
+            isRequired
+            validated={errors.id ? "error" : "default"}
+            helperTextInvalid={t("common:required")}
+          >
+            <TextInput
+              ref={register({ required: !editMode })}
+              type="text"
+              id="kc-id"
+              name="id"
+              isReadOnly={editMode}
+            />
+          </FormGroup>
+          <FormGroup
+            label={t("createdAt")}
+            fieldId="kc-created-at"
+            isRequired
+            validated={errors.createdTimestamp ? "error" : "default"}
+            helperTextInvalid={t("common:required")}
+          >
+            <TextInput
+              ref={register({ required: !editMode })}
+              type="text"
+              id="kc-created-at"
+              name="createdTimestamp"
+              isReadOnly={editMode}
+            />
+          </FormGroup>
+        </>
+      ) : (
+        <FormGroup
+          label={t("username")}
+          fieldId="kc-username"
+          isRequired
+          validated={errors.username ? "error" : "default"}
+          helperTextInvalid={t("common:required")}
+        >
+          <TextInput
+            ref={register()}
+            type="text"
+            id="kc-username"
+            name="username"
+            isReadOnly={editMode}
+          />
+        </FormGroup>
+      )}
       <FormGroup
         label={t("email")}
         fieldId="kc-description"
@@ -112,7 +196,7 @@ export const UserForm = ({
         }
       >
         <Controller
-          name="user-email-verified"
+          name="emailVerified"
           defaultValue={false}
           control={control}
           render={({ onChange, value }) => (
@@ -165,7 +249,7 @@ export const UserForm = ({
         }
       >
         <Controller
-          name="user-enabled"
+          name="enabled"
           defaultValue={false}
           control={control}
           render={({ onChange, value }) => (
@@ -194,7 +278,7 @@ export const UserForm = ({
         }
       >
         <Controller
-          name="required-user-actions"
+          name="requiredActions"
           defaultValue={["0"]}
           typeAheadAriaLabel="Select an action"
           control={control}
@@ -228,11 +312,11 @@ export const UserForm = ({
       <ActionGroup>
         <Button
           data-testid="create-user"
-          isDisabled={!watchUsernameInput}
+          isDisabled={!editMode && !watchUsernameInput}
           variant="primary"
           type="submit"
         >
-          {t("common:Create")}
+          {!editMode ? t("common:Create") : t("common:Save")}
         </Button>
         <Button
           data-testid="cancel-create-user"
