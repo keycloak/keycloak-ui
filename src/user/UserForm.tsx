@@ -265,7 +265,7 @@ export const UserForm = ({
       >
         <Controller
           name="requiredActions"
-          defaultValue={["0"]}
+          defaultValue={[]}
           typeAheadAriaLabel="Select an action"
           control={control}
           render={({ onChange, value }) => (
