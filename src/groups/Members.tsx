@@ -93,6 +93,7 @@ export const Members = () => {
           </ToolbarItem>
           <ToolbarItem>
             <Checkbox
+              data-testid="includeSubGroupsCheck"
               label={t("includeSubGroups")}
               id="kc-include-sub-groups"
               isChecked={includeSubGroup}

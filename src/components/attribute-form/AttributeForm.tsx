@@ -20,7 +20,7 @@ export type KeyValueType = { key: string; value: string };
 
 export type AttributeForm = {
   attributes: KeyValueType[];
-}
+};
 
 export type AttributesFormProps = {
   form: UseFormMethods<AttributeForm>;
