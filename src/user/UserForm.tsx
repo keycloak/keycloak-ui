@@ -46,7 +46,6 @@ export const UserForm = ({
     isRequiredUserActionsDropdownOpen,
     setRequiredUserActionsDropdownOpen,
   ] = useState(false);
-  const [selected, setSelected] = useState<string[]>([]);
   const history = useHistory();
   const adminClient = useAdminClient();
   const { id } = useParams<{ id: string }>();
@@ -55,9 +54,6 @@ export const UserForm = ({
   const watchUsernameInput = watch("username");
   const [ timestamp, setTimestamp ] = useState(null)
 
-  const convertTimestamp = (timestamp: number) => {
-    return moment(timestamp).format("MM/DD/YY hh:MM:ss A");
-  };
 
   useEffect(() => {
     if (editMode) {
@@ -74,11 +70,8 @@ export const UserForm = ({
   const setupForm = (user: UserRepresentation) => {
     reset();
     Object.entries(user).map((entry) => {
-      console.log(entry[0], entry[1]);
       if (entry[0] == "createdTimestamp") {
         setTimestamp(entry[1]);
-        console.log(timestamp)
-        setValue(entry[0], convertTimestamp(entry[1]));
       } else {
         setValue(entry[0], entry[1]);
       }
@@ -106,7 +99,6 @@ export const UserForm = ({
   ];
 
   const clearSelection = () => {
-    setSelected([]);
     setRequiredUserActionsDropdownOpen(false);
   };
 
@@ -142,7 +134,7 @@ export const UserForm = ({
             helperTextInvalid={t("common:required")}
           >
             <TextInput
-              ref={register({ required: !editMode })}
+              value={moment(timestamp).format("MM/DD/YY hh:MM:ss A")}
               type="text"
               id="kc-created-at"
               name="createdTimestamp"
@@ -282,7 +274,7 @@ export const UserForm = ({
           defaultValue={["0"]}
           typeAheadAriaLabel="Select an action"
           control={control}
-          render={() => (
+          render={({ onChange, value }) => (
             <Select
               placeholderText="Select action"
               toggleId="kc-required-user-actions"
@@ -292,13 +284,13 @@ export const UserForm = ({
                 )
               }
               isOpen={isRequiredUserActionsDropdownOpen}
-              selections={selected}
-              onSelect={(_, value) => {
-                const option = value as string;
-                if (selected.includes(option)) {
-                  setSelected(selected.filter((item) => item !== option));
+              selections={value}
+              onSelect={(_, v) => {
+                const option = v as string;
+                if (value.includes(option)) {
+                  onChange(value.filter((item: string) => item !== option));
                 } else {
-                  setSelected([...selected, option]);
+                  onChange([...value, option]);
                 }
               }}
               onClear={clearSelection}
@@ -307,7 +299,7 @@ export const UserForm = ({
               {requiredUserActionsOptions}
             </Select>
           )}
-        ></Controller>
+        />
       </FormGroup>
       <ActionGroup>
         <Button

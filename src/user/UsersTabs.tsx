@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import {
   AlertVariant,
   PageSection,
@@ -15,7 +15,6 @@ import { useAlerts } from "../components/alert/Alerts";
 import { useAdminClient } from "../context/auth/AdminClient";
 import { useHistory, useParams, useRouteMatch } from "react-router-dom";
 import { KeycloakTabs } from "../components/keycloak-tabs/KeycloakTabs";
-import moment from "moment";
 
 export const UsersTabs = () => {
   const { t } = useTranslation("roles");
@@ -27,20 +26,11 @@ export const UsersTabs = () => {
   const form = useForm<UserRepresentation>({ mode: "onChange" });
   const { id } = useParams<{ id: string }>();
 
-  const [userTest, setUserTest] = useState<UserRepresentation>();
-
   const save = async (user: UserRepresentation) => {
     try {
-      console.log(userTest);
-
       if (id) {
-        setUserTest({
-          ...user,
-          createdTimestamp: Number(moment(user.createdTimestamp).format("X"))
-        });
-        await adminClient.users.update({ id: user.id!  }, user);
+        await adminClient.users.update({ id: user.id! }, user);
         addAlert(t("users:userSaved"), AlertVariant.success);
-
       } else {
         await adminClient.users.create(user);
         addAlert(t("users:userCreated"), AlertVariant.success);
