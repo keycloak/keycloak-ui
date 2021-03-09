@@ -229,7 +229,7 @@ export const UsersSection = () => {
               {
                 name: "username",
                 displayKey: "users:username",
-                cellRenderer: UserDetailLink
+                cellRenderer: UserDetailLink,
               },
               {
                 name: "email",

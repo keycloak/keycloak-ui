@@ -58,6 +58,7 @@ export const UsersTabs = () => {
           <KeycloakTabs isBox>
             <Tab
               eventKey="details"
+              data-testid="user-details-tab"
               title={<TabTitleText>{t("details")}</TabTitleText>}
             >
               <UserForm form={form} save={save} editMode={true} />

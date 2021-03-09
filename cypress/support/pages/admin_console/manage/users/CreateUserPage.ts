@@ -17,7 +17,7 @@ export default class CreateUserPage {
   }
 
   //#region General Settings
-  fillRealmRoleData(username: string) {
+  createUser(username: string) {
     cy.get(this.usernameInput).clear();
 
     if (username) {

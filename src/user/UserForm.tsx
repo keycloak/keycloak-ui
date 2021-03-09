@@ -27,15 +27,7 @@ export type UserFormProps = {
 };
 
 export const UserForm = ({
-  form: {
-    handleSubmit,
-    register,
-    errors,
-    watch,
-    control,
-    setValue,
-    reset,
-  },
+  form: { handleSubmit, register, errors, watch, control, setValue, reset },
   save,
   editMode,
 }: UserFormProps) => {
@@ -52,8 +44,7 @@ export const UserForm = ({
   const handleError = useErrorHandler();
 
   const watchUsernameInput = watch("username");
-  const [ timestamp, setTimestamp ] = useState(null)
-
+  const [timestamp, setTimestamp] = useState(null);
 
   useEffect(() => {
     if (editMode) {
@@ -70,6 +61,7 @@ export const UserForm = ({
   const setupForm = (user: UserRepresentation) => {
     reset();
     Object.entries(user).map((entry) => {
+      console.log(entry[0], entry[1]);
       if (entry[0] == "createdTimestamp") {
         setTimestamp(entry[1]);
       } else {
@@ -81,20 +73,17 @@ export const UserForm = ({
   const emailRegexPattern = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 
   const requiredUserActionsOptions = [
-    <SelectOption key={0} value="Configure OTP">
+    <SelectOption key={0} value="CONFIGURE_TOTP">
       {t("configureOTP")}
     </SelectOption>,
-    <SelectOption key={1} value="Update Password">
+    <SelectOption key={1} value="UPDATE_PASSWORD">
       {t("updatePassword")}
     </SelectOption>,
-    <SelectOption key={2} value="Update Profile">
+    <SelectOption key={2} value="UPDATE_PROFILE">
       {t("updateProfile")}
     </SelectOption>,
-    <SelectOption key={3} value="Verify Email">
+    <SelectOption key={3} value="VERIFY_EMAIL">
       {t("verifyEmail")}
-    </SelectOption>,
-    <SelectOption key={4} value="Update User Locale">
-      {t("updateUserLocale")}
     </SelectOption>,
   ];
 
@@ -172,6 +161,7 @@ export const UserForm = ({
           type="email"
           id="kc-email"
           name="email"
+          data-testid="email-input"
           aria-label={t("emailInput")}
         />
       </FormGroup>
@@ -193,10 +183,11 @@ export const UserForm = ({
           control={control}
           render={({ onChange, value }) => (
             <Switch
+              data-testid="email-verified-switch"
               id={"kc-user-email-verified"}
               isDisabled={false}
-              onChange={(value) => onChange([`${value}`])}
-              isChecked={value[0] === "true"}
+              onChange={(value) => onChange(value)}
+              isChecked={value}
               label={t("common:on")}
               labelOff={t("common:off")}
             />
@@ -211,6 +202,7 @@ export const UserForm = ({
       >
         <TextInput
           ref={register()}
+          data-testid="firstName-input"
           type="text"
           id="kc-firstname"
           name="firstName"
@@ -223,6 +215,7 @@ export const UserForm = ({
       >
         <TextInput
           ref={register()}
+          data-testid="lastName-input"
           type="text"
           id="kc-lastname"
           name="lastName"
@@ -246,10 +239,11 @@ export const UserForm = ({
           control={control}
           render={({ onChange, value }) => (
             <Switch
+              data-testid="user-enabled-switch"
               id={"kc-user-enabled"}
               isDisabled={false}
-              onChange={(value) => onChange([`${value}`])}
-              isChecked={value[0] === "true"}
+              onChange={(value) => onChange(value)}
+              isChecked={value}
               label={t("common:on")}
               labelOff={t("common:off")}
             />
@@ -276,6 +270,7 @@ export const UserForm = ({
           control={control}
           render={({ onChange, value }) => (
             <Select
+              data-testid="required-actions-select"
               placeholderText="Select action"
               toggleId="kc-required-user-actions"
               onToggle={() =>
@@ -303,7 +298,7 @@ export const UserForm = ({
       </FormGroup>
       <ActionGroup>
         <Button
-          data-testid="create-user"
+          data-testid={!editMode ? "create-user" : "save-user"}
           isDisabled={!editMode && !watchUsernameInput}
           variant="primary"
           type="submit"
