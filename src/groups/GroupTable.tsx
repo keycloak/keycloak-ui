@@ -20,7 +20,7 @@ import { useRealm } from "../context/realm-context/RealmContext";
 import { KeycloakDataTable } from "../components/table-toolbar/KeycloakDataTable";
 import { ListEmptyState } from "../components/list-empty-state/ListEmptyState";
 import { GroupsCreateModal } from "./GroupsCreateModal";
-import { getId, getLastId } from "./groupIdUtils";
+import { getLastId } from "./groupIdUtils";
 
 type GroupTableData = GroupRepresentation & {
   membersLength?: number;
@@ -36,7 +36,7 @@ export const GroupTable = () => {
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
   const [selectedRows, setSelectedRows] = useState<GroupRepresentation[]>([]);
 
-  const { subGroups, setSubGroups } = useSubGroups();
+  const { subGroups } = useSubGroups();
 
   const [key, setKey] = useState(0);
   const refresh = () => setKey(new Date().getTime());
@@ -47,7 +47,7 @@ export const GroupTable = () => {
 
   useEffect(() => {
     refresh();
-  }, [id]);
+  }, [subGroups]);
 
   const getMembers = async (id: string) => {
     const response = await adminClient.groups.listMembers({ id });
@@ -55,28 +55,9 @@ export const GroupTable = () => {
   };
 
   const loader = async () => {
-    let groupsData;
-    if (!id) {
-      groupsData = await adminClient.groups.find();
-    } else {
-      const ids = getId(location.pathname);
-      const isNavigationStateInValid = ids && ids.length !== subGroups.length;
-      if (isNavigationStateInValid) {
-        const groups = [];
-        for (const i of ids!) {
-          const group = await adminClient.groups.findOne({ id: i });
-          if (group) groups.push(group);
-        }
-        setSubGroups(groups);
-        groupsData = groups.pop()?.subGroups!;
-      } else {
-        const group = await adminClient.groups.findOne({ id });
-        if (group) {
-          setSubGroups([...subGroups, group]);
-          groupsData = group.subGroups!;
-        }
-      }
-    }
+    const groupsData = id
+      ? (await adminClient.groups.findOne({ id })).subGroups
+      : await adminClient.groups.find();
 
     if (groupsData) {
       const memberPromises = groupsData.map((group) => getMembers(group.id!));

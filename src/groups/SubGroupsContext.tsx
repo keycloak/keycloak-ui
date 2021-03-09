@@ -6,6 +6,7 @@ type SubGroupsProps = {
   setSubGroups: (group: GroupRepresentation[]) => void;
   clear: () => void;
   remove: (group: GroupRepresentation) => void;
+  currentGroup: () => GroupRepresentation;
 };
 
 const SubGroupContext = createContext<SubGroupsProps>({
@@ -13,6 +14,9 @@ const SubGroupContext = createContext<SubGroupsProps>({
   setSubGroups: () => {},
   clear: () => {},
   remove: () => {},
+  currentGroup: () => {
+    return {};
+  },
 });
 
 export const SubGroups = ({ children }: { children: ReactNode }) => {
@@ -26,9 +30,10 @@ export const SubGroups = ({ children }: { children: ReactNode }) => {
         subGroups.findIndex((g) => g.id === group.id)
       )
     );
+  const currentGroup = () => subGroups[subGroups.length - 1];
   return (
     <SubGroupContext.Provider
-      value={{ subGroups, setSubGroups, clear, remove }}
+      value={{ subGroups, setSubGroups, clear, remove, currentGroup }}
     >
       {children}
     </SubGroupContext.Provider>

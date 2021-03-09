@@ -13,6 +13,7 @@
     "members": "Members",
     "searchMembers": "Search members",
     "addMember": "Add member",
+    "includeSubGroups": "Include sub-group users",
     "path": "Path",
     "moveTo": "Move to",
     "tableOfGroups": "Table of groups",

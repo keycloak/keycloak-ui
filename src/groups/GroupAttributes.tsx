@@ -26,19 +26,17 @@ export const GroupAttributes = () => {
   });
 
   const id = getLastId(location.pathname);
-  const { subGroups } = useSubGroups();
-  const getGroup = () => subGroups[subGroups.length - 1];
+  const { currentGroup, subGroups } = useSubGroups();
 
   useEffect(() => {
-    const group = getGroup();
-    const attributes = attributesToArray(group.attributes!);
+    const attributes = attributesToArray(currentGroup().attributes!);
     attributes.push({ key: "", value: "" });
     form.setValue("attributes", attributes);
-  }, [id]);
+  }, [subGroups]);
 
   const save = async (attributeForm: AttributeForm) => {
     try {
-      const group = getGroup();
+      const group = currentGroup();
       await adminClient.groups.update(
         { id: id! },
         { ...group, attributes: arrayToAttributes(attributeForm.attributes) }
@@ -56,9 +54,7 @@ export const GroupAttributes = () => {
       array={{ fields, append, remove }}
       reset={() =>
         form.reset({
-          attributes: attributesToArray(
-            subGroups[subGroups.length - 1].attributes
-          ),
+          attributes: attributesToArray(currentGroup().attributes),
         })
       }
     />
