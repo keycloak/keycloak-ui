@@ -14,15 +14,15 @@ export default class UserDetailsPage {
     requiredUserActions: RequiredActionAlias[];
   
     constructor() {
-      this.saveBtn = "[data-testid=save-user]";
-      this.cancelBtn = "[data-testid=cancel-create-user]";
-      this.emailInput = "[data-testid=email-input]"
+      this.saveBtn = "save-user";
+      this.cancelBtn = "cancel-create-user";
+      this.emailInput = "email-input"
       this.emailValue = "example" + "_" + (Math.random() + 1).toString(36).substring(7) + "@example.com";
-      this.firstNameInput = "[data-testid=firstName-input]"
+      this.firstNameInput = "firstName-input"
       this.firstNameValue = "firstname";
-      this.lastNameInput = "[data-testid=lastName-input]"
+      this.lastNameInput = "lastName-input"
       this.lastNameValue = "lastname";
-      this.enabledSwitch = "[data-testid=user-enabled-switch]"
+      this.enabledSwitch = "user-enabled-switch"
       this.enabledValue = true;
       this.requiredUserActions = [RequiredActionAlias.UPDATE_PASSWORD]
     }
@@ -30,23 +30,23 @@ export default class UserDetailsPage {
     
     fillUserData() {
   
-    cy.get(this.emailInput).type(this.emailValue);
-    cy.get(this.firstNameInput).type(this.firstNameValue);
-    cy.get(this.lastNameInput).type(this.lastNameValue);
-    cy.get(this.enabledSwitch).check({ force: true });
+    cy.getId(this.emailInput).type(this.emailValue);
+    cy.getId(this.firstNameInput).type(this.firstNameValue);
+    cy.getId(this.lastNameInput).type(this.lastNameValue);
+    cy.getId(this.enabledSwitch).check({ force: true });
 
   
       return this;
     }
   
     save() {
-      cy.get(this.saveBtn).click();
+      cy.getId(this.saveBtn).click();
   
       return this;
     }
   
     cancel() {
-      cy.get(this.cancelBtn).click();
+      cy.getId(this.cancelBtn).click();
   
       return this;
     }
