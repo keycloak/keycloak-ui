@@ -15,10 +15,6 @@
   color: var(--pf-c-button--m-plain--Color);
 }
 
-.kc-add-button {
-  margin-left: var(--pf-global--spacer--lg);
-}
-
 .kc-attributes__action-group {
   /* subtract the padding at the bottom of the table from the action group margin */
   --pf-c-form__group--m-action--MarginTop: calc(
