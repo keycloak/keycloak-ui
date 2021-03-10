@@ -28,19 +28,22 @@ export const GroupAttributes = () => {
   const id = getLastId(location.pathname);
   const { currentGroup, subGroups } = useSubGroups();
 
-  useEffect(() => {
-    const attributes = attributesToArray(currentGroup().attributes!);
+  const convertAttributes = (attr?: Record<string, any>) => {
+    const attributes = attributesToArray(attr || currentGroup().attributes!);
     attributes.push({ key: "", value: "" });
-    form.setValue("attributes", attributes);
+    return attributes;
+  };
+
+  useEffect(() => {
+    form.setValue("attributes", convertAttributes());
   }, [subGroups]);
 
   const save = async (attributeForm: AttributeForm) => {
     try {
       const group = currentGroup();
-      await adminClient.groups.update(
-        { id: id! },
-        { ...group, attributes: arrayToAttributes(attributeForm.attributes) }
-      );
+      const attributes = arrayToAttributes(attributeForm.attributes);
+      await adminClient.groups.update({ id: id! }, { ...group, attributes });
+      form.setValue("attributes", convertAttributes(attributes));
       addAlert(t("groupUpdated"), AlertVariant.success);
     } catch (error) {
       addAlert(t("groupUpdateError", { error }), AlertVariant.danger);
@@ -54,7 +57,7 @@ export const GroupAttributes = () => {
       array={{ fields, append, remove }}
       reset={() =>
         form.reset({
-          attributes: attributesToArray(currentGroup().attributes),
+          attributes: convertAttributes(),
         })
       }
     />
