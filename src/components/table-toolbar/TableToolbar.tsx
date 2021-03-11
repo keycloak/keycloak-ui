@@ -22,6 +22,7 @@ type TableToolbarProps = {
   toolbarItemFooter?: ReactNode;
   children: ReactNode;
   searchTypeComponent?: ReactNode;
+  filterChips?: ReactNode;
   inputGroupName?: string;
   inputGroupPlaceholder?: string;
   inputGroupOnChange?: (
@@ -36,6 +37,7 @@ export const TableToolbar = ({
   toolbarItemFooter,
   children,
   searchTypeComponent,
+  filterChips,
   inputGroupName,
   inputGroupPlaceholder,
   inputGroupOnChange,
@@ -77,6 +79,7 @@ export const TableToolbar = ({
           {toolbarItem}
         </ToolbarContent>
       </Toolbar>
+      {filterChips}
       <Divider />
       {children}
       <Toolbar>{toolbarItemFooter}</Toolbar>
