@@ -64,8 +64,7 @@ export const RealmRoleForm = ({
               value: 255,
               message: t("common:maxLength", { length: 255 }),
             },
-          })}
-          type="text"
+          })}          type="text"
           validated={
             errors.description
               ? ValidatedOptions.error
