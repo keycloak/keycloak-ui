@@ -1,7 +1,5 @@
-import React, { MouseEventHandler } from "react";
+import React from "react";
 import {
-  Chip,
-  ChipGroup,
   Pagination,
   ToggleTemplateProps,
   ToolbarItem,
@@ -25,7 +23,7 @@ type TableToolbarProps = {
     newInput: string,
     event: React.FormEvent<HTMLInputElement>
   ) => void;
-  inputGroupOnClick?: MouseEventHandler;
+  inputGroupOnEnter?: (value: string) => void;
 };
 
 export const PaginatingTableToolbar = ({
@@ -42,7 +40,7 @@ export const PaginatingTableToolbar = ({
   inputGroupName,
   inputGroupPlaceholder,
   inputGroupOnChange,
-  inputGroupOnClick,
+  inputGroupOnEnter
 }: TableToolbarProps) => {
   const page = Math.round(first / max);
   const pagination = (variant: "top" | "bottom" = "top") => (
@@ -81,7 +79,7 @@ export const PaginatingTableToolbar = ({
       inputGroupName={inputGroupName}
       inputGroupPlaceholder={inputGroupPlaceholder}
       inputGroupOnChange={inputGroupOnChange}
-      inputGroupOnClick={inputGroupOnClick}
+      inputGroupOnEnter={inputGroupOnEnter}
     >
       {children}
 
