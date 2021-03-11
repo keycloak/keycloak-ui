@@ -1,5 +1,7 @@
 import React from "react";
 import {
+  Chip,
+  ChipGroup,
   Pagination,
   ToggleTemplateProps,
   ToolbarItem,
@@ -14,6 +16,7 @@ type TableToolbarProps = {
   onPreviousClick: (page: number) => void;
   onPerPageSelect: (max: number, first: number) => void;
   searchTypeComponent?: React.ReactNode;
+  filterChips?: React.ReactNode;
   toolbarItem?: React.ReactNode;
   children: React.ReactNode;
   inputGroupName?: string;
@@ -33,6 +36,7 @@ export const PaginatingTableToolbar = ({
   onPreviousClick,
   onPerPageSelect,
   searchTypeComponent,
+  filterChips,
   toolbarItem,
   children,
   inputGroupName,
@@ -65,6 +69,7 @@ export const PaginatingTableToolbar = ({
   return (
     <TableToolbar
       searchTypeComponent={searchTypeComponent}
+      filterChips={filterChips}
       toolbarItem={
         <>
           {toolbarItem}
@@ -78,6 +83,7 @@ export const PaginatingTableToolbar = ({
       inputGroupOnEnter={inputGroupOnEnter}
     >
       {children}
+
     </TableToolbar>
   );
 };
