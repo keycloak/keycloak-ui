@@ -1,7 +1,13 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Link, useHistory, useRouteMatch } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import { AlertVariant, Button, ButtonVariant } from "@patternfly/react-core";
+import {
+  AlertVariant,
+  Button,
+  ButtonVariant,
+  Chip,
+  ChipGroup,
+} from "@patternfly/react-core";
 
 import { useAdminClient } from "../context/auth/AdminClient";
 import RoleRepresentation from "keycloak-admin/lib/defs/roleRepresentation";
@@ -21,6 +27,7 @@ type RolesListProps = {
     max?: number,
     search?: string
   ) => Promise<RoleRepresentation[]>;
+  searchFilters?: string[];
 };
 
 const RoleLink = ({ role }: { role: RoleRepresentation }) => {
@@ -46,11 +53,24 @@ export const RolesList = ({
 
   const [selectedRole, setSelectedRole] = useState<RoleRepresentation>();
 
+  const copy = searchFilters;
+
+  const [filterList, setFilterList] = useState<string[]>([]);
+
+  useEffect(() => {
+    console.log(filterList)
+    setFilterList(filterList!);
+  }, [searchFilters]);
+
   const RoleDetailLink = (role: RoleRepresentation) => (
     <>
       <RoleLink role={role} />
     </>
   );
+
+  const handleRemoveItem = (filterName: string) => {
+    setFilterList(filterList!.filter((item) => item !== filterName));
+  };
 
   const [toggleDeleteDialog, DeleteConfirm] = useConfirmDialog({
     titleKey: "roles:roleDeleteConfirm",
@@ -88,6 +108,25 @@ export const RolesList = ({
         loader={loader!}
         ariaLabelKey="roles:roleList"
         searchPlaceholderKey="roles:searchFor"
+        filterChips={
+          <>
+            <ChipGroup categoryName="Category one">
+              {filterList!.map((currentChip) => (
+                <Chip
+                  key={currentChip}
+                  onClick={() => handleRemoveItem(currentChip)}
+                >
+                  {currentChip}
+                </Chip>
+              ))}
+            </ChipGroup>
+            {filterList.length > 0 && (
+              <Button variant="link" onClick={() => setFilterList([])}>
+                {t("roles:clearAllFilters")}
+              </Button>
+            )}
+          </>
+        }
         isPaginated={paginated}
         toolbarItem={
           <>
