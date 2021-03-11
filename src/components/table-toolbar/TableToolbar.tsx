@@ -1,4 +1,12 @@
+<<<<<<< HEAD
 import React, { FormEvent, Fragment, ReactNode } from "react";
+=======
+import React, {
+  FormEvent,
+  Fragment,
+  ReactNode,
+} from "react";
+>>>>>>> filter realm roles on Enter key press, add filter functionality
 import {
   Toolbar,
   ToolbarContent,
@@ -39,6 +47,7 @@ export const TableToolbar = ({
   inputGroupOnEnter,
 }: TableToolbarProps) => {
   const { t } = useTranslation();
+<<<<<<< HEAD
   const [searchValue, setSearchValue] = React.useState<string>("");
 
   const onSearch = () => {
@@ -64,6 +73,20 @@ export const TableToolbar = ({
     inputGroupOnChange && inputGroupOnChange(value, event);
     setSearchValue(value);
   };
+=======
+  const [searchValue, setSearchValue] = React.useState<string>('');
+
+  const handleKeyDown = (e: any) => {
+    if (e.key === 'Enter') {
+      inputGroupOnEnter && inputGroupOnEnter(searchValue);
+    }
+  };
+
+  const handleInputChange = (value: string, event: FormEvent<HTMLInputElement>) => {
+    inputGroupOnChange && inputGroupOnChange(value, event);
+    setSearchValue(value);
+  }
+>>>>>>> filter realm roles on Enter key press, add filter functionality
 
   return (
     <>
@@ -88,7 +111,11 @@ export const TableToolbar = ({
                       <Button
                         variant={ButtonVariant.control}
                         aria-label={t("search")}
+<<<<<<< HEAD
                         onClick={onSearch}
+=======
+                        onClick={() => inputGroupOnEnter && inputGroupOnEnter(searchValue)}
+>>>>>>> filter realm roles on Enter key press, add filter functionality
                       >
                         <SearchIcon />
                       </Button>
