@@ -123,8 +123,6 @@ export const AssociatedRolesTab = ({
     );
   };
 
-  console.log(inheritanceMap);
-
   const toggleModal = () => setOpen(!open);
 
   const [toggleDeleteDialog, DeleteConfirm] = useConfirmDialog({

@@ -9,9 +9,8 @@ import {
 } from "@patternfly/react-core";
 import { useTranslation } from "react-i18next";
 import { UseFormMethods } from "react-hook-form";
-
-import { FormAccess } from "../components/form-access/FormAccess";
 import { RoleFormType } from "./RealmRoleTabs";
+import { FormAccess } from "../components/form-access/FormAccess";
 
 export type RealmRoleFormProps = {
   form: UseFormMethods<RoleFormType>;
@@ -21,16 +20,17 @@ export type RealmRoleFormProps = {
 };
 
 export const RealmRoleForm = ({
-  form,
+  form: { handleSubmit, errors, register },
   save,
   editMode,
   reset,
 }: RealmRoleFormProps) => {
   const { t } = useTranslation("roles");
+
   return (
     <FormAccess
       isHorizontal
-      onSubmit={form.handleSubmit(save)}
+      onSubmit={handleSubmit(save)}
       role="manage-realm"
       className="pf-u-mt-lg"
     >
@@ -38,11 +38,11 @@ export const RealmRoleForm = ({
         label={t("roleName")}
         fieldId="kc-name"
         isRequired
-        validated={form.errors.name ? "error" : "default"}
+        validated={errors.name ? "error" : "default"}
         helperTextInvalid={t("common:required")}
       >
         <TextInput
-          ref={form.register({ required: !editMode })}
+          ref={register({ required: !editMode })}
           type="text"
           id="kc-name"
           name="name"
@@ -53,23 +53,20 @@ export const RealmRoleForm = ({
         label={t("common:description")}
         fieldId="kc-description"
         validated={
-          form.errors.description
-            ? ValidatedOptions.error
-            : ValidatedOptions.default
+          errors.description ? ValidatedOptions.error : ValidatedOptions.default
         }
-        helperTextInvalid={form.errors.description?.message}
+        helperTextInvalid={errors.description?.message}
       >
         <TextArea
           name="description"
-          ref={form.register({
+          ref={register({
             maxLength: {
               value: 255,
               message: t("common:maxLength", { length: 255 }),
             },
-          })}
-          type="text"
+          })}          type="text"
           validated={
-            form.errors.description
+            errors.description
               ? ValidatedOptions.error
               : ValidatedOptions.default
           }
