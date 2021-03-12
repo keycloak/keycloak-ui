@@ -45,7 +45,7 @@ export const UsersSection = () => {
   const [listUsers, setListUsers] = useState(false);
   const [initialSearch, setInitialSearch] = useState("");
   const [selectedRows, setSelectedRows] = useState<UserRepresentation[]>([]);
-  const [ search, setSearch ] = useState("");
+  const [search, setSearch] = useState("");
 
   const [key, setKey] = useState("");
   const refresh = () => setKey(`${new Date().getTime()}`);
@@ -193,14 +193,18 @@ export const UsersSection = () => {
             searchPlaceholderKey="users:searchForUser"
             canSelectAll
             onSelect={(rows) => setSelectedRows([...rows])}
-            emptyState={!search ? (
-              <ListEmptyState
-                message={t("noUsersFound")}
-                instructions={t("emptyInstructions")}
-                primaryActionText={t("createNewUser")}
-                onPrimaryAction={goToCreate}
-              />
-            ) : ""}
+            emptyState={
+              !search ? (
+                <ListEmptyState
+                  message={t("noUsersFound")}
+                  instructions={t("emptyInstructions")}
+                  primaryActionText={t("createNewUser")}
+                  onPrimaryAction={goToCreate}
+                />
+              ) : (
+                ""
+              )
+            }
             toolbarItem={
               <>
                 <ToolbarItem>

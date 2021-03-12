@@ -171,7 +171,7 @@ export const AssociatedRolesTab = ({
   const goToCreate = () => history.push(`${url}/add-role`);
   return (
     <>
-      <PageSection variant="light" padding={{ default: 'noPadding' }}>
+      <PageSection variant="light" padding={{ default: "noPadding" }}>
         <DeleteConfirm />
         <DeleteAssociatedRolesConfirm />
         <AssociatedRolesModal

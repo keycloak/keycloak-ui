@@ -292,7 +292,6 @@ export function KeycloakDataTable<T>({
             searchPlaceholderKey ? `${ariaLabelKey}input` : undefined
           }
           inputGroupOnChange={searchOnChange}
-          inputGroupOnClick={() => filter(search)}
           inputGroupPlaceholder={t(searchPlaceholderKey || "")}
           toolbarItem={toolbarItem}
           searchTypeComponent={searchTypeComponent}

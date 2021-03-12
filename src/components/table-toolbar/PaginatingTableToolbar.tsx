@@ -14,7 +14,6 @@ type TableToolbarProps = {
   onPreviousClick: (page: number) => void;
   onPerPageSelect: (max: number, first: number) => void;
   searchTypeComponent?: React.ReactNode;
-  filterChips?: React.ReactNode;
   toolbarItem?: React.ReactNode;
   children: React.ReactNode;
   inputGroupName?: string;
@@ -34,13 +33,12 @@ export const PaginatingTableToolbar = ({
   onPreviousClick,
   onPerPageSelect,
   searchTypeComponent,
-  filterChips,
   toolbarItem,
   children,
   inputGroupName,
   inputGroupPlaceholder,
   inputGroupOnChange,
-  inputGroupOnEnter
+  inputGroupOnEnter,
 }: TableToolbarProps) => {
   const page = Math.round(first / max);
   const pagination = (variant: "top" | "bottom" = "top") => (
@@ -61,28 +59,25 @@ export const PaginatingTableToolbar = ({
     />
   );
 
+  if (count === 0) {
+    <>{children}</>;
+  }
   return (
     <TableToolbar
       searchTypeComponent={searchTypeComponent}
-      filterChips={filterChips}
       toolbarItem={
         <>
           {toolbarItem}
-          {count !== 0 && (
-            <ToolbarItem variant="pagination">{pagination()}</ToolbarItem>
-          )}
+          <ToolbarItem variant="pagination">{pagination()}</ToolbarItem>
         </>
       }
-      toolbarItemFooter={
-        count !== 0 && <ToolbarItem>{pagination("bottom")}</ToolbarItem>
-      }
+      toolbarItemFooter={<ToolbarItem>{pagination("bottom")}</ToolbarItem>}
       inputGroupName={inputGroupName}
       inputGroupPlaceholder={inputGroupPlaceholder}
       inputGroupOnChange={inputGroupOnChange}
       inputGroupOnEnter={inputGroupOnEnter}
     >
       {children}
-
     </TableToolbar>
   );
 };

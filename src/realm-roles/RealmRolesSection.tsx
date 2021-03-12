@@ -58,10 +58,7 @@ export const RealmRolesSection = () => {
     <>
       <ViewHeader titleKey="roles:title" subKey="roles:roleExplain" />
       <PageSection variant="light" padding={{ default: "noPadding" }}>
-        <RolesList
-          searchFilters={searchFilters}
-          loader={loader}
-        />
+        <RolesList searchFilters={searchFilters} loader={loader} />
       </PageSection>
     </>
   );

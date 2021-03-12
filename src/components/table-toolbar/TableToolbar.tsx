@@ -1,8 +1,4 @@
-import React, {
-  FormEvent,
-  Fragment,
-  ReactNode,
-} from "react";
+import React, { FormEvent, Fragment, ReactNode } from "react";
 import {
   Toolbar,
   ToolbarContent,
@@ -43,18 +39,21 @@ export const TableToolbar = ({
   inputGroupOnEnter,
 }: TableToolbarProps) => {
   const { t } = useTranslation();
-  const [searchValue, setSearchValue] = React.useState<string>('');
+  const [searchValue, setSearchValue] = React.useState<string>("");
 
   const handleKeyDown = (e: any) => {
-    if (e.key === 'Enter') {
+    if (e.key === "Enter") {
       inputGroupOnEnter && inputGroupOnEnter(searchValue);
     }
   };
 
-  const handleInputChange = (value: string, event: FormEvent<HTMLInputElement>) => {
+  const handleInputChange = (
+    value: string,
+    event: FormEvent<HTMLInputElement>
+  ) => {
     inputGroupOnChange && inputGroupOnChange(value, event);
     setSearchValue(value);
-  }
+  };
 
   return (
     <>
@@ -79,7 +78,9 @@ export const TableToolbar = ({
                       <Button
                         variant={ButtonVariant.control}
                         aria-label={t("search")}
-                        onClick={() => inputGroupOnEnter && inputGroupOnEnter(searchValue)}
+                        onClick={() =>
+                          inputGroupOnEnter && inputGroupOnEnter(searchValue)
+                        }
                       >
                         <SearchIcon />
                       </Button>
