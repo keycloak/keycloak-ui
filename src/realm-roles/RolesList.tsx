@@ -1,4 +1,4 @@
-import React, {  useEffect, useState } from "react";
+import React, { useState } from "react";
 import { Link, useHistory, useRouteMatch } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { AlertVariant, Button, ButtonVariant } from "@patternfly/react-core";
@@ -56,7 +56,6 @@ export const RolesList = ({
   const { url } = useRouteMatch();
 
   const [selectedRole, setSelectedRole] = useState<RoleRepresentation>();
-
 
   const RoleDetailLink = (role: RoleRepresentation) => (
     <>

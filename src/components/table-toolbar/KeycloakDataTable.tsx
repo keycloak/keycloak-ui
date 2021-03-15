@@ -174,31 +174,6 @@ export function KeycloakDataTable<T>({
     );
   }, [key, first, max, search]);
 
-  const getNodeText = (node: keyof T | JSX.Element): string => {
-    if (["string", "number"].includes(typeof node)) {
-      return node!.toString();
-    }
-    if (node instanceof Array) {
-      return node.map(getNodeText).join("");
-    }
-    if (typeof node === "object" && node) {
-      return getNodeText(node.props.children);
-    }
-    return "";
-  };
-
-  const filter = (search: string) => {
-    setFilteredData(
-      rows!.filter((row) =>
-        row.cells.some(
-          (cell) =>
-            cell &&
-            getNodeText(cell).toLowerCase().includes(search.toLowerCase())
-        )
-      )
-    );
-  };
-
   const convertAction = () =>
     actions &&
     _.cloneDeep(actions).map((action: Action<T>, index: number) => {

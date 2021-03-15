@@ -41,38 +41,38 @@ const attributesToArray = (attributes: { [key: string]: string }): any => {
 };
 
 type SubGroupsProps = {
-    subGroups: GroupRepresentation[];
-    setSubGroups: (group: GroupRepresentation[]) => void;
-    clear: () => void;
-    remove: (group: GroupRepresentation) => void;
-  };
+  subGroups: GroupRepresentation[];
+  setSubGroups: (group: GroupRepresentation[]) => void;
+  clear: () => void;
+  remove: (group: GroupRepresentation) => void;
+};
 
 const SubGroupContext = createContext<SubGroupsProps>({
-    subGroups: [],
-    setSubGroups: () => {},
-    clear: () => {},
-    remove: () => {},
-  });
+  subGroups: [],
+  setSubGroups: () => {},
+  clear: () => {},
+  remove: () => {},
+});
 
 export const SubGroups = ({ children }: { children: React.ReactNode }) => {
-    const [subGroups, setSubGroups] = useState<GroupRepresentation[]>([]);
-  
-    const clear = () => setSubGroups([]);
-    const remove = (group: GroupRepresentation) =>
-      setSubGroups(
-        subGroups.slice(
-          0,
-          subGroups.findIndex((g) => g.id === group.id)
-        )
-      );
-    return (
-      <SubGroupContext.Provider
-        value={{ subGroups, setSubGroups, clear, remove }}
-      >
-        {children}
-      </SubGroupContext.Provider>
+  const [subGroups, setSubGroups] = useState<GroupRepresentation[]>([]);
+
+  const clear = () => setSubGroups([]);
+  const remove = (group: GroupRepresentation) =>
+    setSubGroups(
+      subGroups.slice(
+        0,
+        subGroups.findIndex((g) => g.id === group.id)
+      )
     );
-  };
+  return (
+    <SubGroupContext.Provider
+      value={{ subGroups, setSubGroups, clear, remove }}
+    >
+      {children}
+    </SubGroupContext.Provider>
+  );
+};
 
 export const useSubGroups = () => useContext(SubGroupContext);
 
@@ -104,7 +104,6 @@ export const JoinGroupsModal = (props: JoinGroupsModalProps) => {
       return 0;
     });
   };
-
 
   const getId = (pathname: string) => {
     const pathParts = pathname.substr(1).split("/");

@@ -8,7 +8,6 @@ import { useErrorHandler } from "react-error-boundary";
 export const RealmRolesSection = () => {
   const adminClient = useAdminClient();
   const [listRoles, setListRoles] = useState(false);
-  const [searchFilters, setSearchFilters] = useState([] as string[]);
   const handleError = useErrorHandler();
 
   useEffect(() => {
@@ -33,9 +32,8 @@ export const RealmRolesSection = () => {
     const searchParam = search || "";
 
     if (searchParam) {
-
       params.search = searchParam;
-     }
+    }
 
     if (listRoles) {
       return [];
@@ -48,7 +46,7 @@ export const RealmRolesSection = () => {
     <>
       <ViewHeader titleKey="roles:title" subKey="roles:roleExplain" />
       <PageSection variant="light" padding={{ default: "noPadding" }}>
-        <RolesList searchFilters={searchFilters} loader={loader} />
+        <RolesList loader={loader} />
       </PageSection>
     </>
   );

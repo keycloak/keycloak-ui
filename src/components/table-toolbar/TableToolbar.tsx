@@ -44,10 +44,7 @@ export const TableToolbar = ({
   const [searchValue, setSearchValue] = React.useState<string>("");
   const [searchFilters, setSearchFilters] = React.useState<string[]>([]);
 
-
-
   const onSearch = () => {
-    
     if (searchValue !== "") {
       setSearchValue(searchValue);
       inputGroupOnEnter && inputGroupOnEnter(searchValue);
@@ -60,7 +57,6 @@ export const TableToolbar = ({
     if (!searchFilters.includes(searchValue!) && searchValue !== "") {
       setSearchFilters([...filterDuplicate, searchValue!]);
     }
-
   };
 
   const handleKeyDown = (e: any) => {
@@ -78,14 +74,12 @@ export const TableToolbar = ({
   };
 
   const handleRemoveItem = (filterName: string) => {
-
     setSearchFilters(searchFilters!.filter((item) => item !== filterName));
     inputGroupOnEnter && inputGroupOnEnter("");
     setSearchValue(searchValue);
   };
 
   const clearAllFilters = () => {
-    
     inputGroupOnEnter && inputGroupOnEnter("");
     setSearchValue(searchValue);
     setSearchFilters([]);
