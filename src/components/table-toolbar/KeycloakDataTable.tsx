@@ -56,11 +56,7 @@ function DataTable<T>({
       }
       canSelectAll={canSelectAll}
       cells={columns.map((column) => {
-        return {
-          ...column,
-          title: t(column.displayKey || column.name),
-          transforms: column.transforms,
-        };
+        return { ...column, title: t(column.displayKey || column.name) };
       })}
       rows={rows}
       actions={actions}
@@ -96,7 +92,6 @@ export type DataListProps<T> = {
   actions?: Action<T>[];
   actionResolver?: IActionsResolver;
   searchTypeComponent?: ReactNode;
-  filterChips?: ReactNode;
   toolbarItem?: ReactNode;
   emptyState?: ReactNode;
 };
@@ -134,7 +129,6 @@ export function KeycloakDataTable<T>({
   actions,
   actionResolver,
   searchTypeComponent,
-  filterChips,
   toolbarItem,
   emptyState,
 }: DataListProps<T>) {
