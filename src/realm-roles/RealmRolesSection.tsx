@@ -17,7 +17,7 @@ export const RealmRolesSection = () => {
 
     if (searchParam) {
       params.search = searchParam;
-     }
+    }
 
     return adminClient.roles.find(params);
   };
