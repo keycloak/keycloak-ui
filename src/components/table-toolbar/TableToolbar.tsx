@@ -8,6 +8,8 @@ import {
   Button,
   ButtonVariant,
   Divider,
+  ChipGroup,
+  Chip,
 } from "@patternfly/react-core";
 import { SearchIcon } from "@patternfly/react-icons";
 import { useTranslation } from "react-i18next";
@@ -40,10 +42,30 @@ export const TableToolbar = ({
 }: TableToolbarProps) => {
   const { t } = useTranslation();
   const [searchValue, setSearchValue] = React.useState<string>("");
+  const [searchFilters, setSearchFilters] = React.useState<string[]>([]);
+
+
+
+  const onSearch = () => {
+    
+    if (searchValue !== "") {
+      setSearchValue(searchValue);
+      inputGroupOnEnter && inputGroupOnEnter(searchValue);
+    }
+
+    const filterDuplicate = searchFilters.filter(
+      (v, i) => searchFilters.indexOf(v) === i
+    );
+
+    if (!searchFilters.includes(searchValue!) && searchValue !== "") {
+      setSearchFilters([...filterDuplicate, searchValue!]);
+    }
+
+  };
 
   const handleKeyDown = (e: any) => {
     if (e.key === "Enter") {
-      inputGroupOnEnter && inputGroupOnEnter(searchValue);
+      onSearch();
     }
   };
 
@@ -54,6 +76,40 @@ export const TableToolbar = ({
     inputGroupOnChange && inputGroupOnChange(value, event);
     setSearchValue(value);
   };
+
+  const handleRemoveItem = (filterName: string) => {
+
+    setSearchFilters(searchFilters!.filter((item) => item !== filterName));
+    inputGroupOnEnter && inputGroupOnEnter("");
+    setSearchValue(searchValue);
+  };
+
+  const clearAllFilters = () => {
+    
+    inputGroupOnEnter && inputGroupOnEnter("");
+    setSearchValue(searchValue);
+    setSearchFilters([]);
+  };
+
+  const chips = (
+    <>
+      <ChipGroup
+        className="kc-filter-chip-group__table"
+        categoryName={t("roles:roleName")}
+      >
+        {searchFilters!.map((currentChip) => (
+          <Chip key={currentChip} onClick={() => handleRemoveItem(currentChip)}>
+            {currentChip}
+          </Chip>
+        ))}
+      </ChipGroup>
+      {searchFilters!.length > 0 && (
+        <Button variant="link" onClick={() => clearAllFilters()}>
+          {t("roles:clearAllFilters")}
+        </Button>
+      )}
+    </>
+  );
 
   return (
     <>
@@ -78,9 +134,7 @@ export const TableToolbar = ({
                       <Button
                         variant={ButtonVariant.control}
                         aria-label={t("search")}
-                        onClick={() =>
-                          inputGroupOnEnter && inputGroupOnEnter(searchValue)
-                        }
+                        onClick={onSearch}
                       >
                         <SearchIcon />
                       </Button>
@@ -93,7 +147,7 @@ export const TableToolbar = ({
           {toolbarItem}
         </ToolbarContent>
       </Toolbar>
-      {filterChips}
+      {filterChips && chips}
       <Divider />
       {children}
       <Toolbar>{toolbarItemFooter}</Toolbar>

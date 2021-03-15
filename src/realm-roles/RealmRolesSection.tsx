@@ -33,20 +33,10 @@ export const RealmRolesSection = () => {
     const searchParam = search || "";
 
     if (searchParam) {
-      const filterDuplicate = searchFilters.filter(
-        (v, i) => searchFilters.indexOf(v) === i
-      );
-
-      if (!searchFilters.includes(search!)) {
-        setSearchFilters([...filterDuplicate, search!]);
-      }
 
       params.search = searchParam;
-    }
+     }
 
-    if (searchParam === "") {
-      setSearchFilters([]);
-    }
     if (listRoles) {
       return [];
     }

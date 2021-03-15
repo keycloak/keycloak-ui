@@ -1,4 +1,4 @@
-import React, { ReactNode, useState } from "react";
+import React, {  useEffect, useState } from "react";
 import { Link, useHistory, useRouteMatch } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { AlertVariant, Button, ButtonVariant } from "@patternfly/react-core";
@@ -22,7 +22,7 @@ type RolesListProps = {
     search?: string
   ) => Promise<RoleRepresentation[]>;
   searchFilters?: string[];
-  filterChips?: ReactNode;
+  filterChips?: boolean;
 };
 
 const RoleLink = ({ role }: { role: RoleRepresentation }) => {
@@ -42,8 +42,12 @@ export const RolesList = ({
   messageBundle = "roles",
 =======
   searchFilters,
+<<<<<<< HEAD
   filterChips,
 >>>>>>> format
+=======
+  filterChips = true,
+>>>>>>> filterChips logic now in table toolbar
 }: RolesListProps) => {
   const { t } = useTranslation(messageBundle);
   const history = useHistory();
@@ -52,6 +56,7 @@ export const RolesList = ({
   const { url } = useRouteMatch();
 
   const [selectedRole, setSelectedRole] = useState<RoleRepresentation>();
+
 
   const RoleDetailLink = (role: RoleRepresentation) => (
     <>
