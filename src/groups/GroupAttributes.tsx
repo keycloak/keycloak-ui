@@ -26,7 +26,7 @@ export const GroupAttributes = () => {
   });
 
   const id = getLastId(location.pathname);
-  const { currentGroup, subGroups } = useSubGroups();
+  const { currentGroup, subGroups, setSubGroups } = useSubGroups();
 
   const convertAttributes = (attr?: Record<string, any>) => {
     const attributes = attributesToArray(attr || currentGroup().attributes!);
@@ -43,6 +43,11 @@ export const GroupAttributes = () => {
       const group = currentGroup();
       const attributes = arrayToAttributes(attributeForm.attributes);
       await adminClient.groups.update({ id: id! }, { ...group, attributes });
+
+      setSubGroups([
+        ...subGroups.slice(0, subGroups.length - 1),
+        { ...group, attributes },
+      ]);
       form.setValue("attributes", convertAttributes(attributes));
       addAlert(t("groupUpdated"), AlertVariant.success);
     } catch (error) {

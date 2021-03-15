@@ -41,8 +41,6 @@ describe("Group test", () => {
       // Delete
       listingPage.deleteItem(groupName);
       masthead.checkNotificationMessage("Group deleted");
-
-      listingPage.itemExist(groupName, false);
     });
 
     const searchGroupPage = new SearchGroupPage();
@@ -83,7 +81,7 @@ describe("Group test", () => {
       const added = "addedGroup";
       createGroupModal.open().fillGroupForm(added).clickCreate();
 
-      detailPage.checkListSubGroup([groups[1], added]);
+      detailPage.checkListSubGroup([added, groups[1]]);
     });
 
     it("Should display members", () => {
