@@ -16,7 +16,7 @@ export default class GroupDetailPage {
       expect(groups).to.have.length(subGroups.length);
       for (let index = 0; index < subGroups.length; index++) {
         const subGroup = subGroups[index];
-        expect(groups.eq(index)).to.contain(subGroup);
+        expect(groups).to.contain(subGroup);
       }
     });
     return this;
