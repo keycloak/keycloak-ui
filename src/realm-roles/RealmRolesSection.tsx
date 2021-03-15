@@ -7,7 +7,7 @@ import { useErrorHandler } from "react-error-boundary";
 
 export const RealmRolesSection = () => {
   const adminClient = useAdminClient();
-  const [listRoles, setListRoles] = useState(false);
+  const [listRoles, setListRoles] = useState(true);
   const handleError = useErrorHandler();
 
   useEffect(() => {
@@ -17,7 +17,7 @@ export const RealmRolesSection = () => {
       },
 
       (response) => {
-        setListRoles(!(response[0] && response[0].length > 0));
+        setListRoles(!!(response[0] && response[0].length > 0));
       },
       handleError
     );

@@ -17,6 +17,8 @@ import { asyncStateFetch, useAdminClient } from "../context/auth/AdminClient";
 import GroupRepresentation from "keycloak-admin/lib/defs/groupRepresentation";
 import { cellWidth } from "@patternfly/react-table";
 import { useErrorHandler } from "react-error-boundary";
+import { arrayToAttributes } from "../components/attribute-form/AttributeForm";
+import _ from "lodash";
 
 export const UserGroups = () => {
   const { t } = useTranslation("roles");
@@ -35,6 +37,10 @@ export const UserGroups = () => {
 
   const adminClient = useAdminClient();
   const { id } = useParams<{ id: string }>();
+  const alphabetize = (groupsList: GroupRepresentation[]) => {
+    return _.sortBy(groupsList, (group) => group.path?.toUpperCase());
+  };
+
   const loader = async (first?: number, max?: number, search?: string) => {
     const params: { [name: string]: string | number } = {
       first: first!,
@@ -54,7 +60,37 @@ export const UserGroups = () => {
       return [];
     }
 
-    return await adminClient.users.listGroups({ ...params, id });
+    const joinedGroups = await adminClient.users.listGroups({ ...params, id });
+    const allGroups = await adminClient.groups.find();
+
+    const getAllPaths = joinedGroups.reduce(
+      (acc: string[], cur) => (cur.path && acc.push(cur.path), acc),
+      []
+    );
+    const parentGroupNames: string[] = [];
+
+    getAllPaths.forEach((item) => parentGroupNames.push(item.split("/")[1]));
+
+    const topLevelGroups = allGroups.filter((value) =>
+      parentGroupNames.includes(value.name!)
+    );
+
+    const directMembership = joinedGroups.filter(
+      (value) => !topLevelGroups.includes(value)
+    );
+
+    const allJoinedGroups = [...topLevelGroups, ...directMembership];
+
+    const filterDupesfromGroups = allJoinedGroups.filter(
+      (thing, index, self) =>
+        index === self.findIndex((t) => t.name === thing.name)
+    );
+
+    if (isDirectMembership) {
+      return alphabetize(directMembership)
+    }
+
+    return alphabetize(filterDupesfromGroups);
   };
 
   useEffect(() => {
