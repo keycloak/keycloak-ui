@@ -96,7 +96,6 @@ export type DataListProps<T> = {
   actions?: Action<T>[];
   actionResolver?: IActionsResolver;
   searchTypeComponent?: ReactNode;
-  filterChips?: ReactNode;
   toolbarItem?: ReactNode;
   emptyState?: ReactNode;
 };
@@ -135,7 +134,6 @@ export function KeycloakDataTable<T>({
   actions,
   actionResolver,
   searchTypeComponent,
-  filterChips,
   toolbarItem,
   emptyState,
   ...props

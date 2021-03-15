@@ -40,11 +40,7 @@ export const PaginatingTableToolbar = ({
   inputGroupName,
   inputGroupPlaceholder,
   inputGroupOnChange,
-<<<<<<< HEAD
   inputGroupOnEnter,
-=======
-  inputGroupOnEnter
->>>>>>> filter realm roles on Enter key press, add filter functionality
 }: TableToolbarProps) => {
   const page = Math.round(first / max);
   const pagination = (variant: "top" | "bottom" = "top") => (
