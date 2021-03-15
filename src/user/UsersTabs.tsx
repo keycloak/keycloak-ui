@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   AlertVariant,
   PageSection,
@@ -15,6 +15,7 @@ import { useAlerts } from "../components/alert/Alerts";
 import { useAdminClient } from "../context/auth/AdminClient";
 import { useHistory, useParams, useRouteMatch } from "react-router-dom";
 import { KeycloakTabs } from "../components/keycloak-tabs/KeycloakTabs";
+import { UserGroups } from "./UserGroups";
 
 export const UsersTabs = () => {
   const { t } = useTranslation("roles");
@@ -25,6 +26,7 @@ export const UsersTabs = () => {
   const adminClient = useAdminClient();
   const form = useForm<UserRepresentation>({ mode: "onChange" });
   const { id } = useParams<{ id: string }>();
+  const [userID, setUserID] = useState("");
 
   const save = async (user: UserRepresentation) => {
     try {
@@ -46,6 +48,14 @@ export const UsersTabs = () => {
     }
   };
 
+  const getId = async () => {
+    const bee = await adminClient.users.find({username: id});
+    console.log(bee[0].id);
+    setUserID(bee[0].id!)
+
+  }
+
+
   return (
     <>
       <ViewHeader titleKey={id! || t("users:createUser")} subKey="" />
@@ -58,6 +68,13 @@ export const UsersTabs = () => {
               title={<TabTitleText>{t("details")}</TabTitleText>}
             >
               <UserForm form={form} save={save} editMode={true} />
+            </Tab>
+            <Tab
+              eventKey="groups"
+              data-testid="user-groups-tab"
+              title={<TabTitleText>{t("groups")}</TabTitleText>}
+            >
+              <UserGroups userID={userID} />
             </Tab>
           </KeycloakTabs>
         )}
