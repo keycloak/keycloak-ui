@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { ReactNode, useState } from "react";
 import { Link, useHistory, useRouteMatch } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import {
@@ -26,7 +26,7 @@ type RolesListProps = {
     search?: string
   ) => Promise<RoleRepresentation[]>;
   searchFilters?: string[];
-  filterChips?: boolean;
+  filterChips?: ReactNode;
 };
 
 const RoleLink = ({ role }: { role: RoleRepresentation }) => {
@@ -43,17 +43,8 @@ export const RolesList = ({
   paginated = true,
   parentRoleId,
   messageBundle = "roles",
-<<<<<<< HEAD
-=======
-=======
   searchFilters,
-<<<<<<< HEAD
   filterChips,
->>>>>>> format
-=======
-  filterChips = true,
->>>>>>> filterChips logic now in table toolbar
->>>>>>> filterChips logic now in table toolbar
 }: RolesListProps) => {
   const { t } = useTranslation(messageBundle);
   const history = useHistory();
@@ -106,7 +97,6 @@ export const RolesList = ({
         loader={loader!}
         ariaLabelKey="roles:roleList"
         searchPlaceholderKey="roles:searchFor"
-        filterChips={filterChips}
         isPaginated={paginated}
         toolbarItem={
           <>

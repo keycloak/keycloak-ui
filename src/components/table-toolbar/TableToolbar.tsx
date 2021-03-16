@@ -25,7 +25,7 @@ type TableToolbarProps = {
   toolbarItemFooter?: ReactNode;
   children: ReactNode;
   searchTypeComponent?: ReactNode;
-  filterChips?: ReactNode;
+  filterChips?: boolean;
   inputGroupName?: string;
   inputGroupPlaceholder?: string;
   inputGroupOnChange?: (
