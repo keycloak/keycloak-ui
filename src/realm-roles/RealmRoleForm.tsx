@@ -74,19 +74,11 @@ export const RealmRoleForm = ({
         />
       </FormGroup>
       <ActionGroup>
-<<<<<<< HEAD
-<<<<<<< HEAD
         <Button
           variant="primary"
           onClick={save}
           data-testid="realm-roles-save-button"
         >
-=======
-        <Button variant="primary" onClick={save}>
->>>>>>> save with erik
-=======
-        <Button variant="primary" onClick={save} data-testid="realm-roles-save-button">
->>>>>>> fix realm roles cypress test
           {t("common:save")}
         </Button>
         <Button onClick={() => reset()} variant="link">

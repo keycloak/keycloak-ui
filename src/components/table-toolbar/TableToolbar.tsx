@@ -1,12 +1,4 @@
-<<<<<<< HEAD
 import React, { FormEvent, Fragment, ReactNode } from "react";
-=======
-import React, {
-  FormEvent,
-  Fragment,
-  ReactNode,
-} from "react";
->>>>>>> filter realm roles on Enter key press, add filter functionality
 import {
   Toolbar,
   ToolbarContent,
@@ -107,10 +99,7 @@ export const TableToolbar = ({
           {toolbarItem}
         </ToolbarContent>
       </Toolbar>
-<<<<<<< HEAD
       {filterChips}
-=======
->>>>>>> remove filter chips functionality
       <Divider />
       {children}
       <Toolbar>{toolbarItemFooter}</Toolbar>

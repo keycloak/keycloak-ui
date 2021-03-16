@@ -57,11 +57,7 @@ export const attributesToArray = (attributes?: {
 };
 
 export const AttributesForm = ({
-<<<<<<< HEAD
   form: { handleSubmit, register, formState, errors, watch },
-=======
-  form: { register, formState, errors, watch },
->>>>>>> fix check-types
   array: { fields, append, remove },
   reset,
   save,
