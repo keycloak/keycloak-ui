@@ -142,7 +142,7 @@ export const RoleAttributes = ({
           </Tbody>
         </TableComposable>
         <ActionGroup className="kc-role-attributes__action-group">
-          <Button variant="primary" isDisabled={!watchFirstKey} onClick={save}>
+          <Button data-testid="realm-roles-save-button" variant="primary" isDisabled={!watchFirstKey} onClick={save}>
             {t("common:save")}
           </Button>
           <Button onClick={reset} variant="link">

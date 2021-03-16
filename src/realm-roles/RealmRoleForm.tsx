@@ -75,7 +75,7 @@ export const RealmRoleForm = ({
         />
       </FormGroup>
       <ActionGroup>
-        <Button variant="primary" onClick={save}>
+        <Button variant="primary" onClick={save} data-testid="realm-roles-save-button">
           {t("common:save")}
         </Button>
         <Button onClick={() => reset()} variant="link">
