@@ -74,7 +74,7 @@ export const AttributesForm = ({
 
   return (
     <>
-      <FormAccess role="manage-realm" >
+      <FormAccess role="manage-realm">
         <TableComposable
           className="kc-attributes__table"
           aria-label="Role attribute keys and values"
