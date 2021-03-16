@@ -3,6 +3,7 @@ import { useHistory, useRouteMatch } from "react-router-dom";
 import moment from "moment";
 import { useTranslation } from "react-i18next";
 import { AlertVariant, Button, ButtonVariant } from "@patternfly/react-core";
+import { wrappable } from "@patternfly/react-table";
 
 import ClientInitialAccessPresentation from "keycloak-admin/lib/defs/clientInitialAccessPresentation";
 import { KeycloakDataTable } from "../../components/table-toolbar/KeycloakDataTable";
@@ -95,6 +96,7 @@ export const InitialAccessTokenList = () => {
           {
             name: "remainingCount",
             displayKey: "clients:remainingCount",
+            transforms: [wrappable],
           },
         ]}
         emptyState={

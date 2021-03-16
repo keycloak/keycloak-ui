@@ -6,6 +6,7 @@ import {
   IActions,
   IActionsResolver,
   IFormatter,
+  ITransform,
   Table,
   TableBody,
   TableHeader,
@@ -71,6 +72,7 @@ export type Field<T> = {
   name: string;
   displayKey?: string;
   cellFormatters?: IFormatter[];
+  transforms?: ITransform[];
   cellRenderer?: (row: T) => ReactNode;
 };
 
