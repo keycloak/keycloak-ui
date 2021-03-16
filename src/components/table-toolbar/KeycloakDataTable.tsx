@@ -90,7 +90,6 @@ export type DataListProps<T> = {
   actions?: Action<T>[];
   actionResolver?: IActionsResolver;
   searchTypeComponent?: ReactNode;
-  filterChips?: boolean;
   toolbarItem?: ReactNode;
   emptyState?: ReactNode;
 };
@@ -128,7 +127,6 @@ export function KeycloakDataTable<T>({
   actions,
   actionResolver,
   searchTypeComponent,
-  filterChips,
   toolbarItem,
   emptyState,
 }: DataListProps<T>) {
@@ -236,7 +234,6 @@ export function KeycloakDataTable<T>({
           inputGroupOnEnter={setSearch}
           inputGroupPlaceholder={t(searchPlaceholderKey || "")}
           searchTypeComponent={searchTypeComponent}
-          filterChips={filterChips}
           toolbarItem={toolbarItem}
         >
           {!loading && rows.length > 0 && (
@@ -266,15 +263,10 @@ export function KeycloakDataTable<T>({
           inputGroupName={
             searchPlaceholderKey ? `${ariaLabelKey}input` : undefined
           }
-<<<<<<< HEAD
-          inputGroupOnChange={searchOnChange}
-=======
           inputGroupOnEnter={setSearch}
->>>>>>> filterChips logic now in table toolbar
           inputGroupPlaceholder={t(searchPlaceholderKey || "")}
           toolbarItem={toolbarItem}
           searchTypeComponent={searchTypeComponent}
-          filterChips={filterChips}
         >
           {!loading && (filteredData || rows).length > 0 && (
             <DataTable

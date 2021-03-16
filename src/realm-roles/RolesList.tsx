@@ -1,4 +1,4 @@
-import React, { ReactNode, useState } from "react";
+import React, { useState } from "react";
 import { Link, useHistory, useRouteMatch } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { AlertVariant, Button, ButtonVariant } from "@patternfly/react-core";
@@ -21,8 +21,6 @@ type RolesListProps = {
     max?: number,
     search?: string
   ) => Promise<RoleRepresentation[]>;
-  searchFilters?: string[];
-  filterChips?: ReactNode;
 };
 
 const RoleLink = ({ role }: { role: RoleRepresentation }) => {

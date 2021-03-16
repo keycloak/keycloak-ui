@@ -14,10 +14,6 @@ type TableToolbarProps = {
   onPreviousClick: (page: number) => void;
   onPerPageSelect: (max: number, first: number) => void;
   searchTypeComponent?: React.ReactNode;
-<<<<<<< HEAD
-=======
-  filterChips?: boolean;
->>>>>>> filterChips logic now in table toolbar
   toolbarItem?: React.ReactNode;
   children: React.ReactNode;
   inputGroupName?: string;

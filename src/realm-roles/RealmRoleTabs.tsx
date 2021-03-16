@@ -96,10 +96,16 @@ export const RealmRoleTabs = () => {
   const save = async () => {
     try {
       const role = form.getValues();
-      if (role.attributes && role.attributes[role.attributes.length -1].key === "") {
-        form.setValue("attributes", role.attributes.slice(0, role.attributes.length - 1));
+      if (
+        role.attributes &&
+        role.attributes[role.attributes.length - 1].key === ""
+      ) {
+        form.setValue(
+          "attributes",
+          role.attributes.slice(0, role.attributes.length - 1)
+        );
       }
-      if (!await form.trigger()) {
+      if (!(await form.trigger())) {
         return;
       }
       const { attributes, ...rest } = role;
