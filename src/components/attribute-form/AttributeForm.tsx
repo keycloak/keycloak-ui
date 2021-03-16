@@ -24,7 +24,7 @@ export type AttributeForm = {
 
 export type AttributesFormProps = {
   form: UseFormMethods<AttributeForm>;
-  save: () => void;
+  save: (model: AttributeForm) => void;
   reset: () => void;
   array: {
     fields: Partial<ArrayField<Record<string, any>, "id">>[];
@@ -57,7 +57,11 @@ export const attributesToArray = (attributes?: {
 };
 
 export const AttributesForm = ({
+<<<<<<< HEAD
   form: { handleSubmit, register, formState, errors, watch },
+=======
+  form: { register, formState, errors, watch },
+>>>>>>> fix check-types
   array: { fields, append, remove },
   reset,
   save,
@@ -76,7 +80,7 @@ export const AttributesForm = ({
 
   return (
     <>
-      <FormAccess role="manage-realm">
+      <FormAccess role="manage-realm" >
         <TableComposable
           className="kc-attributes__table"
           aria-label="Role attribute keys and values"
