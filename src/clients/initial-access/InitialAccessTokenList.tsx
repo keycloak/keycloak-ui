@@ -84,7 +84,9 @@ export const InitialAccessTokenList = () => {
             name: "expiration",
             displayKey: "clients:expires",
             cellRenderer: (row) =>
-              moment(row.timestamp! * 1000 + row.expiration! * 1000).fromNow(),
+              moment(row.timestamp! * 1000 + row.expiration! * 1000).format(
+                "LLL"
+              ),
           },
           {
             name: "count",
