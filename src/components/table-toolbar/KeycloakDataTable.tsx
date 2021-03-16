@@ -187,13 +187,6 @@ export function KeycloakDataTable<T>({
       return action;
     });
 
-  const searchOnChange = (value: string) => {
-    if (value === "") {
-      refresh();
-    }
-    setSearch(value);
-  };
-
   const Loading = () => (
     <div className="pf-u-text-align-center">
       <Spinner />
