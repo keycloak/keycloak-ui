@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { ReactNode, useState } from "react";
 import { Link, useHistory, useRouteMatch } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { AlertVariant, Button, ButtonVariant } from "@patternfly/react-core";
@@ -22,7 +22,7 @@ type RolesListProps = {
     search?: string
   ) => Promise<RoleRepresentation[]>;
   searchFilters?: string[];
-  filterChips?: boolean;
+  filterChips?: ReactNode;
 };
 
 const RoleLink = ({ role }: { role: RoleRepresentation }) => {
@@ -38,16 +38,7 @@ export const RolesList = ({
   loader,
   paginated = true,
   parentRoleId,
-<<<<<<< HEAD
   messageBundle = "roles",
-=======
-  searchFilters,
-<<<<<<< HEAD
-  filterChips,
->>>>>>> format
-=======
-  filterChips = true,
->>>>>>> filterChips logic now in table toolbar
 }: RolesListProps) => {
   const { t } = useTranslation(messageBundle);
   const history = useHistory();
@@ -99,7 +90,6 @@ export const RolesList = ({
         loader={loader!}
         ariaLabelKey="roles:roleList"
         searchPlaceholderKey="roles:searchFor"
-        filterChips={filterChips}
         isPaginated={paginated}
         toolbarItem={
           <>

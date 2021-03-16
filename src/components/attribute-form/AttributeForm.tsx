@@ -24,7 +24,7 @@ export type AttributeForm = {
 
 export type AttributesFormProps = {
   form: UseFormMethods<AttributeForm>;
-  save: (model: AttributeForm) => void;
+  save: () => void;
   reset: () => void;
   array: {
     fields: Partial<ArrayField<Record<string, any>, "id">>[];
@@ -69,7 +69,7 @@ export const AttributesForm = ({
 
   return (
     <>
-      <FormAccess role="manage-realm" onSubmit={handleSubmit(save)}>
+      <FormAccess role="manage-realm" >
         <TableComposable
           className="kc-attributes__table"
           aria-label="Role attribute keys and values"
@@ -96,7 +96,7 @@ export const AttributesForm = ({
                 >
                   <TextInput
                     name={`attributes[${rowIndex}].key`}
-                    ref={register({ required: true })}
+                    ref={register()}
                     aria-label="key-input"
                     defaultValue={attribute.key}
                     validated={
@@ -163,8 +163,8 @@ export const AttributesForm = ({
             ))}
           </Tbody>
         </TableComposable>
-        <ActionGroup className="kc-attributes__action-group">
-          <Button variant="primary" type="submit" isDisabled={!watchFirstKey}>
+        <ActionGroup className="kc-role-attributes__action-group">
+          <Button variant="primary" isDisabled={!watchFirstKey} onClick={save}>
             {t("common:save")}
           </Button>
           <Button onClick={reset} variant="link">

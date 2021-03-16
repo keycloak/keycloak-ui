@@ -14,7 +14,7 @@ import { FormAccess } from "../components/form-access/FormAccess";
 
 export type RealmRoleFormProps = {
   form: UseFormMethods<RoleFormType>;
-  save: (role: RoleFormType) => void;
+  save: () => void;
   editMode: boolean;
   reset: () => void;
 };
@@ -75,7 +75,7 @@ export const RealmRoleForm = ({
         />
       </FormGroup>
       <ActionGroup>
-        <Button variant="primary" type="submit">
+        <Button variant="primary" onClick={save}>
           {t("common:save")}
         </Button>
         <Button onClick={() => reset()} variant="link">
