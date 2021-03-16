@@ -40,14 +40,14 @@ export const UserGroups = ({ onRemove, userID }: UserGroupsTabProps) => {
   const [open, setOpen] = useState(false);
 
   const adminClient = useAdminClient();
-  const { id } = useParams<{ id: string, userId: string }>();
+  const { id } = useParams<{ id: string }>();
 
-  const getId = async () => {
-    const bee = await adminClient.users.find({username: id});
-    setUserId(bee[0]!.id!)
-  }
+//   const getId = async () => {
+//     const bee = await adminClient.users.find({id: id!});
+//     setUserId(bee[0]!.id!)
+//   }
 
-  getId();
+//   getId();
 
   console.log("dooooo dodododo", userId)
 
@@ -59,7 +59,7 @@ export const UserGroups = ({ onRemove, userID }: UserGroupsTabProps) => {
       //   return additionalRoles;
     }
 
-    const allGroups = await adminClient.users.find();
+    const allGroups = await adminClient.users.listGroups({id});
     console.log("test", allGroups)
 
     return allGroups;
