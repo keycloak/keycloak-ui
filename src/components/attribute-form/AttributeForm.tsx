@@ -57,9 +57,10 @@ export const attributesToArray = (attributes?: {
 };
 
 export const AttributesForm = ({
-  form: { register, formState, errors, watch },
+  form: { handleSubmit, register, formState, errors, watch },
   array: { fields, append, remove },
   reset,
+  save,
 }: AttributesFormProps) => {
   const { t } = useTranslation("roles");
 
@@ -68,7 +69,7 @@ export const AttributesForm = ({
 
   return (
     <>
-      <FormAccess role="manage-realm">
+      <FormAccess role="manage-realm" onSubmit={handleSubmit(save)}>
         <TableComposable
           className="kc-attributes__table"
           aria-label="Role attribute keys and values"
