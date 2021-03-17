@@ -77,6 +77,7 @@ describe("Users test", () => {
     });
 
     it("Go to user groups tab", function () {
+      cy.wait(1000);
       sidebarPage.goToUsers();
       listingPage.goToItemDetails(itemId);
 
