@@ -11,15 +11,11 @@ import {
 import RoleRepresentation from "keycloak-admin/lib/defs/roleRepresentation";
 import { ListEmptyState } from "../components/list-empty-state/ListEmptyState";
 import { KeycloakDataTable } from "../components/table-toolbar/KeycloakDataTable";
-import { formattedLinkTableCell } from "../components/external-link/FormattedLink";
 import { useAlerts } from "../components/alert/Alerts";
 import { useConfirmDialog } from "../components/confirm-dialog/ConfirmDialog";
 import { emptyFormatter } from "../util";
 import { useAdminClient } from "../context/auth/AdminClient";
-import ClientRepresentation from "keycloak-admin/lib/defs/clientRepresentation";
 import GroupRepresentation from "keycloak-admin/lib/defs/groupRepresentation";
-// import { JoinGroupsModal } from "./JoinGroupsModal";
-import UserRepresentation from "keycloak-admin/lib/defs/userRepresentation";
 
 type UserGroupsTabProps = {
   onRemove?: (newReps: GroupRepresentation[]) => void;
@@ -42,10 +38,6 @@ export const UserGroups = ({ onRemove, userID }: UserGroupsTabProps) => {
   const adminClient = useAdminClient();
   const { id } = useParams<{ id: string }>();
   const loader = async () => {
-    if (isDirectMembership) {
-      //   return additionalRoles;
-    }
-
     const allGroups = await adminClient.users.listGroups({ id });
 
     return allGroups;
@@ -78,15 +70,10 @@ export const UserGroups = ({ onRemove, userID }: UserGroupsTabProps) => {
     },
   });
 
-  //   const goToCreate = () => history.push(`${url}/add-role`);
   return (
     <>
       <PageSection variant="light">
         <DeleteConfirm />
-        {/* <JoinGroupsModal
-          open={open}
-          toggleDialog={() => setOpen(!open)}
-        /> */}
         <KeycloakDataTable
           key={key}
           loader={loader}
@@ -94,9 +81,7 @@ export const UserGroups = ({ onRemove, userID }: UserGroupsTabProps) => {
           ariaLabelKey="roles:roleList"
           searchPlaceholderKey="groups:searchGroup"
           canSelectAll
-          onSelect={(rows) => {
-            // setSelectedRows([...rows]);
-          }}
+          onSelect={() => {}}
           toolbarItem={
             <>
               <Checkbox
@@ -135,7 +120,6 @@ export const UserGroups = ({ onRemove, userID }: UserGroupsTabProps) => {
             {
               name: "path",
               displayKey: "users:Path",
-              //   cellRenderer: InheritedRoleName,
               cellFormatters: [emptyFormatter()],
             },
           ]}
