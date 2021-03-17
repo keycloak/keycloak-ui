@@ -80,7 +80,7 @@ export const UsersTabs = () => {
               data-testid="user-groups-tab"
               title={<TabTitleText>{t("groups")}</TabTitleText>}
             >
-              <UserGroups userID={user} />
+              <UserGroups />
             </Tab>
           </KeycloakTabs>
         )}

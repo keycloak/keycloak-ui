@@ -17,12 +17,7 @@ import { emptyFormatter } from "../util";
 import { useAdminClient } from "../context/auth/AdminClient";
 import GroupRepresentation from "keycloak-admin/lib/defs/groupRepresentation";
 
-type UserGroupsTabProps = {
-  onRemove?: (newReps: GroupRepresentation[]) => void;
-  userID?: string;
-};
-
-export const UserGroups = ({ onRemove, userID }: UserGroupsTabProps) => {
+export const UserGroups = () => {
   const { t } = useTranslation("roles");
   const history = useHistory();
   const { addAlert } = useAlerts();
