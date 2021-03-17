@@ -75,5 +75,12 @@ describe("Users test", () => {
 
       listingPage.itemExist(itemId, false);
     });
+
+    it("Go to user groups tab", function () {
+      sidebarPage.goToUsers();
+      listingPage.goToItemDetails(itemId);
+
+      cy.getId("user-groups-tab").click();
+    });
   });
 });
