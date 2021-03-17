@@ -104,8 +104,7 @@ export const UserGroups = ({ onRemove, userID }: UserGroupsTabProps) => {
           actions={[
             {
               title: t("common:remove"),
-              onRowClick: (role) => {
-                // setSelectedRows([role]);
+              onRowClick: () => {
                 toggleDeleteDialog();
               },
             },
