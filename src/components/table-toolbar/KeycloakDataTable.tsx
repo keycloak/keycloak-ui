@@ -187,6 +187,8 @@ export function KeycloakDataTable<T>({
     return "";
   };
 
+  console.log(search);
+
   const filter = (search: string) => {
     setFilteredData(
       rows!.filter((row) =>

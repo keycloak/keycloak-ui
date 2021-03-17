@@ -41,26 +41,12 @@ export const UserGroups = ({ onRemove, userID }: UserGroupsTabProps) => {
 
   const adminClient = useAdminClient();
   const { id } = useParams<{ id: string }>();
-
-//   const getId = async () => {
-//     const bee = await adminClient.users.find({id: id!});
-//     setUserId(bee[0]!.id!)
-//   }
-
-//   getId();
-
-  console.log("dooooo dodododo", userId)
-
-  console.log(userID)
-
-
   const loader = async () => {
     if (isDirectMembership) {
       //   return additionalRoles;
     }
 
-    const allGroups = await adminClient.users.listGroups({id});
-    console.log("test", allGroups)
+    const allGroups = await adminClient.users.listGroups({ id });
 
     return allGroups;
   };
@@ -143,8 +129,8 @@ export const UserGroups = ({ onRemove, userID }: UserGroupsTabProps) => {
             {
               name: "groupMembership",
               displayKey: "users:groupMembership",
-            //   cellRenderer: AliasRenderer,
-              cellFormatters: [formattedLinkTableCell(), emptyFormatter()],
+              cellRenderer: AliasRenderer,
+              cellFormatters: [emptyFormatter()],
             },
             {
               name: "path",

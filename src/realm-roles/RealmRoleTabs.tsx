@@ -44,7 +44,7 @@ export const RealmRoleTabs = () => {
 
   const { id, clientId } = useParams<{ id: string; clientId: string }>();
 
-  console.log("reoooel", id)
+  console.log("reoooel", id);
   const { url } = useRouteMatch();
 
   const { realm } = useRealm();
