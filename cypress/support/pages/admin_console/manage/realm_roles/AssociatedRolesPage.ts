@@ -53,7 +53,7 @@ export default class AssociatedRolesPage {
 
     cy.wait(2500);
 
-    cy.get(this.checkbox).eq(40).check({ force: true });
+    cy.get(this.checkbox).eq(12).check({ force: true });
 
     cy.get(this.addAssociatedRolesModalButton).contains("Add").click();
 
