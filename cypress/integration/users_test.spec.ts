@@ -62,6 +62,12 @@ describe("Users test", () => {
 
       masthead.checkNotificationMessage("The user has been saved");
 
+      cy.wait(1000);
+
+      // Go to user details
+
+      cy.getId("user-groups-tab").click();
+
       sidebarPage.goToUsers();
       listingPage.searchItem(itemId).itemExist(itemId);
 
@@ -76,12 +82,5 @@ describe("Users test", () => {
       listingPage.itemExist(itemId, false);
     });
 
-    it("Go to user groups tab", function () {
-      cy.wait(1000);
-      sidebarPage.goToUsers();
-      listingPage.goToItemDetails(itemId);
-
-      cy.getId("user-groups-tab").click();
-    });
   });
 });

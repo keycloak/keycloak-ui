@@ -19,15 +19,12 @@ import GroupRepresentation from "keycloak-admin/lib/defs/groupRepresentation";
 
 export const UserGroups = () => {
   const { t } = useTranslation("roles");
-  const history = useHistory();
   const { addAlert } = useAlerts();
-  const { url } = useRouteMatch();
   const [key, setKey] = useState(0);
   const refresh = () => setKey(new Date().getTime());
 
   const [selectedRows, setSelectedRows] = useState<RoleRepresentation[]>([]);
   const [isDirectMembership, setDirectMembership] = useState(false);
-  const [userId, setUserId] = useState("");
   const [open, setOpen] = useState(false);
 
   const adminClient = useAdminClient();
