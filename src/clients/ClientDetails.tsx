@@ -288,7 +288,7 @@ export const ClientDetails = () => {
               eventKey="settings"
               title={<TabTitleText>{t("common:settings")}</TabTitleText>}
             >
-              <ClientSettings save={() => save()} reload={() => setupForm(client)} />
+              <ClientSettings save={() => save()} reset={() => setupForm(client)} />
             </Tab>
             {client.publicClient && (
               <Tab

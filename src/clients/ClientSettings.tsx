@@ -6,8 +6,6 @@ import {
   Form,
   Switch,
   TextArea,
-  ActionGroup,
-  Button,
   Select,
   SelectVariant,
   SelectOption,
@@ -21,13 +19,14 @@ import { MultiLineInput } from "../components/multi-line-input/MultiLineInput";
 import { FormAccess } from "../components/form-access/FormAccess";
 import { HelpItem } from "../components/help-enabler/HelpItem";
 import { useServerInfo } from "../context/server-info/ServerInfoProvider";
+import { SaveReset } from "./advanced/SaveReset";
 
 type ClientSettingsProps = {
   save: () => void;
-  reload: () => void;
+  reset: () => void;
 };
 
-export const ClientSettings = ({ save, reload }: ClientSettingsProps) => {
+export const ClientSettings = ({ save, reset }: ClientSettingsProps) => {
   const { register, control, watch } = useFormContext();
   const { t } = useTranslation("clients");
 
@@ -165,12 +164,14 @@ export const ClientSettings = ({ save, reload }: ClientSettingsProps) => {
                     onChange(value as string);
                     setLoginThemeOpen(false);
                   }}
-                  selections={value}
+                  selections={value || t("common:choose")}
                   variant={SelectVariant.single}
                   aria-label={t("loginTheme")}
                   isOpen={loginThemeOpen}
                 >
-                  <SelectOption selected={"" === value} key="empty" value="" />
+                  <SelectOption key="empty" value="">
+                    {t("common:choose")}
+                  </SelectOption>
                   <>
                     {loginThemes &&
                       loginThemes.map((theme) => (
@@ -239,14 +240,7 @@ export const ClientSettings = ({ save, reload }: ClientSettingsProps) => {
               }
             />
           </FormGroup>
-          <ActionGroup className="keycloak__form_actions">
-            <Button variant="primary" onClick={save}>
-              {t("common:save")}
-            </Button>
-            <Button variant="link" onClick={reload}>
-              {t("common:reload")}
-            </Button>
-          </ActionGroup>
+          <SaveReset name="settings" save={save} reset={reset} />
         </FormAccess>
       </ScrollForm>
     </>
