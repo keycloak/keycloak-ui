@@ -21,7 +21,6 @@ import { useAdminClient } from "../context/auth/AdminClient";
 import { RoleFormType } from "./RealmRoleTabs";
 import ClientRepresentation from "keycloak-admin/lib/defs/clientRepresentation";
 import { AliasRendererComponent } from "./AliasRendererComponent";
-import _ from "lodash";
 
 type AssociatedRolesTabProps = {
   additionalRoles: RoleRepresentation[];
@@ -79,19 +78,22 @@ export const AssociatedRolesTab = ({
 
         return acc;
       },
-      Promise.resolve([] as RoleRepresentation[])
+      Promise.resolve([])
     );
-
     return newRoles;
   };
 
-  const loader = async () => {
-    const alphabetize = (rolesList: RoleRepresentation[]) => {
-      return _.sortBy(rolesList, (role) => role.name?.toUpperCase());
-    };
+  const loader = async (first?: number, max?: number, search?: string) => {
     if (isInheritedHidden) {
-      setAllRoles(additionalRoles);
-      return alphabetize(additionalRoles);
+      const filteredRoles = additionalRoles.filter(
+        (role) =>
+          !search ||
+          role.name?.toLowerCase().includes(search.toLowerCase()) ||
+          role.description?.toLowerCase().includes(search.toLowerCase())
+      );
+
+      setAllRoles(filteredRoles);
+      return filteredRoles;
     }
 
     const fetchedRoles: Promise<RoleRepresentation[]> = additionalRoles.reduce(
@@ -102,17 +104,23 @@ export const AssociatedRolesTab = ({
         resolvedRoles.push(...subRoles);
         return acc;
       },
-      Promise.resolve([] as RoleRepresentation[])
+      Promise.resolve([])
     );
 
     return fetchedRoles.then((results: RoleRepresentation[]) => {
-      const filterDupes = results.filter(
+      const filteredRoles = results.filter(
+        (role) =>
+          !search ||
+          role.name?.toLowerCase().includes(search.toLowerCase()) ||
+          role.description?.toLowerCase().includes(search.toLowerCase())
+      );
+
+      const filterDupes = filteredRoles.filter(
         (thing, index, self) =>
           index === self.findIndex((t) => t.name === thing.name)
       );
       setAllRoles(filterDupes);
-
-      return alphabetize(filterDupes);
+      return filterDupes;
     });
   };
 
@@ -130,8 +138,8 @@ export const AssociatedRolesTab = ({
         <AliasRendererComponent
           id={id}
           name={role.name}
-          adminClient={adminClient}
           containerId={role.containerId}
+          filterType="clients"
         />
       </>
     );
@@ -199,6 +207,7 @@ export const AssociatedRolesTab = ({
         <KeycloakDataTable
           key={key}
           loader={loader}
+          dataSearch={true}
           ariaLabelKey="roles:roleList"
           searchPlaceholderKey="roles:searchFor"
           canSelectAll
@@ -270,8 +279,8 @@ export const AssociatedRolesTab = ({
           emptyState={
             <ListEmptyState
               hasIcon={true}
-              message={t("noRoles")}
-              instructions={t("noRolesInstructions")}
+              message={t("noRolesInThisRealm")}
+              instructions={t("noRolesInThisRealmInstructions")}
               primaryActionText={t("createRole")}
               onPrimaryAction={goToCreate}
             />
