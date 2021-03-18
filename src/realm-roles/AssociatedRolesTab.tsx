@@ -21,6 +21,7 @@ import { useAdminClient } from "../context/auth/AdminClient";
 import { RoleFormType } from "./RealmRoleTabs";
 import ClientRepresentation from "keycloak-admin/lib/defs/clientRepresentation";
 import { AliasRendererComponent } from "./AliasRendererComponent";
+import _ from "lodash";
 
 type AssociatedRolesTabProps = {
   additionalRoles: RoleRepresentation[];
@@ -83,12 +84,23 @@ export const AssociatedRolesTab = ({
     return newRoles;
   };
 
-  const loader = async () => {
+  const alphabetize = (rolesList: RoleRepresentation[]) => {
+    return _.sortBy(rolesList, (role) => role.name?.toUpperCase());
+  };
+
+  const loader = async (first?: number, max?: number, search?: string) => {
     if (isInheritedHidden) {
-      return additionalRoles;
+      const filteredRoles = additionalRoles.filter(
+        (role) =>
+          !search ||
+          role.name?.toLowerCase().includes(search) ||
+          role.description?.toLowerCase().includes(search)
+      );
+      const roles = alphabetize(filteredRoles);
+      return roles;
     }
 
-    const allRoles: Promise<RoleRepresentation[]> = additionalRoles.reduce(
+    const fetchedRoles: Promise<RoleRepresentation[]> = additionalRoles.reduce(
       async (acc: Promise<RoleRepresentation[]>, role) => {
         const resolvedRoles = await acc;
         resolvedRoles.push(role);
@@ -99,7 +111,16 @@ export const AssociatedRolesTab = ({
       Promise.resolve([] as RoleRepresentation[])
     );
 
-    return allRoles;
+    return fetchedRoles.then((results: RoleRepresentation[]) => {
+      const filteredRoles = results.filter(
+        (role) =>
+          !search ||
+          role.name?.toLowerCase().includes(search) ||
+          role.description?.toLowerCase().includes(search)
+      );
+      const roles = alphabetize(filteredRoles);
+      return roles;
+    });
   };
 
   useEffect(() => {
