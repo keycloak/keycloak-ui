@@ -6,6 +6,7 @@ import {
   IActions,
   IActionsResolver,
   IFormatter,
+  ITransform,
   Table,
   TableBody,
   TableHeader,
@@ -30,6 +31,7 @@ type DataTableProps<T> = {
   columns: Field<T>[];
   rows: Row<T>[];
   actions?: IActions;
+  transforms?: ITransform[];
   actionResolver?: IActionsResolver;
   onSelect?: (isSelected: boolean, rowIndex: number) => void;
   canSelectAll: boolean;
@@ -55,7 +57,11 @@ function DataTable<T>({
       }
       canSelectAll={canSelectAll}
       cells={columns.map((column) => {
-        return { ...column, title: t(column.displayKey || column.name) };
+        return {
+          ...column,
+          title: t(column.displayKey || column.name),
+          transforms: column.transforms,
+        };
       })}
       rows={rows}
       actions={actions}
@@ -73,6 +79,7 @@ export type Field<T> = {
   displayKey?: string;
   cellFormatters?: IFormatter[];
   cellRenderer?: (row: T) => ReactNode;
+  transforms?: ITransform[];
 };
 
 export type Action<T> = IAction & {

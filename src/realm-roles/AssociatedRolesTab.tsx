@@ -22,6 +22,7 @@ import { RoleFormType } from "./RealmRoleTabs";
 import ClientRepresentation from "keycloak-admin/lib/defs/clientRepresentation";
 import { AliasRendererComponent } from "./AliasRendererComponent";
 import _ from "lodash";
+import { cellWidth } from "@patternfly/react-table";
 
 type AssociatedRolesTabProps = {
   additionalRoles: RoleRepresentation[];
@@ -191,7 +192,7 @@ export const AssociatedRolesTab = ({
     },
   });
 
-  console.log(selectedRows)
+  console.log(selectedRows);
 
   const goToCreate = () => history.push(`${url}/add-role`);
   return (
@@ -264,17 +265,20 @@ export const AssociatedRolesTab = ({
               displayKey: "roles:roleName",
               cellRenderer: AliasRenderer,
               cellFormatters: [formattedLinkTableCell(), emptyFormatter()],
+              transforms: [cellWidth(40)],
             },
             {
               name: "containerId",
               displayKey: "roles:inheritedFrom",
               cellRenderer: InheritedRoleName,
               cellFormatters: [emptyFormatter()],
+              transforms: [cellWidth(30)],
             },
             {
               name: "description",
               displayKey: "common:description",
               cellFormatters: [emptyFormatter()],
+              transforms: [cellWidth(30)],
             },
           ]}
           emptyState={
