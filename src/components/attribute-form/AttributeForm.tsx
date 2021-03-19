@@ -67,6 +67,8 @@ export const AttributesForm = ({
   const columns = ["Key", "Value"];
   const watchFirstKey = watch("attributes[0].key", "");
 
+  console.log(fields.length)
+
   return (
     <>
       <FormAccess role="manage-realm" onSubmit={handleSubmit(save)}>
@@ -137,7 +139,7 @@ export const AttributesForm = ({
                 )}
                 {rowIndex === fields.length - 1 && (
                   <Td key="add-button" id="add-button" dataLabel={columns[2]}>
-                    {fields[rowIndex].key === "" && fields.length !== 1 && (
+                    {fields.length !== 1 && (
                       <Button
                         id={`minus-button-${rowIndex}`}
                         aria-label={`remove ${attribute.key} with value ${attribute.value} `}
