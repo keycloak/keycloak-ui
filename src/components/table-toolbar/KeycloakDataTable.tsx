@@ -172,6 +172,32 @@ export function KeycloakDataTable<T>({
     );
   }, [key, first, max, search]);
 
+  const getNodeText = (node: keyof T | JSX.Element): string => {
+    if (["string", "number"].includes(typeof node)) {
+      return node!.toString();
+    }
+    if (node instanceof Array) {
+      return node.map(getNodeText).join("");
+    }
+    if (typeof node === "object" && node) {
+      return getNodeText(node.props.children);
+    }
+    return "";
+  };
+
+  const filter = (search: string) => {
+    setFilteredData(
+      rows!.filter((row) =>
+        row.cells.some(
+          (cell) =>
+            cell &&
+            getNodeText(cell).toLowerCase().includes(search.toLowerCase())
+        )
+      )
+    );
+    setSearch;
+  };
+
   const convertAction = () =>
     actions &&
     _.cloneDeep(actions).map((action: Action<T>, index: number) => {
@@ -207,6 +233,8 @@ export function KeycloakDataTable<T>({
     }
     onSelect!(rows!.filter((row) => row.selected).map((row) => row.data));
   };
+
+  console.log(search);
 
   return (
     <>
@@ -256,7 +284,7 @@ export function KeycloakDataTable<T>({
           inputGroupName={
             searchPlaceholderKey ? `${ariaLabelKey}input` : undefined
           }
-          inputGroupOnEnter={setSearch}
+          inputGroupOnEnter={(search) => filter(search)}
           inputGroupPlaceholder={t(searchPlaceholderKey || "")}
           toolbarItem={toolbarItem}
           searchTypeComponent={searchTypeComponent}
