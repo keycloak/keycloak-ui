@@ -234,8 +234,6 @@ export function KeycloakDataTable<T>({
     onSelect!(rows!.filter((row) => row.selected).map((row) => row.data));
   };
 
-  console.log(search);
-
   return (
     <>
       {rows && isPaginated && (
