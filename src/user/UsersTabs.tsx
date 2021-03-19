@@ -63,7 +63,6 @@ export const UsersTabs = () => {
       <ViewHeader
         titleKey={user! || t("users:createUser")}
         subKey=""
-        dividerComponent="div"
       />
       <PageSection variant="light">
         {id && (
