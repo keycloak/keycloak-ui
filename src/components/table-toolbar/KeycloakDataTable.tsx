@@ -31,7 +31,6 @@ type DataTableProps<T> = {
   columns: Field<T>[];
   rows: Row<T>[];
   actions?: IActions;
-  transforms?: ITransform[];
   actionResolver?: IActionsResolver;
   onSelect?: (isSelected: boolean, rowIndex: number) => void;
   canSelectAll: boolean;
