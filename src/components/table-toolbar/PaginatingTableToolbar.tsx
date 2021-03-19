@@ -23,7 +23,6 @@ type TableToolbarProps = {
     event: React.FormEvent<HTMLInputElement>
   ) => void;
   inputGroupOnEnter?: (value: string) => void;
-  inputGroupOnClick?: MouseEventHandler;
 };
 
 export const PaginatingTableToolbar = ({
@@ -39,7 +38,6 @@ export const PaginatingTableToolbar = ({
   inputGroupName,
   inputGroupPlaceholder,
   inputGroupOnChange,
-  inputGroupOnClick,
   inputGroupOnEnter,
 }: TableToolbarProps) => {
   const page = Math.round(first / max);
@@ -77,7 +75,6 @@ export const PaginatingTableToolbar = ({
       inputGroupName={inputGroupName}
       inputGroupPlaceholder={inputGroupPlaceholder}
       inputGroupOnChange={inputGroupOnChange}
-      inputGroupOnClick={inputGroupOnClick}
       inputGroupOnEnter={inputGroupOnEnter}
     >
       {children}
