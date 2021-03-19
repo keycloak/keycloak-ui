@@ -67,8 +67,6 @@ export const AttributesForm = ({
   const columns = ["Key", "Value"];
   const watchFirstKey = watch("attributes[0].key", "");
 
-  console.log(fields.length)
-
   return (
     <>
       <FormAccess role="manage-realm" onSubmit={handleSubmit(save)}>
