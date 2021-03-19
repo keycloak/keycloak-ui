@@ -52,7 +52,7 @@ export const UserGroups = ({ username }: UserGroupsProps) => {
   const LeaveButtonRenderer = (group: GroupRepresentation) => {
     return (
       <>
-        <Button onClick={() => test(group)} variant="link">
+        <Button onClick={() => leave(group)} variant="link">
           {t("users:Leave")}
         </Button>
       </>
@@ -60,8 +60,6 @@ export const UserGroups = ({ username }: UserGroupsProps) => {
   };
 
   const toggleModal = () => setOpen(!open);
-
-  console.log(selectedGroup);
 
   const [toggleDeleteDialog, DeleteConfirm] = useConfirmDialog({
     titleKey: t("users:leaveGroup", {
@@ -90,9 +88,8 @@ export const UserGroups = ({ username }: UserGroupsProps) => {
     },
   });
 
-  const test = (group: GroupRepresentation) => {
+  const leave = (group: GroupRepresentation) => {
     setSelectedGroup(group);
-    console.log(group);
     toggleDeleteDialog();
   };
 
@@ -129,11 +126,8 @@ export const UserGroups = ({ username }: UserGroupsProps) => {
           }
           actions={[
             {
-              title: "Not yet implemented",
-              onRowClick: (group) => {
-                // setSelectedGroup(group);
-                // toggleDeleteDialog();
-              },
+              title: "Functionality here TBD",
+              onRowClick: () => {},
             },
           ]}
           columns={[
