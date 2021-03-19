@@ -78,7 +78,6 @@ export type Field<T> = {
   displayKey?: string;
   cellFormatters?: IFormatter[];
   cellRenderer?: (row: T) => ReactNode;
-  transforms?: ITransform[];
 };
 
 export type Action<T> = IAction & {
