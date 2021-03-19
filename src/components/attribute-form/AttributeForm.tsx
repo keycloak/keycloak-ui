@@ -137,7 +137,7 @@ export const AttributesForm = ({
                 )}
                 {rowIndex === fields.length - 1 && (
                   <Td key="add-button" id="add-button" dataLabel={columns[2]}>
-                    {fields[rowIndex].key === "" && (
+                    {fields[rowIndex].key === "" && fields.length !== 1 && (
                       <Button
                         id={`minus-button-${rowIndex}`}
                         aria-label={`remove ${attribute.key} with value ${attribute.value} `}
@@ -148,7 +148,11 @@ export const AttributesForm = ({
                         <MinusCircleIcon />
                       </Button>
                     )}
-                    <Button
+                  </Td>
+                )}
+              </Tr>
+            ))}
+              <Button
                       aria-label={t("roles:addAttributeText")}
                       id="plus-icon"
                       variant="link"
@@ -156,11 +160,7 @@ export const AttributesForm = ({
                       onClick={() => append({ key: "", value: "" })}
                       icon={<PlusCircleIcon />}
                       isDisabled={!formState.isValid}
-                    />
-                  </Td>
-                )}
-              </Tr>
-            ))}
+                    >{t("roles:addAttributeText")}</Button>
           </Tbody>
         </TableComposable>
         <ActionGroup className="kc-attributes__action-group">
