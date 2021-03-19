@@ -16,14 +16,20 @@ import { useConfirmDialog } from "../components/confirm-dialog/ConfirmDialog";
 import { emptyFormatter } from "../util";
 import { useAdminClient } from "../context/auth/AdminClient";
 import GroupRepresentation from "keycloak-admin/lib/defs/groupRepresentation";
+import { cellWidth } from "@patternfly/react-table";
 
-export const UserGroups = () => {
+type UserGroupsProps = {
+  username?: string;
+};
+
+export const UserGroups = ({ username }: UserGroupsProps) => {
   const { t } = useTranslation("roles");
   const { addAlert } = useAlerts();
   const [key, setKey] = useState(0);
   const refresh = () => setKey(new Date().getTime());
 
-  const [selectedRows, setSelectedRows] = useState<RoleRepresentation[]>([]);
+  const [selectedGroup, setSelectedGroup] = useState<GroupRepresentation>();
+
   const [isDirectMembership, setDirectMembership] = useState(false);
   const [open, setOpen] = useState(false);
 
@@ -43,24 +49,52 @@ export const UserGroups = () => {
     return <>{group.name}</>;
   };
 
+  const LeaveButtonRenderer = (group: GroupRepresentation) => {
+    return (
+      <>
+        <Button onClick={() => test(group)} variant="link">
+          {t("users:Leave")}
+        </Button>
+      </>
+    );
+  };
+
   const toggleModal = () => setOpen(!open);
 
+  console.log(selectedGroup);
+
   const [toggleDeleteDialog, DeleteConfirm] = useConfirmDialog({
-    titleKey: "roles:roleRemoveAssociatedRoleConfirm",
-    messageKey: t("roles:roleRemoveAssociatedText"),
-    continueButtonLabel: "common:delete",
+    titleKey: t("users:leaveGroup", {
+      name: selectedGroup?.name,
+    }),
+    messageKey: t("users:leaveGroupConfirmDialog", {
+      groupname: selectedGroup?.name,
+      username: username,
+    }),
+    continueButtonLabel: "users:leave",
     continueButtonVariant: ButtonVariant.danger,
     onConfirm: async () => {
       try {
-        await adminClient.roles.delCompositeRoles({ id }, selectedRows);
-        setSelectedRows([]);
-
-        addAlert(t("associatedRolesRemoved"), AlertVariant.success);
+        await adminClient.users.delFromGroup({
+          id,
+          groupId: selectedGroup!.id!,
+        });
+        refresh();
+        addAlert(t("users:removedGroupMembership"), AlertVariant.success);
       } catch (error) {
-        addAlert(t("roleDeleteError", { error }), AlertVariant.danger);
+        addAlert(
+          t("users:removedGroupMembershipError", { error }),
+          AlertVariant.danger
+        );
       }
     },
   });
+
+  const test = (group: GroupRepresentation) => {
+    setSelectedGroup(group);
+    console.log(group);
+    toggleDeleteDialog();
+  };
 
   return (
     <>
@@ -95,9 +129,10 @@ export const UserGroups = () => {
           }
           actions={[
             {
-              title: t("common:remove"),
-              onRowClick: () => {
-                toggleDeleteDialog();
+              title: "Not yet implemented",
+              onRowClick: (group) => {
+                // setSelectedGroup(group);
+                // toggleDeleteDialog();
               },
             },
           ]}
@@ -107,11 +142,19 @@ export const UserGroups = () => {
               displayKey: "users:groupMembership",
               cellRenderer: AliasRenderer,
               cellFormatters: [emptyFormatter()],
+              transforms: [cellWidth(40)],
             },
             {
               name: "path",
               displayKey: "users:Path",
               cellFormatters: [emptyFormatter()],
+              transforms: [cellWidth(45)],
+            },
+            {
+              name: "",
+              cellRenderer: LeaveButtonRenderer,
+              cellFormatters: [emptyFormatter()],
+              transforms: [cellWidth(20)],
             },
           ]}
           emptyState={

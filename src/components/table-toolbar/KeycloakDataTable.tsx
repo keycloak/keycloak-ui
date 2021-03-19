@@ -75,6 +75,7 @@ export type Field<T> = {
   cellFormatters?: IFormatter[];
   transforms?: ITransform[];
   cellRenderer?: (row: T) => ReactNode;
+  transforms?: ITransform[];
 };
 
 export type Action<T> = IAction & {
