@@ -41,7 +41,6 @@ export const UserGroups = () => {
       max: max!,
     };
 
-    // const allGroups = await adminClient.users.listGroups({ id });
     const user = await adminClient.users.findOne({ id });
     setUsername(user.username!);
 
