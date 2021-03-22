@@ -26,7 +26,7 @@ export const UserGroups = () => {
   const handleError = useErrorHandler();
 
   const [selectedGroup, setSelectedGroup] = useState<GroupRepresentation>();
-  const [listGroups, setListGroups] = useState(false);
+  const [listGroups, setListGroups] = useState(true);
   const [search, setSearch] = useState("");
   const [username, setUsername] = useState("");
 
@@ -63,6 +63,7 @@ export const UserGroups = () => {
         return Promise.resolve(adminClient.users.listGroups({ id }));
       },
       (response) => {
+        console.log(response)
         setListGroups(!!(response && response.length > 0));
       },
       handleError
