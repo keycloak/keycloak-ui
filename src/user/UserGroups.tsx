@@ -63,7 +63,6 @@ export const UserGroups = () => {
         return Promise.resolve(adminClient.users.listGroups({ id }));
       },
       (response) => {
-        console.log(response)
         setListGroups(!!(response && response.length > 0));
       },
       handleError
