@@ -13,17 +13,21 @@ import { KeycloakDataTable } from "../components/table-toolbar/KeycloakDataTable
 import { useAlerts } from "../components/alert/Alerts";
 import { useConfirmDialog } from "../components/confirm-dialog/ConfirmDialog";
 import { emptyFormatter } from "../util";
-import { useAdminClient } from "../context/auth/AdminClient";
+import { asyncStateFetch, useAdminClient } from "../context/auth/AdminClient";
 import GroupRepresentation from "keycloak-admin/lib/defs/groupRepresentation";
 import { cellWidth } from "@patternfly/react-table";
+import { useErrorHandler } from "react-error-boundary";
 
 export const UserGroups = () => {
   const { t } = useTranslation("roles");
   const { addAlert } = useAlerts();
   const [key, setKey] = useState(0);
   const refresh = () => setKey(new Date().getTime());
+  const handleError = useErrorHandler();
 
   const [selectedGroup, setSelectedGroup] = useState<GroupRepresentation>();
+  const [listGroups, setListGroups] = useState(false);
+  const [search, setSearch] = useState("");
   const [username, setUsername] = useState("");
 
   const [isDirectMembership, setDirectMembership] = useState(false);
@@ -31,12 +35,40 @@ export const UserGroups = () => {
 
   const adminClient = useAdminClient();
   const { id } = useParams<{ id: string }>();
-  const loader = async () => {
-    const allGroups = await adminClient.users.listGroups({ id });
+  const loader = async (first?: number, max?: number, search?: string) => {
+    const params: { [name: string]: string | number } = {
+      first: first!,
+      max: max!,
+    };
+
+    // const allGroups = await adminClient.users.listGroups({ id });
     const user = await adminClient.users.findOne({ id });
     setUsername(user.username!);
-    return allGroups;
+
+    const searchParam = search || "";
+    if (searchParam) {
+      params.search = searchParam;
+      setSearch(searchParam);
+    }
+
+    if (!searchParam && !listGroups) {
+      return [];
+    }
+
+    return await adminClient.users.listGroups({ ...params, id });
   };
+
+  useEffect(() => {
+    return asyncStateFetch(
+      () => {
+        return Promise.resolve(adminClient.users.listGroups({ id }));
+      },
+      (response) => {
+        setListGroups(!!(response && response.length > 0));
+      },
+      handleError
+    );
+  });
 
   useEffect(() => {
     refresh();
@@ -143,13 +175,17 @@ export const UserGroups = () => {
             },
           ]}
           emptyState={
-            <ListEmptyState
-              hasIcon={true}
-              message={t("users:noGroups")}
-              instructions={t("users:noGroupsText")}
-              primaryActionText={t("users:joinGroup")}
-              onPrimaryAction={() => {}}
-            />
+            !search ? (
+              <ListEmptyState
+                hasIcon={true}
+                message={t("users:noGroups")}
+                instructions={t("users:noGroupsText")}
+                primaryActionText={t("users:joinGroup")}
+                onPrimaryAction={() => {}}
+              />
+            ) : (
+              ""
+            )
           }
         />
       </PageSection>
