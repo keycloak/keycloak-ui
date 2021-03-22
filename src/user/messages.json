@@ -12,7 +12,7 @@
     "joinGroup": "Join Group",
     "leave": "Leave",
     "leaveGroup": "Leave group {{name}}?",
-    "leaveGroupConfirmDialog": "Are you sure you want {{username}} to leave the group {{groupname}}?",
+    "leaveGroupConfirmDialog": "Are you sure you want to remove {{username}} from the group {{groupname}}?",
     "directMembership": "Direct membership",
     "groupMembership": "Group membership",
     "removedGroupMembership": "Removed group membership",

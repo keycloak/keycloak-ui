@@ -8,7 +8,6 @@ import {
   Checkbox,
   PageSection,
 } from "@patternfly/react-core";
-import RoleRepresentation from "keycloak-admin/lib/defs/roleRepresentation";
 import { ListEmptyState } from "../components/list-empty-state/ListEmptyState";
 import { KeycloakDataTable } from "../components/table-toolbar/KeycloakDataTable";
 import { useAlerts } from "../components/alert/Alerts";
@@ -18,17 +17,14 @@ import { useAdminClient } from "../context/auth/AdminClient";
 import GroupRepresentation from "keycloak-admin/lib/defs/groupRepresentation";
 import { cellWidth } from "@patternfly/react-table";
 
-type UserGroupsProps = {
-  username?: string;
-};
-
-export const UserGroups = ({ username }: UserGroupsProps) => {
+export const UserGroups = () => {
   const { t } = useTranslation("roles");
   const { addAlert } = useAlerts();
   const [key, setKey] = useState(0);
   const refresh = () => setKey(new Date().getTime());
 
   const [selectedGroup, setSelectedGroup] = useState<GroupRepresentation>();
+  const [username, setUsername] = useState("");
 
   const [isDirectMembership, setDirectMembership] = useState(false);
   const [open, setOpen] = useState(false);
@@ -37,7 +33,8 @@ export const UserGroups = ({ username }: UserGroupsProps) => {
   const { id } = useParams<{ id: string }>();
   const loader = async () => {
     const allGroups = await adminClient.users.listGroups({ id });
-
+    const user = await adminClient.users.findOne({ id });
+    setUsername(user.username!);
     return allGroups;
   };
 
@@ -107,6 +104,14 @@ export const UserGroups = ({ username }: UserGroupsProps) => {
           onSelect={() => {}}
           toolbarItem={
             <>
+              <Button
+                className="kc-join-group-button"
+                key="join-group-button"
+                onClick={() => toggleModal()}
+                data-testid="add-group-button"
+              >
+                {t("users:joinGroup")}
+              </Button>
               <Checkbox
                 label={t("users:directMembership")}
                 key="direct-membership-check"
@@ -114,22 +119,8 @@ export const UserGroups = ({ username }: UserGroupsProps) => {
                 onChange={() => setDirectMembership(!isDirectMembership)}
                 isChecked={isDirectMembership}
               />
-              <Button
-                className="kc-add-role-button"
-                key="add-role-button"
-                onClick={() => toggleModal()}
-                data-testid="add-role-button"
-              >
-                {t("addRole")}
-              </Button>
             </>
           }
-          actions={[
-            {
-              title: "Functionality here TBD",
-              onRowClick: () => {},
-            },
-          ]}
           columns={[
             {
               name: "groupMembership",
