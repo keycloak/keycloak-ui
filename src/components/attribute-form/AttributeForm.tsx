@@ -58,15 +58,17 @@ export const attributesToArray = (attributes?: {
 
 export const AttributesForm = ({
   form: { handleSubmit, register, formState, errors, watch },
-  save,
   array: { fields, append, remove },
   reset,
+  save,
 }: AttributesFormProps) => {
   const { t } = useTranslation("roles");
 
   const columns = ["Key", "Value"];
   const watchFirstKey = watch("attributes[0].key", "");
 
+  console.log(errors);
+  console.log(formState)
   return (
     <>
       <FormAccess role="manage-realm" onSubmit={handleSubmit(save)}>
@@ -96,7 +98,7 @@ export const AttributesForm = ({
                 >
                   <TextInput
                     name={`attributes[${rowIndex}].key`}
-                    ref={register({ required: true })}
+                    ref={register()}
                     aria-label="key-input"
                     defaultValue={attribute.key}
                     validated={
@@ -159,17 +161,18 @@ export const AttributesForm = ({
               className="kc-attributes__plus-icon"
               onClick={() => append({ key: "", value: "" })}
               icon={<PlusCircleIcon />}
-              isDisabled={!formState.isValid}
+              // isDisabled={!formState.isValid}
             >
               {t("roles:addAttributeText")}
             </Button>
           </Tbody>
         </TableComposable>
+        {formState.isDirty ? "dirty" : "clean!"}
         <ActionGroup className="kc-attributes__action-group">
           <Button variant="primary" type="submit" isDisabled={!watchFirstKey}>
             {t("common:save")}
           </Button>
-          <Button onClick={reset} variant="link">
+          <Button isDisabled={!formState.isDirty} onClick={reset} variant="link">
             {t("common:revert")}
           </Button>
         </ActionGroup>

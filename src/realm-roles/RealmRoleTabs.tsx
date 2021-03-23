@@ -91,7 +91,7 @@ export const RealmRoleTabs = () => {
     name: "attributes",
   });
 
-  useEffect(() => append({ key: "", value: "" }), [append, role]);
+  //useEffect(() => append({ key: "", value: "" }), [append, role]);
 
   const save = async (role: RoleFormType) => {
     try {
@@ -116,6 +116,7 @@ export const RealmRoleTabs = () => {
         );
 
         setRole(role);
+        form.reset(role);
       } else {
         let createdRole;
         if (!clientId) {
