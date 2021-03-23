@@ -41,8 +41,6 @@ export const RolesList = ({
   paginated = true,
   parentRoleId,
   messageBundle = "roles",
-  searchFilters,
-  filterChips,
 }: RolesListProps) => {
   const { t } = useTranslation(messageBundle);
   const history = useHistory();

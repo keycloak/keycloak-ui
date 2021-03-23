@@ -99,7 +99,6 @@ export const TableToolbar = ({
           {toolbarItem}
         </ToolbarContent>
       </Toolbar>
-      {filterChips}
       <Divider />
       {children}
       <Toolbar>{toolbarItemFooter}</Toolbar>

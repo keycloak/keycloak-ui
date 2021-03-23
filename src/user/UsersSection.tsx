@@ -197,7 +197,6 @@ export const UsersSection = () => {
             searchPlaceholderKey="users:searchForUser"
             canSelectAll
             onSelect={(rows) => setSelectedRows([...rows])}
-<<<<<<< HEAD
             emptyState={
               !search ? (
                 <ListEmptyState
@@ -210,16 +209,6 @@ export const UsersSection = () => {
                 ""
               )
             }
-=======
-            emptyState={!search ? (
-              <ListEmptyState
-                message={t("noUsersFound")}
-                instructions={t("emptyInstructions")}
-                primaryActionText={t("createNewUser")}
-                onPrimaryAction={goToCreate}
-              />
-            ) : ""}
->>>>>>> realm roles UX review progress wip
             toolbarItem={
               <>
                 <ToolbarItem>

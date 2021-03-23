@@ -57,10 +57,9 @@ export const attributesToArray = (attributes?: {
 };
 
 export const AttributesForm = ({
-  form: { handleSubmit, register, formState, errors, watch },
+  form: { register, formState, errors, watch },
   array: { fields, append, remove },
   reset,
-  save,
 }: AttributesFormProps) => {
   const { t } = useTranslation("roles");
 
