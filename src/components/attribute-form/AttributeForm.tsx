@@ -60,6 +60,7 @@ export const AttributesForm = ({
   form: { handleSubmit, register, formState, errors, watch },
   array: { fields, append, remove },
   reset,
+  save,
 }: AttributesFormProps) => {
   const { t } = useTranslation("roles");
 
