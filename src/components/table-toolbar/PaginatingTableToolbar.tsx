@@ -14,7 +14,6 @@ type TableToolbarProps = {
   onPreviousClick: (page: number) => void;
   onPerPageSelect: (max: number, first: number) => void;
   searchTypeComponent?: React.ReactNode;
-  filterChips?: React.ReactNode;
   toolbarItem?: React.ReactNode;
   children: React.ReactNode;
   inputGroupName?: string;
@@ -79,7 +78,6 @@ export const PaginatingTableToolbar = ({
       inputGroupOnEnter={inputGroupOnEnter}
     >
       {children}
-
     </TableToolbar>
   );
 };
