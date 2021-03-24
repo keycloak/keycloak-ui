@@ -1,11 +1,7 @@
 import React, { useState } from "react";
 import { Link, useHistory, useRouteMatch } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import {
-  AlertVariant,
-  Button,
-  ButtonVariant,
-} from "@patternfly/react-core";
+import { AlertVariant, Button, ButtonVariant } from "@patternfly/react-core";
 
 import { useAdminClient } from "../context/auth/AdminClient";
 import RoleRepresentation from "keycloak-admin/lib/defs/roleRepresentation";
@@ -55,7 +51,6 @@ export const RolesList = ({
       <RoleLink role={role} />
     </>
   );
-
 
   const [toggleDeleteDialog, DeleteConfirm] = useConfirmDialog({
     titleKey: "roles:roleDeleteConfirm",
