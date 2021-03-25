@@ -171,6 +171,8 @@ export const RealmRoleTabs = () => {
     }
   };
 
+  console.log("all additionalroles", additionalRoles);
+
   const addComposites = async (composites: Composites[]): Promise<void> => {
     const compositeArray = composites;
     setAdditionalRoles([...additionalRoles, ...compositeArray]);

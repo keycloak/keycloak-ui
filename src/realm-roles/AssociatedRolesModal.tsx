@@ -39,11 +39,21 @@ export const AssociatedRolesModal = (props: AssociatedRolesModalProps) => {
 
   const { id } = useParams<{ id: string }>();
 
+  type withFilterType = RoleRepresentation & {
+    filterType?: string;
+  };
+
   const alphabetize = (rolesList: RoleRepresentation[]) => {
     return _.sortBy(rolesList, (role) => role.name?.toUpperCase());
   };
 
-  const loader = async () => {
+  const loader = async (first?: number, max?: number, search?: string) => {
+    const params: { [name: string]: string | number } = {
+      first: first!,
+      max: max!,
+      search: search!,
+    };
+
     const roles = await adminClient.roles.find();
     const existingAdditionalRoles = await adminClient.roles.getCompositeRoles({
       id,
@@ -55,7 +65,19 @@ export const AssociatedRolesModal = (props: AssociatedRolesModalProps) => {
         index === self.findIndex((t) => t.name === thing.name)
     );
 
-    return alphabetize(filterDupes).filter((role: RoleRepresentation) => {
+    const searchParam = search || "";
+    if (searchParam) {
+      params.search = searchParam;
+    }
+
+    const filteredRoles = filterDupes.filter(
+      (role) =>
+        !search ||
+        role.name?.toLowerCase().includes(search) ||
+        role.description?.toLowerCase().includes(search)
+    );
+
+    return alphabetize(filteredRoles).filter((role: RoleRepresentation) => {
       return (
         props.existingCompositeRoles.find(
           (existing: RoleRepresentation) => existing.name === role.name
@@ -64,13 +86,14 @@ export const AssociatedRolesModal = (props: AssociatedRolesModalProps) => {
     });
   };
 
-  const AliasRenderer = (role: RoleRepresentation) => {
+  // const RoleAliasRenderer = (props) => AliasRenderer("roles", ...props);
+
+  const AliasRenderer = (role: withFilterType) => {
     return (
       <>
         <AliasRendererComponent
           id={id}
           name={role.name}
-          adminClient={adminClient}
           filterType={filterType}
           containerId={role.containerId}
         />
@@ -78,7 +101,11 @@ export const AssociatedRolesModal = (props: AssociatedRolesModalProps) => {
     );
   };
 
-  const clientRolesLoader = async () => {
+  const clientRolesLoader = async (
+    first?: number,
+    max?: number,
+    search?: string
+  ) => {
     const clients = await adminClient.clients.find();
 
     const clientIdArray = clients.map((client) => client.id);
@@ -94,7 +121,16 @@ export const AssociatedRolesModal = (props: AssociatedRolesModalProps) => {
       id,
     });
 
-    return alphabetize(rolesList).filter((role: RoleRepresentation) => {
+    const filteredRoles = rolesList.filter(
+      (role) =>
+        !search ||
+        role.name?.toLowerCase().includes(search.toLowerCase()) ||
+        role.description?.toLowerCase().includes(search.toLowerCase())
+    );
+
+    console.log(filteredRoles);
+
+    return alphabetize(filteredRoles).filter((role: RoleRepresentation) => {
       return (
         existingAdditionalRoles.find(
           (existing: RoleRepresentation) => existing.name === role.name
@@ -165,6 +201,7 @@ export const AssociatedRolesModal = (props: AssociatedRolesModalProps) => {
     >
       <KeycloakDataTable
         key={key}
+        dataSearch
         loader={filterType === "roles" ? loader : clientRolesLoader}
         ariaLabelKey="roles:roleList"
         searchPlaceholderKey="roles:searchFor"
