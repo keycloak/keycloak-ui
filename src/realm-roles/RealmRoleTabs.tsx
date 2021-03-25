@@ -57,6 +57,7 @@ export const RealmRoleTabs = () => {
   const [additionalRoles, setAdditionalRoles] = useState<RoleRepresentation[]>(
     []
   );
+
   const { addAlert } = useAlerts();
 
   const [open, setOpen] = useState(false);
@@ -169,6 +170,8 @@ export const RealmRoleTabs = () => {
       );
     }
   };
+
+  console.log("all additionalroles", additionalRoles);
 
   const addComposites = async (composites: Composites[]): Promise<void> => {
     const compositeArray = composites;
