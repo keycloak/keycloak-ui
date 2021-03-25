@@ -158,7 +158,6 @@ export const AttributesForm = ({
               className="kc-attributes__plus-icon"
               onClick={() => append({ key: "", value: "" })}
               icon={<PlusCircleIcon />}
-              isDisabled={!formState.isValid}
             >
               {t("roles:addAttributeText")}
             </Button>
