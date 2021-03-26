@@ -87,7 +87,7 @@ export const UserGroups = () => {
     );
 
     if (isDirectMembership) {
-      return alphabetize(directMembership)
+      return alphabetize(directMembership);
     }
 
     return alphabetize(filterDupesfromGroups);
