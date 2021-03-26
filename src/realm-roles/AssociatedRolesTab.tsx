@@ -145,8 +145,6 @@ export const AssociatedRolesTab = ({
     );
   };
 
-  console.log(inheritanceMap);
-
   const toggleModal = () => setOpen(!open);
 
   const [toggleDeleteDialog, DeleteConfirm] = useConfirmDialog({
@@ -191,8 +189,6 @@ export const AssociatedRolesTab = ({
       }
     },
   });
-
-  console.log(selectedRows);
 
   const goToCreate = () => history.push(`${url}/add-role`);
   return (
