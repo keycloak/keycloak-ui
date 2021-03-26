@@ -68,6 +68,10 @@ export const AttributesForm = ({
 
   const watchLast = watch(`attributes[${fields.length - 1}].key`, "");
 
+  if (fields.length === 0) {
+    append({ key: "", value: "" });
+  }
+
   return (
     <>
       <FormAccess role="manage-realm" onSubmit={handleSubmit(save)}>
