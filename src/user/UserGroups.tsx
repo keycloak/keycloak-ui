@@ -17,7 +17,6 @@ import { asyncStateFetch, useAdminClient } from "../context/auth/AdminClient";
 import GroupRepresentation from "keycloak-admin/lib/defs/groupRepresentation";
 import { cellWidth } from "@patternfly/react-table";
 import { useErrorHandler } from "react-error-boundary";
-import { arrayToAttributes } from "../components/attribute-form/AttributeForm";
 import _ from "lodash";
 
 export const UserGroups = () => {
