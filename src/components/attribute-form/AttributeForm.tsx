@@ -57,7 +57,7 @@ export const attributesToArray = (attributes?: {
 };
 
 export const AttributesForm = ({
-  form: { handleSubmit, register, formState, errors },
+  form: { handleSubmit, register, formState, errors, watch },
   array: { fields, append, remove },
   reset,
   save,
@@ -65,6 +65,8 @@ export const AttributesForm = ({
   const { t } = useTranslation("roles");
 
   const columns = ["Key", "Value"];
+
+  const watchLast = watch(`attributes[${fields.length - 1}].key`, "");
 
   return (
     <>
@@ -158,6 +160,7 @@ export const AttributesForm = ({
               className="kc-attributes__plus-icon"
               onClick={() => append({ key: "", value: "" })}
               icon={<PlusCircleIcon />}
+              isDisabled={!watchLast}
             >
               {t("roles:addAttributeText")}
             </Button>
