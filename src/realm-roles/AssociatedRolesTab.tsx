@@ -89,8 +89,8 @@ export const AssociatedRolesTab = ({
       const filteredRoles = additionalRoles.filter(
         (role) =>
           !search ||
-          role.name?.toLowerCase().includes(search) ||
-          role.description?.toLowerCase().includes(search)
+          role.name?.toLowerCase().includes(search.toLowerCase()) ||
+          role.description?.toLowerCase().includes(search.toLowerCase())
       );
       const roles = filteredRoles.slice(first!, max! - 1);
       setAllRoles(roles);
@@ -112,8 +112,8 @@ export const AssociatedRolesTab = ({
       const filteredRoles = results.filter(
         (role) =>
           !search ||
-          role.name?.toLowerCase().includes(search) ||
-          role.description?.toLowerCase().includes(search)
+          role.name?.toLowerCase().includes(search.toLowerCase()) ||
+          role.description?.toLowerCase().includes(search.toLowerCase())
       );
 
       const filterDupes = filteredRoles.filter(
