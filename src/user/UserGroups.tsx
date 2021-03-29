@@ -60,25 +60,69 @@ export const UserGroups = () => {
     }
 
     const joinedGroups = await adminClient.users.listGroups({ ...params, id });
-    const allGroups = await adminClient.groups.find();
+    const allCreatedGroups = await adminClient.groups.find();
 
     const getAllPaths = joinedGroups.reduce(
       (acc: string[], cur) => (cur.path && acc.push(cur.path), acc),
       []
     );
     const parentGroupNames: string[] = [];
+    const allGroupMembership: string[] = [];
 
-    getAllPaths.forEach((item) => parentGroupNames.push(item.split("/")[1]));
+    console.log("getallPaths", getAllPaths)
 
-    const topLevelGroups = allGroups.filter((value) =>
+    getAllPaths.forEach((item) => {
+
+      // console.log(item.split("/")[getAllPaths.length - 2])
+      // console.log(item.split("/")[getAllPaths.length - 2])
+      // parentGroupNames.push(item.split("/")[3])
+      // parentGroupNames.push(item.split("/")[1])
+
+      for (let i = 1; i <= getAllPaths.length - 1; i++) {
+        console.log(item.split("/")[i])
+        parentGroupNames.push(item.split("/")[i])
+      }
+    });
+
+    allGroupMembership.push(...parentGroupNames)
+
+    console.log("allGroupMembership", allGroupMembership)
+    console.log("parentGroupNames", parentGroupNames)
+
+
+
+
+    const topLevelGroups = allCreatedGroups.filter((value) =>
       parentGroupNames.includes(value.name!)
     );
+
+
+    const subGroups = topLevelGroups.forEach((group) => console.log(group.subGroups))
+    console.log("subgroups", subGroups)
+
+    const subgroupArray: any[] = []
+    
+    topLevelGroups.forEach((group) => subgroupArray.push(group.subGroups))
+
+    const flattenedSubgroupArray = [].concat(...subgroupArray);
+
+    console.log("array of subgroups", flattenedSubgroupArray)
+    
+
+    console.log("allgroups", allCreatedGroups)
+
+    console.log("toplevelgroups", topLevelGroups)
+
+
 
     const directMembership = joinedGroups.filter(
       (value) => !topLevelGroups.includes(value)
     );
 
-    const allJoinedGroups = [...topLevelGroups, ...directMembership];
+    console.log("directMembership", directMembership)
+    console.log("topLevelGroups", topLevelGroups)
+
+    const allJoinedGroups = [...topLevelGroups, ...directMembership, ...flattenedSubgroupArray];
 
     const filterDupesfromGroups = allJoinedGroups.filter(
       (thing, index, self) =>
