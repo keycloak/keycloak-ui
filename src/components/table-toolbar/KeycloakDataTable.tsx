@@ -242,25 +242,26 @@ export function KeycloakDataTable<T>({
   );
 
   const _onSelect = (isSelected: boolean, rowIndex: number) => {
+    const data = filteredData || rows;
     if (rowIndex === -1) {
       setRows(
-        rows!.map((row) => {
+        data!.map((row) => {
           row.selected = isSelected;
           return row;
         })
       );
     } else {
-      rows![rowIndex].selected = isSelected;
+      data![rowIndex].selected = isSelected;
       setRows([...rows!]);
     }
     const difference = _.differenceBy(
       selected,
-      rows!.map((row) => row.data),
+      data!.map((row) => row.data),
       "id"
     );
     const selectedRows = [
       ...difference,
-      ...rows!.filter((row) => row.selected).map((row) => row.data),
+      ...data!.filter((row) => row.selected).map((row) => row.data),
     ];
     setSelected(selectedRows);
     onSelect!(selectedRows);
