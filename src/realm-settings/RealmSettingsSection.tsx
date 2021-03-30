@@ -20,7 +20,6 @@ import {
   StackItem,
   Switch,
   Tab,
-  Tabs,
   TabTitleText,
   TextInput,
 } from "@patternfly/react-core";
