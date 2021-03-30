@@ -47,6 +47,7 @@ export const AssociatedRolesModal = (props: AssociatedRolesModalProps) => {
     const params: { [name: string]: string | number } = {
       first: first!,
       max: max!,
+      search: search!
     };
 
     const roles = await adminClient.roles.find();
@@ -81,6 +82,7 @@ export const AssociatedRolesModal = (props: AssociatedRolesModalProps) => {
     });
   };
 
+
   const AliasRenderer = (role: RoleRepresentation) => {
     return (
       <>
@@ -103,7 +105,10 @@ export const AssociatedRolesModal = (props: AssociatedRolesModalProps) => {
     const params: { [name: string]: string | number } = {
       first: first!,
       max: max!,
+      search: search!,
     };
+
+    console.log(first, max, search)
 
     const searchParam = search || "";
     if (searchParam) {
@@ -111,6 +116,7 @@ export const AssociatedRolesModal = (props: AssociatedRolesModalProps) => {
     }
 
     const clients = await adminClient.clients.find();
+   
 
     const clientIdArray = clients.map((client) => client.id);
 
@@ -126,13 +132,15 @@ export const AssociatedRolesModal = (props: AssociatedRolesModalProps) => {
     });
 
     const filteredRoles = rolesList.filter(
-      (role) =>
+      (role) => {
         !search ||
         role.name?.toLowerCase().includes(search) ||
         role.description?.toLowerCase().includes(search)
+      }
+
     );
 
-    return alphabetize(filteredRoles).filter((role: RoleRepresentation) => {
+    return alphabetize(rolesList).filter((role: RoleRepresentation) => {
       return (
         existingAdditionalRoles.find(
           (existing: RoleRepresentation) => existing.name === role.name
