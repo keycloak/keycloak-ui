@@ -209,7 +209,6 @@ export const AssociatedRolesTab = ({
         <KeycloakDataTable
           key={key}
           loader={loader}
-          isPaginated
           ariaLabelKey="roles:roleList"
           searchPlaceholderKey="roles:searchFor"
           canSelectAll

@@ -206,7 +206,6 @@ export const AssociatedRolesModal = (props: AssociatedRolesModalProps) => {
         loader={filterType === "roles" ? loader : clientRolesLoader}
         ariaLabelKey="roles:roleList"
         searchPlaceholderKey="roles:searchFor"
-        isPaginated
         searchTypeComponent={
           <Dropdown
             onSelect={() => onFilterDropdownSelect(filterType)}

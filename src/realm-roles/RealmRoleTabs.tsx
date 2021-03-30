@@ -322,7 +322,6 @@ export const RealmRoleTabs = () => {
                   addComposites={addComposites}
                   parentRole={role!}
                   onRemove={() => refresh()}
-                  // client={client!}
                 />
               </Tab>
             ) : null}
