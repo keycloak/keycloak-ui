@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import KeycloakAdminClient from "keycloak-admin";
 import { Label } from "@patternfly/react-core";
+import { filter } from "cypress/types/lodash";
 
 export type AliasRendererComponentProps = {
   name?: string;
@@ -20,9 +21,11 @@ export const AliasRendererComponent = ({
   const [containerName, setContainerName] = useState<string>("");
 
   useEffect(() => {
-    adminClient.clients
+    if (filterType === "clients") {
+      adminClient.clients
       .findOne({ id: containerId! })
       .then((client) => setContainerName(client.clientId! as string));
+    }
   }, [containerId]);
 
   if (filterType === "roles" || !containerName) {
