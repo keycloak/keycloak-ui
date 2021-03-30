@@ -16,7 +16,6 @@ import { Spinner } from "@patternfly/react-core";
 import _ from "lodash";
 
 import { PaginatingTableToolbar } from "./PaginatingTableToolbar";
-import { TableToolbar } from "./TableToolbar";
 import { asyncStateFetch } from "../../context/auth/AdminClient";
 import { ListEmptyState } from "../list-empty-state/ListEmptyState";
 
@@ -162,7 +161,7 @@ export function KeycloakDataTable<T>({
         return convertToColumns(data);
       },
       (result) => {
-        setRows(result);
+        setRows(result.slice(first, first + max));
         setFilteredData(result);
         setLoading(false);
       },
