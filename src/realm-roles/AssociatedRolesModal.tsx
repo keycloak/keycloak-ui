@@ -129,15 +129,6 @@ export const AssociatedRolesModal = (props: AssociatedRolesModalProps) => {
       id,
     });
 
-    // const filteredRoles = rolesList.filter(
-    //   (role) => {
-    //     !search ||
-    //     role.name?.toLowerCase().includes(search) ||
-    //     role.description?.toLowerCase().includes(search)
-    //   }
-
-    // );
-
     return alphabetize(rolesList).filter((role: RoleRepresentation) => {
       return (
         existingAdditionalRoles.find(
