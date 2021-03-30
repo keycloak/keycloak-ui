@@ -22,8 +22,8 @@ export const AliasRendererComponent = ({
   useEffect(() => {
     if (filterType === "clients") {
       adminClient.clients
-      .findOne({ id: containerId! })
-      .then((client) => setContainerName(client.clientId! as string));
+        .findOne({ id: containerId! })
+        .then((client) => setContainerName(client.clientId! as string));
     }
   }, [containerId]);
 
