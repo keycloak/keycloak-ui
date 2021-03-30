@@ -107,8 +107,6 @@ export const AssociatedRolesModal = (props: AssociatedRolesModalProps) => {
       search: search!,
     };
 
-    console.log(first, max, search);
-
     const searchParam = search || "";
     if (searchParam) {
       params.search = searchParam;
