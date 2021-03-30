@@ -60,6 +60,8 @@ export const UserGroups = () => {
     }
 
     const joinedGroups = await adminClient.users.listGroups({ ...params, id });
+
+    // only returns the first 100 groups
     const allCreatedGroups = await adminClient.groups.find();
 
     const getAllPaths = joinedGroups.reduce(
@@ -75,14 +77,24 @@ export const UserGroups = () => {
 
       // console.log(item.split("/")[getAllPaths.length - 2])
       // console.log(item.split("/")[getAllPaths.length - 2])
-      // parentGroupNames.push(item.split("/")[3])
-      // parentGroupNames.push(item.split("/")[1])
 
-      for (let i = 1; i <= getAllPaths.length - 1; i++) {
-        console.log(item.split("/")[i])
-        parentGroupNames.push(item.split("/")[i])
+
+      const paths = item.split("/");
+      const groups: string[] = [];
+      for (let i = 0; i < paths.length; i++) {
+        groups.push((i > 0 ? groups[i - 1] : '') + "/" + paths[i]);
       }
-    });
+      console.log("test", groups);
+
+
+      //parentGroupNames.concat()
+
+      // for (let i = 1; i <= 2; i++) {
+      //   console.log(item.split("/")[i])
+      //   parentGroupNames.push(item.split("/")[i])
+      // }
+    }
+    );
 
     allGroupMembership.push(...parentGroupNames)
 
