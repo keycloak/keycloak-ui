@@ -70,6 +70,8 @@ export const UserGroups = () => {
     );
     const parentGroupNames: string[] = [];
     const allGroupMembership: string[] = [];
+    const slicedGroups: string[] = [];
+
 
     console.log("getallPaths", getAllPaths)
 
@@ -81,13 +83,22 @@ export const UserGroups = () => {
 
       const paths = item.split("/");
       const groups: string[] = [];
-      for (let i = 0; i < paths.length; i++) {
-        groups.push((i > 0 ? groups[i - 1] : '') + "/" + paths[i]);
+      // for (let i = 0; i < paths.length; i++) {
+      //   groups.push((i > 0 ? groups[i - 1] : '') + "/" + paths[i]);
+      // }
+
+      paths.reduce((acc, value) => {
+        const path = acc + "/" + value;
+        groups.push(path);
+        return path;
+     }, '');
+
+    for (let i = 1; i < groups.length; i++) {
+      // console.log(groups[i].substring(1))
+        slicedGroups.push(groups[i].substring(1));
+
       }
-      console.log("test", groups);
 
-
-      //parentGroupNames.concat()
 
       // for (let i = 1; i <= 2; i++) {
       //   console.log(item.split("/")[i])
@@ -96,12 +107,13 @@ export const UserGroups = () => {
     }
     );
 
-    allGroupMembership.push(...parentGroupNames)
+    allGroupMembership.push(...slicedGroups)
+    console.log("test", slicedGroups);
+
+    console.log("asddsad", allCreatedGroups)
 
     console.log("allGroupMembership", allGroupMembership)
     console.log("parentGroupNames", parentGroupNames)
-
-
 
 
     const topLevelGroups = allCreatedGroups.filter((value) =>
