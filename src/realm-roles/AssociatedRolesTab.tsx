@@ -85,9 +85,13 @@ export const AssociatedRolesTab = ({
   };
 
   const loader = async () => {
+      
+ const alphabetize = (rolesList: RoleRepresentation[]) => {
+    return _.sortBy(rolesList, (role) => role.name?.toUpperCase());
+  };
     if (isInheritedHidden) {
       setAllRoles(additionalRoles);
-      return additionalRoles;
+      return alphabetize(additionalRoles);
     }
 
     const fetchedRoles: Promise<RoleRepresentation[]> = additionalRoles.reduce(
@@ -108,7 +112,8 @@ export const AssociatedRolesTab = ({
       );
       setAllRoles(filterDupes);
 
-      return filterDupes;
+      return alphabetize(filterDupes);
+
     });
   };
 
@@ -266,8 +271,8 @@ export const AssociatedRolesTab = ({
           emptyState={
             <ListEmptyState
               hasIcon={true}
-              message={t("noRolesInThisRealm")}
-              instructions={t("noRolesInThisRealmInstructions")}
+              message={t("noRoles")}
+              instructions={t("noRolesInstructions")}
               primaryActionText={t("createRole")}
               onPrimaryAction={goToCreate}
             />
