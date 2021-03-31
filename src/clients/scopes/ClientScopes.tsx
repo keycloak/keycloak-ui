@@ -146,7 +146,13 @@ export const ClientScopes = ({ clientId, protocol }: ClientScopesProps) => {
         type={scope.type}
         onSelect={async (value) => {
           try {
-            await changeScope(adminClient, clientId, scope, scope.type, value);
+            await changeScope(
+              adminClient,
+              clientId,
+              scope,
+              scope.type,
+              value as ClientScope
+            );
             addAlert(t("clientScopeSuccess"), AlertVariant.success);
             refresh();
           } catch (error) {
