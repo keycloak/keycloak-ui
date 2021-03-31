@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from "react";
-import KeycloakAdminClient from "keycloak-admin";
 import { Label } from "@patternfly/react-core";
+import { useAdminClient } from "../context/auth/AdminClient";
 
 export type AliasRendererComponentProps = {
   name?: string;
   containerId?: string;
   filterType?: string;
-  adminClient: KeycloakAdminClient;
+  // adminClient: KeycloakAdminClient;
   id: string;
 };
 
@@ -14,10 +14,11 @@ export const AliasRendererComponent = ({
   name,
   containerId,
   filterType,
-  adminClient,
+  // adminClient,
   id,
 }: AliasRendererComponentProps) => {
   const [containerName, setContainerName] = useState<string>("");
+  const adminClient = useAdminClient();
 
   useEffect(() => {
     if (filterType === "clients") {
