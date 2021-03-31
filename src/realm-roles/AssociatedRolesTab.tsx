@@ -84,17 +84,10 @@ export const AssociatedRolesTab = ({
     return newRoles;
   };
 
-  const loader = async (first?: number, max?: number, search?: string) => {
+  const loader = async () => {
     if (isInheritedHidden) {
-      const filteredRoles = additionalRoles.filter(
-        (role) =>
-          !search ||
-          role.name?.toLowerCase().includes(search.toLowerCase()) ||
-          role.description?.toLowerCase().includes(search.toLowerCase())
-      );
-      const roles = filteredRoles.slice(first!, max! - 1);
-      setAllRoles(roles);
-      return roles;
+      setAllRoles(additionalRoles);
+      return additionalRoles;
     }
 
     const fetchedRoles: Promise<RoleRepresentation[]> = additionalRoles.reduce(
@@ -109,14 +102,7 @@ export const AssociatedRolesTab = ({
     );
 
     return fetchedRoles.then((results: RoleRepresentation[]) => {
-      const filteredRoles = results.filter(
-        (role) =>
-          !search ||
-          role.name?.toLowerCase().includes(search.toLowerCase()) ||
-          role.description?.toLowerCase().includes(search.toLowerCase())
-      );
-
-      const filterDupes = filteredRoles.filter(
+      const filterDupes = results.filter(
         (thing, index, self) =>
           index === self.findIndex((t) => t.name === thing.name)
       );
