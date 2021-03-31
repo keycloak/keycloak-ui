@@ -31,7 +31,7 @@ export const UserGroups = () => {
   const [search, setSearch] = useState("");
   const [username, setUsername] = useState("");
 
-  const [isDirectMembership, setDirectMembership] = useState(false);
+  const [isDirectMembership, setDirectMembership] = useState(true);
   const [open, setOpen] = useState(false);
 
   const adminClient = useAdminClient();
@@ -72,110 +72,69 @@ export const UserGroups = () => {
     const allGroupMembership: string[] = [];
     const slicedGroups: string[] = [];
     const rootLevelGroups: GroupRepresentation[] = [...allCreatedGroups];
-    const allPaths: GroupRepresentation[] = [...rootLevelGroups];
+    let allPaths: GroupRepresentation[] = [];
 
+    const getAllSubgroupPaths = (
+      o: any,
+      f: any,
+      context: GroupRepresentation[]
+    ): GroupRepresentation[] => {
+      f(o, context);
+      if (typeof o !== "object") return context;
+      if (Array.isArray(o))
+        return o.forEach((e) => getAllSubgroupPaths(e, f, context)), context;
+      for (const prop in o) getAllSubgroupPaths(o[prop], f, context);
+      return context;
+    };
 
-      console.log("aaaaa", rootLevelGroups)
+    const arr = getAllSubgroupPaths(
+      rootLevelGroups,
+      (x: GroupRepresentation, context: GroupRepresentation[][]) => {
+        if (x !== undefined && x.subGroups) context.push(x.subGroups);
+      },
+      []
+    );
 
-    console.log("getallPaths", getAllPaths)
+    const allSubgroups: GroupRepresentation[] = [].concat(...(arr as any));
+
+    allPaths = [...rootLevelGroups, ...allSubgroups];
 
     getAllPaths.forEach((item) => {
-
-      // console.log(item.split("/")[getAllPaths.length - 2])
-      // console.log(item.split("/")[getAllPaths.length - 2])
-
-
       const paths = item.split("/");
       const groups: string[] = [];
-      // for (let i = 0; i < paths.length; i++) {
-      //   groups.push((i > 0 ? groups[i - 1] : '') + "/" + paths[i]);
-      // }
 
       paths.reduce((acc, value) => {
         const path = acc + "/" + value;
         groups.push(path);
         return path;
-     }, '');
+      }, "");
 
-    for (let i = 1; i < groups.length; i++) {
-      // console.log(groups[i].substring(1))
+      for (let i = 1; i < groups.length; i++) {
         slicedGroups.push(groups[i].substring(1));
-
       }
+    });
 
-
-      // for (let i = 1; i <= 2; i++) {
-      //   console.log(item.split("/")[i])
-      //   parentGroupNames.push(item.split("/")[i])
-      // }
-    }
-    );
-
-    allGroupMembership.push(...slicedGroups)
-    console.log("test", slicedGroups);
-
-    console.log("all cerated groups ", allCreatedGroups)
-
-    // const addSubgroups = (subgroups: GroupRepresentation[]) => {
-      // allPaths.forEach((item) => {
-      //   console.log(item.subGroups)
-      //   if (item.subGroups) {
-      //     allPaths.push(...item!.subGroups!);
-      //     addSubgroups(item.subGroups);
-      //   }
-      // })
-    // }
+    allGroupMembership.push(...slicedGroups);
 
     allPaths.forEach((item) => {
-      console.log(item.subGroups)
       if (item.subGroups!.length !== 0) {
-        allPaths.push(...item!.subGroups!)
+        allPaths.push(...item!.subGroups!);
       }
-    })
-
-    // const omg = allGroupMembership.filter(value => allGroupMembership.forEach.includes(value));
-
-    console.log("allGroupMembership paths", allGroupMembership)
-    // console.log("parentGroupNames", parentGroupNames)
-
-    console.log("this should have everything", allPaths)
+    });
 
     const topLevelGroups = allCreatedGroups.filter((value) =>
       parentGroupNames.includes(value.name!)
     );
 
+    const subgroupArray: any[] = [];
 
-    
-
-
-    const subGroups = topLevelGroups.forEach((group) => console.log(group.subGroups))
-    console.log("subgroups", subGroups)
-
-    const subgroupArray: any[] = []
-    
-    topLevelGroups.forEach((group) => subgroupArray.push(group.subGroups))
-
-    const flattenedSubgroupArray = [].concat(...subgroupArray);
-
-    console.log("array of subgroups", flattenedSubgroupArray)
-    
-
-    console.log("allgroups", allCreatedGroups)
-
-    console.log("toplevelgroups", topLevelGroups)
-
-
+    topLevelGroups.forEach((group) => subgroupArray.push(group.subGroups));
 
     const directMembership = joinedGroups.filter(
       (value) => !topLevelGroups.includes(value)
     );
 
-    console.log("directMembership", directMembership)
-    console.log("topLevelGroups", topLevelGroups)
-
-    const allJoinedGroups = [...topLevelGroups, ...directMembership, ...flattenedSubgroupArray];
-
-    const filterDupesfromGroups = allJoinedGroups.filter(
+    const filterDupesfromGroups = allPaths.filter(
       (thing, index, self) =>
         index === self.findIndex((t) => t.name === thing.name)
     );
