@@ -21,6 +21,8 @@ import { useAdminClient } from "../context/auth/AdminClient";
 import { RoleFormType } from "./RealmRoleTabs";
 import ClientRepresentation from "keycloak-admin/lib/defs/clientRepresentation";
 import { AliasRendererComponent } from "./AliasRendererComponent";
+import _ from "lodash";
+import { cellWidth } from "@patternfly/react-table";
 
 type AssociatedRolesTabProps = {
   additionalRoles: RoleRepresentation[];
@@ -83,12 +85,16 @@ export const AssociatedRolesTab = ({
     return newRoles;
   };
 
+  const alphabetize = (rolesList: RoleRepresentation[]) => {
+    return _.sortBy(rolesList, (role) => role.name?.toUpperCase());
+  };
+
   const loader = async () => {
     if (isInheritedHidden) {
-      return additionalRoles;
+      return alphabetize(additionalRoles);
     }
 
-    const allRoles: Promise<RoleRepresentation[]> = additionalRoles.reduce(
+    const fetchedRoles: Promise<RoleRepresentation[]> = additionalRoles.reduce(
       async (acc: Promise<RoleRepresentation[]>, role) => {
         const resolvedRoles = await acc;
         resolvedRoles.push(role);
@@ -99,7 +105,9 @@ export const AssociatedRolesTab = ({
       Promise.resolve([] as RoleRepresentation[])
     );
 
-    return allRoles;
+    return fetchedRoles.then((results: RoleRepresentation[]) => {
+      return alphabetize(results);
+    });
   };
 
   useEffect(() => {
@@ -128,7 +136,7 @@ export const AssociatedRolesTab = ({
   const [toggleDeleteDialog, DeleteConfirm] = useConfirmDialog({
     titleKey: "roles:roleRemoveAssociatedRoleConfirm",
     messageKey: t("roles:roleRemoveAssociatedText"),
-    continueButtonLabel: "common:delete",
+    continueButtonLabel: t("common:remove"),
     continueButtonVariant: ButtonVariant.danger,
     onConfirm: async () => {
       try {
@@ -150,7 +158,7 @@ export const AssociatedRolesTab = ({
     messageKey: t("roles:removeAllAssociatedRolesConfirmDialog", {
       name: parentRole?.name || t("createRole"),
     }),
-    continueButtonLabel: "common:delete",
+    continueButtonLabel: "common:remove",
     continueButtonVariant: ButtonVariant.danger,
     onConfirm: async () => {
       try {
@@ -183,7 +191,6 @@ export const AssociatedRolesTab = ({
         <KeycloakDataTable
           key={key}
           loader={loader}
-          isPaginated
           ariaLabelKey="roles:roleList"
           searchPlaceholderKey="roles:searchFor"
           canSelectAll
@@ -239,24 +246,27 @@ export const AssociatedRolesTab = ({
               displayKey: "roles:roleName",
               cellRenderer: AliasRenderer,
               cellFormatters: [formattedLinkTableCell(), emptyFormatter()],
+              transforms: [cellWidth(40)],
             },
             {
               name: "containerId",
               displayKey: "roles:inheritedFrom",
               cellRenderer: InheritedRoleName,
               cellFormatters: [emptyFormatter()],
+              transforms: [cellWidth(30)],
             },
             {
               name: "description",
               displayKey: "common:description",
               cellFormatters: [emptyFormatter()],
+              transforms: [cellWidth(30)],
             },
           ]}
           emptyState={
             <ListEmptyState
               hasIcon={true}
-              message={t("noRolesInThisRealm")}
-              instructions={t("noRolesInThisRealmInstructions")}
+              message={t("noRoles")}
+              instructions={t("noRolesInstructions")}
               primaryActionText={t("createRole")}
               onPrimaryAction={goToCreate}
             />

@@ -92,7 +92,7 @@ export const RealmRoleTabs = () => {
     name: "attributes",
   });
 
-  useEffect(() => append({ key: "", value: "" }), [append, role]);
+  //useEffect(() => append({ key: "", value: "" }), [append, role]);
 
   const save = async () => {
     try {
@@ -130,6 +130,7 @@ export const RealmRoleTabs = () => {
         );
 
         setRole(role);
+        form.reset(role);
       } else {
         let createdRole;
         if (!clientId) {
@@ -162,7 +163,7 @@ export const RealmRoleTabs = () => {
     } catch (error) {
       addAlert(
         t((id ? "roleSave" : "roleCreate") + "Error", {
-          error: error.response.data?.errorMessage || error,
+          error: error.response?.data?.errorMessage || error,
         }),
         AlertVariant.danger
       );
@@ -278,19 +279,19 @@ export const RealmRoleTabs = () => {
             : id
             ? [
                 <DropdownItem
-                  key="delete-role"
-                  component="button"
-                  onClick={() => toggleDeleteDialog()}
-                >
-                  {t("deleteRole")}
-                </DropdownItem>,
-                <DropdownItem
                   key="toggle-modal"
                   data-testid="add-roles"
                   component="button"
                   onClick={() => toggleModal()}
                 >
                   {t("addAssociatedRolesText")}
+                </DropdownItem>,
+                <DropdownItem
+                  key="delete-role"
+                  component="button"
+                  onClick={() => toggleDeleteDialog()}
+                >
+                  {t("deleteRole")}
                 </DropdownItem>,
               ]
             : undefined

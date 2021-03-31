@@ -32,7 +32,7 @@ export const ClientScopesSection = () => {
         titleKey="clientScopes"
         subKey="client-scopes:clientScopeExplain"
       />
-      <PageSection variant="light">
+      <PageSection variant="light" className="pf-u-p-0">
         <KeycloakDataTable
           loader={loader}
           ariaLabelKey="client-scopes:clientScopeList"
@@ -57,7 +57,7 @@ export const ClientScopesSection = () => {
                 } catch (error) {
                   addAlert(
                     t("deleteError", {
-                      error: error.response.data?.errorMessage || error,
+                      error: error.response?.data?.errorMessage || error,
                     }),
                     AlertVariant.danger
                   );
