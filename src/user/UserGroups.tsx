@@ -98,6 +98,8 @@ export const UserGroups = () => {
 
     allPaths = [...rootLevelGroups, ...allSubgroups];
 
+    console.log(joinedGroups)
+
     getAllPaths.forEach((item) => {
       const paths = item.split("/");
       const groups: string[] = [];
@@ -120,6 +122,8 @@ export const UserGroups = () => {
         allPaths.push(...item!.subGroups!);
       }
     });
+
+    console.log(allGroupMembership)
 
     const topLevelGroups = allCreatedGroups.filter((value) =>
       parentGroupNames.includes(value.name!)
