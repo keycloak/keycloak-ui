@@ -61,7 +61,6 @@ export const UserGroups = () => {
 
     const joinedGroups = await adminClient.users.listGroups({ ...params, id });
 
-    // only returns the first 100 groups
     const allCreatedGroups = await adminClient.groups.find();
 
     const getAllPaths = joinedGroups.reduce(
