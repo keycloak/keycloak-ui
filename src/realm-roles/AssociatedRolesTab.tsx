@@ -21,6 +21,7 @@ import { useAdminClient } from "../context/auth/AdminClient";
 import { RoleFormType } from "./RealmRoleTabs";
 import ClientRepresentation from "keycloak-admin/lib/defs/clientRepresentation";
 import { AliasRendererComponent } from "./AliasRendererComponent";
+import _ from "lodash";
 
 type AssociatedRolesTabProps = {
   additionalRoles: RoleRepresentation[];
@@ -85,12 +86,11 @@ export const AssociatedRolesTab = ({
   };
 
   const loader = async () => {
-      
- const alphabetize = (rolesList: RoleRepresentation[]) => {
-    return _.sortBy(rolesList, (role) => role.name?.toUpperCase());
-  };
+    const alphabetize = (rolesList: RoleRepresentation[]) => {
+      return _.sortBy(rolesList, (role) => role.name?.toUpperCase());
+    };
     if (isInheritedHidden) {
-      setAllRoles(additionalRoles);
+      // setAllRoles(additionalRoles);
       return alphabetize(additionalRoles);
     }
 
@@ -113,7 +113,6 @@ export const AssociatedRolesTab = ({
       setAllRoles(filterDupes);
 
       return alphabetize(filterDupes);
-
     });
   };
 
