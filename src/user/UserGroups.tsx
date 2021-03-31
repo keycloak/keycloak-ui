@@ -71,7 +71,11 @@ export const UserGroups = () => {
     const parentGroupNames: string[] = [];
     const allGroupMembership: string[] = [];
     const slicedGroups: string[] = [];
+    const rootLevelGroups: GroupRepresentation[] = [...allCreatedGroups];
+    const allPaths: GroupRepresentation[] = [...rootLevelGroups];
 
+
+      console.log("aaaaa", rootLevelGroups)
 
     console.log("getallPaths", getAllPaths)
 
@@ -110,15 +114,38 @@ export const UserGroups = () => {
     allGroupMembership.push(...slicedGroups)
     console.log("test", slicedGroups);
 
-    console.log("asddsad", allCreatedGroups)
+    console.log("all cerated groups ", allCreatedGroups)
 
-    console.log("allGroupMembership", allGroupMembership)
-    console.log("parentGroupNames", parentGroupNames)
+    // const addSubgroups = (subgroups: GroupRepresentation[]) => {
+      // allPaths.forEach((item) => {
+      //   console.log(item.subGroups)
+      //   if (item.subGroups) {
+      //     allPaths.push(...item!.subGroups!);
+      //     addSubgroups(item.subGroups);
+      //   }
+      // })
+    // }
 
+    allPaths.forEach((item) => {
+      console.log(item.subGroups)
+      if (item.subGroups!.length !== 0) {
+        allPaths.push(...item!.subGroups!)
+      }
+    })
+
+    // const omg = allGroupMembership.filter(value => allGroupMembership.forEach.includes(value));
+
+    console.log("allGroupMembership paths", allGroupMembership)
+    // console.log("parentGroupNames", parentGroupNames)
+
+    console.log("this should have everything", allPaths)
 
     const topLevelGroups = allCreatedGroups.filter((value) =>
       parentGroupNames.includes(value.name!)
     );
+
+
+    
 
 
     const subGroups = topLevelGroups.forEach((group) => console.log(group.subGroups))
