@@ -90,7 +90,7 @@ export const AssociatedRolesTab = ({
       return _.sortBy(rolesList, (role) => role.name?.toUpperCase());
     };
     if (isInheritedHidden) {
-      // setAllRoles(additionalRoles);
+      setAllRoles(additionalRoles);
       return alphabetize(additionalRoles);
     }
 
