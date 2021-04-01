@@ -176,12 +176,19 @@ export function KeycloakDataTable<T>({
       async () => {
         setLoading(true);
 
-        let data = unPaginatedData || (await loader(first, max, search));
+        let data = (await loader(first, max, search));
 
-        if (!isPaginated) {
-          setUnPaginatedData(data);
+        if (!isPaginated && dataSearch) {
+          setUnPaginatedData(await loader(first, max, search));
           data = data.slice(first, first + max);
         }
+
+        // if (!isPaginated) {
+        //   setUnPaginatedData(unPaginatedData);
+        //   data = data.slice(first, first + max);
+        // }
+
+
 
         return convertToColumns(data);
       },
@@ -234,13 +241,11 @@ export function KeycloakDataTable<T>({
     });
   };
 
+  console.log(search)
   const filter = (search: string) => {
     setFilteredData(
       convertToColumns(unPaginatedData!).filter((row) => {
-        // console.log(row);
         row.cells.some((cell) => {
-          // console.log(cell);
-          // console.log(getNodeText(cell));
           cell &&
             getNodeText(cell).toLowerCase().includes(search.toLowerCase());
         });
