@@ -93,6 +93,7 @@ export const AddScopeDialog = ({
         loader={loader}
         ariaLabelKey="client-scopes:chooseAMapperType"
         searchPlaceholderKey="client-scopes:searchFor"
+        canSelectAll
         onSelect={(rows) => setRows(rows)}
         columns={[
           {
