@@ -98,7 +98,11 @@ export const UserGroups = () => {
 
     allPaths = [...rootLevelGroups, ...allSubgroups];
 
-    console.log(joinedGroups)
+    console.log("joined", joinedGroups);
+
+    console.log("allPaths", allPaths);
+
+    // allPaths.forEach((item) => console.log("lalala", item.path))
 
     getAllPaths.forEach((item) => {
       const paths = item.split("/");
@@ -123,7 +127,9 @@ export const UserGroups = () => {
       }
     });
 
-    console.log(allGroupMembership)
+    // console.log(allGroupMembership);
+
+    allPaths = allPaths.filter((group) => allGroupMembership.includes(group.path as any));
 
     const topLevelGroups = allCreatedGroups.filter((value) =>
       parentGroupNames.includes(value.name!)
