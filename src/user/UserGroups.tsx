@@ -129,7 +129,9 @@ export const UserGroups = () => {
 
     // console.log(allGroupMembership);
 
-    allPaths = allPaths.filter((group) => allGroupMembership.includes(group.path as any));
+    allPaths = allPaths.filter((group) =>
+      allGroupMembership.includes(group.path as any)
+    );
 
     const topLevelGroups = allCreatedGroups.filter((value) =>
       parentGroupNames.includes(value.name!)
