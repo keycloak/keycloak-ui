@@ -176,19 +176,12 @@ export function KeycloakDataTable<T>({
       async () => {
         setLoading(true);
 
-        let data = (await loader(first, max, search));
+        let data = await loader(first, max, search);
 
         if (!isPaginated && dataSearch) {
           setUnPaginatedData(await loader(first, max, search));
           data = data.slice(first, first + max);
         }
-
-        // if (!isPaginated) {
-        //   setUnPaginatedData(unPaginatedData);
-        //   data = data.slice(first, first + max);
-        // }
-
-
 
         return convertToColumns(data);
       },
@@ -209,17 +202,9 @@ export function KeycloakDataTable<T>({
       return node.map(getNodeText).join("");
     }
     if (typeof node === "object" && node) {
-      const text = node.props.children;
-      if (typeof text === "string") {
-        return text;
-      }
-      console.dir(text);
-      console.log(`========= Children: ${typeof text} =============`);
-
-      // console.dir(text.props);
-      return getNodeText(text);
+      return getNodeText(node.props.children);
     }
-    console.log(`========= NodeType: ${typeof node} =============`);
+
     return "";
   };
 
@@ -241,7 +226,6 @@ export function KeycloakDataTable<T>({
     });
   };
 
-  console.log(search)
   const filter = (search: string) => {
     setFilteredData(
       convertToColumns(unPaginatedData!).filter((row) => {
