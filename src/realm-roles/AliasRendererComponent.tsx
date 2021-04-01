@@ -6,7 +6,6 @@ export type AliasRendererComponentProps = {
   name?: string;
   containerId?: string;
   filterType?: string;
-  // adminClient: KeycloakAdminClient;
   id: string;
 };
 
@@ -14,7 +13,6 @@ export const AliasRendererComponent = ({
   name,
   containerId,
   filterType,
-  // adminClient,
   id,
 }: AliasRendererComponentProps) => {
   const [containerName, setContainerName] = useState<string>("");

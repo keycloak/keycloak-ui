@@ -250,8 +250,8 @@ export const AssociatedRolesModal = (props: AssociatedRolesModalProps) => {
         emptyState={
           <ListEmptyState
             hasIcon={true}
-            message={t("noRolesInThisRealm")}
-            instructions={t("noRolesInThisRealmInstructions")}
+            message={t("noRoles")}
+            instructions={t("noRolesInstructions")}
             primaryActionText={t("createRole")}
           />
         }
