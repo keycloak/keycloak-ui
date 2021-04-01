@@ -79,7 +79,7 @@ export const AssociatedRolesTab = ({
 
         return acc;
       },
-      Promise.resolve([])
+      Promise.resolve([] as RoleRepresentation[])
     );
     return newRoles;
   };
@@ -105,7 +105,7 @@ export const AssociatedRolesTab = ({
         resolvedRoles.push(...subRoles);
         return acc;
       },
-      Promise.resolve([])
+      Promise.resolve([] as RoleRepresentation[])
     );
 
     return fetchedRoles.then((results: RoleRepresentation[]) => {
