@@ -154,6 +154,22 @@ export function KeycloakDataTable<T>({
   const handleError = useErrorHandler();
 
   useEffect(() => {
+    if (canSelectAll) {
+      const checkboxes = document
+        .getElementsByClassName("pf-c-table__check")
+        .item(0);
+      if (checkboxes) {
+        const checkAllCheckbox = checkboxes.children!.item(
+          0
+        )! as HTMLInputElement;
+        checkAllCheckbox.indeterminate =
+          selected.length > 0 &&
+          selected.length < (filteredData || rows)!.length;
+      }
+    }
+  }, [selected]);
+
+  useEffect(() => {
     return asyncStateFetch(
       async () => {
         setLoading(true);
