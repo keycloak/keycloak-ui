@@ -11,6 +11,7 @@ import {
   PageSection,
   ToolbarItem,
 } from "@patternfly/react-core";
+import { cellWidth } from "@patternfly/react-table";
 import ClientScopeRepresentation from "keycloak-admin/lib/defs/clientScopeRepresentation";
 
 import { useAdminClient } from "../context/auth/AdminClient";
@@ -265,13 +266,14 @@ export const ClientScopesSection = () => {
             { name: "description", cellFormatters: [emptyFormatter()] },
             { name: "type", cellRenderer: TypeSelector },
             {
+              name: "protocol",
+              displayKey: "client-scopes:protocol",
+            },
+            {
               name: "attributes['gui.order']",
               displayKey: "client-scopes:displayOrder",
               cellFormatters: [emptyFormatter()],
-            },
-            {
-              name: "protocol",
-              displayKey: "client-scopes:protocol",
+              transforms: [cellWidth(20)],
             },
           ]}
         />
