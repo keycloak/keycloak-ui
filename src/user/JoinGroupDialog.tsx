@@ -7,6 +7,7 @@ import {
   DataList,
   DataListAction,
   DataListCell,
+  DataListCheck,
   DataListItem,
   DataListItemCells,
   DataListItemRow,
@@ -42,6 +43,7 @@ export const JoinGroupDialog = ({
 }: JoinGroupDialogProps) => {
   const { t } = useTranslation("roles");
   const adminClient = useAdminClient();
+  const [selectedRows, setSelectedRows] = useState<GroupRepresentation[]>([]);
 
   const errorHandler = useErrorHandler();
 
