@@ -23,7 +23,6 @@ import { RoleFormType } from "./RealmRoleTabs";
 import ClientRepresentation from "keycloak-admin/lib/defs/clientRepresentation";
 // import { AliasRendererComponent } from "./AliasRendererComponent";
 import _ from "lodash";
-import { AliasRendererComponent } from "./AliasRendererComponent";
 
 type AssociatedRolesTabProps = {
   additionalRoles: Role[];

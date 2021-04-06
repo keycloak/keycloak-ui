@@ -15,7 +15,6 @@ import RoleRepresentation from "keycloak-admin/lib/defs/roleRepresentation";
 import { KeycloakDataTable } from "../components/table-toolbar/KeycloakDataTable";
 import { ListEmptyState } from "../components/list-empty-state/ListEmptyState";
 import { CaretDownIcon, FilterIcon } from "@patternfly/react-icons";
-import { AliasRendererComponent } from "./AliasRendererComponent";
 import _ from "lodash";
 import { useErrorHandler } from "react-error-boundary";
 
@@ -43,10 +42,6 @@ export const AssociatedRolesModal = (props: AssociatedRolesModalProps) => {
   const refresh = () => setKey(new Date().getTime());
 
   const { id } = useParams<{ id: string }>();
-
-  type withFilterType = RoleRepresentation & {
-    filterType?: string;
-  };
 
   const alphabetize = (rolesList: RoleRepresentation[]) => {
     return _.sortBy(rolesList, (role) => role.name?.toUpperCase());
@@ -221,7 +216,6 @@ export const AssociatedRolesModal = (props: AssociatedRolesModalProps) => {
     >
       <KeycloakDataTable
         key={key}
-        // dataSearch
         loader={filterType === "roles" ? loader : clientRolesLoader}
         ariaLabelKey="roles:roleList"
         searchPlaceholderKey="roles:searchFor"
