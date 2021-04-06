@@ -34,6 +34,10 @@ export type JoinGroupDialogProps = {
   username: string;
 };
 
+type Group = GroupRepresentation & {
+  checked?: boolean;
+};
+
 export const JoinGroupDialog = ({
   onClose,
   open,
@@ -43,12 +47,12 @@ export const JoinGroupDialog = ({
 }: JoinGroupDialogProps) => {
   const { t } = useTranslation("roles");
   const adminClient = useAdminClient();
-  const [selectedRows, setSelectedRows] = useState<GroupRepresentation[]>([]);
+  const [selectedRows, setSelectedRows] = useState<Group[]>([]);
 
   const errorHandler = useErrorHandler();
 
-  const [navigation, setNavigation] = useState<GroupRepresentation[]>([]);
-  const [groups, setGroups] = useState<GroupRepresentation[]>([]);
+  const [navigation, setNavigation] = useState<Group[]>([]);
+  const [groups, setGroups] = useState<Group[]>([]);
   const [filtered, setFiltered] = useState<GroupRepresentation[]>();
   const [filter, setFilter] = useState("");
 
@@ -172,7 +176,7 @@ export const JoinGroupDialog = ({
         aria-label={t("groups")}
         isCompact
       >
-        {(filtered || groups).map((group) => (
+        {(filtered || groups).map((group: Group) => (
           <DataListItem
             aria-labelledby={group.name}
             key={group.id}
