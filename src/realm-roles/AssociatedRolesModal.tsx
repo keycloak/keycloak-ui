@@ -5,6 +5,7 @@ import {
   Dropdown,
   DropdownItem,
   DropdownToggle,
+  Label,
   Modal,
   ModalVariant,
 } from "@patternfly/react-core";
@@ -17,6 +18,10 @@ import { CaretDownIcon, FilterIcon } from "@patternfly/react-icons";
 import { AliasRendererComponent } from "./AliasRendererComponent";
 import _ from "lodash";
 import { useErrorHandler } from "react-error-boundary";
+
+type Role = RoleRepresentation & {
+  clientId?: string;
+};
 
 export type AssociatedRolesModalProps = {
   open: boolean;
@@ -60,10 +65,20 @@ export const AssociatedRolesModal = (props: AssociatedRolesModalProps) => {
     });
     const allRoles = [...roles, ...existingAdditionalRoles];
 
-    const filterDupes = allRoles.filter(
+    const filterDupes: Role[] = allRoles.filter(
       (thing, index, self) =>
         index === self.findIndex((t) => t.name === thing.name)
     );
+
+    const clients = await adminClient.clients.find();
+    filterDupes
+      .filter((role) => role.clientRole)
+      .map(
+        (role) =>
+          (role.clientId = clients.find(
+            (client) => client.id === role.containerId
+          )!.clientId!)
+      );
 
     const searchParam = search || "";
     if (searchParam) {
@@ -86,15 +101,15 @@ export const AssociatedRolesModal = (props: AssociatedRolesModalProps) => {
     });
   };
 
-  const AliasRenderer = (role: withFilterType) => {
+  const AliasRenderer = ({ id, name, clientId }: Role) => {
     return (
       <>
-        <AliasRendererComponent
-          id={id}
-          name={role.name}
-          filterType={filterType}
-          containerId={role.containerId}
-        />
+        {clientId && (
+          <Label color="blue" key={`label-${id}`}>
+            {clientId}
+          </Label>
+        )}{" "}
+        {name}
       </>
     );
   };
@@ -108,7 +123,7 @@ export const AssociatedRolesModal = (props: AssociatedRolesModalProps) => {
 
     const clientIdArray = clients.map((client) => client.id);
 
-    let rolesList: RoleRepresentation[] = [];
+    let rolesList: Role[] = [];
     for (const id of clientIdArray) {
       const clientRolesList = await adminClient.clients.listRoles({
         id: id as string,
@@ -118,6 +133,15 @@ export const AssociatedRolesModal = (props: AssociatedRolesModalProps) => {
     const existingAdditionalRoles = await adminClient.roles.getCompositeRoles({
       id,
     });
+
+    rolesList
+      .filter((role) => role.clientRole)
+      .map(
+        (role) =>
+          (role.clientId = clients.find(
+            (client) => client.id === role.containerId
+          )!.clientId!)
+      );
 
     const filteredRoles = rolesList.filter(
       (role) =>
@@ -199,7 +223,7 @@ export const AssociatedRolesModal = (props: AssociatedRolesModalProps) => {
     >
       <KeycloakDataTable
         key={key}
-        dataSearch
+        // dataSearch
         loader={filterType === "roles" ? loader : clientRolesLoader}
         ariaLabelKey="roles:roleList"
         searchPlaceholderKey="roles:searchFor"
