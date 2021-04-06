@@ -268,12 +268,13 @@ export const ClientScopesSection = () => {
             {
               name: "protocol",
               displayKey: "client-scopes:protocol",
+              transforms: [cellWidth(15)],
             },
             {
               name: "attributes['gui.order']",
               displayKey: "client-scopes:displayOrder",
               cellFormatters: [emptyFormatter()],
-              transforms: [cellWidth(20)],
+              transforms: [cellWidth(15)],
             },
           ]}
         />
