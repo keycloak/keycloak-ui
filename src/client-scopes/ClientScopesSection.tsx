@@ -19,7 +19,7 @@ import { ViewHeader } from "../components/view-header/ViewHeader";
 import { useAlerts } from "../components/alert/Alerts";
 import { KeycloakDataTable } from "../components/table-toolbar/KeycloakDataTable";
 import { useConfirmDialog } from "../components/confirm-dialog/ConfirmDialog";
-import { emptyFormatter } from "../util";
+import { boolFormatter, emptyFormatter } from "../util";
 import {
   CellDropdown,
   ClientScope,
@@ -268,6 +268,7 @@ export const ClientScopesSection = () => {
             {
               name: "protocol",
               displayKey: "client-scopes:protocol",
+              cellFormatters: [boolFormatter()],
               transforms: [cellWidth(15)],
             },
             {
