@@ -150,8 +150,6 @@ export const AssociatedRolesModal = (props: AssociatedRolesModalProps) => {
         role.description?.toLowerCase().includes(search.toLowerCase())
     );
 
-    console.log(filteredRoles);
-
     return alphabetize(filteredRoles).filter((role: RoleRepresentation) => {
       return (
         existingAdditionalRoles.find(
