@@ -21,7 +21,6 @@ import { AssociatedRolesModal } from "./AssociatedRolesModal";
 import { useAdminClient } from "../context/auth/AdminClient";
 import { RoleFormType } from "./RealmRoleTabs";
 import ClientRepresentation from "keycloak-admin/lib/defs/clientRepresentation";
-// import { AliasRendererComponent } from "./AliasRendererComponent";
 import _ from "lodash";
 
 type AssociatedRolesTabProps = {
@@ -59,10 +58,7 @@ export const AssociatedRolesTab = ({
   const { id } = useParams<{ id: string }>();
   const inheritanceMap = React.useRef<{ [key: string]: string }>({});
 
-  const getSubRoles = async (
-    role: RoleRepresentation,
-    allRoles: RoleRepresentation[]
-  ): Promise<Role[]> => {
+  const getSubRoles = async (role: Role, allRoles: Role[]): Promise<Role[]> => {
     // Fetch all composite roles
     const allCompositeRoles = await adminClient.roles.getCompositeRoles({
       id: role.id!,
@@ -95,18 +91,15 @@ export const AssociatedRolesTab = ({
       return _.sortBy(rolesList, (role) => role.name?.toUpperCase());
     };
     const clients = await adminClient.clients.find();
-    additionalRoles
-      .filter((role) => role.clientRole)
-      .map(
-        (role) =>
-          (role.clientId = clients.find(
-            (client) => client.id === role.containerId
-          )!.clientId!)
-      );
 
     if (isInheritedHidden) {
       setAllRoles(additionalRoles);
-      return alphabetize(additionalRoles);
+      return alphabetize(
+        additionalRoles.filter(
+          (role) =>
+            role.containerId === "master" && !inheritanceMap.current[role.id!]
+        )
+      );
     }
 
     const fetchedRoles: Promise<Role[]> = additionalRoles.reduce(
@@ -125,9 +118,16 @@ export const AssociatedRolesTab = ({
         (thing, index, self) =>
           index === self.findIndex((t) => t.name === thing.name)
       );
-      setAllRoles(filterDupes);
+      filterDupes
+        .filter((role) => role.clientRole)
+        .map(
+          (role) =>
+            (role.clientId = clients.find(
+              (client) => client.id === role.containerId
+            )!.clientId!)
+        );
 
-      return alphabetize(filterDupes);
+      return alphabetize(additionalRoles);
     });
   };
 

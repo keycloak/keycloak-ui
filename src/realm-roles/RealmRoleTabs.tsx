@@ -34,6 +34,10 @@ export type RoleFormType = Omit<RoleRepresentation, "attributes"> & {
   attributes: KeyValueType[];
 };
 
+// type Role = RoleRepresentation & {
+//   clientId?: string;
+// };
+
 export const RealmRoleTabs = () => {
   const { t } = useTranslation("roles");
   const form = useForm<RoleFormType>({ mode: "onChange" });
@@ -54,9 +58,7 @@ export const RealmRoleTabs = () => {
     setKey(`${new Date().getTime()}`);
   };
 
-  const [additionalRoles, setAdditionalRoles] = useState<RoleRepresentation[]>(
-    []
-  );
+  const [additionalRoles, setAdditionalRoles] = useState<Role[]>([]);
 
   const { addAlert } = useAlerts();
 

@@ -47,13 +47,7 @@ export const AssociatedRolesModal = (props: AssociatedRolesModalProps) => {
     return _.sortBy(rolesList, (role) => role.name?.toUpperCase());
   };
 
-  const loader = async (first?: number, max?: number, search?: string) => {
-    const params: { [name: string]: string | number } = {
-      first: first!,
-      max: max!,
-      search: search!,
-    };
-
+  const loader = async () => {
     const roles = await adminClient.roles.find();
     const existingAdditionalRoles = await adminClient.roles.getCompositeRoles({
       id,
@@ -75,19 +69,7 @@ export const AssociatedRolesModal = (props: AssociatedRolesModalProps) => {
           )!.clientId!)
       );
 
-    const searchParam = search || "";
-    if (searchParam) {
-      params.search = searchParam;
-    }
-
-    const filteredRoles = filterDupes.filter(
-      (role) =>
-        !search ||
-        role.name?.toLowerCase().includes(search) ||
-        role.description?.toLowerCase().includes(search)
-    );
-
-    return alphabetize(filteredRoles).filter((role: RoleRepresentation) => {
+    return alphabetize(filterDupes).filter((role: RoleRepresentation) => {
       return (
         props.existingCompositeRoles.find(
           (existing: RoleRepresentation) => existing.name === role.name
@@ -109,11 +91,7 @@ export const AssociatedRolesModal = (props: AssociatedRolesModalProps) => {
     );
   };
 
-  const clientRolesLoader = async (
-    first?: number,
-    max?: number,
-    search?: string
-  ) => {
+  const clientRolesLoader = async () => {
     const clients = await adminClient.clients.find();
 
     const clientIdArray = clients.map((client) => client.id);
@@ -138,14 +116,7 @@ export const AssociatedRolesModal = (props: AssociatedRolesModalProps) => {
           )!.clientId!)
       );
 
-    const filteredRoles = rolesList.filter(
-      (role) =>
-        !search ||
-        role.name?.toLowerCase().includes(search.toLowerCase()) ||
-        role.description?.toLowerCase().includes(search.toLowerCase())
-    );
-
-    return alphabetize(filteredRoles).filter((role: RoleRepresentation) => {
+    return alphabetize(rolesList).filter((role: RoleRepresentation) => {
       return (
         existingAdditionalRoles.find(
           (existing: RoleRepresentation) => existing.name === role.name
