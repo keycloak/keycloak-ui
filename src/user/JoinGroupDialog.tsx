@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 // import { useParams } from "react-router-dom";
 import {
+  AlertVariant,
   Breadcrumb,
   BreadcrumbItem,
   Button,
@@ -21,39 +22,29 @@ import {
   ToolbarItem,
 } from "@patternfly/react-core";
 import { useTranslation } from "react-i18next";
-import { useForm } from "react-hook-form";
 import { asyncStateFetch, useAdminClient } from "../context/auth/AdminClient";
-import RoleRepresentation from "keycloak-admin/lib/defs/roleRepresentation";
-import { ListEmptyState } from "../components/list-empty-state/ListEmptyState";
 import { AngleRightIcon, SearchIcon } from "@patternfly/react-icons";
 import GroupRepresentation from "keycloak-admin/lib/defs/groupRepresentation";
 import { useErrorHandler } from "react-error-boundary";
 import { useParams } from "react-router-dom";
-// import { AliasRendererComponent } from "./AliasRendererComponent";
+import { useAlerts } from "../components/alert/Alerts";
 
 export type JoinGroupDialogProps = {
   open: boolean;
-    group: GroupRepresentation;
-//   toggleDialog: () => void;
+  group: GroupRepresentation;
+  toggleDialog: () => void;
   onClose: () => void;
-//   username: string;
-  onConfirm: (newReps: GroupRepresentation[]) => void;
+  onConfirm: () => void;
 };
 
 export const JoinGroupDialog = ({
   group,
   onClose,
-  onMove,
   open,
   toggleDialog,
-  onConfirm,
 }: JoinGroupDialogProps) => {
   const { t } = useTranslation("roles");
-  const form = useForm<RoleRepresentation>({ mode: "onChange" });
-  const [name, setName] = useState("");
   const adminClient = useAdminClient();
-  const [selectedRows, setSelectedRows] = useState<GroupRepresentation[]>([]);
-  //   const [id, setId] = useState<string>();
 
   const errorHandler = useErrorHandler();
 
@@ -63,23 +54,10 @@ export const JoinGroupDialog = ({
   const [filter, setFilter] = useState("");
 
   const [groupId, setGroupId] = useState<string>();
+  const { addAlert } = useAlerts();
 
-  const [isFilterDropdownOpen, setIsFilterDropdownOpen] = useState(false);
-  const [filterType, setFilterType] = useState("roles");
-  const [key, setKey] = useState(0);
-  const refresh = () => setKey(new Date().getTime());
+  const { id } = useParams<{ id: string }>();
 
-    const { id } = useParams<{ id: string }>();
-
-  console.log;
-
-  useEffect(() => {
-    refresh();
-  }, [filterType]);
-
-  const currentGroup = () => navigation[navigation.length - 1];
-  console.log(currentGroup);
-  console.log("navigation" , navigation);
   useEffect(
     () =>
       asyncStateFetch(
@@ -91,37 +69,22 @@ export const JoinGroupDialog = ({
             return { group, groups: await adminClient.groups.find() };
           }
         },
-        ({ group: selectedGroup, groups }) => {
-          console.log(selectedGroup);
-          console.log(groups);
-
+        async ({ group: selectedGroup, groups }) => {
           if (selectedGroup) {
-            console.log("beep")
             setNavigation([...navigation, selectedGroup]);
           }
-          //   setGroups(groups.filter((g) => g.id !== group.id));
-          if (selectedGroup && selectedGroup.subGroups?.length !== 0) setGroups(groups);
+
+          setGroups(groups);
         },
         errorHandler
       ),
     [groupId]
   );
 
-  console.log(selectedRows)
-
-
   return (
     <Modal
       variant={ModalVariant.small}
-      //   title={
-      //     currentGroup()
-      //       ? t("moveToGroup", {
-      //           group1: group.name,
-      //           group2: currentGroup().name,
-      //         })
-      //       : t("moveTo")
-      //   }
-      isOpen={true}
+      isOpen={open}
       onClose={onClose}
       actions={[
         <Button
@@ -129,25 +92,24 @@ export const JoinGroupDialog = ({
           key="confirm"
           variant="primary"
           form="group-form"
-            onClick={async () => {
-              try {
-                await adminClient.users.addToGroup({
-                  id,
-                  groupId: navigation[navigation.length - 1].id,
-                });
-                refresh();
-                addAlert(t("users:removedGroupMembership"), AlertVariant.success);
-              } catch (error) {
-                addAlert(
-                  t("users:removedGroupMembershipError", { error }),
-                  AlertVariant.danger
-                );
-              }
-            }}
+          onClick={async () => {
+            try {
+              await adminClient.users.addToGroup({
+                id: id,
+                groupId: navigation[navigation.length - 1].id!,
+              });
+              toggleDialog();
+              addAlert(t("users:addedGroupMembership"), AlertVariant.success);
+            } catch (error) {
+              addAlert(
+                t("users:addedGroupMembershipError", { error }),
+                AlertVariant.danger
+              );
+            }
+          }}
         >
           {t("users:Join")}
         </Button>,
-    
       ]}
     >
       <Breadcrumb>
@@ -216,7 +178,6 @@ export const JoinGroupDialog = ({
         onSelectDataListItem={(value) => setGroupId(value)}
         aria-label={t("groups")}
         isCompact
-
       >
         {(filtered || groups).map((group) => (
           <DataListItem
@@ -225,10 +186,6 @@ export const JoinGroupDialog = ({
             id={group.id}
           >
             <DataListItemRow data-testid={group.name}>
-            <DataListCheck onChange={(checked) => {
-            checked ? setSelectedRows([...selectedRows, group]) : setSelectedRows([...selectedRows.filter((g) => g.id != group.id), group]);
-          }} aria-labelledby="data-list-check" />
-
               <DataListItemCells
                 dataListCells={[
                   <DataListCell key={`name-${group.id}`}>
@@ -249,13 +206,6 @@ export const JoinGroupDialog = ({
             </DataListItemRow>
           </DataListItem>
         ))}
-        {/* {(filtered || groups).length === 0 && (
-          <ListEmptyState
-            hasIcon={false}
-            message={t("moveGroupEmpty")}
-            instructions={t("moveGroupEmptyInstructions")}
-          />
-        )} */}
       </DataList>
     </Modal>
   );
