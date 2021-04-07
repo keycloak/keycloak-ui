@@ -34,10 +34,6 @@ export type RoleFormType = Omit<RoleRepresentation, "attributes"> & {
   attributes: KeyValueType[];
 };
 
-// type Role = RoleRepresentation & {
-//   clientId?: string;
-// };
-
 export const RealmRoleTabs = () => {
   const { t } = useTranslation("roles");
   const form = useForm<RoleFormType>({ mode: "onChange" });
