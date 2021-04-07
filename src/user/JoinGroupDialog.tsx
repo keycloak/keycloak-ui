@@ -28,6 +28,7 @@ import { ListEmptyState } from "../components/list-empty-state/ListEmptyState";
 import { AngleRightIcon, SearchIcon } from "@patternfly/react-icons";
 import GroupRepresentation from "keycloak-admin/lib/defs/groupRepresentation";
 import { useErrorHandler } from "react-error-boundary";
+import { useParams } from "react-router-dom";
 // import { AliasRendererComponent } from "./AliasRendererComponent";
 
 export type JoinGroupDialogProps = {
@@ -61,14 +62,14 @@ export const JoinGroupDialog = ({
   const [filtered, setFiltered] = useState<GroupRepresentation[]>();
   const [filter, setFilter] = useState("");
 
-  const [id, setId] = useState<string>();
+  const [groupId, setGroupId] = useState<string>();
 
   const [isFilterDropdownOpen, setIsFilterDropdownOpen] = useState(false);
   const [filterType, setFilterType] = useState("roles");
   const [key, setKey] = useState(0);
   const refresh = () => setKey(new Date().getTime());
 
-  //   const { id } = useParams<{ id: string }>();
+    const { id } = useParams<{ id: string }>();
 
   console.log;
 
@@ -78,13 +79,13 @@ export const JoinGroupDialog = ({
 
   const currentGroup = () => navigation[navigation.length - 1];
   console.log(currentGroup);
-  console.log(navigation);
+  console.log("navigation" , navigation);
   useEffect(
     () =>
       asyncStateFetch(
         async () => {
-          if (id) {
-            const group = await adminClient.groups.findOne({ id });
+          if (groupId) {
+            const group = await adminClient.groups.findOne({ id: groupId });
             return { group, groups: group.subGroups! };
           } else {
             return { group, groups: await adminClient.groups.find() };
@@ -94,13 +95,16 @@ export const JoinGroupDialog = ({
           console.log(selectedGroup);
           console.log(groups);
 
-          if (selectedGroup) setNavigation([...navigation, selectedGroup]);
+          if (selectedGroup) {
+            console.log("beep")
+            setNavigation([...navigation, selectedGroup]);
+          }
           //   setGroups(groups.filter((g) => g.id !== group.id));
-          setGroups(groups);
+          if (selectedGroup && selectedGroup.subGroups?.length !== 0) setGroups(groups);
         },
         errorHandler
       ),
-    [id]
+    [groupId]
   );
 
   console.log(selectedRows)
@@ -125,7 +129,21 @@ export const JoinGroupDialog = ({
           key="confirm"
           variant="primary"
           form="group-form"
-          //   onClick={() => onMove(currentGroup().id!)}
+            onClick={async () => {
+              try {
+                await adminClient.users.addToGroup({
+                  id,
+                  groupId: navigation[navigation.length - 1].id,
+                });
+                refresh();
+                addAlert(t("users:removedGroupMembership"), AlertVariant.success);
+              } catch (error) {
+                addAlert(
+                  t("users:removedGroupMembershipError", { error }),
+                  AlertVariant.danger
+                );
+              }
+            }}
         >
           {t("users:Join")}
         </Button>,
@@ -137,7 +155,7 @@ export const JoinGroupDialog = ({
           <Button
             variant="link"
             onClick={() => {
-              setId(undefined);
+              setGroupId(undefined);
               setNavigation([]);
             }}
           >
@@ -150,7 +168,7 @@ export const JoinGroupDialog = ({
               <Button
                 variant="link"
                 onClick={() => {
-                  setId(group.id);
+                  setGroupId(group.id);
                   setNavigation([...navigation].slice(0, i));
                 }}
               >
@@ -195,7 +213,7 @@ export const JoinGroupDialog = ({
         </ToolbarContent>
       </Toolbar>
       <DataList
-        onSelectDataListItem={(value) => setId(value)}
+        onSelectDataListItem={(value) => setGroupId(value)}
         aria-label={t("groups")}
         isCompact
 
