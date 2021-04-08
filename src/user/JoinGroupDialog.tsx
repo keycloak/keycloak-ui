@@ -81,7 +81,7 @@ export const JoinGroupDialog = ({
       onClose={onClose}
       actions={[
         <Button
-          data-testid="moveGroup"
+          data-testid="joinGroup"
           key="confirm"
           variant="primary"
           form="group-form"
