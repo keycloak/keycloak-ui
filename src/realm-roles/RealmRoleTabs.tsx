@@ -54,7 +54,9 @@ export const RealmRoleTabs = () => {
     setKey(`${new Date().getTime()}`);
   };
 
-  const [additionalRoles, setAdditionalRoles] = useState<RoleRepresentation[]>([]);
+  const [additionalRoles, setAdditionalRoles] = useState<RoleRepresentation[]>(
+    []
+  );
 
   const { addAlert } = useAlerts();
 
