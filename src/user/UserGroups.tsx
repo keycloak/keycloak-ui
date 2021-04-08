@@ -214,7 +214,11 @@ export const UserGroups = () => {
     ) {
       return (
         <>
-          <Button data-testid={`leave-${group.name}`} onClick={() => leave(group)} variant="link">
+          <Button
+            data-testid={`leave-${group.name}`}
+            onClick={() => leave(group)}
+            variant="link"
+          >
             {t("users:Leave")}
           </Button>
         </>
