@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-// import { useParams } from "react-router-dom";
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -24,19 +23,14 @@ import { asyncStateFetch, useAdminClient } from "../context/auth/AdminClient";
 import { AngleRightIcon, SearchIcon } from "@patternfly/react-icons";
 import GroupRepresentation from "keycloak-admin/lib/defs/groupRepresentation";
 import { useErrorHandler } from "react-error-boundary";
-import { useParams } from "react-router-dom";
-import { useAlerts } from "../components/alert/Alerts";
-
 export type JoinGroupDialogProps = {
   open: boolean;
-  group: GroupRepresentation;
   toggleDialog: () => void;
   onClose: () => void;
   onConfirm: (newGroup: GroupRepresentation) => void;
 };
 
 export const JoinGroupDialog = ({
-  group,
   onClose,
   open,
   toggleDialog,
@@ -53,9 +47,6 @@ export const JoinGroupDialog = ({
   const [filter, setFilter] = useState("");
 
   const [groupId, setGroupId] = useState<string>();
-  const { addAlert } = useAlerts();
-
-  const { id } = useParams<{ id: string }>();
 
   useEffect(
     () =>
@@ -65,7 +56,7 @@ export const JoinGroupDialog = ({
             const group = await adminClient.groups.findOne({ id: groupId });
             return { group, groups: group.subGroups! };
           } else {
-            return { group, groups: await adminClient.groups.find() };
+            return { groups: await adminClient.groups.find() };
           }
         },
         async ({ group: selectedGroup, groups }) => {
