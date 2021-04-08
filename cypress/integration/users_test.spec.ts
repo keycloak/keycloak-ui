@@ -6,11 +6,44 @@ import ListingPage from "../support/pages/admin_console/ListingPage";
 import UserDetailsPage from "../support/pages/admin_console/manage/users/UserDetailsPage";
 import ModalUtils from "../support/util/ModalUtils";
 import { keycloakBefore } from "../support/util/keycloak_before";
+import GroupModal from "../support/pages/admin_console/manage/groups/GroupModal";
+import UserGroupsPage from "../support/pages/admin_console/manage/users/UserGroupsPage";
+
+let groupName = "group";
+
+describe("Group creation", () => {
+  const loginPage = new LoginPage();
+  const masthead = new Masthead();
+  const sidebarPage = new SidebarPage();
+  const listingPage = new ListingPage();
+  const groupModal = new GroupModal();
+
+  beforeEach(function () {
+    keycloakBefore();
+    loginPage.logIn();
+    sidebarPage.goToGroups();
+  });
+
+  it("Add group to be joined", () => {
+    groupName += "_" + (Math.random() + 1).toString(36).substring(7);
+
+    groupModal
+      .open("openCreateGroupModal")
+      .fillGroupForm(groupName)
+      .clickCreate();
+
+    masthead.checkNotificationMessage("Group created");
+
+    sidebarPage.goToGroups();
+    listingPage.searchItem(groupName, false).itemExist(groupName);
+  });
+});
 
 describe("Users test", () => {
   const loginPage = new LoginPage();
   const sidebarPage = new SidebarPage();
   const createUserPage = new CreateUserPage();
+  const userGroupsPage = new UserGroupsPage();
   const masthead = new Masthead();
   const modalUtils = new ModalUtils();
   const listingPage = new ListingPage();
@@ -64,9 +97,16 @@ describe("Users test", () => {
 
       cy.wait(1000);
 
-      // Go to user details
+      // Go to user groups
 
-      cy.getId("user-groups-tab").click();
+      userGroupsPage.goToGroupsTab();
+      userGroupsPage.toggleAddGroupModal();
+      cy.getId(`${groupName}`).click();
+      userGroupsPage.joinGroup();
+
+      cy.wait(1000);
+
+      listingPage.itemExist(groupName);
 
       sidebarPage.goToUsers();
       listingPage.searchItem(itemId).itemExist(itemId);
@@ -81,6 +121,5 @@ describe("Users test", () => {
 
       listingPage.itemExist(itemId, false);
     });
-
   });
 });
