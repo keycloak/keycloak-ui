@@ -34,7 +34,7 @@ export type JoinGroupDialogProps = {
   group: GroupRepresentation;
   toggleDialog: () => void;
   onClose: () => void;
-  onConfirm: () => void;
+  onConfirm: (newGroup: GroupRepresentation) => void;
 };
 
 export const JoinGroupDialog = ({
@@ -42,6 +42,7 @@ export const JoinGroupDialog = ({
   onClose,
   open,
   toggleDialog,
+  onConfirm,
 }: JoinGroupDialogProps) => {
   const { t } = useTranslation("roles");
   const adminClient = useAdminClient();
@@ -92,20 +93,24 @@ export const JoinGroupDialog = ({
           key="confirm"
           variant="primary"
           form="group-form"
-          onClick={async () => {
-            try {
-              await adminClient.users.addToGroup({
-                id: id,
-                groupId: navigation[navigation.length - 1].id!,
-              });
-              toggleDialog();
-              addAlert(t("users:addedGroupMembership"), AlertVariant.success);
-            } catch (error) {
-              addAlert(
-                t("users:addedGroupMembershipError", { error }),
-                AlertVariant.danger
-              );
-            }
+          // onClick={async () => {
+          //   try {
+          //     await adminClient.users.addToGroup({
+          //       id: id,
+          //       groupId: navigation[navigation.length - 1].id!,
+          //     });
+          //     toggleDialog();
+          //     addAlert(t("users:addedGroupMembership"), AlertVariant.success);
+          //   } catch (error) {
+          //     addAlert(
+          //       t("users:addedGroupMembershipError", { error }),
+          //       AlertVariant.danger
+          //     );
+          //   }
+          // }}
+          onClick={() => {
+            toggleDialog();
+            onConfirm(navigation[navigation.length - 1]);
           }}
         >
           {t("users:Join")}
