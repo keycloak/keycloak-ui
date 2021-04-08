@@ -28,6 +28,7 @@ export type JoinGroupDialogProps = {
   toggleDialog: () => void;
   onClose: () => void;
   onConfirm: (newGroup: GroupRepresentation) => void;
+  username: string;
 };
 
 export const JoinGroupDialog = ({
@@ -35,6 +36,7 @@ export const JoinGroupDialog = ({
   open,
   toggleDialog,
   onConfirm,
+  username,
 }: JoinGroupDialogProps) => {
   const { t } = useTranslation("roles");
   const adminClient = useAdminClient();
@@ -74,6 +76,7 @@ export const JoinGroupDialog = ({
   return (
     <Modal
       variant={ModalVariant.small}
+      title={`Join groups for user ${username}`}
       isOpen={open}
       onClose={onClose}
       actions={[
