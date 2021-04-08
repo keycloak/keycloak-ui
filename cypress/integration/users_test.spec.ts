@@ -84,7 +84,7 @@ describe("Users test", () => {
       sidebarPage.goToUsers();
     });
 
-    it("Go to user details test", function () {
+    it("User details test", function () {
       cy.wait(1000);
       listingPage.searchItem(itemId).itemExist(itemId);
 
@@ -97,7 +97,15 @@ describe("Users test", () => {
 
       cy.wait(1000);
 
+      sidebarPage.goToUsers();
+      listingPage.searchItem(itemId).itemExist(itemId);
+    });
+
+    it("Add user to group test", function () {
       // Go to user groups
+
+      listingPage.searchItem(itemId).itemExist(itemId);
+      listingPage.goToItemDetails(itemId);
 
       userGroupsPage.goToGroupsTab();
       userGroupsPage.toggleAddGroupModal();
@@ -107,10 +115,19 @@ describe("Users test", () => {
       cy.wait(1000);
 
       listingPage.itemExist(groupName);
+    });
 
-      sidebarPage.goToUsers();
+    it("Leave group test", function () {
       listingPage.searchItem(itemId).itemExist(itemId);
+      listingPage.goToItemDetails(itemId);
+      // Go to user groups
+      userGroupsPage.goToGroupsTab();
+      cy.getId(`leave-${groupName}`).click();
+      cy.getId("modalConfirm").click();
+    });
 
+    it("Delete user", function () {
+      listingPage.searchItem(itemId).itemExist(itemId);
       // Delete
       cy.wait(1000);
       listingPage.deleteItem(itemId);
