@@ -258,6 +258,7 @@ export function KeycloakDataTable<T>({
   );
 
   const _onSelect = (isSelected: boolean, rowIndex: number) => {
+<<<<<<< HEAD
     const data = filteredData || rows;
     if (rowIndex === -1) {
       setRows(
@@ -268,17 +269,60 @@ export function KeycloakDataTable<T>({
       );
     } else {
       data![rowIndex].selected = isSelected;
+=======
+
+    if (rowIndex === -1) {
+
+      if (filteredData) {
+        setRows(
+          filteredData!.map((row) => {
+            row.selected = isSelected;
+            return row;
+          })
+        );
+      } else {
+        setRows(
+          rows!.map((row) => {
+            row.selected = isSelected;
+            return row;
+          })
+        );
+        setRows(rows);
+      }
+    } else {
+      if (filteredData) {
+        const foundRow = rows!.find(
+          (row) => row.data === filteredData[rowIndex].data
+        );
+
+        filteredData[rowIndex].selected = isSelected;
+
+        if (foundRow) {
+          foundRow.selected = isSelected;
+        }
+        setRows([...filteredData!]);
+      } else {
+        rows![rowIndex].selected = isSelected;
+      }
+
+>>>>>>> make checkboxes selectable
       setRows([...rows!]);
     }
+
+    // Keeps selected items when paginating
     const difference = _.differenceBy(
       selected,
       data!.map((row) => row.data),
       "id"
     );
+
+    console.log(difference);
+    // Selected rows are any rows previously selected from a different page, plus current page selections
     const selectedRows = [
       ...difference,
       ...data!.filter((row) => row.selected).map((row) => row.data),
     ];
+
     setSelected(selectedRows);
     onSelect!(selectedRows);
   };
