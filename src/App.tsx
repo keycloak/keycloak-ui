@@ -21,7 +21,6 @@ import { PageBreadCrumbs } from "./components/bread-crumb/PageBreadCrumbs";
 import { ForbiddenSection } from "./ForbiddenSection";
 import { SubGroups } from "./groups/SubGroupsContext";
 import { useRealm } from "./context/realm-context/RealmContext";
-import { useAdminClient, asyncStateFetch } from "./context/auth/AdminClient";
 import { ErrorRenderer } from "./components/error/ErrorRenderer";
 import { RecentUsed } from "./components/realm-selector/recent-used";
 
@@ -39,28 +38,14 @@ const AppContexts = ({ children }: { children: ReactNode }) => (
   </AccessContextProvider>
 );
 
-// set the realm form the path if it's one of the know realms
+// set the realm form the path
 const RealmPathSelector = ({ children }: { children: ReactNode }) => {
   const { setRealm } = useRealm();
   const { realm } = useParams<{ realm: string }>();
-  const adminClient = useAdminClient();
-  const handleError = useErrorHandler();
+  useEffect(() => setRealm(realm), []);
   const recentUsed = new RecentUsed();
 
-  useEffect(
-    () =>
-      asyncStateFetch(
-        () => adminClient.realms.find(),
-        (realms) => {
           recentUsed.clean(realms.map((r) => r.realm!));
-          if (realms.findIndex((r) => r.realm == realm) !== -1) {
-            setRealm(realm);
-          }
-        },
-        handleError
-      ),
-    []
-  );
 
   return <>{children}</>;
 };

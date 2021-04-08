@@ -14,12 +14,12 @@ export const KeycloakAdminConsole = ({
   adminClient,
 }: KeycloakAdminConsoleProps) => {
   return (
-    <RealmContextProvider>
-      <AdminClient.Provider value={adminClient}>
+    <AdminClient.Provider value={adminClient}>
+      <RealmContextProvider>
         <WhoAmIContextProvider>
           <App />
         </WhoAmIContextProvider>
-      </AdminClient.Provider>
-    </RealmContextProvider>
+      </RealmContextProvider>
+    </AdminClient.Provider>
   );
 };

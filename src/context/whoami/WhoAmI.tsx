@@ -2,7 +2,7 @@ import React, { useContext, useEffect, useState } from "react";
 import { useErrorHandler } from "react-error-boundary";
 import i18n from "../../i18n";
 
-import { AdminClient, asyncStateFetch } from "../auth/AdminClient";
+import { asyncStateFetch, useAdminClient } from "../auth/AdminClient";
 import { RealmContext } from "../realm-context/RealmContext";
 import WhoAmIRepresentation, {
   AccessType,
@@ -62,7 +62,7 @@ export const WhoAmIContext = React.createContext<WhoAmIProps>({
 
 type WhoAmIProviderProps = { children: React.ReactNode };
 export const WhoAmIContextProvider = ({ children }: WhoAmIProviderProps) => {
-  const adminClient = useContext(AdminClient)!;
+  const adminClient = useAdminClient();
   const handleError = useErrorHandler();
   const { realm, setRealm } = useContext(RealmContext);
   const [whoAmI, setWhoAmI] = useState<WhoAmI>(new WhoAmI());
@@ -70,10 +70,7 @@ export const WhoAmIContextProvider = ({ children }: WhoAmIProviderProps) => {
 
   useEffect(() => {
     return asyncStateFetch(
-      () =>
-        adminClient.whoAmI.find({
-          realm: adminClient.keycloak?.realm,
-        }),
+      () => adminClient.whoAmI.find(),
       (me) => {
         const whoAmI = new WhoAmI(adminClient.keycloak?.realm, me);
         if (!realm) {
