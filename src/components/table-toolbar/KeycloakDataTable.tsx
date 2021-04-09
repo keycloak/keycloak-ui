@@ -107,7 +107,7 @@ export type DataListProps<T> = {
  *   <KeycloakDataTable columns={[
  *     {
  *        name: "clientId", //name of the field from the array of object the loader returns to display in this column
- *        displayKey: "common:clientId", //i18n key to use to lookup the name of the column header
+ *        displayKey: "common:clientID", //i18n key to use to lookup the name of the column header
  *        cellRenderer: ClientDetailLink, //optionally you can use a component to render the column when you don't want just the content of the field, the whole row / entire object is passed in.
  *     }
  *   ]}
@@ -152,22 +152,6 @@ export function KeycloakDataTable<T>({
   const [key, setKey] = useState(0);
   const refresh = () => setKey(new Date().getTime());
   const handleError = useErrorHandler();
-
-  useEffect(() => {
-    if (canSelectAll) {
-      const checkboxes = document
-        .getElementsByClassName("pf-c-table__check")
-        .item(0);
-      if (checkboxes) {
-        const checkAllCheckbox = checkboxes.children!.item(
-          0
-        )! as HTMLInputElement;
-        checkAllCheckbox.indeterminate =
-          selected.length > 0 &&
-          selected.length < (filteredData || rows)!.length;
-      }
-    }
-  }, [selected]);
 
   useEffect(() => {
     return asyncStateFetch(
@@ -258,7 +242,6 @@ export function KeycloakDataTable<T>({
   );
 
   const _onSelect = (isSelected: boolean, rowIndex: number) => {
-<<<<<<< HEAD
     const data = filteredData || rows;
     if (rowIndex === -1) {
       setRows(
@@ -269,43 +252,7 @@ export function KeycloakDataTable<T>({
       );
     } else {
       data![rowIndex].selected = isSelected;
-=======
 
-    if (rowIndex === -1) {
-
-      if (filteredData) {
-        setRows(
-          filteredData!.map((row) => {
-            row.selected = isSelected;
-            return row;
-          })
-        );
-      } else {
-        setRows(
-          rows!.map((row) => {
-            row.selected = isSelected;
-            return row;
-          })
-        );
-        setRows(rows);
-      }
-    } else {
-      if (filteredData) {
-        const foundRow = rows!.find(
-          (row) => row.data === filteredData[rowIndex].data
-        );
-
-        filteredData[rowIndex].selected = isSelected;
-
-        if (foundRow) {
-          foundRow.selected = isSelected;
-        }
-        setRows([...filteredData!]);
-      } else {
-        rows![rowIndex].selected = isSelected;
-      }
-
->>>>>>> make checkboxes selectable
       setRows([...rows!]);
     }
 
@@ -316,7 +263,6 @@ export function KeycloakDataTable<T>({
       "id"
     );
 
-    console.log(difference);
     // Selected rows are any rows previously selected from a different page, plus current page selections
     const selectedRows = [
       ...difference,
