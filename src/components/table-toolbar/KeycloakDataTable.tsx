@@ -107,7 +107,7 @@ export type DataListProps<T> = {
  *   <KeycloakDataTable columns={[
  *     {
  *        name: "clientId", //name of the field from the array of object the loader returns to display in this column
- *        displayKey: "common:clientID", //i18n key to use to lookup the name of the column header
+ *        displayKey: "common:clientId", //i18n key to use to lookup the name of the column header
  *        cellRenderer: ClientDetailLink, //optionally you can use a component to render the column when you don't want just the content of the field, the whole row / entire object is passed in.
  *     }
  *   ]}
@@ -152,6 +152,22 @@ export function KeycloakDataTable<T>({
   const [key, setKey] = useState(0);
   const refresh = () => setKey(new Date().getTime());
   const handleError = useErrorHandler();
+
+  useEffect(() => {
+    if (canSelectAll) {
+      const checkboxes = document
+        .getElementsByClassName("pf-c-table__check")
+        .item(0);
+      if (checkboxes) {
+        const checkAllCheckbox = checkboxes.children!.item(
+          0
+        )! as HTMLInputElement;
+        checkAllCheckbox.indeterminate =
+          selected.length > 0 &&
+          selected.length < (filteredData || rows)!.length;
+      }
+    }
+  }, [selected]);
 
   useEffect(() => {
     return asyncStateFetch(
