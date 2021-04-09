@@ -17,7 +17,6 @@ import { useHistory, useParams, useRouteMatch } from "react-router-dom";
 import { KeycloakTabs } from "../components/keycloak-tabs/KeycloakTabs";
 import { UserGroups } from "./UserGroups";
 import { UserConsents } from "./UserConsents";
-import UserConsentRepresentation from "keycloak-admin/lib/defs/userConsentRepresentation";
 
 export const UsersTabs = () => {
   const { t } = useTranslation("roles");
@@ -27,9 +26,6 @@ export const UsersTabs = () => {
 
   const adminClient = useAdminClient();
   const userForm = useForm<UserRepresentation>({ mode: "onChange" });
-  const userConsentsForm = useForm<UserConsentRepresentation>({
-    mode: "onChange",
-  });
   const { id } = useParams<{ id: string }>();
   const [user, setUser] = useState("");
 
@@ -88,7 +84,7 @@ export const UsersTabs = () => {
               data-testid="user-consents-tab"
               title={<TabTitleText>{t("users:consents")}</TabTitleText>}
             >
-              <UserConsents form={userConsentsForm} />
+              <UserConsents />
             </Tab>
           </KeycloakTabs>
         )}
