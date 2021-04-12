@@ -12,6 +12,7 @@
     "saveSuccess": "Realm successfully updated",
     "saveError": "Realm could not be updated: {error}",
     "general": "General",
+    "login": "Login",
     "realmId": "Realm ID",
     "displayName": "Display name",
     "htmlDisplayName": "HTML Display name",
