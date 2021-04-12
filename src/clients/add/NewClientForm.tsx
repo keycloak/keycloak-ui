@@ -52,10 +52,11 @@ export const NewClientForm = () => {
     }
   };
 
-  const forward = async () => {
+  const forward = async (onNext: () => void) => {
     if (await methods.trigger()) {
       setClient({ ...client, ...methods.getValues() });
       setShowCapabilityConfig(true);
+      onNext();
     }
   };
 
@@ -66,9 +67,9 @@ export const NewClientForm = () => {
 
   const onGoToStep = (newStep: { id?: string | number }) => {
     if (newStep.id === "generalSettings") {
-      forward();
-    } else {
       back();
+    } else {
+      forward(() => {});
     }
   };
 
@@ -82,8 +83,7 @@ export const NewClientForm = () => {
                 variant="primary"
                 type="submit"
                 onClick={() => {
-                  forward();
-                  onNext();
+                  forward(onNext);
                 }}
               >
                 {activeStep.name === t("capabilityConfig")
