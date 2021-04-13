@@ -119,8 +119,6 @@ const RealmSettingsHeader = ({
   );
 };
 
-const requireSslTypes = ["all", "external", "none"];
-
 export const RealmSettingsSection = () => {
   const { t } = useTranslation("realm-settings");
   const adminClient = useAdminClient();

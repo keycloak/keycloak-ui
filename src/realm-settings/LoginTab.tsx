@@ -1,53 +1,32 @@
 import React, { useEffect, useState } from "react";
-import { useHistory } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { Controller, useForm } from "react-hook-form";
-import { useErrorHandler } from "react-error-boundary";
 import {
-  ActionGroup,
   AlertVariant,
-  Button,
-  ButtonVariant,
-  ClipboardCopy,
-  DropdownItem,
-  DropdownSeparator,
   FormGroup,
   PageSection,
-  Select,
-  SelectOption,
-  SelectVariant,
-  Stack,
-  StackItem,
   Switch,
-  Tab,
-  TabTitleText,
-  TextInput,
 } from "@patternfly/react-core";
-
-import RealmRepresentation from "keycloak-admin/lib/defs/realmRepresentation";
-import { getBaseUrl, toUpperCase } from "../util";
-import { useConfirmDialog } from "../components/confirm-dialog/ConfirmDialog";
-import { useAdminClient, asyncStateFetch } from "../context/auth/AdminClient";
-import { useRealm } from "../context/realm-context/RealmContext";
-import { ViewHeader } from "../components/view-header/ViewHeader";
-import { useAlerts } from "../components/alert/Alerts";
 import { FormAccess } from "../components/form-access/FormAccess";
 import { HelpItem } from "../components/help-enabler/HelpItem";
-import { FormattedLink } from "../components/external-link/FormattedLink";
-import { KeycloakTabs } from "../components/keycloak-tabs/KeycloakTabs";
-
+import { FormPanel } from "../components/scroll-form/FormPanel";
+import { asyncStateFetch, useAdminClient } from "../context/auth/AdminClient";
+import RealmRepresentation from "keycloak-admin/lib/defs/realmRepresentation";
+import { useErrorHandler } from "react-error-boundary";
+import { useRealm } from "../context/realm-context/RealmContext";
+import { useAlerts } from "../components/alert/Alerts";
 
 export const RealmSettingsLoginTab = () => {
   const { t } = useTranslation("realm-settings");
-  const adminClient = useAdminClient();
+  const { control, setValue } = useForm();
+  const [emailAsUsername, setEmailAsUsername] = useState(false);
+  const [loginWithEmailAllowed, setLoginWithEmailAllowed] = useState(false);
+  const [realm, setRealm] = useState<RealmRepresentation>();
   const handleError = useErrorHandler();
+  const adminClient = useAdminClient();
   const { realm: realmName } = useRealm();
   const { addAlert } = useAlerts();
-  const { register, control, getValues, setValue, handleSubmit } = useForm();
-  const [realm, setRealm] = useState<RealmRepresentation>();
-  const [open, setOpen] = useState(false);
 
-  const baseUrl = getBaseUrl(adminClient);
 
   useEffect(() => {
     return asyncStateFetch(
@@ -74,30 +53,240 @@ export const RealmSettingsLoginTab = () => {
     }
   };
 
+  console.log(realm);
+
   return (
     <>
       <PageSection variant="light">
-          <FormGroup
-            label={t("endpoints")}
-            labelIcon={
-              <HelpItem
-                helpText="realm-settings-help:endpoints"
-                forLabel={t("endpoints")}
-                forID="kc-endpoints"
-              />
-            }
-            fieldId="kc-endpoints"
-          >
-          </FormGroup>
-
-          <ActionGroup>
-            <Button variant="primary" type="submit">
-              {t("common:save")}
-            </Button>
-            <Button variant="link" onClick={() => setupForm(realm!)}>
-              {t("common:revert")}
-            </Button>
-          </ActionGroup>
+        <FormPanel scrollId="" title="Login screen customization">
+          {
+            <FormAccess isHorizontal role="manage-realm">
+              <FormGroup
+                label={t("userRegistration")}
+                fieldId="kc-user-reg"
+                labelIcon={
+                  <HelpItem
+                    helpText={t("userRegistrationHelpText")}
+                    forLabel={t("userRegistration")}
+                    forID="kc-user-reg"
+                  />
+                }
+                hasNoPaddingTop
+              >
+                <Controller
+                  name="registrationAllowed"
+                  defaultValue={false}
+                  control={control}
+                  render={({ onChange, value }) => (
+                    <Switch
+                      id="kc-user-reg"
+                      name="registrationAllowed"
+                      label={t("common:on")}
+                      labelOff={t("common:off")}
+                      isChecked={!value}
+                      onChange={(value) => {
+                        onChange(!value);
+                        save(realm!);
+                      }}                    />
+                  )}
+                />
+              </FormGroup>
+              <FormGroup
+                label={t("forgotPassword")}
+                fieldId="kc-forgot-pw"
+                labelIcon={
+                  <HelpItem
+                    helpText={t("forgotPasswordHelpText")}
+                    forLabel={t("forgotPassword")}
+                    forID="kc-forgot-pw"
+                  />
+                }
+                hasNoPaddingTop
+              >
+                <Controller
+                  name="resetPasswordAllowed"
+                  defaultValue={false}
+                  control={control}
+                  render={({ onChange, value }) => (
+                    <Switch
+                      id="kc-forgot-pw"
+                      name="resetPasswordAllowed"
+                      label={t("common:on")}
+                      labelOff={t("common:off")}
+                      isChecked={!value}
+                      onChange={(value) => {
+                        onChange(!value);
+                        save(realm!);
+                      }}
+                    />
+                  )}
+                />
+              </FormGroup>
+              <FormGroup
+                label={t("rememberMe")}
+                fieldId="kc-remember-me"
+                labelIcon={
+                  <HelpItem
+                    helpText={t("rememberMeHelpText")}
+                    forLabel={t("rememberMe")}
+                    forID="kc-remember-me"
+                  />
+                }
+                hasNoPaddingTop
+              >
+                <Controller
+                  name="rememberMe"
+                  defaultValue={false}
+                  control={control}
+                  render={({ onChange, value }) => (
+                    <Switch
+                      id="kc-remember-me"
+                      name="rememberMe"
+                      label={t("common:on")}
+                      labelOff={t("common:off")}
+                      isChecked={!value}
+                      onChange={(value) => {
+                        onChange(!value);
+                        save(realm!);
+                      }}
+                    />
+                  )}
+                />
+              </FormGroup>
+            </FormAccess>
+          }
+        </FormPanel>
+        <FormPanel scrollId="" title="Email settings">
+          {
+            <FormAccess isHorizontal role="manage-realm">
+              <FormGroup
+                label={t("emailAsUsername")}
+                fieldId="kc-email-as-username"
+                labelIcon={
+                  <HelpItem
+                    helpText={t("emailAsUsernameHelpText")}
+                    forLabel={t("emailAsUsername")}
+                    forID="kc-email-as-username"
+                  />
+                }
+                hasNoPaddingTop
+              >
+                <Controller
+                  name="registrationEmailAsUsername"
+                  defaultValue={false}
+                  control={control}
+                  render={({ onChange, value }) => (
+                    <Switch
+                      id="kc-email-as-username"
+                      name="registrationEmailAsUsername"
+                      label={t("common:on")}
+                      labelOff={t("common:off")}
+                      isChecked={!value}
+                      onChange={(value) => {
+                        onChange(!value);
+                        setEmailAsUsername(value);
+                        save(realm!);
+                      }}
+                    />
+                  )}
+                />
+              </FormGroup>
+              <FormGroup
+                label={t("loginWithEmail")}
+                fieldId="kc-login-with-email"
+                labelIcon={
+                  <HelpItem
+                    helpText={t("loginWithEmailHelpText")}
+                    forLabel={t("loginWithEmail")}
+                    forID="kc-login-with-email"
+                  />
+                }
+                hasNoPaddingTop
+              >
+                <Controller
+                  name="loginWithEmailAllowed"
+                  defaultValue={false}
+                  control={control}
+                  render={({ onChange, value }) => (
+                    <Switch
+                      id="kc-login-with-email"
+                      label={t("common:on")}
+                      labelOff={t("common:off")}
+                      isChecked={!value}
+                      onChange={(value) => {
+                        onChange(!value);
+                        setLoginWithEmailAllowed(value);
+                        save(realm!)
+                      }}
+                    />
+                  )}
+                />
+              </FormGroup>
+              <FormGroup
+                label={t("duplicateEmails")}
+                fieldId="kc-duplicate-emails"
+                labelIcon={
+                  <HelpItem
+                    helpText={t("duplicateEmailsHelpText")}
+                    forLabel={t("duplicateEmails")}
+                    forID="kc-duplicate-emails"
+                  />
+                }
+                hasNoPaddingTop
+              >
+                <Controller
+                  name="duplicateEmailsAllowed"
+                  defaultValue={false}
+                  control={control}
+                  render={({ onChange, value }) => (
+                    <Switch
+                      id="kc-duplicate-emails"
+                      label={t("common:on")}
+                      labelOff={t("common:off")}
+                      name="duplicateEmailsAllowed"
+                      isChecked={!value}
+                      onChange={(value) => {
+                        onChange(!value);
+                        save(realm!)
+                      }}
+                      isDisabled={!emailAsUsername && !loginWithEmailAllowed}
+                    />
+                  )}
+                />
+              </FormGroup>
+              <FormGroup
+                label={t("verifyEmail")}
+                fieldId="kc-verify-email"
+                labelIcon={
+                  <HelpItem
+                    helpText={t("verifyEmailHelpText")}
+                    forLabel={t("verifyEmail")}
+                    forID="kc-verify-email"
+                  />
+                }
+                hasNoPaddingTop
+              >
+                <Controller
+                  name="verifyEmail"
+                  defaultValue={false}
+                  control={control}
+                  render={({ onChange, value }) => (
+                    <Switch
+                      id="kc-verify-email"
+                      name="verifyEmail"
+                      label={t("common:on")}
+                      labelOff={t("common:off")}
+                      isChecked={!value}
+                      onChange={(value) => {
+                        onChange(!value);
+                        save(realm!);
+                      }}                    />
+                  )}
+                />
+              </FormGroup>
+            </FormAccess>
+          }
+        </FormPanel>
       </PageSection>
     </>
   );

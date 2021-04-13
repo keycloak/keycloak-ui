@@ -31,8 +31,6 @@ import { SearchGroups } from "./groups/SearchGroups";
 import { CreateInitialAccessToken } from "./clients/initial-access/CreateInitialAccessToken";
 import { LdapMappingDetails } from "./user-federation/ldap/mappers/LdapMappingDetails";
 import { RealmSettingsTabs } from "./realm-settings/RealmSettingsTabs";
-import { RealmSettingsGeneralTab } from "./realm-settings/GeneralTab";
-import { TestWrapper } from "./realm-settings/TestWrapper";
 
 export type RouteDef = BreadcrumbsRoute & {
   access: AccessType;
@@ -175,7 +173,7 @@ export const routes: RoutesFn = (t: TFunction) => [
     access: "view-events",
   },
   {
-    path: "/:realm/realm-settings",
+    path: "/:realm/realm-settings/:tab?",
     component: RealmSettingsSection,
     breadcrumb: t("realmSettings"),
     access: "view-realm",
