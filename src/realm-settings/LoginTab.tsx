@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { Controller, useForm } from "react-hook-form";
+import { Controller, useForm, useWatch } from "react-hook-form";
 import {
   AlertVariant,
   FormGroup,
@@ -18,7 +18,7 @@ import { useAlerts } from "../components/alert/Alerts";
 
 export const RealmSettingsLoginTab = () => {
   const { t } = useTranslation("realm-settings");
-  const { control, setValue } = useForm();
+  const { control, setValue, watch } = useForm();
   const [emailAsUsername, setEmailAsUsername] = useState(false);
   const [loginWithEmailAllowed, setLoginWithEmailAllowed] = useState(false);
   const [realm, setRealm] = useState<RealmRepresentation>();
@@ -27,6 +27,20 @@ export const RealmSettingsLoginTab = () => {
   const { realm: realmName } = useRealm();
   const { addAlert } = useAlerts();
 
+
+  const watchEmailAsUsername = useWatch({control, name: "registrationEmailAsUsername", defaultValue: false});
+  const watchLoginWithEmailAllowed = useWatch({control, name: "loginWithEmailAllowed", defaultValue: false});
+
+  console.log("eas", watchEmailAsUsername);
+  console.log(watchLoginWithEmailAllowed);
+  
+  useEffect(() => {
+    console.log("maybe?")
+    if (!watchLoginWithEmailAllowed && !watchEmailAsUsername) {
+      console.log("setting to false");
+      setValue("duplicateEmailsAllowed", false);
+    }
+  }, [watchEmailAsUsername, watchLoginWithEmailAllowed])  
 
   useEffect(() => {
     return asyncStateFetch(
@@ -47,6 +61,7 @@ export const RealmSettingsLoginTab = () => {
     try {
       await adminClient.realms.update({ realm: realmName }, realm);
       setRealm(realm);
+      console.log(realm.loginWithEmailAllowed)
       addAlert(t("saveSuccess"), AlertVariant.success);
     } catch (error) {
       addAlert(t("saveError", { error }), AlertVariant.danger);
@@ -58,6 +73,7 @@ export const RealmSettingsLoginTab = () => {
   return (
     <>
       <PageSection variant="light">
+        {/* <FormAccess ref={ref} ></FormAccess> */}
         <FormPanel scrollId="" title="Login screen customization">
           {
             <FormAccess isHorizontal role="manage-realm">
@@ -83,10 +99,10 @@ export const RealmSettingsLoginTab = () => {
                       name="registrationAllowed"
                       label={t("common:on")}
                       labelOff={t("common:off")}
-                      isChecked={!value}
+                      isChecked={value}
                       onChange={(value) => {
-                        onChange(!value);
-                        save(realm!);
+                        onChange(value);
+                        // save(realm!);
                       }}                    />
                   )}
                 />
@@ -97,7 +113,7 @@ export const RealmSettingsLoginTab = () => {
                 labelIcon={
                   <HelpItem
                     helpText={t("forgotPasswordHelpText")}
-                    forLabel={t("forgotPassword")}
+                    forLabel={t("forgotPassword")}Value
                     forID="kc-forgot-pw"
                   />
                 }
@@ -113,10 +129,9 @@ export const RealmSettingsLoginTab = () => {
                       name="resetPasswordAllowed"
                       label={t("common:on")}
                       labelOff={t("common:off")}
-                      isChecked={!value}
+                      isChecked={value}
                       onChange={(value) => {
-                        onChange(!value);
-                        save(realm!);
+                        onChange(value);
                       }}
                     />
                   )}
@@ -144,10 +159,10 @@ export const RealmSettingsLoginTab = () => {
                       name="rememberMe"
                       label={t("common:on")}
                       labelOff={t("common:off")}
-                      isChecked={!value}
+                      isChecked={value}
                       onChange={(value) => {
-                        onChange(!value);
-                        save(realm!);
+                        onChange(value);
+                        // save(realm!);
                       }}
                     />
                   )}
@@ -181,11 +196,11 @@ export const RealmSettingsLoginTab = () => {
                       name="registrationEmailAsUsername"
                       label={t("common:on")}
                       labelOff={t("common:off")}
-                      isChecked={!value}
+                      isChecked={value}
                       onChange={(value) => {
-                        onChange(!value);
+                        onChange(value);
                         setEmailAsUsername(value);
-                        save(realm!);
+                        // save(realm!);
                       }}
                     />
                   )}
@@ -214,9 +229,10 @@ export const RealmSettingsLoginTab = () => {
                       labelOff={t("common:off")}
                       isChecked={!value}
                       onChange={(value) => {
+                          console.log("value", value)
                         onChange(!value);
                         setLoginWithEmailAllowed(value);
-                        save(realm!)
+                        // save(realm!)
                       }}
                     />
                   )}
@@ -244,12 +260,12 @@ export const RealmSettingsLoginTab = () => {
                       label={t("common:on")}
                       labelOff={t("common:off")}
                       name="duplicateEmailsAllowed"
-                      isChecked={!value}
+                      isChecked={value}
                       onChange={(value) => {
-                        onChange(!value);
-                        save(realm!)
+                        onChange(value);
+                        // save(realm!)
                       }}
-                      isDisabled={!emailAsUsername && !loginWithEmailAllowed}
+                      isDisabled={!watchEmailAsUsername && !watchLoginWithEmailAllowed}
                     />
                   )}
                 />
