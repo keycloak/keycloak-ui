@@ -27,20 +27,27 @@ export const RealmSettingsLoginTab = () => {
   const { realm: realmName } = useRealm();
   const { addAlert } = useAlerts();
 
-
-  const watchEmailAsUsername = useWatch({control, name: "registrationEmailAsUsername", defaultValue: false});
-  const watchLoginWithEmailAllowed = useWatch({control, name: "loginWithEmailAllowed", defaultValue: false});
+  const watchEmailAsUsername = useWatch({
+    control,
+    name: "registrationEmailAsUsername",
+    defaultValue: false,
+  });
+  const watchLoginWithEmailAllowed = useWatch({
+    control,
+    name: "loginWithEmailAllowed",
+    defaultValue: false,
+  });
 
   console.log("eas", watchEmailAsUsername);
   console.log(watchLoginWithEmailAllowed);
-  
+
   useEffect(() => {
-    console.log("maybe?")
+    console.log("maybe?");
     if (!watchLoginWithEmailAllowed && !watchEmailAsUsername) {
       console.log("setting to false");
       setValue("duplicateEmailsAllowed", false);
     }
-  }, [watchEmailAsUsername, watchLoginWithEmailAllowed])  
+  }, [watchEmailAsUsername, watchLoginWithEmailAllowed]);
 
   useEffect(() => {
     return asyncStateFetch(
@@ -61,7 +68,7 @@ export const RealmSettingsLoginTab = () => {
     try {
       await adminClient.realms.update({ realm: realmName }, realm);
       setRealm(realm);
-      console.log(realm.loginWithEmailAllowed)
+      console.log(realm.loginWithEmailAllowed);
       addAlert(t("saveSuccess"), AlertVariant.success);
     } catch (error) {
       addAlert(t("saveError", { error }), AlertVariant.danger);
@@ -103,7 +110,8 @@ export const RealmSettingsLoginTab = () => {
                       onChange={(value) => {
                         onChange(value);
                         // save(realm!);
-                      }}                    />
+                      }}
+                    />
                   )}
                 />
               </FormGroup>
@@ -113,7 +121,7 @@ export const RealmSettingsLoginTab = () => {
                 labelIcon={
                   <HelpItem
                     helpText={t("forgotPasswordHelpText")}
-                    forLabel={t("forgotPassword")}Value
+                    forLabel={t("forgotPassword")}
                     forID="kc-forgot-pw"
                   />
                 }
@@ -229,7 +237,7 @@ export const RealmSettingsLoginTab = () => {
                       labelOff={t("common:off")}
                       isChecked={!value}
                       onChange={(value) => {
-                          console.log("value", value)
+                        console.log("value", value);
                         onChange(!value);
                         setLoginWithEmailAllowed(value);
                         // save(realm!)
@@ -265,7 +273,9 @@ export const RealmSettingsLoginTab = () => {
                         onChange(value);
                         // save(realm!)
                       }}
-                      isDisabled={!watchEmailAsUsername && !watchLoginWithEmailAllowed}
+                      isDisabled={
+                        !watchEmailAsUsername && !watchLoginWithEmailAllowed
+                      }
                     />
                   )}
                 />
@@ -296,7 +306,8 @@ export const RealmSettingsLoginTab = () => {
                       onChange={(value) => {
                         onChange(!value);
                         save(realm!);
-                      }}                    />
+                      }}
+                    />
                   )}
                 />
               </FormGroup>
