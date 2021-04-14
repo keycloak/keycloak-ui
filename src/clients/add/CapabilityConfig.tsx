@@ -28,7 +28,7 @@ export const CapabilityConfig = ({
   const clientAuthentication = watch("publicClient");
   const clientAuthorization = watch("authorizationServicesEnabled");
 
-  console.log(clientAuthentication)
+  console.log(clientAuthentication);
 
   return (
     <FormAccess isHorizontal role="manage-clients" unWrap={unWrap}>

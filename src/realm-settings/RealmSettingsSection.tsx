@@ -1,43 +1,28 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { useHistory } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { Controller, useForm } from "react-hook-form";
 import { useErrorHandler } from "react-error-boundary";
 import {
-  ActionGroup,
   AlertVariant,
-  Button,
   ButtonVariant,
-  ClipboardCopy,
   DropdownItem,
   DropdownSeparator,
-  FormGroup,
   PageSection,
-  Select,
-  SelectOption,
-  SelectVariant,
-  Stack,
-  StackItem,
-  Switch,
   Tab,
   TabTitleText,
-  TextInput,
 } from "@patternfly/react-core";
 
 import RealmRepresentation from "keycloak-admin/lib/defs/realmRepresentation";
-import { getBaseUrl, toUpperCase } from "../util";
+import { toUpperCase } from "../util";
 import { useConfirmDialog } from "../components/confirm-dialog/ConfirmDialog";
 import { useAdminClient, asyncStateFetch } from "../context/auth/AdminClient";
 import { useRealm } from "../context/realm-context/RealmContext";
 import { ViewHeader } from "../components/view-header/ViewHeader";
 import { useAlerts } from "../components/alert/Alerts";
-import { FormAccess } from "../components/form-access/FormAccess";
-import { HelpItem } from "../components/help-enabler/HelpItem";
-import { FormattedLink } from "../components/external-link/FormattedLink";
 import { KeycloakTabs } from "../components/keycloak-tabs/KeycloakTabs";
 import { RealmSettingsLoginTab } from "./LoginTab";
 import { RealmSettingsGeneralTab } from "./GeneralTab";
-import { RealmSettingsTabs } from "./RealmSettingsTabs";
 
 type RealmSettingsHeaderProps = {
   onChange: (value: boolean) => void;
@@ -125,17 +110,12 @@ export const RealmSettingsSection = () => {
   const handleError = useErrorHandler();
   const { realm: realmName } = useRealm();
   const { addAlert } = useAlerts();
-  const { register, control, getValues, setValue, handleSubmit } = useForm();
-  const [realm, setRealm] = useState<RealmRepresentation>();
-  const [open, setOpen] = useState(false);
-
-  const baseUrl = getBaseUrl(adminClient);
+  const { control, getValues, setValue } = useForm();
 
   useEffect(() => {
     return asyncStateFetch(
       () => adminClient.realms.findOne({ realm: realmName }),
       (realm) => {
-        setRealm(realm);
         setupForm(realm);
       },
       handleError
@@ -149,7 +129,6 @@ export const RealmSettingsSection = () => {
   const save = async (realm: RealmRepresentation) => {
     try {
       await adminClient.realms.update({ realm: realmName }, realm);
-      setRealm(realm);
       addAlert(t("saveSuccess"), AlertVariant.success);
     } catch (error) {
       addAlert(t("saveError", { error }), AlertVariant.danger);
@@ -176,12 +155,14 @@ export const RealmSettingsSection = () => {
           <Tab
             eventKey="general"
             title={<TabTitleText>{t("realm-settings:general")}</TabTitleText>}
+            data-testid="rs-general-tab"
           >
             <RealmSettingsGeneralTab />
           </Tab>
           <Tab
             eventKey="login"
             title={<TabTitleText>{t("realm-settings:login")}</TabTitleText>}
+            data-testid="rs-login-tab"
           >
             <RealmSettingsLoginTab />
           </Tab>

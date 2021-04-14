@@ -24,7 +24,7 @@
     "loginWithEmail": "Login with email",
     "loginWithEmailHelpText": "Allow users to log in with their email address.",
     "duplicateEmails": "Duplicate emails",
-    "duplicateEmailsHelpText": "Duplicate emails",
+    "duplicateEmailsHelpText": "Allow multiple users to have the same email address. Changing this setting will also clear the user's cache. It is recommended to manually update email constraints of existing users in the database after switching off support for duplicate email addresses.",
     "verifyEmail": "Verify email",
     "verifyEmailHelpText": "Require user to verify their email address after initial login or after address changes are submitted.",
     "realmId": "Realm ID",

@@ -50,7 +50,6 @@ export const RealmSettingsGeneralTab = () => {
 
   const requireSslTypes = ["all", "external", "none"];
 
-
   useEffect(() => {
     return asyncStateFetch(
       () => adminClient.realms.findOne({ realm: realmName }),
@@ -184,7 +183,8 @@ export const RealmSettingsGeneralTab = () => {
               defaultValue={false}
               render={({ onChange, value }) => (
                 <Switch
-                  id="kc-user-manged-access"
+                  id="kc-user-managed-access"
+                  data-testid="user-managed-access-switch"
                   label={t("common:on")}
                   labelOff={t("common:off")}
                   isChecked={value}
@@ -221,7 +221,11 @@ export const RealmSettingsGeneralTab = () => {
           </FormGroup>
 
           <ActionGroup>
-            <Button variant="primary" type="submit">
+            <Button
+              variant="primary"
+              type="submit"
+              data-testid="general-tab-save"
+            >
               {t("common:save")}
             </Button>
             <Button variant="link" onClick={() => setupForm(realm!)}>
