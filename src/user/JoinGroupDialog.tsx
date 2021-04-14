@@ -23,6 +23,8 @@ import { asyncStateFetch, useAdminClient } from "../context/auth/AdminClient";
 import { AngleRightIcon, SearchIcon } from "@patternfly/react-icons";
 import GroupRepresentation from "keycloak-admin/lib/defs/groupRepresentation";
 import { useErrorHandler } from "react-error-boundary";
+import { useParams } from "react-router-dom";
+import _ from "lodash";
 export type JoinGroupDialogProps = {
   open: boolean;
   toggleDialog: () => void;
@@ -50,15 +52,22 @@ export const JoinGroupDialog = ({
 
   const [groupId, setGroupId] = useState<string>();
 
+  const { id } = useParams<{ id: string }>();
+
   useEffect(
     () =>
       asyncStateFetch(
         async () => {
+          const existingUserGroups = await adminClient.users.listGroups({ id });
+          const allGroups = await adminClient.groups.find();
+
           if (groupId) {
             const group = await adminClient.groups.findOne({ id: groupId });
             return { group, groups: group.subGroups! };
           } else {
-            return { groups: await adminClient.groups.find() };
+            return {
+              groups: _.differenceBy(allGroups, existingUserGroups, "id"),
+            };
           }
         },
         async ({ group: selectedGroup, groups }) => {
