@@ -18,36 +18,37 @@ import { useAlerts } from "../components/alert/Alerts";
 
 export const RealmSettingsLoginTab = () => {
   const { t } = useTranslation("realm-settings");
-  const { control, setValue, watch } = useForm();
-  const [emailAsUsername, setEmailAsUsername] = useState(false);
-  const [loginWithEmailAllowed, setLoginWithEmailAllowed] = useState(false);
+  const { control, setValue, getValues, watch, register } = useForm();
+  // const [emailAsUsername, setEmailAsUsername] = useState(false);
+  // const [loginWithEmailAllowed, setLoginWithEmailAllowed] = useState(false);
   const [realm, setRealm] = useState<RealmRepresentation>();
   const handleError = useErrorHandler();
   const adminClient = useAdminClient();
   const { realm: realmName } = useRealm();
   const { addAlert } = useAlerts();
 
-  const watchEmailAsUsername = useWatch({
-    control,
-    name: "registrationEmailAsUsername",
-    defaultValue: false,
-  });
-  const watchLoginWithEmailAllowed = useWatch({
-    control,
-    name: "loginWithEmailAllowed",
-    defaultValue: false,
-  });
+  // const watchEmailAsUsername = useWatch({
+  //   control,
+  //   name: "registrationEmailAsUsername",
+  //   defaultValue: false,
+  // });
+  // const watchLoginWithEmailAllowed = useWatch({
+  //   control,
+  //   name: "loginWithEmailAllowed",
+  //   defaultValue: false,
+  // });
 
-  console.log("eas", watchEmailAsUsername);
-  console.log(watchLoginWithEmailAllowed);
+  // console.log("stuff", emailAsUsername);
+  // console.log("conversations", loginWithEmailAllowed);
 
-  useEffect(() => {
-    console.log("maybe?");
-    if (!watchLoginWithEmailAllowed && !watchEmailAsUsername) {
-      console.log("setting to false");
-      setValue("duplicateEmailsAllowed", false);
-    }
-  }, [watchEmailAsUsername, watchLoginWithEmailAllowed]);
+
+  // useEffect(() => {
+  //   console.log("maybe?");
+  //   if (!loginWithEmailAllowed && !emailAsUsername) {
+  //     console.log("setting to false");
+  //     setValue("duplicateEmailsAllowed", false);
+  //   }
+  // }, [emailAsUsername, loginWithEmailAllowed]);
 
   useEffect(() => {
     return asyncStateFetch(
@@ -75,13 +76,11 @@ export const RealmSettingsLoginTab = () => {
     }
   };
 
-  console.log(realm);
-
   return (
     <>
       <PageSection variant="light">
         {/* <FormAccess ref={ref} ></FormAccess> */}
-        <FormPanel scrollId="" title="Login screen customization">
+        <FormPanel title="Login screen customization">
           {
             <FormAccess isHorizontal role="manage-realm">
               <FormGroup
@@ -96,23 +95,16 @@ export const RealmSettingsLoginTab = () => {
                 }
                 hasNoPaddingTop
               >
-                <Controller
+                <Switch
+                  id="kc-user-reg"
                   name="registrationAllowed"
-                  defaultValue={false}
-                  control={control}
-                  render={({ onChange, value }) => (
-                    <Switch
-                      id="kc-user-reg"
-                      name="registrationAllowed"
-                      label={t("common:on")}
-                      labelOff={t("common:off")}
-                      isChecked={value}
-                      onChange={(value) => {
-                        onChange(value);
-                        // save(realm!);
-                      }}
-                    />
-                  )}
+                  {...register("registrationAllowed")}
+                  label={t("common:on")}
+                  labelOff={t("common:off")}
+                  isChecked={realm?.registrationAllowed}
+                  onChange={(value) => {
+                    save({ ...realm, registrationAllowed: value });
+                  }}
                 />
               </FormGroup>
               <FormGroup
@@ -127,22 +119,15 @@ export const RealmSettingsLoginTab = () => {
                 }
                 hasNoPaddingTop
               >
-                <Controller
+                <Switch
+                  id="kc-forgot-pw"
                   name="resetPasswordAllowed"
-                  defaultValue={false}
-                  control={control}
-                  render={({ onChange, value }) => (
-                    <Switch
-                      id="kc-forgot-pw"
-                      name="resetPasswordAllowed"
-                      label={t("common:on")}
-                      labelOff={t("common:off")}
-                      isChecked={value}
-                      onChange={(value) => {
-                        onChange(value);
-                      }}
-                    />
-                  )}
+                  label={t("common:on")}
+                  labelOff={t("common:off")}
+                  isChecked={realm?.resetPasswordAllowed}
+                  onChange={(value) => {
+                    save({ ...realm, resetPasswordAllowed: value });
+                  }}
                 />
               </FormGroup>
               <FormGroup
@@ -157,29 +142,21 @@ export const RealmSettingsLoginTab = () => {
                 }
                 hasNoPaddingTop
               >
-                <Controller
+                <Switch
+                  id="kc-remember-me"
                   name="rememberMe"
-                  defaultValue={false}
-                  control={control}
-                  render={({ onChange, value }) => (
-                    <Switch
-                      id="kc-remember-me"
-                      name="rememberMe"
-                      label={t("common:on")}
-                      labelOff={t("common:off")}
-                      isChecked={value}
-                      onChange={(value) => {
-                        onChange(value);
-                        // save(realm!);
-                      }}
-                    />
-                  )}
+                  label={t("common:on")}
+                  labelOff={t("common:off")}
+                  isChecked={realm?.rememberMe}
+                  onChange={(value) => {
+                    save({ ...realm, rememberMe: value });
+                  }}
                 />
               </FormGroup>
             </FormAccess>
           }
         </FormPanel>
-        <FormPanel scrollId="" title="Email settings">
+        <FormPanel title="Email settings">
           {
             <FormAccess isHorizontal role="manage-realm">
               <FormGroup
@@ -194,24 +171,16 @@ export const RealmSettingsLoginTab = () => {
                 }
                 hasNoPaddingTop
               >
-                <Controller
+                <Switch
+                  id="kc-email-as-username"
                   name="registrationEmailAsUsername"
-                  defaultValue={false}
-                  control={control}
-                  render={({ onChange, value }) => (
-                    <Switch
-                      id="kc-email-as-username"
-                      name="registrationEmailAsUsername"
-                      label={t("common:on")}
-                      labelOff={t("common:off")}
-                      isChecked={value}
-                      onChange={(value) => {
-                        onChange(value);
-                        setEmailAsUsername(value);
-                        // save(realm!);
-                      }}
-                    />
-                  )}
+                  label={t("common:on")}
+                  labelOff={t("common:off")}
+                  isChecked={realm?.registrationEmailAsUsername}
+                  onChange={(value) => {
+                    // setEmailAsUsername(value);
+                    save({ ...realm, registrationEmailAsUsername: value });
+                  }}
                 />
               </FormGroup>
               <FormGroup
@@ -226,24 +195,16 @@ export const RealmSettingsLoginTab = () => {
                 }
                 hasNoPaddingTop
               >
-                <Controller
+                <Switch
+                  id="kc-login-with-email"
                   name="loginWithEmailAllowed"
-                  defaultValue={false}
-                  control={control}
-                  render={({ onChange, value }) => (
-                    <Switch
-                      id="kc-login-with-email"
-                      label={t("common:on")}
-                      labelOff={t("common:off")}
-                      isChecked={!value}
-                      onChange={(value) => {
-                        console.log("value", value);
-                        onChange(!value);
-                        setLoginWithEmailAllowed(value);
-                        // save(realm!)
-                      }}
-                    />
-                  )}
+                  label={t("common:on")}
+                  labelOff={t("common:off")}
+                  isChecked={realm?.loginWithEmailAllowed}
+                  onChange={(value) => {
+                    // setLoginWithEmailAllowed(value);
+                    save({ ...realm, loginWithEmailAllowed: value });
+                  }}
                 />
               </FormGroup>
               <FormGroup
@@ -258,26 +219,18 @@ export const RealmSettingsLoginTab = () => {
                 }
                 hasNoPaddingTop
               >
-                <Controller
+                <Switch
+                  id="kc-duplicate-emails"
+                  label={t("common:on")}
+                  labelOff={t("common:off")}
                   name="duplicateEmailsAllowed"
-                  defaultValue={false}
-                  control={control}
-                  render={({ onChange, value }) => (
-                    <Switch
-                      id="kc-duplicate-emails"
-                      label={t("common:on")}
-                      labelOff={t("common:off")}
-                      name="duplicateEmailsAllowed"
-                      isChecked={value}
-                      onChange={(value) => {
-                        onChange(value);
-                        // save(realm!)
-                      }}
-                      isDisabled={
-                        !watchEmailAsUsername && !watchLoginWithEmailAllowed
-                      }
-                    />
-                  )}
+                  isChecked={realm?.duplicateEmailsAllowed}
+                  onChange={(value) => {
+                    save({ ...realm, duplicateEmailsAllowed: value });
+                  }}
+                  isDisabled={
+                    !realm?.loginWithEmailAllowed && !realm?.registrationEmailAsUsername
+                  }
                 />
               </FormGroup>
               <FormGroup
@@ -292,23 +245,15 @@ export const RealmSettingsLoginTab = () => {
                 }
                 hasNoPaddingTop
               >
-                <Controller
+                <Switch
+                  id="kc-verify-email"
                   name="verifyEmail"
-                  defaultValue={false}
-                  control={control}
-                  render={({ onChange, value }) => (
-                    <Switch
-                      id="kc-verify-email"
-                      name="verifyEmail"
-                      label={t("common:on")}
-                      labelOff={t("common:off")}
-                      isChecked={!value}
-                      onChange={(value) => {
-                        onChange(!value);
-                        save(realm!);
-                      }}
-                    />
-                  )}
+                  label={t("common:on")}
+                  labelOff={t("common:off")}
+                  isChecked={realm?.verifyEmail}
+                  onChange={(value) => {
+                    save({ ...realm, verifyEmail: value });
+                  }}
                 />
               </FormGroup>
             </FormAccess>
