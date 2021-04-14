@@ -23,6 +23,7 @@ import { useAlerts } from "../components/alert/Alerts";
 import { KeycloakTabs } from "../components/keycloak-tabs/KeycloakTabs";
 import { RealmSettingsLoginTab } from "./LoginTab";
 import { RealmSettingsGeneralTab } from "./GeneralTab";
+import { PartialImportDialog } from "./PartialImport";
 
 type RealmSettingsHeaderProps = {
   onChange: (value: boolean) => void;
@@ -42,6 +43,7 @@ const RealmSettingsHeader = ({
   const { addAlert } = useAlerts();
   const history = useHistory();
   const { setRealm } = useRealm();
+  const [partialImportOpen, setPartialImportOpen] = useState(false);
 
   const [toggleDisableDialog, DisableConfirm] = useConfirmDialog({
     titleKey: "realm-settings:disableConfirmTitle",
@@ -74,12 +76,22 @@ const RealmSettingsHeader = ({
     <>
       <DisableConfirm />
       <DeleteConfirm />
+      <PartialImportDialog
+        open={partialImportOpen}
+        toggleDialog={() => setPartialImportOpen(!partialImportOpen)}
+      />
       <ViewHeader
         titleKey={toUpperCase(realmName)}
         subKey=""
         divider={false}
         dropdownItems={[
-          <DropdownItem key="import" onClick={() => {}}>
+          <DropdownItem
+            key="import"
+            data-testid="openPartialImportModal"
+            onClick={() => {
+              setPartialImportOpen(true);
+            }}
+          >
             {t("partialImport")}
           </DropdownItem>,
           <DropdownItem key="export" onClick={() => {}}>

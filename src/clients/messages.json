@@ -1,7 +1,7 @@
 {
   "clients": {
     "clientType": "Client type",
-    "clientAuthorization": "Client authorization",
+    "clientAuthorization": "Authorization",
     "implicitFlow": "Implicit flow",
     "createClient": "Create client",
     "importClient": "Import client",
@@ -83,6 +83,8 @@
     "tokenDeleteSuccess": "initial access token created successfully",
     "tokenDeleteError": "Could not delete initial access token: '{{error}}'",
     "timestamp": "Created date",
+    "created": "Created",
+    "lastUpdated": "Last updated",
     "expires": "Expires",
     "count": "Count",
     "remainingCount": "Remaining count",
