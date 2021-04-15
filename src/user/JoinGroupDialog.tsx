@@ -26,6 +26,11 @@ import GroupRepresentation from "keycloak-admin/lib/defs/groupRepresentation";
 import { useErrorHandler } from "react-error-boundary";
 import { useParams } from "react-router-dom";
 import _ from "lodash";
+<<<<<<< HEAD
+=======
+// import { AliasRendererComponent } from "./AliasRendererComponent";
+
+>>>>>>> cfixcheckbox select bug
 export type JoinGroupDialogProps = {
   open: boolean;
   toggleDialog: () => void;
@@ -172,7 +177,10 @@ export const JoinGroupDialog = ({
         </ToolbarContent>
       </Toolbar>
       <DataList
-        onSelectDataListItem={(value) => setGroupId(value)}
+        onSelectDataListItem={(value) => {
+          console.log("?");
+          setGroupId(value);
+        }}
         aria-label={t("groups")}
         isCompact
       >
@@ -181,6 +189,16 @@ export const JoinGroupDialog = ({
             aria-labelledby={group.name}
             key={group.id}
             id={group.id}
+            onClick={(e) => {
+              if (e.target.type !== 'checkbox') {
+                setGroupId(group.id);
+              }
+              console.log("?");
+              console.dir( e.target);
+              // console.log(groupId);
+
+              // setNavigation([...navigation].slice(0, i));
+            }}
           >
             <DataListItemRow data-testid={group.name}>
               <DataListItemCells
