@@ -33,7 +33,6 @@ export const RealmSettingsLoginTab = () => {
     );
   }, []);
 
-
   const save = async (realm: RealmRepresentation) => {
     try {
       await adminClient.realms.update({ realm: realmName }, realm);
