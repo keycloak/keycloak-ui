@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { useForm } from "react-hook-form";
 import {
   AlertVariant,
   FormGroup,
@@ -18,7 +17,6 @@ import { useAlerts } from "../components/alert/Alerts";
 
 export const RealmSettingsLoginTab = () => {
   const { t } = useTranslation("realm-settings");
-  const { setValue } = useForm();
   const [realm, setRealm] = useState<RealmRepresentation>();
   const handleError = useErrorHandler();
   const adminClient = useAdminClient();
@@ -30,7 +28,6 @@ export const RealmSettingsLoginTab = () => {
       () => adminClient.realms.findOne({ realm: realmName }),
       (realm) => {
         setRealm(realm);
-        setupForm(realm);
       },
       handleError
     );
