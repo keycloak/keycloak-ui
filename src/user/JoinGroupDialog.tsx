@@ -24,19 +24,15 @@ import { asyncStateFetch, useAdminClient } from "../context/auth/AdminClient";
 import { AngleRightIcon, SearchIcon } from "@patternfly/react-icons";
 import GroupRepresentation from "keycloak-admin/lib/defs/groupRepresentation";
 import { useErrorHandler } from "react-error-boundary";
-import { useParams } from "react-router-dom";
 import _ from "lodash";
-<<<<<<< HEAD
-=======
-// import { AliasRendererComponent } from "./AliasRendererComponent";
+import { useParams } from "react-router-dom";
 
->>>>>>> cfixcheckbox select bug
 export type JoinGroupDialogProps = {
   open: boolean;
   toggleDialog: () => void;
   onClose: () => void;
-  onConfirm: (newGroup: GroupRepresentation) => void;
   username: string;
+  onConfirm: (newGroups: Group[]) => void;
 };
 
 type Group = GroupRepresentation & {
@@ -86,6 +82,9 @@ export const JoinGroupDialog = ({
             setNavigation([...navigation, selectedGroup]);
           }
 
+          groups.forEach((group: Group) => {
+            group.checked = !!selectedRows.find((r) => r.id === group.id);
+          });
           setGroups(groups);
         },
         errorHandler
@@ -107,8 +106,9 @@ export const JoinGroupDialog = ({
           form="group-form"
           onClick={() => {
             toggleDialog();
-            onConfirm(navigation[navigation.length - 1]);
+            onConfirm(selectedRows);
           }}
+          isDisabled={selectedRows.length === 0}
         >
           {t("users:Join")}
         </Button>,
@@ -178,7 +178,6 @@ export const JoinGroupDialog = ({
       </Toolbar>
       <DataList
         onSelectDataListItem={(value) => {
-          console.log("?");
           setGroupId(value);
         }}
         aria-label={t("groups")}
@@ -190,17 +189,30 @@ export const JoinGroupDialog = ({
             key={group.id}
             id={group.id}
             onClick={(e) => {
-              if (e.target.type !== 'checkbox') {
+              if ((e.target as HTMLInputElement).type !== "checkbox") {
                 setGroupId(group.id);
               }
-              console.log("?");
-              console.dir( e.target);
-              // console.log(groupId);
-
-              // setNavigation([...navigation].slice(0, i));
             }}
           >
             <DataListItemRow data-testid={group.name}>
+              <DataListCheck
+                isChecked={group.checked}
+                onChange={(checked, e) => {
+                  group.checked = (e.target as HTMLInputElement).checked;
+                  let newSelectedRows: Group[];
+                  if (!group.checked) {
+                    newSelectedRows = selectedRows.filter(
+                      (r) => r.id !== group.id
+                    );
+                  } else if (group.checked) {
+                    newSelectedRows = [...selectedRows, group];
+                  }
+
+                  setSelectedRows(newSelectedRows!);
+                }}
+                aria-labelledby="data-list-check"
+              />
+
               <DataListItemCells
                 dataListCells={[
                   <DataListCell key={`name-${group.id}`}>

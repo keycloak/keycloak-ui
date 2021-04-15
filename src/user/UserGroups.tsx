@@ -32,7 +32,7 @@ export type UserFormProps = {
     max?: number,
     search?: string
   ) => Promise<UserRepresentation[]>;
-  addGroups?: (newReps: GroupRepresentation[]) => void;
+  addGroup?: (newGroup: GroupRepresentation) => void;
 };
 
 export const UserGroups = () => {
@@ -48,17 +48,12 @@ export const UserGroups = () => {
 
   const [search, setSearch] = useState("");
   const [username, setUsername] = useState("");
-  const [join, setJoin] = useState<GroupTableData>();
-
-  const lastId = getLastId(location.pathname);
-
 
   const [isDirectMembership, setDirectMembership] = useState(true);
   const [directMembershipList, setDirectMembershipList] = useState<
     GroupRepresentation[]
   >([]);
   const [open, setOpen] = useState(false);
-  const [move, setMove] = useState<GroupTableData>();
 
   const adminClient = useAdminClient();
   const { id } = useParams<{ id: string }>();
@@ -210,15 +205,6 @@ export const UserGroups = () => {
   const toggleModal = () => {
     setOpen(!open);
   };
-  const JoinGroupButtonRenderer = (group: GroupRepresentation) => {
-    return (
-      <>
-        <Button onClick={() => joinGroup(group)} variant="link">
-          {t("users:joinGroup")}
-        </Button>
-      </>
-    );
-  };
 
   const joinGroup = (group: GroupRepresentation) => {
     setSelectedGroup(group);
@@ -279,23 +265,25 @@ export const UserGroups = () => {
     }
   };
 
-  const addGroup = async (group: GroupRepresentation): Promise<void> => {
-    const newGroup = group;
+  const addGroups = async (groups: GroupRepresentation[]): Promise<void> => {
+    const newGroups = groups;
 
-    try {
-      await adminClient.users.addToGroup({
-        id: id,
-        groupId: newGroup.id!,
-      });
-      setList(true);
-      refresh();
-      addAlert(t("users:addedGroupMembership"), AlertVariant.success);
-    } catch (error) {
-      addAlert(
-        t("users:addedGroupMembershipError", { error }),
-        AlertVariant.danger
-      );
-    }
+    newGroups.forEach(async (group) => {
+      try {
+        await adminClient.users.addToGroup({
+          id: id,
+          groupId: group.id!,
+        });
+        setList(true);
+        refresh();
+        addAlert(t("users:addedGroupMembership"), AlertVariant.success);
+      } catch (error) {
+        addAlert(
+          t("users:addedGroupMembershipError", { error }),
+          AlertVariant.danger
+        );
+      }
+    });
   };
 
   return (
