@@ -294,7 +294,7 @@ export const UserGroups = () => {
           <JoinGroupDialog
             open={open}
             onClose={() => setOpen(!open)}
-            onConfirm={addGroup}
+            onConfirm={addGroups}
             toggleDialog={() => toggleModal()}
             username={username}
           />
