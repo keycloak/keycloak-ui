@@ -36,9 +36,6 @@ export const RealmSettingsLoginTab = () => {
     );
   }, []);
 
-  const setupForm = (realm: RealmRepresentation) => {
-    Object.entries(realm).map((entry) => setValue(entry[0], entry[1]));
-  };
 
   const save = async (realm: RealmRepresentation) => {
     try {
