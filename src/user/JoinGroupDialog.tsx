@@ -196,6 +196,7 @@ export const JoinGroupDialog = ({
           >
             <DataListItemRow data-testid={group.name}>
               <DataListCheck
+                data-testid={`${group.name}-check`}
                 isChecked={group.checked}
                 onChange={(checked, e) => {
                   group.checked = (e.target as HTMLInputElement).checked;
