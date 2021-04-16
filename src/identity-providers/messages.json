@@ -1,0 +1,19 @@
+{
+  "identity-providers": {
+    "listExplain": "Through Identity Brokering it's easy to allow users to authenticate to Keycloak using external Identity Provider or Social Networks.",
+    "provider": "Provider",
+    "addProvider": "Add provider",
+    "deleteProvider": "Delete provider?",
+    "deleteConfirm": "Are you sure you want to permanently delete the provider '{{provider}}'",
+    "deletedSuccess": "Provider successfully deleted",
+    "deleteError": "Could not delete the provider {{error}}",
+    "getStarted": "To get started, select a provider from the list below.",
+    "addIdentityProvider": "Add {{provider}} provider",
+    "redirectURI": "Redirect URI",
+    "clientId": "Client ID",
+    "clientSecret": "Client Secret",
+    "displayOrder": "Display order",
+    "createSuccess": "Identity provider successfully created",
+    "createError": "Could not create the identity provider provider {{error}}"
+  }
+}
