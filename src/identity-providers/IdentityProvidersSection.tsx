@@ -98,6 +98,7 @@ export const IdentityProvidersSection = () => {
           <DropdownItem
             key={provider.id}
             value={provider.id}
+            data-testid={provider.id}
             onClick={() => navigateToCreate(provider.id)}
           >
             {provider.name}
@@ -190,6 +191,7 @@ export const IdentityProvidersSection = () => {
               <>
                 <ToolbarItem>
                   <Dropdown
+                    data-testid="addProviderDropdown"
                     onSelect={() => {}}
                     toggle={
                       <DropdownToggle
@@ -206,6 +208,7 @@ export const IdentityProvidersSection = () => {
 
                 <ToolbarItem>
                   <Button
+                    data-testid="manageDisplayOrder"
                     variant="link"
                     onClick={() => setManageDisplayDialog(true)}
                   >

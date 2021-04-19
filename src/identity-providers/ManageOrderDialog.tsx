@@ -100,7 +100,8 @@ export const ManageOderDialog = ({
       </TextContent>
 
       <DataList
-        aria-label="draggable data list example"
+        aria-label={t("manageOrderTableAria")}
+        data-testid="manageOrderDataList"
         isCompact
         onDragFinish={onDragFinish}
         onDragStart={onDragStart}
@@ -125,7 +126,10 @@ export const ManageOderDialog = ({
               </DataListControl>
               <DataListItemCells
                 dataListCells={[
-                  <DataListCell key="item1">
+                  <DataListCell
+                    key={`${provider.alias}-cell`}
+                    data-testid={provider.alias}
+                  >
                     <span id={provider.alias}>{provider.alias}</span>
                   </DataListCell>,
                 ]}
