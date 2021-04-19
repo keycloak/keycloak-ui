@@ -1,5 +1,6 @@
-import React, { useState } from "react";
+import React, { Fragment, useEffect, useState } from "react";
 import { Link, useHistory, useRouteMatch } from "react-router-dom";
+import { useErrorHandler } from "react-error-boundary";
 import { useTranslation } from "react-i18next";
 import _ from "lodash";
 import {
@@ -25,7 +26,7 @@ import {
 
 import IdentityProviderRepresentation from "keycloak-admin/lib/defs/identityProviderRepresentation";
 import { ViewHeader } from "../components/view-header/ViewHeader";
-import { useAdminClient } from "../context/auth/AdminClient";
+import { asyncStateFetch, useAdminClient } from "../context/auth/AdminClient";
 import { KeycloakDataTable } from "../components/table-toolbar/KeycloakDataTable";
 import { useRealm } from "../context/realm-context/RealmContext";
 import { useAlerts } from "../components/alert/Alerts";
@@ -49,24 +50,31 @@ export const IdentityProvidersSection = () => {
 
   const [addProviderOpen, setAddProviderOpen] = useState(false);
   const [manageDisplayDialog, setManageDisplayDialog] = useState(false);
-  const [providerCount, setProviderCount] = useState(1);
-  const [providers, setProviders] = useState<
-    IdentityProviderRepresentation[]
-  >();
+  const [providers, setProviders] = useState<IdentityProviderRepresentation[]>(
+    []
+  );
   const [selectedProvider, setSelectedProvider] = useState<
     IdentityProviderRepresentation
   >();
 
   const adminClient = useAdminClient();
+  const errorHandler = useErrorHandler();
   const { addAlert } = useAlerts();
 
-  const loader = async () => {
-    const providers = (await adminClient.realms.findOne({ realm }))
-      .identityProviders!;
-    setProviderCount(providers.length);
-    setProviders(providers);
-    return _.sortBy(providers, "alias");
-  };
+  useEffect(
+    () =>
+      asyncStateFetch(
+        async () =>
+          (await adminClient.realms.findOne({ realm })).identityProviders!,
+        (providers) => {
+          setProviders(providers);
+        },
+        errorHandler
+      ),
+    [key]
+  );
+
+  const loader = () => Promise.resolve(_.sortBy(providers, "alias"));
 
   const DetailLink = (identityProvider: IdentityProviderRepresentation) => (
     <>
@@ -140,16 +148,16 @@ export const IdentityProvidersSection = () => {
         divider={false}
       />
       <PageSection
-        variant={providerCount === 0 ? "default" : "light"}
-        className={providerCount === 0 ? "" : "pf-u-p-0"}
+        variant={providers.length === 0 ? "default" : "light"}
+        className={providers.length === 0 ? "" : "pf-u-p-0"}
       >
-        {providerCount === 0 && (
+        {providers.length === 0 && (
           <>
             <TextContent>
               <Text component={TextVariants.p}>{t("getStarted")}</Text>
             </TextContent>
             {Object.keys(identityProviders).map((group) => (
-              <>
+              <Fragment key={group}>
                 <TextContent>
                   <Text className="pf-u-mt-lg" component={TextVariants.h2}>
                     {group}:
@@ -177,13 +185,12 @@ export const IdentityProvidersSection = () => {
                     )
                   )}
                 </Gallery>
-              </>
+              </Fragment>
             ))}
           </>
         )}
-        {providerCount !== 0 && (
+        {providers.length !== 0 && (
           <KeycloakDataTable
-            key={key}
             loader={loader}
             ariaLabelKey="common:identityProviders"
             searchPlaceholderKey="identity-providers:searchForProvider"
