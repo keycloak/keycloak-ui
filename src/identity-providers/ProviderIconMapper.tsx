@@ -12,6 +12,8 @@ import {
 } from "@patternfly/react-icons";
 import { SVGIconProps } from "@patternfly/react-icons/dist/js/createIcon";
 
+import { FontAwesomeIcon } from "./icons/FontAwesomeIcon";
+
 type ProviderIconMapperProps = {
   provider: { [index: string]: string };
 };
@@ -37,6 +39,11 @@ export const ProviderIconMapper = ({ provider }: ProviderIconMapperProps) => {
       return <StackOverflowIcon {...defaultProps} />;
     case "twitter":
       return <TwitterIcon {...defaultProps} />;
+    case "microsoft":
+    case "bitbucket":
+    case "instagram":
+    case "paypal":
+      return <FontAwesomeIcon icon={provider.id} />;
     default:
       return <CubeIcon {...defaultProps} />;
   }
