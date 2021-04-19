@@ -171,7 +171,7 @@ export const AddIdentityProvider = () => {
               type="submit"
               data-testid="createProvider"
             >
-              {t("common:save")}
+              {t("common:add")}
             </Button>
             <Button variant="link" data-testid="cancel">
               {t("common:cancel")}

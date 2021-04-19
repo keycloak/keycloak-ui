@@ -33,6 +33,7 @@ import { useServerInfo } from "../context/server-info/ServerInfoProvider";
 import { upperCaseFormatter } from "../util";
 import { useConfirmDialog } from "../components/confirm-dialog/ConfirmDialog";
 import { ProviderIconMapper } from "./ProviderIconMapper";
+import { ManageOderDialog } from "./ManageOrderDialog";
 
 export const IdentityProvidersSection = () => {
   const { t } = useTranslation("identity-providers");
@@ -47,7 +48,11 @@ export const IdentityProvidersSection = () => {
   const refresh = () => setKey(new Date().getTime());
 
   const [addProviderOpen, setAddProviderOpen] = useState(false);
+  const [manageDisplayDialog, setManageDisplayDialog] = useState(false);
   const [providerCount, setProviderCount] = useState(1);
+  const [providers, setProviders] = useState<
+    IdentityProviderRepresentation[]
+  >();
   const [selectedProvider, setSelectedProvider] = useState<
     IdentityProviderRepresentation
   >();
@@ -59,7 +64,8 @@ export const IdentityProvidersSection = () => {
     const providers = (await adminClient.realms.findOne({ realm }))
       .identityProviders!;
     setProviderCount(providers.length);
-    return providers;
+    setProviders(providers);
+    return _.sortBy(providers, "alias");
   };
 
   const DetailLink = (identityProvider: IdentityProviderRepresentation) => (
@@ -82,11 +88,18 @@ export const IdentityProvidersSection = () => {
     </>
   );
 
+  const navigateToCreate = (providerId: string) =>
+    history.push(`${url}/${providerId}`);
+
   const identityProviderOptions = () =>
     Object.keys(identityProviders).map((group) => (
       <DropdownGroup key={group} label={group}>
         {_.sortBy(identityProviders[group], "name").map((provider) => (
-          <DropdownItem key={provider.id} value={provider.id}>
+          <DropdownItem
+            key={provider.id}
+            value={provider.id}
+            onClick={() => navigateToCreate(provider.id)}
+          >
             {provider.name}
           </DropdownItem>
         ))}
@@ -114,6 +127,12 @@ export const IdentityProvidersSection = () => {
   return (
     <>
       <DeleteConfirm />
+      {manageDisplayDialog && (
+        <ManageOderDialog
+          onClose={() => setManageDisplayDialog(false)}
+          providers={providers!}
+        />
+      )}
       <ViewHeader
         titleKey="common:identityProviders"
         subKey="identity-providers:listExplain"
@@ -143,7 +162,7 @@ export const IdentityProvidersSection = () => {
                         key={provider.id}
                         isHoverable
                         data-testid={`${provider.id}-card`}
-                        onClick={() => history.push(`${url}/${provider.id}`)}
+                        onClick={() => navigateToCreate(provider.id)}
                       >
                         <CardTitle>
                           <Split hasGutter>
@@ -165,8 +184,8 @@ export const IdentityProvidersSection = () => {
           <KeycloakDataTable
             key={key}
             loader={loader}
-            ariaLabelKey="clients:clientList"
-            searchPlaceholderKey="clients:searchForClient"
+            ariaLabelKey="common:identityProviders"
+            searchPlaceholderKey="identity-providers:searchForProvider"
             toolbarItem={
               <>
                 <ToolbarItem>
@@ -186,7 +205,12 @@ export const IdentityProvidersSection = () => {
                 </ToolbarItem>
 
                 <ToolbarItem>
-                  <Button variant="link">{t("importClient")}</Button>
+                  <Button
+                    variant="link"
+                    onClick={() => setManageDisplayDialog(true)}
+                  >
+                    {t("manageDisplayOrder")}
+                  </Button>
                 </ToolbarItem>
               </>
             }
