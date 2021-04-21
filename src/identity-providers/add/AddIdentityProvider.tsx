@@ -1,5 +1,5 @@
-import React, { useEffect } from "react";
-import { useParams } from "react-router-dom";
+import React from "react";
+import { useHistory, useParams } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { Controller, useForm } from "react-hook-form";
 import {
@@ -37,6 +37,7 @@ export const AddIdentityProvider = () => {
 
   const adminClient = useAdminClient();
   const { addAlert } = useAlerts();
+  const history = useHistory();
   const { realm } = useRealm();
 
   const callbackUrl = `${getBaseUrl(adminClient)}/realms/${realm}/broker`;
@@ -49,6 +50,7 @@ export const AddIdentityProvider = () => {
         alias: id,
       });
       addAlert(t("createSuccess"), AlertVariant.success);
+      history.push(`/${realm}/identity-providers`);
     } catch (error) {
       addAlert(t("createError", { error }), AlertVariant.danger);
     }
@@ -173,7 +175,11 @@ export const AddIdentityProvider = () => {
             >
               {t("common:add")}
             </Button>
-            <Button variant="link" data-testid="cancel">
+            <Button
+              variant="link"
+              data-testid="cancel"
+              onClick={() => history.push(`/${realm}/identity-providers`)}
+            >
               {t("common:cancel")}
             </Button>
           </ActionGroup>
