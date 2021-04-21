@@ -71,7 +71,7 @@ export const IdentityProvidersSection = () => {
         },
         errorHandler
       ),
-    [key]
+    []
   );
 
   const loader = () => Promise.resolve(_.sortBy(providers, "alias"));
@@ -125,6 +125,9 @@ export const IdentityProvidersSection = () => {
         await adminClient.identityProviders.del({
           alias: selectedProvider!.alias!,
         });
+        setProviders([
+          ...providers.filter((p) => p.alias !== selectedProvider?.alias),
+        ]);
         refresh();
         addAlert(t("deletedSuccess"), AlertVariant.success);
       } catch (error) {
@@ -191,6 +194,7 @@ export const IdentityProvidersSection = () => {
         )}
         {providers.length !== 0 && (
           <KeycloakDataTable
+            key={key}
             loader={loader}
             ariaLabelKey="common:identityProviders"
             searchPlaceholderKey="identity-providers:searchForProvider"
