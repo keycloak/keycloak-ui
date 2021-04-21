@@ -133,7 +133,11 @@ export const ViewHeader = ({
         {enabled && (
           <TextContent id="view-header-subkey">
             <Text>
-              {React.isValidElement(subKey) ? subKey : (subKey ? t(subKey) : "")}
+              {React.isValidElement(subKey)
+                ? subKey
+                : subKey
+                ? t(subKey as string)
+                : ""}
               {subKeyLinkProps && (
                 <FormattedLink
                   {...subKeyLinkProps}
