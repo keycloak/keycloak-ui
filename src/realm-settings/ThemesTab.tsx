@@ -221,7 +221,7 @@ export const RealmSettingsThemesTab = () => {
             labelIcon={
               <HelpItem
                 helpText="realm-settings-help:adminConsoleTheme"
-                forLabel={t("requireSsl")}
+                forLabel={t("adminTheme")}
                 forID="kc-admin-console-theme"
               />
             }
