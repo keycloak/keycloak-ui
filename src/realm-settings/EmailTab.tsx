@@ -23,7 +23,6 @@ import { FormPanel } from "../components/scroll-form/FormPanel";
 
 import "./RealmSettingsSection.css";
 
-
 export const RealmSettingsEmailTab = () => {
   const { t } = useTranslation("realm-settings");
   const adminClient = useAdminClient();
