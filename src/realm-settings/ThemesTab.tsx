@@ -84,7 +84,6 @@ export const RealmSettingsThemesTab = () => {
         setupForm(realm);
         setInternationalizationEnabled(realm!.internationalizationEnabled!);
         setDefaultLocale(realm!.defaultLocale!);
-
       },
       handleError
     );
@@ -117,7 +116,9 @@ export const RealmSettingsThemesTab = () => {
     newSelection: string
   ) => {
     if (supportedLocales.includes(newSelection)) {
-      setSupportedLocales(supportedLocales.filter((item) => item !== newSelection));
+      setSupportedLocales(
+        supportedLocales.filter((item) => item !== newSelection)
+      );
     } else {
       setSupportedLocales([...supportedLocales, newSelection]);
     }
@@ -405,11 +406,15 @@ export const RealmSettingsThemesTab = () => {
                       }
                       onSelect={(_, value) => {
                         onChange(value as string);
-                        console.log(value)
+                        console.log(value);
                         setDefaultLocaleOpen(false);
                         setDefaultLocale(value as string);
                       }}
-                      selections={defaultLocale ? t(`allSupportedLocales.${defaultLocale}`) : t(`allSupportedLocales.${value}`)}
+                      selections={
+                        defaultLocale
+                          ? t(`allSupportedLocales.${defaultLocale}`)
+                          : t(`allSupportedLocales.${value}`)
+                      }
                       variant={SelectVariant.single}
                       aria-label={t("defaultLocale")}
                       isOpen={defaultLocaleOpen}
