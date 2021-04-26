@@ -160,7 +160,7 @@ export const RealmSettingsThemesTab = () => {
                   placeholderText="Select a theme"
                   data-testid="select-login-theme"
                 >
-                  {themeTypes.map((theme, idx) => (
+                  {themeTypes.slice(0, -1).map((theme, idx) => (
                     <SelectOption
                       selected={theme === value}
                       key={`login-theme-${idx}`}
@@ -246,7 +246,7 @@ export const RealmSettingsThemesTab = () => {
                   placeholderText="Select a theme"
                   data-testid="select-admin-theme"
                 >
-                  {themeTypes.map((theme, idx) => (
+                  {themeTypes.slice(0, -1).map((theme, idx) => (
                     <SelectOption
                       selected={theme === value}
                       key={`admin-theme-${idx}`}
@@ -288,7 +288,7 @@ export const RealmSettingsThemesTab = () => {
                   placeholderText="Select a theme"
                   data-testid="select-email-theme"
                 >
-                  {themeTypes.map((theme, idx) => (
+                  {themeTypes.slice(0, -1).map((theme, idx) => (
                     <SelectOption
                       selected={theme === value}
                       key={`email-theme-${idx}`}
