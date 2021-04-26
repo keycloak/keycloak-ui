@@ -72,9 +72,6 @@ export const RealmSettingsEmailTab = () => {
     }
   };
 
-  //   console.log("is authent", realm?.attributes!.authentication)
-  //   console.log("weeee", realm?.attributes!.authentication)
-
   return (
     <>
       <PageSection variant="light">
@@ -89,6 +86,7 @@ export const RealmSettingsEmailTab = () => {
               <TextInput
                 type="text"
                 id="kc-sender-email-address"
+                data-testid="sender-email-address"
                 name="attributes.from"
                 ref={register}
                 placeholder="Sender email address"
@@ -108,6 +106,7 @@ export const RealmSettingsEmailTab = () => {
               <TextInput
                 type="text"
                 id="kc-from-display-name"
+                data-testid="from-display-name"
                 name="attributes.fromDisplayName"
                 ref={register}
                 placeholder="Display name for Sender email address"
@@ -174,7 +173,7 @@ export const RealmSettingsEmailTab = () => {
                 type="text"
                 id="kc-host"
                 name="attributes.host"
-                ref={register}
+                ref={register({ required: true })}
                 placeholder="SMTP host"
               />
             </FormGroup>
@@ -194,7 +193,8 @@ export const RealmSettingsEmailTab = () => {
                 defaultValue="false"
                 render={({ onChange, value }) => (
                   <Checkbox
-                    id="kc-html-display-name"
+                    id="kc-enable-ssl"
+                    data-testid="enable-ssl"
                     name="attributes.enableSsl"
                     label={t("enableSSL")}
                     ref={register}
@@ -209,7 +209,8 @@ export const RealmSettingsEmailTab = () => {
                 defaultValue="false"
                 render={({ onChange, value }) => (
                   <Checkbox
-                    id="kc-html-display-name"
+                    id="kc-enable-start-tls"
+                    data-testid="enable-start-tls"
                     name="attributes.startTls"
                     label={t("enableStartTLS")}
                     ref={register}
@@ -257,20 +258,21 @@ export const RealmSettingsEmailTab = () => {
                 <FormGroup
                   label={t("username")}
                   fieldId="kc-username"
-                  isRequired
+                  isRequired={isAuthenticationEnabled === "true"}
                 >
                   <TextInput
                     type="text"
                     id="kc-username"
+                    data-testid="username-input"
                     name="attributes.loginUsername"
-                    ref={register}
+                    ref={register({ required: true })}
                     placeholder="Login username"
                   />
                 </FormGroup>
                 <FormGroup
                   label={t("password")}
                   fieldId="kc-username"
-                  isRequired
+                  isRequired={isAuthenticationEnabled === "true"}
                   labelIcon={
                     <HelpItem
                       helpText="realm-settings-help:frontendUrl"
@@ -282,6 +284,7 @@ export const RealmSettingsEmailTab = () => {
                   <TextInput
                     type="password"
                     id="kc-password"
+                    data-testid="password-input"
                     name="attributes.loginPassword"
                     ref={register}
                     placeholder="Login password"
