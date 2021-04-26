@@ -20,6 +20,7 @@ import { useRealm } from "../context/realm-context/RealmContext";
 import { useAlerts } from "../components/alert/Alerts";
 import { FormAccess } from "../components/form-access/FormAccess";
 import { HelpItem } from "../components/help-enabler/HelpItem";
+import { useServerInfo } from "../context/server-info/ServerInfoProvider";
 
 export const RealmSettingsThemesTab = () => {
   const { t } = useTranslation("realm-settings");
@@ -38,6 +39,7 @@ export const RealmSettingsThemesTab = () => {
   const [supportedLocalesOpen, setSupportedLocalesOpen] = useState(false);
   const [defaultLocale, setDefaultLocale] = useState("");
   const [defaultLocaleOpen, setDefaultLocaleOpen] = useState(false);
+  const [supportedLocales, setSupportedLocales] = useState<string[]>([]);
 
   const [
     internationalizationEnabled,
@@ -46,31 +48,33 @@ export const RealmSettingsThemesTab = () => {
 
   const form = useForm();
 
-  const themeTypes = ["base", "keycloak", "keycloakV2"];
-  const supportedLocales = [
-    "ca",
-    "cs",
-    "da",
-    "de",
-    "en",
-    "es",
-    "fr",
-    "hu",
-    "it",
-    "ja",
-    "lt",
-    "nl",
-    "no",
-    "pl",
-    "ptBR",
-    "ru",
-    "sk",
-    "sv",
-    "tr",
-    "zhCN",
-  ];
+  // const themeTypes = ["base", "keycloak", "keycloakV2"];
+  const themeTypes = useServerInfo().themes!;
 
-  const [selections, setSelections] = useState<string[]>(supportedLocales);
+  console.log("theeeemes", themeTypes);
+
+  // const supportedLocales = [
+  //   "ca",
+  //   "cs",
+  //   "da",
+  //   "de",
+  //   "en",
+  //   "es",
+  //   "fr",
+  //   "hu",
+  //   "it",
+  //   "ja",
+  //   "lt",
+  //   "nl",
+  //   "no",
+  //   "pl",
+  //   "ptBR",
+  //   "ru",
+  //   "sk",
+  //   "sv",
+  //   "tr",
+  //   "zhCN",
+  // ];
 
   useEffect(() => {
     return asyncStateFetch(
@@ -80,10 +84,17 @@ export const RealmSettingsThemesTab = () => {
         setupForm(realm);
         setInternationalizationEnabled(realm!.internationalizationEnabled!);
         setDefaultLocale(realm!.defaultLocale!);
+
       },
       handleError
     );
   }, []);
+
+  console.log(realm?.supportedLocales);
+
+  const [selections, setSelections] = useState<string[]>([]);
+
+  console.log("sel", selections);
 
   const setupForm = (realm: RealmRepresentation) => {
     const { ...formValues } = realm;
@@ -105,22 +116,24 @@ export const RealmSettingsThemesTab = () => {
     event: React.MouseEvent<Element, MouseEvent> | React.ChangeEvent<Element>,
     newSelection: string
   ) => {
-    if (selections.includes(newSelection)) {
-      setSelections(selections.filter((item) => item !== newSelection));
+    if (supportedLocales.includes(newSelection)) {
+      setSupportedLocales(supportedLocales.filter((item) => item !== newSelection));
     } else {
-      setSelections([...selections, newSelection]);
+      setSupportedLocales([...supportedLocales, newSelection]);
     }
   };
 
   const save = async (realm: RealmRepresentation) => {
     try {
       await adminClient.realms.update({ realm: realmName }, realm);
-      setRealm(realm);
+      setRealm({ supportedLocales: selections, ...realm });
       addAlert(t("saveSuccess"), AlertVariant.success);
     } catch (error) {
       addAlert(t("saveError", { error }), AlertVariant.danger);
     }
   };
+
+  console.log("realm", realm);
 
   return (
     <>
@@ -151,6 +164,7 @@ export const RealmSettingsThemesTab = () => {
                   onToggle={() => setLoginThemeOpen(!loginThemeOpen)}
                   onSelect={(_, value) => {
                     onChange(value as string);
+                    console.log(value);
                     setLoginThemeOpen(false);
                   }}
                   selections={value}
@@ -160,13 +174,13 @@ export const RealmSettingsThemesTab = () => {
                   placeholderText="Select a theme"
                   data-testid="select-login-theme"
                 >
-                  {themeTypes.slice(0, -1).map((theme, idx) => (
+                  {themeTypes.login.map((theme, idx) => (
                     <SelectOption
-                      selected={theme === value}
+                      selected={theme.name === value}
                       key={`login-theme-${idx}`}
-                      value={theme}
+                      value={theme.name}
                     >
-                      {t(`themeTypes.${theme}`)}
+                      {t(`${theme.name}`)}
                     </SelectOption>
                   ))}
                 </Select>
@@ -202,13 +216,13 @@ export const RealmSettingsThemesTab = () => {
                   placeholderText="Select a theme"
                   data-testid="select-account-theme"
                 >
-                  {themeTypes.map((theme, idx) => (
+                  {themeTypes.account.map((theme, idx) => (
                     <SelectOption
-                      selected={theme === value}
+                      selected={theme.name === value}
                       key={`account-theme-${idx}`}
-                      value={theme}
+                      value={theme.name}
                     >
-                      {t(`themeTypes.${theme}`)}
+                      {t(`${theme.name}`)}
                     </SelectOption>
                   ))}
                 </Select>
@@ -246,13 +260,13 @@ export const RealmSettingsThemesTab = () => {
                   placeholderText="Select a theme"
                   data-testid="select-admin-theme"
                 >
-                  {themeTypes.slice(0, -1).map((theme, idx) => (
+                  {themeTypes.admin.map((theme, idx) => (
                     <SelectOption
-                      selected={theme === value}
+                      selected={theme.name === value}
                       key={`admin-theme-${idx}`}
-                      value={theme}
+                      value={theme.name}
                     >
-                      {t(`themeTypes.${theme}`)}
+                      {t(`${theme.name}`)}
                     </SelectOption>
                   ))}
                 </Select>
@@ -288,13 +302,13 @@ export const RealmSettingsThemesTab = () => {
                   placeholderText="Select a theme"
                   data-testid="select-email-theme"
                 >
-                  {themeTypes.slice(0, -1).map((theme, idx) => (
+                  {themeTypes.email.map((theme, idx) => (
                     <SelectOption
-                      selected={theme === value}
+                      selected={theme.name === value}
                       key={`email-theme-${idx}`}
-                      value={theme}
+                      value={theme.name}
                     >
-                      {t(`themeTypes.${theme}`)}
+                      {t(`${theme.name}`)}
                     </SelectOption>
                   ))}
                 </Select>
@@ -348,17 +362,22 @@ export const RealmSettingsThemesTab = () => {
                         setSupportedLocalesOpen(!supportedLocalesOpen)
                       }
                       onSelect={(_, value) => {
-                        setSelections([...selections, value as string]);
+                        console.log(value);
+                        // setSelections([...selections, value as string]);
                         onLocaleSelect(_, value as string);
+                        // console.log("selec", selections)
+                        // setRealm({supportedLocales: selections, ...realm})
+                        setSupportedLocales([...selections, value as string]);
+                        console.log(supportedLocales);
                       }}
                       onClear={clearSelections}
-                      selections={selections}
+                      selections={supportedLocales}
                       variant={SelectVariant.typeaheadMulti}
                       aria-label={t("supportedLocales")}
                       isOpen={supportedLocalesOpen}
                       placeholderText={"Select locales"}
                     >
-                      {supportedLocales.map((locale, idx) => (
+                      {themeTypes?.admin![0].locales.map((locale, idx) => (
                         <SelectOption
                           selected={true}
                           key={`locale-${idx}`}
@@ -379,20 +398,25 @@ export const RealmSettingsThemesTab = () => {
                   render={({ onChange, value }) => (
                     <Select
                       toggleId="kc-default-locale"
-                      onToggle={() => setDefaultLocaleOpen(!defaultLocaleOpen)}
+                      onToggle={
+                        selections.length !== 0
+                          ? () => setDefaultLocaleOpen(!defaultLocaleOpen)
+                          : () => {}
+                      }
                       onSelect={(_, value) => {
                         onChange(value as string);
+                        console.log(value)
                         setDefaultLocaleOpen(false);
                         setDefaultLocale(value as string);
                       }}
-                      selections={defaultLocale ? defaultLocale : value}
+                      selections={defaultLocale ? t(`allSupportedLocales.${defaultLocale}`) : t(`allSupportedLocales.${value}`)}
                       variant={SelectVariant.single}
                       aria-label={t("defaultLocale")}
                       isOpen={defaultLocaleOpen}
                       placeholderText="Select one"
                       data-testid="select-default-locale"
                     >
-                      {supportedLocales.map((locale, idx) => (
+                      {selections.map((locale, idx) => (
                         <SelectOption
                           key={`default-locale-${idx}`}
                           value={locale}
