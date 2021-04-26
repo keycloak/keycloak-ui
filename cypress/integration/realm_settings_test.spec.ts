@@ -8,14 +8,6 @@ describe("Realm settings test", () => {
   const sidebarPage = new SidebarPage();
   const realmSettingsPage = new RealmSettingsPage();
 
-  // const managedAccessSwitch = "user-managed-access-switch";
-  // const userRegSwitch = "user-reg-switch";
-  // const forgotPwdSwitch = "forgot-pw-switch";
-  // const rememberMeSwitch = "remember-me-switch";
-  // const verifyEmailSwitch = "verify-email-switch";
-
-  let itemId = "user_crud";
-
   describe("Realm settings", function () {
     beforeEach(function () {
       keycloakBefore();
@@ -45,7 +37,7 @@ describe("Realm settings test", () => {
 
       realmSettingsPage.addSenderEmail("example@example.com");
 
-      cy.wait(100)
+      cy.wait(100);
 
       realmSettingsPage.toggleCheck(realmSettingsPage.enableSslCheck);
       realmSettingsPage.toggleCheck(realmSettingsPage.enableStartTlsCheck);

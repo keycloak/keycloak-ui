@@ -240,15 +240,6 @@ export const RealmSettingsEmailTab = () => {
                       onChange("" + value);
                       setAuthenticationEnabled(String(value));
                     }}
-                    // onChange={() => {
-                    // //   onChange(value);
-                    //   onChange(isAuthenticationEnabled);
-                    //   if (value == true) {
-                    //     // setValue("attributes.authentication", true);
-                    //     // setAuthenticationEnabled(value);
-                    //   }
-                    //   setAuthenticationEnabled(value);
-                    // }}
                   />
                 )}
               />
