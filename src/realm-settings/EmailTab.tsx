@@ -96,7 +96,7 @@ export const RealmSettingsEmailTab = () => {
               fieldId="kc-from-display-name"
               labelIcon={
                 <HelpItem
-                  helpText="realm-settings-help:userManagedAccess"
+                  helpText="realm-settings-help:fromDisplayName"
                   forLabel={t("authentication")}
                   forID="kc-user-manged-access"
                 />
@@ -125,7 +125,7 @@ export const RealmSettingsEmailTab = () => {
               fieldId="kc-reply-to-display-name"
               labelIcon={
                 <HelpItem
-                  helpText="realm-settings-help:userManagedAccess"
+                  helpText="realm-settings-help:replyToDisplayName"
                   forLabel={t("replyToDisplayName")}
                   forID="kc-user-manged-access"
                 />
@@ -144,7 +144,7 @@ export const RealmSettingsEmailTab = () => {
               fieldId="kc-envelope-from"
               labelIcon={
                 <HelpItem
-                  helpText="realm-settings-help:frontendUrl"
+                  helpText="realm-settings-help:envelopeFrom"
                   forLabel={t("envelopeFrom")}
                   forID="kc-envelope-from"
                 />
@@ -152,7 +152,7 @@ export const RealmSettingsEmailTab = () => {
             >
               <TextInput
                 type="text"
-                id="kc-frontend-url"
+                id="kc-envelope-from"
                 name="attributes.envelopeFrom"
                 ref={register}
                 placeholder="Sender envelope email address"
