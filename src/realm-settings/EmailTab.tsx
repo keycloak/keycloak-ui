@@ -29,9 +29,7 @@ export const RealmSettingsEmailTab = () => {
   const { addAlert } = useAlerts();
   const { register, control, setValue, handleSubmit } = useForm();
   const [realm, setRealm] = useState<RealmRepresentation>();
-  const [isAuthenticationEnabled, setAuthenticationEnabled] = useState(false);
-  const [isSslChecked, setIsSslChecked] = useState(false);
-  const [isStartTlsChecked, setIsStartTlsChecked] = useState(false);
+  const [isAuthenticationEnabled, setAuthenticationEnabled] = useState("");
 
   const form = useForm();
 
@@ -41,28 +39,22 @@ export const RealmSettingsEmailTab = () => {
       (realm) => {
         setRealm(realm);
         setupForm(realm);
-        // setAuthenticationEnabled(realm!.attributes!.authentication);
-        // setValue("attributes.loginUsername", realm!.attributes!.loginUsername);
-        // setValue("attributes.loginPassword", realm!.attributes!.loginPassword);
 
-        // setIsSslChecked(realm.attributes!.enableSsl);
-        // setIsStartTlsChecked(realm.attributes!.enableStartTls);
+        setAuthenticationEnabled(realm?.attributes!.authentication);
       },
       handleError
     );
-  }, [isAuthenticationEnabled]);
+  }, []);
 
-  //   const setupForm = (realm: RealmRepresentation) => {
-  //     Object.entries(realm).map((entry) => setValue(entry[0], entry[1]));
-  //   };
+  useEffect(() => {
+    setValue("attributes.loginUsername", realm?.attributes!.loginUsername);
+    setValue("attributes.loginPassword", realm?.attributes!.loginPassword);
+  }, [isAuthenticationEnabled]);
 
   const setupForm = (realm: RealmRepresentation) => {
     const { ...formValues } = realm;
 
     form.reset(formValues);
-
-    setValue("attributes.loginUsername", realm!.attributes!.loginUsername);
-    setValue("attributes.loginPassword", realm!.attributes!.loginPassword);
 
     Object.entries(realm).map((entry) => {
       setValue(entry[0], entry[1]);
@@ -70,7 +62,7 @@ export const RealmSettingsEmailTab = () => {
   };
 
   const save = async (realm: RealmRepresentation) => {
-    console.log("yeet");
+    console.log(realm);
     try {
       await adminClient.realms.update({ realm: realmName }, realm);
       setRealm(realm);
@@ -79,6 +71,9 @@ export const RealmSettingsEmailTab = () => {
       addAlert(t("saveError", { error }), AlertVariant.danger);
     }
   };
+
+  //   console.log("is authent", realm?.attributes!.authentication)
+  //   console.log("weeee", realm?.attributes!.authentication)
 
   return (
     <>
@@ -242,7 +237,7 @@ export const RealmSettingsEmailTab = () => {
                     isChecked={value === "true"}
                     onChange={(value) => {
                       onChange("" + value);
-                      setAuthenticationEnabled(value);
+                      setAuthenticationEnabled(String(value));
                     }}
                     // onChange={() => {
                     // //   onChange(value);
@@ -257,7 +252,7 @@ export const RealmSettingsEmailTab = () => {
                 )}
               />
             </FormGroup>
-            {isAuthenticationEnabled && (
+            {isAuthenticationEnabled === "true" && (
               <>
                 <FormGroup
                   label={t("username")}
@@ -285,7 +280,7 @@ export const RealmSettingsEmailTab = () => {
                   }
                 >
                   <TextInput
-                    type="text"
+                    type="password"
                     id="kc-password"
                     name="attributes.loginPassword"
                     ref={register}
