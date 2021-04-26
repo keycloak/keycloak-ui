@@ -62,7 +62,6 @@ export const RealmSettingsEmailTab = () => {
   };
 
   const save = async (realm: RealmRepresentation) => {
-    console.log(realm);
     try {
       await adminClient.realms.update({ realm: realmName }, realm);
       setRealm(realm);
