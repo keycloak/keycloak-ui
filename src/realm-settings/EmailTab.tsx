@@ -21,6 +21,9 @@ import { FormAccess } from "../components/form-access/FormAccess";
 import { HelpItem } from "../components/help-enabler/HelpItem";
 import { FormPanel } from "../components/scroll-form/FormPanel";
 
+import "./RealmSettingsSection.css";
+
+
 export const RealmSettingsEmailTab = () => {
   const { t } = useTranslation("realm-settings");
   const adminClient = useAdminClient();
