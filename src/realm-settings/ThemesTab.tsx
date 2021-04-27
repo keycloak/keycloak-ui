@@ -37,9 +37,8 @@ export const RealmSettingsThemesTab = () => {
   const [emailThemeOpen, setEmailThemeOpen] = useState(false);
 
   const [supportedLocalesOpen, setSupportedLocalesOpen] = useState(false);
-  const [defaultLocale, setDefaultLocale] = useState("");
   const [defaultLocaleOpen, setDefaultLocaleOpen] = useState(false);
-  const [supportedLocales, setSupportedLocales] = useState<string[]>([]);
+  const [selections, setSelections] = useState<string[]>([]);
 
   const [
     internationalizationEnabled,
@@ -48,33 +47,16 @@ export const RealmSettingsThemesTab = () => {
 
   const form = useForm();
 
+  //set watch here with default values of account themes
+
   // const themeTypes = ["base", "keycloak", "keycloakV2"];
   const themeTypes = useServerInfo().themes!;
+  // const supportedLocales = useServerInfo().supportedLocales!;
 
-  console.log("theeeemes", themeTypes);
-
-  // const supportedLocales = [
-  //   "ca",
-  //   "cs",
-  //   "da",
-  //   "de",
-  //   "en",
-  //   "es",
-  //   "fr",
-  //   "hu",
-  //   "it",
-  //   "ja",
-  //   "lt",
-  //   "nl",
-  //   "no",
-  //   "pl",
-  //   "ptBR",
-  //   "ru",
-  //   "sk",
-  //   "sv",
-  //   "tr",
-  //   "zhCN",
-  // ];
+  const watchSupportedLocales = form.watch(
+    "supportedLocales",
+    themeTypes?.account![0].locales
+  );
 
   useEffect(() => {
     return asyncStateFetch(
@@ -82,18 +64,16 @@ export const RealmSettingsThemesTab = () => {
       (realm) => {
         setRealm(realm);
         setupForm(realm);
-        setInternationalizationEnabled(realm!.internationalizationEnabled!);
-        setDefaultLocale(realm!.defaultLocale!);
+        setInternationalizationEnabled(realm.internationalizationEnabled!);
       },
       handleError
     );
   }, []);
 
-  console.log(realm?.supportedLocales);
-
-  const [selections, setSelections] = useState<string[]>([]);
-
-  console.log("sel", selections);
+  useEffect(() => {
+    setValue("supportedLocales", realm?.supportedLocales);
+    setValue("defaultLocale", realm?.defaultLocale);
+  }, [internationalizationEnabled]);
 
   const setupForm = (realm: RealmRepresentation) => {
     const { ...formValues } = realm;
@@ -107,23 +87,6 @@ export const RealmSettingsThemesTab = () => {
     });
   };
 
-  const clearSelections = () => {
-    setSelections([]);
-  };
-
-  const onLocaleSelect = (
-    event: React.MouseEvent<Element, MouseEvent> | React.ChangeEvent<Element>,
-    newSelection: string
-  ) => {
-    if (supportedLocales.includes(newSelection)) {
-      setSupportedLocales(
-        supportedLocales.filter((item) => item !== newSelection)
-      );
-    } else {
-      setSupportedLocales([...supportedLocales, newSelection]);
-    }
-  };
-
   const save = async (realm: RealmRepresentation) => {
     try {
       await adminClient.realms.update({ realm: realmName }, realm);
@@ -133,8 +96,6 @@ export const RealmSettingsThemesTab = () => {
       addAlert(t("saveError", { error }), AlertVariant.danger);
     }
   };
-
-  console.log("realm", realm);
 
   return (
     <>
@@ -165,7 +126,6 @@ export const RealmSettingsThemesTab = () => {
                   onToggle={() => setLoginThemeOpen(!loginThemeOpen)}
                   onSelect={(_, value) => {
                     onChange(value as string);
-                    console.log(value);
                     setLoginThemeOpen(false);
                   }}
                   selections={value}
@@ -322,7 +282,6 @@ export const RealmSettingsThemesTab = () => {
           >
             <Controller
               name="internationalizationEnabled"
-              defaultValue={true}
               control={control}
               render={({ onChange, value }) => (
                 <Switch
@@ -356,37 +315,47 @@ export const RealmSettingsThemesTab = () => {
                 <Controller
                   name="supportedLocales"
                   control={control}
-                  render={() => (
+                  render={({ value, onChange }) => (
                     <Select
                       toggleId="kc-supported-locales"
                       onToggle={() =>
                         setSupportedLocalesOpen(!supportedLocalesOpen)
                       }
-                      onSelect={(_, value) => {
-                        console.log(value);
-                        // setSelections([...selections, value as string]);
-                        onLocaleSelect(_, value as string);
-                        // console.log("selec", selections)
-                        // setRealm({supportedLocales: selections, ...realm})
-                        setSupportedLocales([...selections, value as string]);
-                        console.log(supportedLocales);
+                      onSelect={(_, v) => {
+                        const option = v as string;
+                        if (!value) {
+                          onChange([option]);
+                        } else if (value!.includes(option)) {
+                          onChange(
+                            value.filter((item: string) => item !== option)
+                          );
+                          setSupportedLocalesOpen(false);
+                        } else {
+                          onChange([...value, option]);
+                          setSupportedLocalesOpen(false);
+                        }
+                        setSelections([...value, v]);
                       }}
-                      onClear={clearSelections}
-                      selections={supportedLocales}
+                      onClear={() => {
+                        onChange(setSelections([]));
+                      }}
+                      selections={value}
                       variant={SelectVariant.typeaheadMulti}
                       aria-label={t("supportedLocales")}
                       isOpen={supportedLocalesOpen}
                       placeholderText={"Select locales"}
                     >
-                      {themeTypes?.admin![0].locales.map((locale, idx) => (
-                        <SelectOption
-                          selected={true}
-                          key={`locale-${idx}`}
-                          value={locale}
-                        >
-                          {t(`allSupportedLocales.${locale}`)}
-                        </SelectOption>
-                      ))}
+                      {themeTypes?.admin![0].locales.map(
+                        (locale: string, idx: number) => (
+                          <SelectOption
+                            selected={true}
+                            key={`locale-${idx}`}
+                            value={locale}
+                          >
+                            {t(`allSupportedLocales.${locale}`)}
+                          </SelectOption>
+                        )
+                      )}
                     </Select>
                   )}
                 />
@@ -394,41 +363,41 @@ export const RealmSettingsThemesTab = () => {
               <FormGroup label={t("defaultLocale")} fieldId="kc-default-locale">
                 <Controller
                   name="defaultLocale"
-                  defaultValue={defaultLocale}
                   control={control}
                   render={({ onChange, value }) => (
                     <Select
                       toggleId="kc-default-locale"
-                      onToggle={
-                        selections.length !== 0
-                          ? () => setDefaultLocaleOpen(!defaultLocaleOpen)
-                          : () => {}
-                      }
+                      onToggle={() => setDefaultLocaleOpen(!defaultLocaleOpen)}
                       onSelect={(_, value) => {
                         onChange(value as string);
-                        console.log(value);
                         setDefaultLocaleOpen(false);
-                        setDefaultLocale(value as string);
                       }}
-                      selections={
-                        defaultLocale
-                          ? t(`allSupportedLocales.${defaultLocale}`)
-                          : t(`allSupportedLocales.${value}`)
-                      }
+                      selections={value && t(`allSupportedLocales.${value}`)}
                       variant={SelectVariant.single}
                       aria-label={t("defaultLocale")}
                       isOpen={defaultLocaleOpen}
                       placeholderText="Select one"
                       data-testid="select-default-locale"
                     >
-                      {selections.map((locale, idx) => (
-                        <SelectOption
-                          key={`default-locale-${idx}`}
-                          value={locale}
-                        >
-                          {t(`allSupportedLocales.${locale}`)}
-                        </SelectOption>
-                      ))}
+                      {selections.length !== 0
+                        ? selections.map((locale: string, idx: number) => (
+                            <SelectOption
+                              key={`default-locale-${idx}`}
+                              value={locale}
+                            >
+                              {t(`allSupportedLocales.${locale}`)}
+                            </SelectOption>
+                          ))
+                        : watchSupportedLocales.map(
+                            (locale: string, idx: number) => (
+                              <SelectOption
+                                key={`default-locale-${idx}`}
+                                value={locale}
+                              >
+                                {t(`allSupportedLocales.${locale}`)}
+                              </SelectOption>
+                            )
+                          )}
                     </Select>
                   )}
                 />
