@@ -345,7 +345,7 @@ export const RealmSettingsThemesTab = () => {
                       isOpen={supportedLocalesOpen}
                       placeholderText={"Select locales"}
                     >
-                      {themeTypes?.admin![0].locales.map(
+                      {themeTypes?.login![0].locales.map(
                         (locale: string, idx: number) => (
                           <SelectOption
                             selected={true}
