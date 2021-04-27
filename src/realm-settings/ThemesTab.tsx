@@ -47,11 +47,7 @@ export const RealmSettingsThemesTab = () => {
 
   const form = useForm();
 
-  //set watch here with default values of account themes
-
-  // const themeTypes = ["base", "keycloak", "keycloakV2"];
   const themeTypes = useServerInfo().themes!;
-  // const supportedLocales = useServerInfo().supportedLocales!;
 
   const watchSupportedLocales = form.watch(
     "supportedLocales",
