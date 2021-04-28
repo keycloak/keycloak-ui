@@ -61,7 +61,6 @@ export const KeysTab = ({ keys, realmComponents }: KeysTabProps) => {
   useEffect(() => {
       console.log("Testing 123")
     //   setAllKeys(keys);
-      console.log("pLEASE", keys)
       keys.map((key) => { 
         key.provider = realmComponents.find(
           (component) => component.id === key.providerId
