@@ -10,6 +10,7 @@ import {
   DropdownSeparator,
   PageSection,
   Tab,
+  Tabs,
   TabTitleText,
 } from "@patternfly/react-core";
 
@@ -25,7 +26,17 @@ import { RealmSettingsLoginTab } from "./LoginTab";
 import { RealmSettingsGeneralTab } from "./GeneralTab";
 import { PartialImportDialog } from "./PartialImport";
 import { RealmSettingsThemesTab } from "./ThemesTab";
+<<<<<<< HEAD
 import { RealmSettingsEmailTab } from "./EmailTab";
+=======
+import { KeysTab } from "./KeysTab";
+import { ClientScopes } from "keycloak-admin/lib/resources/clientScopes";
+import { EvaluateScopes } from "../clients/scopes/EvaluateScopes";
+import KeysMetadataRepresentation, {
+  KeyMetadataRepresentation,
+} from "keycloak-admin/lib/defs/keyMetadataRepresentation";
+import ComponentRepresentation from "keycloak-admin/lib/defs/componentRepresentation";
+>>>>>>> wip keys
 
 type RealmSettingsHeaderProps = {
   onChange: (value: boolean) => void;
@@ -126,6 +137,11 @@ export const RealmSettingsSection = () => {
   const form = useForm();
   const { control, getValues, setValue } = form;
   const [realm, setRealm] = useState<RealmRepresentation>();
+  const [activeTab2, setActiveTab2] = useState(0);
+  const [keys, setKeys] = useState<KeyMetadataRepresentation[]>([]);
+  const [realmComponents, setRealmComponents] = useState<
+    ComponentRepresentation[]
+  >([]);
 
   useEffect(() => {
     return asyncStateFetch(
@@ -136,6 +152,22 @@ export const RealmSettingsSection = () => {
       },
       handleError
     );
+  }, []);
+
+  useEffect(() => {
+    const update = async () => {
+      const keysMetaData = await adminClient.realms.getKeys({
+        realm: realmName,
+      });
+      setKeys(keysMetaData.keys!);
+      console.log("keyyyyy", keys);
+      const realmComponents = await adminClient.components.find({
+        type: "org.keycloak.keys.KeyProvider",
+        realm: realmName,
+      });
+      setRealmComponents(realmComponents);
+    };
+    setTimeout(update, 100);
   }, []);
 
   const setupForm = (realm: RealmRepresentation) => {
@@ -168,6 +200,7 @@ export const RealmSettingsSection = () => {
         )}
       />
       <PageSection variant="light" className="pf-u-p-0">
+<<<<<<< HEAD
         <FormProvider {...form}>
           <KeycloakTabs isBox>
             <Tab
@@ -201,14 +234,60 @@ export const RealmSettingsSection = () => {
               eventKey="themes"
               title={<TabTitleText>{t("realm-settings:themes")}</TabTitleText>}
               data-testid="rs-themes-tab"
+=======
+        <KeycloakTabs isBox>
+          <Tab
+            eventKey="general"
+            title={<TabTitleText>{t("realm-settings:general")}</TabTitleText>}
+            data-testid="rs-general-tab"
+          >
+            <RealmSettingsGeneralTab
+              save={save}
+              reset={() => setupForm(realm!)}
+            />
+          </Tab>
+          <Tab
+            eventKey="login"
+            title={<TabTitleText>{t("realm-settings:login")}</TabTitleText>}
+            data-testid="rs-login-tab"
+          >
+            <RealmSettingsLoginTab save={save} realm={realm!} />
+          </Tab>
+          <Tab
+            eventKey="themes"
+            title={<TabTitleText>{t("realm-settings:themes")}</TabTitleText>}
+            data-testid="rs-themes-tab"
+          >
+            <RealmSettingsThemesTab
+              save={save}
+              reset={() => setupForm(realm!)}
+            />
+          </Tab>
+          <Tab
+            eventKey="keys"
+            title={<TabTitleText>{t("realm-settings:keys")}</TabTitleText>}
+            data-testid="rs-keys-tab"
+          >
+            <Tabs
+              activeKey={activeTab2}
+              onSelect={(_, key) => setActiveTab2(key as number)}
+>>>>>>> wip keys
             >
-              <RealmSettingsThemesTab
-                save={save}
-                reset={() => setupForm(realm!)}
-              />
-            </Tab>
-          </KeycloakTabs>
-        </FormProvider>
+              <Tab
+                id="setup"
+                eventKey={0}
+                title={<TabTitleText>{t("keysList")}</TabTitleText>}
+              >
+                <KeysTab keys={keys} realmComponents={realmComponents} />
+              </Tab>
+              <Tab
+                id="evaluate"
+                eventKey={1}
+                title={<TabTitleText>{t("providers")}</TabTitleText>}
+              ></Tab>
+            </Tabs>
+          </Tab>
+        </KeycloakTabs>
       </PageSection>
     </>
   );

@@ -14,6 +14,7 @@
     "general": "General",
     "login": "Login",
     "themes": "Themes",
+<<<<<<< HEAD
     "email": "Email",
     "template": "Template",
     "connectionAndAuthentication": "Connection & Authentication",
@@ -30,6 +31,17 @@
     "enableStartTLS": "Enable StartTLS",
     "username": "Username",
     "password": "Password",
+=======
+    "keys": "Keys",
+    "keysList": "Keys list",
+    "providers": "Providers",
+    "algorithm": "Algorithm",
+    "type": "Type",
+    "kid": "Kid",
+    "provider": "Provider",
+    "publicKeys": "Public keys",
+    "certificate": "Certificate",
+>>>>>>> wip keys
     "userRegistration": "User registration",
     "userRegistrationHelpText": "Enable/disable the registration page. A link for registration will show on login page too.",
     "forgotPassword": "Forgot password",
