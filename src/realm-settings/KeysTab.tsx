@@ -73,10 +73,7 @@ export const KeysTab = ({ keys, realmComponents }: KeysTabProps) => {
 
     const keysMetaData = allKeys;
     
-    // console.log("f", f);
-    // console.log("hey", realmComponents);
     console.log("keyz", allKeys);
-    // console.log("lalal", currentRealm);
 
     return keysMetaData.map((key) => { 
             key.provider = realmComponents.find(
@@ -93,7 +90,6 @@ export const KeysTab = ({ keys, realmComponents }: KeysTabProps) => {
     //   });
 
     //   console.log(typeof f)
-    //   console.log("no", f)
 
   //   keys.forEach((item) => {
   //       if (item.name === "ecdsa-generated" )
@@ -120,20 +116,6 @@ export const KeysTab = ({ keys, realmComponents }: KeysTabProps) => {
     return <>{provider}</>;
 
 };
-
-  //   const TypeRenderer = ({ type }: KeyMetadataRepresentation) => {
-  //     if (
-  //       name === "aes-generated" ||
-  //       name === "hmac-generated" ||
-  //       name === "fallback-HS256"
-  //     ) {
-  //       return <>{"OCT"}</>;
-  //     } else if (name === "ecdsa-generated") {
-  //       return <>{"EC"}</>;
-  //     } else if (name === "rsa-generated" || name === "fallback-RS256") {
-  //       return <>{"RSA"}</>;
-  //     }
-  //   };
 
   const ButtonRenderer = ({ name }: ComponentRepresentation) => {
     if (name === "ecdsa-generated") {
