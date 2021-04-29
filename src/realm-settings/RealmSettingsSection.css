@@ -5,7 +5,13 @@
   padding-bottom: var(--pf-global--spacer--sm);
 }
 
-.kc-form-panel__header.pf-c-card__header,
-.kc-form-panel__body.pf-c-card__body {
+div.pf-c-card__header.kc-form-panel__header {
+  padding-bottom: 0px;
   padding-left: 0px;
+  padding-top: 0px;
+}
+
+div.pf-c-card__body.kc-form-panel__body {
+  padding-left: 0px;
+  padding-bottom: var(--pf-global--spacer--2xl);
 }

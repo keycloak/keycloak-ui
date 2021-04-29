@@ -1,30 +1,4 @@
 export default class RealmSettingsPage {
-  // generalSaveBtn: string;
-  // saveBtnThemes: string;
-  // loginTab: string;
-  // selectLoginTheme: string;
-  // loginThemeList: string;
-  // selectAccountTheme: string;
-  // accountThemeList: string;
-  // selectAdminTheme: string;
-  // adminThemeList: string;
-  // selectEmailTheme: string;
-  // emailThemeList: string;
-  // selectDefaultLocale: string;
-  // defaultLocaleList: string;
-  // emailSaveBtn: string;
-  // managedAccessSwitch: string;
-  // userRegSwitch: string;
-  // forgotPwdSwitch: string;
-  // rememberMeSwitch: string;
-  // emailAsUsernameSwitch: string;
-  // loginWithEmailSwitch: string;
-  // duplicateEmailsSwitch: string;
-  // verifyEmailSwitch: string;
-  // authSwitch: string;
-  // fromInput: string;
-  // enableSslCheck: string;
-  // enableStartTlsCheck: string;
   generalSaveBtn = "general-tab-save";
   themesSaveBtn = "themes-tab-save";
   loginTab = "rs-login-tab";
@@ -51,37 +25,6 @@ export default class RealmSettingsPage {
   fromInput = "sender-email-address";
   enableSslCheck = "enable-ssl";
   enableStartTlsCheck = "enable-start-tls";
-
-  // constructor() {
-  //   this.generalSaveBtn = "general-tab-save";
-  //   this.saveBtnThemes = "themes-tab-save";
-  //   this.loginTab = "rs-login-tab";
-  //   this.selectLoginTheme = "#kc-login-theme";
-  //   this.loginThemeList = "#kc-login-theme + ul";
-  //   this.selectAccountTheme = "#kc-account-theme";
-  //   this.accountThemeList = "#kc-account-theme + ul";
-  //   this.selectAdminTheme = "#kc-admin-console-theme";
-  //   this.adminThemeList = "#kc-admin-console-theme + ul";
-  //   this.selectEmailTheme = "#kc-email-theme";
-  //   this.emailThemeList = "#kc-email-theme + ul";
-  //   this.selectDefaultLocale = "select-default-locale";
-  //   this.defaultLocaleList = "select-default-locale + ul";
-  //   this.generalSaveBtn = "general-tab-save";
-  //   this.emailSaveBtn = "email-tab-save";
-  //   this.loginTab = "rs-login-tab";
-  //   this.managedAccessSwitch = "user-managed-access-switch";
-  //   this.userRegSwitch = "user-reg-switch";
-  //   this.forgotPwdSwitch = "forgot-pw-switch";
-  //   this.rememberMeSwitch = "remember-me-switch";
-  //   this.emailAsUsernameSwitch = "email-as-username-switch";
-  //   this.loginWithEmailSwitch = "login-with-email-switch";
-  //   this.duplicateEmailsSwitch = "duplicate-emails-switch";
-  //   this.verifyEmailSwitch = "verify-email-switch";
-  //   this.authSwitch = "email-authentication-switch";
-  //   this.fromInput = "sender-email-address";
-  //   this.enableSslCheck = "enable-ssl";
-  //   this.enableStartTlsCheck = "enable-start-tls";
-  // }
 
   selectLoginThemeType(themeType: string) {
     cy.get(this.selectLoginTheme).click();

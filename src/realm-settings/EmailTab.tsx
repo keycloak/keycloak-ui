@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { Controller, useForm } from "react-hook-form";
+import { Controller, UseFormMethods } from "react-hook-form";
 import { useErrorHandler } from "react-error-boundary";
 import {
   ActionGroup,
@@ -22,18 +22,22 @@ import { HelpItem } from "../components/help-enabler/HelpItem";
 import { FormPanel } from "../components/scroll-form/FormPanel";
 
 import "./RealmSettingsSection.css";
+import { emailRegexPattern } from "../util";
 
-export const RealmSettingsEmailTab = () => {
+export type UserFormProps = {
+  form: UseFormMethods<RealmRepresentation>;
+};
+
+export const RealmSettingsEmailTab = ({
+  form: { handleSubmit, register, errors, control, setValue, reset },
+}: UserFormProps) => {
   const { t } = useTranslation("realm-settings");
   const adminClient = useAdminClient();
   const handleError = useErrorHandler();
   const { realm: realmName } = useRealm();
   const { addAlert } = useAlerts();
-  const { register, control, setValue, handleSubmit } = useForm();
   const [realm, setRealm] = useState<RealmRepresentation>();
   const [isAuthenticationEnabled, setAuthenticationEnabled] = useState("");
-
-  const form = useForm();
 
   useEffect(() => {
     return asyncStateFetch(
@@ -56,10 +60,10 @@ export const RealmSettingsEmailTab = () => {
   const setupForm = (realm: RealmRepresentation) => {
     const { ...formValues } = realm;
 
-    form.reset(formValues);
+    reset(formValues);
 
-    Object.entries(realm).map((entry) => {
-      setValue(entry[0], entry[1]);
+    Object.entries(realm).map(([key, value]) => {
+      setValue(key, value);
     });
   };
 
@@ -83,13 +87,25 @@ export const RealmSettingsEmailTab = () => {
             className="pf-u-mt-lg"
             onSubmit={handleSubmit(save)}
           >
-            <FormGroup label={t("from")} fieldId="kc-display-name" isRequired>
+            <FormGroup
+              label={t("from")}
+              fieldId="kc-display-name"
+              isRequired
+              validated={
+                errors.attributes?.from?.type === "pattern"
+                  ? "error"
+                  : "default"
+              }
+              helperTextInvalid={t("users:emailInvalid")}
+            >
               <TextInput
-                type="text"
+                type="email"
                 id="kc-sender-email-address"
                 data-testid="sender-email-address"
                 name="attributes.from"
-                ref={register}
+                ref={register({
+                  pattern: emailRegexPattern,
+                })}
                 placeholder="Sender email address"
               />
             </FormGroup>
@@ -109,16 +125,26 @@ export const RealmSettingsEmailTab = () => {
                 id="kc-from-display-name"
                 data-testid="from-display-name"
                 name="attributes.fromDisplayName"
-                ref={register}
                 placeholder="Display name for Sender email address"
               />
             </FormGroup>
-            <FormGroup label={t("replyTo")} fieldId="kc-reply-to">
+            <FormGroup
+              label={t("replyTo")}
+              fieldId="kc-reply-to"
+              validated={
+                errors.attributes?.replyTo?.type === "pattern"
+                  ? "error"
+                  : "default"
+              }
+              helperTextInvalid={t("users:emailInvalid")}
+            >
               <TextInput
-                type="text"
+                type="email"
                 id="kc-reply-to"
                 name="attributes.replyTo"
-                ref={register}
+                ref={register({
+                  pattern: emailRegexPattern,
+                })}
                 placeholder="Reply to email address"
               />
             </FormGroup>

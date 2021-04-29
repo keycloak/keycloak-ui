@@ -126,6 +126,7 @@ export const RealmSettingsSection = () => {
   const form = useForm();
   const { control, getValues, setValue } = form;
   const [realm, setRealm] = useState<RealmRepresentation>();
+  const emailForm = useForm<RealmRepresentation>({ mode: "onChange" });
 
   useEffect(() => {
     return asyncStateFetch(
@@ -192,7 +193,7 @@ export const RealmSettingsSection = () => {
               title={<TabTitleText>{t("realm-settings:email")}</TabTitleText>}
               data-testid="rs-email-tab"
             >
-              <RealmSettingsEmailTab />
+              <RealmSettingsEmailTab form={emailForm}/>
             </Tab>
             <Tab
               eventKey="themes"
