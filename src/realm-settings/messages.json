@@ -39,11 +39,6 @@
       "none": "None"
     },
     "selectATheme": "Select a theme",
-    "themeTypes": {
-      "base": "base",
-      "keycloak": "keycloak",
-      "keycloak.v2": "keycloak.v2"
-    },
     "allSupportedLocales": {
       "ca": "Català",
       "cs": "Čeština",
