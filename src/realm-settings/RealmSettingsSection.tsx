@@ -30,11 +30,7 @@ import { RealmSettingsThemesTab } from "./ThemesTab";
 import { RealmSettingsEmailTab } from "./EmailTab";
 =======
 import { KeysTab } from "./KeysTab";
-import { ClientScopes } from "keycloak-admin/lib/resources/clientScopes";
-import { EvaluateScopes } from "../clients/scopes/EvaluateScopes";
-import KeysMetadataRepresentation, {
-  KeyMetadataRepresentation,
-} from "keycloak-admin/lib/defs/keyMetadataRepresentation";
+import { KeyMetadataRepresentation } from "keycloak-admin/lib/defs/keyMetadataRepresentation";
 import ComponentRepresentation from "keycloak-admin/lib/defs/componentRepresentation";
 >>>>>>> wip keys
 
@@ -160,7 +156,6 @@ export const RealmSettingsSection = () => {
         realm: realmName,
       });
       setKeys(keysMetaData.keys!);
-      console.log("keyyyyy", keys);
       const realmComponents = await adminClient.components.find({
         type: "org.keycloak.keys.KeyProvider",
         realm: realmName,
@@ -280,11 +275,12 @@ export const RealmSettingsSection = () => {
               >
                 <KeysTab keys={keys} realmComponents={realmComponents} />
               </Tab>
-              <Tab
+              {/* TODO: implement Providers tab */}
+              {/* <Tab
                 id="evaluate"
                 eventKey={1}
                 title={<TabTitleText>{t("providers")}</TabTitleText>}
-              ></Tab>
+              ></Tab> */}
             </Tabs>
           </Tab>
         </KeycloakTabs>

@@ -6,10 +6,23 @@ import { HelpItem } from "../components/help-enabler/HelpItem";
 import { FormPanel } from "../components/scroll-form/FormPanel";
 import RealmRepresentation from "keycloak-admin/lib/defs/realmRepresentation";
 
-type RealmSettingsLoginTabProps = {
-  save: (realm: RealmRepresentation) => void;
-  realm: RealmRepresentation;
-};
+export const RealmSettingsLoginTab = () => {
+  const { t } = useTranslation("realm-settings");
+  const [realm, setRealm] = useState<RealmRepresentation>();
+  const handleError = useErrorHandler();
+  const adminClient = useAdminClient();
+  const { realm: realmName } = useRealm();
+  const { addAlert } = useAlerts();
+
+  useEffect(() => {
+    return asyncStateFetch(
+      () => adminClient.realms.findOne({ realm: realmName }),
+      (realm) => {
+        setRealm(realm);
+      },
+      handleError
+    );
+  }, []);
 
 export const RealmSettingsLoginTab = ({
   save,

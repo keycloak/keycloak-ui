@@ -1,138 +1,104 @@
-import React, { useEffect, useState } from "react";
-import { useHistory, useParams, useRouteMatch } from "react-router-dom";
+import React, { useState } from "react";
+import { useHistory, useRouteMatch } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import {
-  AlertVariant,
-  Button,
-  ButtonVariant,
-  Checkbox,
-  Label,
-  PageSection,
-  ToolbarItem,
-} from "@patternfly/react-core";
-import RoleRepresentation from "keycloak-admin/lib/defs/roleRepresentation";
-import RealmRepresentation from "keycloak-admin/lib/defs/realmRepresentation";
-import KeysMetadataRepresentation, {
-  KeyMetadataRepresentation,
-} from "keycloak-admin/lib/defs/keyMetadataRepresentation";
+import { Button, ButtonVariant, PageSection } from "@patternfly/react-core";
+import { KeyMetadataRepresentation } from "keycloak-admin/lib/defs/keyMetadataRepresentation";
 import { ListEmptyState } from "../components/list-empty-state/ListEmptyState";
 import { KeycloakDataTable } from "../components/table-toolbar/KeycloakDataTable";
-import { useAlerts } from "../components/alert/Alerts";
 import { useConfirmDialog } from "../components/confirm-dialog/ConfirmDialog";
 import { emptyFormatter } from "../util";
-import { useAdminClient } from "../context/auth/AdminClient";
-import _ from "lodash";
-import { useRealm } from "../context/realm-context/RealmContext";
 import ComponentRepresentation from "keycloak-admin/lib/defs/componentRepresentation";
 
 import "./RealmSettingsSection.css";
+import { cellWidth } from "@patternfly/react-table";
 
 type KeyData = KeyMetadataRepresentation & {
   provider?: string;
 };
 
-type KeysTabProps = {
+type KeysTabInnerProps = {
   keys: KeyData[];
-  // addComposites: (newReps: RoleRepresentation[]) => void;
-  realmComponents: ComponentRepresentation[];
-  // onRemove: (newReps: RoleRepresentation[]) => void;
-  // client?: ClientRepresentation;
 };
 
-export const KeysTab = ({ keys, realmComponents }: KeysTabProps) => {
+export const KeysTabInner = ({ keys }: KeysTabInnerProps) => {
   const { t } = useTranslation("roles");
   const history = useHistory();
-  const { addAlert } = useAlerts();
   const { url } = useRouteMatch();
   const [key, setKey] = useState(0);
   const refresh = () => setKey(new Date().getTime());
-  const { realm } = useRealm();
 
-  const [selectedRows, setSelectedRows] = useState<RoleRepresentation[]>([]);
-  const [isInheritedHidden, setIsInheritedHidden] = useState(false);
-  const [allRoles, setAllRoles] = useState<RoleRepresentation[]>([]);
-    const [allKeys, setAllKeys] = useState<KeyData[]>([]);
-
-  const [open, setOpen] = useState(false);
-
-  const adminClient = useAdminClient();
-  const { id } = useParams<{ id: string }>();
-
-  useEffect(() => {
-      console.log("Testing 123")
-    //   setAllKeys(keys);
-      keys.map((key) => { 
-        key.provider = realmComponents.find(
-          (component) => component.id === key.providerId
-        )?.name!;
-      });
-    //   console.log(x)
-  })
+  const [publicKey, setPublicKey] = useState("");
+  const [certificate, setCertificate] = useState("");
 
   const loader = async () => {
-
-    const keysMetaData = allKeys;
-    
-    console.log("keyz", allKeys);
-
-    return keysMetaData.map((key) => { 
-            key.provider = realmComponents.find(
-              (component) => component.id === key.providerId
-            )?.name!;
-          });
+    return keys;
   };
 
-    // let f = 
-    // keys.map((key) => { 
-    //     key.provider = realmComponents.find(
-    //       (component) => component.id === key.providerId
-    //     )?.name!;
-    //   });
+  React.useEffect(() => {
+    refresh();
+  }, [keys]);
 
-    //   console.log(typeof f)
+  const [togglePublicKeyDialog, PublicKeyDialog] = useConfirmDialog({
+    titleKey: t("realm-settings:publicKeys").slice(0, -1),
+    messageKey: publicKey,
+    continueButtonLabel: "common:close",
+    continueButtonVariant: ButtonVariant.primary,
+    noCancelButton: true,
+    onConfirm: async () => {},
+  });
 
-  //   keys.forEach((item) => {
-  //       if (item.name === "ecdsa-generated" )
-  //       console.log(item.config!.ecdsaEllipticCurveKey[0].slice(-3))
-  //     }
-  //       )
-  //   keys.config!.ecdsaEllipticCurveKey.slice(-2)
-
-  const toggleModal = () => setOpen(!open);
+  const [toggleCertificateDialog, CertificateDialog] = useConfirmDialog({
+    titleKey: t("realm-settings:certificate"),
+    messageKey: certificate,
+    continueButtonLabel: "common:close",
+    continueButtonVariant: ButtonVariant.primary,
+    noCancelButton: true,
+    onConfirm: async () => {},
+  });
 
   const goToCreate = () => history.push(`${url}/add-role`);
 
-  //   keys?.forEach((item) => {
-
-  //     let x = adminClient.components.findOne({id: item.providerId!}).then((res) => console.log(res.name))
-  //     console.log("sadsa", x)
-  //      })
-
-  const ProviderRenderer = ({provider}: KeyData) => {
-    //   let p = adminClient.components.findOne({id: item.providerId!}).then(res => {return <>{res.name}</>})
-    //   console.log("o", p)
-    //     })
-    //     return <>{adminClient.components.findOne({id: item.providerId!}).then(res => {return <>{res.name}</>})}</>;
+  const ProviderRenderer = ({ provider }: KeyData) => {
     return <>{provider}</>;
+  };
 
-};
-
-  const ButtonRenderer = ({ name }: ComponentRepresentation) => {
-    if (name === "ecdsa-generated") {
+  const ButtonRenderer = ({ provider, publicKey, certificate }: KeyData) => {
+    if (provider === "ecdsa-generated") {
       return (
         <>
-          <Button variant="secondary" id="kc-public-key">
+          <Button
+            onClick={() => {
+              togglePublicKeyDialog();
+              setPublicKey(publicKey!);
+            }}
+            variant="secondary"
+            id="kc-public-key"
+          >
             {t("realm-settings:publicKeys").slice(0, -1)}
           </Button>
         </>
       );
-    } else if (name === "rsa-generated" || name === "fallback-RS256") {
+    } else if (provider === "rsa-generated" || provider === "fallback-RS256") {
       return (
         <>
-          <Button variant="secondary" id="kc-rsa-public-key">
+          <Button
+            onClick={() => {
+              togglePublicKeyDialog();
+              setPublicKey(publicKey!);
+            }}
+            variant="secondary"
+            id="kc-rsa-public-key"
+          >
             {t("realm-settings:publicKeys").slice(0, -1)}
           </Button>
-          <Button variant="secondary" id="kc-certificate">
+          <Button
+            onClick={() => {
+              toggleCertificateDialog();
+              setCertificate(certificate!);
+            }}
+            variant="secondary"
+            id="kc-certificate"
+          >
             {t("realm-settings:certificate")}
           </Button>
         </>
@@ -143,53 +109,32 @@ export const KeysTab = ({ keys, realmComponents }: KeysTabProps) => {
   return (
     <>
       <PageSection variant="light" padding={{ default: "noPadding" }}>
+        <PublicKeyDialog />
+        <CertificateDialog />
         <KeycloakDataTable
           key={key}
           loader={loader}
-          ariaLabelKey="roles:roleList"
-          searchPlaceholderKey="roles:searchFor"
+          ariaLabelKey="realm-settings:keysList"
+          searchPlaceholderKey="realm-settings:searchKey"
           canSelectAll
-          toolbarItem={
-            <>
-              <ToolbarItem>
-                <Checkbox
-                  label="Hide inherited roles"
-                  key="associated-roles-check"
-                  id="kc-hide-inherited-roles-checkbox"
-                  onChange={() => setIsInheritedHidden(!isInheritedHidden)}
-                  isChecked={isInheritedHidden}
-                />
-              </ToolbarItem>
-              <ToolbarItem>
-                <Button
-                  key="add-role-button"
-                  onClick={() => toggleModal()}
-                  data-testid="add-role-button"
-                >
-                  {t("addRole")}
-                </Button>
-              </ToolbarItem>
-            </>
-          }
           columns={[
             {
               name: "algorithm",
               displayKey: "realm-settings:algorithm",
-              //   cellRenderer: AlgRenderer,
               cellFormatters: [emptyFormatter()],
+              transforms: [cellWidth(15)],
             },
             {
               name: "type",
               displayKey: "realm-settings:type",
-              //   cellRenderer: TypeRenderer,
               cellFormatters: [emptyFormatter()],
+              transforms: [cellWidth(10)],
             },
             {
               name: "kid",
               displayKey: "realm-settings:kid",
               cellFormatters: [emptyFormatter()],
             },
-
             {
               name: "provider",
               displayKey: "realm-settings:provider",
@@ -199,8 +144,8 @@ export const KeysTab = ({ keys, realmComponents }: KeysTabProps) => {
             {
               name: "publicKeys",
               displayKey: "realm-settings:publicKeys",
-            //   cellRenderer: ButtonRenderer,
-              cellFormatters: [emptyFormatter()],
+              cellRenderer: ButtonRenderer,
+              cellFormatters: [],
             },
           ]}
           emptyState={
@@ -215,5 +160,25 @@ export const KeysTab = ({ keys, realmComponents }: KeysTabProps) => {
         />
       </PageSection>
     </>
+  );
+};
+
+type KeysProps = {
+  keys: KeyMetadataRepresentation[];
+  realmComponents: ComponentRepresentation[];
+};
+
+export const KeysTab = ({ keys, realmComponents, ...props }: KeysProps) => {
+  return (
+    <KeysTabInner
+      keys={keys?.map((key) => {
+        const provider = realmComponents.find(
+          (component: ComponentRepresentation) =>
+            component.id === key.providerId
+        );
+        return { ...key, provider: provider?.providerId };
+      })}
+      {...props}
+    />
   );
 };
