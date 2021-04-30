@@ -45,7 +45,6 @@ export const RealmSettingsEmailTab = ({
       (realm) => {
         setRealm(realm);
         setupForm(realm);
-
         setAuthenticationEnabled(realm?.attributes!.authentication);
       },
       handleError
@@ -125,6 +124,7 @@ export const RealmSettingsEmailTab = ({
                 id="kc-from-display-name"
                 data-testid="from-display-name"
                 name="attributes.fromDisplayName"
+                ref={register}
                 placeholder="Display name for Sender email address"
               />
             </FormGroup>
