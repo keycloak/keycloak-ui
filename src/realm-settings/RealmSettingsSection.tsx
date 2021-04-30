@@ -26,13 +26,14 @@ import { RealmSettingsLoginTab } from "./LoginTab";
 import { RealmSettingsGeneralTab } from "./GeneralTab";
 import { PartialImportDialog } from "./PartialImport";
 import { RealmSettingsThemesTab } from "./ThemesTab";
-<<<<<<< HEAD
 import { RealmSettingsEmailTab } from "./EmailTab";
-=======
 import { KeysTab } from "./KeysTab";
-import { KeyMetadataRepresentation } from "keycloak-admin/lib/defs/keyMetadataRepresentation";
+import { ClientScopes } from "keycloak-admin/lib/resources/clientScopes";
+import { EvaluateScopes } from "../clients/scopes/EvaluateScopes";
+import KeysMetadataRepresentation, {
+  KeyMetadataRepresentation,
+} from "keycloak-admin/lib/defs/keyMetadataRepresentation";
 import ComponentRepresentation from "keycloak-admin/lib/defs/componentRepresentation";
->>>>>>> wip keys
 
 type RealmSettingsHeaderProps = {
   onChange: (value: boolean) => void;
@@ -156,6 +157,7 @@ export const RealmSettingsSection = () => {
         realm: realmName,
       });
       setKeys(keysMetaData.keys!);
+      console.log("keyyyyy", keys);
       const realmComponents = await adminClient.components.find({
         type: "org.keycloak.keys.KeyProvider",
         realm: realmName,
@@ -195,7 +197,6 @@ export const RealmSettingsSection = () => {
         )}
       />
       <PageSection variant="light" className="pf-u-p-0">
-<<<<<<< HEAD
         <FormProvider {...form}>
           <KeycloakTabs isBox>
             <Tab
@@ -229,44 +230,6 @@ export const RealmSettingsSection = () => {
               eventKey="themes"
               title={<TabTitleText>{t("realm-settings:themes")}</TabTitleText>}
               data-testid="rs-themes-tab"
-=======
-        <KeycloakTabs isBox>
-          <Tab
-            eventKey="general"
-            title={<TabTitleText>{t("realm-settings:general")}</TabTitleText>}
-            data-testid="rs-general-tab"
-          >
-            <RealmSettingsGeneralTab
-              save={save}
-              reset={() => setupForm(realm!)}
-            />
-          </Tab>
-          <Tab
-            eventKey="login"
-            title={<TabTitleText>{t("realm-settings:login")}</TabTitleText>}
-            data-testid="rs-login-tab"
-          >
-            <RealmSettingsLoginTab save={save} realm={realm!} />
-          </Tab>
-          <Tab
-            eventKey="themes"
-            title={<TabTitleText>{t("realm-settings:themes")}</TabTitleText>}
-            data-testid="rs-themes-tab"
-          >
-            <RealmSettingsThemesTab
-              save={save}
-              reset={() => setupForm(realm!)}
-            />
-          </Tab>
-          <Tab
-            eventKey="keys"
-            title={<TabTitleText>{t("realm-settings:keys")}</TabTitleText>}
-            data-testid="rs-keys-tab"
-          >
-            <Tabs
-              activeKey={activeTab2}
-              onSelect={(_, key) => setActiveTab2(key as number)}
->>>>>>> wip keys
             >
               <Tab
                 id="setup"
@@ -275,12 +238,11 @@ export const RealmSettingsSection = () => {
               >
                 <KeysTab keys={keys} realmComponents={realmComponents} />
               </Tab>
-              {/* TODO: implement Providers tab */}
-              {/* <Tab
+              <Tab
                 id="evaluate"
                 eventKey={1}
                 title={<TabTitleText>{t("providers")}</TabTitleText>}
-              ></Tab> */}
+              ></Tab>
             </Tabs>
           </Tab>
         </KeycloakTabs>
