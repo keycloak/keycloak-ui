@@ -64,6 +64,7 @@ export const RealmSettingsEmailTab = ({
                 name="attributes.from"
                 ref={register({
                   pattern: emailRegexPattern,
+                  required: true,
                 })}
                 placeholder="Sender email address"
               />
