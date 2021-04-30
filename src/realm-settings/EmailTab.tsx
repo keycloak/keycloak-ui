@@ -1,10 +1,8 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
-import { Controller, UseFormMethods } from "react-hook-form";
-import { useErrorHandler } from "react-error-boundary";
+import { Controller, useFormContext, UseFormMethods } from "react-hook-form";
 import {
   ActionGroup,
-  AlertVariant,
   Button,
   Checkbox,
   FormGroup,
@@ -14,9 +12,6 @@ import {
 } from "@patternfly/react-core";
 
 import RealmRepresentation from "keycloak-admin/lib/defs/realmRepresentation";
-import { useAdminClient, asyncStateFetch } from "../context/auth/AdminClient";
-import { useRealm } from "../context/realm-context/RealmContext";
-import { useAlerts } from "../components/alert/Alerts";
 import { FormAccess } from "../components/form-access/FormAccess";
 import { HelpItem } from "../components/help-enabler/HelpItem";
 import { FormPanel } from "../components/scroll-form/FormPanel";
@@ -28,53 +23,18 @@ export type UserFormProps = {
   form: UseFormMethods<RealmRepresentation>;
 };
 
+type RealmSettingsEmailTabProps = {
+  save: (realm: RealmRepresentation) => void;
+  reset: () => void;
+};
+
 export const RealmSettingsEmailTab = ({
-  form: { handleSubmit, register, errors, control, setValue, reset },
-}: UserFormProps) => {
+  save,
+  reset,
+}: RealmSettingsEmailTabProps) => {
   const { t } = useTranslation("realm-settings");
-  const adminClient = useAdminClient();
-  const handleError = useErrorHandler();
-  const { realm: realmName } = useRealm();
-  const { addAlert } = useAlerts();
-  const [realm, setRealm] = useState<RealmRepresentation>();
   const [isAuthenticationEnabled, setAuthenticationEnabled] = useState("");
-
-  useEffect(() => {
-    return asyncStateFetch(
-      () => adminClient.realms.findOne({ realm: realmName }),
-      (realm) => {
-        setRealm(realm);
-        setupForm(realm);
-        setAuthenticationEnabled(realm?.attributes!.authentication);
-      },
-      handleError
-    );
-  }, []);
-
-  useEffect(() => {
-    setValue("attributes.loginUsername", realm?.attributes!.loginUsername);
-    setValue("attributes.loginPassword", realm?.attributes!.loginPassword);
-  }, [isAuthenticationEnabled]);
-
-  const setupForm = (realm: RealmRepresentation) => {
-    const { ...formValues } = realm;
-
-    reset(formValues);
-
-    Object.entries(realm).map(([key, value]) => {
-      setValue(key, value);
-    });
-  };
-
-  const save = async (realm: RealmRepresentation) => {
-    try {
-      await adminClient.realms.update({ realm: realmName }, realm);
-      setRealm(realm);
-      addAlert(t("saveSuccess"), AlertVariant.success);
-    } catch (error) {
-      addAlert(t("saveError", { error }), AlertVariant.danger);
-    }
-  };
+  const { register, control, handleSubmit, errors } = useFormContext();
 
   return (
     <>
@@ -319,7 +279,7 @@ export const RealmSettingsEmailTab = ({
               >
                 {t("common:save")}
               </Button>
-              <Button variant="link" onClick={() => setupForm(realm!)}>
+              <Button variant="link" onClick={reset}>
                 {t("common:revert")}
               </Button>
             </ActionGroup>
