@@ -43,6 +43,7 @@ export const RealmSelector = () => {
 
   const AddRealm = () => (
     <Button
+      data-testid="add-realm"
       component="div"
       isBlock
       onClick={() => {
@@ -103,6 +104,7 @@ export const RealmSelector = () => {
     <>
       {realms.length > 5 && (
         <ContextSelector
+          data-testid="realmSelector"
           toggleText={toUpperCase(realm)}
           isOpen={open}
           screenReaderLabel={toUpperCase(realm)}
@@ -144,11 +146,12 @@ export const RealmSelector = () => {
       {realms.length <= 5 && (
         <Dropdown
           id="realm-select"
+          data-testid="realmSelector"
           className="keycloak__realm_selector__dropdown"
           isOpen={open}
           toggle={
             <DropdownToggle
-              id="realm-select-toggle"
+              data-testid="realmSelectorToggle"
               onToggle={() => setOpen(!open)}
               className="keycloak__realm_selector_dropdown__toggle"
             >
