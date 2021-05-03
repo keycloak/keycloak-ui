@@ -1,4 +1,5 @@
-.kc-form-panel__panel.pf-c-card.pf-m-flat {
+.pf-c-card.pf-m-flat.kc-email-template,
+.pf-c-card.pf-m-flat.kc-email-connection {
   border: none;
   margin-top: 0px;
   margin-bottom: 0px;
