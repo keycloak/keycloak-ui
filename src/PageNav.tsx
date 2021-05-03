@@ -1,7 +1,6 @@
 import React from "react";
 import { useHistory, useLocation } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import _ from "lodash";
 import {
   Nav,
   NavItem,
@@ -18,7 +17,7 @@ import { routes } from "./route-config";
 export const PageNav: React.FunctionComponent = () => {
   const { t } = useTranslation("common");
   const { hasAccess, hasSomeAccess } = useAccess();
-  const { realm, realms } = useRealm();
+  const { realm } = useRealm();
 
   const history = useHistory();
 
@@ -78,7 +77,7 @@ export const PageNav: React.FunctionComponent = () => {
         <Nav onSelect={onSelect}>
           <NavList>
             <NavItem className="keycloak__page_nav__nav_item__realm-selector">
-              <RealmSelector realmList={realms} />
+              <RealmSelector />
             </NavItem>
           </NavList>
           {isOnAddRealm() && (

@@ -1,9 +1,8 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useErrorHandler } from "react-error-boundary";
 import i18n from "../../i18n";
 
 import { asyncStateFetch, useAdminClient } from "../auth/AdminClient";
-import { RealmContext } from "../realm-context/RealmContext";
 import WhoAmIRepresentation, {
   AccessType,
 } from "keycloak-admin/lib/defs/whoAmIRepresentation";
@@ -64,18 +63,14 @@ type WhoAmIProviderProps = { children: React.ReactNode };
 export const WhoAmIContextProvider = ({ children }: WhoAmIProviderProps) => {
   const adminClient = useAdminClient();
   const handleError = useErrorHandler();
-  const { realm, setRealm } = useContext(RealmContext);
   const [whoAmI, setWhoAmI] = useState<WhoAmI>(new WhoAmI());
   const [key, setKey] = useState(0);
 
   useEffect(() => {
     return asyncStateFetch(
-      () => adminClient.whoAmI.find(),
+      () => adminClient.whoAmI.find({ realm: "master" }),
       (me) => {
         const whoAmI = new WhoAmI(adminClient.keycloak?.realm, me);
-        if (!realm) {
-          setRealm(whoAmI.getHomeRealm());
-        }
         setWhoAmI(whoAmI);
       },
       handleError

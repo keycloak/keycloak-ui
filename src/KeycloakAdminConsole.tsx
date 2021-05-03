@@ -15,11 +15,11 @@ export const KeycloakAdminConsole = ({
 }: KeycloakAdminConsoleProps) => {
   return (
     <AdminClient.Provider value={adminClient}>
-      <RealmContextProvider>
-        <WhoAmIContextProvider>
+      <WhoAmIContextProvider>
+        <RealmContextProvider>
           <App />
-        </WhoAmIContextProvider>
-      </RealmContextProvider>
+        </RealmContextProvider>
+      </WhoAmIContextProvider>
     </AdminClient.Provider>
   );
 };

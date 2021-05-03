@@ -11,7 +11,7 @@ it("renders realm selector", async () => {
     <MemoryRouter>
       <RealmContextProvider>
         <div id="realm">
-          <RealmSelector realmList={[{ id: "321", realm: "another" }]} />
+          <RealmSelector />
         </div>
       </RealmContextProvider>
     </MemoryRouter>

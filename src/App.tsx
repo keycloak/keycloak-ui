@@ -6,7 +6,7 @@ import {
   Switch,
   useParams,
 } from "react-router-dom";
-import { ErrorBoundary, useErrorHandler } from "react-error-boundary";
+import { ErrorBoundary } from "react-error-boundary";
 
 import { Header } from "./PageHeader";
 import { PageNav } from "./PageNav";
@@ -22,7 +22,6 @@ import { ForbiddenSection } from "./ForbiddenSection";
 import { SubGroups } from "./groups/SubGroupsContext";
 import { useRealm } from "./context/realm-context/RealmContext";
 import { ErrorRenderer } from "./components/error/ErrorRenderer";
-import { RecentUsed } from "./components/realm-selector/recent-used";
 
 export const mainPageContentId = "kc-main-content-page-container";
 
@@ -43,9 +42,6 @@ const RealmPathSelector = ({ children }: { children: ReactNode }) => {
   const { setRealm } = useRealm();
   const { realm } = useParams<{ realm: string }>();
   useEffect(() => setRealm(realm), []);
-  const recentUsed = new RecentUsed();
-
-          recentUsed.clean(realms.map((r) => r.realm!));
 
   return <>{children}</>;
 };
