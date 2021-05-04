@@ -86,28 +86,29 @@ describe("Group test", () => {
       moveGroupModal.clickMove();
 
       masthead.checkNotificationMessage("Group moved");
-      listingPage
-        .itemExist(groupName, false)
-        .goToItemDetails(targetGroupName)
-        .itemExist(targetGroupName);
-
+      listingPage.itemExist(groupName, false).goToItemDetails(targetGroupName);
+      cy.wait(2000);
+      listingPage.itemExist(groupName);
+      cy.wait(1000);
       sidebarPage.goToGroups();
       listingPage.deleteItem(targetGroupName);
     });
 
     it("Should move group to root", async () => {
       const groups = ["group1", "group2"];
-      await new AdminClient().createSubGroups(groups);
-      sidebarPage.goToGroups();
-      listingPage.goToItemDetails(groups[0]);
-      cy.wait(2000);
-      listingPage.clickRowDetails(groups[1]).clickDetailMenu("Move to");
+      groupModal
+        .open("empty-primary-action")
+        .fillGroupForm(groups[0])
+        .clickCreate();
+      groupModal.open().fillGroupForm(groups[1]).clickCreate();
+      listingPage.clickRowDetails(groups[0]).clickDetailMenu("Move to");
 
       moveGroupModal.clickRoot().clickMove();
       sidebarPage.goToGroups();
 
       new GroupDetailPage().checkListSubGroup(groups);
       listingPage.deleteItem(groups[0]);
+      listingPage.deleteItem(groups[1]);
     });
   });
 
