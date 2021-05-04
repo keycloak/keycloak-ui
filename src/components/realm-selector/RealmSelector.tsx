@@ -16,7 +16,6 @@ import {
 } from "@patternfly/react-core";
 import { CheckIcon } from "@patternfly/react-icons";
 
-import type RealmRepresentation from "keycloak-admin/lib/defs/realmRepresentation";
 import { toUpperCase } from "../../util";
 import { useRealm } from "../../context/realm-context/RealmContext";
 import { WhoAmIContext } from "../../context/whoami/WhoAmI";
@@ -24,15 +23,31 @@ import { RecentUsed } from "./recent-used";
 
 import "./realm-selector.css";
 
+type RecentUsedRealm = {
+  name: string;
+  used: boolean;
+};
+
 export const RealmSelector = () => {
   const { realm, setRealm, realms } = useRealm();
   const { whoAmI } = useContext(WhoAmIContext);
   const [open, setOpen] = useState(false);
   const [search, setSearch] = useState("");
-  const [filteredItems, setFilteredItems] = useState<RealmRepresentation[]>();
+  const [filteredItems, setFilteredItems] = useState<RecentUsedRealm[]>();
   const history = useHistory();
   const { t } = useTranslation("common");
   const recentUsed = new RecentUsed();
+  const all = recentUsed.used
+    .map((name) => {
+      return { name, used: true };
+    })
+    .concat(
+      realms
+        .filter((r) => !recentUsed.used.includes(r.realm!))
+        .map((r) => {
+          return { name: r.realm!, used: false };
+        })
+    );
 
   const RealmText = ({ value }: { value: string }) => (
     <Split className="keycloak__realm_selector__list-item-split">
@@ -59,8 +74,8 @@ export const RealmSelector = () => {
     if (search === "") {
       setFilteredItems(undefined);
     } else {
-      const filtered = realms.filter(
-        (r) => r.realm!.toLowerCase().indexOf(search.toLowerCase()) !== -1
+      const filtered = all.filter(
+        (r) => r.name.toLowerCase().indexOf(search.toLowerCase()) !== -1
       );
       setFilteredItems(filtered);
     }
@@ -126,18 +141,12 @@ export const RealmSelector = () => {
           onSearchButtonClick={() => onFilter()}
           className="keycloak__realm_selector__context_selector"
         >
-          {recentUsed.used.map((realm) => (
-            <ContextSelectorItem key={realm}>
-              <RealmText value={realm} /> <Label>{t("recent")}</Label>
+          {(filteredItems || all).map((item) => (
+            <ContextSelectorItem key={item.name}>
+              <RealmText value={item.name} />{" "}
+              {item.used && <Label>{t("recent")}</Label>}
             </ContextSelectorItem>
           ))}
-          {(filteredItems || realms)
-            .filter((r) => !recentUsed.used.includes(r.realm!))
-            .map((item) => (
-              <ContextSelectorItem key={item.id}>
-                <RealmText value={item.realm!} />
-              </ContextSelectorItem>
-            ))}
           <ContextSelectorItem key="add">
             <AddRealm />
           </ContextSelectorItem>
