@@ -80,6 +80,9 @@ describe("Client Scopes test", function () {
       scopeTab.goToScopeTab().clickAssignRole().selectRow(role).clickAssign();
       masthead.checkNotificationMessage("Role mapping updated");
       scopeTab.checkRoles([role]);
+      scopeTab.hideInheritedRoles().selectRow(role).clickUnAssign();
+      modalUtils.checkModalTitle("Remove mapping?").confirmModal();
+      scopeTab.checkRoles([]);
     });
   });
 });
