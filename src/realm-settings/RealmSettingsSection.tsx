@@ -138,12 +138,6 @@ export const RealmSettingsSection = () => {
     ComponentRepresentation[]
   >([]);
 
-  const kpComponentTypes = useServerInfo().componentTypes![
-    "org.keycloak.keys.KeyProvider"
-  ];
-
-  console.log(kpComponentTypes);
-
   useEffect(() => {
     return asyncStateFetch(
       () => adminClient.realms.findOne({ realm: realmName }),
