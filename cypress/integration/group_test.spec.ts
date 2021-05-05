@@ -72,7 +72,7 @@ describe("Group test", () => {
 
     it("Should move group", () => {
       const targetGroupName = "target";
-      groupModal.open("empty-primary-action");
+      groupModal.open("openCreateGroupModal");
       cy.wait(1000);
       groupModal.fillGroupForm(groupName).clickCreate();
 
