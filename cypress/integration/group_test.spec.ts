@@ -139,6 +139,7 @@ describe("Group test", () => {
         const username = "user" + i;
         await adminClient.deleteUser(username);
       }
+      await adminClient.deleteUser("new");
     });
 
     it("Should display all the subgroups", () => {
