@@ -132,8 +132,13 @@ describe("Group test", () => {
       sidebarPage.goToGroups();
     });
 
-    after(() => {
-      new AdminClient().deleteGroups();
+    after(async () => {
+      const adminClient = new AdminClient();
+      await adminClient.deleteGroups();
+      for (let i = 0; i < 5; i++) {
+        const username = "user" + i;
+        await adminClient.deleteUser(username);
+      }
     });
 
     it("Should display all the subgroups", () => {

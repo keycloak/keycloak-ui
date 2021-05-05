@@ -79,4 +79,10 @@ export default class AdminClient {
     const user = await this.createUser({ username, enabled: true });
     await this.client.users.addToGroup({ id: user.id!, groupId });
   }
+
+  async deleteUser(username: string) {
+    await this.login();
+    const user = await this.client.users.find({ username });
+    await this.client.users.del({ id: user[0].id! });
+  }
 }
