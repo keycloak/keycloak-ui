@@ -19,7 +19,13 @@
 }
 
 .keycloak__realm_selector__context_selector {
-  --pf-c-context-selector__toggle--Color: var(--pf-c-nav__link--m-current--Color);
+  --pf-c-context-selector__toggle--Color: var(
+    --pf-c-nav__link--m-current--Color
+  );
+}
+
+.keycloak__page_nav__nav_item__realm-selector ul {
+  scrollbar-width: thin;
 }
 
 .keycloak__realm_selector__dropdown {
@@ -33,9 +39,10 @@
 
 /* the last child is the realm selector button, and this is the only way to style the li around it */
 .keycloak__realm_selector__context_selector li:last-child {
-  position: sticky;
-  bottom: 0;
+  position: absolute;
+  top: 268px;
   background-color: var(--pf-c-context-selector__menu--BackgroundColor);
+  width: 227.33px;
 }
 
 .keycloak__page_nav__nav_item__realm-selector {
