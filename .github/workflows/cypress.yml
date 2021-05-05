@@ -41,12 +41,12 @@ jobs:
     - name: Cypress run
       run: yarn start:cypress-tests --headless --browser chrome
 
-    - name: Add Cypress videos artifacts
-      uses: actions/upload-artifact@v2
-      if: failure()
-      with:
-        name: cypress-videos
-        path: assets/videos
+    # - name: Add Cypress videos artifacts
+    #   uses: actions/upload-artifact@v2
+    #   if: failure()
+    #   with:
+    #     name: cypress-videos
+    #     path: assets/videos
 
     - name: Add Cypress screenshots artifacts
       uses: actions/upload-artifact@v2
