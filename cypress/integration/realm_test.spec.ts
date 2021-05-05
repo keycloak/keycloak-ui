@@ -53,25 +53,27 @@ describe("Realms test", () => {
 
   describe("More then 5 realms", () => {
     const realmNames = ["One", "Two", "Three", "Four", "Five"];
+    const client = new AdminClient();
 
     beforeEach(() => {
       keycloakBefore();
       loginPage.logIn();
+    });
+
+    before(async () => {
       for (const realmName of realmNames) {
-        sidebarPage.goToCreateRealm();
-        createRealmPage.fillRealmName(realmName).createRealm();
-        sidebarPage.goToClients();
+        await client.createRealm(realmName);
       }
     });
 
-    afterEach(async () => {
-      const client = new AdminClient();
+    after(async () => {
       for (const realmName of realmNames) {
         await client.deleteRealm(realmName);
       }
     });
 
     it("switch to searchable realm selector", () => {
+      cy.visit("");
       realmSelector.openRealmContextSelector().shouldContainAll(realmNames);
     });
   });
