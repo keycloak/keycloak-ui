@@ -64,16 +64,9 @@ describe("Group test", () => {
       listingPage.deleteItem(newName);
     });
 
-    it("Group search", () => {
-      viewHeaderPage.clickAction("searchGroup");
-      searchGroupPage.searchGroup("group").clickSearchButton();
-      searchGroupPage.checkTerm("group");
-    });
-
     it("Should move group", () => {
       const targetGroupName = "target";
-      groupModal.open("openCreateGroupModal");
-      cy.wait(1000);
+      groupModal.open("empty-primary-action");
       groupModal.fillGroupForm(groupName).clickCreate();
 
       groupModal.open().fillGroupForm(targetGroupName).clickCreate();
@@ -109,6 +102,12 @@ describe("Group test", () => {
       listingPage.deleteItem(groups[0]);
       listingPage.deleteItem(groups[1]);
     });
+  
+    it("Group search", () => {
+      viewHeaderPage.clickAction("searchGroup");
+      searchGroupPage.searchGroup("group").clickSearchButton();
+      searchGroupPage.checkTerm("group");
+    });
   });
 
   describe("Group details", () => {
@@ -126,7 +125,7 @@ describe("Group test", () => {
     });
 
     beforeEach(() => {
-      cy.visit("");
+      keycloakBefore();
       loginPage.logIn();
       sidebarPage.goToGroups();
     });
