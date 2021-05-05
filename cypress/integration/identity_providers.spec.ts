@@ -89,12 +89,16 @@ describe("Identity provider test", () => {
       const modalUtils = new ModalUtils();
       listingPage.deleteItem("bitbucket");
       modalUtils.checkModalTitle("Delete provider?").confirmModal();
+      masthead.checkNotificationMessage("Provider successfully deleted");
 
       listingPage.deleteItem("facebook");
       modalUtils.checkModalTitle("Delete provider?").confirmModal();
+      masthead.checkNotificationMessage("Provider successfully deleted");
 
+      cy.wait(100);
       listingPage.deleteItem("github");
       modalUtils.checkModalTitle("Delete provider?").confirmModal();
+      masthead.checkNotificationMessage("Provider successfully deleted");
     });
   });
 });
