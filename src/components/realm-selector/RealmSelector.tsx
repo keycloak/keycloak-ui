@@ -1,4 +1,4 @@
-import React, { useState, useContext, useEffect, ReactElement } from "react";
+import React, { useState, useContext, ReactElement, useMemo } from "react";
 import { useHistory } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 
@@ -33,7 +33,6 @@ export const RealmSelector = () => {
   const { whoAmI } = useContext(WhoAmIContext);
   const [open, setOpen] = useState(false);
   const [search, setSearch] = useState("");
-  const [filteredItems, setFilteredItems] = useState<RecentUsedRealm[]>();
   const history = useHistory();
   const { t } = useTranslation("common");
   const recentUsed = new RecentUsed();
@@ -48,6 +47,16 @@ export const RealmSelector = () => {
           return { name: r.realm!, used: false };
         })
     );
+
+  const filteredItems = useMemo(() => {
+    if (search === "") {
+      return undefined;
+    }
+
+    return all.filter((r) =>
+      r.name.toLowerCase().includes(search.toLowerCase())
+    );
+  }, [search, all]);
 
   const RealmText = ({ value }: { value: string }) => (
     <Split className="keycloak__realm_selector__list-item-split">
@@ -70,26 +79,11 @@ export const RealmSelector = () => {
     </Button>
   );
 
-  const onFilter = () => {
-    if (search === "") {
-      setFilteredItems(undefined);
-    } else {
-      const filtered = all.filter(
-        (r) => r.name.toLowerCase().indexOf(search.toLowerCase()) !== -1
-      );
-      setFilteredItems(filtered);
-    }
-  };
-
   const selectRealm = (realm: string) => {
     setRealm(realm);
     setOpen(!open);
     history.push(`/${realm}/`);
   };
-
-  useEffect(() => {
-    onFilter();
-  }, [search]);
 
   const dropdownItems = realms.map((r) => (
     <DropdownItem
@@ -138,7 +132,6 @@ export const RealmSelector = () => {
           }}
           searchInputValue={search}
           onSearchInputChange={(value) => setSearch(value)}
-          onSearchButtonClick={() => onFilter()}
           className="keycloak__realm_selector__context_selector"
         >
           {(filteredItems || all).map((item) => (
