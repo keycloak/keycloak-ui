@@ -30,8 +30,6 @@ import { RealmSettingsEmailTab } from "./EmailTab";
 import { KeysListTab } from "./KeysListTab";
 import { KeyMetadataRepresentation } from "keycloak-admin/lib/defs/keyMetadataRepresentation";
 import ComponentRepresentation from "keycloak-admin/lib/defs/componentRepresentation";
-import { KeysProviderTab } from "./KeysProvidersTab";
-import { useServerInfo } from "../context/server-info/ServerInfoProvider";
 
 type RealmSettingsHeaderProps = {
   onChange: (value: boolean) => void;
