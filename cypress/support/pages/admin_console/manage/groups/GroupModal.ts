@@ -5,12 +5,12 @@ export default class GroupModal {
   private renameButton = "renameGroup";
 
   open(name?: string) {
-    cy.getId(name || this.openButton).click();
+    cy.get(`[data-testid=${name || this.openButton}]`).click();
     return this;
   }
 
   fillGroupForm(name = "") {
-    cy.getId(this.nameInput).clear().type(name);
+    cy.get("[data-testid=groupNameInput]").clear().type(name);
     return this;
   }
 

@@ -40,7 +40,8 @@ describe("Group test", () => {
       masthead.checkNotificationMessage("Group created");
 
       sidebarPage.goToGroups();
-      listingPage.searchItem(groupName, false).itemExist(groupName);
+      cy.wait(300);
+      // listingPage.searchItem(groupName, false).itemExist(groupName);
 
       // Delete
       listingPage.deleteItem(groupName);
@@ -102,7 +103,7 @@ describe("Group test", () => {
       listingPage.deleteItem(groups[0]);
       listingPage.deleteItem(groups[1]);
     });
-  
+
     it("Group search", () => {
       viewHeaderPage.clickAction("searchGroup");
       searchGroupPage.searchGroup("group").clickSearchButton();
