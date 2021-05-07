@@ -40,8 +40,7 @@ describe("Group test", () => {
       masthead.checkNotificationMessage("Group created");
 
       sidebarPage.goToGroups();
-      cy.wait(300);
-      // listingPage.searchItem(groupName, false).itemExist(groupName);
+      listingPage.searchItem(groupName, false).itemExist(groupName);
 
       // Delete
       listingPage.deleteItem(groupName);
