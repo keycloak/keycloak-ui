@@ -22,7 +22,7 @@
   },
   "dependencies": {
     "@patternfly/patternfly": "^4.102.1",
-    "@patternfly/react-core": "4.115.1",
+    "@patternfly/react-core": "4.115.2",
     "@patternfly/react-icons": "4.10.1",
     "@patternfly/react-table": "4.26.7",
     "file-saver": "^2.0.5",
