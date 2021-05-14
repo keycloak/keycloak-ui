@@ -62,36 +62,30 @@ export const KeysTabInner = ({ keys }: KeysTabInnerProps) => {
     return <>{provider}</>;
   };
 
+  const renderPublicKeyButton = (publicKey: string) => {
+    return (
+      <Button
+        onClick={() => {
+          togglePublicKeyDialog();
+          setPublicKey(publicKey!);
+        }}
+        variant="secondary"
+        id="kc-public-key"
+      >
+        {t("realm-settings:publicKeys").slice(0, -1)}
+      </Button>
+    );
+  };
+
   const ButtonRenderer = ({ provider, publicKey, certificate }: KeyData) => {
     if (provider === "ecdsa-generated") {
-      return (
-        <>
-          <Button
-            onClick={() => {
-              togglePublicKeyDialog();
-              setPublicKey(publicKey!);
-            }}
-            variant="secondary"
-            id="kc-public-key"
-          >
-            {t("realm-settings:publicKeys").slice(0, -1)}
-          </Button>
-        </>
-      );
-    } else if (provider === "rsa-generated" || provider === "fallback-RS256") {
+      return <>{renderPublicKeyButton(publicKey!)}</>;
+    }
+    if (provider === "rsa-generated" || provider === "fallback-RS256") {
       return (
         <>
           <div>
-            <Button
-              onClick={() => {
-                togglePublicKeyDialog();
-                setPublicKey(publicKey!);
-              }}
-              variant="secondary"
-              id="kc-rsa-public-key"
-            >
-              {t("realm-settings:publicKeys").slice(0, -1)}
-            </Button>
+            {renderPublicKeyButton(publicKey!)}
             <Button
               onClick={() => {
                 toggleCertificateDialog();

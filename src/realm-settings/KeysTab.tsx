@@ -78,7 +78,8 @@ export const KeysTabInner = ({ keys }: KeysTabInnerProps) => {
           </Button>
         </>
       );
-    } else if (provider === "rsa-generated" || provider === "fallback-RS256") {
+    }
+    if (provider === "rsa-generated" || provider === "fallback-RS256") {
       return (
         <>
           <Button
