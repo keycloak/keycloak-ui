@@ -27,7 +27,7 @@ import { PartialImportDialog } from "./PartialImport";
 import { RealmSettingsThemesTab } from "./ThemesTab";
 import { RealmSettingsEmailTab } from "./EmailTab";
 import { KeysListTab } from "./KeysListTab";
-import { EventsTab } from "./EventsTab";
+import { EventsTab } from "./event-config/EventsTab";
 import type ComponentRepresentation from "keycloak-admin/lib/defs/componentRepresentation";
 import { KeysProviderTab } from "./KeysProvidersTab";
 import { useServerInfo } from "../context/server-info/ServerInfoProvider";

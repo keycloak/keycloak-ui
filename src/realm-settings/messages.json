@@ -48,7 +48,7 @@
     "password": "Password",
     "keys": "Keys",
     "keysList": "Keys list",
-    "searchKey":"Search key",
+    "searchKey": "Search key",
     "keystore": "Keystore",
     "keystorePassword": "Keystore password",
     "keyAlias": "Key alias",
@@ -135,77 +135,253 @@
     "supportedLocales": "Supported locales",
     "defaultLocale": "Default locale",
 
+    "eventType": "Event saved type",
+    "searchEventType": "Search saved event type",
+    "addTypes": "Add saved types",
     "eventTypes": {
-      "SEND_RESET_PASSWORD": "Send reset password",
-      "UPDATE_CONSENT_ERROR": "Update consent error",
-      "GRANT_CONSENT": "Grant consent",
-      "REMOVE_TOTP": "Remove totp",
-      "REVOKE_GRANT": "Revoke grant",
-      "UPDATE_TOTP": "Update totp",
-      "LOGIN_ERROR": "Login error",
-      "CLIENT_LOGIN": "Client login",
-      "RESET_PASSWORD_ERROR": "Reset password error",
-      "IMPERSONATE_ERROR": "Impersonate error",
-      "CODE_TO_TOKEN_ERROR": "Code to token error",
-      "CUSTOM_REQUIRED_ACTION": "Custom required action",
-      "RESTART_AUTHENTICATION": "Restart authentication",
-      "IMPERSONATE": "Impersonate",
-      "UPDATE_PROFILE_ERROR": "Update profile error",
-      "LOGIN": "Login",
-      "UPDATE_PASSWORD_ERROR": "Update password error",
-      "CLIENT_INITIATED_ACCOUNT_LINKING": "Client initiated account linking",
-      "TOKEN_EXCHANGE": "Token exchange",
-      "LOGOUT": "Logout",
-      "REGISTER": "Register",
-      "DELETE_ACCOUNT_ERROR": "Delete account error",
-      "CLIENT_REGISTER": "Client register",
-      "IDENTITY_PROVIDER_LINK_ACCOUNT": "Identity provider link account",
-      "DELETE_ACCOUNT": "Delete account",
-      "UPDATE_PASSWORD": "Update password",
-      "CLIENT_DELETE": "Client delete",
-      "FEDERATED_IDENTITY_LINK_ERROR": "Federated identity link error",
-      "IDENTITY_PROVIDER_FIRST_LOGIN": "Identity provider first login",
-      "CLIENT_DELETE_ERROR": "Client delete error",
-      "VERIFY_EMAIL": "Verify email",
-      "CLIENT_LOGIN_ERROR": "Client login error",
-      "RESTART_AUTHENTICATION_ERROR": "Restart authentication error",
-      "EXECUTE_ACTIONS": "Execute actions",
-      "REMOVE_FEDERATED_IDENTITY_ERROR": "Remove federated identity error",
-      "TOKEN_EXCHANGE_ERROR": "Token exchange error",
-      "PERMISSION_TOKEN": "Permission token",
-      "SEND_IDENTITY_PROVIDER_LINK_ERROR": "Send identity provider link error",
-      "EXECUTE_ACTION_TOKEN_ERROR": "Execute action token error",
-      "SEND_VERIFY_EMAIL": "Send verify email",
-      "EXECUTE_ACTIONS_ERROR": "Execute actions error",
-      "REMOVE_FEDERATED_IDENTITY": "Remove federated identity",
-      "IDENTITY_PROVIDER_POST_LOGIN": "Identity provider post login",
-      "IDENTITY_PROVIDER_LINK_ACCOUNT_ERROR": "Identity provider link account error",
-      "UPDATE_EMAIL": "Update email",
-      "REGISTER_ERROR": "Register error",
-      "REVOKE_GRANT_ERROR": "Revoke grant error",
-      "EXECUTE_ACTION_TOKEN": "Execute action token",
-      "LOGOUT_ERROR": "Logout error",
-      "UPDATE_EMAIL_ERROR": "Update email error",
-      "CLIENT_UPDATE_ERROR": "Client update error",
-      "UPDATE_PROFILE": "Update profile",
-      "CLIENT_REGISTER_ERROR": "Client register error",
-      "FEDERATED_IDENTITY_LINK": "Federated identity link",
-      "SEND_IDENTITY_PROVIDER_LINK": "Send identity provider link",
-      "SEND_VERIFY_EMAIL_ERROR": "Send verify email error",
-      "RESET_PASSWORD": "Reset password",
-      "CLIENT_INITIATED_ACCOUNT_LINKING_ERROR": "Client initiated account linking error",
-      "UPDATE_CONSENT": "Update consent",
-      "REMOVE_TOTP_ERROR": "Remove totp error",
-      "VERIFY_EMAIL_ERROR": "Verify email error",
-      "SEND_RESET_PASSWORD_ERROR": "Send reset password error",
-      "CLIENT_UPDATE": "Client update",
-      "CUSTOM_REQUIRED_ACTION_ERROR": "Custom required action error",
-      "IDENTITY_PROVIDER_POST_LOGIN_ERROR": "Identity provider post login error",
-      "UPDATE_TOTP_ERROR": "Update totp error",
-      "CODE_TO_TOKEN": "Code to token",
-      "GRANT_CONSENT_ERROR": "Grant consent error",
-      "IDENTITY_PROVIDER_FIRST_LOGIN_ERROR": "Identity provider first login error"
-    }
+      "SEND_RESET_PASSWORD": {
+        "name": "Send reset password",
+        "description": "Send reset password by someone"
+      },
+      "UPDATE_CONSENT_ERROR": {
+        "name": "Update consent error",
+        "description": "Update consent error"
+      },
+      "GRANT_CONSENT": {
+        "name": "Grant consent",
+        "description": "Grant consent"
+      },
+      "REMOVE_TOTP": { "name": "Remove totp", "description": "Remove totp" },
+      "REVOKE_GRANT": { "name": "Revoke grant", "description": "Revoke grant" },
+      "UPDATE_TOTP": { "name": "Update totp", "description": "Update totp" },
+      "LOGIN_ERROR": { "name": "Login error", "description": "Login error" },
+      "CLIENT_LOGIN": { "name": "Client login", "description": "Client login" },
+      "RESET_PASSWORD_ERROR": {
+        "name": "Reset password error",
+        "description": "Reset password error"
+      },
+      "IMPERSONATE_ERROR": {
+        "name": "Impersonate error",
+        "description": "Impersonate error"
+      },
+      "CODE_TO_TOKEN_ERROR": {
+        "name": "Code to token error",
+        "description": "Code to token error"
+      },
+      "CUSTOM_REQUIRED_ACTION": {
+        "name": "Custom required action",
+        "description": "Custom required action"
+      },
+      "RESTART_AUTHENTICATION": {
+        "name": "Restart authentication",
+        "description": "Restart authentication"
+      },
+      "IMPERSONATE": { "name": "Impersonate", "description": "Impersonate" },
+      "UPDATE_PROFILE_ERROR": {
+        "name": "Update profile error",
+        "description": "Update profile error"
+      },
+      "LOGIN": { "name": "Login", "description": "Login" },
+      "UPDATE_PASSWORD_ERROR": {
+        "name": "Update password error",
+        "description": "Update password error"
+      },
+      "CLIENT_INITIATED_ACCOUNT_LINKING": {
+        "name": "Client initiated account linking",
+        "description": "Client initiated account linking"
+      },
+      "TOKEN_EXCHANGE": {
+        "name": "Token exchange",
+        "description": "Token exchange"
+      },
+      "LOGOUT": { "name": "Logout", "description": "Logout" },
+      "REGISTER": { "name": "Register", "description": "Register" },
+      "DELETE_ACCOUNT_ERROR": {
+        "name": "Delete account error",
+        "description": "Delete account error"
+      },
+      "CLIENT_REGISTER": {
+        "name": "Client register",
+        "description": "Client register"
+      },
+      "IDENTITY_PROVIDER_LINK_ACCOUNT": {
+        "name": "Identity provider link account",
+        "description": "Identity provider link account"
+      },
+      "DELETE_ACCOUNT": {
+        "name": "Delete account",
+        "description": "Delete account"
+      },
+      "UPDATE_PASSWORD": {
+        "name": "Update password",
+        "description": "Update password"
+      },
+      "CLIENT_DELETE": {
+        "name": "Client delete",
+        "description": "Client delete"
+      },
+      "FEDERATED_IDENTITY_LINK_ERROR": {
+        "name": "Federated identity link error",
+        "description": "Federated identity link error"
+      },
+      "IDENTITY_PROVIDER_FIRST_LOGIN": {
+        "name": "Identity provider first login",
+        "description": "Identity provider first login"
+      },
+      "CLIENT_DELETE_ERROR": {
+        "name": "Client delete error",
+        "description": "Client delete error"
+      },
+      "VERIFY_EMAIL": { "name": "Verify email", "description": "Verify email" },
+      "CLIENT_LOGIN_ERROR": {
+        "name": "Client login error",
+        "description": "Client login error"
+      },
+      "RESTART_AUTHENTICATION_ERROR": {
+        "name": "Restart authentication error",
+        "description": "Restart authentication error"
+      },
+      "EXECUTE_ACTIONS": {
+        "name": "Execute actions",
+        "description": "Execute actions"
+      },
+      "REMOVE_FEDERATED_IDENTITY_ERROR": {
+        "name": "Remove federated identity error",
+        "description": "Remove federated identity error"
+      },
+      "TOKEN_EXCHANGE_ERROR": {
+        "name": "Token exchange error",
+        "description": "Token exchange error"
+      },
+      "PERMISSION_TOKEN": {
+        "name": "Permission token",
+        "description": "Permission token"
+      },
+      "SEND_IDENTITY_PROVIDER_LINK_ERROR": {
+        "name": "Send identity provider link error",
+        "description": "Send identity provider link error"
+      },
+      "EXECUTE_ACTION_TOKEN_ERROR": {
+        "name": "Execute action token error",
+        "description": "Execute action token error"
+      },
+      "SEND_VERIFY_EMAIL": {
+        "name": "Send verify email",
+        "description": "Send verify email"
+      },
+      "EXECUTE_ACTIONS_ERROR": {
+        "name": "Execute actions error",
+        "description": "Execute actions error"
+      },
+      "REMOVE_FEDERATED_IDENTITY": {
+        "name": "Remove federated identity",
+        "description": "Remove federated identity"
+      },
+      "IDENTITY_PROVIDER_POST_LOGIN": {
+        "name": "Identity provider post login",
+        "description": "Identity provider post login"
+      },
+      "IDENTITY_PROVIDER_LINK_ACCOUNT_ERROR": {
+        "name": "Identity provider link account error",
+        "description": "Identity provider link account error"
+      },
+      "UPDATE_EMAIL": { "name": "Update email", "description": "Update email" },
+      "REGISTER_ERROR": {
+        "name": "Register error",
+        "description": "Register error"
+      },
+      "REVOKE_GRANT_ERROR": {
+        "name": "Revoke grant error",
+        "description": "Revoke grant error"
+      },
+      "EXECUTE_ACTION_TOKEN": {
+        "name": "Execute action token",
+        "description": "Execute action token"
+      },
+      "LOGOUT_ERROR": { "name": "Logout error", "description": "Logout error" },
+      "UPDATE_EMAIL_ERROR": {
+        "name": "Update email error",
+        "description": "Update email error"
+      },
+      "CLIENT_UPDATE_ERROR": {
+        "name": "Client update error",
+        "description": "Client update error"
+      },
+      "UPDATE_PROFILE": {
+        "name": "Update profile",
+        "description": "Update profile"
+      },
+      "CLIENT_REGISTER_ERROR": {
+        "name": "Client register error",
+        "description": "Client register error"
+      },
+      "FEDERATED_IDENTITY_LINK": {
+        "name": "Federated identity link",
+        "description": "Federated identity link"
+      },
+      "SEND_IDENTITY_PROVIDER_LINK": {
+        "name": "Send identity provider link",
+        "description": "Send identity provider link"
+      },
+      "SEND_VERIFY_EMAIL_ERROR": {
+        "name": "Send verify email error",
+        "description": "Send verify email error"
+      },
+      "RESET_PASSWORD": {
+        "name": "Reset password",
+        "description": "Reset password"
+      },
+      "CLIENT_INITIATED_ACCOUNT_LINKING_ERROR": {
+        "name": "Client initiated account linking error",
+        "description": "Client initiated account linking error"
+      },
+      "UPDATE_CONSENT": {
+        "name": "Update consent",
+        "description": "Update consent"
+      },
+      "REMOVE_TOTP_ERROR": {
+        "name": "Remove totp error",
+        "description": "Remove totp error"
+      },
+      "VERIFY_EMAIL_ERROR": {
+        "name": "Verify email error",
+        "description": "Verify email error"
+      },
+      "SEND_RESET_PASSWORD_ERROR": {
+        "name": "Send reset password error",
+        "description": "Send reset password error"
+      },
+      "CLIENT_UPDATE": {
+        "name": "Client update",
+        "description": "Client update"
+      },
+      "CUSTOM_REQUIRED_ACTION_ERROR": {
+        "name": "Custom required action error",
+        "description": "Custom required action error"
+      },
+      "IDENTITY_PROVIDER_POST_LOGIN_ERROR": {
+        "name": "Identity provider post login error",
+        "description": "Identity provider post login error"
+      },
+      "UPDATE_TOTP_ERROR": {
+        "name": "Update totp error",
+        "description": "Update totp error"
+      },
+      "CODE_TO_TOKEN": {
+        "name": "Code to token",
+        "description": "Code to token"
+      },
+      "GRANT_CONSENT_ERROR": {
+        "name": "Grant consent error",
+        "description": "Grant consent error"
+      },
+      "IDENTITY_PROVIDER_FIRST_LOGIN_ERROR": {
+        "name": "Identity provider first login error",
+        "description": "Identity provider first login error"
+      }
+    },
+    "eventConfigSuccessfully": "Successfully saved configuration",
+    "eventConfigError": "Could not save event configuration {{error}}"
   },
   "partial-import": {
     "partialImportHeaderText": "Partial import allows you to import users, clients, and resources from a previously exported json file.",
