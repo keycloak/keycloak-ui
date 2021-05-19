@@ -23,7 +23,9 @@ export const EventConfigForm = ({
 }) => {
   const { t } = useTranslation("realm-settings");
   const { control, watch } = form;
-  const eventsEnabled: boolean = watch("eventsEnabled");
+
+  const eventKey = type === "admin" ? "adminEventsEnabled" : "eventsEnabled";
+  const eventsEnabled: boolean = watch(eventKey);
 
   const reset = () => {};
 
@@ -32,23 +34,23 @@ export const EventConfigForm = ({
       <FormGroup
         hasNoPaddingTop
         label={t("saveEvents")}
-        fieldId="saveEvents"
+        fieldId={eventKey}
         labelIcon={
           <HelpItem
             helpText={`realm-settings-help:save-${type}-events`}
             forLabel={t("saveEvents")}
-            forID="saveEvents"
+            forID={eventKey}
           />
         }
       >
         <Controller
-          name="eventsEnabled"
+          name={eventKey}
           defaultValue={false}
           control={control}
           render={({ onChange, value }) => (
             <Switch
-              data-testid="saveEvents"
-              id="saveEvents"
+              data-testid={eventKey}
+              id={eventKey}
               label={t("common:on")}
               labelOff={t("common:off")}
               isChecked={value}
