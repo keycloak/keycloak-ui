@@ -12,22 +12,26 @@ import {
 import { HelpItem } from "../../components/help-enabler/HelpItem";
 import { TimeSelector } from "../../components/time-selector/TimeSelector";
 
-type EventsType = "admin" | "user";
+export type EventsType = "admin" | "user";
+
+type EventConfigFormProps = {
+  type: EventsType;
+  form: UseFormMethods;
+  reset: () => void;
+  clear: () => void;
+};
 
 export const EventConfigForm = ({
   type,
   form,
-}: {
-  type: EventsType;
-  form: UseFormMethods;
-}) => {
+  reset,
+  clear,
+}: EventConfigFormProps) => {
   const { t } = useTranslation("realm-settings");
   const { control, watch } = form;
 
   const eventKey = type === "admin" ? "adminEventsEnabled" : "eventsEnabled";
   const eventsEnabled: boolean = watch(eventKey);
-
-  const reset = () => {};
 
   return (
     <>
@@ -91,30 +95,32 @@ export const EventConfigForm = ({
               />
             </FormGroup>
           )}
-          <FormGroup
-            label={t("expiration")}
-            fieldId="expiration"
-            labelIcon={
-              <HelpItem
-                helpText="realm-settings-help:expiration"
-                forLabel={t("expiration")}
-                forID="expiration"
-              />
-            }
-          >
-            <Controller
-              name="eventsExpiration"
-              defaultValue=""
-              control={control}
-              render={({ onChange, value }) => (
-                <TimeSelector
-                  value={value}
-                  onChange={onChange}
-                  units={["minutes", "hours", "days"]}
+          {type === "user" && (
+            <FormGroup
+              label={t("expiration")}
+              fieldId="expiration"
+              labelIcon={
+                <HelpItem
+                  helpText="realm-settings-help:expiration"
+                  forLabel={t("expiration")}
+                  forID="expiration"
                 />
-              )}
-            />
-          </FormGroup>
+              }
+            >
+              <Controller
+                name="eventsExpiration"
+                defaultValue=""
+                control={control}
+                render={({ onChange, value }) => (
+                  <TimeSelector
+                    value={value}
+                    onChange={onChange}
+                    units={["minutes", "hours", "days"]}
+                  />
+                )}
+              />
+            </FormGroup>
+          )}
         </>
       )}
       <ActionGroup>
@@ -142,7 +148,11 @@ export const EventConfigForm = ({
           />
         }
       >
-        <Button variant="danger" id={`clear-${type}-events`}>
+        <Button
+          variant="danger"
+          id={`clear-${type}-events`}
+          onClick={() => clear()}
+        >
           {t("clearEvents")}
         </Button>
       </FormGroup>

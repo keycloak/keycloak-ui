@@ -141,7 +141,7 @@
     "eventTypes": {
       "SEND_RESET_PASSWORD": {
         "name": "Send reset password",
-        "description": "Send reset password by someone"
+        "description": "Send reset password"
       },
       "UPDATE_CONSENT_ERROR": {
         "name": "Update consent error",
@@ -378,10 +378,109 @@
       "IDENTITY_PROVIDER_FIRST_LOGIN_ERROR": {
         "name": "Identity provider first login error",
         "description": "Identity provider first login error"
+      },
+      "REGISTER_NODE_ERROR": {
+        "name": "Register node error",
+        "description": "Register node error"
+      },
+      "PERMISSION_TOKEN_ERROR": {
+        "name": "Permission token error",
+        "description": "Permission token error"
+      },
+      "IDENTITY_PROVIDER_RETRIEVE_TOKEN_ERROR": {
+        "name": "Identity provider retrieve token error",
+        "description": "Identity provider retrieve token error"
+      },
+      "CLIENT_INFO": {
+        "name": "Client info",
+        "description": "Client info"
+      },
+      "VALIDATE_ACCESS_TOKEN": {
+        "name": "Validate access token",
+        "description": "Validate access token"
+      },
+      "IDENTITY_PROVIDER_LOGIN": {
+        "name": "Identity provider login",
+        "description": "Identity provider login"
+      },
+      "CLIENT_INFO_ERROR": {
+        "name": "Client info error",
+        "description": "Client info error"
+      },
+      "INTROSPECT_TOKEN_ERROR": {
+        "name": "Introspect token error",
+        "description": "Introspect token error"
+      },
+      "INTROSPECT_TOKEN": {
+        "name": "Introspect token",
+        "description": "Introspect token"
+      },
+      "UNREGISTER_NODE": {
+        "name": "Unregister node",
+        "description": "Unregister node"
+      },
+      "REGISTER_NODE": {
+        "name": "Register node",
+        "description": "Register node"
+      },
+      "INVALID_SIGNATURE": {
+        "name": "Invalid signature",
+        "description": "Invalid signature"
+      },
+      "USER_INFO_REQUEST_ERROR": {
+        "name": "User info request error",
+        "description": "User info request error"
+      },
+      "REFRESH_TOKEN": {
+        "name": "Refresh token",
+        "description": "Refresh token"
+      },
+      "IDENTITY_PROVIDER_RESPONSE": {
+        "name": "Identity provider response",
+        "description": "Identity provider response"
+      },
+      "IDENTITY_PROVIDER_RETRIEVE_TOKEN": {
+        "name": "Identity provider retrieve token",
+        "description": "Identity provider retrieve token"
+      },
+      "UNREGISTER_NODE_ERROR": {
+        "name": "Unregister node error",
+        "description": "Unregister node error"
+      },
+      "VALIDATE_ACCESS_TOKEN_ERROR": {
+        "name": "Validate access token error",
+        "description": "Validate access token error"
+      },
+      "INVALID_SIGNATURE_ERROR": {
+        "name": "Invalid signature error",
+        "description": "Invalid signature error"
+      },
+      "USER_INFO_REQUEST": {
+        "name": "User info request",
+        "description": "User info request"
+      },
+      "IDENTITY_PROVIDER_RESPONSE_ERROR": {
+        "name": "Identity provider response error",
+        "description": "Identity provider response error"
+      },
+      "IDENTITY_PROVIDER_LOGIN_ERROR": {
+        "name": "Identity provider login error",
+        "description": "Identity provider login error"
+      },
+      "REFRESH_TOKEN_ERROR": {
+        "name": "Refresh token error",
+        "description": "Refresh token error"
       }
+
     },
     "eventConfigSuccessfully": "Successfully saved configuration",
-    "eventConfigError": "Could not save event configuration {{error}}"
+    "eventConfigError": "Could not save event configuration {{error}}",
+    "deleteEvents": "Delete events",
+    "deleteEventsConfirm": "Are you sure you want to permanently delete the events",
+    "admin-events-cleared": "The admin events have been cleared",
+    "admin-events-cleared-error": "Could not clear the admin events {{error}}",
+    "user-events-cleared": "The user events have been cleared",
+    "user-events-cleared-error": "Could not clear the user events {{error}}"
   },
   "partial-import": {
     "partialImportHeaderText": "Partial import allows you to import users, clients, and resources from a previously exported json file.",
