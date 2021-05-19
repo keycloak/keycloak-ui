@@ -137,7 +137,8 @@
 
     "eventType": "Event saved type",
     "searchEventType": "Search saved event type",
-    "addTypes": "Add saved types",
+    "addSavedTypes": "Add saved types",
+    "addTypes": "Add types",
     "eventTypes": {
       "SEND_RESET_PASSWORD": {
         "name": "Send reset password",
@@ -473,6 +474,8 @@
       }
 
     },
+    "emptyEvents": "Nothing to add",
+    "emptyEventsInstructions": "There are no more events types left to add",
     "eventConfigSuccessfully": "Successfully saved configuration",
     "eventConfigError": "Could not save event configuration {{error}}",
     "deleteEvents": "Delete events",

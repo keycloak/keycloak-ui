@@ -3,25 +3,23 @@ import { useTranslation } from "react-i18next";
 import { useForm } from "react-hook-form";
 import {
   AlertVariant,
-  Button,
   ButtonVariant,
   PageSection,
   Tab,
   Tabs,
   TabTitleText,
   Title,
-  ToolbarItem,
 } from "@patternfly/react-core";
-import { IFormatterValueType } from "@patternfly/react-table";
 
 import type { RealmEventsConfigRepresentation } from "keycloak-admin/lib/defs/realmEventsConfigRepresentation";
 import { FormAccess } from "../../components/form-access/FormAccess";
-import { KeycloakDataTable } from "../../components/table-toolbar/KeycloakDataTable";
 import { useRealm } from "../../context/realm-context/RealmContext";
 import { useAlerts } from "../../components/alert/Alerts";
 import { useFetch, useAdminClient } from "../../context/auth/AdminClient";
 import { EventConfigForm, EventsType } from "./EventConfigForm";
 import { useConfirmDialog } from "../../components/confirm-dialog/ConfirmDialog";
+import { EventsTypeTable } from "./EventsTypeTable";
+import { AddEventTypesDialog } from "./AddEventTypesDialog";
 
 export const EventsTab = () => {
   const { t } = useTranslation("realm-settings");
@@ -31,10 +29,7 @@ export const EventsTab = () => {
   const [activeTab, setActiveTab] = useState("user");
   const [events, setEvents] = useState<RealmEventsConfigRepresentation>();
   const [type, setType] = useState<EventsType>();
-
-  const DescriptionCell = (event: { eventType: string }) => (
-    <>{t(`eventTypes.${event.eventType}.description`)}</>
-  );
+  const [addEventType, setAddEventType] = useState(false);
 
   const adminClient = useAdminClient();
   const { addAlert } = useAlerts();
@@ -103,6 +98,12 @@ export const EventsTab = () => {
   return (
     <>
       <DeleteConfirm />
+      {addEventType && (
+        <AddEventTypesDialog
+          onClose={() => setAddEventType(false)}
+          configured={events?.enabledEventTypes || []}
+        />
+      )}
       <Tabs
         activeKey={activeTab}
         onSelect={(_, key) => setActiveTab(key as string)}
@@ -133,9 +134,8 @@ export const EventsTab = () => {
           </PageSection>
           {eventsEnabled && (
             <PageSection>
-              <KeycloakDataTable
-                ariaLabelKey="userEventsRegistered"
-                searchPlaceholderKey="realm-settings:searchEventType"
+              <EventsTypeTable
+                addTypes={() => setAddEventType(true)}
                 loader={() =>
                   Promise.resolve(
                     events!.enabledEventTypes!.map((eventType) => {
@@ -143,34 +143,6 @@ export const EventsTab = () => {
                     })
                   )
                 }
-                toolbarItem={
-                  <ToolbarItem>
-                    <Button id="addTypes" onClick={() => {}}>
-                      {t("addTypes")}
-                    </Button>
-                  </ToolbarItem>
-                }
-                actions={[
-                  {
-                    title: t("common:delete"),
-                    onRowClick: () => {},
-                  },
-                ]}
-                columns={[
-                  {
-                    name: "eventType",
-                    displayKey: "realm-settings:eventType",
-                    cellFormatters: [
-                      (data?: IFormatterValueType) =>
-                        t(`eventTypes.${data}.name`),
-                    ],
-                  },
-                  {
-                    name: "description",
-                    displayKey: "description",
-                    cellRenderer: DescriptionCell,
-                  },
-                ]}
               />
             </PageSection>
           )}
