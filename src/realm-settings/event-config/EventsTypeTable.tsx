@@ -1,4 +1,4 @@
-import React from "react";
+import React, { Fragment } from "react";
 import { useTranslation } from "react-i18next";
 import { Button, ToolbarItem } from "@patternfly/react-core";
 import type { IFormatterValueType } from "@patternfly/react-table";
@@ -26,7 +26,9 @@ export function EventsTypeTable({
   const { t } = useTranslation("realm-settings");
 
   const DescriptionCell = (event: { eventType: string }) => (
-    <>{t(`eventTypes.${event.eventType}.description`)}</>
+    <Fragment key={event.eventType}>
+      {t(`eventTypes.${event.eventType}.description`)}
+    </Fragment>
   );
 
   return (
