@@ -301,7 +301,7 @@ export const RealmSettingsSection = () => {
             <Tab
               eventKey="events"
               title={<TabTitleText>{t("events")}</TabTitleText>}
-              data-testid="rs-events-tab"
+              data-testid="rs-realm-events-tab"
             >
               <EventsTab />
             </Tab>

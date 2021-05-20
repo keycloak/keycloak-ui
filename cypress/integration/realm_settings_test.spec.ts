@@ -1,12 +1,17 @@
 import SidebarPage from "../support/pages/admin_console/SidebarPage";
 import LoginPage from "../support/pages/LoginPage";
 import RealmSettingsPage from "../support/pages/admin_console/manage/realm_settings/RealmSettingsPage";
+import Masthead from "../support/pages/admin_console/Masthead";
+import ModalUtils from "../support/util/ModalUtils";
 import { keycloakBefore } from "../support/util/keycloak_before";
 import AdminClient from "../support/util/AdminClient";
+import ListingPage from "../support/pages/admin_console/ListingPage";
 
 // describe("Realm settings test", () => {
 const loginPage = new LoginPage();
 const sidebarPage = new SidebarPage();
+  const masthead = new Masthead();
+  const modalUtils = new ModalUtils();
 const realmSettingsPage = new RealmSettingsPage();
 
 describe("Realm settings", () => {
@@ -67,6 +72,48 @@ describe("Realm settings", () => {
     realmSettingsPage.selectEmailThemeType("base");
 
     realmSettingsPage.saveThemes();
+    });
+
+    describe("Events tab", () => {
+      const listingPage = new ListingPage();
+
+      it("Enable user events", () => {
+        sidebarPage.goToRealmSettings();
+        cy.getId("rs-realm-events-tab").click();
+
+        realmSettingsPage
+          .toggleSwitch(realmSettingsPage.enableEvents)
+          .save(realmSettingsPage.eventsUserSave);
+        masthead.checkNotificationMessage("Successfully saved configuration");
+
+        realmSettingsPage.clearEvents("user");
+
+        modalUtils
+          .checkModalMessage(
+            "If you clear all events of this realm, all records will be permanently cleared in the database"
+          )
+          .confirmModal();
+
+        masthead.checkNotificationMessage("The user events have been cleared");
+      });
+
+      it("Add event types", () => {
+        sidebarPage.goToRealmSettings();
+        cy.getId("rs-realm-events-tab").click();
+
+        const events = ["Client info", "Client info error"];
+
+        cy.intercept("GET", `/auth/admin/realms/${realmName}/events/config`).as(
+          "fetchConfig"
+        );
+        realmSettingsPage.addUserEvents(events).clickAdd();
+        masthead.checkNotificationMessage("Successfully saved configuration");
+        cy.wait(["@fetchConfig"]);
+
+        for (const event of events) {
+          listingPage.searchItem(event, false).itemExist(event);
+        }
+      });
   });
 
   it("Go to keys tab", function () {
@@ -116,3 +163,45 @@ describe("Realm settings", () => {
   });
 });
 // });
+
+    describe("Events tab", () => {
+      const listingPage = new ListingPage();
+
+      it("Enable user events", () => {
+        sidebarPage.goToRealmSettings();
+        cy.getId("rs-realm-events-tab").click();
+
+        realmSettingsPage
+          .toggleSwitch(realmSettingsPage.enableEvents)
+          .save(realmSettingsPage.eventsUserSave);
+        masthead.checkNotificationMessage("Successfully saved configuration");
+
+        realmSettingsPage.clearEvents("user");
+
+        modalUtils
+          .checkModalMessage(
+            "If you clear all events of this realm, all records will be permanently cleared in the database"
+          )
+          .confirmModal();
+
+        masthead.checkNotificationMessage("The user events have been cleared");
+      });
+
+      it("Add event types", () => {
+        sidebarPage.goToRealmSettings();
+        cy.getId("rs-realm-events-tab").click();
+
+        const events = ["Client info", "Client info error"];
+
+        cy.intercept("GET", `/auth/admin/realms/${realmName}/events/config`).as(
+          "fetchConfig"
+        );
+        realmSettingsPage.addUserEvents(events).clickAdd();
+        masthead.checkNotificationMessage("Successfully saved configuration");
+        cy.wait(["@fetchConfig"]);
+
+        for (const event of events) {
+          listingPage.searchItem(event, false).itemExist(event);
+        }
+      });
+    });

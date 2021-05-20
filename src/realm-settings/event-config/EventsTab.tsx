@@ -28,6 +28,8 @@ export const EventsTab = () => {
 
   const [key, setKey] = useState(0);
   const refresh = () => setKey(new Date().getTime());
+  const [tableKey, setTableKey] = useState(0);
+  const reload = () => setTableKey(new Date().getTime());
 
   const [activeTab, setActiveTab] = useState("user");
   const [events, setEvents] = useState<RealmEventsConfigRepresentation>();
@@ -80,9 +82,10 @@ export const EventsTab = () => {
     () => adminClient.realms.getConfigEvents({ realm }),
     (eventConfig) => {
       setEvents(eventConfig);
+      reload();
       setupForm(eventConfig);
     },
-    []
+    [key]
   );
 
   const save = async (eventConfig: RealmEventsConfigRepresentation) => {
@@ -101,7 +104,7 @@ export const EventsTab = () => {
   };
 
   const addEventTypes = async (eventTypes: EventType[]) => {
-    const eventsTypes = eventTypes.map((type) => type.eventType);
+    const eventsTypes = eventTypes.map((type) => type.id);
     const enabledEvents = events!.enabledEventTypes?.concat(eventsTypes);
     await addEvents(enabledEvents);
   };
@@ -155,21 +158,21 @@ export const EventsTab = () => {
           {eventsEnabled && (
             <PageSection>
               <EventsTypeTable
-                key={key}
+                key={tableKey}
                 addTypes={() => setAddEventType(true)}
                 loader={() =>
                   Promise.resolve(
-                    events?.enabledEventTypes?.map((eventType) => {
-                      return { eventType };
+                    events?.enabledEventTypes?.map((id) => {
+                      return { id };
                     }) || []
                   )
                 }
                 onDelete={(value) => {
-                  addEvents(
-                    events?.enabledEventTypes?.filter(
-                      (e) => e !== value.eventType
-                    )
+                  const enabledEventTypes = events?.enabledEventTypes?.filter(
+                    (e) => e !== value.id
                   );
+                  addEvents(enabledEventTypes);
+                  setEvents({ ...events, enabledEventTypes });
                 }}
               />
             </PageSection>

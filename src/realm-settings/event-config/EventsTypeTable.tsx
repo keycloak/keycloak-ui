@@ -7,7 +7,7 @@ import { KeycloakDataTable } from "../../components/table-toolbar/KeycloakDataTa
 import { ListEmptyState } from "../../components/list-empty-state/ListEmptyState";
 
 export type EventType = {
-  eventType: string;
+  id: string;
 };
 
 type EventsTypeTableProps = {
@@ -25,9 +25,9 @@ export function EventsTypeTable({
 }: EventsTypeTableProps) {
   const { t } = useTranslation("realm-settings");
 
-  const DescriptionCell = (event: { eventType: string }) => (
-    <Fragment key={event.eventType}>
-      {t(`eventTypes.${event.eventType}.description`)}
+  const DescriptionCell = (event: EventType) => (
+    <Fragment key={event.id}>
+      {t(`eventTypes.${event.id}.description`)}
     </Fragment>
   );
 
@@ -42,7 +42,7 @@ export function EventsTypeTable({
         <>
           {addTypes && (
             <ToolbarItem>
-              <Button id="addTypes" onClick={addTypes}>
+              <Button id="addTypes" onClick={addTypes} data-testid="addTypes">
                 {t("addSavedTypes")}
               </Button>
             </ToolbarItem>
@@ -61,7 +61,7 @@ export function EventsTypeTable({
       }
       columns={[
         {
-          name: "eventType",
+          name: "id",
           displayKey: "realm-settings:eventType",
           cellFormatters: [
             (data?: IFormatterValueType) => t(`eventTypes.${data}.name`),

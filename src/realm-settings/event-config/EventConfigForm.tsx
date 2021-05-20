@@ -166,6 +166,7 @@ export const EventConfigForm = ({
         <Button
           variant="danger"
           id={`clear-${type}-events`}
+          data-testid={`clear-${type}-events`}
           onClick={() => clear()}
         >
           {t("clearEvents")}
