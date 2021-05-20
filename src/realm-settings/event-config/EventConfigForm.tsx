@@ -11,6 +11,7 @@ import {
 
 import { HelpItem } from "../../components/help-enabler/HelpItem";
 import { TimeSelector } from "../../components/time-selector/TimeSelector";
+import { useConfirmDialog } from "../../components/confirm-dialog/ConfirmDialog";
 
 export type EventsType = "admin" | "user";
 
@@ -28,13 +29,21 @@ export const EventConfigForm = ({
   clear,
 }: EventConfigFormProps) => {
   const { t } = useTranslation("realm-settings");
-  const { control, watch } = form;
+  const { control, watch, setValue } = form;
 
   const eventKey = type === "admin" ? "adminEventsEnabled" : "eventsEnabled";
   const eventsEnabled: boolean = watch(eventKey);
 
+  const [toggleDisableDialog, DisableConfirm] = useConfirmDialog({
+    titleKey: "realm-settings:events-disable-title",
+    messageKey: "realm-settings:events-disable-confirm",
+    continueButtonLabel: "realm-settings:confirm",
+    onConfirm: () => setValue(eventKey, false),
+  });
+
   return (
     <>
+      <DisableConfirm />
       <FormGroup
         hasNoPaddingTop
         label={t("saveEvents")}
@@ -58,7 +67,13 @@ export const EventConfigForm = ({
               label={t("common:on")}
               labelOff={t("common:off")}
               isChecked={value}
-              onChange={onChange}
+              onChange={(value) => {
+                if (!value) {
+                  toggleDisableDialog();
+                } else {
+                  onChange(value);
+                }
+              }}
             />
           )}
         />

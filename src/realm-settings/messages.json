@@ -483,7 +483,10 @@
     "admin-events-cleared": "The admin events have been cleared",
     "admin-events-cleared-error": "Could not clear the admin events {{error}}",
     "user-events-cleared": "The user events have been cleared",
-    "user-events-cleared-error": "Could not clear the user events {{error}}"
+    "user-events-cleared-error": "Could not clear the user events {{error}}",
+    "events-disable-title": "Unsave events?",
+    "events-disable-confirm": "If \"Save events\" is disabled, subsequent events will not be displayed in the \"Events\" menu",
+    "confirm": "Confirm"
   },
   "partial-import": {
     "partialImportHeaderText": "Partial import allows you to import users, clients, and resources from a previously exported json file.",
