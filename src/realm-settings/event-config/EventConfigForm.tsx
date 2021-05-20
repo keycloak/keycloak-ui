@@ -139,12 +139,12 @@ export const EventConfigForm = ({
       <Divider />
       <FormGroup
         label={t("clearEvents")}
-        fieldId="clearEvents"
+        fieldId={`clear-${type}-events`}
         labelIcon={
           <HelpItem
-            helpText="realm-settings-help:clearEvents"
+            helpText={`realm-settings-help:${type}-clearEvents`}
             forLabel={t("clearEvents")}
-            forID="clearEvents"
+            forID={`clear-${type}-events`}
           />
         }
       >
