@@ -18,13 +18,16 @@ import { useAlerts } from "../../components/alert/Alerts";
 import { useFetch, useAdminClient } from "../../context/auth/AdminClient";
 import { EventConfigForm, EventsType } from "./EventConfigForm";
 import { useConfirmDialog } from "../../components/confirm-dialog/ConfirmDialog";
-import { EventsTypeTable } from "./EventsTypeTable";
+import { EventsTypeTable, EventType } from "./EventsTypeTable";
 import { AddEventTypesDialog } from "./AddEventTypesDialog";
 
 export const EventsTab = () => {
   const { t } = useTranslation("realm-settings");
-  const form = useForm();
+  const form = useForm<RealmEventsConfigRepresentation>();
   const { setValue, handleSubmit, watch } = form;
+
+  const [key, setKey] = useState(0);
+  const refresh = () => setKey(new Date().getTime());
 
   const [activeTab, setActiveTab] = useState("user");
   const [events, setEvents] = useState<RealmEventsConfigRepresentation>();
@@ -35,8 +38,7 @@ export const EventsTab = () => {
   const { addAlert } = useAlerts();
   const { realm } = useRealm();
 
-  const setState = (eventConfig?: RealmEventsConfigRepresentation) => {
-    setEvents(eventConfig);
+  const setupForm = (eventConfig?: RealmEventsConfigRepresentation) => {
     Object.entries(eventConfig || {}).forEach((entry) =>
       setValue(entry[0], entry[1])
     );
@@ -50,7 +52,7 @@ export const EventsTab = () => {
   const [toggleDeleteDialog, DeleteConfirm] = useConfirmDialog({
     titleKey: "realm-settings:deleteEvents",
     messageKey: "realm-settings:deleteEventsConfirm",
-    continueButtonLabel: "common:delete",
+    continueButtonLabel: "common:clear",
     continueButtonVariant: ButtonVariant.danger,
     onConfirm: async () => {
       try {
@@ -76,14 +78,17 @@ export const EventsTab = () => {
 
   useFetch(
     () => adminClient.realms.getConfigEvents({ realm }),
-    (eventConfig) => setState(eventConfig),
+    (eventConfig) => {
+      setEvents(eventConfig);
+      setupForm(eventConfig);
+    },
     []
   );
 
   const save = async (eventConfig: RealmEventsConfigRepresentation) => {
     try {
       await adminClient.realms.updateConfigEvents({ realm }, eventConfig);
-      setState(eventConfig);
+      setupForm(eventConfig);
       addAlert(t("eventConfigSuccessfully"), AlertVariant.success);
     } catch (error) {
       addAlert(
@@ -94,14 +99,29 @@ export const EventsTab = () => {
       );
     }
   };
-  const eventsEnabled: boolean = watch("eventsEnabled");
+
+  const addEventTypes = async (eventTypes: EventType[]) => {
+    const eventsTypes = eventTypes.map((type) => type.eventType);
+    const enabledEvents = events!.enabledEventTypes?.concat(eventsTypes);
+    await addEvents(enabledEvents);
+  };
+
+  const addEvents = async (events: string[] = []) => {
+    const eventConfig = { ...form.getValues(), enabledEventTypes: events };
+    await save(eventConfig);
+    setAddEventType(false);
+    refresh();
+  };
+
+  const eventsEnabled: boolean = watch("eventsEnabled") || false;
   return (
     <>
       <DeleteConfirm />
       {addEventType && (
         <AddEventTypesDialog
-          onClose={() => setAddEventType(false)}
+          onConfirm={(eventTypes) => addEventTypes(eventTypes)}
           configured={events?.enabledEventTypes || []}
+          onClose={() => setAddEventType(false)}
         />
       )}
       <Tabs
@@ -127,7 +147,7 @@ export const EventsTab = () => {
               <EventConfigForm
                 type="user"
                 form={form}
-                reset={() => setState(events)}
+                reset={() => setupForm(events)}
                 clear={() => clear("user")}
               />
             </FormAccess>
@@ -135,14 +155,22 @@ export const EventsTab = () => {
           {eventsEnabled && (
             <PageSection>
               <EventsTypeTable
+                key={key}
                 addTypes={() => setAddEventType(true)}
                 loader={() =>
                   Promise.resolve(
-                    events!.enabledEventTypes!.map((eventType) => {
+                    events?.enabledEventTypes?.map((eventType) => {
                       return { eventType };
-                    })
+                    }) || []
                   )
                 }
+                onDelete={(value) => {
+                  addEvents(
+                    events?.enabledEventTypes?.filter(
+                      (e) => e !== value.eventType
+                    )
+                  );
+                }}
               />
             </PageSection>
           )}
@@ -166,7 +194,7 @@ export const EventsTab = () => {
               <EventConfigForm
                 type="admin"
                 form={form}
-                reset={() => setState(events)}
+                reset={() => setupForm(events)}
                 clear={() => clear("admin")}
               />
             </FormAccess>

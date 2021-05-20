@@ -1,21 +1,28 @@
 import React from "react";
 import { useTranslation } from "react-i18next";
 import { Button, ToolbarItem } from "@patternfly/react-core";
-import { IFormatterValueType } from "@patternfly/react-table";
+import type { IFormatterValueType } from "@patternfly/react-table";
 
 import { KeycloakDataTable } from "../../components/table-toolbar/KeycloakDataTable";
 import { ListEmptyState } from "../../components/list-empty-state/ListEmptyState";
 
-type EventType = {
+export type EventType = {
   eventType: string;
 };
 
 type EventsTypeTableProps = {
   loader: () => Promise<EventType[]>;
   addTypes?: () => void;
+  onSelect?: (value: EventType[]) => void;
+  onDelete?: (value: EventType) => void;
 };
 
-export function EventsTypeTable({ loader, addTypes }: EventsTypeTableProps) {
+export function EventsTypeTable({
+  loader,
+  addTypes,
+  onSelect,
+  onDelete,
+}: EventsTypeTableProps) {
   const { t } = useTranslation("realm-settings");
 
   const DescriptionCell = (event: { eventType: string }) => (
@@ -27,6 +34,8 @@ export function EventsTypeTable({ loader, addTypes }: EventsTypeTableProps) {
       ariaLabelKey="userEventsRegistered"
       searchPlaceholderKey="realm-settings:searchEventType"
       loader={loader}
+      onSelect={onSelect ? onSelect : undefined}
+      canSelectAll={!!onSelect}
       toolbarItem={
         <>
           {addTypes && (
@@ -38,12 +47,16 @@ export function EventsTypeTable({ loader, addTypes }: EventsTypeTableProps) {
           )}
         </>
       }
-      actions={[
-        {
-          title: t("common:delete"),
-          onRowClick: () => {},
-        },
-      ]}
+      actions={
+        !onDelete
+          ? []
+          : [
+              {
+                title: t("common:delete"),
+                onRowClick: onDelete,
+              },
+            ]
+      }
       columns={[
         {
           name: "eventType",
