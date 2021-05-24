@@ -64,14 +64,6 @@ button.pf-c-button.pf-m-link.add-provider {
   padding-left: var(--pf-c-toolbar__content--PaddingLeft);
 }
 
-.pf-c-modal-box.add-provider-modal.pf-m-md {
-  max-height: calc(100vh - 225px);
-}
-
-.pf-c-modal-box__body {
-  overflow: visible;
-}
-
 .pf-c-form__group-label {
   display: flex;
   align-items: start;
