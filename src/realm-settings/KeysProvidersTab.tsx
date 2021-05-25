@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import {
@@ -11,6 +12,7 @@ import {
   DataListItemCells,
   DataListItemRow,
   Dropdown,
+  DropdownItem,
   DropdownToggle,
   InputGroup,
   PageSection,
@@ -26,6 +28,8 @@ import type ComponentRepresentation from "keycloak-admin/lib/defs/componentRepre
 import type ComponentTypeRepresentation from "keycloak-admin/lib/defs/componentTypeRepresentation";
 
 import "./RealmSettingsSection.css";
+import { AddProviderModal } from "./AddProviderModal";
+import { useServerInfo } from "../context/server-info/ServerInfoProvider";
 
 type ComponentData = KeyMetadataRepresentation & {
   providerDescription?: string;
@@ -34,9 +38,12 @@ type ComponentData = KeyMetadataRepresentation & {
 
 type KeysTabInnerProps = {
   components: ComponentData[];
+  realmComponents: ComponentRepresentation[];
+  keyProviderComponentTypes: ComponentTypeRepresentation[];
+  refresh: () => void;
 };
 
-export const KeysTabInner = ({ components }: KeysTabInnerProps) => {
+export const KeysTabInner = ({ components, refresh }: KeysTabInnerProps) => {
   const { t } = useTranslation("roles");
 
   const [id, setId] = useState("");
@@ -44,10 +51,21 @@ export const KeysTabInner = ({ components }: KeysTabInnerProps) => {
   const [filteredComponents, setFilteredComponents] = useState<ComponentData[]>(
     []
   );
+  const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
+
+  const serverInfo = useServerInfo();
+  const providerTypes = serverInfo.componentTypes![
+    "org.keycloak.keys.KeyProvider"
+  ].map((item) => item.id);
 
   const itemIds = components.map((_, idx) => "data" + idx);
 
   const [itemOrder, setItemOrder] = useState<string[]>([]);
+  const [providerDropdownOpen, setProviderDropdownOpen] = useState(false);
+
+  const [defaultConsoleDisplayName, setDefaultConsoleDisplayName] = useState(
+    ""
+  );
 
   const [liveText, setLiveText] = useState("");
 
@@ -96,8 +114,21 @@ export const KeysTabInner = ({ components }: KeysTabInnerProps) => {
     setSearchVal(value);
   };
 
+  const handleModalToggle = () => {
+    setIsCreateModalOpen(!isCreateModalOpen);
+  };
+
   return (
     <>
+      {isCreateModalOpen && (
+        <AddProviderModal
+          handleModalToggle={handleModalToggle}
+          providerType={defaultConsoleDisplayName}
+          refresh={refresh}
+          open={isCreateModalOpen}
+        />
+      )}
+
       <PageSection variant="light" padding={{ default: "noPadding" }}>
         <Toolbar>
           <>
@@ -125,12 +156,30 @@ export const KeysTabInner = ({ components }: KeysTabInnerProps) => {
                 <Dropdown
                   data-testid="addProviderDropdown"
                   className="add-provider-dropdown"
-                  onSelect={() => {}}
+                  isOpen={providerDropdownOpen}
                   toggle={
-                    <DropdownToggle isPrimary>
+                    <DropdownToggle
+                      onToggle={(val) => setProviderDropdownOpen(val)}
+                      isPrimary
+                    >
                       {t("realm-settings:addProvider")}
                     </DropdownToggle>
                   }
+                  dropdownItems={[
+                    providerTypes.map((item) => (
+                      <DropdownItem
+                        onClick={() => {
+                          handleModalToggle();
+
+                          setProviderDropdownOpen(false);
+                          setDefaultConsoleDisplayName(item);
+                        }}
+                        key={item}
+                      >
+                        {item}
+                      </DropdownItem>
+                    )),
+                  ]}
                 />
               </ToolbarItem>
             </ToolbarGroup>
@@ -163,6 +212,12 @@ export const KeysTabInner = ({ components }: KeysTabInnerProps) => {
                     <>{t("realm-settings:name")}</>
                   </DataListCell>,
                   <DataListCell className="provider" key={"2"}>
+                    <>{t("realm-settings:provider")}</>
+                  </DataListCell>,
+                  <DataListCell className="provider-description" key={"3"}>
+                    <>{t("realm-settings:providerDescription")}</>
+                  </DataListCell>,
+                  <DataListCell key={"2"}>
                     <>{t("realm-settings:provider")}</>
                   </DataListCell>,
                   <DataListCell className="provider-description" key={"3"}>
@@ -222,11 +277,13 @@ export const KeysTabInner = ({ components }: KeysTabInnerProps) => {
 type KeysProps = {
   components: ComponentRepresentation[];
   keyProviderComponentTypes: ComponentTypeRepresentation[];
+  refresh: () => void;
 };
 
 export const KeysProviderTab = ({
   components,
   keyProviderComponentTypes,
+  refresh,
   ...props
 }: KeysProps) => {
   return (
@@ -238,6 +295,9 @@ export const KeysProviderTab = ({
         );
         return { ...component, providerDescription: provider?.helpText };
       })}
+      keyProviderComponentTypes={keyProviderComponentTypes}
+      refresh={refresh}
+      realmComponents={components}
       {...props}
     />
   );

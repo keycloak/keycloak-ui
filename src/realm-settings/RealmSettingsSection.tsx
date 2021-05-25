@@ -130,6 +130,8 @@ export const RealmSettingsSection = () => {
   const { control, getValues, setValue, reset: resetForm } = form;
   const [realm, setRealm] = useState<RealmRepresentation>();
   const [activeTab, setActiveTab] = useState(0);
+  const [key, setKey] = useState(0);
+  // const [keys, setKeys] = useState<KeyMetadataRepresentation[]>([]);
   const [realmComponents, setRealmComponents] = useState<
     ComponentRepresentation[]
   >();
@@ -154,6 +156,22 @@ export const RealmSettingsSection = () => {
     },
     []
   );
+
+  const refresh = () => {
+    setKey(new Date().getTime());
+  };
+
+  useEffect(() => {
+
+    const update = async () => {
+      const realmComponents = await adminClient.components.find({
+        type: "org.keycloak.keys.KeyProvider",
+        realm: realmName,
+      });
+      setRealmComponents(realmComponents);
+    };
+    setTimeout(update, 100);
+  }, [key]);
 
   useEffect(() => {
     if (realm) setupForm(realm);
@@ -252,6 +270,7 @@ export const RealmSettingsSection = () => {
                     title={<TabTitleText>{t("providers")}</TabTitleText>}
                   >
                     <KeysProviderTab
+                      refresh={refresh}
                       components={realmComponents}
                       keyProviderComponentTypes={kpComponentTypes}
                     />
