@@ -25,6 +25,8 @@ export default class RealmSettingsPage {
   fromInput = "sender-email-address";
   enableSslCheck = "enable-ssl";
   enableStartTlsCheck = "enable-start-tls";
+  addProviderDropdown = "addProviderDropdown";
+  addProviderButton = "add-provider-button";
 
   selectLoginThemeType(themeType: string) {
     cy.get(this.selectLoginTheme).click();
@@ -86,6 +88,18 @@ export default class RealmSettingsPage {
 
   toggleCheck(switchName: string) {
     cy.getId(switchName).click();
+
+    return this;
+  }
+
+  toggleAddProviderDropdown() {
+    cy.getId(this.addProviderDropdown).click();
+
+    return this;
+  }
+
+  addProvider() {
+    cy.getId(this.addProviderButton).click();
 
     return this;
   }

@@ -67,5 +67,34 @@ describe("Realm settings test", () => {
 
       realmSettingsPage.saveThemes();
     });
+
+    it("Go to keys tab", function () {
+      sidebarPage.goToRealmSettings();
+      cy.getId("rs-keys-tab").click();
+      cy.getId("rs-providers-tab").click();
+      realmSettingsPage.toggleAddProviderDropdown();
+
+      cy.getId("option-aes-generated").click();
+      realmSettingsPage.enterConsoleDisplayName("test_aes-generated");
+      realmSettingsPage.addProvider();
+
+      realmSettingsPage.toggleAddProviderDropdown();
+
+      cy.getId("option-ecdsa-generated").click();
+      realmSettingsPage.enterConsoleDisplayName("test_ecdsa-generated");
+      realmSettingsPage.addProvider();
+
+      realmSettingsPage.toggleAddProviderDropdown();
+
+      cy.getId("option-hmac-generated").click();
+      realmSettingsPage.enterConsoleDisplayName("test_hmac-generated");
+      realmSettingsPage.addProvider();
+
+      realmSettingsPage.toggleAddProviderDropdown();
+
+      cy.getId("option-hmac-generated").click();
+      realmSettingsPage.enterConsoleDisplayName("test_rsa-generated");
+      realmSettingsPage.addProvider();
+    });
   });
 });

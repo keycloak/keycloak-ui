@@ -87,7 +87,7 @@ AddProviderModalProps) => {
       onClose={handleModalToggle}
       actions={[
         <Button
-          data-testid={"add-provider"}
+          data-testid="add-provider-button"
           key="confirm"
           variant="primary"
           type="submit"
@@ -136,7 +136,7 @@ AddProviderModalProps) => {
                   onChange(value);
                   setDisplayName(value);
                 }}
-                data-testid="select-display-name"
+                data-testid="display-name-input"
               ></TextInput>
             )}
           />

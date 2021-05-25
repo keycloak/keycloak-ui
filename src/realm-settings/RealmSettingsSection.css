@@ -56,6 +56,10 @@ button.pf-c-data-list__item-draggable-button.row-drag-button {
   margin-right: 0px;
 }
 
+.pf-c-data-list__item-row.test {
+  font-weight: bold;
+}
+
 button.pf-c-button.pf-m-link.add-provider {
   padding: 0px;
 }

@@ -174,6 +174,7 @@ export const KeysTabInner = ({ components, refresh }: KeysTabInnerProps) => {
                           setProviderDropdownOpen(false);
                           setDefaultConsoleDisplayName(item);
                         }}
+                        data-testid={`option-${item}`}
                         key={item}
                       >
                         {item}
@@ -216,13 +217,7 @@ export const KeysTabInner = ({ components, refresh }: KeysTabInnerProps) => {
                   </DataListCell>,
                   <DataListCell className="provider-description" key={"3"}>
                     <>{t("realm-settings:providerDescription")}</>
-                  </DataListCell>,
-                  <DataListCell key={"2"}>
-                    <>{t("realm-settings:provider")}</>
-                  </DataListCell>,
-                  <DataListCell className="provider-description" key={"3"}>
-                    <>{t("realm-settings:providerDescription")}</>
-                  </DataListCell>,
+                  </DataListCell>
                 ]}
               />
             </DataListItemRow>
