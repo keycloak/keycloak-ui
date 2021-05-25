@@ -24,7 +24,7 @@ import { AddEventTypesDialog } from "./AddEventTypesDialog";
 export const EventsTab = () => {
   const { t } = useTranslation("realm-settings");
   const form = useForm<RealmEventsConfigRepresentation>();
-  const { setValue, handleSubmit, watch } = form;
+  const { setValue, handleSubmit, watch, reset } = form;
 
   const [key, setKey] = useState(0);
   const refresh = () => setKey(new Date().getTime());
@@ -41,6 +41,8 @@ export const EventsTab = () => {
   const { realm } = useRealm();
 
   const setupForm = (eventConfig?: RealmEventsConfigRepresentation) => {
+    reset(eventConfig);
+    setEvents(eventConfig);
     Object.entries(eventConfig || {}).forEach((entry) =>
       setValue(entry[0], entry[1])
     );
@@ -81,9 +83,8 @@ export const EventsTab = () => {
   useFetch(
     () => adminClient.realms.getConfigEvents({ realm }),
     (eventConfig) => {
-      setEvents(eventConfig);
-      reload();
       setupForm(eventConfig);
+      reload();
     },
     [key]
   );

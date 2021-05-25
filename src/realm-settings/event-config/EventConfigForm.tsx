@@ -29,7 +29,12 @@ export const EventConfigForm = ({
   clear,
 }: EventConfigFormProps) => {
   const { t } = useTranslation("realm-settings");
-  const { control, watch, setValue } = form;
+  const {
+    control,
+    watch,
+    setValue,
+    formState: { isDirty },
+  } = form;
 
   const eventKey = type === "admin" ? "adminEventsEnabled" : "eventsEnabled";
   const eventsEnabled: boolean = watch(eventKey);
@@ -144,6 +149,7 @@ export const EventConfigForm = ({
           type="submit"
           id={`save-${type}`}
           data-testid={`save-${type}`}
+          isDisabled={!isDirty}
         >
           {t("common:save")}
         </Button>
