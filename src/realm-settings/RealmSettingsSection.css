@@ -72,3 +72,7 @@ button.pf-c-button.pf-m-link.add-provider {
   display: flex;
   align-items: start;
 }
+
+.add-provider-modal > div.pf-c-modal-box__body {
+  overflow: visible;
+}

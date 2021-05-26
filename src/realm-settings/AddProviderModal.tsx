@@ -59,8 +59,6 @@ AddProviderModalProps) => {
     "org.keycloak.keys.KeyProvider"
   ];
 
-  const [AESkeySize, setAESkeySize] = useState<string[]>(["16"]);
-
   const save = async (component: ComponentRepresentation) => {
     try {
       await adminClient.components.create({
@@ -84,6 +82,7 @@ AddProviderModalProps) => {
 
   return (
     <Modal
+      className="add-provider-modal"
       variant={ModalVariant.medium}
       title={t("realm-settings:addProvider")}
       isOpen={open}
@@ -118,12 +117,12 @@ AddProviderModalProps) => {
       >
         <FormGroup
           label={t("realm-settings:consoleDisplayName")}
-          fieldId="kc-login-theme"
+          fieldId="kc-console-display-name"
           labelIcon={
             <HelpItem
               helpText="realm-settings-help:displayName"
               forLabel={t("loginTheme")}
-              forID="kc-login-theme"
+              forID="kc-console-display-name"
             />
           }
         >
@@ -146,12 +145,12 @@ AddProviderModalProps) => {
         </FormGroup>
         <FormGroup
           label={t("common:enabled")}
-          fieldId="kc-account-theme"
+          fieldId="kc-enabled"
           labelIcon={
             <HelpItem
               helpText={t("realm-settings-help:enabled")}
-              forLabel={t("accountTheme")}
-              forID="kc-account-theme"
+              forLabel={t("enabled")}
+              forID="kc-enabled"
             />
           }
         >
@@ -162,8 +161,8 @@ AddProviderModalProps) => {
             render={({ onChange, value }) => (
               <Switch
                 id="kc-enabled"
-                label={t("common:enabled")}
-                labelOff={t("common:disabled")}
+                label={t("common:on")}
+                labelOff={t("common:off")}
                 isChecked={value[0] === "true"}
                 data-testid={
                   value[0] === "true"
@@ -179,7 +178,7 @@ AddProviderModalProps) => {
         </FormGroup>
         <FormGroup
           label={t("realm-settings:active")}
-          fieldId="kc-admin-console-theme"
+          fieldId="kc-active"
           labelIcon={
             <HelpItem
               helpText="realm-settings-help:active"
@@ -195,8 +194,8 @@ AddProviderModalProps) => {
             render={({ onChange, value }) => (
               <Switch
                 id="kc-active"
-                label={t("common:enabled")}
-                labelOff={t("common:disabled")}
+                label={t("common:on")}
+                labelOff={t("common:off")}
                 isChecked={value[0] === "true"}
                 data-testid={
                   value[0] === "true"
@@ -225,7 +224,7 @@ AddProviderModalProps) => {
             >
               <Controller
                 name="algorithm"
-                // control={control}
+                control={control}
                 defaultValue=""
                 render={({ onChange, value }) => (
                   <Select
@@ -333,7 +332,7 @@ AddProviderModalProps) => {
             >
               <Controller
                 name="algorithm"
-                // control={control}
+                control={control}
                 defaultValue=""
                 render={({ onChange, value }) => (
                   <Select
@@ -387,7 +386,6 @@ AddProviderModalProps) => {
                     }
                     onSelect={(_, value) => {
                       onChange([value + ""]);
-                      setAESkeySize([value + ""]);
                       setIsKeySizeDropdownOpen(false);
                     }}
                     selections={[value + ""]}
@@ -436,10 +434,9 @@ AddProviderModalProps) => {
                   }
                   onSelect={(_, value) => {
                     onChange([value + ""]);
-                    setAESkeySize([value + ""]);
                     setIsKeySizeDropdownOpen(false);
                   }}
-                  selections={AESkeySize}
+                  selections={[value + ""]}
                   isOpen={isKeySizeDropdownOpen}
                   variant={SelectVariant.single}
                   aria-label={t("aesKeySize")}
@@ -529,7 +526,6 @@ AddProviderModalProps) => {
                     }
                     onSelect={(_, value) => {
                       onChange([value + ""]);
-                      setAESkeySize([value + ""]);
                       setIsKeySizeDropdownOpen(false);
                     }}
                     selections={[value + ""]}
