@@ -29,29 +29,13 @@ export const NewRealmForm = () => {
   const adminClient = useAdminClient();
   const { addAlert } = useAlerts();
 
-  const {
-    register,
-    handleSubmit,
-    setValue,
-    control,
-    formState,
-    errors,
-  } = useForm<RealmRepresentation>({ mode: "onChange" });
+  const { register, handleSubmit, control, formState, errors, reset } = useForm<
+    RealmRepresentation
+  >({ mode: "onChange" });
 
-  const handleFileChange = (value: string | File) => {
+  const handleFileChange = (obj: object) => {
     const defaultRealm = { id: "", realm: "", enabled: true };
-
-    let obj: { [name: string]: boolean | string } = defaultRealm;
-    if (value) {
-      try {
-        obj = JSON.parse(value as string);
-      } catch (error) {
-        console.warn("Invalid json, ignoring value using default");
-      }
-    }
-    Object.keys(obj).forEach((k) => {
-      setValue(k, obj[k]);
-    });
+    reset(obj || defaultRealm, { dirtyFields: true });
   };
 
   const save = async (realm: RealmRepresentation) => {
