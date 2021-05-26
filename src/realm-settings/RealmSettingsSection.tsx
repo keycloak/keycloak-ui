@@ -132,7 +132,7 @@ export const RealmSettingsSection = () => {
   const [activeTab, setActiveTab] = useState(0);
   const [realmComponents, setRealmComponents] = useState<
     ComponentRepresentation[]
-  >([]);
+  >();
 
   const kpComponentTypes = useServerInfo().componentTypes![
     "org.keycloak.keys.KeyProvider"
@@ -234,28 +234,30 @@ export const RealmSettingsSection = () => {
               title={<TabTitleText>{t("realm-settings:keys")}</TabTitleText>}
               data-testid="rs-keys-tab"
             >
-              <Tabs
-                activeKey={activeTab}
-                onSelect={(_, key) => setActiveTab(key as number)}
-              >
-                <Tab
-                  id="setup"
-                  eventKey={0}
-                  title={<TabTitleText>{t("keysList")}</TabTitleText>}
+              {realmComponents && (
+                <Tabs
+                  activeKey={activeTab}
+                  onSelect={(_, key) => setActiveTab(key as number)}
                 >
-                  <KeysListTab realmComponents={realmComponents} />
-                </Tab>
-                <Tab
-                  id="evaluate"
-                  eventKey={1}
-                  title={<TabTitleText>{t("providers")}</TabTitleText>}
-                >
-                  <KeysProviderTab
-                    components={realmComponents}
-                    keyProviderComponentTypes={kpComponentTypes}
-                  />
-                </Tab>
-              </Tabs>
+                  <Tab
+                    id="setup"
+                    eventKey={0}
+                    title={<TabTitleText>{t("keysList")}</TabTitleText>}
+                  >
+                    <KeysListTab realmComponents={realmComponents} />
+                  </Tab>
+                  <Tab
+                    id="evaluate"
+                    eventKey={1}
+                    title={<TabTitleText>{t("providers")}</TabTitleText>}
+                  >
+                    <KeysProviderTab
+                      components={realmComponents}
+                      keyProviderComponentTypes={kpComponentTypes}
+                    />
+                  </Tab>
+                </Tabs>
+              )}
             </Tab>
           </KeycloakTabs>
         </FormProvider>
