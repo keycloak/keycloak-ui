@@ -4,7 +4,6 @@ import {
   Button,
   ButtonVariant,
   FileUpload,
-  FileUploadField,
   Form,
   FormGroup,
   Modal,
