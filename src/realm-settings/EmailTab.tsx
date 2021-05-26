@@ -296,7 +296,7 @@ export const RealmSettingsEmailTab = ({
                   helperTextInvalid={t("common:required")}
                   labelIcon={
                     <HelpItem
-                      helpText="realm-settings-help:frontendUrl"
+                      helpText="realm-settings-help:password"
                       forLabel={t("password")}
                       forID="kc-password"
                     />
