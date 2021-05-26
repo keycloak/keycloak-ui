@@ -27,6 +27,7 @@ export default class RealmSettingsPage {
   enableStartTlsCheck = "enable-start-tls";
   addProviderDropdown = "addProviderDropdown";
   addProviderButton = "add-provider-button";
+  displayName = "display-name-input";
 
   selectLoginThemeType(themeType: string) {
     cy.get(this.selectLoginTheme).click();
@@ -102,6 +103,10 @@ export default class RealmSettingsPage {
     cy.getId(this.addProviderButton).click();
 
     return this;
+  }
+
+  enterConsoleDisplayName(name: string) {
+    cy.getId(this.displayName).clear().type(name);
   }
 
   save(saveBtn: string) {

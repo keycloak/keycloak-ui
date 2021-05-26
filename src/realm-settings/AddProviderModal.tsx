@@ -4,6 +4,7 @@ import {
   Button,
   ButtonVariant,
   FileUpload,
+  FileUploadField,
   Form,
   FormGroup,
   Modal,
@@ -51,6 +52,9 @@ AddProviderModalProps) => {
   const [isRSAalgDropdownOpen, setIsRSAalgDropdownOpen] = useState(false);
   const [displayName, setDisplayName] = useState("");
   const realm = useRealm();
+
+  const [keyFileName, setKeyFileName] = useState("");
+  const [certificateFileName, setCertificateFileName] = useState("");
 
   const allComponentTypes = serverInfo.componentTypes![
     "org.keycloak.keys.KeyProvider"
@@ -272,11 +276,13 @@ AddProviderModalProps) => {
                   <FileUpload
                     id="importFile"
                     type="text"
-                    value={value.value}
-                    filename={value.filename}
-                    onChange={(value, filename) =>
-                      onChange({ value, filename })
-                    }
+                    value={value[0]}
+                    filenamePlaceholder="Upload a PEM file or paste key below"
+                    filename={keyFileName}
+                    onChange={(value, fileName) => {
+                      setKeyFileName(fileName);
+                      onChange([value]);
+                    }}
                   />
                 )}
               />
@@ -300,10 +306,12 @@ AddProviderModalProps) => {
                   <FileUpload
                     id="importFile"
                     type="text"
-                    value={value.value}
-                    filename={value.filename}
-                    onChange={(value) => {
-                      onChange([value + ""]);
+                    value={value[0]}
+                    filenamePlaceholder="Upload a PEM file or paste key below"
+                    filename={certificateFileName}
+                    onChange={(value, fileName) => {
+                      setCertificateFileName(fileName);
+                      onChange([value]);
                     }}
                   />
                 )}

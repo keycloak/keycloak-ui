@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import {
@@ -217,7 +216,7 @@ export const KeysTabInner = ({ components, refresh }: KeysTabInnerProps) => {
                   </DataListCell>,
                   <DataListCell className="provider-description" key={"3"}>
                     <>{t("realm-settings:providerDescription")}</>
-                  </DataListCell>
+                  </DataListCell>,
                 ]}
               />
             </DataListItemRow>
