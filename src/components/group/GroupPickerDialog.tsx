@@ -135,17 +135,19 @@ export const GroupPickerDialog = ({
       ]}
     >
       <Breadcrumb>
-        <BreadcrumbItem key="home">
-          <Button
-            variant="link"
-            onClick={() => {
-              setGroupId(undefined);
-              setNavigation([]);
-            }}
-          >
-            {t("groups")}
-          </Button>
-        </BreadcrumbItem>
+        {navigation.length > 0 && (
+          <BreadcrumbItem key="home">
+            <Button
+              variant="link"
+              onClick={() => {
+                setGroupId(undefined);
+                setNavigation([]);
+              }}
+            >
+              {t("groups")}
+            </Button>
+          </BreadcrumbItem>
+        )}
         {navigation.map((group, i) => (
           <BreadcrumbItem key={i}>
             {navigation.length - 1 !== i && (
