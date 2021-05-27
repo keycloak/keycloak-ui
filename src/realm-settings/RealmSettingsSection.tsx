@@ -162,7 +162,6 @@ export const RealmSettingsSection = () => {
   };
 
   useEffect(() => {
-
     const update = async () => {
       const realmComponents = await adminClient.components.find({
         type: "org.keycloak.keys.KeyProvider",
