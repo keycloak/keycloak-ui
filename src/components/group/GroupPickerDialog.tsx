@@ -89,6 +89,8 @@ export const GroupPickerDialog = ({
       });
       setFiltered(undefined);
       setFilter("");
+      setFirst(0);
+      setMax(10);
       setGroups(
         filterGroups
           ? [

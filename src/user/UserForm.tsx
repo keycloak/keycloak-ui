@@ -21,7 +21,6 @@ import { HelpItem } from "../components/help-enabler/HelpItem";
 import { useRealm } from "../context/realm-context/RealmContext";
 import { useFetch, useAdminClient } from "../context/auth/AdminClient";
 import moment from "moment";
-import { JoinGroupDialog } from "./JoinGroupDialog";
 import type GroupRepresentation from "keycloak-admin/lib/defs/groupRepresentation";
 import { useAlerts } from "../components/alert/Alerts";
 import { emailRegexPattern } from "../util";
@@ -54,7 +53,6 @@ export const UserForm = ({
 
   const watchUsernameInput = watch("username");
   const [user, setUser] = useState<UserRepresentation>();
-  const [chips, setChips] = useState<string[]>([]);
   const [selectedGroups, setSelectedGroups] = useState<GroupRepresentation[]>(
     []
   );
@@ -73,7 +71,7 @@ export const UserForm = ({
         setUser(user);
       }
     },
-    [chips]
+    [selectedGroups]
   );
 
   const setupForm = (user: UserRepresentation) => {
@@ -103,20 +101,12 @@ export const UserForm = ({
   };
 
   const deleteItem = (id: string) => {
-    const copyOfChips = chips;
-    const copyOfGroups = selectedGroups;
-
-    setChips(copyOfChips.filter((item) => item !== id));
-    setSelectedGroups(copyOfGroups.filter((item) => item.name !== id));
+    setSelectedGroups(selectedGroups.filter((item) => item.name !== id));
     onGroupsUpdate(selectedGroups);
   };
 
   const addChips = async (groups: GroupRepresentation[]): Promise<void> => {
-    const newSelectedGroups = groups;
-
-    const newGroupNames: string[] = newSelectedGroups.map((item) => item.name!);
-    setChips([...chips!, ...newGroupNames]);
-    setSelectedGroups([...selectedGroups!, ...newSelectedGroups]);
+    setSelectedGroups([...selectedGroups!, ...groups]);
   };
 
   const addGroups = async (groups: GroupRepresentation[]): Promise<void> => {
@@ -161,7 +151,7 @@ export const UserForm = ({
             setOpen(false);
           }}
           onClose={() => setOpen(false)}
-          filterGroups={chips}
+          filterGroups={selectedGroups.map((g) => g.name!)}
         />
       )}
       {editMode && user ? (
@@ -368,12 +358,12 @@ export const UserForm = ({
               <>
                 <InputGroup>
                   <ChipGroup categoryName={" "}>
-                    {chips.map((currentChip) => (
+                    {selectedGroups.map((currentChip) => (
                       <Chip
-                        key={currentChip}
-                        onClick={() => deleteItem(currentChip!)}
+                        key={currentChip.id}
+                        onClick={() => deleteItem(currentChip.name!)}
                       >
-                        {currentChip}
+                        {currentChip.path}
                       </Chip>
                     ))}
                   </ChipGroup>
