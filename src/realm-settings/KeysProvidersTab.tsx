@@ -27,8 +27,13 @@ import type ComponentRepresentation from "keycloak-admin/lib/defs/componentRepre
 import type ComponentTypeRepresentation from "keycloak-admin/lib/defs/componentTypeRepresentation";
 
 import "./RealmSettingsSection.css";
-import { AddProviderModal } from "./AddProviderModal";
 import { useServerInfo } from "../context/server-info/ServerInfoProvider";
+import { AESGeneratedModal } from "./AESGeneratedModal";
+import { ECDSAGeneratedModal } from "./ECDSAGeneratedModal";
+import { HMACGeneratedModal } from "./HMACGeneratedModal";
+import { JavaKeystoreModal } from "./JavaKeystoreModal";
+import { RSAModal } from "./RSAModal";
+import { RSAGeneratedModal } from "./RSAGeneratedModal";
 
 type ComponentData = KeyMetadataRepresentation & {
   providerDescription?: string;
@@ -119,15 +124,62 @@ export const KeysTabInner = ({ components, refresh }: KeysTabInnerProps) => {
 
   return (
     <>
-      {isCreateModalOpen && (
-        <AddProviderModal
+      {defaultConsoleDisplayName === "aes-generated" && (
+        <AESGeneratedModal
           handleModalToggle={handleModalToggle}
           providerType={defaultConsoleDisplayName}
           refresh={refresh}
           open={isCreateModalOpen}
         />
       )}
-
+      {defaultConsoleDisplayName === "ecdsa-generated" && (
+        <ECDSAGeneratedModal
+          handleModalToggle={handleModalToggle}
+          providerType={defaultConsoleDisplayName}
+          refresh={refresh}
+          open={isCreateModalOpen}
+        />
+      )}
+      {defaultConsoleDisplayName === "ecdsa-generated" && (
+        <ECDSAGeneratedModal
+          handleModalToggle={handleModalToggle}
+          providerType={defaultConsoleDisplayName}
+          refresh={refresh}
+          open={isCreateModalOpen}
+        />
+      )}
+      {defaultConsoleDisplayName === "hmac-generated" && (
+        <HMACGeneratedModal
+          handleModalToggle={handleModalToggle}
+          providerType={defaultConsoleDisplayName}
+          refresh={refresh}
+          open={isCreateModalOpen}
+        />
+      )}
+      {defaultConsoleDisplayName === "java-keystore" && (
+        <JavaKeystoreModal
+          handleModalToggle={handleModalToggle}
+          providerType={defaultConsoleDisplayName}
+          refresh={refresh}
+          open={isCreateModalOpen}
+        />
+      )}
+      {defaultConsoleDisplayName === "rsa" && (
+        <RSAModal
+          handleModalToggle={handleModalToggle}
+          providerType={defaultConsoleDisplayName}
+          refresh={refresh}
+          open={isCreateModalOpen}
+        />
+      )}
+      {defaultConsoleDisplayName === "rsa-generated" && (
+        <RSAGeneratedModal
+          handleModalToggle={handleModalToggle}
+          providerType={defaultConsoleDisplayName}
+          refresh={refresh}
+          open={isCreateModalOpen}
+        />
+      )}
       <PageSection variant="light" padding={{ default: "noPadding" }}>
         <Toolbar>
           <>
