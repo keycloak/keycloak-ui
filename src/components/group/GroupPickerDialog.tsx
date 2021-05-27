@@ -4,7 +4,6 @@ import {
   Breadcrumb,
   BreadcrumbItem,
   Button,
-  ButtonVariant,
   DataList,
   DataListAction,
   DataListCell,
@@ -12,19 +11,15 @@ import {
   DataListItem,
   DataListItemCells,
   DataListItemRow,
-  InputGroup,
   Modal,
   ModalVariant,
-  TextInput,
-  Toolbar,
-  ToolbarContent,
-  ToolbarItem,
 } from "@patternfly/react-core";
-import { AngleRightIcon, SearchIcon } from "@patternfly/react-icons";
+import { AngleRightIcon } from "@patternfly/react-icons";
 
 import type GroupRepresentation from "keycloak-admin/lib/defs/groupRepresentation";
 import { useAdminClient, useFetch } from "../../context/auth/AdminClient";
 import { ListEmptyState } from "../list-empty-state/ListEmptyState";
+import { PaginatingTableToolbar } from "../table-toolbar/PaginatingTableToolbar";
 
 export type GroupPickerDialogProps = {
   id?: string;
@@ -56,8 +51,11 @@ export const GroupPickerDialog = ({
   const [filtered, setFiltered] = useState<GroupRepresentation[]>();
   const [filter, setFilter] = useState("");
   const [joinedGroups, setJoinedGroups] = useState<GroupRepresentation[]>([]);
-
   const [groupId, setGroupId] = useState<string>();
+
+  const [max, setMax] = useState(10);
+  const [first, setFirst] = useState(0);
+
   const currentGroup = () => navigation[navigation.length - 1];
 
   useFetch(
@@ -89,6 +87,8 @@ export const GroupPickerDialog = ({
       groups.forEach((group: SelectableGroup) => {
         group.checked = !!selectedRows.find((r) => r.id === group.id);
       });
+      setFiltered(undefined);
+      setFilter("");
       setGroups(
         filterGroups
           ? [
@@ -164,114 +164,108 @@ export const GroupPickerDialog = ({
         ))}
       </Breadcrumb>
 
-      <Toolbar>
-        <ToolbarContent>
-          <ToolbarItem>
-            <InputGroup>
-              <TextInput
-                type="search"
-                aria-label={t("common:search")}
-                placeholder={t("users:searchForGroups")}
-                onChange={(value) => {
-                  if (value === "") {
-                    setFiltered(undefined);
+      <PaginatingTableToolbar
+        count={(filtered || groups).slice(first, first + max).length}
+        first={first}
+        max={max}
+        onNextClick={setFirst}
+        onPreviousClick={setFirst}
+        onPerPageSelect={(first, max) => {
+          setFirst(first);
+          setMax(max);
+        }}
+        inputGroupName={"common:search"}
+        inputGroupOnEnter={(search) => {
+          setFilter(search);
+          setFirst(0);
+          setMax(10);
+          setFiltered(
+            groups.filter((group) =>
+              group.name?.toLowerCase().includes(search.toLowerCase())
+            )
+          );
+        }}
+        inputGroupPlaceholder={t("users:searchForGroups")}
+      >
+        <DataList aria-label={t("groups")} isCompact>
+          {(filtered || groups)
+            .slice(first, first + max)
+            .map((group: SelectableGroup) => (
+              <DataListItem
+                aria-labelledby={group.name}
+                key={group.id}
+                id={group.id}
+                onClick={(e) => {
+                  if (type === "selectOne") {
+                    setGroupId(group.id);
+                  } else if (
+                    hasSubgroups(group) &&
+                    (e.target as HTMLInputElement).type !== "checkbox"
+                  ) {
+                    setGroupId(group.id);
                   }
-                  setFilter(value);
                 }}
-              />
-              <Button
-                variant={ButtonVariant.control}
-                aria-label={t("common:search")}
-                onClick={() =>
-                  setFiltered(
-                    groups.filter((group) =>
-                      group.name?.toLowerCase().includes(filter.toLowerCase())
-                    )
-                  )
-                }
               >
-                <SearchIcon />
-              </Button>
-            </InputGroup>
-          </ToolbarItem>
-        </ToolbarContent>
-      </Toolbar>
-      <DataList aria-label={t("groups")} isCompact>
-        {(filtered || groups).map((group: SelectableGroup) => (
-          <DataListItem
-            aria-labelledby={group.name}
-            key={group.id}
-            id={group.id}
-            onClick={(e) => {
-              if (type === "selectOne") {
-                setGroupId(group.id);
-              } else if (
-                hasSubgroups(group) &&
-                (e.target as HTMLInputElement).type !== "checkbox"
-              ) {
-                setGroupId(group.id);
-              }
-            }}
-          >
-            <DataListItemRow
-              className={`join-group-dialog-row-${
-                isRowDisabled(group) ? "m-disabled" : ""
-              }`}
-              data-testid={group.name}
-            >
-              {type === "selectMany" && (
-                <DataListCheck
-                  className="join-group-modal-check"
-                  data-testid={`${group.name}-check`}
-                  checked={group.checked}
-                  isDisabled={isRowDisabled(group)}
-                  onChange={(checked) => {
-                    group.checked = checked;
-                    let newSelectedRows: SelectableGroup[] = [];
-                    if (!group.checked) {
-                      newSelectedRows = selectedRows.filter(
-                        (r) => r.id !== group.id
-                      );
-                    } else if (group.checked) {
-                      newSelectedRows = [...selectedRows, group];
-                    }
+                <DataListItemRow
+                  className={`join-group-dialog-row-${
+                    isRowDisabled(group) ? "m-disabled" : ""
+                  }`}
+                  data-testid={group.name}
+                >
+                  {type === "selectMany" && (
+                    <DataListCheck
+                      className="join-group-modal-check"
+                      data-testid={`${group.name}-check`}
+                      checked={group.checked}
+                      isDisabled={isRowDisabled(group)}
+                      onChange={(checked) => {
+                        group.checked = checked;
+                        let newSelectedRows: SelectableGroup[] = [];
+                        if (!group.checked) {
+                          newSelectedRows = selectedRows.filter(
+                            (r) => r.id !== group.id
+                          );
+                        } else if (group.checked) {
+                          newSelectedRows = [...selectedRows, group];
+                        }
 
-                    setSelectedRows(newSelectedRows);
-                  }}
-                  aria-labelledby="data-list-check"
-                />
-              )}
+                        setSelectedRows(newSelectedRows);
+                      }}
+                      aria-labelledby="data-list-check"
+                    />
+                  )}
 
-              <DataListItemCells
-                dataListCells={[
-                  <DataListCell key={`name-${group.id}`}>
-                    <>{group.name}</>
-                  </DataListCell>,
-                ]}
-              />
-              <DataListAction
-                aria-labelledby={`select-${group.name}`}
-                id={`select-${group.name}`}
-                aria-label={t("groupName")}
-                isPlainButtonAction
-              >
-                {(hasSubgroups(group) || type === "selectOne") && (
-                  <Button isDisabled variant="link">
-                    <AngleRightIcon />
-                  </Button>
-                )}
-              </DataListAction>
-            </DataListItemRow>
-          </DataListItem>
-        ))}
-        {(filtered || groups).length === 0 && filter === "" && (
-          <ListEmptyState
-            hasIcon={false}
-            message={t("groups:moveGroupEmpty")}
-            instructions={t("groups:moveGroupEmptyInstructions")}
-          />
-        )}
-      </DataList>
+                  <DataListItemCells
+                    dataListCells={[
+                      <DataListCell key={`name-${group.id}`}>
+                        <>{group.name}</>
+                      </DataListCell>,
+                    ]}
+                  />
+                  <DataListAction
+                    aria-labelledby={`select-${group.name}`}
+                    id={`select-${group.name}`}
+                    aria-label={t("groupName")}
+                    isPlainButtonAction
+                  >
+                    {(hasSubgroups(group) || type === "selectOne") && (
+                      <Button isDisabled variant="link">
+                        <AngleRightIcon />
+                      </Button>
+                    )}
+                  </DataListAction>
+                </DataListItemRow>
+              </DataListItem>
+            ))}
+          {(filtered || groups).length === 0 && filter === "" && (
+            <ListEmptyState
+              hasIcon={false}
+              message={t("groups:moveGroupEmpty")}
+              instructions={t("groups:moveGroupEmptyInstructions")}
+            />
+          )}
+        </DataList>
+      </PaginatingTableToolbar>
     </Modal>
   );
 };
