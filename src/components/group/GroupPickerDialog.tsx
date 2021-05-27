@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useTranslation } from "react-i18next";
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -19,46 +20,45 @@ import {
   ToolbarContent,
   ToolbarItem,
 } from "@patternfly/react-core";
-import { useTranslation } from "react-i18next";
-import { useFetch, useAdminClient } from "../context/auth/AdminClient";
 import { AngleRightIcon, SearchIcon } from "@patternfly/react-icons";
-import type GroupRepresentation from "keycloak-admin/lib/defs/groupRepresentation";
-import { useParams } from "react-router-dom";
 
-export type JoinGroupDialogProps = {
-  open: boolean;
-  toggleDialog: () => void;
+import type GroupRepresentation from "keycloak-admin/lib/defs/groupRepresentation";
+import { useAdminClient, useFetch } from "../../context/auth/AdminClient";
+import { ListEmptyState } from "../list-empty-state/ListEmptyState";
+
+export type GroupPickerDialogProps = {
+  id?: string;
+  type: "selectOne" | "selectMany";
+  filterGroups?: string[];
+  text: { title: string; ok: string };
+  onConfirm: (groups: GroupRepresentation[]) => void;
   onClose: () => void;
-  username?: string;
-  onConfirm: (newGroups: Group[]) => void;
-  chips?: any;
 };
 
-type Group = GroupRepresentation & {
+type SelectableGroup = GroupRepresentation & {
   checked?: boolean;
 };
 
-export const JoinGroupDialog = ({
+export const GroupPickerDialog = ({
+  id,
+  type,
+  filterGroups,
+  text,
   onClose,
-  open,
-  toggleDialog,
   onConfirm,
-  username,
-  chips,
-}: JoinGroupDialogProps) => {
-  const { t } = useTranslation("roles");
+}: GroupPickerDialogProps) => {
+  const { t } = useTranslation();
   const adminClient = useAdminClient();
-  const [selectedRows, setSelectedRows] = useState<Group[]>([]);
+  const [selectedRows, setSelectedRows] = useState<SelectableGroup[]>([]);
 
-  const [navigation, setNavigation] = useState<Group[]>([]);
-  const [groups, setGroups] = useState<Group[]>([]);
+  const [navigation, setNavigation] = useState<SelectableGroup[]>([]);
+  const [groups, setGroups] = useState<SelectableGroup[]>([]);
   const [filtered, setFiltered] = useState<GroupRepresentation[]>();
   const [filter, setFilter] = useState("");
   const [joinedGroups, setJoinedGroups] = useState<GroupRepresentation[]>([]);
 
   const [groupId, setGroupId] = useState<string>();
-
-  const { id } = useParams<{ id: string }>();
+  const currentGroup = () => navigation[navigation.length - 1];
 
   useFetch(
     async () => {
@@ -71,26 +71,33 @@ export const JoinGroupDialog = ({
         const existingUserGroups = await adminClient.users.listGroups({
           id,
         });
-        setJoinedGroups(existingUserGroups);
         return {
           groups: allGroups,
+          existingUserGroups,
         };
       } else
         return {
           groups: allGroups,
         };
     },
-    async ({ group: selectedGroup, groups }) => {
+    async ({ group: selectedGroup, groups, existingUserGroups }) => {
+      setJoinedGroups(existingUserGroups || []);
       if (selectedGroup) {
         setNavigation([...navigation, selectedGroup]);
       }
 
-      groups.forEach((group: Group) => {
+      groups.forEach((group: SelectableGroup) => {
         group.checked = !!selectedRows.find((r) => r.id === group.id);
       });
-      id
-        ? setGroups(groups)
-        : setGroups([...groups.filter((row) => !chips.includes(row.name))]);
+      setGroups(
+        filterGroups
+          ? [
+              ...groups.filter(
+                (row) => filterGroups && !filterGroups.includes(row.name!)
+              ),
+            ]
+          : groups
+      );
     },
     [groupId]
   );
@@ -106,24 +113,24 @@ export const JoinGroupDialog = ({
   return (
     <Modal
       variant={ModalVariant.small}
-      title={
-        username ? t("users:joinGroupsFor") + username : t("users:selectGroups")
-      }
-      isOpen={open}
+      title={t(text.title, {
+        group1: filter[0],
+        group2: currentGroup() ? currentGroup().name : t("root"),
+      })}
+      isOpen
       onClose={onClose}
       actions={[
         <Button
-          data-testid="join-button"
+          data-testid={`${text.ok}-button`}
           key="confirm"
           variant="primary"
           form="group-form"
           onClick={() => {
-            toggleDialog();
-            onConfirm(selectedRows);
+            onConfirm(type === "selectMany" ? selectedRows : [currentGroup()]);
           }}
-          isDisabled={selectedRows.length === 0}
+          isDisabled={type === "selectMany" && selectedRows.length === 0}
         >
-          {t("users:Join")}
+          {t(text.ok)}
         </Button>,
       ]}
     >
@@ -190,20 +197,21 @@ export const JoinGroupDialog = ({
         </ToolbarContent>
       </Toolbar>
       <DataList aria-label={t("groups")} isCompact>
-        {(filtered || groups).map((group: Group) => (
+        {(filtered || groups).map((group: SelectableGroup) => (
           <DataListItem
             aria-labelledby={group.name}
             key={group.id}
             id={group.id}
-            onClick={
-              hasSubgroups(group)
-                ? (e) => {
-                    if ((e.target as HTMLInputElement).type !== "checkbox") {
-                      setGroupId(group.id);
-                    }
-                  }
-                : undefined
-            }
+            onClick={(e) => {
+              if (type === "selectOne") {
+                setGroupId(group.id);
+              } else if (
+                hasSubgroups(group) &&
+                (e.target as HTMLInputElement).type !== "checkbox"
+              ) {
+                setGroupId(group.id);
+              }
+            }}
           >
             <DataListItemRow
               className={`join-group-dialog-row-${
@@ -211,26 +219,28 @@ export const JoinGroupDialog = ({
               }`}
               data-testid={group.name}
             >
-              <DataListCheck
-                className="join-group-modal-check"
-                data-testid={`${group.name}-check`}
-                isChecked={group.checked}
-                isDisabled={isRowDisabled(group)}
-                onChange={(checked, e) => {
-                  group.checked = (e.target as HTMLInputElement).checked;
-                  let newSelectedRows: Group[];
-                  if (!group.checked) {
-                    newSelectedRows = selectedRows.filter(
-                      (r) => r.id !== group.id
-                    );
-                  } else if (group.checked) {
-                    newSelectedRows = [...selectedRows, group];
-                  }
+              {type === "selectMany" && (
+                <DataListCheck
+                  className="join-group-modal-check"
+                  data-testid={`${group.name}-check`}
+                  checked={group.checked}
+                  isDisabled={isRowDisabled(group)}
+                  onChange={(checked) => {
+                    group.checked = checked;
+                    let newSelectedRows: SelectableGroup[] = [];
+                    if (!group.checked) {
+                      newSelectedRows = selectedRows.filter(
+                        (r) => r.id !== group.id
+                      );
+                    } else if (group.checked) {
+                      newSelectedRows = [...selectedRows, group];
+                    }
 
-                  setSelectedRows(newSelectedRows!);
-                }}
-                aria-labelledby="data-list-check"
-              />
+                    setSelectedRows(newSelectedRows);
+                  }}
+                  aria-labelledby="data-list-check"
+                />
+              )}
 
               <DataListItemCells
                 dataListCells={[
@@ -245,17 +255,22 @@ export const JoinGroupDialog = ({
                 aria-label={t("groupName")}
                 isPlainButtonAction
               >
-                {hasSubgroups(group) ? (
+                {(hasSubgroups(group) || type === "selectOne") && (
                   <Button isDisabled variant="link">
                     <AngleRightIcon />
                   </Button>
-                ) : (
-                  ""
                 )}
               </DataListAction>
             </DataListItemRow>
           </DataListItem>
         ))}
+        {(filtered || groups).length === 0 && filter === "" && (
+          <ListEmptyState
+            hasIcon={false}
+            message={t("groups:moveGroupEmpty")}
+            instructions={t("groups:moveGroupEmptyInstructions")}
+          />
+        )}
       </DataList>
     </Modal>
   );
