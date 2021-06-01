@@ -27,9 +27,6 @@ export default class RealmSettingsPage {
   enableStartTlsCheck = "enable-start-tls";
   addProviderDropdown = "addProviderDropdown";
   addProviderButton = "add-provider-button";
-  aesDisplayName = "aes-display-name-input";
-  ecdsaDisplayName = "ecdsa-display-name-input";
-  hmacDisplayName = "hmac-display-name-input";
   displayName = "display-name-input";
 
   selectLoginThemeType(themeType: string) {
@@ -38,7 +35,6 @@ export default class RealmSettingsPage {
 
     cy.get(this.selectLoginTheme).click();
     cy.get(this.loginThemeList).contains(themeType).click();
-    // cy.wait(["@themesFetch"]);
 
     return this;
   }
@@ -105,8 +101,6 @@ export default class RealmSettingsPage {
     const keysUrl = "/auth/admin/realms/master/keys";
     cy.intercept(keysUrl).as("keysFetch");
     cy.getId(this.addProviderDropdown).click();
-        // cy.wait(["@themesFetch"]);
-
 
     return this;
   }
@@ -120,10 +114,6 @@ export default class RealmSettingsPage {
   enterConsoleDisplayName(name: string) {
     cy.getId(this.displayName).clear().type(name);
   }
-
-  // enterECDSAConsoleDisplayName(name: string) {
-  //   cy.getId(this.ecdsaDisplayName).clear().type(name);
-  // }
 
   save(saveBtn: string) {
     cy.getId(saveBtn).click();
