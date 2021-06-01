@@ -1,6 +1,7 @@
 {
   "groups": {
     "groups": "Groups",
+    "groupDetails": "Group details",
     "childGroups": "Child groups",
     "createGroup": "Create group",
     "groupName": "Group name",
