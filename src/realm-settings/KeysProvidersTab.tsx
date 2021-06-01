@@ -140,14 +140,14 @@ export const KeysTabInner = ({ components, refresh }: KeysTabInnerProps) => {
           open={isCreateModalOpen}
         />
       )}
-      {defaultConsoleDisplayName === "ecdsa-generated" && (
+      {/* {defaultConsoleDisplayName === "ecdsa-generated" && (
         <ECDSAGeneratedModal
           handleModalToggle={handleModalToggle}
           providerType={defaultConsoleDisplayName}
           refresh={refresh}
           open={isCreateModalOpen}
         />
-      )}
+      )} */}
       {defaultConsoleDisplayName === "hmac-generated" && (
         <HMACGeneratedModal
           handleModalToggle={handleModalToggle}
