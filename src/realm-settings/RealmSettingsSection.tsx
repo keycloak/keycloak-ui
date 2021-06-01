@@ -257,14 +257,15 @@ export const RealmSettingsSection = () => {
                   onSelect={(_, key) => setActiveTab(key as number)}
                 >
                   <Tab
-                    id="setup"
+                    id="keysList"
                     eventKey={0}
                     title={<TabTitleText>{t("keysList")}</TabTitleText>}
                   >
                     <KeysListTab realmComponents={realmComponents} />
                   </Tab>
                   <Tab
-                    id="evaluate"
+                    id="providers"
+                    data-testid="rs-providers-tab"
                     eventKey={1}
                     title={<TabTitleText>{t("providers")}</TabTitleText>}
                   >

@@ -71,7 +71,7 @@ describe("Realm settings test", () => {
     it("Go to keys tab", function () {
       sidebarPage.goToRealmSettings();
       cy.getId("rs-keys-tab").click();
-      cy.getId("rs-providers-tab").click();
+      cy.getId("rs-providers-tab").click(); 
       realmSettingsPage.toggleAddProviderDropdown();
 
       cy.getId("option-aes-generated").click();
