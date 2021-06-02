@@ -22,9 +22,9 @@ describe("Realm settings", () => {
     await new AdminClient().createRealm(realmName);
   });
 
-  after(async () => {
-    await new AdminClient().deleteRealm(realmName);
-  });
+  // after(async () => {
+  //   await new AdminClient().deleteRealm(realmName);
+  // });
 
   it("Go to general tab", function () {
     sidebarPage.goToRealmSettings();
