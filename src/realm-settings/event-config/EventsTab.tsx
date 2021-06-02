@@ -92,7 +92,7 @@ export const EventsTab = () => {
   const save = async (eventConfig: RealmEventsConfigRepresentation) => {
     try {
       await adminClient.realms.updateConfigEvents({ realm }, eventConfig);
-      setupForm(eventConfig);
+      setupForm({ ...events, ...eventConfig });
       addAlert(t("eventConfigSuccessfully"), AlertVariant.success);
     } catch (error) {
       addAlert(

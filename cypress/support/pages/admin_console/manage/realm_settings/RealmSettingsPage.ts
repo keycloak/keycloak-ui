@@ -90,7 +90,7 @@ export default class RealmSettingsPage {
   }
 
   toggleSwitch(switchName: string) {
-    cy.getId(switchName).next().click();
+    cy.getId(switchName).click({ force: true });
 
     return this;
   }

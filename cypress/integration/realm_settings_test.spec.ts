@@ -95,11 +95,6 @@ describe("Realm settings", () => {
           .confirmModal();
 
         masthead.checkNotificationMessage("The user events have been cleared");
-      });
-
-      it("Add event types", () => {
-        sidebarPage.goToRealmSettings();
-        cy.getId("rs-realm-events-tab").click();
 
         const events = ["Client info", "Client info error"];
 
@@ -109,6 +104,7 @@ describe("Realm settings", () => {
         realmSettingsPage.addUserEvents(events).clickAdd();
         masthead.checkNotificationMessage("Successfully saved configuration");
         cy.wait(["@fetchConfig"]);
+        cy.get(".pf-c-spinner__tail-ball").should("not.exist");
 
         for (const event of events) {
           listingPage.searchItem(event, false).itemExist(event);
