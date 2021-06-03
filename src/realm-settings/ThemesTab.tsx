@@ -245,7 +245,7 @@ export const RealmSettingsThemesTab = ({
               defaultValue={false}
               render={({ onChange, value }) => (
                 <Switch
-                  id="kc-internationalization"
+                  id="kc-t-internationalization"
                   label={t("common:enabled")}
                   labelOff={t("common:disabled")}
                   isChecked={value}
@@ -263,7 +263,7 @@ export const RealmSettingsThemesTab = ({
             <>
               <FormGroup
                 label={t("supportedLocales")}
-                fieldId="kc-supported-locales"
+                fieldId="kc-t-supported-locales"
               >
                 <Controller
                   name="supportedLocales"
@@ -271,7 +271,7 @@ export const RealmSettingsThemesTab = ({
                   defaultValue={themeTypes?.account![0].locales}
                   render={({ value, onChange }) => (
                     <Select
-                      toggleId="kc-supported-locales"
+                      toggleId="kc-t-supported-locales"
                       onToggle={() => {
                         setSupportedLocalesOpen(!supportedLocalesOpen);
                       }}
@@ -318,7 +318,7 @@ export const RealmSettingsThemesTab = ({
                   defaultValue=""
                   render={({ onChange, value }) => (
                     <Select
-                      toggleId="kc-default-locale"
+                      toggleId="kc-t-default-locale"
                       onToggle={() => setDefaultLocaleOpen(!defaultLocaleOpen)}
                       onSelect={(_, value) => {
                         onChange(value as string);

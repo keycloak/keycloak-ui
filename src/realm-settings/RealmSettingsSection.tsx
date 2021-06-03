@@ -31,6 +31,7 @@ import { EventsTab } from "./event-config/EventsTab";
 import type ComponentRepresentation from "keycloak-admin/lib/defs/componentRepresentation";
 import { KeysProviderTab } from "./KeysProvidersTab";
 import { useServerInfo } from "../context/server-info/ServerInfoProvider";
+import { LocalizationTab } from "./LocalizationTab";
 
 type RealmSettingsHeaderProps = {
   onChange: (value: boolean) => void;
@@ -129,9 +130,9 @@ export const RealmSettingsSection = () => {
   const { addAlert } = useAlerts();
   const form = useForm();
   const { control, getValues, setValue, reset: resetForm } = form;
+  const [key, setKey] = useState(0);
   const [realm, setRealm] = useState<RealmRepresentation>();
   const [activeTab, setActiveTab] = useState(0);
-  const [key, setKey] = useState(0);
   const [realmComponents, setRealmComponents] = useState<
     ComponentRepresentation[]
   >();
@@ -195,6 +196,17 @@ export const RealmSettingsSection = () => {
   useEffect(() => {
     if (realm) setupForm(realm);
   }, [realm]);
+
+  useEffect(() => {
+    const update = async () => {
+      const realmComponents = await adminClient.components.find({
+        type: "org.keycloak.keys.KeyProvider",
+        realm: realmName,
+      });
+      setRealmComponents(realmComponents);
+    };
+    setTimeout(update, 100);
+  }, [key]);
 
   const setupForm = (realm: RealmRepresentation) => {
     resetForm(realm);
@@ -304,6 +316,20 @@ export const RealmSettingsSection = () => {
               data-testid="rs-realm-events-tab"
             >
               <EventsTab />
+            </Tab>
+
+            <Tab
+              id="localization"
+              eventKey="localization"
+              title={<TabTitleText>{t("localization")}</TabTitleText>}
+            >
+              <LocalizationTab
+                key={key}
+                refresh={refresh}
+                save={save}
+                reset={() => setupForm(realm!)}
+                realm={realm!}
+              />
             </Tab>
           </KeycloakTabs>
         </FormProvider>
