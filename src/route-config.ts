@@ -13,6 +13,7 @@ import { PageNotFoundSection } from "./PageNotFoundSection";
 import realmRoleRoutes from "./realm-roles/routes";
 import realmSettingRoutes from "./realm-settings/routes";
 import { CreateFlow } from "./authentication/form/CreateFlow";
+import { FlowDetails } from "./authentication/FlowDetails";
 import realmRoutes from "./realm/routes";
 import sessionRoutes from "./sessions/routes";
 import userFederationRoutes from "./user-federation/routes";
@@ -52,5 +53,11 @@ export const routes: RouteDef[] = [
     path: "/:realm/authentication/create",
     component: CreateFlow,
     breadcrumb: t("authentication:createFlow"),
+    access: "manage-authorization",
+  },
+  {
+    path: "/:realm/authentication/:id",
+    component: FlowDetails,
+    breadcrumb: t("authentication:flowDetails"),
     access: "manage-authorization",
 ];
