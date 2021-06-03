@@ -19,6 +19,14 @@
     "duplicateFlow": "Duplicate flow",
     "copyOf": "Copy of {{name}}",
     "copyFlowSuccess": "Flow successfully duplicated",
-    "copyFlowError": "Could not duplicate flow: {{error}}"
+    "copyFlowError": "Could not duplicate flow: {{error}}",
+    "createFlow": "Create flow",
+    "flowType": "Flow type",
+    "flow-type": {
+      "basic-flow": "Basic flow",
+      "client-flow": "Client flow"
+    },
+    "flowCreatedSuccess": "Flow created",
+    "flowCreateError": "Could not create flow: {{error}}"
   }
 }

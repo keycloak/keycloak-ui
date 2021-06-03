@@ -36,6 +36,7 @@ import {
 } from "./identity-providers/add/AddIdentityProvider";
 import { AddOpenIdConnect } from "./identity-providers/add/AddOpenIdConnect";
 import { DetailSettings } from "./identity-providers/add/DetailSettings";
+import { CreateFlow } from "./authentication/form/CreateFlow";
 
 export type RouteDef = BreadcrumbsRoute & {
   access: AccessType;
@@ -187,7 +188,13 @@ export const routes: RoutesFn = (t: TFunction) => [
     path: "/:realm/authentication",
     component: AuthenticationSection,
     breadcrumb: t("authentication"),
-    access: "view-realm",
+    access: "view-authorization",
+  },
+  {
+    path: "/:realm/authentication/create",
+    component: CreateFlow,
+    breadcrumb: t("authentication:createFlow"),
+    access: "manage-authorization",
   },
   {
     path: "/:realm/identity-providers",
