@@ -131,7 +131,7 @@ const LdapSettingsHeader = ({
     <>
       <DisableConfirm />
       {!id ? (
-        <ViewHeader titleKey="LDAP" />
+        <ViewHeader titleKey={t("addOneLdap")} />
       ) : (
         <ViewHeader
           titleKey="LDAP"
