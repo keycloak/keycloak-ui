@@ -20,7 +20,7 @@ const Template: Story<ViewHeaderProps> = (args) => (
 export const Extended = Template.bind({});
 Extended.args = {
   titleKey: "This is the title",
-  badge: "badge",
+  badges: [{ text: "badge" }],
   subKey: "This is the description.",
   subKeyLinkProps: {
     title: "More information",

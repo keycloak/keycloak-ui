@@ -1,4 +1,11 @@
-import React, { ReactElement, ReactNode, useContext, useState } from "react";
+import React, {
+  Fragment,
+  isValidElement,
+  ReactElement,
+  ReactNode,
+  useContext,
+  useState,
+} from "react";
 import {
   Text,
   PageSection,
@@ -14,6 +21,8 @@ import {
   Dropdown,
   DropdownToggle,
   DropdownPosition,
+  Button,
+  ButtonVariant,
 } from "@patternfly/react-core";
 import { HelpContext } from "../help-enabler/HelpHeader";
 import { useTranslation } from "react-i18next";
@@ -22,12 +31,11 @@ import {
   FormattedLinkProps,
 } from "../external-link/FormattedLink";
 import { HelpItem } from "../help-enabler/HelpItem";
+import { CheckCircleIcon } from "@patternfly/react-icons";
 
 export type ViewHeaderProps = {
   titleKey: string;
-  badge?: string;
-  badgeId?: string;
-  badgeIsRead?: boolean;
+  badges?: ViewHeaderBadge[];
   subKey?: string | ReactNode;
   actionsDropdownId?: string;
   subKeyLinkProps?: FormattedLinkProps;
@@ -40,11 +48,16 @@ export type ViewHeaderProps = {
   helpTextKey?: string;
 };
 
+export type ViewHeaderBadge = {
+  id?: string;
+  text?: string | ReactNode;
+  readonly?: boolean;
+};
+
 export const ViewHeader = ({
   actionsDropdownId,
   titleKey,
-  badge,
-  badgeIsRead,
+  badges,
   subKey,
   subKeyLinkProps,
   dropdownItems,
@@ -79,14 +92,20 @@ export const ViewHeader = ({
                   <Text component="h1">{t(titleKey)}</Text>
                 </TextContent>
               </LevelItem>
-              {badge && (
+              {badges && (
                 <LevelItem>
-                  <Badge
-                    data-testid="composite-role-badge"
-                    isRead={badgeIsRead}
-                  >
-                    {badge}
-                  </Badge>
+                  {badges.map((badge) => (
+                    <>
+                      {!isValidElement(badge.text) && (
+                        <Fragment key={badge.text as string}>
+                          <Badge data-testid={badge.id} isRead={badge.readonly}>
+                            {badge.text}
+                          </Badge>{" "}
+                        </Fragment>
+                      )}
+                      {isValidElement(badge.text) && <>{badge.text}</>}{" "}
+                    </>
+                  ))}
                 </LevelItem>
               )}
             </Level>
