@@ -7,11 +7,10 @@ import { keycloakBefore } from "../support/util/keycloak_before";
 import AdminClient from "../support/util/AdminClient";
 import ListingPage from "../support/pages/admin_console/ListingPage";
 
-// describe("Realm settings test", () => {
 const loginPage = new LoginPage();
 const sidebarPage = new SidebarPage();
-  const masthead = new Masthead();
-  const modalUtils = new ModalUtils();
+const masthead = new Masthead();
+const modalUtils = new ModalUtils();
 const realmSettingsPage = new RealmSettingsPage();
 
 describe("Realm settings", () => {
@@ -27,11 +26,11 @@ describe("Realm settings", () => {
     await new AdminClient().createRealm(realmName);
   });
 
-  // after(async () => {
-  //   await new AdminClient().deleteRealm(realmName);
-  // });
+  after(async () => {
+    await new AdminClient().deleteRealm(realmName);
+  });
 
-  it("Go to general tab", function () {
+  it("Go to general tab", () => {
     sidebarPage.goToRealmSettings();
     realmSettingsPage.toggleSwitch(realmSettingsPage.managedAccessSwitch);
     realmSettingsPage.save(realmSettingsPage.generalSaveBtn);
@@ -39,7 +38,7 @@ describe("Realm settings", () => {
     realmSettingsPage.save(realmSettingsPage.generalSaveBtn);
   });
 
-  it("Go to login tab", function () {
+  it("Go to login tab", () => {
     sidebarPage.goToRealmSettings();
     cy.getId("rs-login-tab").click();
     realmSettingsPage.toggleSwitch(realmSettingsPage.userRegSwitch);
@@ -48,7 +47,7 @@ describe("Realm settings", () => {
     realmSettingsPage.toggleSwitch(realmSettingsPage.verifyEmailSwitch);
   });
 
-  it("Go to email tab", function () {
+  it("Go to email tab", () => {
     sidebarPage.goToRealmSettings();
     cy.getId("rs-email-tab").click();
 
@@ -62,7 +61,7 @@ describe("Realm settings", () => {
     realmSettingsPage.save(realmSettingsPage.emailSaveBtn);
   });
 
-  it("Go to themes tab", function () {
+  it("Go to themes tab", () => {
     cy.wait(5000);
     sidebarPage.goToRealmSettings();
     cy.getId("rs-themes-tab").click();
@@ -72,47 +71,48 @@ describe("Realm settings", () => {
     realmSettingsPage.selectEmailThemeType("base");
 
     realmSettingsPage.saveThemes();
-    });
-
-    describe("Events tab", () => {
-      const listingPage = new ListingPage();
-
-      it("Enable user events", () => {
-        sidebarPage.goToRealmSettings();
-        cy.getId("rs-realm-events-tab").click();
-
-        realmSettingsPage
-          .toggleSwitch(realmSettingsPage.enableEvents)
-          .save(realmSettingsPage.eventsUserSave);
-        masthead.checkNotificationMessage("Successfully saved configuration");
-
-        realmSettingsPage.clearEvents("user");
-
-        modalUtils
-          .checkModalMessage(
-            "If you clear all events of this realm, all records will be permanently cleared in the database"
-          )
-          .confirmModal();
-
-        masthead.checkNotificationMessage("The user events have been cleared");
-
-        const events = ["Client info", "Client info error"];
-
-        cy.intercept("GET", `/auth/admin/realms/${realmName}/events/config`).as(
-          "fetchConfig"
-        );
-        realmSettingsPage.addUserEvents(events).clickAdd();
-        masthead.checkNotificationMessage("Successfully saved configuration");
-        cy.wait(["@fetchConfig"]);
-        cy.get(".pf-c-spinner__tail-ball").should("not.exist");
-
-        for (const event of events) {
-          listingPage.searchItem(event, false).itemExist(event);
-        }
-      });
   });
 
-  it("Go to keys tab", function () {
+  describe("Events tab", () => {
+    const listingPage = new ListingPage();
+
+    it("Enable user events", () => {
+      sidebarPage.goToRealmSettings();
+      cy.getId("rs-realm-events-tab").click();
+
+      cy.wait(5000);
+      realmSettingsPage
+        .toggleSwitch(realmSettingsPage.enableEvents)
+        .save(realmSettingsPage.eventsUserSave);
+      masthead.checkNotificationMessage("Successfully saved configuration");
+
+      realmSettingsPage.clearEvents("user");
+
+      modalUtils
+        .checkModalMessage(
+          "If you clear all events of this realm, all records will be permanently cleared in the database"
+        )
+        .confirmModal();
+
+      masthead.checkNotificationMessage("The user events have been cleared");
+
+      const events = ["Client info", "Client info error"];
+
+      cy.intercept("GET", `/auth/admin/realms/${realmName}/events/config`).as(
+        "fetchConfig"
+      );
+      realmSettingsPage.addUserEvents(events).clickAdd();
+      masthead.checkNotificationMessage("Successfully saved configuration");
+      cy.wait(["@fetchConfig"]);
+      cy.get(".pf-c-spinner__tail-ball").should("not.exist");
+
+      for (const event of events) {
+        listingPage.searchItem(event, false).itemExist(event);
+      }
+    });
+  });
+
+  it("Go to keys tab", () => {
     cy.wait(5000);
 
     sidebarPage.goToRealmSettings();
@@ -120,7 +120,7 @@ describe("Realm settings", () => {
     cy.getId("rs-keys-tab").click();
   });
 
-  it("add Providers", function () {
+  it("add Providers", () => {
     cy.wait(5000);
     sidebarPage.goToRealmSettings();
 
@@ -158,46 +158,3 @@ describe("Realm settings", () => {
     realmSettingsPage.addProvider();
   });
 });
-// });
-
-    describe("Events tab", () => {
-      const listingPage = new ListingPage();
-
-      it("Enable user events", () => {
-        sidebarPage.goToRealmSettings();
-        cy.getId("rs-realm-events-tab").click();
-
-        realmSettingsPage
-          .toggleSwitch(realmSettingsPage.enableEvents)
-          .save(realmSettingsPage.eventsUserSave);
-        masthead.checkNotificationMessage("Successfully saved configuration");
-
-        realmSettingsPage.clearEvents("user");
-
-        modalUtils
-          .checkModalMessage(
-            "If you clear all events of this realm, all records will be permanently cleared in the database"
-          )
-          .confirmModal();
-
-        masthead.checkNotificationMessage("The user events have been cleared");
-      });
-
-      it("Add event types", () => {
-        sidebarPage.goToRealmSettings();
-        cy.getId("rs-realm-events-tab").click();
-
-        const events = ["Client info", "Client info error"];
-
-        cy.intercept("GET", `/auth/admin/realms/${realmName}/events/config`).as(
-          "fetchConfig"
-        );
-        realmSettingsPage.addUserEvents(events).clickAdd();
-        masthead.checkNotificationMessage("Successfully saved configuration");
-        cy.wait(["@fetchConfig"]);
-
-        for (const event of events) {
-          listingPage.searchItem(event, false).itemExist(event);
-        }
-      });
-    });
