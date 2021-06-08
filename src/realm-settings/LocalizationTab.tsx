@@ -60,7 +60,6 @@ export const LocalizationTab = ({
 
   const loader = async () => {
     if (realm) {
-
       const response = await fetch(
         `${getBaseUrl(adminClient)}admin/realms/${
           realm.realm
@@ -100,13 +99,13 @@ export const LocalizationTab = ({
               <Controller
                 name="internationalizationEnabled"
                 control={control}
-                defaultValue={false}
+                defaultValue={realm?.internationalizationEnabled}
                 render={({ onChange, value }) => (
                   <Switch
                     id="kc-l-internationalization"
                     label={t("common:enabled")}
                     labelOff={t("common:disabled")}
-                    isChecked={internationalizationEnabled}
+                    isChecked={value}
                     data-testid={
                       value
                         ? "internationalization-enabled"
