@@ -126,7 +126,7 @@ export const LocalizationTab = ({
                     name="supportedLocales"
                     control={control}
                     defaultValue={themeTypes?.account![0].locales}
-                    render={({ value, onChange }) => (
+                    render={({ onChange }) => (
                       <Select
                         toggleId="kc-l-supported-locales"
                         onToggle={() => {
@@ -134,20 +134,22 @@ export const LocalizationTab = ({
                         }}
                         onSelect={(_, v) => {
                           const option = v as string;
-                          if (!value) {
+                          if (!watchSupportedLocales) {
                             onChange([option]);
-                          } else if (value!.includes(option)) {
+                          } else if (watchSupportedLocales!.includes(option)) {
                             onChange(
-                              value.filter((item: string) => item !== option)
+                              watchSupportedLocales.filter(
+                                (item: string) => item !== option
+                              )
                             );
                           } else {
-                            onChange([...value, option]);
+                            onChange([...watchSupportedLocales, option]);
                           }
                         }}
                         onClear={() => {
                           onChange([]);
                         }}
-                        selections={value}
+                        selections={watchSupportedLocales}
                         variant={SelectVariant.typeaheadMulti}
                         aria-label={t("supportedLocales")}
                         isOpen={supportedLocalesOpen}
@@ -204,7 +206,7 @@ export const LocalizationTab = ({
                               key={`default-locale-${idx}`}
                               value={locale}
                             >
-                              {t(`allSupportedLocales.${locale}`)}
+                              {/* {t(`allSupportedLocales.${locale}`)} */}
                             </SelectOption>
                           )
                         )}
