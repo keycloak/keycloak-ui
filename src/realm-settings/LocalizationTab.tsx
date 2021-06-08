@@ -219,7 +219,7 @@ export const LocalizationTab = ({
               <Button
                 variant="primary"
                 type="submit"
-                data-testid="themes-tab-save"
+                data-testid="localization-tab-save"
               >
                 {t("common:save")}
               </Button>
