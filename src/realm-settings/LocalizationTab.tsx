@@ -21,7 +21,6 @@ import { KeycloakDataTable } from "../components/table-toolbar/KeycloakDataTable
 import { useAdminClient } from "../context/auth/AdminClient";
 import { getBaseUrl } from "../util";
 import { ListEmptyState } from "../components/list-empty-state/ListEmptyState";
-import { SearchIcon } from "@patternfly/react-icons";
 
 type LocalizationTabProps = {
   save: (realm: RealmRepresentation) => void;
@@ -55,7 +54,7 @@ export const LocalizationTab = ({
   const internationalizationEnabled = useWatch({
     control,
     name: "internationalizationEnabled",
-    defaultValue: false,
+    defaultValue: realm?.internationalizationEnabled,
   });
 
   const loader = async () => {

@@ -20,11 +20,13 @@ import { useServerInfo } from "../context/server-info/ServerInfoProvider";
 type RealmSettingsThemesTabProps = {
   save: (realm: RealmRepresentation) => void;
   reset: () => void;
+  realm: RealmRepresentation;
 };
 
 export const RealmSettingsThemesTab = ({
   save,
   reset,
+  realm,
 }: RealmSettingsThemesTabProps) => {
   const { t } = useTranslation("realm-settings");
 
@@ -49,7 +51,7 @@ export const RealmSettingsThemesTab = ({
   const internationalizationEnabled = useWatch({
     control,
     name: "internationalizationEnabled",
-    defaultValue: false,
+    defaultValue: realm?.internationalizationEnabled,
   });
 
   return (
@@ -242,7 +244,7 @@ export const RealmSettingsThemesTab = ({
             <Controller
               name="internationalizationEnabled"
               control={control}
-              defaultValue={false}
+              defaultValue={internationalizationEnabled}
               render={({ onChange, value }) => (
                 <Switch
                   id="kc-t-internationalization"

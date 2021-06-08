@@ -276,6 +276,7 @@ export const RealmSettingsSection = () => {
               <RealmSettingsThemesTab
                 save={save}
                 reset={() => setupForm(realm!)}
+                realm={realm!}
               />
             </Tab>
             <Tab
