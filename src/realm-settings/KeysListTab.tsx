@@ -275,8 +275,11 @@ export const KeysListTab = ({ realmComponents }: KeysListTabProps) => {
           emptyState={
             <ListEmptyState
               hasIcon={true}
-              message={t("noRoles")}
-              instructions={t("noRolesInstructions")}
+              message={t("realm-settings:noKeys")}
+              instructions={
+                t(`realm-settings:noKeysDescription`) +
+                `${filterType.toLocaleLowerCase()}.`
+              }
               primaryActionText={t("createRole")}
               onPrimaryAction={goToCreate}
             />
