@@ -231,7 +231,7 @@ export const LocalizationTab = ({
           </FormAccess>
         </FormPanel>
 
-        <FormPanel className="kc-login-screen" title="Edit message bundle">
+        <FormPanel className="kc-login-screen" title="Edit message bundles">
           <TextContent className="messageBundleDescription">
             {t("messageBundleDescription")}
           </TextContent>
@@ -244,9 +244,8 @@ export const LocalizationTab = ({
               emptyState={
                 <ListEmptyState
                   hasIcon={true}
-                  icon={SearchIcon}
-                  message={t("common:noSearchResults")}
-                  instructions={t("common:noSearchResultsInstructions")}
+                  message={t("noMessageBundles")}
+                  instructions={t("noMessageBundlesInstructions")}
                   onPrimaryAction={() => {}}
                 />
               }
