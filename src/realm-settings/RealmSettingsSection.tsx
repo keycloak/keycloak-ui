@@ -319,19 +319,22 @@ export const RealmSettingsSection = () => {
               <EventsTab />
             </Tab>
 
-            <Tab
-              id="localization"
-              eventKey="localization"
-              title={<TabTitleText>{t("localization")}</TabTitleText>}
-            >
-              <LocalizationTab
-                key={key}
-                refresh={refresh}
-                save={save}
-                reset={() => setupForm(realm!)}
-                realm={realm!}
-              />
-            </Tab>
+            {realm && (
+              <Tab
+                id="localization"
+                eventKey="localization"
+                title={<TabTitleText>{t("localization")}</TabTitleText>}
+              >
+                <LocalizationTab
+                  key={key}
+                  refresh={refresh}
+                  save={save}
+                  reset={() => setupForm(realm)}
+                  realm={realm}
+                />
+              </Tab>
+            )}
+
           </KeycloakTabs>
         </FormProvider>
       </PageSection>
