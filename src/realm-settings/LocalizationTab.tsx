@@ -205,7 +205,7 @@ export const LocalizationTab = ({
                               key={`default-locale-${idx}`}
                               value={locale}
                             >
-                              {/* {t(`allSupportedLocales.${locale}`)} */}
+                              {t(`allSupportedLocales.${locale}`)}
                             </SelectOption>
                           )
                         )}
