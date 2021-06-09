@@ -95,12 +95,15 @@ export const KeysTabInner = ({ components, refresh }: KeysTabInnerProps) => {
     setItemOrder(["data", ...itemIds]);
   }, [components, searchVal]);
 
+  console.log("realm", realm);
+
   const [toggleDeleteDialog, DeleteConfirm] = useConfirmDialog({
     titleKey: "realm-settings:deleteProviderTitle",
     messageKey: t("deleteProviderConfirm") + selectedComponent?.name + "?",
     continueButtonLabel: "common:delete",
     continueButtonVariant: ButtonVariant.danger,
     onConfirm: async () => {
+      console.log(selectedComponent);
       try {
         await adminClient.components.del({
           id: selectedComponent!.id!,

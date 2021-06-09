@@ -150,17 +150,6 @@ export const RealmSettingsSection = () => {
     []
   );
 
-  useEffect(() => {
-    const update = async () => {
-      const realmComponents = await adminClient.components.find({
-        type: "org.keycloak.keys.KeyProvider",
-        realm: realmName,
-      });
-      setRealmComponents(realmComponents);
-    };
-    setTimeout(update, 100);
-  }, [key]);
-
   useFetch(
     async () => {
       const realm = await adminClient.realms.findOne({ realm: realmName });
@@ -175,7 +164,7 @@ export const RealmSettingsSection = () => {
       setRealm(result.realm);
       setRealmComponents(result.realmComponents);
     },
-    []
+    [key]
   );
 
   const refresh = () => {
@@ -183,30 +172,8 @@ export const RealmSettingsSection = () => {
   };
 
   useEffect(() => {
-    const update = async () => {
-      const realmComponents = await adminClient.components.find({
-        type: "org.keycloak.keys.KeyProvider",
-        realm: realmName,
-      });
-      setRealmComponents(realmComponents);
-    };
-    setTimeout(update, 100);
-  }, [key]);
-
-  useEffect(() => {
     if (realm) setupForm(realm);
   }, [realm]);
-
-  useEffect(() => {
-    const update = async () => {
-      const realmComponents = await adminClient.components.find({
-        type: "org.keycloak.keys.KeyProvider",
-        realm: realmName,
-      });
-      setRealmComponents(realmComponents);
-    };
-    setTimeout(update, 100);
-  }, [key]);
 
   const setupForm = (realm: RealmRepresentation) => {
     resetForm(realm);
@@ -334,7 +301,6 @@ export const RealmSettingsSection = () => {
                 />
               </Tab>
             )}
-
           </KeycloakTabs>
         </FormProvider>
       </PageSection>
