@@ -370,7 +370,7 @@ export function KeycloakDataTable<T>({
   return (
     <>
       {!rows && loading && <Loading />}
-      {((data && data.length > 0) || search !== "") && (
+      {((data && data.length > 0) || search !== "" || !emptyState) && (
         <PaginatingTableToolbar
           count={data?.length || 0}
           first={first}
@@ -406,7 +406,7 @@ export function KeycloakDataTable<T>({
           )}
           {!loading &&
             (!data || data.length === 0) &&
-            search !== "" &&
+            (search !== "" || !emptyState) &&
             searchPlaceholderKey && (
               <ListEmptyState
                 hasIcon={true}

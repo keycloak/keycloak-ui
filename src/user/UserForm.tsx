@@ -107,6 +107,7 @@ export const UserForm = ({
 
   const addChips = async (groups: GroupRepresentation[]): Promise<void> => {
     setSelectedGroups([...selectedGroups!, ...groups]);
+    onGroupsUpdate([...selectedGroups!, ...groups]);
   };
 
   const addGroups = async (groups: GroupRepresentation[]): Promise<void> => {
@@ -115,7 +116,7 @@ export const UserForm = ({
     newGroups.forEach(async (group) => {
       try {
         await adminClient.users.addToGroup({
-          id: id,
+          id,
           groupId: group.id!,
         });
         addAlert(t("users:addedGroupMembership"), AlertVariant.success);
