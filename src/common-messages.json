@@ -133,6 +133,7 @@
     
     "leaveDirtyTitle": "Leave without saving?",
     "leaveDirtyConfirm": "Do you want to leave this page without saving? Any unsaved changes will be lost.",
-    "leave": "Leave"
+    "leave": "Leave",
+    "reorder": "Reorder"
   }
 }
