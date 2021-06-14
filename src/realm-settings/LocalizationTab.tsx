@@ -43,6 +43,7 @@ export const LocalizationTab = ({
 
   const { control, handleSubmit } = useFormContext();
   const [selectedLocale, setSelectedLocale] = useState("en");
+  const [valueSelected, setValueSelected] = useState(false);
   const themeTypes = useServerInfo().themes!;
 
   const watchSupportedLocales = useWatch({
@@ -104,7 +105,7 @@ export const LocalizationTab = ({
                     id="kc-l-internationalization"
                     label={t("common:enabled")}
                     labelOff={t("common:disabled")}
-                    isChecked={value}
+                    isChecked={internationalizationEnabled}
                     data-testid={
                       value
                         ? "internationalization-enabled"
@@ -185,18 +186,22 @@ export const LocalizationTab = ({
                         }
                         onSelect={(_, value) => {
                           onChange(value as string);
+                          setValueSelected(true);
                           setSelectedLocale(value as string);
                           setKey(new Date().getTime());
                           setDefaultLocaleOpen(false);
                         }}
                         selections={
-                          realm?.defaultLocale &&
-                          t(`allSupportedLocales.${value}`)
+                          valueSelected
+                            ? t(`allSupportedLocales.${value}`)
+                            : realm.defaultLocale !== ""
+                            ? t(`allSupportedLocales.${realm?.defaultLocale}`)
+                            : t("placeholderText")
                         }
                         variant={SelectVariant.single}
                         aria-label={t("defaultLocale")}
                         isOpen={defaultLocaleOpen}
-                        placeholderText="Select one"
+                        placeholderText={t("placeholderText")}
                         data-testid="select-default-locale"
                       >
                         {watchSupportedLocales.map(
