@@ -41,8 +41,8 @@ export const LocalizationTab = ({
   const [supportedLocalesOpen, setSupportedLocalesOpen] = useState(false);
   const [defaultLocaleOpen, setDefaultLocaleOpen] = useState(false);
 
-  const { control, handleSubmit } = useFormContext();
-  const [selectedLocale, setSelectedLocale] = useState("en");
+  const { getValues, control, handleSubmit } = useFormContext();
+  // const [selectedLocale, setSelectedLocale] = useState("en");
   const [valueSelected, setValueSelected] = useState(false);
   const themeTypes = useServerInfo().themes!;
 
@@ -61,9 +61,9 @@ export const LocalizationTab = ({
   const loader = async () => {
     if (realm) {
       const response = await fetch(
-        `${getBaseUrl(adminClient)}admin/realms/${
-          realm.realm
-        }/localization/${selectedLocale}`,
+        `${getBaseUrl(adminClient)}admin/realms/${realm.realm}/localization/${
+          getValues("defaultLocale") || "en"
+        }`,
         {
           method: "GET",
           headers: {
@@ -187,7 +187,7 @@ export const LocalizationTab = ({
                         onSelect={(_, value) => {
                           onChange(value as string);
                           setValueSelected(true);
-                          setSelectedLocale(value as string);
+                          // setSelectedLocale(value as string);
                           setKey(new Date().getTime());
                           setDefaultLocaleOpen(false);
                         }}
@@ -195,7 +195,11 @@ export const LocalizationTab = ({
                           valueSelected
                             ? t(`allSupportedLocales.${value}`)
                             : realm.defaultLocale !== ""
-                            ? t(`allSupportedLocales.${realm?.defaultLocale}`)
+                            ? t(
+                                `allSupportedLocales.${
+                                  realm.defaultLocale || "en"
+                                }`
+                              )
                             : t("placeholderText")
                         }
                         variant={SelectVariant.single}
