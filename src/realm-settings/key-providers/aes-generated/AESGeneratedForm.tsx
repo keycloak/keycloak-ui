@@ -24,6 +24,7 @@ import { FormAccess } from "../../../components/form-access/FormAccess";
 import { ViewHeader } from "../../../components/view-header/ViewHeader";
 import { convertToFormValues } from "../../../util";
 import { useAlerts } from "../../../components/alert/Alerts";
+import { AESProviderTypeRoute } from "./AESProviderTypeRoute";
 
 type AESGeneratedFormProps = {
   handleModalToggle?: () => void;
@@ -346,9 +347,8 @@ export const AESGeneratedForm = ({
 
 export const AESGeneratedSettings = () => {
   const { t } = useTranslation("realm-settings");
-  const providerId = useRouteMatch<MatchParams>(
-    "/:realm/realm-settings/keys/:id?/:providerType?/settings"
-  )?.params.providerType;
+  const providerId = useRouteMatch<MatchParams>(AESProviderTypeRoute.path)
+    ?.params.providerType;
   return (
     <>
       <ViewHeader titleKey={t("editProvider")} subKey={providerId} />
