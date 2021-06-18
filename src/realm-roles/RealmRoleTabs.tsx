@@ -358,27 +358,27 @@ export const RealmRoleTabs = () => {
                 </PageSection>
               </Tab>
             )}
-            {!realm?.defaultRole && (
-              <>
-                <Tab
-                  eventKey="attributes"
-                  title={<TabTitleText>{t("common:attributes")}</TabTitleText>}
-                >
-                  <AttributesForm
-                    form={form}
-                    save={save}
-                    array={{ fields, append, remove }}
-                    reset={() => form.reset(role)}
-                  />
-                </Tab>
-
-                <Tab
-                  eventKey="users-in-role"
-                  title={<TabTitleText>{t("usersInRole")}</TabTitleText>}
-                >
-                  <UsersInRoleTab data-cy="users-in-role-tab" />
-                </Tab>
-              </>
+            {form.getValues().name !== realm?.defaultRole?.name && (
+              <Tab
+                eventKey="attributes"
+                className="kc-attributes-tab"
+                title={<TabTitleText>{t("common:attributes")}</TabTitleText>}
+              >
+                <AttributesForm
+                  form={form}
+                  save={save}
+                  array={{ fields, append, remove }}
+                  reset={() => form.reset(role)}
+                />
+              </Tab>
+            )}
+            {form.getValues().name !== realm?.defaultRole?.name && (
+              <Tab
+                eventKey="users-in-role"
+                title={<TabTitleText>{t("usersInRole")}</TabTitleText>}
+              >
+                <UsersInRoleTab data-cy="users-in-role-tab" />
+              </Tab>
             )}
           </KeycloakTabs>
         )}
