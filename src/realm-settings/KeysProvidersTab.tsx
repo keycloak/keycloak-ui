@@ -42,6 +42,7 @@ import { useAdminClient } from "../context/auth/AdminClient";
 import { useAlerts } from "../components/alert/Alerts";
 import { useConfirmDialog } from "../components/confirm-dialog/ConfirmDialog";
 import { useRealm } from "../context/realm-context/RealmContext";
+import { Link, useRouteMatch } from "react-router-dom";
 
 type ComponentData = KeyMetadataRepresentation & {
   providerDescription?: string;
@@ -62,6 +63,7 @@ export const KeysTabInner = ({ components, refresh }: KeysTabInnerProps) => {
   const { addAlert } = useAlerts();
   const adminClient = useAdminClient();
   const { realm } = useRealm();
+  const { url } = useRouteMatch();
 
   const [id, setId] = useState("");
 
@@ -168,6 +170,14 @@ export const KeysTabInner = ({ components, refresh }: KeysTabInnerProps) => {
     actionListOpen[index] = !actionListOpen[index];
     setActionListOpen([...actionListOpen]);
   };
+
+  // const ProviderLink = (component: ComponentRepresentation) => (
+  //   <>
+  //     <Link key={user.username} to={`${url}/${user.id}/settings`}>
+  //       {user.username}
+  //     </Link>
+  //   </>
+  // );
 
   return (
     <>
@@ -337,7 +347,12 @@ export const KeysTabInner = ({ components, refresh }: KeysTabInnerProps) => {
                   dataListCells={[
                     <DataListCell key={`name-${idx}`}>
                       <>
-                        <Button variant="link">{component.name}</Button>
+                        <Link
+                          key={component.name}
+                          to={`${url}/${component.providerId}/settings`}
+                        >
+                          {component.name}
+                        </Link>
                       </>
                     </DataListCell>,
                     <DataListCell key={`providerId-${idx}`}>

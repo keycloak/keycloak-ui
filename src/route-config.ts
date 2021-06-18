@@ -36,6 +36,7 @@ import {
 } from "./identity-providers/add/AddIdentityProvider";
 import { AddOpenIdConnect } from "./identity-providers/add/AddOpenIdConnect";
 import { DetailSettings } from "./identity-providers/add/DetailSettings";
+import { ProviderForm } from "./realm-settings/ProviderForm";
 
 export type RouteDef = BreadcrumbsRoute & {
   access: AccessType;
@@ -179,6 +180,12 @@ export const routes: RoutesFn = (t: TFunction) => [
   },
   {
     path: "/:realm/realm-settings/:tab?",
+    component: RealmSettingsSection,
+    breadcrumb: t("realmSettings"),
+    access: "view-realm",
+  },
+  {
+    path: "/:realm/realm-settings/keys/:providerId/settings?",
     component: RealmSettingsSection,
     breadcrumb: t("realmSettings"),
     access: "view-realm",
