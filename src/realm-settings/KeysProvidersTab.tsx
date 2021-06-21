@@ -45,6 +45,7 @@ import { useRealm } from "../context/realm-context/RealmContext";
 import { Link, useRouteMatch } from "react-router-dom";
 
 type ComponentData = KeyMetadataRepresentation & {
+  id: string;
   providerDescription?: string;
   name?: string;
   toggleHidden?: boolean;
@@ -154,6 +155,7 @@ export const KeysTabInner = ({ components, refresh }: KeysTabInnerProps) => {
       onSearch();
     }
   };
+  console.log("ymca", components)
 
   const handleInputChange = (value: string) => {
     setSearchVal(value);
@@ -178,6 +180,10 @@ export const KeysTabInner = ({ components, refresh }: KeysTabInnerProps) => {
   //     </Link>
   //   </>
   // );
+
+  console.log(
+    "means", selectedComponent
+  )
 
   return (
     <>
@@ -349,7 +355,8 @@ export const KeysTabInner = ({ components, refresh }: KeysTabInnerProps) => {
                       <>
                         <Link
                           key={component.name}
-                          to={`${url}/${component.providerId}/settings`}
+                          // onClick={() => setComponent}
+                          to={`${url}/${component.id}/settings`}
                         >
                           {component.name}
                         </Link>
