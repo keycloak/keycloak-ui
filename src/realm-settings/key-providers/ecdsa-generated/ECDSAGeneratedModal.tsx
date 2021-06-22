@@ -3,39 +3,35 @@ import {
   AlertVariant,
   Button,
   ButtonVariant,
-
   Modal,
   ModalVariant,
-
 } from "@patternfly/react-core";
 import { useTranslation } from "react-i18next";
-
-import { useAdminClient } from "../context/auth/AdminClient";
-import { useAlerts } from "../components/alert/Alerts";
 import type ComponentRepresentation from "keycloak-admin/lib/defs/componentRepresentation";
-import { useServerInfo } from "../context/server-info/ServerInfoProvider";
-import { useRealm } from "../context/realm-context/RealmContext";
-import { RSAGeneratedForm } from "./RSAGeneratedForm";
+import { ECDSAGeneratedForm } from "./ECDSAGeneratedForm";
+import { useAlerts } from "../../../components/alert/Alerts";
+import { useAdminClient } from "../../../context/auth/AdminClient";
+import { useRealm } from "../../../context/realm-context/RealmContext";
 
-type RSAGeneratedModalProps = {
+type ECDSAGeneratedModalProps = {
   providerType?: string;
   handleModalToggle?: () => void;
   refresh?: () => void;
   open: boolean;
 };
 
-export const RSAGeneratedModal = ({
+export const ECDSAGeneratedModal = ({
   providerType,
   handleModalToggle,
   open,
   refresh,
-}: RSAGeneratedModalProps) => {
+}: // save,
+ECDSAGeneratedModalProps) => {
   const { t } = useTranslation("groups");
   const adminClient = useAdminClient();
   const { addAlert } = useAlerts();
   const [displayName, setDisplayName] = useState("");
   const realm = useRealm();
-
 
   const save = async (component: ComponentRepresentation) => {
     try {
@@ -87,7 +83,7 @@ export const RSAGeneratedModal = ({
         </Button>,
       ]}
     >
-      <RSAGeneratedForm save={save} providerType={providerType} />
+      <ECDSAGeneratedForm editMode={true} save={save} providerType={providerType}/>
     </Modal>
   );
 };

@@ -3,61 +3,38 @@ import {
   AlertVariant,
   Button,
   ButtonVariant,
-  FileUpload,
-  Form,
-  FormGroup,
+
   Modal,
   ModalVariant,
-  Select,
-  SelectOption,
-  SelectVariant,
-  Switch,
-  TextInput,
+
 } from "@patternfly/react-core";
 import { useTranslation } from "react-i18next";
-import { Controller, useForm } from "react-hook-form";
 
-import { useAdminClient } from "../context/auth/AdminClient";
-import { useAlerts } from "../components/alert/Alerts";
+import { useAdminClient } from "../../../context/auth/AdminClient";
+import { useAlerts } from "../../../components/alert/Alerts";
 import type ComponentRepresentation from "keycloak-admin/lib/defs/componentRepresentation";
-import { HelpItem } from "../components/help-enabler/HelpItem";
-import { useServerInfo } from "../context/server-info/ServerInfoProvider";
-import { useRealm } from "../context/realm-context/RealmContext";
-import { ECDSAGeneratedForm } from "./ECDSAGeneratedForm";
+import { useRealm } from "../../../context/realm-context/RealmContext";
+import { RSAGeneratedForm } from "./RSAGeneratedForm";
 
-type ECDSAGeneratedModalProps = {
+type RSAGeneratedModalProps = {
   providerType?: string;
   handleModalToggle?: () => void;
   refresh?: () => void;
   open: boolean;
 };
 
-export const ECDSAGeneratedModal = ({
+export const RSAGeneratedModal = ({
   providerType,
   handleModalToggle,
   open,
   refresh,
-}: // save,
-ECDSAGeneratedModalProps) => {
+}: RSAGeneratedModalProps) => {
   const { t } = useTranslation("groups");
-  const serverInfo = useServerInfo();
   const adminClient = useAdminClient();
   const { addAlert } = useAlerts();
-  const { handleSubmit, control } = useForm({});
-  const [
-    isEllipticCurveDropdownOpen,
-    setIsEllipticCurveDropdownOpen,
-  ] = useState(false);
-  const [isRSAalgDropdownOpen, setIsRSAalgDropdownOpen] = useState(false);
   const [displayName, setDisplayName] = useState("");
   const realm = useRealm();
 
-  const [keyFileName, setKeyFileName] = useState("");
-  const [certificateFileName, setCertificateFileName] = useState("");
-
-  const allComponentTypes = serverInfo.componentTypes![
-    "org.keycloak.keys.KeyProvider"
-  ];
 
   const save = async (component: ComponentRepresentation) => {
     try {
@@ -109,7 +86,7 @@ ECDSAGeneratedModalProps) => {
         </Button>,
       ]}
     >
-      <ECDSAGeneratedForm save={save} providerType={providerType}/>
+      <RSAGeneratedForm save={save} providerType={providerType} />
     </Modal>
   );
 };

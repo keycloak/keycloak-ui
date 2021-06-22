@@ -3,40 +3,36 @@ import {
   AlertVariant,
   Button,
   ButtonVariant,
-
   Modal,
   ModalVariant,
 } from "@patternfly/react-core";
 import { useTranslation } from "react-i18next";
-
-import { useAdminClient } from "../context/auth/AdminClient";
-import { useAlerts } from "../components/alert/Alerts";
 import type ComponentRepresentation from "keycloak-admin/lib/defs/componentRepresentation";
-import { useRealm } from "../context/realm-context/RealmContext";
-import { RSAForm } from "./RSAForm";
+import { useAdminClient } from "../../context/auth/AdminClient";
+import { useAlerts } from "../../components/alert/Alerts";
+import { useRealm } from "../../context/realm-context/RealmContext";
+import { AESGeneratedForm } from "../key-providers/aes-generated/AESGeneratedForm";
 
-type RSAModalProps = {
+
+type AESGeneratedModalProps = {
   providerType?: string;
   handleModalToggle?: () => void;
   refresh?: () => void;
   open: boolean;
 };
 
-export const RSAModal = ({
+export const AESGeneratedModal = ({
   providerType,
   handleModalToggle,
   open,
   refresh,
 }: // save,
-RSAModalProps) => {
+AESGeneratedModalProps) => {
   const { t } = useTranslation("groups");
   const adminClient = useAdminClient();
   const { addAlert } = useAlerts();
-
   const [displayName, setDisplayName] = useState("");
   const realm = useRealm();
-
-
 
   const save = async (component: ComponentRepresentation) => {
     try {
@@ -88,7 +84,7 @@ RSAModalProps) => {
         </Button>,
       ]}
     >
-      <RSAForm save={save} providerType={providerType} />
+      <AESGeneratedForm  save={save} providerType={providerType}/>
     </Modal>
   );
 };

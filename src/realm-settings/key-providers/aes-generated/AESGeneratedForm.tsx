@@ -1,12 +1,8 @@
 import React, { useState } from "react";
 import {
-  AlertVariant,
-  Button,
-  ButtonVariant,
+
   Form,
   FormGroup,
-  Modal,
-  ModalVariant,
   Select,
   SelectOption,
   SelectVariant,
@@ -16,58 +12,31 @@ import {
 import { useTranslation } from "react-i18next";
 import { Controller, useForm, UseFormMethods } from "react-hook-form";
 
-import { useAdminClient, useFetch } from "../context/auth/AdminClient";
-import { useAlerts } from "../components/alert/Alerts";
 import type ComponentRepresentation from "keycloak-admin/lib/defs/componentRepresentation";
-import { HelpItem } from "../components/help-enabler/HelpItem";
-import { useServerInfo } from "../context/server-info/ServerInfoProvider";
-import { useRealm } from "../context/realm-context/RealmContext";
-import { useParams } from "react-router-dom";
+import { HelpItem } from "../../../components/help-enabler/HelpItem";
+import { useServerInfo } from "../../../context/server-info/ServerInfoProvider";
+
 
 type AESGeneratedFormProps = {
   providerType?: string;
   handleModalToggle?: () => void;
   refresh?: () => void;
-  save: (component: ComponentRepresentation) => void;
+  save?: (component: ComponentRepresentation) => void;
   form?: UseFormMethods<ComponentRepresentation>;
   editMode?: boolean;
 };
 
 export const AESGeneratedForm = ({
   providerType,
-form,
-  handleModalToggle,
   save,
-  editMode,
-  refresh,
+
 }: // save,
 AESGeneratedFormProps) => {
   const { t } = useTranslation("groups");
   const serverInfo = useServerInfo();
-  const adminClient = useAdminClient();
-  const { addAlert } = useAlerts();
   const { handleSubmit, control } = useForm({});
   const [isKeySizeDropdownOpen, setIsKeySizeDropdownOpen] = useState(false);
   const [displayName, setDisplayName] = useState("");
-  const realm = useRealm();
-  const { id } = useParams<{ id: string }>();
-
-//   useFetch(
-//     async () => {
-//       if (editMode) return await adminClient.components.findOne({ id: id });
-//     },
-//     (component) => {
-//       if (component) setupForm(component);
-//     },
-//     []
-//   );
-
-//   const setupForm = (component: ComponentRepresentation) => {
-//     reset();
-//     Object.entries(component).map((entry) => {
-//       setValue(entry[0], entry[1]);
-//     });
-//   };
 
   console.log("provider type", providerType);
 
@@ -218,4 +187,13 @@ AESGeneratedFormProps) => {
       </FormGroup>
     </Form>
   );
+};
+
+export const AESGeneratedSettings = () => {
+
+  return (
+     <AESGeneratedForm />
+  );
+
+
 };

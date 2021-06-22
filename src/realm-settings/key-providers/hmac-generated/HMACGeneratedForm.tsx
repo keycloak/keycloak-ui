@@ -1,12 +1,7 @@
 import React, { useState } from "react";
 import {
-  AlertVariant,
-  Button,
-  ButtonVariant,
   Form,
   FormGroup,
-  Modal,
-  ModalVariant,
   Select,
   SelectOption,
   SelectVariant,
@@ -16,33 +11,26 @@ import {
 import { useTranslation } from "react-i18next";
 import { Controller, useForm } from "react-hook-form";
 
-import { useAdminClient } from "../context/auth/AdminClient";
-import { useAlerts } from "../components/alert/Alerts";
 import type ComponentRepresentation from "keycloak-admin/lib/defs/componentRepresentation";
-import { HelpItem } from "../components/help-enabler/HelpItem";
-import { useServerInfo } from "../context/server-info/ServerInfoProvider";
-import { useRealm } from "../context/realm-context/RealmContext";
+import { HelpItem } from "../../../components/help-enabler/HelpItem";
+import { useServerInfo } from "../../../context/server-info/ServerInfoProvider";
 
-type HMACGeneratedModalProps = {
+type HMACGeneratedFormProps = {
   providerType?: string;
   handleModalToggle?: () => void;
   refresh?: () => void;
-  save: (component: ComponentRepresentation) => void;
+  save?: (component: ComponentRepresentation) => void;
 //   open: boolean;
 };
 
 export const HMACGeneratedForm = ({
   providerType,
-  handleModalToggle,
   save,
-//   open,
-  refresh,
+
 }: // save,
-HMACGeneratedModalProps) => {
+HMACGeneratedFormProps) => {
   const { t } = useTranslation("groups");
   const serverInfo = useServerInfo();
-  const adminClient = useAdminClient();
-  const { addAlert } = useAlerts();
   const { handleSubmit, control } = useForm({});
   const [isKeySizeDropdownOpen, setIsKeySizeDropdownOpen] = useState(false);
   const [
@@ -50,7 +38,6 @@ HMACGeneratedModalProps) => {
     setIsEllipticCurveDropdownOpen,
   ] = useState(false);
   const [displayName, setDisplayName] = useState("");
-  const realm = useRealm();
 
   const allComponentTypes = serverInfo.componentTypes![
     "org.keycloak.keys.KeyProvider"
@@ -254,4 +241,13 @@ HMACGeneratedModalProps) => {
         {/* )} */}
       </Form>
   );
+};
+
+export const HMACGeneratedSettings = () => {
+
+  return (
+     <HMACGeneratedForm />
+  );
+
+
 };

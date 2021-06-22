@@ -1,13 +1,8 @@
 import React, { useState } from "react";
 import {
-  AlertVariant,
-  Button,
-  ButtonVariant,
   FileUpload,
   Form,
   FormGroup,
-  Modal,
-  ModalVariant,
   Select,
   SelectOption,
   SelectVariant,
@@ -16,13 +11,10 @@ import {
 } from "@patternfly/react-core";
 import { useTranslation } from "react-i18next";
 import { Controller, useForm } from "react-hook-form";
-
-import { useAdminClient } from "../context/auth/AdminClient";
-import { useAlerts } from "../components/alert/Alerts";
 import type ComponentRepresentation from "keycloak-admin/lib/defs/componentRepresentation";
-import { HelpItem } from "../components/help-enabler/HelpItem";
-import { useServerInfo } from "../context/server-info/ServerInfoProvider";
-import { useRealm } from "../context/realm-context/RealmContext";
+import { HelpItem } from "../../../components/help-enabler/HelpItem";
+import { useServerInfo } from "../../../context/server-info/ServerInfoProvider";
+import { HMACGeneratedForm } from "../hmac-generated/HMACGeneratedForm";
 
 type RSAFormProps = {
   providerType?: string;
@@ -33,19 +25,14 @@ type RSAFormProps = {
 
 export const RSAForm = ({
   providerType,
-  handleModalToggle,
   save,
-  refresh,
-}: // save,
+}: 
 RSAFormProps) => {
   const { t } = useTranslation("groups");
   const serverInfo = useServerInfo();
-  const adminClient = useAdminClient();
-  const { addAlert } = useAlerts();
   const { handleSubmit, control } = useForm({});
   const [isRSAalgDropdownOpen, setIsRSAalgDropdownOpen] = useState(false);
   const [displayName, setDisplayName] = useState("");
-  const realm = useRealm();
 
   const [keyFileName, setKeyFileName] = useState("");
   const [certificateFileName, setCertificateFileName] = useState("");
@@ -258,4 +245,13 @@ RSAFormProps) => {
       </>
     </Form>
   );
+};
+
+export const HMACSettings = () => {
+
+  return (
+     <HMACGeneratedForm />
+  );
+
+
 };

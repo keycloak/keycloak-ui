@@ -3,37 +3,41 @@ import {
   AlertVariant,
   Button,
   ButtonVariant,
+
   Modal,
   ModalVariant,
 } from "@patternfly/react-core";
 import { useTranslation } from "react-i18next";
 
-import { useAdminClient } from "../context/auth/AdminClient";
-import { useAlerts } from "../components/alert/Alerts";
-import type ComponentRepresentation from "keycloak-admin/lib/defs/componentRepresentation";
-import { useServerInfo } from "../context/server-info/ServerInfoProvider";
-import { useRealm } from "../context/realm-context/RealmContext";
-import { HMACGeneratedForm } from "./HMACGeneratedForm";
 
-type HMACGeneratedModalProps = {
+import type ComponentRepresentation from "keycloak-admin/lib/defs/componentRepresentation";
+import { RSAForm } from "./RSAForm";
+import { useAlerts } from "../../../components/alert/Alerts";
+import { useAdminClient } from "../../../context/auth/AdminClient";
+import { useRealm } from "../../../context/realm-context/RealmContext";
+
+type RSAModalProps = {
   providerType?: string;
   handleModalToggle?: () => void;
   refresh?: () => void;
   open: boolean;
 };
 
-export const HMACGeneratedModal = ({
+export const RSAModal = ({
   providerType,
   handleModalToggle,
   open,
   refresh,
 }: // save,
-HMACGeneratedModalProps) => {
+RSAModalProps) => {
   const { t } = useTranslation("groups");
   const adminClient = useAdminClient();
   const { addAlert } = useAlerts();
+
   const [displayName, setDisplayName] = useState("");
   const realm = useRealm();
+
+
 
   const save = async (component: ComponentRepresentation) => {
     try {
@@ -85,7 +89,7 @@ HMACGeneratedModalProps) => {
         </Button>,
       ]}
     >
-      <HMACGeneratedForm save={save} providerType={providerType} />
+      <RSAForm save={save} providerType={providerType} />
     </Modal>
   );
 };

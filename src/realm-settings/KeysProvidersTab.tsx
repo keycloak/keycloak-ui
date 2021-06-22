@@ -32,20 +32,21 @@ import type ComponentTypeRepresentation from "keycloak-admin/lib/defs/componentT
 
 import "./RealmSettingsSection.css";
 import { useServerInfo } from "../context/server-info/ServerInfoProvider";
-import { AESGeneratedModal } from "./AESGeneratedModal";
-import { ECDSAGeneratedModal } from "./ECDSAGeneratedModal";
-import { HMACGeneratedModal } from "./HMACGeneratedModal";
 import { JavaKeystoreModal } from "./JavaKeystoreModal";
-import { RSAModal } from "./RSAModal";
-import { RSAGeneratedModal } from "./RSAGeneratedModal";
+import { RSAModal } from "./key-providers/rsa/RSAModal";
+import { RSAGeneratedModal } from "./key-providers/rsa-generated/RSAGeneratedModal";
 import { useAdminClient } from "../context/auth/AdminClient";
 import { useAlerts } from "../components/alert/Alerts";
 import { useConfirmDialog } from "../components/confirm-dialog/ConfirmDialog";
 import { useRealm } from "../context/realm-context/RealmContext";
 import { Link, useRouteMatch } from "react-router-dom";
+import { HMACGeneratedForm } from "./key-providers/hmac-generated/HMACGeneratedForm";
+import { AESGeneratedModal } from "./aes-generated/AESGeneratedModal";
+import { ECDSAGeneratedModal } from "./key-providers/ecdsa-generated/ECDSAGeneratedModal";
+import { HMACGeneratedModal } from "./key-providers/hmac-generated/HMACGeneratedModal";
 
 type ComponentData = KeyMetadataRepresentation & {
-  id: string;
+  id?: string;
   providerDescription?: string;
   name?: string;
   toggleHidden?: boolean;
@@ -87,6 +88,11 @@ export const KeysTabInner = ({ components, refresh }: KeysTabInnerProps) => {
   const [defaultConsoleDisplayName, setDefaultConsoleDisplayName] = useState(
     ""
   );
+  const [providerDisplayName, setProviderDisplayName] = useState(
+    ""
+  );
+
+  const [editMode, setEditMode] = useState(false);
 
   const [selectedComponent, setSelectedComponent] = useState<
     ComponentRepresentation
@@ -155,7 +161,7 @@ export const KeysTabInner = ({ components, refresh }: KeysTabInnerProps) => {
       onSearch();
     }
   };
-  console.log("ymca", components)
+  console.log("ymca", components);
 
   const handleInputChange = (value: string) => {
     setSearchVal(value);
@@ -181,9 +187,7 @@ export const KeysTabInner = ({ components, refresh }: KeysTabInnerProps) => {
   //   </>
   // );
 
-  console.log(
-    "means", selectedComponent
-  )
+  console.log("selected component", selectedComponent);
 
   return (
     <>
@@ -293,6 +297,12 @@ export const KeysTabInner = ({ components, refresh }: KeysTabInnerProps) => {
             </ToolbarGroup>
           </>
         </Toolbar>
+        {/* 
+        <PageSection variant="light">
+                <HMACGeneratedForm
+                  editMode={true}
+                />
+              </PageSection> */}
 
         <DataList
           aria-label={t("groups")}
@@ -355,8 +365,8 @@ export const KeysTabInner = ({ components, refresh }: KeysTabInnerProps) => {
                       <>
                         <Link
                           key={component.name}
-                          // onClick={() => setComponent}
-                          to={`${url}/${component.id}/settings`}
+                          onClick={() => setProviderDisplayName(component.name!)}
+                          to={`${url}/${component.id}/${component.name}/settings`}
                         >
                           {component.name}
                         </Link>
@@ -407,6 +417,7 @@ export const KeysTabInner = ({ components, refresh }: KeysTabInnerProps) => {
             </DataListItem>
           ))}
         </DataList>
+        {url.includes("hmac-generated/settings") && <HMACGeneratedForm />}
         <div className="pf-screen-reader" aria-live="assertive">
           {liveText}
         </div>

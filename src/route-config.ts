@@ -37,7 +37,13 @@ import {
 import { AddOpenIdConnect } from "./identity-providers/add/AddOpenIdConnect";
 import { DetailSettings } from "./identity-providers/add/DetailSettings";
 import { ProviderForm } from "./realm-settings/ProviderForm";
-import { AESGeneratedForm } from "./realm-settings/AESGeneratedForm";
+import {  AESGeneratedSettings } from "./realm-settings/key-providers/aes-generated/AESGeneratedForm";
+import {HMACGeneratedSettings } from "./realm-settings/key-providers/hmac-generated/HMACGeneratedForm";
+import {  ECDSASettings } from "./realm-settings/key-providers/ecdsa-generated/ECDSAGeneratedForm";
+import { JavaKeystoreForm } from "./realm-settings/JavaKeystoreForm";
+import { RSAForm } from "./realm-settings/key-providers/rsa/RSAForm";
+import { RSAGeneratedForm } from "./realm-settings/key-providers/rsa-generated/RSAGeneratedForm";
+
 
 export type RouteDef = BreadcrumbsRoute & {
   access: AccessType;
@@ -186,11 +192,41 @@ export const routes: RoutesFn = (t: TFunction) => [
     access: "view-realm",
   },
   {
-    path: "/:realm/realm-settings/keys/:id",
-    component: RealmSettingsSection,
+    path: "/:realm/realm-settings/keys/:id?/settings",
+    component: AESGeneratedSettings,
     breadcrumb: t("realmSettings"),
     access: "view-realm",
   },
+  {
+    path: "/:realm/realm-settings/keys/:id?/:name/settings",
+    component: ECDSASettings,
+    breadcrumb: t("realmSettings"),
+    access: "view-realm",
+  },
+  {
+    path: "/:realm/realm-settings/keys/:id?/settings",
+    component: HMACGeneratedSettings,
+    breadcrumb: t("realmSettings"),
+    access: "view-realm",
+  },
+  // {
+  //   path: "/:realm/realm-settings/keys/:id?/java-keystore/settings",
+  //   component: JavaKeystoreForm,
+  //   breadcrumb: t("realmSettings"),
+  //   access: "view-realm",
+  // },
+  // {
+  //   path: "/:realm/realm-settings/keys/:id?/rsa/settings",
+  //   component: RSAForm,
+  //   breadcrumb: t("realmSettings"),
+  //   access: "view-realm",
+  // },
+  // {
+  //   path: "/:realm/realm-settings/keys/:id?/rsa-generated/settings",
+  //   component: RSAGeneratedForm,
+  //   breadcrumb: t("realmSettings"),
+  //   access: "view-realm",
+  // },
   {
     path: "/:realm/authentication",
     component: AuthenticationSection,

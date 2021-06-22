@@ -3,53 +3,38 @@ import {
   AlertVariant,
   Button,
   ButtonVariant,
-  Form,
-  FormGroup,
   Modal,
   ModalVariant,
-  Select,
-  SelectOption,
-  SelectVariant,
-  Switch,
-  TextInput,
 } from "@patternfly/react-core";
 import { useTranslation } from "react-i18next";
-import { Controller, useForm } from "react-hook-form";
 
-import { useAdminClient } from "../context/auth/AdminClient";
-import { useAlerts } from "../components/alert/Alerts";
+
 import type ComponentRepresentation from "keycloak-admin/lib/defs/componentRepresentation";
-import { HelpItem } from "../components/help-enabler/HelpItem";
-import { useServerInfo } from "../context/server-info/ServerInfoProvider";
-import { useRealm } from "../context/realm-context/RealmContext";
-import { AESGeneratedForm } from "./AESGeneratedForm";
 
-type AESGeneratedModalProps = {
+import { HMACGeneratedForm } from "./HMACGeneratedForm";
+import { useAlerts } from "../../../components/alert/Alerts";
+import { useAdminClient } from "../../../context/auth/AdminClient";
+import { useRealm } from "../../../context/realm-context/RealmContext";
+
+type HMACGeneratedModalProps = {
   providerType?: string;
   handleModalToggle?: () => void;
   refresh?: () => void;
   open: boolean;
 };
 
-export const AESGeneratedModal = ({
+export const HMACGeneratedModal = ({
   providerType,
   handleModalToggle,
   open,
   refresh,
 }: // save,
-AESGeneratedModalProps) => {
+HMACGeneratedModalProps) => {
   const { t } = useTranslation("groups");
-  const serverInfo = useServerInfo();
   const adminClient = useAdminClient();
   const { addAlert } = useAlerts();
-  const { handleSubmit, control } = useForm({});
-  const [isKeySizeDropdownOpen, setIsKeySizeDropdownOpen] = useState(false);
   const [displayName, setDisplayName] = useState("");
   const realm = useRealm();
-
-  const allComponentTypes = serverInfo.componentTypes![
-    "org.keycloak.keys.KeyProvider"
-  ];
 
   const save = async (component: ComponentRepresentation) => {
     try {
@@ -101,7 +86,7 @@ AESGeneratedModalProps) => {
         </Button>,
       ]}
     >
-      <AESGeneratedForm  save={save} providerType={providerType}/>
+      <HMACGeneratedForm save={save} providerType={providerType} />
     </Modal>
   );
 };
