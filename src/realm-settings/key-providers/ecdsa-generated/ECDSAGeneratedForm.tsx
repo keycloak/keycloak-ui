@@ -44,7 +44,9 @@ export const ECDSAGeneratedForm = ({
   const serverInfo = useServerInfo();
   const adminClient = useAdminClient();
   const [savedDisplayName, setSavedDisplayName] = useState("");
-  const [fetchedProvider, setFetchedProvider] = useState<ComponentRepresentation>();
+  const [fetchedProvider, setFetchedProvider] = useState<
+    ComponentRepresentation
+  >();
 
   console.log("lalala", providerDisplayName);
 
@@ -79,7 +81,6 @@ export const ECDSAGeneratedForm = ({
         // configProperties: properties,
         name: getComponentById.name,
         config: getComponentById.config,
-
       };
     },
     (result) => {
@@ -98,7 +99,7 @@ export const ECDSAGeneratedForm = ({
   const [displayName, setDisplayName] = useState("");
 
   console.log("provider type", providerType);
-  console.log("i got faith", fetchedProvider)
+  console.log("i got faith", fetchedProvider);
 
   const allComponentTypes = serverInfo.componentTypes![
     "org.keycloak.keys.KeyProvider"
@@ -188,18 +189,18 @@ export const ECDSAGeneratedForm = ({
         <Controller
           name="config.active"
           control={control}
-          defaultValue={editMode ? fetchedProvider?.config!.active : ["true"]}
+          // defaultValue={editMode ? fetchedProvider?.config!.active : ["true"]}
           render={({ onChange, value }) => (
             <Switch
               id="kc-active"
               label={t("common:on")}
               labelOff={t("common:off")}
-              isChecked={editMode ? fetchedProvider?.config!.active[0] === "true" : value[0] === "true"}
-              data-testid={
-                value[0] === "true"
-                  ? "internationalization-enabled"
-                  : "internationalization-disabled"
-              }
+              // isChecked={editMode ? fetchedProvider?.config!.active[0] === "true" : value[0] === "true"}
+              // data-testid={
+              //   value[0] === "true"
+              //     ? "internationalization-enabled"
+              //     : "internationalization-disabled"
+              // }
               onChange={(value) => {
                 onChange([value + ""]);
               }}
