@@ -199,6 +199,9 @@ export const UserFederationLdapSettings = () => {
 
   const setupForm = (component: ComponentRepresentation) => {
     Object.entries(component).map((entry) => {
+      console.dir("aaaaaaa")
+      console.log(entry[0], entry[1])
+
       if (entry[0] === "config") {
         form.setValue(
           "config.periodicChangedUsersSync",

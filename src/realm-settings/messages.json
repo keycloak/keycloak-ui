@@ -14,6 +14,7 @@
     "deleteError": "Could not delete realm: {{error}}",
     "disableConfirmTitle": "Disable realm?",
     "disableConfirm": "User and clients can't access the realm if it's disabled. Are you sure you want to continue?",
+    "editProvider": "Edit provider",
     "saveSuccess": "Realm successfully updated",
     "saveProviderSuccess": "The provider has been saved successfully.",
     "saveProviderError": "Error saving provider: ",

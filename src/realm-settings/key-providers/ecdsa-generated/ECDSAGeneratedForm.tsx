@@ -2,27 +2,37 @@ import React, { Component, useState } from "react";
 import {
   ActionGroup,
   Button,
+  Checkbox,
+  DropdownItem,
+  Flex,
+  FlexItem,
   Form,
   FormGroup,
+  PageSection,
   Select,
   SelectOption,
   SelectVariant,
   Switch,
   TextInput,
+  ValidatedOptions,
 } from "@patternfly/react-core";
 import { useTranslation } from "react-i18next";
-import { Controller, useForm } from "react-hook-form";
+import { Controller, useForm, UseFormMethods } from "react-hook-form";
 import type ComponentRepresentation from "keycloak-admin/lib/defs/componentRepresentation";
 import { HelpItem } from "../../../components/help-enabler/HelpItem";
 import { useServerInfo } from "../../../context/server-info/ServerInfoProvider";
 import { useParams } from "react-router-dom";
 import { useAdminClient, useFetch } from "../../../context/auth/AdminClient";
 import { convertToFormValues } from "../../../util";
+import { FormAccess } from "../../../components/form-access/FormAccess";
+import { ViewHeader } from "../../../components/view-header/ViewHeader";
 
 type ECDSAGeneratedFormProps = {
   providerType?: string;
+  providerDetails?: ComponentRepresentation;
   // providerDisplayName?: string;
   editMode?: boolean;
+  form?: UseFormMethods<ComponentRepresentation>;
   handleModalToggle?: () => void;
   refresh?: () => void;
   save?: (component: ComponentRepresentation) => void;
@@ -36,60 +46,28 @@ type Params = {
 
 export const ECDSAGeneratedForm = ({
   providerType,
+  providerDetails,
   providerDisplayName,
+  form,
   save,
   editMode,
 }: ECDSAGeneratedFormProps) => {
   const { t } = useTranslation("groups");
   const serverInfo = useServerInfo();
-  const adminClient = useAdminClient();
   const [savedDisplayName, setSavedDisplayName] = useState("");
-  const [fetchedProvider, setFetchedProvider] = useState<
-    ComponentRepresentation
-  >();
 
   console.log("lalala", providerDisplayName);
 
   const { handleSubmit, control, setValue } = useForm({});
-  const { id, name } = useParams<Params>();
 
-  console.log("pls", id);
-  console.log("anem", name);
+  // console.log("pls", id);
+  console.log("key", providerDetails?.config!.ecdsaEllipticCurveKey);
 
-  const test = async () => {
-    const name2 = await adminClient.components.findOne({ id: id });
-    console.log("is this it", name2.name);
-    setSavedDisplayName(name2.name!);
-  };
-
-  useFetch(
-    async () => {
-      // const data = await adminClient.clientScopes.findProtocolMapper({
-      //   id,
-      //   mapperId,
-      // });
-
-      const getComponentById = await adminClient.components.findOne({ id: id });
-
-      if (getComponentById) {
-        Object.entries(getComponentById).map((entry) => {
-          convertToFormValues(entry[1], "name", setValue);
-        });
-      }
-
-      return {
-        // configProperties: properties,
-        name: getComponentById.name,
-        config: getComponentById.config,
-      };
-    },
-    (result) => {
-      setSavedDisplayName(result.name!);
-      setFetchedProvider(result!);
-      // setMapping(result.mapping);
-    },
-    []
-  );
+  // const test = async () => {
+  //   const name2 = await adminClient.components.findOne({ id: id });
+  //   console.log("is this it", name2.name);
+  //   setSavedDisplayName(name2.name!);
+  // };
 
   const [
     isEllipticCurveDropdownOpen,
@@ -99,16 +77,18 @@ export const ECDSAGeneratedForm = ({
   const [displayName, setDisplayName] = useState("");
 
   console.log("provider type", providerType);
-  console.log("i got faith", fetchedProvider);
+  console.log("fetched prov", providerDetails);
 
   const allComponentTypes = serverInfo.componentTypes![
     "org.keycloak.keys.KeyProvider"
   ];
 
   console.log("beeep", savedDisplayName);
+  console.log("wtf", providerDetails?.name);
 
   return (
-    <Form
+    <FormAccess
+      role="view-realm"
       isHorizontal
       id="add-provider"
       className="pf-u-mt-lg"
@@ -132,12 +112,13 @@ export const ECDSAGeneratedForm = ({
           render={({ onChange }) => (
             <TextInput
               aria-label={t("consoleDisplayName")}
-              defaultValue={name}
+              defaultValue={providerDetails?.name}
               onChange={(value) => {
                 onChange(value);
                 setDisplayName(value);
               }}
               data-testid="display-name-input"
+              // ref={form.register()}
             ></TextInput>
           )}
         />
@@ -156,18 +137,23 @@ export const ECDSAGeneratedForm = ({
         <Controller
           name="config.enabled"
           control={control}
-          defaultValue={["true"]}
+          defaultValue={
+            !editMode ? ["true"] : providerDetails?.config!.enabled === ["true"]
+          }
           render={({ onChange, value }) => (
             <Switch
               id="kc-enabled"
               label={t("common:on")}
               labelOff={t("common:off")}
               isChecked={value[0] === "true"}
-              data-testid={
-                value[0] === "true"
-                  ? "internationalization-enabled"
-                  : "internationalization-disabled"
-              }
+              // data-testid={
+              //   !editMode ?
+              //   value[0] === "true"
+              //     ? "internationalization-enabled"
+              //     : "internationalization-disabled"
+              //     :
+
+              // }
               onChange={(value) => {
                 onChange([value + ""]);
               }}
@@ -251,25 +237,7 @@ export const ECDSAGeneratedForm = ({
           )}
         />
       </FormGroup>
-    </Form>
+    </FormAccess>
   );
 };
 
-export const ECDSASettings = () => {
-  const { t } = useTranslation("groups");
-
-  return (
-    <>
-      <ECDSAGeneratedForm editMode={true} />
-      <ActionGroup>
-        <Button
-          variant="primary"
-          //  onClick={save}
-          data-testid="realm-roles-save-button"
-        >
-          {t("common:save")}
-        </Button>
-      </ActionGroup>
-    </>
-  );
-};

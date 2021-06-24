@@ -37,7 +37,7 @@ HMACGeneratedFormProps) => {
     isEllipticCurveDropdownOpen,
     setIsEllipticCurveDropdownOpen,
   ] = useState(false);
-  const [displayName, setDisplayName] = useState("");
+  // const [displayName, setDisplayName] = useState("");
 
   const allComponentTypes = serverInfo.componentTypes![
     "org.keycloak.keys.KeyProvider"
@@ -71,7 +71,7 @@ HMACGeneratedFormProps) => {
                 defaultValue={providerType}
                 onChange={(value) => {
                   onChange(value);
-                  setDisplayName(value);
+                  // setDisplayName(value);
                 }}
                 data-testid="display-name-input"
               ></TextInput>

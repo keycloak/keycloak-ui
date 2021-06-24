@@ -13,12 +13,14 @@ import { AESGeneratedForm } from "./AESGeneratedForm";
 import { useAlerts } from "../../../components/alert/Alerts";
 import { useAdminClient } from "../../../context/auth/AdminClient";
 import { useRealm } from "../../../context/realm-context/RealmContext";
+import { useForm } from "react-hook-form";
 
 type AESGeneratedModalProps = {
   providerType?: string;
   handleModalToggle?: () => void;
   refresh?: () => void;
   open: boolean;
+  getName: () => void;
 };
 
 export const AESGeneratedModal = ({
@@ -26,22 +28,29 @@ export const AESGeneratedModal = ({
   handleModalToggle,
   open,
   refresh,
+  getName,
 }: // save,
 AESGeneratedModalProps) => {
   const { t } = useTranslation("groups");
   const adminClient = useAdminClient();
   const { addAlert } = useAlerts();
-  const [displayName, setDisplayName] = useState("");
   const realm = useRealm();
+
+  const form = useForm<ComponentRepresentation>({ mode: "onChange" });
+
+  const testWatch = form.watch("name");
+
+  console.log("provider type in modal", providerType)
 
   const save = async (component: ComponentRepresentation) => {
     try {
+      console.log(`========== SAVE ==========`);
+      console.dir(component);
       await adminClient.components.create({
+        ...component,
         parentId: realm.realm,
-        name: displayName !== "" ? displayName : providerType,
         providerId: providerType,
         providerType: "org.keycloak.keys.KeyProvider",
-        ...component,
       });
       refresh!();
       addAlert(t("realm-settings:saveProviderSuccess"), AlertVariant.success);
@@ -84,7 +93,10 @@ AESGeneratedModalProps) => {
         </Button>,
       ]}
     >
-      <AESGeneratedForm  save={save} providerType={providerType}/>
+      <AESGeneratedForm
+        save={save}
+        providerType={providerType}
+      />
     </Modal>
   );
 };

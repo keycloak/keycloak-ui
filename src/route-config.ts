@@ -39,7 +39,7 @@ import { DetailSettings } from "./identity-providers/add/DetailSettings";
 import { ProviderForm } from "./realm-settings/ProviderForm";
 import {  AESGeneratedSettings } from "./realm-settings/key-providers/aes-generated/AESGeneratedForm";
 import {HMACGeneratedSettings } from "./realm-settings/key-providers/hmac-generated/HMACGeneratedForm";
-import {  ECDSASettings } from "./realm-settings/key-providers/ecdsa-generated/ECDSAGeneratedForm";
+import {  ECDSASettings } from "./realm-settings/key-providers/ecdsa-generated/ECDSAGeneratedSettings"
 import { JavaKeystoreForm } from "./realm-settings/JavaKeystoreForm";
 import { RSAForm } from "./realm-settings/key-providers/rsa/RSAForm";
 import { RSAGeneratedForm } from "./realm-settings/key-providers/rsa-generated/RSAGeneratedForm";
@@ -192,15 +192,15 @@ export const routes: RoutesFn = (t: TFunction) => [
     access: "view-realm",
   },
   {
-    path: "/:realm/realm-settings/keys/:id?/settings",
+    path: "/:realm/realm-settings/keys/:id?/aes-generated/settings",
     component: AESGeneratedSettings,
-    breadcrumb: t("realmSettings"),
+    breadcrumb: t("realm-settings:editProvider"),
     access: "view-realm",
   },
   {
-    path: "/:realm/realm-settings/keys/:id?/:name/settings",
+    path: "/:realm/realm-settings/keys/:id?/ecdsa-generated/settings",
     component: ECDSASettings,
-    breadcrumb: t("realmSettings"),
+    breadcrumb: t("realm-settings:editProvider"),
     access: "view-realm",
   },
   {

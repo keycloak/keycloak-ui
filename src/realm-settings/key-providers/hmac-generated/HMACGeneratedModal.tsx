@@ -36,6 +36,8 @@ HMACGeneratedModalProps) => {
   const [displayName, setDisplayName] = useState("");
   const realm = useRealm();
 
+  console.log("fasf", displayName)
+
   const save = async (component: ComponentRepresentation) => {
     try {
       await adminClient.components.create({

@@ -40,10 +40,10 @@ import { useAlerts } from "../components/alert/Alerts";
 import { useConfirmDialog } from "../components/confirm-dialog/ConfirmDialog";
 import { useRealm } from "../context/realm-context/RealmContext";
 import { Link, useRouteMatch } from "react-router-dom";
-import { HMACGeneratedForm } from "./key-providers/hmac-generated/HMACGeneratedForm";
-import { AESGeneratedModal } from "./aes-generated/AESGeneratedModal";
+import { AESGeneratedModal } from "./key-providers/aes-generated/AESGeneratedModal";
 import { ECDSAGeneratedModal } from "./key-providers/ecdsa-generated/ECDSAGeneratedModal";
 import { HMACGeneratedModal } from "./key-providers/hmac-generated/HMACGeneratedModal";
+import { AESGeneratedSettings } from "./key-providers/aes-generated/AESGeneratedForm";
 
 type ComponentData = KeyMetadataRepresentation & {
   id?: string;
@@ -88,11 +88,11 @@ export const KeysTabInner = ({ components, refresh }: KeysTabInnerProps) => {
   const [defaultConsoleDisplayName, setDefaultConsoleDisplayName] = useState(
     ""
   );
-  const [providerDisplayName, setProviderDisplayName] = useState(
+  const [providerId, setProviderId] = useState(
     ""
   );
 
-  const [editMode, setEditMode] = useState(false);
+  // const [editMode, setEditMode] = useState(false);
 
   const [selectedComponent, setSelectedComponent] = useState<
     ComponentRepresentation
@@ -161,7 +161,7 @@ export const KeysTabInner = ({ components, refresh }: KeysTabInnerProps) => {
       onSearch();
     }
   };
-  console.log("ymca", components);
+  // console.log("ymca", components);
 
   const handleInputChange = (value: string) => {
     setSearchVal(value);
@@ -179,6 +179,12 @@ export const KeysTabInner = ({ components, refresh }: KeysTabInnerProps) => {
     setActionListOpen([...actionListOpen]);
   };
 
+  const renderEditForm = (providerName: string) => {
+    if (providerName === "aes-generated") {
+      return <><AESGeneratedSettings/></>
+    }
+  }
+
   // const ProviderLink = (component: ComponentRepresentation) => (
   //   <>
   //     <Link key={user.username} to={`${url}/${user.id}/settings`}>
@@ -187,7 +193,9 @@ export const KeysTabInner = ({ components, refresh }: KeysTabInnerProps) => {
   //   </>
   // );
 
-  console.log("selected component", selectedComponent);
+  useEffect(() => {
+    renderEditForm(providerId)
+  }, [providerId])
 
   return (
     <>
@@ -365,8 +373,11 @@ export const KeysTabInner = ({ components, refresh }: KeysTabInnerProps) => {
                       <>
                         <Link
                           key={component.name}
-                          onClick={() => setProviderDisplayName(component.name!)}
-                          to={`${url}/${component.id}/${component.name}/settings`}
+                          // variant={"link"}
+                          onClick={() => {
+                            setProviderId(component.providerId!);
+                            renderEditForm(providerId);}}
+                          to={`${url}/${component.id}/${component.providerId}/settings`}
                         >
                           {component.name}
                         </Link>
@@ -417,7 +428,7 @@ export const KeysTabInner = ({ components, refresh }: KeysTabInnerProps) => {
             </DataListItem>
           ))}
         </DataList>
-        {url.includes("hmac-generated/settings") && <HMACGeneratedForm />}
+        {/* {url.includes("hmac-generated/settings") && <HMACGeneratedForm />} */}
         <div className="pf-screen-reader" aria-live="assertive">
           {liveText}
         </div>
