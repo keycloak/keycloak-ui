@@ -38,7 +38,6 @@ import { useConfirmDialog } from "../components/confirm-dialog/ConfirmDialog";
 import { useRealm } from "../context/realm-context/RealmContext";
 import { Link, useRouteMatch } from "react-router-dom";
 import { AESGeneratedModal } from "./key-providers/aes-generated/AESGeneratedModal";
-import { AESGeneratedSettings } from "./key-providers/aes-generated/AESGeneratedForm";
 import { JavaKeystoreModal } from "./JavaKeystoreModal";
 import { HMACGeneratedModal } from "./HMACGeneratedModal";
 import { ECDSAGeneratedModal } from "./ECDSAGeneratedModal";
@@ -88,7 +87,6 @@ export const KeysTabInner = ({ components, refresh }: KeysTabInnerProps) => {
   const [defaultConsoleDisplayName, setDefaultConsoleDisplayName] = useState(
     ""
   );
-  const [providerId, setProviderId] = useState("");
 
   const [selectedComponent, setSelectedComponent] = useState<
     ComponentRepresentation
@@ -173,20 +171,6 @@ export const KeysTabInner = ({ components, refresh }: KeysTabInnerProps) => {
     actionListOpen[index] = !actionListOpen[index];
     setActionListOpen([...actionListOpen]);
   };
-
-  const renderEditForm = (providerName: string) => {
-    if (providerName === "aes-generated") {
-      return (
-        <>
-          <AESGeneratedSettings />
-        </>
-      );
-    }
-  };
-
-  useEffect(() => {
-    renderEditForm(providerId);
-  }, [providerId]);
 
   return (
     <>
@@ -362,10 +346,6 @@ export const KeysTabInner = ({ components, refresh }: KeysTabInnerProps) => {
                         <Link
                           key={component.name}
                           data-testId="provider-name-link"
-                          onClick={() => {
-                            setProviderId(component.providerId!);
-                            renderEditForm(providerId);
-                          }}
                           to={`${url}/${component.id}/${component.providerId}/settings`}
                         >
                           {component.name}
