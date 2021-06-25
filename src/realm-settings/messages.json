@@ -71,6 +71,7 @@
     "secretSize": "Secret size",
     "type": "Type",
     "name": "Name",
+    "providerId": "ID",
     "kid": "Kid",
     "provider": "Provider",
     "providerDescription": "Provider description",

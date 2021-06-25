@@ -3,7 +3,6 @@ import {
   ActionGroup,
   AlertVariant,
   Button,
-  Form,
   FormGroup,
   PageSection,
   Select,
@@ -20,21 +19,14 @@ import type ComponentRepresentation from "keycloak-admin/lib/defs/componentRepre
 import { HelpItem } from "../../../components/help-enabler/HelpItem";
 import { useServerInfo } from "../../../context/server-info/ServerInfoProvider";
 import { useAdminClient, useFetch } from "../../../context/auth/AdminClient";
-import { useParams } from "react-router-dom";
+import { useParams, useRouteMatch } from "react-router-dom";
 import { FormAccess } from "../../../components/form-access/FormAccess";
 import { ViewHeader } from "../../../components/view-header/ViewHeader";
 import { convertToFormValues } from "../../../util";
 import { useAlerts } from "../../../components/alert/Alerts";
 import { useRealm } from "../../../context/realm-context/RealmContext";
 
-type Params = {
-  name: string;
-  id: string;
-  providerId: string;
-};
-
 type AESGeneratedFormProps = {
-  providerType?: string;
   handleModalToggle?: () => void;
   refresh?: () => void;
   save?: (component: ComponentRepresentation) => void;
@@ -42,65 +34,82 @@ type AESGeneratedFormProps = {
   editMode?: boolean;
   displayName?: string;
   onNameUpdate?: (name: string | undefined) => void | undefined;
+  providerType: string;
 };
 
 export const AESGeneratedForm = ({
-  providerType,
-  save,
   editMode,
-  onNameUpdate,
-  displayName,
-  params,
-}: // save,
-AESGeneratedFormProps) => {
+  providerType,
+  handleModalToggle,
+}: AESGeneratedFormProps) => {
   const { t } = useTranslation("groups");
   const serverInfo = useServerInfo();
-  // const { handleSubmit } = useForm({});
   const [isKeySizeDropdownOpen, setIsKeySizeDropdownOpen] = useState(false);
-  // const [displayName, setDisplayName] = useState("");
   const [fetchedProvider, setFetchedProvider] = useState<
     ComponentRepresentation
   >();
   const adminClient = useAdminClient();
+  const { addAlert } = useAlerts();
+  const realm = useRealm();
 
-  const { id } = useParams<Params>();
+  const { id } = useParams<{ id: string }>();
+  const { url } = useRouteMatch();
+
+  const providerId = url.split("/").slice(-2)[0];
+
+  const save = async (component: ComponentRepresentation) => {
+    try {
+      if (id) {
+        await adminClient.components.update(
+          { id },
+          {
+            ...component,
+            parentId: realm.realm,
+            providerId: providerId,
+            providerType: "org.keycloak.keys.KeyProvider",
+          }
+        );
+        addAlert(t("realm-settings:saveProviderSuccess"), AlertVariant.success);
+      } else {
+        await adminClient.components.create({
+          ...component,
+          parentId: realm.realm,
+          providerId: providerType,
+          providerType: "org.keycloak.keys.KeyProvider",
+        });
+        handleModalToggle!();
+        addAlert(t("realm-settings:saveProviderSuccess"), AlertVariant.success);
+      }
+    } catch (error) {
+      addAlert(
+        t("realm-settings:saveProviderError") +
+          error.response?.data?.errorMessage || error,
+        AlertVariant.danger
+      );
+    }
+  };
 
   const form = useForm<ComponentRepresentation>({ mode: "onChange" });
 
-  console.log("??edit mode", editMode);
-
   const setupForm = (component: ComponentRepresentation) => {
-    console.log("component", component);
     form.reset();
     Object.entries(component).forEach((entry) => {
-      // form.setValue(
-      //   "config.allowPasswordAuthentication",
-      //   component.config?.allowPasswordAuthentication
-      // );
       if (entry[0] === "config") {
-        console.log("???", entry[1].secretSize);
-
         form.setValue("config.secretSize", entry[1].secretSize[0]);
 
         form.setValue("config.active", entry[1].active[0]);
 
         convertToFormValues(entry[1], "config", form.setValue);
-
-        // console.log(convertToFormValues(entry[1][0], "config.ecdsaEllipticCurveKey", form.setValue));
       }
       form.setValue(entry[0], entry[1]);
     });
   };
-
-  console.log("provider", providerType);
 
   useFetch(
     async () => {
       if (editMode) return await adminClient.components.findOne({ id: id });
     },
     (result) => {
-      console.log(`----------- RESULT -----------`);
-      console.dir(result);
       if (result) {
         setupForm(result);
         setFetchedProvider(result);
@@ -120,8 +129,50 @@ AESGeneratedFormProps) => {
       id="add-provider"
       className="pf-u-mt-lg"
       role="manage-realm"
-      onSubmit={form.handleSubmit(save!)}
+      onSubmit={form.handleSubmit(save)}
     >
+      {editMode && (
+        <FormGroup
+          label={t("realm-settings:providerId")}
+          labelIcon={
+            <HelpItem
+              helpText="client-scopes-help:mapperName"
+              forLabel={t("common:name")}
+              forID="name"
+            />
+          }
+          fieldId="id"
+          isRequired
+          validated={
+            form.errors.name ? ValidatedOptions.error : ValidatedOptions.default
+          }
+          helperTextInvalid={t("common:required")}
+        >
+          {/* <Controller
+            name="id"
+            control={form.control}
+            defaultValue={providerId}
+            render={({ onChange, value }) => {
+              return ( */}
+                <TextInput
+                  ref={form.register()}
+                  id="id"
+                  type="text"
+                  isReadOnly={editMode}
+                  aria-label={t("consoleDisplayName")}
+                  defaultValue={providerId}
+                  name="id"
+
+                  // value={value}
+                  // onChange={(value) => onChange(value)}
+                  data-testid="display-name-input"
+                />
+              {/* ); */}
+            {/* }} */}
+          {/* // /> */}
+        </FormGroup>
+      // )
+      )}
       <FormGroup
         label={t("common:name")}
         labelIcon={
@@ -139,54 +190,51 @@ AESGeneratedFormProps) => {
         helperTextInvalid={t("common:required")}
       >
         {!editMode && (
-          <Controller
-            name="name"
-            control={form.control}
-            defaultValue={providerType}
-            render={({ onChange, value }) => {
-              console.log(`======= Value: ${value} ========`);
-              return (
+          // <Controller
+          //   name="name"
+          //   control={form.control}
+          //   defaultValue={providerType}
+          //   render={({ onChange, value }) => {
+          //     return (
                 <TextInput
                   ref={form.register()}
                   id="name"
                   type="text"
                   aria-label={t("consoleDisplayName")}
                   defaultValue={providerType}
-                  value={value}
-                  onChange={(value) => onChange(value)}
+                  // value={value}
+                  // onChange={(value) => onChange(value)}
                   data-testid="display-name-input"
                 />
-              );
-            }}
-          />
+              // );
+            // }}
+          //  {/* /> */}
         )}
         {editMode && (
-          <Controller
-            name="name"
-            control={form.control}
-            defaultValue={providerType}
-            render={({ onChange }) => {
-              return (
-                <TextInput
-                  ref={form.register({ required: true })}
-                  type="text"
-                  id="name"
-                  name="name"
-                  // onChange={(value) => params.setDisplayName!(value)}
-                  onChange={(value) => onChange(value)}
-                  // onChange={(value) => {
-                  //   onChange([value + ""]);
-                  // }}
-                  defaultValue={providerType}
-                  validated={
-                    form.errors.name
-                      ? ValidatedOptions.error
-                      : ValidatedOptions.default
-                  }
-                />
-              );
-            }}
-          />
+          <>
+            {/* <Controller
+              name="name"
+              control={form.control}
+              defaultValue={providerId}
+              render={({ onChange }) => {
+                return ( */}
+                  <TextInput
+                    ref={form.register({ required: true })}
+                    type="text"
+                    id="name"
+                    name="name"
+                    // onChange={(value) => onChange(value)}
+                    defaultValue={providerId}
+                    validated={
+                      form.errors.name
+                        ? ValidatedOptions.error
+                        : ValidatedOptions.default
+                    }
+                  />
+                {/* ); */}
+              {/* }} */}
+            {/* /> */}
+          </>
         )}
       </FormGroup>
       <FormGroup
@@ -298,37 +346,30 @@ AESGeneratedFormProps) => {
           )}
         />
       </FormGroup>
+      <ActionGroup className="kc-AESform-buttons">
+        <Button
+          className="kc-AESform-save-button"
+          variant="primary"
+          type="submit"
+        >
+          {t("common:save")}
+        </Button>
+        <Button
+          className="kc-AESform-cancel-button"
+          onClick={!editMode ? () => handleModalToggle!() : () => {}}
+          variant="link"
+        >
+          {t("common:cancel")}
+        </Button>
+      </ActionGroup>
     </FormAccess>
   );
 };
 
 export const AESGeneratedSettings = () => {
-
-  const {id, providerId} = useParams<{id: string, providerId: string}>();
-  const form = useForm<ComponentRepresentation>({ mode: "onChange" });
-
-  console.log("vals", form.getValues())
-  
   const { t } = useTranslation("groups");
-  const adminClient = useAdminClient();
-  const { addAlert } = useAlerts();
-  
-  const update = async (component: ComponentRepresentation) => {
-    console.log("WAT", component)
-    try {
-      console.log(`========== SAVE ==========`);
-      console.dir(component);
-      await adminClient.components.update({ id }, component);
-      // refresh!();
-      addAlert(t("realm-settings:saveProviderSuccess"), AlertVariant.success);
-    } catch (error) {
-      addAlert(
-        t("realm-settings:saveProviderError") +
-          error.response?.data?.errorMessage || error,
-        AlertVariant.danger
-      );
-    }
-  };
+  const { url } = useRouteMatch();
+  const providerId = url.split("/").slice(-2)[0];
 
   return (
     <>
@@ -337,18 +378,8 @@ export const AESGeneratedSettings = () => {
         subKey={providerId}
       />
       <PageSection variant="light">
-        <FormAccess
-          isHorizontal
-          onSubmit={form.handleSubmit(() => update(form.getValues()))}
-          role="manage-clients"
-        >
-          <AESGeneratedForm editMode={true} />
-          <ActionGroup>
-            <Button variant="primary" type="submit">
-              {t("common:save")}
-            </Button>
-            <Button variant="link">{t("common:cancel")}</Button>
-          </ActionGroup>
+        <FormAccess isHorizontal role="manage-clients">
+          <AESGeneratedForm providerType={providerId} editMode={true} />
         </FormAccess>
       </PageSection>
     </>

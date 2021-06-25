@@ -32,17 +32,12 @@ import type ComponentTypeRepresentation from "keycloak-admin/lib/defs/componentT
 
 import "./RealmSettingsSection.css";
 import { useServerInfo } from "../context/server-info/ServerInfoProvider";
-import { JavaKeystoreModal } from "./JavaKeystoreModal";
-import { RSAModal } from "./key-providers/rsa/RSAModal";
-import { RSAGeneratedModal } from "./key-providers/rsa-generated/RSAGeneratedModal";
 import { useAdminClient } from "../context/auth/AdminClient";
 import { useAlerts } from "../components/alert/Alerts";
 import { useConfirmDialog } from "../components/confirm-dialog/ConfirmDialog";
 import { useRealm } from "../context/realm-context/RealmContext";
 import { Link, useRouteMatch } from "react-router-dom";
 import { AESGeneratedModal } from "./key-providers/aes-generated/AESGeneratedModal";
-import { ECDSAGeneratedModal } from "./key-providers/ecdsa-generated/ECDSAGeneratedModal";
-import { HMACGeneratedModal } from "./key-providers/hmac-generated/HMACGeneratedModal";
 import { AESGeneratedSettings } from "./key-providers/aes-generated/AESGeneratedForm";
 
 type ComponentData = KeyMetadataRepresentation & {
@@ -168,6 +163,7 @@ export const KeysTabInner = ({ components, refresh }: KeysTabInnerProps) => {
   };
 
   const handleModalToggle = () => {
+    console.log("doo we get here")
     setIsCreateModalOpen(!isCreateModalOpen);
   };
 
@@ -207,7 +203,7 @@ export const KeysTabInner = ({ components, refresh }: KeysTabInnerProps) => {
           open={isCreateModalOpen}
         />
       )}
-      {defaultConsoleDisplayName === "ecdsa-generated" && (
+      {/* {defaultConsoleDisplayName === "ecdsa-generated" && (
         <ECDSAGeneratedModal
           handleModalToggle={handleModalToggle}
           providerType={defaultConsoleDisplayName}
@@ -246,7 +242,7 @@ export const KeysTabInner = ({ components, refresh }: KeysTabInnerProps) => {
           refresh={refresh}
           open={isCreateModalOpen}
         />
-      )}
+      )} */}
       <DeleteConfirm />
       <PageSection variant="light" padding={{ default: "noPadding" }}>
         <Toolbar>

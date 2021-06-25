@@ -20,7 +20,6 @@ type AESGeneratedModalProps = {
   handleModalToggle?: () => void;
   refresh?: () => void;
   open: boolean;
-  getName: () => void;
 };
 
 export const AESGeneratedModal = ({
@@ -28,7 +27,6 @@ export const AESGeneratedModal = ({
   handleModalToggle,
   open,
   refresh,
-  getName,
 }: // save,
 AESGeneratedModalProps) => {
   const { t } = useTranslation("groups");
@@ -36,16 +34,8 @@ AESGeneratedModalProps) => {
   const { addAlert } = useAlerts();
   const realm = useRealm();
 
-  const form = useForm<ComponentRepresentation>({ mode: "onChange" });
-
-  const testWatch = form.watch("name");
-
-  console.log("provider type in modal", providerType)
-
   const save = async (component: ComponentRepresentation) => {
     try {
-      console.log(`========== SAVE ==========`);
-      console.dir(component);
       await adminClient.components.create({
         ...component,
         parentId: realm.realm,
@@ -71,31 +61,11 @@ AESGeneratedModalProps) => {
       title={t("realm-settings:addProvider")}
       isOpen={open}
       onClose={handleModalToggle}
-      actions={[
-        <Button
-          data-testid="add-provider-button"
-          key="confirm"
-          variant="primary"
-          type="submit"
-          form="add-provider"
-        >
-          {t("common:Add")}
-        </Button>,
-        <Button
-          id="modal-cancel"
-          key="cancel"
-          variant={ButtonVariant.link}
-          onClick={() => {
-            handleModalToggle!();
-          }}
-        >
-          {t("common:cancel")}
-        </Button>,
-      ]}
     >
       <AESGeneratedForm
         save={save}
-        providerType={providerType}
+        providerType={providerType!}
+        handleModalToggle={handleModalToggle}
       />
     </Modal>
   );
