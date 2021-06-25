@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import {
@@ -21,6 +21,8 @@ import { KeycloakDataTable } from "../components/table-toolbar/KeycloakDataTable
 import { useAdminClient } from "../context/auth/AdminClient";
 import { useRealm } from "../context/realm-context/RealmContext";
 import { ListEmptyState } from "../components/list-empty-state/ListEmptyState";
+import { GroupPath } from "../components/group/GroupPath";
+import { useSubGroups } from "./SubGroupsContext";
 
 type SearchGroup = GroupRepresentation & {
   link?: string;
@@ -33,10 +35,12 @@ export const SearchGroups = () => {
 
   const [searchTerm, setSearchTerm] = useState("");
   const [searchTerms, setSearchTerms] = useState<string[]>([]);
-  const [searchCount, setSearchCount] = useState(0);
 
   const [key, setKey] = useState(0);
   const refresh = () => setKey(new Date().getTime());
+
+  const { setSubGroups } = useSubGroups();
+  useEffect(() => setSubGroups([{ name: t("searchGroups") }]), []);
 
   const deleteTerm = (id: string) => {
     const index = searchTerms.indexOf(id);
@@ -51,13 +55,16 @@ export const SearchGroups = () => {
     refresh();
   };
 
-  const GroupNameCell = (group: SearchGroup) => (
-    <>
-      <Link key={group.id} to={`/${realm}/groups/${group.link}`}>
-        {group.name}
-      </Link>
-    </>
-  );
+  const GroupNameCell = (group: SearchGroup) => {
+    setSubGroups([{ name: t("searchGroups"), id: "search" }, group]);
+    return (
+      <>
+        <Link key={group.id} to={`/${realm}/groups/search/${group.link}`}>
+          {group.name}
+        </Link>
+      </>
+    );
+  };
 
   const flatten = (
     groups: GroupRepresentation[],
@@ -92,9 +99,10 @@ export const SearchGroups = () => {
       }
     }
 
-    setSearchCount(result.length);
     return result;
   };
+
+  const Path = (group: GroupRepresentation) => <GroupPath group={group} />;
 
   return (
     <>
@@ -136,8 +144,6 @@ export const SearchGroups = () => {
             ))}
           </ChipGroup>
         </Form>
-      </PageSection>
-      <PageSection variant={searchCount === 0 ? "light" : "default"}>
         <KeycloakDataTable
           key={key}
           ariaLabelKey="groups:groups"
@@ -152,6 +158,7 @@ export const SearchGroups = () => {
             {
               name: "path",
               displayKey: "groups:path",
+              cellRenderer: Path,
             },
           ]}
           emptyState={

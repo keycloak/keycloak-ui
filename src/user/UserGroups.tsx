@@ -19,9 +19,10 @@ import type GroupRepresentation from "keycloak-admin/lib/defs/groupRepresentatio
 import { cellWidth } from "@patternfly/react-table";
 import _ from "lodash";
 import type UserRepresentation from "keycloak-admin/lib/defs/userRepresentation";
-import { JoinGroupDialog } from "./JoinGroupDialog";
+import { GroupPickerDialog } from "../components/group/GroupPickerDialog";
 import { HelpContext } from "../components/help-enabler/HelpHeader";
 import { QuestionCircleIcon } from "@patternfly/react-icons";
+import { GroupPath } from "../components/group/GroupPath";
 
 type GroupTableData = GroupRepresentation & {
   membersLength?: number;
@@ -38,7 +39,7 @@ export type UserFormProps = {
 };
 
 export const UserGroups = () => {
-  const { t } = useTranslation("roles");
+  const { t } = useTranslation("users");
   const { addAlert } = useAlerts();
   const [key, setKey] = useState(0);
   const refresh = () => setKey(new Date().getTime());
@@ -194,34 +195,19 @@ export const UserGroups = () => {
     return <>{group.name}</>;
   };
 
-  const JoinGroupButtonRenderer = (group: GroupRepresentation) => {
-    return (
-      <>
-        <Button onClick={() => joinGroup(group)} variant="link">
-          {t("users:joinGroup")}
-        </Button>
-      </>
-    );
-  };
-
   const toggleModal = () => {
     setOpen(!open);
   };
 
-  const joinGroup = (group: GroupRepresentation) => {
-    setSelectedGroup(group);
-    toggleModal();
-  };
-
   const [toggleDeleteDialog, DeleteConfirm] = useConfirmDialog({
-    titleKey: t("users:leaveGroup", {
+    titleKey: t("leaveGroup", {
       name: selectedGroup?.name,
     }),
-    messageKey: t("users:leaveGroupConfirmDialog", {
+    messageKey: t("leaveGroupConfirmDialog", {
       groupname: selectedGroup?.name,
       username: username,
     }),
-    continueButtonLabel: "users:leave",
+    continueButtonLabel: "leave",
     continueButtonVariant: ButtonVariant.danger,
     onConfirm: async () => {
       try {
@@ -230,10 +216,10 @@ export const UserGroups = () => {
           groupId: selectedGroup!.id!,
         });
         refresh();
-        addAlert(t("users:removedGroupMembership"), AlertVariant.success);
+        addAlert(t("removedGroupMembership"), AlertVariant.success);
       } catch (error) {
         addAlert(
-          t("users:removedGroupMembershipError", { error }),
+          t("removedGroupMembershipError", { error }),
           AlertVariant.danger
         );
       }
@@ -246,25 +232,23 @@ export const UserGroups = () => {
   };
 
   const LeaveButtonRenderer = (group: GroupRepresentation) => {
-    if (
+    const canLeaveGroup =
       directMembershipList.some((item) => item.id === group.id) ||
       directMembershipList.length === 0 ||
-      isDirectMembership
-    ) {
-      return (
-        <>
+      isDirectMembership;
+    return (
+      <>
+        {canLeaveGroup && (
           <Button
             data-testid={`leave-${group.name}`}
             onClick={() => leave(group)}
             variant="link"
           >
-            {t("users:Leave")}
+            {t("leave")}
           </Button>
-        </>
-      );
-    } else {
-      return <> </>;
-    }
+        )}
+      </>
+    );
   };
 
   const addGroups = async (groups: GroupRepresentation[]): Promise<void> => {
@@ -278,27 +262,35 @@ export const UserGroups = () => {
         });
         setList(true);
         refresh();
-        addAlert(t("users:addedGroupMembership"), AlertVariant.success);
+        addAlert(t("addedGroupMembership"), AlertVariant.success);
       } catch (error) {
         addAlert(
-          t("users:addedGroupMembershipError", { error }),
+          t("addedGroupMembershipError", { error }),
           AlertVariant.danger
         );
       }
     });
   };
 
+  const Path = (group: GroupRepresentation) => <GroupPath group={group} />;
+
   return (
     <>
       <PageSection variant="light">
         <DeleteConfirm />
         {open && (
-          <JoinGroupDialog
-            open={open}
-            onClose={() => setOpen(!open)}
-            onConfirm={addGroups}
-            toggleDialog={() => toggleModal()}
-            username={username}
+          <GroupPickerDialog
+            id={id}
+            type="selectMany"
+            text={{
+              title: t("joinGroupsFor", { username }),
+              ok: "users:join",
+            }}
+            onClose={() => setOpen(false)}
+            onConfirm={(groups) => {
+              addGroups(groups);
+              setOpen(false);
+            }}
           />
         )}
         <KeycloakDataTable
@@ -317,11 +309,10 @@ export const UserGroups = () => {
                 onClick={toggleModal}
                 data-testid="add-group-button"
               >
-                {t("users:joinGroup")}
+                {t("joinGroup")}
               </Button>
-              {JoinGroupButtonRenderer}
               <Checkbox
-                label={t("users:directMembership")}
+                label={t("directMembership")}
                 key="direct-membership-check"
                 id="kc-direct-membership-checkbox"
                 onChange={() => setDirectMembership(!isDirectMembership)}
@@ -332,7 +323,7 @@ export const UserGroups = () => {
                 <Popover
                   aria-label="Basic popover"
                   position="bottom"
-                  bodyContent={<div>{t("users:whoWillAppearPopoverText")}</div>}
+                  bodyContent={<div>{t("whoWillAppearPopoverText")}</div>}
                 >
                   <Button
                     variant="link"
@@ -340,7 +331,7 @@ export const UserGroups = () => {
                     key="who-will-appear-button"
                     icon={<QuestionCircleIcon />}
                   >
-                    {t("users:whoWillAppearLinkText")}
+                    {t("whoWillAppearLinkText")}
                   </Button>
                 </Popover>
               )}
@@ -356,8 +347,8 @@ export const UserGroups = () => {
             },
             {
               name: "path",
-              displayKey: "users:Path",
-              cellFormatters: [emptyFormatter()],
+              displayKey: "users:path",
+              cellRenderer: Path,
               transforms: [cellWidth(45)],
             },
 
@@ -372,8 +363,10 @@ export const UserGroups = () => {
             !search ? (
               <ListEmptyState
                 hasIcon={true}
-                message={t("users:noGroups")}
-                instructions={t("users:noGroupsText")}
+                message={t("noGroups")}
+                instructions={t("noGroupsText")}
+                primaryActionText={t("joinGroup")}
+                onPrimaryAction={toggleModal}
               />
             ) : (
               ""

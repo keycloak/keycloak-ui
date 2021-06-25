@@ -1,4 +1,3 @@
-  
 {
   "realm-settings": {
     "partialImport": "Partial import",
@@ -95,8 +94,13 @@
     "loginWithEmailHelpText": "Allow users to log in with their email address.",
     "duplicateEmails": "Duplicate emails",
     "duplicateEmailsHelpText": "Allow multiple users to have the same email address. Changing this setting will also clear the user's cache. It is recommended to manually update email constraints of existing users in the database after switching off support for duplicate email addresses.",
+    "provideEmailTitle": "Provide your email address",
+    "provideEmail": "To test connection, you should provide your email address first.",
     "verifyEmail": "Verify email",
     "verifyEmailHelpText": "Require user to verify their email address after initial login or after address changes are submitted.",
+    "testConnection": "Test connection",
+    "testConnectionSuccess": "Success! SMTP connection successful. E-mail was sent!",
+    "testConnectionError": "Error! Failed to send email.",
     "realmId": "Realm ID",
     "displayName": "Display name",
     "htmlDisplayName": "HTML Display name",
@@ -130,6 +134,7 @@
       "tr": "Türkçe",
       "zh-CN": "中文"
     },
+    "placeholderText": "Select one",
     "userManagedAccess": "User-managed access",
     "endpoints": "Endpoints",
     "openIDEndpointConfiguration": "OpenID Endpoint Configuration",
@@ -139,6 +144,9 @@
     "adminTheme": "Admin console theme",
     "emailTheme": "Email theme",
     "internationalization": "Internationalization",
+    "localization": "Localization",
+    "key": "Key",
+    "value": "Value",
     "supportedLocales": "Supported locales",
     "defaultLocale": "Default locale",
 
@@ -479,7 +487,6 @@
         "name": "Refresh token error",
         "description": "Refresh token error"
       }
-
     },
     "emptyEvents": "Nothing to add",
     "emptyEventsInstructions": "There are no more events types left to add",
@@ -493,11 +500,20 @@
     "user-events-cleared-error": "Could not clear the user events {{error}}",
     "events-disable-title": "Unsave events?",
     "events-disable-confirm": "If \"Save events\" is disabled, subsequent events will not be displayed in the \"Events\" menu",
-    "confirm": "Confirm"
+    "confirm": "Confirm",
+    "noMessageBundles": "No message bundles",
+    "noMessageBundlesInstructions": "Add a message bundle to get started.",
+    "messageBundleDescription": "You can edit the supported locales. If you haven't selected supported locales yet, you can only edit the English locale."
   },
   "partial-import": {
-    "partialImportHeaderText": "Partial import allows you to import users, clients, and resources from a previously exported json file.",
-    "import": "Import"
+    "partialImportHeaderText": "Partial import allows you to import users, clients, and other resources from a previously exported json file.",
+    "selectRealm": "Select realm",
+    "chooseResources": "Choose the resources you want to import",
+    "selectIfResourceExists": "If a resource already exists, specify what should be done",
+    "import": "Import",
+    "FAIL": "Fail import",
+    "SKIP": "Skip",
+    "OVERWRITE": "Overwrite"
   },
   "onDragStart": "Dragging started for item {{id}}",
   "onDragMove": "Dragging item {{id}}",

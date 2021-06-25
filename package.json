@@ -1,8 +1,14 @@
 {
   "name": "keycloak-admin-ui",
-  "version": "1.0.0",
+  "version": "0.0.1",
   "main": "index.js",
-  "license": "MIT",
+  "homepage": "https://github.com/keycloak/keycloak-admin-ui",
+  "bugs": "https://github.com/keycloak/keycloak-admin-ui/issues",
+  "repository": {
+    "url": "https://github.com/keycloak/keycloak-admin-ui",
+    "type": "git"
+  },
+  "license": "Apache",
   "engines": {
     "node": "16"
   },
@@ -40,7 +46,7 @@
   },
   "devDependencies": {
     "@babel/core": "^7.10.5",
-    "@babel/preset-typescript": "^7.13.0",
+    "@babel/preset-typescript": "^7.14.5",
     "@jest/types": "^26.6.2",
     "@snowpack/app-scripts-react": "^1.10.0",
     "@snowpack/plugin-postcss": "1.4.0",
@@ -54,8 +60,8 @@
     "@storybook/preset-create-react-app": "^3.1.7",
     "@storybook/preset-typescript": "^3.0.0",
     "@storybook/react": "^6.2.9",
-    "@testing-library/jest-dom": "^5.12.0",
-    "@testing-library/react": "^10.4.6",
+    "@testing-library/jest-dom": "^5.14.1",
+    "@testing-library/react": "^11.2.7",
     "@types/dot": "^1.1.4",
     "@types/enzyme": "^3.10.8",
     "@types/enzyme-adapter-react-16": "^1.0.6",
@@ -69,7 +75,7 @@
     "@typescript-eslint/eslint-plugin": "^3.8.0",
     "@typescript-eslint/parser": "^3.8.0",
     "babel-loader": "^8.1.0",
-    "cypress": "7.4.0",
+    "cypress": "7.5.0",
     "decompress": "^4.2.1",
     "decompress-targz": "^4.1.1",
     "enzyme": "^3.11.0",
@@ -82,7 +88,7 @@
     "jest": "^26.6.3",
     "mutationobserver-shim": "^0.3.7",
     "postcss": "^8.3.3",
-    "postcss-cli": "^7.1.1",
+    "postcss-cli": "^8.3.1",
     "postcss-import": "^12.0.1",
     "prettier": "^2.0.5",
     "snowpack": "2.11.1",
