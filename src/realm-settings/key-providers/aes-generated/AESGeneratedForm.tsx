@@ -261,7 +261,6 @@ export const AESGeneratedForm = ({
           control={form.control}
           defaultValue={["true"]}
           render={({ onChange, value }) => {
-            console.log(`======= Switch Value: ${value}`);
             return (
               <Switch
                 id="kc-active"
