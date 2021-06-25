@@ -121,7 +121,6 @@ export const AESGeneratedForm = ({
     "org.keycloak.keys.KeyProvider"
   ];
 
-  console.log(":D", providerId);
   return (
     <FormAccess
       isHorizontal
@@ -147,28 +146,17 @@ export const AESGeneratedForm = ({
           }
           helperTextInvalid={t("common:required")}
         >
-          {/* <Controller
+          <TextInput
+            ref={form.register()}
+            id="id"
+            type="text"
             name="id"
-            control={form.control}
-            defaultValue={providerId}
-            render={({ onChange, value }) => {
-              return ( */}
-                <TextInput
-                  ref={form.register()}
-                  id="id"
-                  type="text"
-                  isReadOnly={editMode}
-                  aria-label={t("consoleDisplayName")}
-                  defaultValue={id}
-                  // value={value}
-                  // onChange={(value) => onChange(value)}
-                  data-testid="display-name-input"
-                />
-              {/* ); */}
-            {/* }} */}
-          {/* // /> */}
+            isReadOnly={editMode}
+            aria-label={t("consoleDisplayName")}
+            defaultValue={id}
+            data-testid="display-name-input"
+          />
         </FormGroup>
-      // )
       )}
       <FormGroup
         label={t("common:name")}
@@ -194,7 +182,7 @@ export const AESGeneratedForm = ({
             render={({ onChange, value }) => {
               return (
                 <TextInput
-                  ref={form.register()}
+                  // ref={form.register()}
                   id="name"
                   type="text"
                   aria-label={t("consoleDisplayName")}
@@ -205,32 +193,22 @@ export const AESGeneratedForm = ({
                 />
               );
             }}
-           /> 
+          />
         )}
         {editMode && (
           <>
-            {/* <Controller
+            <TextInput
+              ref={form.register()}
+              type="text"
+              id="name"
               name="name"
-              control={form.control}
               defaultValue={providerId}
-              render={({ onChange }) => {
-                return ( */}
-                  <TextInput
-                    ref={form.register({ required: true })}
-                    type="text"
-                    id="name"
-                    name="name"
-                    // onChange={(value) => onChange(value)}
-                    defaultValue={providerId}
-                    validated={
-                      form.errors.name
-                        ? ValidatedOptions.error
-                        : ValidatedOptions.default
-                    }
-                  />
-                {/* ); */}
-              {/* }} */}
-            {/* /> */}
+              validated={
+                form.errors.name
+                  ? ValidatedOptions.error
+                  : ValidatedOptions.default
+              }
+            />
           </>
         )}
       </FormGroup>
