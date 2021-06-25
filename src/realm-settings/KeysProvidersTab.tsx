@@ -90,8 +90,6 @@ export const KeysTabInner = ({ components, refresh }: KeysTabInnerProps) => {
   );
   const [providerId, setProviderId] = useState("");
 
-  // const [editMode, setEditMode] = useState(false);
-
   const [selectedComponent, setSelectedComponent] = useState<
     ComponentRepresentation
   >();
@@ -159,7 +157,6 @@ export const KeysTabInner = ({ components, refresh }: KeysTabInnerProps) => {
       onSearch();
     }
   };
-  // console.log("ymca", components);
 
   const handleInputChange = (value: string) => {
     setSearchVal(value);
