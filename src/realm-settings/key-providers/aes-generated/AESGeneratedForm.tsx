@@ -13,7 +13,7 @@ import {
   ValidatedOptions,
 } from "@patternfly/react-core";
 import { useTranslation } from "react-i18next";
-import { Controller, useForm, UseFormMethods } from "react-hook-form";
+import { Controller, useForm } from "react-hook-form";
 
 import type ComponentRepresentation from "keycloak-admin/lib/defs/componentRepresentation";
 import { HelpItem } from "../../../components/help-enabler/HelpItem";
@@ -30,10 +30,7 @@ type AESGeneratedFormProps = {
   handleModalToggle?: () => void;
   refresh?: () => void;
   save?: (component: ComponentRepresentation) => void;
-  form?: UseFormMethods<ComponentRepresentation>;
   editMode?: boolean;
-  displayName?: string;
-  onNameUpdate?: (name: string | undefined) => void | undefined;
   providerType: string;
 };
 
