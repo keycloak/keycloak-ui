@@ -1,11 +1,5 @@
-import React, { useState } from "react";
-import {
-  AlertVariant,
-  Button,
-  ButtonVariant,
-  Modal,
-  ModalVariant,
-} from "@patternfly/react-core";
+import React from "react";
+import { AlertVariant, Modal, ModalVariant } from "@patternfly/react-core";
 import { useTranslation } from "react-i18next";
 
 import type ComponentRepresentation from "keycloak-admin/lib/defs/componentRepresentation";
@@ -13,7 +7,6 @@ import { AESGeneratedForm } from "./AESGeneratedForm";
 import { useAlerts } from "../../../components/alert/Alerts";
 import { useAdminClient } from "../../../context/auth/AdminClient";
 import { useRealm } from "../../../context/realm-context/RealmContext";
-import { useForm } from "react-hook-form";
 
 type AESGeneratedModalProps = {
   providerType?: string;
@@ -27,8 +20,7 @@ export const AESGeneratedModal = ({
   handleModalToggle,
   open,
   refresh,
-}: // save,
-AESGeneratedModalProps) => {
+}: AESGeneratedModalProps) => {
   const { t } = useTranslation("groups");
   const adminClient = useAdminClient();
   const { addAlert } = useAlerts();
@@ -66,6 +58,7 @@ AESGeneratedModalProps) => {
         save={save}
         providerType={providerType!}
         handleModalToggle={handleModalToggle}
+        refresh={refresh}
       />
     </Modal>
   );

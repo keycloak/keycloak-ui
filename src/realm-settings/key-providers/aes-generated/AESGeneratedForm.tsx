@@ -41,13 +41,12 @@ export const AESGeneratedForm = ({
   editMode,
   providerType,
   handleModalToggle,
+  refresh,
 }: AESGeneratedFormProps) => {
   const { t } = useTranslation("groups");
   const serverInfo = useServerInfo();
   const [isKeySizeDropdownOpen, setIsKeySizeDropdownOpen] = useState(false);
-  const [fetchedProvider, setFetchedProvider] = useState<
-    ComponentRepresentation
-  >();
+
   const adminClient = useAdminClient();
   const { addAlert } = useAlerts();
   const realm = useRealm();
@@ -79,6 +78,7 @@ export const AESGeneratedForm = ({
         });
         handleModalToggle!();
         addAlert(t("realm-settings:saveProviderSuccess"), AlertVariant.success);
+        refresh!();
       }
     } catch (error) {
       addAlert(
@@ -112,7 +112,6 @@ export const AESGeneratedForm = ({
     (result) => {
       if (result) {
         setupForm(result);
-        setFetchedProvider(result);
       }
     },
     []
@@ -122,7 +121,7 @@ export const AESGeneratedForm = ({
     "org.keycloak.keys.KeyProvider"
   ];
 
-  console.log(":D", fetchedProvider);
+  console.log(":D", providerId);
   return (
     <FormAccess
       isHorizontal
@@ -160,9 +159,7 @@ export const AESGeneratedForm = ({
                   type="text"
                   isReadOnly={editMode}
                   aria-label={t("consoleDisplayName")}
-                  defaultValue={providerId}
-                  name="id"
-
+                  defaultValue={id}
                   // value={value}
                   // onChange={(value) => onChange(value)}
                   data-testid="display-name-input"
@@ -190,25 +187,25 @@ export const AESGeneratedForm = ({
         helperTextInvalid={t("common:required")}
       >
         {!editMode && (
-          // <Controller
-          //   name="name"
-          //   control={form.control}
-          //   defaultValue={providerType}
-          //   render={({ onChange, value }) => {
-          //     return (
+          <Controller
+            name="name"
+            control={form.control}
+            defaultValue={providerType}
+            render={({ onChange, value }) => {
+              return (
                 <TextInput
                   ref={form.register()}
                   id="name"
                   type="text"
                   aria-label={t("consoleDisplayName")}
                   defaultValue={providerType}
-                  // value={value}
-                  // onChange={(value) => onChange(value)}
+                  value={value}
+                  onChange={(value) => onChange(value)}
                   data-testid="display-name-input"
                 />
-              // );
-            // }}
-          //  {/* /> */}
+              );
+            }}
+           /> 
         )}
         {editMode && (
           <>
