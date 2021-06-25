@@ -172,7 +172,7 @@ describe("Realm settings", () => {
     cy.getId("provider-name-link").contains("test_aes-generated").click();
   });
 
-  it("Test keys", function () {
+  it("Test keys", () => {
     sidebarPage.goToRealmSettings();
     goToKeys();
 

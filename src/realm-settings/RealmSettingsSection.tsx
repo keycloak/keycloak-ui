@@ -149,17 +149,6 @@ export const RealmSettingsSection = () => {
     []
   );
 
-  useEffect(() => {
-    const update = async () => {
-      const realmComponents = await adminClient.components.find({
-        type: "org.keycloak.keys.KeyProvider",
-        realm: realmName,
-      });
-      setRealmComponents(realmComponents);
-    };
-    setTimeout(update, 100);
-  }, [key]);
-
   useFetch(
     async () => {
       const realm = await adminClient.realms.findOne({ realm: realmName });
