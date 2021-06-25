@@ -191,24 +191,6 @@ export const routes: RoutesFn = (t: TFunction) => [
     breadcrumb: t("realm-settings:editProvider"),
     access: "view-realm",
   },
-  // {
-  //   path: "/:realm/realm-settings/keys/:id?/java-keystore/settings",
-  //   component: JavaKeystoreForm,
-  //   breadcrumb: t("realmSettings"),
-  //   access: "view-realm",
-  // },
-  // {
-  //   path: "/:realm/realm-settings/keys/:id?/rsa/settings",
-  //   component: RSAForm,
-  //   breadcrumb: t("realmSettings"),
-  //   access: "view-realm",
-  // },
-  // {
-  //   path: "/:realm/realm-settings/keys/:id?/rsa-generated/settings",
-  //   component: RSAGeneratedForm,
-  //   breadcrumb: t("realmSettings"),
-  //   access: "view-realm",
-  // },
   {
     path: "/:realm/authentication",
     component: AuthenticationSection,

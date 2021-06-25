@@ -166,7 +166,6 @@ export const KeysTabInner = ({ components, refresh }: KeysTabInnerProps) => {
   };
 
   const handleModalToggle = () => {
-    console.log("doo we get here");
     setIsCreateModalOpen(!isCreateModalOpen);
   };
 
@@ -187,14 +186,6 @@ export const KeysTabInner = ({ components, refresh }: KeysTabInnerProps) => {
       );
     }
   };
-
-  // const ProviderLink = (component: ComponentRepresentation) => (
-  //   <>
-  //     <Link key={user.username} to={`${url}/${user.id}/settings`}>
-  //       {user.username}
-  //     </Link>
-  //   </>
-  // );
 
   useEffect(() => {
     renderEditForm(providerId);
@@ -366,11 +357,14 @@ export const KeysTabInner = ({ components, refresh }: KeysTabInnerProps) => {
                 </DataListControl>
                 <DataListItemCells
                   dataListCells={[
-                    <DataListCell  data-testId="provider-name" key={`name-${idx}`}>
+                    <DataListCell
+                      data-testId="provider-name"
+                      key={`name-${idx}`}
+                    >
                       <>
                         <Link
                           key={component.name}
-                          data-testId="provider-name-link" 
+                          data-testId="provider-name-link"
                           onClick={() => {
                             setProviderId(component.providerId!);
                             renderEditForm(providerId);

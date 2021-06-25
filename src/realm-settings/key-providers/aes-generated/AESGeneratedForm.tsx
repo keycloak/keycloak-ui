@@ -182,7 +182,6 @@ export const AESGeneratedForm = ({
             render={({ onChange, value }) => {
               return (
                 <TextInput
-                  // ref={form.register()}
                   id="name"
                   type="text"
                   aria-label={t("consoleDisplayName")}

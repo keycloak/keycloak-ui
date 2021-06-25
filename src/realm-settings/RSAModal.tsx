@@ -36,7 +36,7 @@ export const RSAModal = ({
   handleModalToggle,
   open,
   refresh,
-}: // save,
+}: 
 RSAModalProps) => {
   const { t } = useTranslation("groups");
   const serverInfo = useServerInfo();
