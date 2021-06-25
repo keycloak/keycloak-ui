@@ -23,25 +23,26 @@ import { HelpItem } from "../components/help-enabler/HelpItem";
 import { useServerInfo } from "../context/server-info/ServerInfoProvider";
 import { useRealm } from "../context/realm-context/RealmContext";
 
-type JavaKeystoreModalProps = {
+type HMACGeneratedModalProps = {
   providerType?: string;
   handleModalToggle?: () => void;
   refresh?: () => void;
   open: boolean;
 };
 
-export const JavaKeystoreModal = ({
+export const HMACGeneratedModal = ({
   providerType,
   handleModalToggle,
   open,
   refresh,
 }: // save,
-JavaKeystoreModalProps) => {
+HMACGeneratedModalProps) => {
   const { t } = useTranslation("groups");
   const serverInfo = useServerInfo();
   const adminClient = useAdminClient();
   const { addAlert } = useAlerts();
   const { handleSubmit, control } = useForm({});
+  const [isKeySizeDropdownOpen, setIsKeySizeDropdownOpen] = useState(false);
   const [
     isEllipticCurveDropdownOpen,
     setIsEllipticCurveDropdownOpen,
@@ -203,8 +204,52 @@ JavaKeystoreModalProps) => {
             )}
           />
         </FormGroup>
-        {providerType === "java-keystore" && (
+        {providerType === "hmac-generated" && (
           <>
+            <FormGroup
+              label={t("realm-settings:secretSize")}
+              fieldId="kc-aes-keysize"
+              labelIcon={
+                <HelpItem
+                  helpText="realm-settings-help:secretSize"
+                  forLabel={t("emailTheme")}
+                  forID="kc-email-theme"
+                />
+              }
+            >
+              <Controller
+                name="config.secretSize"
+                control={control}
+                defaultValue={["64"]}
+                render={({ onChange, value }) => (
+                  <Select
+                    toggleId="kc-aes-keysize"
+                    onToggle={() =>
+                      setIsKeySizeDropdownOpen(!isKeySizeDropdownOpen)
+                    }
+                    onSelect={(_, value) => {
+                      onChange([value + ""]);
+                      setIsKeySizeDropdownOpen(false);
+                    }}
+                    selections={[value + ""]}
+                    isOpen={isKeySizeDropdownOpen}
+                    variant={SelectVariant.single}
+                    aria-label={t("aesKeySize")}
+                    data-testid="select-secret-size"
+                  >
+                    {allComponentTypes[2].properties[3].options!.map(
+                      (item, idx) => (
+                        <SelectOption
+                          selected={item === value}
+                          key={`email-theme-${idx}`}
+                          value={item}
+                        />
+                      )
+                    )}
+                  </Select>
+                )}
+              />
+            </FormGroup>
             <FormGroup
               label={t("realm-settings:algorithm")}
               fieldId="kc-algorithm"
@@ -212,14 +257,14 @@ JavaKeystoreModalProps) => {
                 <HelpItem
                   helpText="realm-settings-help:algorithm"
                   forLabel={t("algorithm")}
-                  forID="kc-email-theme"
+                  forID="kc-algorithm"
                 />
               }
             >
               <Controller
                 name="config.algorithm"
                 control={control}
-                defaultValue={["RS256"]}
+                defaultValue={["HS-256"]}
                 render={({ onChange, value }) => (
                   <Select
                     toggleId="kc-elliptic"
@@ -234,127 +279,21 @@ JavaKeystoreModalProps) => {
                     }}
                     selections={[value + ""]}
                     variant={SelectVariant.single}
-                    aria-label={t("algorithm")}
+                    aria-label={t("emailTheme")}
                     isOpen={isEllipticCurveDropdownOpen}
                     placeholderText="Select one..."
-                    data-testid="select-algorithm"
+                    data-testid="select-email-theme"
                   >
-                    {allComponentTypes[3].properties[3].options!.map(
+                    {allComponentTypes[2].properties[4].options!.map(
                       (p, idx) => (
                         <SelectOption
                           selected={p === value}
-                          key={`algorithm-${idx}`}
+                          key={`email-theme-${idx}`}
                           value={p}
                         ></SelectOption>
                       )
                     )}
                   </Select>
-                )}
-              />
-            </FormGroup>
-            <FormGroup
-              label={t("realm-settings:keystore")}
-              fieldId="kc-login-theme"
-              labelIcon={
-                <HelpItem
-                  helpText="realm-settings-help:keystore"
-                  forLabel={t("keystore")}
-                  forID="kc-keystore"
-                />
-              }
-            >
-              <Controller
-                name="config.keystore"
-                control={control}
-                defaultValue={[]}
-                render={({ onChange }) => (
-                  <TextInput
-                    aria-label={t("keystore")}
-                    onChange={(value) => {
-                      onChange([value + ""]);
-                    }}
-                    data-testid="select-display-name"
-                  ></TextInput>
-                )}
-              />
-            </FormGroup>
-            <FormGroup
-              label={t("realm-settings:keystorePassword")}
-              fieldId="kc-login-theme"
-              labelIcon={
-                <HelpItem
-                  helpText="realm-settings-help:keystorePassword"
-                  forLabel={t("keystorePassword")}
-                  forID="kc-keystore-password"
-                />
-              }
-            >
-              <Controller
-                name="config.keystorePassword"
-                control={control}
-                defaultValue={[]}
-                render={({ onChange }) => (
-                  <TextInput
-                    aria-label={t("consoleDisplayName")}
-                    onChange={(value) => {
-                      onChange([value + ""]);
-                      setDisplayName(value);
-                    }}
-                    data-testid="select-display-name"
-                  ></TextInput>
-                )}
-              />
-            </FormGroup>
-            <FormGroup
-              label={t("realm-settings:keyAlias")}
-              fieldId="kc-login-theme"
-              labelIcon={
-                <HelpItem
-                  helpText="realm-settings-help:keyAlias"
-                  forLabel={t("keyAlias")}
-                  forID="kc-key-alias"
-                />
-              }
-            >
-              <Controller
-                name="config.keyAlias"
-                control={control}
-                defaultValue={[]}
-                render={({ onChange }) => (
-                  <TextInput
-                    aria-label={t("consoleDisplayName")}
-                    onChange={(value) => {
-                      onChange([value + ""]);
-                    }}
-                    data-testid="select-display-name"
-                  ></TextInput>
-                )}
-              />
-            </FormGroup>
-            <FormGroup
-              label={t("realm-settings:keyPassword")}
-              fieldId="kc-login-theme"
-              labelIcon={
-                <HelpItem
-                  helpText="realm-settings-help:keyPassword"
-                  forLabel={t("keyPassword")}
-                  forID="kc-key-password"
-                />
-              }
-            >
-              <Controller
-                name="config.keyPassword"
-                control={control}
-                defaultValue={[]}
-                render={({ onChange }) => (
-                  <TextInput
-                    aria-label={t("consoleDisplayName")}
-                    onChange={(value) => {
-                      onChange([value + ""]);
-                      setDisplayName(value);
-                    }}
-                    data-testid="select-display-name"
-                  ></TextInput>
                 )}
               />
             </FormGroup>

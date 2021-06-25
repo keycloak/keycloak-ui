@@ -23,29 +23,26 @@ import { HelpItem } from "../components/help-enabler/HelpItem";
 import { useServerInfo } from "../context/server-info/ServerInfoProvider";
 import { useRealm } from "../context/realm-context/RealmContext";
 
-type JavaKeystoreModalProps = {
+type RSAGeneratedModalProps = {
   providerType?: string;
   handleModalToggle?: () => void;
   refresh?: () => void;
   open: boolean;
 };
 
-export const JavaKeystoreModal = ({
+export const RSAGeneratedModal = ({
   providerType,
   handleModalToggle,
   open,
   refresh,
-}: // save,
-JavaKeystoreModalProps) => {
+}: RSAGeneratedModalProps) => {
   const { t } = useTranslation("groups");
   const serverInfo = useServerInfo();
   const adminClient = useAdminClient();
   const { addAlert } = useAlerts();
   const { handleSubmit, control } = useForm({});
-  const [
-    isEllipticCurveDropdownOpen,
-    setIsEllipticCurveDropdownOpen,
-  ] = useState(false);
+  const [isKeySizeDropdownOpen, setIsKeySizeDropdownOpen] = useState(false);
+  const [isRSAalgDropdownOpen, setIsRSAalgDropdownOpen] = useState(false);
   const [displayName, setDisplayName] = useState("");
   const realm = useRealm();
 
@@ -203,7 +200,7 @@ JavaKeystoreModalProps) => {
             )}
           />
         </FormGroup>
-        {providerType === "java-keystore" && (
+        {providerType === "rsa-generated" && (
           <>
             <FormGroup
               label={t("realm-settings:algorithm")}
@@ -212,7 +209,7 @@ JavaKeystoreModalProps) => {
                 <HelpItem
                   helpText="realm-settings-help:algorithm"
                   forLabel={t("algorithm")}
-                  forID="kc-email-theme"
+                  forID="kc-algorithm"
                 />
               }
             >
@@ -222,28 +219,25 @@ JavaKeystoreModalProps) => {
                 defaultValue={["RS256"]}
                 render={({ onChange, value }) => (
                   <Select
-                    toggleId="kc-elliptic"
+                    toggleId="kc-rsa-algorithm"
                     onToggle={() =>
-                      setIsEllipticCurveDropdownOpen(
-                        !isEllipticCurveDropdownOpen
-                      )
+                      setIsRSAalgDropdownOpen(!isRSAalgDropdownOpen)
                     }
                     onSelect={(_, value) => {
                       onChange([value + ""]);
-                      setIsEllipticCurveDropdownOpen(false);
+                      setIsRSAalgDropdownOpen(false);
                     }}
                     selections={[value + ""]}
                     variant={SelectVariant.single}
                     aria-label={t("algorithm")}
-                    isOpen={isEllipticCurveDropdownOpen}
-                    placeholderText="Select one..."
-                    data-testid="select-algorithm"
+                    isOpen={isRSAalgDropdownOpen}
+                    data-testid="select-rsa-algorithm"
                   >
-                    {allComponentTypes[3].properties[3].options!.map(
+                    {allComponentTypes[5].properties[3].options!.map(
                       (p, idx) => (
                         <SelectOption
                           selected={p === value}
-                          key={`algorithm-${idx}`}
+                          key={`rsa-algorithm-${idx}`}
                           value={p}
                         ></SelectOption>
                       )
@@ -253,108 +247,46 @@ JavaKeystoreModalProps) => {
               />
             </FormGroup>
             <FormGroup
-              label={t("realm-settings:keystore")}
-              fieldId="kc-login-theme"
+              label={t("realm-settings:AESKeySize")}
+              fieldId="kc-aes-keysize"
               labelIcon={
                 <HelpItem
-                  helpText="realm-settings-help:keystore"
-                  forLabel={t("keystore")}
-                  forID="kc-keystore"
+                  helpText="realm-settings-help:AESKeySize"
+                  forLabel={t("AESKeySize")}
+                  forID="kc-aes-key-size"
                 />
               }
             >
               <Controller
-                name="config.keystore"
+                name="config.secretSize"
                 control={control}
-                defaultValue={[]}
-                render={({ onChange }) => (
-                  <TextInput
-                    aria-label={t("keystore")}
-                    onChange={(value) => {
+                defaultValue={["2048"]}
+                render={({ onChange, value }) => (
+                  <Select
+                    toggleId="kc-rsa-keysize"
+                    onToggle={() =>
+                      setIsKeySizeDropdownOpen(!isKeySizeDropdownOpen)
+                    }
+                    onSelect={(_, value) => {
                       onChange([value + ""]);
+                      setIsKeySizeDropdownOpen(false);
                     }}
-                    data-testid="select-display-name"
-                  ></TextInput>
-                )}
-              />
-            </FormGroup>
-            <FormGroup
-              label={t("realm-settings:keystorePassword")}
-              fieldId="kc-login-theme"
-              labelIcon={
-                <HelpItem
-                  helpText="realm-settings-help:keystorePassword"
-                  forLabel={t("keystorePassword")}
-                  forID="kc-keystore-password"
-                />
-              }
-            >
-              <Controller
-                name="config.keystorePassword"
-                control={control}
-                defaultValue={[]}
-                render={({ onChange }) => (
-                  <TextInput
-                    aria-label={t("consoleDisplayName")}
-                    onChange={(value) => {
-                      onChange([value + ""]);
-                      setDisplayName(value);
-                    }}
-                    data-testid="select-display-name"
-                  ></TextInput>
-                )}
-              />
-            </FormGroup>
-            <FormGroup
-              label={t("realm-settings:keyAlias")}
-              fieldId="kc-login-theme"
-              labelIcon={
-                <HelpItem
-                  helpText="realm-settings-help:keyAlias"
-                  forLabel={t("keyAlias")}
-                  forID="kc-key-alias"
-                />
-              }
-            >
-              <Controller
-                name="config.keyAlias"
-                control={control}
-                defaultValue={[]}
-                render={({ onChange }) => (
-                  <TextInput
-                    aria-label={t("consoleDisplayName")}
-                    onChange={(value) => {
-                      onChange([value + ""]);
-                    }}
-                    data-testid="select-display-name"
-                  ></TextInput>
-                )}
-              />
-            </FormGroup>
-            <FormGroup
-              label={t("realm-settings:keyPassword")}
-              fieldId="kc-login-theme"
-              labelIcon={
-                <HelpItem
-                  helpText="realm-settings-help:keyPassword"
-                  forLabel={t("keyPassword")}
-                  forID="kc-key-password"
-                />
-              }
-            >
-              <Controller
-                name="config.keyPassword"
-                control={control}
-                defaultValue={[]}
-                render={({ onChange }) => (
-                  <TextInput
-                    aria-label={t("consoleDisplayName")}
-                    onChange={(value) => {
-                      onChange([value + ""]);
-                      setDisplayName(value);
-                    }}
-                    data-testid="select-display-name"
-                  ></TextInput>
+                    selections={[value + ""]}
+                    isOpen={isKeySizeDropdownOpen}
+                    variant={SelectVariant.single}
+                    aria-label={t("keySize")}
+                    data-testid="select-secret-size"
+                  >
+                    {allComponentTypes[5].properties[4].options!.map(
+                      (item, idx) => (
+                        <SelectOption
+                          selected={item === value}
+                          key={`rsa-generated-key-size-${idx}`}
+                          value={item}
+                        />
+                      )
+                    )}
+                  </Select>
                 )}
               />
             </FormGroup>

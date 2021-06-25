@@ -3,6 +3,7 @@ import {
   AlertVariant,
   Button,
   ButtonVariant,
+  FileUpload,
   Form,
   FormGroup,
   Modal,
@@ -23,20 +24,20 @@ import { HelpItem } from "../components/help-enabler/HelpItem";
 import { useServerInfo } from "../context/server-info/ServerInfoProvider";
 import { useRealm } from "../context/realm-context/RealmContext";
 
-type JavaKeystoreModalProps = {
+type ECDSAGeneratedModalProps = {
   providerType?: string;
   handleModalToggle?: () => void;
   refresh?: () => void;
   open: boolean;
 };
 
-export const JavaKeystoreModal = ({
+export const ECDSAGeneratedModal = ({
   providerType,
   handleModalToggle,
   open,
   refresh,
 }: // save,
-JavaKeystoreModalProps) => {
+ECDSAGeneratedModalProps) => {
   const { t } = useTranslation("groups");
   const serverInfo = useServerInfo();
   const adminClient = useAdminClient();
@@ -46,8 +47,12 @@ JavaKeystoreModalProps) => {
     isEllipticCurveDropdownOpen,
     setIsEllipticCurveDropdownOpen,
   ] = useState(false);
+  const [isRSAalgDropdownOpen, setIsRSAalgDropdownOpen] = useState(false);
   const [displayName, setDisplayName] = useState("");
   const realm = useRealm();
+
+  const [keyFileName, setKeyFileName] = useState("");
+  const [certificateFileName, setCertificateFileName] = useState("");
 
   const allComponentTypes = serverInfo.componentTypes![
     "org.keycloak.keys.KeyProvider"
@@ -203,7 +208,7 @@ JavaKeystoreModalProps) => {
             )}
           />
         </FormGroup>
-        {providerType === "java-keystore" && (
+        {providerType === "rsa" && (
           <>
             <FormGroup
               label={t("realm-settings:algorithm")}
@@ -212,38 +217,35 @@ JavaKeystoreModalProps) => {
                 <HelpItem
                   helpText="realm-settings-help:algorithm"
                   forLabel={t("algorithm")}
-                  forID="kc-email-theme"
+                  forID="kc-algorithm"
                 />
               }
             >
               <Controller
-                name="config.algorithm"
+                name="algorithm"
                 control={control}
-                defaultValue={["RS256"]}
+                defaultValue=""
                 render={({ onChange, value }) => (
                   <Select
-                    toggleId="kc-elliptic"
+                    toggleId="kc-rsa-algorithm"
                     onToggle={() =>
-                      setIsEllipticCurveDropdownOpen(
-                        !isEllipticCurveDropdownOpen
-                      )
+                      setIsRSAalgDropdownOpen(!isRSAalgDropdownOpen)
                     }
                     onSelect={(_, value) => {
-                      onChange([value + ""]);
-                      setIsEllipticCurveDropdownOpen(false);
+                      onChange(value as string);
+                      setIsRSAalgDropdownOpen(false);
                     }}
                     selections={[value + ""]}
                     variant={SelectVariant.single}
                     aria-label={t("algorithm")}
-                    isOpen={isEllipticCurveDropdownOpen}
-                    placeholderText="Select one..."
-                    data-testid="select-algorithm"
+                    isOpen={isRSAalgDropdownOpen}
+                    data-testid="select-rsa-algorithm"
                   >
-                    {allComponentTypes[3].properties[3].options!.map(
+                    {allComponentTypes[4].properties[3].options!.map(
                       (p, idx) => (
                         <SelectOption
                           selected={p === value}
-                          key={`algorithm-${idx}`}
+                          key={`rsa-algorithm-${idx}`}
                           value={p}
                         ></SelectOption>
                       )
@@ -253,112 +255,111 @@ JavaKeystoreModalProps) => {
               />
             </FormGroup>
             <FormGroup
-              label={t("realm-settings:keystore")}
-              fieldId="kc-login-theme"
+              label={t("realm-settings:privateRSAKey")}
+              fieldId="kc-private-rsa-key"
               labelIcon={
                 <HelpItem
-                  helpText="realm-settings-help:keystore"
-                  forLabel={t("keystore")}
-                  forID="kc-keystore"
+                  helpText="realm-settings-help:privateRSAKey"
+                  forLabel={t("privateRSAKey")}
+                  forID="kc-rsa-key"
                 />
               }
             >
               <Controller
-                name="config.keystore"
+                name="config.privateKey"
                 control={control}
                 defaultValue={[]}
-                render={({ onChange }) => (
-                  <TextInput
-                    aria-label={t("keystore")}
-                    onChange={(value) => {
-                      onChange([value + ""]);
+                render={({ onChange, value }) => (
+                  <FileUpload
+                    id="importPrivateKey"
+                    type="text"
+                    value={value[0]}
+                    filenamePlaceholder="Upload a PEM file or paste key below"
+                    filename={keyFileName}
+                    onChange={(value, fileName) => {
+                      setKeyFileName(fileName);
+                      onChange([value]);
                     }}
-                    data-testid="select-display-name"
-                  ></TextInput>
+                  />
                 )}
               />
             </FormGroup>
             <FormGroup
-              label={t("realm-settings:keystorePassword")}
-              fieldId="kc-login-theme"
+              label={t("realm-settings:x509Certificate")}
+              fieldId="kc-aes-keysize"
               labelIcon={
                 <HelpItem
-                  helpText="realm-settings-help:keystorePassword"
-                  forLabel={t("keystorePassword")}
-                  forID="kc-keystore-password"
+                  helpText="realm-settings-help:x509Certificate"
+                  forLabel={t("x509Certificate")}
+                  forID="kc-x509-certificatw"
                 />
               }
             >
               <Controller
-                name="config.keystorePassword"
+                name="config.certificate"
                 control={control}
                 defaultValue={[]}
-                render={({ onChange }) => (
-                  <TextInput
-                    aria-label={t("consoleDisplayName")}
-                    onChange={(value) => {
-                      onChange([value + ""]);
-                      setDisplayName(value);
+                render={({ onChange, value }) => (
+                  <FileUpload
+                    id="importCertificate"
+                    type="text"
+                    value={value[0]}
+                    filenamePlaceholder="Upload a PEM file or paste key below"
+                    filename={certificateFileName}
+                    onChange={(value, fileName) => {
+                      setCertificateFileName(fileName);
+                      onChange([value]);
                     }}
-                    data-testid="select-display-name"
-                  ></TextInput>
-                )}
-              />
-            </FormGroup>
-            <FormGroup
-              label={t("realm-settings:keyAlias")}
-              fieldId="kc-login-theme"
-              labelIcon={
-                <HelpItem
-                  helpText="realm-settings-help:keyAlias"
-                  forLabel={t("keyAlias")}
-                  forID="kc-key-alias"
-                />
-              }
-            >
-              <Controller
-                name="config.keyAlias"
-                control={control}
-                defaultValue={[]}
-                render={({ onChange }) => (
-                  <TextInput
-                    aria-label={t("consoleDisplayName")}
-                    onChange={(value) => {
-                      onChange([value + ""]);
-                    }}
-                    data-testid="select-display-name"
-                  ></TextInput>
-                )}
-              />
-            </FormGroup>
-            <FormGroup
-              label={t("realm-settings:keyPassword")}
-              fieldId="kc-login-theme"
-              labelIcon={
-                <HelpItem
-                  helpText="realm-settings-help:keyPassword"
-                  forLabel={t("keyPassword")}
-                  forID="kc-key-password"
-                />
-              }
-            >
-              <Controller
-                name="config.keyPassword"
-                control={control}
-                defaultValue={[]}
-                render={({ onChange }) => (
-                  <TextInput
-                    aria-label={t("consoleDisplayName")}
-                    onChange={(value) => {
-                      onChange([value + ""]);
-                      setDisplayName(value);
-                    }}
-                    data-testid="select-display-name"
-                  ></TextInput>
+                  />
                 )}
               />
             </FormGroup>
           </>
+        )}
+        {providerType === "ecdsa-generated" && (
+          <FormGroup
+            label={t("realm-settings:ellipticCurve")}
+            fieldId="kc-algorithm"
+            labelIcon={
+              <HelpItem
+                helpText="realm-settings-help:ellipticCurve"
+                forLabel={t("emailTheme")}
+                forID="kc-email-theme"
+              />
+            }
+          >
+            <Controller
+              name="config.ecdsaEllipticCurveKey"
+              control={control}
+              defaultValue={["P-256"]}
+              render={({ onChange, value }) => (
+                <Select
+                  toggleId="kc-elliptic"
+                  onToggle={() =>
+                    setIsEllipticCurveDropdownOpen(!isEllipticCurveDropdownOpen)
+                  }
+                  onSelect={(_, value) => {
+                    onChange([value + ""]);
+                    setIsEllipticCurveDropdownOpen(false);
+                  }}
+                  selections={[value + ""]}
+                  variant={SelectVariant.single}
+                  aria-label={t("emailTheme")}
+                  isOpen={isEllipticCurveDropdownOpen}
+                  placeholderText="Select one..."
+                  data-testid="select-email-theme"
+                >
+                  {allComponentTypes[1].properties[3].options!.map((p, idx) => (
+                    <SelectOption
+                      selected={p === value}
+                      key={`email-theme-${idx}`}
+                      value={p}
+                    ></SelectOption>
+                  ))}
+                </Select>
+              )}
+            />
+          </FormGroup>
         )}
       </Form>
     </Modal>

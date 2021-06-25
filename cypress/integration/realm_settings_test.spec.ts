@@ -131,12 +131,9 @@ describe("Realm settings", () => {
   });
 
   it("add Providers", () => {
-    cy.wait(5000);
     sidebarPage.goToRealmSettings();
 
     cy.getId("rs-keys-tab").click();
-
-    cy.wait(10000);
 
     cy.getId("rs-providers-tab").click();
 
@@ -163,6 +160,16 @@ describe("Realm settings", () => {
     cy.getId("option-rsa-generated").click();
     realmSettingsPage.enterConsoleDisplayName("test_rsa-generated");
     realmSettingsPage.addProvider();
+  });
+
+  it("go to details", () => {
+    sidebarPage.goToRealmSettings();
+
+    cy.getId("rs-keys-tab").click();
+
+    cy.getId("rs-providers-tab").click();
+
+    cy.getId("provider-name-link").contains("test_aes-generated").click();
   });
 
   it("Test keys", function () {

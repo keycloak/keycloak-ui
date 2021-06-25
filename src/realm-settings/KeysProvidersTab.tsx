@@ -39,6 +39,11 @@ import { useRealm } from "../context/realm-context/RealmContext";
 import { Link, useRouteMatch } from "react-router-dom";
 import { AESGeneratedModal } from "./key-providers/aes-generated/AESGeneratedModal";
 import { AESGeneratedSettings } from "./key-providers/aes-generated/AESGeneratedForm";
+import { JavaKeystoreModal } from "./JavaKeystoreModal";
+import { HMACGeneratedModal } from "./HMACGeneratedModal";
+import { ECDSAGeneratedModal } from "./ECDSAGeneratedModal";
+import { RSAModal } from "./RSAModal";
+import { RSAGeneratedModal } from "./RSAGeneratedModal";
 
 type ComponentData = KeyMetadataRepresentation & {
   id?: string;
@@ -83,9 +88,7 @@ export const KeysTabInner = ({ components, refresh }: KeysTabInnerProps) => {
   const [defaultConsoleDisplayName, setDefaultConsoleDisplayName] = useState(
     ""
   );
-  const [providerId, setProviderId] = useState(
-    ""
-  );
+  const [providerId, setProviderId] = useState("");
 
   // const [editMode, setEditMode] = useState(false);
 
@@ -163,7 +166,7 @@ export const KeysTabInner = ({ components, refresh }: KeysTabInnerProps) => {
   };
 
   const handleModalToggle = () => {
-    console.log("doo we get here")
+    console.log("doo we get here");
     setIsCreateModalOpen(!isCreateModalOpen);
   };
 
@@ -177,9 +180,13 @@ export const KeysTabInner = ({ components, refresh }: KeysTabInnerProps) => {
 
   const renderEditForm = (providerName: string) => {
     if (providerName === "aes-generated") {
-      return <><AESGeneratedSettings/></>
+      return (
+        <>
+          <AESGeneratedSettings />
+        </>
+      );
     }
-  }
+  };
 
   // const ProviderLink = (component: ComponentRepresentation) => (
   //   <>
@@ -190,8 +197,8 @@ export const KeysTabInner = ({ components, refresh }: KeysTabInnerProps) => {
   // );
 
   useEffect(() => {
-    renderEditForm(providerId)
-  }, [providerId])
+    renderEditForm(providerId);
+  }, [providerId]);
 
   return (
     <>
@@ -203,7 +210,7 @@ export const KeysTabInner = ({ components, refresh }: KeysTabInnerProps) => {
           open={isCreateModalOpen}
         />
       )}
-      {/* {defaultConsoleDisplayName === "ecdsa-generated" && (
+      {defaultConsoleDisplayName === "ecdsa-generated" && (
         <ECDSAGeneratedModal
           handleModalToggle={handleModalToggle}
           providerType={defaultConsoleDisplayName}
@@ -242,7 +249,7 @@ export const KeysTabInner = ({ components, refresh }: KeysTabInnerProps) => {
           refresh={refresh}
           open={isCreateModalOpen}
         />
-      )} */}
+      )}
       <DeleteConfirm />
       <PageSection variant="light" padding={{ default: "noPadding" }}>
         <Toolbar>
@@ -301,12 +308,6 @@ export const KeysTabInner = ({ components, refresh }: KeysTabInnerProps) => {
             </ToolbarGroup>
           </>
         </Toolbar>
-        {/* 
-        <PageSection variant="light">
-                <HMACGeneratedForm
-                  editMode={true}
-                />
-              </PageSection> */}
 
         <DataList
           aria-label={t("groups")}
@@ -365,14 +366,15 @@ export const KeysTabInner = ({ components, refresh }: KeysTabInnerProps) => {
                 </DataListControl>
                 <DataListItemCells
                   dataListCells={[
-                    <DataListCell key={`name-${idx}`}>
+                    <DataListCell  data-testId="provider-name" key={`name-${idx}`}>
                       <>
                         <Link
                           key={component.name}
-                          // variant={"link"}
+                          data-testId="provider-name-link" 
                           onClick={() => {
                             setProviderId(component.providerId!);
-                            renderEditForm(providerId);}}
+                            renderEditForm(providerId);
+                          }}
                           to={`${url}/${component.id}/${component.providerId}/settings`}
                         >
                           {component.name}
@@ -424,7 +426,6 @@ export const KeysTabInner = ({ components, refresh }: KeysTabInnerProps) => {
             </DataListItem>
           ))}
         </DataList>
-        {/* {url.includes("hmac-generated/settings") && <HMACGeneratedForm />} */}
         <div className="pf-screen-reader" aria-live="assertive">
           {liveText}
         </div>

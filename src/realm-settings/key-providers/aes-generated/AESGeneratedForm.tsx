@@ -323,6 +323,7 @@ export const AESGeneratedForm = ({
       <ActionGroup className="kc-AESform-buttons">
         <Button
           className="kc-AESform-save-button"
+          data-testid="add-provider-button"
           variant="primary"
           type="submit"
         >
