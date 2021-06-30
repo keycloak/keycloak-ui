@@ -59,6 +59,8 @@ export const LocalizationTab = ({
   const bundleForm = useForm<BundleForm>({ mode: "onChange" });
   const { addAlert } = useAlerts();
 
+  console.log(realm.supportedLocales);
+
   const watchSupportedLocales = useWatch({
     control,
     name: "supportedLocales",
@@ -71,14 +73,22 @@ export const LocalizationTab = ({
     defaultValue: realm?.internationalizationEnabled,
   });
 
+  console.log("ok", realm);
+
   const loader = async () => {
     if (realm) {
+      // if(realm.supportedLocales?.length === 0) {
+      //   return [[]];
+      // }
+      // else {
       const result = await adminClient.realms.getRealmLocalizationTexts({
         realm: realm.realm!,
         selectedLocale: getValues("defaultLocale") || "en",
       });
       return Object.keys(result).map((key) => [key, result[key]]);
     }
+
+    // }
     return [[]];
   };
 
