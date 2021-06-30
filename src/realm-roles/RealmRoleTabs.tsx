@@ -324,10 +324,7 @@ export const RealmRoleTabs = () => {
         subKey={id ? "" : "roles:roleCreateExplain"}
         actionsDropdownId="roles-actions-dropdown"
         dropdownItems={dropdownItems}
-<<<<<<< HEAD
         divider={!id}
-=======
->>>>>>> wip provider details
       />
       <PageSection variant="light" className="pf-u-p-0">
         {id && (
