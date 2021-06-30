@@ -39,13 +39,10 @@ export default class RealmSettingsPage {
   testConnectionButton = "test-connection-button";
   modalTestConnectionButton = "modal-test-connection-button";
   emailAddressInput = "email-address-input";
-<<<<<<< HEAD
-=======
   addBundleButton = "no-message-bundles-empty-action";
   confirmAddBundle = "add-bundle-confirm-button";
   keyInput = "key-input";
   valueInput = "value-input";
->>>>>>> wip provider details
 
   selectLoginThemeType(themeType: string) {
     const themesUrl = "/auth/admin/realms/master/themes";
