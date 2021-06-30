@@ -30,7 +30,7 @@ export const AlertProvider = ({ children }: { children: ReactNode }) => {
     variant: AlertVariant = AlertVariant.default,
     description?: string
   ) => {
-    setAlerts([...alerts, { key: createId(), message, variant, description }]);
+    setAlerts([{ key: createId(), message, variant, description }, ...alerts]);
   };
 
   return (
