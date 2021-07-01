@@ -40,6 +40,19 @@ describe("Realm settings", () => {
     return this;
   };
 
+  const addBundle = () => {
+    const localizationUrl =
+      "/auth/admin/realms/master/realm-settings/localization";
+    cy.intercept(localizationUrl).as("localizationFetch");
+
+    realmSettingsPage.addKeyValuePair(
+      "key_" + (Math.random() + 1).toString(36).substring(7),
+      "value_" + (Math.random() + 1).toString(36).substring(7)
+    );
+
+    return this;
+  };
+
   it("Go to general tab", function () {
     sidebarPage.goToRealmSettings();
     realmSettingsPage.toggleSwitch(realmSettingsPage.managedAccessSwitch);
@@ -188,5 +201,17 @@ describe("Realm settings", () => {
     goToKeys();
 
     realmSettingsPage.testSelectFilter();
+  });
+
+  it("add locale", () => {
+    sidebarPage.goToRealmSettings();
+
+    cy.getId("rs-localization-tab").click();
+
+    addBundle();
+
+    masthead.checkNotificationMessage(
+      "Success! The localization text has been created."
+    );
   });
 });

@@ -147,9 +147,11 @@
     "localization": "Localization",
     "key": "Key",
     "value": "Value",
+    "pairCreatedSuccess": "Success! The localization text has been created.",
+    "pairCreatedError": "Error creating localization text.",
     "supportedLocales": "Supported locales",
     "defaultLocale": "Default locale",
-
+    "addMessageBundle": "Add message bundle",
     "eventType": "Event saved type",
     "searchEventType": "Search saved event type",
     "addSavedTypes": "Add saved types",
