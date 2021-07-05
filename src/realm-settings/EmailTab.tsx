@@ -164,8 +164,7 @@ export const RealmSettingsEmailTab = ({
                 type="email"
                 id="kc-sender-email-address"
                 data-testid="sender-email-address"
-                name="smtpServer.from"
-                ref={register({
+                {...register("smtpServer.from", {
                   pattern: emailRegexPattern,
                   required: true,
                 })}
@@ -188,8 +187,7 @@ export const RealmSettingsEmailTab = ({
                 type="text"
                 id="kc-from-display-name"
                 data-testid="from-display-name"
-                name="smtpServer.fromDisplayName"
-                ref={register}
+                {...register("smtpServer.fromDisplayName")}
                 placeholder="Display name for Sender email address"
               />
             </FormGroup>
@@ -202,8 +200,7 @@ export const RealmSettingsEmailTab = ({
               <TextInput
                 type="email"
                 id="kc-reply-to"
-                name="smtpServer.replyTo"
-                ref={register({
+                {...register("smtpServer.replyTo", {
                   pattern: emailRegexPattern,
                 })}
                 placeholder="Reply to email address"
@@ -224,8 +221,7 @@ export const RealmSettingsEmailTab = ({
               <TextInput
                 type="text"
                 id="kc-reply-to-display-name"
-                name="smtpServer.replyToDisplayName"
-                ref={register}
+                {...register("smtpServer.replyToDisplayName")}
                 placeholder='Display name for "reply to" email address'
               />
             </FormGroup>
@@ -243,8 +239,7 @@ export const RealmSettingsEmailTab = ({
               <TextInput
                 type="text"
                 id="kc-envelope-from"
-                name="smtpServer.envelopeFrom"
-                ref={register}
+                {...register("smtpServer.envelopeFrom")}
                 placeholder="Sender envelope email address"
               />
             </FormGroup>
@@ -270,8 +265,7 @@ export const RealmSettingsEmailTab = ({
               <TextInput
                 type="text"
                 id="kc-host"
-                name="smtpServer.host"
-                ref={register({ required: true })}
+                {...register("smtpServer.host", { required: true })}
                 placeholder="SMTP host"
                 validated={errors.smtpServer?.host ? "error" : "default"}
               />
@@ -280,8 +274,7 @@ export const RealmSettingsEmailTab = ({
               <TextInput
                 type="text"
                 id="kc-port"
-                name="smtpServer.port"
-                ref={register}
+                {...register("smtpServer.port")}
                 placeholder="SMTP port (defaults to 25)"
               />
             </FormGroup>
@@ -295,7 +288,6 @@ export const RealmSettingsEmailTab = ({
                     id="kc-enable-ssl"
                     data-testid="enable-ssl"
                     label={t("enableSSL")}
-                    ref={register}
                     isChecked={value === "true"}
                     onChange={(value) => onChange("" + value)}
                   />
@@ -310,7 +302,6 @@ export const RealmSettingsEmailTab = ({
                     id="kc-enable-start-tls"
                     data-testid="enable-start-tls"
                     label={t("enableStartTLS")}
-                    ref={register}
                     isChecked={value === "true"}
                     onChange={(value) => onChange("" + value)}
                   />
@@ -353,8 +344,7 @@ export const RealmSettingsEmailTab = ({
                     type="text"
                     id="kc-username"
                     data-testid="username-input"
-                    name="smtpServer.user"
-                    ref={register({ required: true })}
+                    {...register("smtpServer.user", { required: true })}
                     placeholder="Login username"
                     validated={errors.smtpServer?.user ? "error" : "default"}
                   />
@@ -377,8 +367,7 @@ export const RealmSettingsEmailTab = ({
                     type="password"
                     id="kc-password"
                     data-testid="password-input"
-                    name="smtpServer.password"
-                    ref={register({ required: true })}
+                    {...register("smtpServer.password", { required: true })}
                     placeholder="Login password"
                     validated={
                       errors.smtpServer?.password ? "error" : "default"

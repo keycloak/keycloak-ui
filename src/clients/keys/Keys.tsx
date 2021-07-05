@@ -204,8 +204,7 @@ export const Keys = ({ clientId, save }: KeysProps) => {
                 <TextInput
                   type="text"
                   id="jwksUrl"
-                  name="attributes.jwks-url"
-                  ref={register}
+                  {...register("attributes.jwks-url")}
                 />
               </FormGroup>
             )}

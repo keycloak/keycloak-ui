@@ -39,11 +39,10 @@ export const OIDCGeneralSettings = ({ id }: { id: string }) => {
           type="text"
           id="alias"
           data-testid="alias"
-          name="alias"
+          {...register("alias", { required: true })}
           validated={
             errors.alias ? ValidatedOptions.error : ValidatedOptions.default
           }
-          ref={register({ required: true })}
         />
       </FormGroup>
 

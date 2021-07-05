@@ -48,8 +48,7 @@ const Fields = ({ readOnly }: DiscoverySettingsProps) => {
           type="text"
           data-testid="authorizationUrl"
           id="kc-authorization-url"
-          name="config.authorizationUrl"
-          ref={register({ required: true })}
+          {...register("config.authorizationUrl", { required: true })}
           validated={
             errors.config && errors.config.authorizationUrl
               ? ValidatedOptions.error
@@ -73,8 +72,7 @@ const Fields = ({ readOnly }: DiscoverySettingsProps) => {
         <TextInput
           type="text"
           id="tokenUrl"
-          name="config.tokenUrl"
-          ref={register({ required: true })}
+          {...register("config.tokenUrl", { required: true })}
           validated={
             errors.config && errors.config.tokenUrl
               ? ValidatedOptions.error

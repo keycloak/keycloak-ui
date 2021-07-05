@@ -55,7 +55,6 @@ export const MultiLineInput = ({
           <InputGroup>
             <TextInput
               id={id}
-              ref={register()}
               name={`${name}[${index}].value`}
               defaultValue={value}
               {...rest}

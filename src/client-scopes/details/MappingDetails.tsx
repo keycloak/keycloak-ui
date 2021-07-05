@@ -188,10 +188,9 @@ export const MappingDetails = () => {
                 helperTextInvalid={t("common:required")}
               >
                 <TextInput
-                  ref={register({ required: true })}
                   type="text"
                   id="name"
-                  name="name"
+                  {...register("name", { required: true })}
                   validated={
                     errors.name
                       ? ValidatedOptions.error
@@ -213,10 +212,9 @@ export const MappingDetails = () => {
             fieldId="prefix"
           >
             <TextInput
-              ref={register()}
               type="text"
               id="prefix"
-              name="config.usermodel-realmRoleMapping-rolePrefix"
+              {...register("config.usermodel-realmRoleMapping-rolePrefix")}
             />
           </FormGroup>
           <FormGroup
@@ -257,10 +255,9 @@ export const MappingDetails = () => {
             fieldId="claimName"
           >
             <TextInput
-              ref={register()}
               type="text"
               id="claimName"
-              name="config.claim-name"
+              {...register("config.claim-name")}
             />
           </FormGroup>
           <FormGroup

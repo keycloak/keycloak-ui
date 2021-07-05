@@ -32,12 +32,7 @@ describe("<FormAccess />", () => {
           <AccessContextProvider>
             <FormAccess role="manage-clients">
               <FormGroup label="test" fieldId="field">
-                <TextInput
-                  type="text"
-                  id="field"
-                  name="fieldName"
-                  ref={register()}
-                />
+                <TextInput type="text" id="field" {...register("fieldName")} />
               </FormGroup>
               <Controller
                 name="consentRequired"

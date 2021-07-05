@@ -133,7 +133,7 @@ export const OpenIdConnectSettings = () => {
         >
           <TextInput
             type="text"
-            name="discoveryEndpoint"
+            {...register("discoveryEndpoint", { required: true })}
             data-testid="discoveryEndpoint"
             id="kc-discovery-endpoint"
             placeholder="https://hostname/.well-known/openid-configuration"
@@ -153,7 +153,6 @@ export const OpenIdConnectSettings = () => {
                 ? 'data:image/svg+xml;charset=utf8,%3Csvg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid"%3E%3Ccircle cx="50" cy="50" fill="none" stroke="%230066cc" stroke-width="10" r="35" stroke-dasharray="164.93361431346415 56.97787143782138"%3E%3CanimateTransform attributeName="transform" type="rotate" repeatCount="indefinite" dur="1s" values="0 50 50;360 50 50" keyTimes="0;1"%3E%3C/animateTransform%3E%3C/circle%3E%3C/svg%3E'
                 : ""
             }
-            ref={register({ required: true })}
           />
         </FormGroup>
       )}

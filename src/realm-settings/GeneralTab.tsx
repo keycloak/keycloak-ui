@@ -59,8 +59,7 @@ export const RealmSettingsGeneralTab = ({
             <TextInput
               type="text"
               id="kc-display-name"
-              name="displayName"
-              ref={register}
+              {...register("displayName")}
             />
           </FormGroup>
           <FormGroup
@@ -70,8 +69,7 @@ export const RealmSettingsGeneralTab = ({
             <TextInput
               type="text"
               id="kc-html-display-name"
-              name="displayNameHtml"
-              ref={register}
+              {...register("displayNameHtml")}
             />
           </FormGroup>
           <FormGroup
@@ -88,8 +86,7 @@ export const RealmSettingsGeneralTab = ({
             <TextInput
               type="text"
               id="kc-frontend-url"
-              name="attributes.frontendUrl"
-              ref={register}
+              {...register("attributes.frontendUrl")}
             />
           </FormGroup>
           <FormGroup

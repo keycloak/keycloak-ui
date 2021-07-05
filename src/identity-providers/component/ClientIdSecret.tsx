@@ -43,8 +43,7 @@ export const ClientIdSecret = ({
           type="text"
           id="kc-client-id"
           data-testid="clientId"
-          name="config.clientId"
-          ref={register({ required: true })}
+          {...register("config.clientId", { required: true })}
         />
       </FormGroup>
       <FormGroup
@@ -70,8 +69,7 @@ export const ClientIdSecret = ({
             isRequired={secretRequired}
             id="kc-client-secret"
             data-testid="clientSecret"
-            name="config.clientSecret"
-            ref={register({ required: secretRequired })}
+            {...register("config.clientSecret", { required: secretRequired })}
           />
         )}
         {!create && (
@@ -80,8 +78,7 @@ export const ClientIdSecret = ({
             type="password"
             id="kc-client-secret"
             data-testid="clientSecret"
-            name="config.clientSecret"
-            ref={register({ required: secretRequired })}
+            {...register("config.clientSecret", { required: secretRequired })}
           />
         )}
       </FormGroup>

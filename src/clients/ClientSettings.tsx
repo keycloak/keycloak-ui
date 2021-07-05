@@ -64,12 +64,7 @@ export const ClientSettings = ({ save, reset }: ClientSettingsProps) => {
               />
             }
           >
-            <TextInput
-              type="text"
-              id="kc-root-url"
-              name="rootUrl"
-              ref={register}
-            />
+            <TextInput type="text" id="kc-root-url" {...register("rootUrl")} />
           </FormGroup>
           <FormGroup
             label={t("validRedirectUri")}
@@ -98,12 +93,7 @@ export const ClientSettings = ({ save, reset }: ClientSettingsProps) => {
               />
             }
           >
-            <TextInput
-              type="text"
-              id="kc-home-url"
-              name="baseUrl"
-              ref={register}
-            />
+            <TextInput type="text" id="kc-home-url" {...register("baseUrl")} />
           </FormGroup>
           <FormGroup
             label={t("webOrigins")}
@@ -135,8 +125,7 @@ export const ClientSettings = ({ save, reset }: ClientSettingsProps) => {
             <TextInput
               type="text"
               id="kc-admin-url"
-              name="adminUrl"
-              ref={register}
+              {...register("adminUrl")}
             />
           </FormGroup>
         </FormAccess>
@@ -233,8 +222,7 @@ export const ClientSettings = ({ save, reset }: ClientSettingsProps) => {
           >
             <TextArea
               id="kc-consent-screen-text"
-              name="attributes.consent-screen-text"
-              ref={register}
+              {...register("attributes.consent-screen-text")}
               isDisabled={
                 !(consentRequired && displayOnConsentScreen === "true")
               }

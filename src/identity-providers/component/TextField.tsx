@@ -12,9 +12,8 @@ export const TextField = ({ label, field, isReadOnly = false }: FieldProps) => {
         type="text"
         id={label}
         data-testid={label}
-        name={field}
-        ref={register}
         isReadOnly={isReadOnly}
+        {...register(field)}
       />
     </FormGroupField>
   );

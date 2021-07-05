@@ -102,8 +102,7 @@ export const DuplicateFlowModal = ({
           <TextInput
             type="text"
             id="kc-name"
-            name="name"
-            ref={register({ required: true })}
+            {...register("name", { required: true })}
             validated={
               errors.name ? ValidatedOptions.error : ValidatedOptions.default
             }
@@ -113,8 +112,7 @@ export const DuplicateFlowModal = ({
           <TextInput
             type="text"
             id="kc-description"
-            name="description"
-            ref={register()}
+            {...register("description")}
           />
         </FormGroup>
       </Form>

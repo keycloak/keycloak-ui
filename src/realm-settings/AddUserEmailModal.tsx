@@ -80,11 +80,13 @@ export const AddUserEmailModal = ({
         >
           <TextInput
             data-testid="email-address-input"
-            ref={register({ required: true, pattern: emailRegexPattern })}
             autoFocus
             type="text"
             id="add-email"
-            name="email"
+            {...register("email", {
+              required: true,
+              pattern: emailRegexPattern,
+            })}
             validated={
               errors.email ? ValidatedOptions.error : ValidatedOptions.default
             }

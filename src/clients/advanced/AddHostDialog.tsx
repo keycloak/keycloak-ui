@@ -80,7 +80,7 @@ export const AddHostDialog = ({
     >
       <Form isHorizontal>
         <FormGroup label={t("nodeHost")} fieldId="nodeHost">
-          <TextInput id="nodeHost" ref={register} name="node" />
+          <TextInput id="nodeHost" {...register("node")} />
         </FormGroup>
       </Form>
     </Modal>

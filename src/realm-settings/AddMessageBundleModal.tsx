@@ -73,11 +73,10 @@ export const AddMessageBundleModal = ({
         >
           <TextInput
             data-testid="key-input"
-            ref={register({ required: true })}
             autoFocus
             type="text"
             id="add-key"
-            name="key"
+            {...register("key", { required: true })}
             validated={
               errors.email ? ValidatedOptions.error : ValidatedOptions.default
             }
@@ -95,11 +94,10 @@ export const AddMessageBundleModal = ({
         >
           <TextInput
             data-testid="value-input"
-            ref={register({ required: true })}
             autoFocus
             type="text"
             id="add-value"
-            name="value"
+            {...register("value", { required: true })}
             validated={
               errors.email ? ValidatedOptions.error : ValidatedOptions.default
             }

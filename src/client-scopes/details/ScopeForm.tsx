@@ -81,10 +81,9 @@ export const ScopeForm = ({ clientScope, save }: ScopeFormProps) => {
         helperTextInvalid={t("common:required")}
       >
         <TextInput
-          ref={register({ required: true })}
           type="text"
           id="kc-name"
-          name="name"
+          {...register("name", { required: true })}
           validated={
             errors.name ? ValidatedOptions.error : ValidatedOptions.default
           }
@@ -106,9 +105,6 @@ export const ScopeForm = ({ clientScope, save }: ScopeFormProps) => {
         helperTextInvalid={t("common:maxLength", { length: 255 })}
       >
         <TextInput
-          ref={register({
-            maxLength: 255,
-          })}
           validated={
             errors.description
               ? ValidatedOptions.error
@@ -116,7 +112,9 @@ export const ScopeForm = ({ clientScope, save }: ScopeFormProps) => {
           }
           type="text"
           id="kc-description"
-          name="description"
+          {...register("description", {
+            maxLength: 255,
+          })}
         />
       </FormGroup>
       <FormGroup
@@ -233,10 +231,9 @@ export const ScopeForm = ({ clientScope, save }: ScopeFormProps) => {
           fieldId="kc-consent-screen-text"
         >
           <TextArea
-            ref={register}
             type="text"
             id="kc-consent-screen-text"
-            name="attributes.consent-screen-text"
+            {...register("attributes.consent-screen-text")}
           />
         </FormGroup>
       )}

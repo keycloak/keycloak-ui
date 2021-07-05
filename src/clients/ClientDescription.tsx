@@ -35,10 +35,9 @@ export const ClientDescription = () => {
         isRequired
       >
         <TextInput
-          ref={register({ required: true })}
           type="text"
           id="kc-client-id"
-          name="clientId"
+          {...register("clientId", { required: true })}
           validated={
             errors.clientId ? ValidatedOptions.error : ValidatedOptions.default
           }
@@ -55,7 +54,7 @@ export const ClientDescription = () => {
         label={t("common:name")}
         fieldId="kc-name"
       >
-        <TextInput ref={register()} type="text" id="kc-name" name="name" />
+        <TextInput type="text" id="kc-name" {...register("name")} />
       </FormGroup>
       <FormGroup
         labelIcon={
@@ -73,15 +72,14 @@ export const ClientDescription = () => {
         helperTextInvalid={errors.description?.message}
       >
         <TextArea
-          ref={register({
+          type="text"
+          id="kc-description"
+          {...register("description", {
             maxLength: {
               value: 255,
               message: t("common:maxLength", { length: 255 }),
             },
           })}
-          type="text"
-          id="kc-description"
-          name="description"
           validated={
             errors.description
               ? ValidatedOptions.error

@@ -99,11 +99,10 @@ export const GroupsModal = ({
         >
           <TextInput
             data-testid="groupNameInput"
-            ref={register({ required: true })}
             autoFocus
             type="text"
             id="create-group-name"
-            name="name"
+            {...register("name", { required: true })}
             validated={
               errors.name ? ValidatedOptions.error : ValidatedOptions.default
             }

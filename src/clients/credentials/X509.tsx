@@ -27,10 +27,9 @@ export const X509 = () => {
       isRequired
     >
       <TextInput
-        ref={register({ required: true })}
         type="text"
         id="kc-subject"
-        name="attributes.x509-subjectdn"
+        {...register("attributes.x509-subjectdn", { required: true })}
         validated={
           errors.attributes && errors.attributes["x509-subjectdn"]
             ? ValidatedOptions.error

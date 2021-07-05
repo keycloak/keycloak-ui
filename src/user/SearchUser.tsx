@@ -37,8 +37,7 @@ export const SearchUser = ({ onSearch }: SearchUserProps) => {
             <TextInput
               type="text"
               id="kc-user-search"
-              name="search"
-              ref={register()}
+              {...register("search")}
             />
             <Button
               variant={ButtonVariant.control}

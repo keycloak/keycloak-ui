@@ -158,10 +158,9 @@ export const RoleMappingForm = () => {
             fieldId="protocolMapper"
           >
             <TextInput
-              ref={register()}
               type="text"
               id="protocolMapper"
-              name="protocolMapper"
+              {...register("protocolMapper")}
               isReadOnly
             />
           </FormGroup>
@@ -182,10 +181,9 @@ export const RoleMappingForm = () => {
             helperTextInvalid={t("common:required")}
           >
             <TextInput
-              ref={register({ required: true })}
               type="text"
               id="name"
-              name="name"
+              {...register("name", { required: true })}
               validated={
                 errors.name ? ValidatedOptions.error : ValidatedOptions.default
               }
@@ -284,10 +282,9 @@ export const RoleMappingForm = () => {
             fieldId="newRoleName"
           >
             <TextInput
-              ref={register()}
               type="text"
               id="newRoleName"
-              name="config.new-role-name"
+              {...register("config.new-role-name")}
             />
           </FormGroup>
           <ActionGroup>
