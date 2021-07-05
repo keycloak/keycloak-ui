@@ -21,8 +21,6 @@ import {
   Dropdown,
   DropdownToggle,
   DropdownPosition,
-  Button,
-  ButtonVariant,
 } from "@patternfly/react-core";
 import { HelpContext } from "../help-enabler/HelpHeader";
 import { useTranslation } from "react-i18next";
@@ -31,7 +29,6 @@ import {
   FormattedLinkProps,
 } from "../external-link/FormattedLink";
 import { HelpItem } from "../help-enabler/HelpItem";
-import { CheckCircleIcon } from "@patternfly/react-icons";
 
 export type ViewHeaderProps = {
   titleKey: string;
