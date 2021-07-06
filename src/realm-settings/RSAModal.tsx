@@ -36,8 +36,12 @@ export const RSAModal = ({
   handleModalToggle,
   open,
   refresh,
+<<<<<<< HEAD
 }: 
 RSAModalProps) => {
+=======
+}: RSAModalProps) => {
+>>>>>>> 707d11fe938192a8dc32351d710bc3d78fb21436
   const { t } = useTranslation("groups");
   const serverInfo = useServerInfo();
   const adminClient = useAdminClient();
@@ -50,9 +54,8 @@ RSAModalProps) => {
   const [keyFileName, setKeyFileName] = useState("");
   const [certificateFileName, setCertificateFileName] = useState("");
 
-  const allComponentTypes = serverInfo.componentTypes![
-    "org.keycloak.keys.KeyProvider"
-  ];
+  const allComponentTypes =
+    serverInfo.componentTypes!["org.keycloak.keys.KeyProvider"];
 
   const save = async (component: ComponentRepresentation) => {
     try {

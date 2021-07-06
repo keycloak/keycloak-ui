@@ -84,13 +84,11 @@ export const KeysTabInner = ({ components, refresh }: KeysTabInnerProps) => {
   const [itemOrder, setItemOrder] = useState<string[]>([]);
   const [providerDropdownOpen, setProviderDropdownOpen] = useState(false);
 
-  const [defaultConsoleDisplayName, setDefaultConsoleDisplayName] = useState(
-    ""
-  );
+  const [defaultConsoleDisplayName, setDefaultConsoleDisplayName] =
+    useState("");
 
-  const [selectedComponent, setSelectedComponent] = useState<
-    ComponentRepresentation
-  >();
+  const [selectedComponent, setSelectedComponent] =
+    useState<ComponentRepresentation>();
 
   const [liveText, setLiveText] = useState("");
 
@@ -339,13 +337,13 @@ export const KeysTabInner = ({ components, refresh }: KeysTabInnerProps) => {
                 <DataListItemCells
                   dataListCells={[
                     <DataListCell
-                      data-testId="provider-name"
+                      data-testid="provider-name"
                       key={`name-${idx}`}
                     >
                       <>
                         <Link
                           key={component.name}
-                          data-testId="provider-name-link"
+                          data-testid="provider-name-link"
                           to={`${url}/${component.id}/${component.providerId}/settings`}
                         >
                           {component.name}

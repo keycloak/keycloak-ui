@@ -23,28 +23,26 @@ import { HelpItem } from "../components/help-enabler/HelpItem";
 import { useServerInfo } from "../context/server-info/ServerInfoProvider";
 import { useRealm } from "../context/realm-context/RealmContext";
 
-type HMACGeneratedModalProps = {
+type AESGeneratedModalProps = {
   providerType?: string;
   handleModalToggle?: () => void;
   refresh?: () => void;
   open: boolean;
 };
 
-export const HMACGeneratedModal = ({
+export const AESGeneratedModal = ({
   providerType,
   handleModalToggle,
   open,
   refresh,
 }: // save,
-HMACGeneratedModalProps) => {
+AESGeneratedModalProps) => {
   const { t } = useTranslation("groups");
   const serverInfo = useServerInfo();
   const adminClient = useAdminClient();
   const { addAlert } = useAlerts();
   const { handleSubmit, control } = useForm({});
   const [isKeySizeDropdownOpen, setIsKeySizeDropdownOpen] = useState(false);
-  const [isEllipticCurveDropdownOpen, setIsEllipticCurveDropdownOpen] =
-    useState(false);
   const [displayName, setDisplayName] = useState("");
   const realm = useRealm();
 
@@ -201,100 +199,51 @@ HMACGeneratedModalProps) => {
             )}
           />
         </FormGroup>
-        {providerType === "hmac-generated" && (
-          <>
-            <FormGroup
-              label={t("realm-settings:secretSize")}
-              fieldId="kc-aes-keysize"
-              labelIcon={
-                <HelpItem
-                  helpText="realm-settings-help:secretSize"
-                  forLabel={t("emailTheme")}
-                  forID="kc-email-theme"
-                />
-              }
-            >
-              <Controller
-                name="config.secretSize"
-                control={control}
-                defaultValue={["64"]}
-                render={({ onChange, value }) => (
-                  <Select
-                    toggleId="kc-aes-keysize"
-                    onToggle={() =>
-                      setIsKeySizeDropdownOpen(!isKeySizeDropdownOpen)
-                    }
-                    onSelect={(_, value) => {
-                      onChange([value + ""]);
-                      setIsKeySizeDropdownOpen(false);
-                    }}
-                    selections={[value + ""]}
-                    isOpen={isKeySizeDropdownOpen}
-                    variant={SelectVariant.single}
-                    aria-label={t("aesKeySize")}
-                    data-testid="select-secret-size"
-                  >
-                    {allComponentTypes[2].properties[3].options!.map(
-                      (item, idx) => (
-                        <SelectOption
-                          selected={item === value}
-                          key={`email-theme-${idx}`}
-                          value={item}
-                        />
-                      )
-                    )}
-                  </Select>
-                )}
+        {providerType === "aes-generated" && (
+          <FormGroup
+            label={t("realm-settings:AESKeySize")}
+            fieldId="kc-aes-keysize"
+            labelIcon={
+              <HelpItem
+                helpText="realm-settings-help:AESKeySize"
+                forLabel={t("AESKeySize")}
+                forID="kc-aes-key-size"
               />
-            </FormGroup>
-            <FormGroup
-              label={t("realm-settings:algorithm")}
-              fieldId="kc-algorithm"
-              labelIcon={
-                <HelpItem
-                  helpText="realm-settings-help:algorithm"
-                  forLabel={t("algorithm")}
-                  forID="kc-algorithm"
-                />
-              }
-            >
-              <Controller
-                name="config.algorithm"
-                control={control}
-                defaultValue={["HS-256"]}
-                render={({ onChange, value }) => (
-                  <Select
-                    toggleId="kc-elliptic"
-                    onToggle={() =>
-                      setIsEllipticCurveDropdownOpen(
-                        !isEllipticCurveDropdownOpen
-                      )
-                    }
-                    onSelect={(_, value) => {
-                      onChange([value + ""]);
-                      setIsEllipticCurveDropdownOpen(false);
-                    }}
-                    selections={[value + ""]}
-                    variant={SelectVariant.single}
-                    aria-label={t("emailTheme")}
-                    isOpen={isEllipticCurveDropdownOpen}
-                    placeholderText="Select one..."
-                    data-testid="select-email-theme"
-                  >
-                    {allComponentTypes[2].properties[4].options!.map(
-                      (p, idx) => (
-                        <SelectOption
-                          selected={p === value}
-                          key={`email-theme-${idx}`}
-                          value={p}
-                        ></SelectOption>
-                      )
-                    )}
-                  </Select>
-                )}
-              />
-            </FormGroup>
-          </>
+            }
+          >
+            <Controller
+              name="config.secretSize"
+              control={control}
+              defaultValue={["16"]}
+              render={({ onChange, value }) => (
+                <Select
+                  toggleId="kc-aes-keysize"
+                  onToggle={() =>
+                    setIsKeySizeDropdownOpen(!isKeySizeDropdownOpen)
+                  }
+                  onSelect={(_, value) => {
+                    onChange([value + ""]);
+                    setIsKeySizeDropdownOpen(false);
+                  }}
+                  selections={[value + ""]}
+                  isOpen={isKeySizeDropdownOpen}
+                  variant={SelectVariant.single}
+                  aria-label={t("aesKeySize")}
+                  data-testid="select-secret-size"
+                >
+                  {allComponentTypes[0].properties[3].options!.map(
+                    (item, idx) => (
+                      <SelectOption
+                        selected={item === value}
+                        key={`email-theme-${idx}`}
+                        value={item}
+                      />
+                    )
+                  )}
+                </Select>
+              )}
+            />
+          </FormGroup>
         )}
       </Form>
     </Modal>
