@@ -49,10 +49,8 @@ export const ClientScopesSection = () => {
   >([]);
 
   const loader = async () => {
-    const defaultScopes =
-      await adminClient.clientScopes.listDefaultClientScopes();
-    const optionalScopes =
-      await adminClient.clientScopes.listDefaultOptionalClientScopes();
+    const defaultScopes = await adminClient.clientScopes.listDefaultClientScopes();
+    const optionalScopes = await adminClient.clientScopes.listDefaultOptionalClientScopes();
 
     const clientScopes = (await adminClient.clientScopes.find()).map(
       (scope) => {

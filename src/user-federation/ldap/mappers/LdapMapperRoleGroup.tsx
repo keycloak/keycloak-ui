@@ -28,8 +28,10 @@ export const LdapMapperRoleGroup = ({
   const adminClient = useAdminClient();
   const [isMbAttTypeDropdownOpen, setIsMbAttTypeDropdownOpen] = useState(false);
   const [isModeDropdownOpen, setIsModeDropdownOpen] = useState(false);
-  const [isRetrieveStratDropdownOpen, setIsRetrieveStratDropdownOpen] =
-    useState(false);
+  const [
+    isRetrieveStratDropdownOpen,
+    setIsRetrieveStratDropdownOpen,
+  ] = useState(false);
   const [isClientIdDropdownOpen, setIsClientIdDropdownOpen] = useState(false);
   const [clients, setClients] = useState<ClientRepresentation[]>([]);
 

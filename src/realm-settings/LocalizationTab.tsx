@@ -46,8 +46,9 @@ export const LocalizationTab = ({
 }: LocalizationTabProps) => {
   const { t } = useTranslation("realm-settings");
   const adminClient = useAdminClient();
-  const [addMessageBundleModalOpen, setAddMessageBundleModalOpen] =
-    useState(false);
+  const [addMessageBundleModalOpen, setAddMessageBundleModalOpen] = useState(
+    false
+  );
   const [key, setKey] = useState(0);
 
   const [supportedLocalesOpen, setSupportedLocalesOpen] = useState(false);

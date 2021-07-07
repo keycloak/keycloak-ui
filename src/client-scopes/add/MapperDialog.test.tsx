@@ -12,7 +12,7 @@ describe("MapperDialog", () => {
 
     return (
       <ServerInfoContext.Provider
-        value={serverInfo as unknown as ServerInfoRepresentation}
+        value={(serverInfo as unknown) as ServerInfoRepresentation}
       >
         <AddMapperDialog
           {...args}

@@ -46,8 +46,9 @@ AESGeneratedModalProps) => {
   const [displayName, setDisplayName] = useState("");
   const realm = useRealm();
 
-  const allComponentTypes =
-    serverInfo.componentTypes!["org.keycloak.keys.KeyProvider"];
+  const allComponentTypes = serverInfo.componentTypes![
+    "org.keycloak.keys.KeyProvider"
+  ];
 
   const save = async (component: ComponentRepresentation) => {
     try {

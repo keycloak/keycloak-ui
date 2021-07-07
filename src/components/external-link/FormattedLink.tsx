@@ -26,9 +26,10 @@ export const FormattedLink = ({
   );
 };
 
-export const formattedLinkTableCell =
-  (): IFormatter => (data?: IFormatterValueType) => {
-    return (
-      data ? <FormattedLink href={data.toString()} /> : undefined
-    ) as object;
-  };
+export const formattedLinkTableCell = (): IFormatter => (
+  data?: IFormatterValueType
+) => {
+  return (data ? (
+    <FormattedLink href={data.toString()} />
+  ) : undefined) as object;
+};
