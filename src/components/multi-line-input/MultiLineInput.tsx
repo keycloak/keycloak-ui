@@ -40,8 +40,9 @@ export const MultiLineInput = ({
     name,
     control,
   });
-  const currentValues: { [name: string]: { value: string } } | undefined =
-    useWatch({ control, name });
+  const currentValues:
+    | { [name: string]: { value: string } }
+    | undefined = useWatch({ control, name });
 
   useEffect(() => {
     reset({

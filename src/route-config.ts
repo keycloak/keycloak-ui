@@ -36,8 +36,7 @@ import {
 } from "./identity-providers/add/AddIdentityProvider";
 import { AddOpenIdConnect } from "./identity-providers/add/AddOpenIdConnect";
 import { DetailSettings } from "./identity-providers/add/DetailSettings";
-import {  AESGeneratedSettings } from "./realm-settings/key-providers/aes-generated/AESGeneratedForm";
-
+import { AESGeneratedSettings } from "./realm-settings/key-providers/aes-generated/AESGeneratedForm";
 
 export type RouteDef = BreadcrumbsRoute & {
   access: AccessType;

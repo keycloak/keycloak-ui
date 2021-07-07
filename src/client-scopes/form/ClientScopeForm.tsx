@@ -34,8 +34,9 @@ import { useRealm } from "../../context/realm-context/RealmContext";
 
 export const ClientScopeForm = () => {
   const { t } = useTranslation("client-scopes");
-  const [clientScope, setClientScope] =
-    useState<ClientScopeDefaultOptionalType>();
+  const [clientScope, setClientScope] = useState<
+    ClientScopeDefaultOptionalType
+  >();
   const history = useHistory();
   const { realm } = useRealm();
   const [hide, setHide] = useState(false);
