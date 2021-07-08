@@ -1,5 +1,4 @@
-@import "@patternfly/patternfly/patternfly.min.css";
-
+/* TODO: Find a way to load this file based on a build flag */
 .keycloak__pageheader_brand {
   height: 16px;
 }

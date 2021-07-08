@@ -43,14 +43,7 @@ If your Keycloak instance is not on `localhost:8180`, create a file `.env` with 
 
 ```bash
 $> npm run format
-$> npm run check-types
 $> npm run lint
-```
-
-To switch to a RH-SSO themed version of this console you can run:
-
-```bash
-$> npx grunt switch-rh-sso
 ```
 
 To switch back just do a `git checkout public`
