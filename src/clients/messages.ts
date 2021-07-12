@@ -1,4 +1,4 @@
-{
+export default {
   "clients": {
     "clientType": "Client type",
     "clientAuthorization": "Authorization",

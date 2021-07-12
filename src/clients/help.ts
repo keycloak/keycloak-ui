@@ -1,4 +1,4 @@
-{
+export default {
   "clients-help": {
     "enableDisable": "Disabled clients cannot initiate a login or have obtained access tokens.",
     "clientType": "'OpenID connect' allows Clients to verify the identity of the End-User based on the authentication performed by an Authorization Server.'SAML' enables web-based authentication and authorization scenarios including cross-domain single sign-on (SSO) and uses security tokens containing assertions to pass information.",

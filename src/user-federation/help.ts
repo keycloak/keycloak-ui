@@ -1,4 +1,4 @@
-{
+export default {
   "user-federation-help": {
     "addKerberosWizardDescription": "Text needed here",
     "addLdapWizardDescription": "Text needed here",

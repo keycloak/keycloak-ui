@@ -1,4 +1,4 @@
-{
+export default {
   "realm": {
     "uploadFile":"Upload JSON file",
     "realmName":"Realm name",

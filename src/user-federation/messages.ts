@@ -1,4 +1,4 @@
-{
+export default {
   "user-federation": {
     "userFederation": "User federation",
     "descriptionLanding": "This is the description for the user federation landing page",

@@ -1,4 +1,4 @@
-{
+export default {
   "authentication": {
     "title": "Authentication",
     "flows": "Flows",

@@ -1,4 +1,4 @@
-{
+export default {
   "identity-providers-help": {
     "redirectURI": "The redirect uri to use when configuring the identity provider.",
     "alias": "The alias uniquely identifies an identity provider and it is also used to build the redirect uri.",

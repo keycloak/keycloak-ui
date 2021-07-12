@@ -1,4 +1,4 @@
-{
+export default {
   "groups": {
     "groups": "Groups",
     "groupDetails": "Group details",

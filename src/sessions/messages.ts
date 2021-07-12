@@ -1,4 +1,4 @@
-{
+export default {
   "sessions": {
     "title": "Sessions",
     "sessionExplain": "Some description about sessions",

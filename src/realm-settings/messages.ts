@@ -1,4 +1,4 @@
-{
+export default {
   "realm-settings": {
     "partialImport": "Partial import",
     "partialExport": "Partial export",

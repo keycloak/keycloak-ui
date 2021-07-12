@@ -1,4 +1,4 @@
-{
+export default {
   "client-scopes": {
     "createClientScope": "Create client scope",
     "clientScopeList": "Client scopes",

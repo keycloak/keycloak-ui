@@ -1,4 +1,4 @@
-{
+export default {
   "common": {
     "fullName": "{{givenName}} {{familyName}}",
     "unknownUser": "Anonymous",

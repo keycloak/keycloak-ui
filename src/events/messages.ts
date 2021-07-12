@@ -1,4 +1,4 @@
-{
+export default {
   "events": {
     "title": "Events",
     "eventExplain": "If you want to configure user events, Admin events or Event listeners, please enter <1>Event configs</1> page realm settings to configure.",

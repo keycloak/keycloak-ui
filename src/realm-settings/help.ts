@@ -1,4 +1,4 @@
-{
+export default {
   "realm-settings-help": {
     "fromDisplayName": "A user-friendly name for the 'From' address (optional).",
     "replyToDisplayName": "A user-friendly name for the 'Reply-To' address (optional).",

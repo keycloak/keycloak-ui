@@ -1,4 +1,4 @@
-{
+export default {
   "users": {
     "title": "Users",
     "searchForUser": "Search user",

@@ -1,4 +1,4 @@
-{
+export default {
   "users-help": {
     "disabled": "A disabled user cannot log in.",
     "emailVerified": "Has the user's email been verified?",

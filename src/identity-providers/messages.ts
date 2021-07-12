@@ -1,4 +1,4 @@
-{
+export default {
   "identity-providers": {
     "listExplain": "Through Identity Brokering it's easy to allow users to authenticate to Keycloak using external Identity Provider or Social Networks.",
     "searchForProvider": "Search for provider",

@@ -1,4 +1,4 @@
-{
+export default {
   "dashboard": {
     "welcome": "Welcome to",
     "introduction": "If you want to leave this page and mange this realm, please click the corresponding menu items in the left navigation bar.",

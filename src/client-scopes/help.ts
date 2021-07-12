@@ -1,4 +1,4 @@
-{
+export default {
   "client-scopes-help": {
     "name": "Name of the client scope. Must be unique in the realm. Name should not contain space characters as it is used as value of scope parameter",
     "description": "Description of the client scope",
