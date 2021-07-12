@@ -80,6 +80,7 @@ export const TimeSelector = ({
           {...rest}
           type="number"
           id={`kc-time-${new Date().getTime()}`}
+          aria-label="kc-time"
           min="0"
           value={timeValue}
           onChange={(value) => {
