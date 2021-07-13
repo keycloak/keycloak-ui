@@ -31,12 +31,6 @@
         </license>
     </licenses>
 
-    <properties></properties>
-
-    <dependencyManagement>
-        <dependencies></dependencies>
-    </dependencyManagement>
-
     <repositories>
         <repository>
             <id>jboss</id>

@@ -7,7 +7,7 @@ import { useAdminClient, useFetch } from "../auth/AdminClient";
 import { homeRealm } from "../../util";
 
 export class WhoAmI {
-  constructor(private me?: WhoAmIRepresentation | undefined) {
+  constructor(private me?: WhoAmIRepresentation) {
     if (this.me !== undefined && this.me.locale) {
       i18n.changeLanguage(this.me.locale, (error) => {
         if (error) console.error("Unable to set locale to", this.me?.locale);
