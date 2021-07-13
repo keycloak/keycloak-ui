@@ -24,7 +24,10 @@ import { FormAccess } from "../../../components/form-access/FormAccess";
 import { ViewHeader } from "../../../components/view-header/ViewHeader";
 import { convertToFormValues } from "../../../util";
 import { useAlerts } from "../../../components/alert/Alerts";
-import { AESProviderTypeRoute } from "./AESProviderTypeRoute";
+import {
+  AESProviderTypeRoute,
+  AESProviderTypeRouteParams,
+} from "./AESProviderTypeRoute";
 
 type AESGeneratedFormProps = {
   handleModalToggle?: () => void;
@@ -32,10 +35,6 @@ type AESGeneratedFormProps = {
   editMode?: boolean;
   providerType: string;
 };
-
-export interface MatchParams {
-  providerType: string;
-}
 
 export const AESGeneratedForm = ({
   editMode,
@@ -53,7 +52,8 @@ export const AESGeneratedForm = ({
   const { id } = useParams<{ id: string }>();
 
   const providerId =
-    useRouteMatch<MatchParams>("/:providerType?")?.params.providerType;
+    useRouteMatch<AESProviderTypeRouteParams>("/:providerType?")?.params
+      .providerType;
 
   const save = async (component: ComponentRepresentation) => {
     try {
@@ -347,8 +347,9 @@ export const AESGeneratedForm = ({
 
 export const AESGeneratedSettings = () => {
   const { t } = useTranslation("realm-settings");
-  const providerId = useRouteMatch<MatchParams>(AESProviderTypeRoute.path)
-    ?.params.providerType;
+  const providerId = useRouteMatch<AESProviderTypeRouteParams>(
+    AESProviderTypeRoute.path
+  )?.params.providerType;
   return (
     <>
       <ViewHeader titleKey={t("editProvider")} subKey={providerId} />

@@ -11,6 +11,7 @@ export const AESGeneratedCrumb = () => {
 export type AESProviderTypeRouteParams = {
   realm: string;
   id: string;
+  providerType: string;
 };
 
 export const AESProviderTypeRoute = {
