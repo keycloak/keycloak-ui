@@ -136,6 +136,6 @@ server/
 
 # Cypress #
 ###########
-**/assets
+/assets
 **/cypress.env.json
 cypress/downloads/

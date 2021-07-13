@@ -4,7 +4,7 @@ import proxy from "http2-proxy";
 export default {
   mount: {
     public: { url: "/", static: true },
-    src: { url: "/dist" },
+    src: { url: "/" },
     "node_modules/@patternfly/patternfly/assets/fonts": { url: "/assets/fonts", static: true },
     "node_modules/@patternfly/patternfly/assets/pficon": { url: "/assets/pficon", static: true },
     "node_modules/@patternfly/patternfly/assets/images": { url: "/assets/images", static: true },
@@ -31,8 +31,5 @@ export default {
   ],
   optimize: {
     bundle: true,
-  },
-  buildOptions: {
-    baseUrl: "/adminv2",
   },
 };
