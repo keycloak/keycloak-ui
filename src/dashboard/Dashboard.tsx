@@ -1,6 +1,5 @@
 import {
   Brand,
-  Button,
   Card,
   CardBody,
   CardTitle,
@@ -34,7 +33,7 @@ import { HelpItem } from "../components/help-enabler/HelpItem";
 
 const EmptyDashboard = () => {
   const { t } = useTranslation("dashboard");
-  const { realm, setRealm } = useRealm();
+  const { realm } = useRealm();
   return (
     <PageSection variant="light">
       <EmptyState variant="large">
