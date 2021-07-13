@@ -81,7 +81,6 @@ export const LocalizationTab = ({
       });
       return Object.keys(result).map((key) => [key, result[key]]);
     }
-
     return [[]];
   };
 
@@ -234,7 +233,6 @@ export const LocalizationTab = ({
                         onSelect={(_, value) => {
                           onChange(value as string);
                           setValueSelected(true);
-                          // setSelectedLocale(value as string);
                           setKey(new Date().getTime());
                           setDefaultLocaleOpen(false);
                         }}

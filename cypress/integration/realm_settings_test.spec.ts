@@ -40,6 +40,18 @@ describe("Realm settings", () => {
     return this;
   };
 
+  const goToDetails = () => {
+    const keysUrl = `/auth/admin/realms/${realmName}/keys`;
+    cy.intercept(keysUrl).as("keysFetch");
+
+    cy.getId("rs-keys-tab").click();
+    cy.getId("rs-providers-tab").click();
+    cy.getId("provider-name-link").contains("test_aes-generated").click();
+    cy.wait(["@keysFetch"]);
+
+    return this;
+  };
+
   const addBundle = () => {
     const localizationUrl = `/auth/admin/realms/${realmName}/localization/en`;
     cy.intercept(localizationUrl).as("localizationFetch");
@@ -193,12 +205,7 @@ describe("Realm settings", () => {
 
   it("go to details", () => {
     sidebarPage.goToRealmSettings();
-
-    cy.getId("rs-keys-tab").click();
-
-    cy.getId("rs-providers-tab").click();
-
-    cy.getId("provider-name-link").contains("test_aes-generated").click();
+    goToDetails();
   });
 
   it("Test keys", () => {

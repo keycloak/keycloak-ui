@@ -1,4 +1,5 @@
 import React from "react";
+<<<<<<< HEAD
 import { AlertVariant, Modal, ModalVariant } from "@patternfly/react-core";
 import { useTranslation } from "react-i18next";
 
@@ -12,6 +13,16 @@ type AESGeneratedModalProps = {
   providerType?: string;
   handleModalToggle?: () => void;
   refresh?: () => void;
+=======
+import { Modal, ModalVariant } from "@patternfly/react-core";
+import { useTranslation } from "react-i18next";
+import { AESGeneratedForm } from "./AESGeneratedForm";
+
+type AESGeneratedModalProps = {
+  providerType: string;
+  handleModalToggle: () => void;
+  refresh: () => void;
+>>>>>>> 9ad9d6c314de4a24800d73656eb778f229350dcc
   open: boolean;
 };
 
@@ -21,6 +32,7 @@ export const AESGeneratedModal = ({
   open,
   refresh,
 }: AESGeneratedModalProps) => {
+<<<<<<< HEAD
   const { t } = useTranslation("groups");
   const adminClient = useAdminClient();
   const { addAlert } = useAlerts();
@@ -45,17 +57,27 @@ export const AESGeneratedModal = ({
       );
     }
   };
+=======
+  const { t } = useTranslation("realm-settings");
+>>>>>>> 9ad9d6c314de4a24800d73656eb778f229350dcc
 
   return (
     <Modal
       className="add-provider-modal"
       variant={ModalVariant.medium}
+<<<<<<< HEAD
       title={t("realm-settings:addProvider")}
+=======
+      title={t("addProvider")}
+>>>>>>> 9ad9d6c314de4a24800d73656eb778f229350dcc
       isOpen={open}
       onClose={handleModalToggle}
     >
       <AESGeneratedForm
+<<<<<<< HEAD
         save={save}
+=======
+>>>>>>> 9ad9d6c314de4a24800d73656eb778f229350dcc
         providerType={providerType!}
         handleModalToggle={handleModalToggle}
         refresh={refresh}

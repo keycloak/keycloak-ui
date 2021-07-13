@@ -371,6 +371,7 @@ export const KeysTabInner = ({ components, refresh }: KeysTabInnerProps) => {
                         isOpen={actionListOpen[idx]}
                         toggle={
                           <KebabToggle
+                            data-testid="provider-action"
                             onToggle={() => {
                               toggleActionList(idx);
                             }}
@@ -380,13 +381,14 @@ export const KeysTabInner = ({ components, refresh }: KeysTabInnerProps) => {
                           <DropdownItem
                             key="action"
                             component="button"
+                            data-testid="delete-action"
                             onClick={() => {
                               setSelectedComponent(component);
                               toggleDeleteDialog();
                               toggleActionList(idx);
                             }}
                           >
-                            Delete
+                            {t("common:delete")}
                           </DropdownItem>,
                         ]}
                       />
@@ -411,7 +413,7 @@ type KeysProps = {
   refresh: () => void;
 };
 
-export const KeysProviderTab = ({
+export const KeysProvidersTab = ({
   keyProviderComponentTypes,
   realmComponents,
   refresh,

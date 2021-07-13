@@ -24,34 +24,59 @@ import { FormAccess } from "../../../components/form-access/FormAccess";
 import { ViewHeader } from "../../../components/view-header/ViewHeader";
 import { convertToFormValues } from "../../../util";
 import { useAlerts } from "../../../components/alert/Alerts";
+<<<<<<< HEAD
 import { useRealm } from "../../../context/realm-context/RealmContext";
+=======
+>>>>>>> 9ad9d6c314de4a24800d73656eb778f229350dcc
 
 type AESGeneratedFormProps = {
   handleModalToggle?: () => void;
   refresh?: () => void;
+<<<<<<< HEAD
   save?: (component: ComponentRepresentation) => void;
+=======
+>>>>>>> 9ad9d6c314de4a24800d73656eb778f229350dcc
   editMode?: boolean;
   providerType: string;
 };
 
+<<<<<<< HEAD
+=======
+export interface MatchParams {
+  providerType: string;
+}
+
+>>>>>>> 9ad9d6c314de4a24800d73656eb778f229350dcc
 export const AESGeneratedForm = ({
   editMode,
   providerType,
   handleModalToggle,
   refresh,
 }: AESGeneratedFormProps) => {
+<<<<<<< HEAD
   const { t } = useTranslation("groups");
+=======
+  const { t } = useTranslation("realm-settings");
+>>>>>>> 9ad9d6c314de4a24800d73656eb778f229350dcc
   const serverInfo = useServerInfo();
   const [isKeySizeDropdownOpen, setIsKeySizeDropdownOpen] = useState(false);
 
   const adminClient = useAdminClient();
   const { addAlert } = useAlerts();
+<<<<<<< HEAD
   const realm = useRealm();
 
   const { id } = useParams<{ id: string }>();
   const { url } = useRouteMatch();
 
   const providerId = url.split("/").slice(-2)[0];
+=======
+
+  const { id } = useParams<{ id: string }>();
+
+  const providerId =
+    useRouteMatch<MatchParams>("/:providerType?")?.params.providerType;
+>>>>>>> 9ad9d6c314de4a24800d73656eb778f229350dcc
 
   const save = async (component: ComponentRepresentation) => {
     try {
@@ -60,6 +85,7 @@ export const AESGeneratedForm = ({
           { id },
           {
             ...component,
+<<<<<<< HEAD
             parentId: realm.realm,
             providerId: providerId,
             providerType: "org.keycloak.keys.KeyProvider",
@@ -81,6 +107,30 @@ export const AESGeneratedForm = ({
       addAlert(
         t("realm-settings:saveProviderError") +
           error.response?.data?.errorMessage || error,
+=======
+            parentId: component.parentId,
+            providerId: providerType,
+            providerType: "org.keycloak.keys.KeyProvider",
+          }
+        );
+        addAlert(t("saveProviderSuccess"), AlertVariant.success);
+      } else {
+        await adminClient.components.create({
+          ...component,
+          parentId: component.parentId,
+          providerId: providerType,
+          providerType: "org.keycloak.keys.KeyProvider",
+        });
+        handleModalToggle?.();
+        addAlert(t("saveProviderSuccess"), AlertVariant.success);
+        refresh?.();
+      }
+    } catch (error) {
+      addAlert(
+        t("saveProviderError", {
+          error: error.response?.data?.errorMessage || error,
+        }),
+>>>>>>> 9ad9d6c314de4a24800d73656eb778f229350dcc
         AlertVariant.danger
       );
     }
@@ -90,6 +140,7 @@ export const AESGeneratedForm = ({
 
   const setupForm = (component: ComponentRepresentation) => {
     form.reset();
+<<<<<<< HEAD
     Object.entries(component).forEach((entry) => {
       if (entry[0] === "config") {
         form.setValue("config.secretSize", entry[1].secretSize[0]);
@@ -99,6 +150,21 @@ export const AESGeneratedForm = ({
         convertToFormValues(entry[1], "config", form.setValue);
       }
       form.setValue(entry[0], entry[1]);
+=======
+    Object.entries(component).map(([key, value]) => {
+      if (
+        key === "config" &&
+        component.config?.secretSize &&
+        component.config?.active
+      ) {
+        form.setValue("config.secretSize", value.secretSize[0]);
+
+        form.setValue("config.active", value.active[0]);
+
+        convertToFormValues(value, "config", form.setValue);
+      }
+      form.setValue(key, value);
+>>>>>>> 9ad9d6c314de4a24800d73656eb778f229350dcc
     });
   };
 
@@ -114,9 +180,16 @@ export const AESGeneratedForm = ({
     []
   );
 
+<<<<<<< HEAD
   const allComponentTypes = serverInfo.componentTypes![
     "org.keycloak.keys.KeyProvider"
   ];
+=======
+  const allComponentTypes =
+    serverInfo.componentTypes?.["org.keycloak.keys.KeyProvider"] ?? [];
+
+  const aesSecretSizeOptions = allComponentTypes[0].properties[3].options;
+>>>>>>> 9ad9d6c314de4a24800d73656eb778f229350dcc
 
   return (
     <FormAccess
@@ -128,7 +201,11 @@ export const AESGeneratedForm = ({
     >
       {editMode && (
         <FormGroup
+<<<<<<< HEAD
           label={t("realm-settings:providerId")}
+=======
+          label={t("providerId")}
+>>>>>>> 9ad9d6c314de4a24800d73656eb778f229350dcc
           labelIcon={
             <HelpItem
               helpText="client-scopes-help:mapperName"
@@ -235,14 +312,22 @@ export const AESGeneratedForm = ({
                   : "internationalization-disabled"
               }
               onChange={(value) => {
+<<<<<<< HEAD
                 onChange([value + ""]);
+=======
+                onChange([value.toString()]);
+>>>>>>> 9ad9d6c314de4a24800d73656eb778f229350dcc
               }}
             />
           )}
         />
       </FormGroup>
       <FormGroup
+<<<<<<< HEAD
         label={t("realm-settings:active")}
+=======
+        label={t("active")}
+>>>>>>> 9ad9d6c314de4a24800d73656eb778f229350dcc
         fieldId="kc-active"
         labelIcon={
           <HelpItem
@@ -269,7 +354,11 @@ export const AESGeneratedForm = ({
                     : "internationalization-disabled"
                 }
                 onChange={(value) => {
+<<<<<<< HEAD
                   onChange([value + ""]);
+=======
+                  onChange([value.toString()]);
+>>>>>>> 9ad9d6c314de4a24800d73656eb778f229350dcc
                 }}
               />
             );
@@ -277,7 +366,11 @@ export const AESGeneratedForm = ({
         />
       </FormGroup>
       <FormGroup
+<<<<<<< HEAD
         label={t("realm-settings:AESKeySize")}
+=======
+        label={t("AESKeySize")}
+>>>>>>> 9ad9d6c314de4a24800d73656eb778f229350dcc
         fieldId="kc-aes-keysize"
         labelIcon={
           <HelpItem
@@ -296,19 +389,33 @@ export const AESGeneratedForm = ({
               toggleId="kc-aes-keysize"
               onToggle={() => setIsKeySizeDropdownOpen(!isKeySizeDropdownOpen)}
               onSelect={(_, value) => {
+<<<<<<< HEAD
                 onChange([value + ""]);
                 setIsKeySizeDropdownOpen(false);
               }}
               selections={[value + ""]}
+=======
+                onChange([value.toString()]);
+                setIsKeySizeDropdownOpen(false);
+              }}
+              selections={[value.toString()]}
+>>>>>>> 9ad9d6c314de4a24800d73656eb778f229350dcc
               isOpen={isKeySizeDropdownOpen}
               variant={SelectVariant.single}
               aria-label={t("aesKeySize")}
               data-testid="select-secret-size"
             >
+<<<<<<< HEAD
               {allComponentTypes[0].properties[3].options!.map((item, idx) => (
                 <SelectOption
                   selected={item === value}
                   key={`email-theme-${idx}`}
+=======
+              {aesSecretSizeOptions?.map((item) => (
+                <SelectOption
+                  selected={item === value}
+                  key={item}
+>>>>>>> 9ad9d6c314de4a24800d73656eb778f229350dcc
                   value={item}
                 />
               ))}
@@ -327,7 +434,11 @@ export const AESGeneratedForm = ({
         </Button>
         <Button
           className="kc-AESform-cancel-button"
+<<<<<<< HEAD
           onClick={!editMode ? () => handleModalToggle!() : () => {}}
+=======
+          onClick={(!editMode && handleModalToggle) || undefined}
+>>>>>>> 9ad9d6c314de4a24800d73656eb778f229350dcc
           variant="link"
         >
           {t("common:cancel")}
@@ -338,6 +449,7 @@ export const AESGeneratedForm = ({
 };
 
 export const AESGeneratedSettings = () => {
+<<<<<<< HEAD
   const { t } = useTranslation("groups");
   const { url } = useRouteMatch();
   const providerId = url.split("/").slice(-2)[0];
@@ -352,6 +464,17 @@ export const AESGeneratedSettings = () => {
         <FormAccess isHorizontal role="manage-clients">
           <AESGeneratedForm providerType={providerId} editMode={true} />
         </FormAccess>
+=======
+  const { t } = useTranslation("realm-settings");
+  const providerId = useRouteMatch<MatchParams>(
+    "/:realm/realm-settings/keys/:id?/:providerType?/settings"
+  )?.params.providerType;
+  return (
+    <>
+      <ViewHeader titleKey={t("editProvider")} subKey={providerId} />
+      <PageSection variant="light">
+        <AESGeneratedForm providerType={providerId!} editMode />
+>>>>>>> 9ad9d6c314de4a24800d73656eb778f229350dcc
       </PageSection>
     </>
   );

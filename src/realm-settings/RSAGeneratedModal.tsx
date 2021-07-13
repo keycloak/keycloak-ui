@@ -21,12 +21,11 @@ import { useAlerts } from "../components/alert/Alerts";
 import type ComponentRepresentation from "keycloak-admin/lib/defs/componentRepresentation";
 import { HelpItem } from "../components/help-enabler/HelpItem";
 import { useServerInfo } from "../context/server-info/ServerInfoProvider";
-import { useRealm } from "../context/realm-context/RealmContext";
 
 type RSAGeneratedModalProps = {
-  providerType?: string;
-  handleModalToggle?: () => void;
-  refresh?: () => void;
+  providerType: string;
+  handleModalToggle: () => void;
+  refresh: () => void;
   open: boolean;
 };
 
@@ -36,36 +35,39 @@ export const RSAGeneratedModal = ({
   open,
   refresh,
 }: RSAGeneratedModalProps) => {
-  const { t } = useTranslation("groups");
+  const { t } = useTranslation("realm-settings");
   const serverInfo = useServerInfo();
   const adminClient = useAdminClient();
   const { addAlert } = useAlerts();
   const { handleSubmit, control } = useForm({});
   const [isKeySizeDropdownOpen, setIsKeySizeDropdownOpen] = useState(false);
   const [isRSAalgDropdownOpen, setIsRSAalgDropdownOpen] = useState(false);
-  const [displayName, setDisplayName] = useState("");
-  const realm = useRealm();
 
+<<<<<<< HEAD
   const allComponentTypes = serverInfo.componentTypes![
     "org.keycloak.keys.KeyProvider"
   ];
+=======
+  const allComponentTypes =
+    serverInfo.componentTypes?.["org.keycloak.keys.KeyProvider"] ?? [];
+>>>>>>> 9ad9d6c314de4a24800d73656eb778f229350dcc
 
   const save = async (component: ComponentRepresentation) => {
     try {
       await adminClient.components.create({
-        parentId: realm.realm,
-        name: displayName !== "" ? displayName : providerType,
+        ...component,
+        parentId: component.parentId,
         providerId: providerType,
         providerType: "org.keycloak.keys.KeyProvider",
-        ...component,
       });
-      refresh!();
-      addAlert(t("realm-settings:saveProviderSuccess"), AlertVariant.success);
-      handleModalToggle!();
+      handleModalToggle();
+      addAlert(t("saveProviderSuccess"), AlertVariant.success);
+      refresh();
     } catch (error) {
       addAlert(
-        t("realm-settings:saveProviderError") +
-          error.response?.data?.errorMessage || error,
+        t("saveProviderError", {
+          error: error.response?.data?.errorMessage || error,
+        }),
         AlertVariant.danger
       );
     }
@@ -75,7 +77,7 @@ export const RSAGeneratedModal = ({
     <Modal
       className="add-provider-modal"
       variant={ModalVariant.medium}
-      title={t("realm-settings:addProvider")}
+      title={t("addProvider")}
       isOpen={open}
       onClose={handleModalToggle}
       actions={[
@@ -107,7 +109,7 @@ export const RSAGeneratedModal = ({
         onSubmit={handleSubmit(save!)}
       >
         <FormGroup
-          label={t("realm-settings:consoleDisplayName")}
+          label={t("consoleDisplayName")}
           fieldId="kc-console-display-name"
           labelIcon={
             <HelpItem
@@ -127,7 +129,6 @@ export const RSAGeneratedModal = ({
                 defaultValue={providerType}
                 onChange={(value) => {
                   onChange(value);
-                  setDisplayName(value);
                 }}
                 data-testid="display-name-input"
               ></TextInput>
@@ -168,7 +169,7 @@ export const RSAGeneratedModal = ({
           />
         </FormGroup>
         <FormGroup
-          label={t("realm-settings:active")}
+          label={t("active")}
           fieldId="kc-active"
           labelIcon={
             <HelpItem
@@ -203,7 +204,7 @@ export const RSAGeneratedModal = ({
         {providerType === "rsa-generated" && (
           <>
             <FormGroup
-              label={t("realm-settings:algorithm")}
+              label={t("algorithm")}
               fieldId="kc-algorithm"
               labelIcon={
                 <HelpItem
@@ -247,7 +248,7 @@ export const RSAGeneratedModal = ({
               />
             </FormGroup>
             <FormGroup
-              label={t("realm-settings:AESKeySize")}
+              label={t("AESKeySize")}
               fieldId="kc-aes-keysize"
               labelIcon={
                 <HelpItem
