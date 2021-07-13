@@ -36,14 +36,8 @@ export const RSAModal = ({
   handleModalToggle,
   open,
   refresh,
-<<<<<<< HEAD
-}: 
-RSAModalProps) => {
-  const { t } = useTranslation("groups");
-=======
 }: RSAModalProps) => {
   const { t } = useTranslation("realm-settings");
->>>>>>> 9ad9d6c314de4a24800d73656eb778f229350dcc
   const serverInfo = useServerInfo();
   const adminClient = useAdminClient();
   const { addAlert } = useAlerts();

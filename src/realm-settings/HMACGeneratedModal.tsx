@@ -41,24 +41,11 @@ export const HMACGeneratedModal = ({
   const { addAlert } = useAlerts();
   const { handleSubmit, control } = useForm({});
   const [isKeySizeDropdownOpen, setIsKeySizeDropdownOpen] = useState(false);
-<<<<<<< HEAD
-  const [
-    isEllipticCurveDropdownOpen,
-    setIsEllipticCurveDropdownOpen,
-  ] = useState(false);
-  const [displayName, setDisplayName] = useState("");
-  const realm = useRealm();
-
-  const allComponentTypes = serverInfo.componentTypes![
-    "org.keycloak.keys.KeyProvider"
-  ];
-=======
   const [isEllipticCurveDropdownOpen, setIsEllipticCurveDropdownOpen] =
     useState(false);
 
   const allComponentTypes =
     serverInfo.componentTypes?.["org.keycloak.keys.KeyProvider"] ?? [];
->>>>>>> 9ad9d6c314de4a24800d73656eb778f229350dcc
 
   const save = async (component: ComponentRepresentation) => {
     try {
