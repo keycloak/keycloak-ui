@@ -14,10 +14,8 @@ export type AESProviderTypeRouteParams = {
 };
 
 export const AESProviderTypeRoute = {
-  path: "/:realm/realm-settings/keys/:id?/:providerType/settings",
+  path: "/:realm/realm-settings/keys/:id/:providerType/settings",
   component: AESGeneratedSettings,
   breadcrumb: AESGeneratedCrumb,
   access: "view-realm",
 };
-
-export const routes = [AESProviderTypeRoute];
