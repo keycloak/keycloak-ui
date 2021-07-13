@@ -51,9 +51,7 @@ export const AESGeneratedForm = ({
 
   const { id } = useParams<{ id: string }>();
 
-  const providerId =
-    useRouteMatch<AESProviderTypeRouteParams>("/:providerType?")?.params
-      .providerType;
+  const params = useParams<AESProviderTypeRouteParams>()
 
   const save = async (component: ComponentRepresentation) => {
     try {
@@ -206,7 +204,7 @@ export const AESGeneratedForm = ({
               type="text"
               id="name"
               name="name"
-              defaultValue={providerId}
+              defaultValue={params.providerType}
               validated={
                 form.errors.name
                   ? ValidatedOptions.error
