@@ -12,7 +12,7 @@ export const resourceUri = isDevMode ? "." : resourceUrl;
 
 // if we are running on Keycloak server, loginRealm will be passed from index.ftl
 declare const loginRealm: string;
-export const loggedInRealm = () => {
+export const homeRealm = () => {
   if (typeof loginRealm !== "undefined") return loginRealm;
 
   return new URLSearchParams(window.location.search).get("realm") || "master";

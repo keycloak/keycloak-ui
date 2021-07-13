@@ -50,9 +50,6 @@ const EmptyDashboard = () => {
           {realm}
         </Title>
         <EmptyStateBody>{t("introduction")}</EmptyStateBody>
-        <Button variant="link" onClick={() => setRealm("master")}>
-          {t("common:realmInfo")}
-        </Button>
       </EmptyState>
     </PageSection>
   );

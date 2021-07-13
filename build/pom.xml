@@ -77,10 +77,14 @@
                             <token>&lt;head&gt;</token>
                             <value>
 &lt;head&gt;
-  &lt;script&gt;
-    var resourceUrl="${resourceUrl}";
+  &lt;script type="text/javascript"&gt;
     var loginRealm = "${loginRealm}";
+    var authServerUrl = "${authServerUrl}";
     var authUrl = "${authUrl}";
+    var consoleBaseUrl = "${consoleBaseUrl}";
+    var resourceUrl = "${resourceUrl}";
+    var masterRealm = "${masterRealm}";
+    var resourceVersion = "${resourceVersion}";
   &lt;/script&gt;
 </value>
                         </replacement>

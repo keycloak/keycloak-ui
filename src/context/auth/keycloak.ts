@@ -1,5 +1,5 @@
 import KcAdminClient from "keycloak-admin";
-import { loggedInRealm, isDevMode, authUri } from "../../util";
+import { homeRealm, isDevMode, authUri } from "../../util";
 
 export default async function (): Promise<KcAdminClient> {
   const kcAdminClient = new KcAdminClient();
@@ -8,13 +8,13 @@ export default async function (): Promise<KcAdminClient> {
       { onLoad: "check-sso", pkceMethod: "S256" },
       {
         url: authUri(),
-        realm: loggedInRealm(),
+        realm: homeRealm(),
         clientId: isDevMode
           ? "security-admin-console-v2"
           : "security-admin-console",
       }
     );
-    kcAdminClient.setConfig({ realmName: loggedInRealm() });
+    kcAdminClient.setConfig({ realmName: homeRealm() });
 
     kcAdminClient.baseUrl = authUri();
   } catch (error) {
