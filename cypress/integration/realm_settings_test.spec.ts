@@ -47,6 +47,13 @@ describe("Realm settings", () => {
     cy.getId("rs-keys-tab").click();
     cy.getId("rs-providers-tab").click();
     cy.getId("provider-name-link").contains("test_aes-generated").click();
+
+    sidebarPage.goToRealmSettings();
+
+    cy.getId("rs-keys-tab").click();
+    cy.getId("rs-providers-tab").click();
+    cy.getId("provider-name-link").contains("test_ecdsa-generated").click();
+
     cy.wait(["@keysFetch"]);
 
     return this;
@@ -206,6 +213,18 @@ describe("Realm settings", () => {
   it("go to details", () => {
     sidebarPage.goToRealmSettings();
     goToDetails();
+  });
+
+  it("delete providers", () => {
+    sidebarPage.goToRealmSettings();
+    cy.getId("rs-keys-tab").click();
+
+    cy.getId("rs-providers-tab").click();
+
+    realmSettingsPage.deleteProvider("test_aes-generated");
+    realmSettingsPage.deleteProvider("test_ecdsa-generated");
+    realmSettingsPage.deleteProvider("test_hmac-generated");
+    realmSettingsPage.deleteProvider("test_rsa-generated");
   });
 
   it("Test keys", () => {
