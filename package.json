@@ -80,7 +80,7 @@
     "grunt": "^1.4.1",
     "grunt-contrib-copy": "^1.0.0",
     "husky": "^7.0.1",
-    "jest": "^26.6.3",
+    "jest": "^27.0.6",
     "lint-staged": "^11.0.1",
     "mutationobserver-shim": "^0.3.7",
     "postcss": "^8.3.5",
