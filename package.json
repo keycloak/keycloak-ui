@@ -89,7 +89,7 @@
     "prettier": "^2.3.2",
     "snowpack": "2.18.5",
     "ts-node": "^10.1.0",
-    "typescript": "4.2.4"
+    "typescript": "4.3.5"
   },
   "lint-staged": {
     "*.{js,jsx,ts,tsx}": "eslint --cache --fix"
