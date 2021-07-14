@@ -35,10 +35,6 @@ For development on this project you will need a running Keycloak server listenin
 
 You can reach the new admin interface at http://localhost
 
-If your Keycloak instance is not on `localhost:8180`, create a file `.env` with the following:
-
-    KEYCLOAK_ENDPOINT=https:\/\/remoteinstance.keycloak.com
-
 ### Additionally there are some nice scripts to format and lint
 
 ```bash
