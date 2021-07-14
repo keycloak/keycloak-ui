@@ -1,4 +1,4 @@
-module.exports = {
+export default {
   extends: "@snowpack/app-scripts-react",
   proxy: {
     "/auth/admin": "http://localhost:8180/auth/admin/",
@@ -13,6 +13,7 @@ module.exports = {
     clean: true,
   },
   devOptions: {
+    hmrErrorOverlay: false,
     out: "build/src/main/resources/admin/resources", // For snowpack 3, "out" goes under buildOptions.
   },
 };
