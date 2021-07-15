@@ -5,6 +5,7 @@ export type Environment = {
   authServerUrl: string;
   /** The URL to the path of the auth server where client requests can be sent. */
   authUrl: string;
+  /** The URL to the base of the admin console. */
   consoleBaseUrl: string;
   resourceUrl: string;
   /** The name of the master realm. */
@@ -22,12 +23,12 @@ const realm =
 // The default environment, used during development.
 const defaultEnvironment: Environment = {
   loginRealm: realm,
-  authServerUrl: "TODO",
+  authServerUrl: "http://localhost:8180/auth",
   authUrl: "http://localhost:8180/auth",
-  consoleBaseUrl: "TODO",
+  consoleBaseUrl: "/auth/admin/master/console/",
   resourceUrl: ".",
   masterRealm: "master",
-  resourceVersion: "TODO",
+  resourceVersion: "unknown",
   isRunningAsTheme: false,
 };
 
