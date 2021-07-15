@@ -234,7 +234,7 @@ export default class RealmSettingsPage {
     return this;
   }
 
-  changeTimeUnit(unit: string, inputType: string, listType: string) {
+  changeTimeUnit(unit: "Minutes" | "Hours" | "Days", inputType: string, listType: string) {
     switch (unit) {
       case "Minutes":
         cy.get(inputType).click();
