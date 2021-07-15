@@ -155,7 +155,7 @@ export default {
     emailTheme: "Email theme",
     internationalization: "Internationalization",
     localization: "Localization",
-    sessions: "Sesisons",
+    sessions: "Sessions",
     SSOSessionSettings: "SSO Session Settings",
     SSOSessionIdle: "SSO Session Idle",
     SSOSessionMax: "SSO Session Max",
