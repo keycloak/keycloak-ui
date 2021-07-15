@@ -79,7 +79,8 @@
       "consoleBaseUrl": "${consoleBaseUrl}",
       "resourceUrl": "${resourceUrl}",
       "masterRealm": "${masterRealm}",
-      "resourceVersion": "${resourceVersion}"
+      "resourceVersion": "${resourceVersion}",
+      "isRunningAsTheme": true
     }
   </script>
 </body>

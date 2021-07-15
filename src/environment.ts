@@ -31,13 +31,10 @@ const defaultEnvironment: Environment = {
   isRunningAsTheme: false,
 };
 
-const ENV_ELEMENT_ID = "environment";
-
 // Merge the default and injected environment variables together.
 const environment: Environment = {
   ...defaultEnvironment,
   ...getInjectedEnvironment(),
-  isRunningAsTheme: document.getElementById(ENV_ELEMENT_ID) !== null,
 };
 
 export default environment;
@@ -47,7 +44,7 @@ export default environment;
  * These variables are injected by Keycloak into the `index.html` as a script tag, the contents of which can be parsed as JSON.
  */
 function getInjectedEnvironment(): Record<string, string | number | boolean> {
-  const element = document.getElementById(ENV_ELEMENT_ID);
+  const element = document.getElementById("environment");
 
   // If the element cannot be found, return an empty record.
   if (!element?.textContent) {
