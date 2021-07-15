@@ -36,11 +36,6 @@ export default class RealmSettingsPage {
     "#kc-client-session-max-select-menu > div > ul";
 
   offlineSessionIdleSelectMenu = "#kc-offline-session-idle-select-menu";
-  offlineSessionIdleSelectMenuList =
-    "#kc-offline-session-idle-select-menu > ul";
-
-  offlineSessionMaxSelectMenu = "#kc-offline-session-max-select-menu";
-  offlineSessionMaxSelectMenuList = "#kc-offline-session-max-select-menu-ul";
 
   loginTimeoutSelectMenu = "#kc-login-timeout-select-menu";
   loginTimeoutSelectMenuList = "#kc-login-timeout-select-menu > div > ul";
@@ -254,8 +249,7 @@ export default class RealmSettingsPage {
         cy.get(listType).contains(unit).click();
         break;
       default:
-        console.log("Invalid unit, must be 'minutes', 'hours', or 'days'.");
-        break;
+        throw "Invalid unit, must be 'minutes', 'hours', or 'days'.";
     }
     return this;
   }
