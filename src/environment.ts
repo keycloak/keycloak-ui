@@ -15,7 +15,7 @@ export type Environment = {
   isRunningAsTheme: boolean;
 };
 
-// TODO: See if we can drop this by switching away from hash based routing.
+// During development the realm can be passed as a query parameter when redirecting back from Keycloak.
 const realm =
   new URLSearchParams(window.location.search).get("realm") ?? "master";
 
