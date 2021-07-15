@@ -41,7 +41,7 @@ export default environment;
 
 /**
  * Extracts the environment variables that are passed if the application is running as a Keycloak theme.
- * These variables are injected by Keycloak into the `index.html` as a script tag, the contents of which can be parsed as JSON.
+ * These variables are injected by Keycloak into the `index.ftl` as a script tag, the contents of which can be parsed as JSON.
  */
 function getInjectedEnvironment(): Record<string, string | number | boolean> {
   const element = document.getElementById("environment");
