@@ -51,9 +51,7 @@ export const RealmSettingsSessionsTab = ({
     defaultValue: realm?.offlineSessionMaxLifespanEnabled,
   });
 
-  useEffect(() => {
-    reset();
-  }, [realm]);
+  useEffect(() => resetForm(realm), [realm]);
 
   const setupForm = (realm: RealmRepresentation) => {
     Object.entries(realm).map((entry) => setValue(...entry));
