@@ -9,7 +9,7 @@ export type Environment = {
   resourceUrl: string;
   /** The name of the master realm. */
   masterRealm: string;
-  /** The version number of the auth sever (e.g. 14.0.0). */
+  /** The version hash of the auth sever. */
   resourceVersion: string;
   /** Indicates if the application is running as a Keycloak theme. */
   isRunningAsTheme: boolean;
