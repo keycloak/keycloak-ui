@@ -234,7 +234,11 @@ export default class RealmSettingsPage {
     return this;
   }
 
-  changeTimeUnit(unit: "Minutes" | "Hours" | "Days", inputType: string, listType: string) {
+  changeTimeUnit(
+    unit: "Minutes" | "Hours" | "Days",
+    inputType: string,
+    listType: string
+  ) {
     switch (unit) {
       case "Minutes":
         cy.get(inputType).click();
@@ -275,7 +279,7 @@ export default class RealmSettingsPage {
     );
     cy.getId(this.ssoSessionMaxRememberMeInput).clear().type("4");
     this.changeTimeUnit(
-      "minutes",
+      "Minutes",
       this.ssoSessionMaxRememberMeSelectMenu,
       this.ssoSessionMaxRememberMeSelectMenuList
     );

@@ -258,19 +258,30 @@ describe("Realm settings", () => {
 
     cy.getId("rs-sessions-tab").click();
 
-    cy.getId(realmSettingsPage.ssoSessionIdleInput).should('have.value', 1);
-    cy.getId(realmSettingsPage.ssoSessionMaxInput).should('have.value', 2);
-    cy.getId(realmSettingsPage.ssoSessionIdleRememberMeInput).should('have.value', 3);
-    cy.getId(realmSettingsPage.ssoSessionMaxRememberMeInput).should('have.value', 4);
+    cy.getId(realmSettingsPage.ssoSessionIdleInput).should("have.value", 1);
+    cy.getId(realmSettingsPage.ssoSessionMaxInput).should("have.value", 2);
+    cy.getId(realmSettingsPage.ssoSessionIdleRememberMeInput).should(
+      "have.value",
+      3
+    );
+    cy.getId(realmSettingsPage.ssoSessionMaxRememberMeInput).should(
+      "have.value",
+      4
+    );
 
-    cy.getId(realmSettingsPage.clientSessionIdleInput).should('have.value', 5);
-    cy.getId(realmSettingsPage.clientSessionMaxInput).should('have.value', 6);
+    cy.getId(realmSettingsPage.clientSessionIdleInput).should("have.value", 5);
+    cy.getId(realmSettingsPage.clientSessionMaxInput).should("have.value", 6);
 
-    cy.getId(realmSettingsPage.offlineSessionIdleInput).should('have.value', 7);
-    cy.getId(realmSettingsPage.offlineSessionMaxSwitch).should('have.value', "on")
-    
-    cy.getId(realmSettingsPage.loginTimeoutInput).should('have.value', 9);
-    cy.getId(realmSettingsPage.loginActionTimeoutInput).should('have.value', 10);
+    cy.getId(realmSettingsPage.offlineSessionIdleInput).should("have.value", 7);
+    cy.getId(realmSettingsPage.offlineSessionMaxSwitch).should(
+      "have.value",
+      "on"
+    );
 
+    cy.getId(realmSettingsPage.loginTimeoutInput).should("have.value", 9);
+    cy.getId(realmSettingsPage.loginActionTimeoutInput).should(
+      "have.value",
+      10
+    );
   });
 });

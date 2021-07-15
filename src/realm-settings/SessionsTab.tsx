@@ -40,7 +40,6 @@ export const RealmSettingsSessionsTab = ({
   const {
     control,
     handleSubmit,
-    setValue,
     reset: resetForm,
     formState,
   } = useForm<RealmRepresentation>();
@@ -52,10 +51,6 @@ export const RealmSettingsSessionsTab = ({
   });
 
   useEffect(() => resetForm(realm), [realm]);
-
-  const setupForm = (realm: RealmRepresentation) => {
-    Object.entries(realm).map((entry) => setValue(...entry));
-  };
 
   const save = async (form: RealmRepresentation) => {
     try {
@@ -74,7 +69,6 @@ export const RealmSettingsSessionsTab = ({
   const reset = () => {
     if (realm) {
       resetForm(realm);
-      setupForm(realm);
     }
   };
 
