@@ -193,7 +193,6 @@ export const routes: RoutesFn = (t: TFunction) => [
     access: "view-realm",
   },
   {
-
     path: "/:realm/realm-settings/keys/:id?/ecdsa-generated/settings",
     component: ECDSAGeneratedSettings,
     breadcrumb: t("realm-settings:editProvider"),
