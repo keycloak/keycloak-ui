@@ -198,7 +198,6 @@ export const RSAGeneratedForm = ({
                   id="name"
                   type="text"
                   aria-label={t("consoleDisplayName")}
-                  defaultValue={providerType}
                   value={value}
                   onChange={(value) => onChange(value)}
                   data-testid="display-name-input"
