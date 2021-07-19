@@ -281,7 +281,7 @@ export const ECDSAGeneratedForm = ({
           <HelpItem
             helpText="realm-settings-help:ellipticCurve"
             forLabel={t("ellipticCurve")}
-            forID="kc-elliptic-curve"
+            forID={t("common:helpLabel", { label: t("ellipticCurve") })}
           />
         }
       >
