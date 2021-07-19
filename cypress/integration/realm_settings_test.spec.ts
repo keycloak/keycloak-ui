@@ -65,7 +65,23 @@ describe("Realm settings", () => {
     return this;
   };
 
-  /*const addBundle = () => {
+  const deleteProvider = (providerName: string) => {
+    const keysUrl = `/auth/admin/realms/${realmName}/keys`;
+    cy.intercept(keysUrl).as("keysFetch");
+
+    cy.getId("provider-name-link")
+      .contains(providerName)
+      .parent()
+      .siblings(".pf-c-data-list__item-action")
+      .click()
+      .getId(realmSettingsPage.deleteAction)
+      .click();
+    cy.wait(500).getId(realmSettingsPage.modalConfirm).click();
+
+    return this;
+  };
+
+  const addBundle = () => {
     const localizationUrl = `/auth/admin/realms/${realmName}/localization/en`;
     cy.intercept(localizationUrl).as("localizationFetch");
 
@@ -77,7 +93,7 @@ describe("Realm settings", () => {
     cy.wait(["@localizationFetch"]);
 
     return this;
-  };*/
+  };
 
   it("Go to general tab", function () {
     sidebarPage.goToRealmSettings();
@@ -220,6 +236,17 @@ describe("Realm settings", () => {
     goToDetails();
   });
 
+  it("delete providers", () => {
+    sidebarPage.goToRealmSettings();
+    cy.getId("rs-keys-tab").click();
+
+    cy.getId("rs-providers-tab").click();
+
+    deleteProvider("test_aes-generated");
+    deleteProvider("test_ecdsa-generated");
+    deleteProvider("test_hmac-generated");
+    deleteProvider("test_rsa-generated");
+  });
   it("Test keys", () => {
     sidebarPage.goToRealmSettings();
     goToKeys();
