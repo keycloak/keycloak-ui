@@ -1,6 +1,7 @@
 import type { TFunction } from "i18next";
 import type { AccessType } from "keycloak-admin/lib/defs/whoAmIRepresentation";
 import type { ComponentType } from "react";
+import type { MatchOptions } from "use-react-router-breadcrumbs";
 import { AuthenticationSection } from "./authentication/AuthenticationSection";
 import { RoleMappingForm } from "./client-scopes/add/RoleMappingForm";
 import { ClientScopesSection } from "./client-scopes/ClientScopesSection";
@@ -50,7 +51,7 @@ export type RouteDef = {
   component: ComponentType;
   breadcrumb: ((t: TFunction) => string | ComponentType<any>) | null;
   access: AccessType;
-  exact?: boolean;
+  matchOptions?: MatchOptions;
 };
 
 export const routes: RouteDef[] = [
@@ -329,7 +330,9 @@ export const routes: RouteDef[] = [
     component: GroupsSection,
     breadcrumb: null,
     access: "query-groups",
-    exact: false,
+    matchOptions: {
+      exact: false,
+    },
   },
   {
     path: "/",

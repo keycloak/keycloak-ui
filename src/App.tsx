@@ -76,7 +76,7 @@ export const App = () => {
             <Switch>
               {routes.map((route, i) => (
                 <Route
-                  exact={route.exact ?? true}
+                  exact={route.matchOptions?.exact ?? true}
                   key={i}
                   path={route.path}
                   component={() => (
