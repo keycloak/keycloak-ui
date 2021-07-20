@@ -1,8 +1,8 @@
 import type { LocationDescriptorObject } from "history";
 import { generatePath } from "react-router-dom";
-import type { RouteConfig } from ".";
-import { ClientDetails } from "../clients/ClientDetails";
-import type { HomeParams } from "./Home";
+import type { RouteConfig } from "../../routes";
+import { ClientDetails } from "../ClientDetails";
+import type { HomeParams } from "../../routes/Home";
 
 export type ClientParams = HomeParams & {
   clientId: string;

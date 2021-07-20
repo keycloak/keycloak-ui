@@ -1,8 +1,8 @@
 import type { LocationDescriptorObject } from "history";
 import { generatePath } from "react-router-dom";
-import type { RouteConfig } from ".";
-import { ClientsSection } from "../clients/ClientsSection";
-import type { HomeParams } from "./Home";
+import type { RouteConfig } from "../../routes";
+import { ClientsSection } from "../ClientsSection";
+import type { HomeParams } from "../../routes/Home";
 
 export type ClientsParams = HomeParams & {
   tab?: string;

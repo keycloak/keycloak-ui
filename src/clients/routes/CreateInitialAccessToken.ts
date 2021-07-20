@@ -1,8 +1,8 @@
 import type { LocationDescriptorObject } from "history";
 import { generatePath } from "react-router-dom";
-import type { RouteConfig } from ".";
-import { CreateInitialAccessToken } from "../clients/initial-access/CreateInitialAccessToken";
-import type { HomeParams } from "./Home";
+import type { RouteConfig } from "../../routes";
+import { CreateInitialAccessToken } from "../initial-access/CreateInitialAccessToken";
+import type { HomeParams } from "../../routes/Home";
 
 export type CreateInitialAccessTokenParams = HomeParams;
 

@@ -1,8 +1,8 @@
 import type { LocationDescriptorObject } from "history";
 import { generatePath } from "react-router-dom";
-import type { RouteConfig } from ".";
-import { NewClientForm } from "../clients/add/NewClientForm";
-import type { HomeParams } from "./Home";
+import type { RouteConfig } from "../../routes";
+import type { HomeParams } from "../../routes/Home";
+import { NewClientForm } from "../add/NewClientForm";
 
 export type AddClientParams = HomeParams;
 
