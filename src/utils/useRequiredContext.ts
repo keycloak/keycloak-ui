@@ -17,13 +17,9 @@ export default function useRequiredContext<T>(
     return resolved as NonNullable<T>;
   }
 
-  if (context.displayName) {
-    throw new Error(
-      `No provider found for the '${context.displayName}' context, make sure it is included in your component hierarchy.`
-    );
-  }
-
   throw new Error(
-    `No provider found for an unknown context, make sure it is included in your component hierarchy.`
+    `No provider found for ${
+      context.displayName ? `the '${context.displayName}'` : "an unknown"
+    } context, make sure it is included in your component hierarchy.`
   );
 }
