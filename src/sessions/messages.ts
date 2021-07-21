@@ -14,5 +14,14 @@ export default {
       directGrant: "Direct grant",
       serviceAccount: "Service account",
     },
+    revocation: "Revocation",
+    revocationDescription:
+      "This is a way to revoke all active sessions and access tokens. Not before means you can revoke any tokens issued before the date.",
+    notBefore: "Not before",
+    signOutAllActiveSessions: "Sign out all active sessions",
+    setToNow: "Set to now",
+    clear: "Clear",
+    push: "Push",
+    none: "None",
   },
 };

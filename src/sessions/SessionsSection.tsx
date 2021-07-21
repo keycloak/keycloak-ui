@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import {
+  DropdownItem,
   PageSection,
   Select,
   SelectOption,
@@ -15,6 +16,8 @@ import { KeycloakDataTable } from "../components/table-toolbar/KeycloakDataTable
 import { useAdminClient } from "../context/auth/AdminClient";
 import { FilterIcon } from "@patternfly/react-icons";
 import "./SessionsSection.css";
+import { RevocationModal } from "./RevocationModal";
+// import { useRealm } from "../context/realm-context/RealmContext";
 
 const Clients = (row: UserSessionRepresentation) => {
   return (
@@ -30,8 +33,11 @@ const Clients = (row: UserSessionRepresentation) => {
 
 export const SessionsSection = () => {
   const { t } = useTranslation("sessions");
+  // const { realm: realmName } = useRealm();
   const adminClient = useAdminClient();
+  // const [realm, setRealm] = useState<RealmRepresentation>();
   const [filterDropdownOpen, setFilterDropdownOpen] = useState(false);
+  const [revocationModalOpen, setRevocationModalOpen] = useState(false);
   const [filterType, setFilterType] = useState(
     t("sessionsType.allSessions").toString()
   );
@@ -40,6 +46,22 @@ export const SessionsSection = () => {
   const refresh = () => {
     setKey(new Date().getTime());
   };
+
+  const handleRevocationModalToggle = () => {
+    setRevocationModalOpen(!revocationModalOpen);
+  };
+
+  // useFetch(
+  //   async () => {
+  //     const realm = await adminClient.realms.findOne({ realm: realmName });
+
+  //     return { realm };
+  //   },
+  //   ({ realm }) => {
+  //     setRealm(realm);
+  //   },
+  //   [key]
+  // );
 
   const loader = async () => {
     const activeClients = await adminClient.sessions.find();
@@ -63,10 +85,46 @@ export const SessionsSection = () => {
     return userSessions;
   };
 
+  const dropdownItems = [
+    <DropdownItem
+      key="toggle-modal"
+      data-testid="add-roles"
+      component="button"
+      onClick={() => handleRevocationModalToggle()}
+    >
+      {t("revocation")}
+    </DropdownItem>,
+    <DropdownItem
+      key="delete-role"
+      component="button"
+      // onClick={() => toggleActiveSessionsDialog()}
+    >
+      {t("signOutAllActiveSessions")}
+    </DropdownItem>,
+  ];
+
   return (
     <>
-      <ViewHeader titleKey="sessions:title" subKey="sessions:sessionExplain" />
+      <ViewHeader
+        dropdownItems={dropdownItems}
+        titleKey="sessions:title"
+        subKey="sessions:sessionExplain"
+      />
       <PageSection variant="light" className="pf-u-p-0">
+        {revocationModalOpen && (
+          <RevocationModal
+            handleModalToggle={handleRevocationModalToggle}
+            // testConnection={testConnection}
+            save={() => {
+              // save(realm!);
+              handleRevocationModalToggle();
+            }}
+            // form={realmForm}
+            // user={currentUser!}
+            // refresh={refresh}
+            // realm={realm!}
+          />
+        )}
         <KeycloakDataTable
           key={key}
           loader={loader}
