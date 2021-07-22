@@ -87,7 +87,7 @@ export const SessionsSection = () => {
   const dropdownItems = [
     <DropdownItem
       key="toggle-modal"
-      data-testid="add-roles"
+      data-testid="revocation"
       component="button"
       onClick={() => handleRevocationModalToggle()}
     >

@@ -33,6 +33,7 @@ type RevocationModalProps = {
 export const RevocationModal = ({
   handleModalToggle,
   save,
+  activeClients,
 }: RevocationModalProps) => {
   const { t } = useTranslation("sessions");
   const { addAlert } = useAlerts();
@@ -88,6 +89,23 @@ export const RevocationModal = ({
     }
   };
 
+  const push = async (allClients: ClientRepresentation[]) => {
+    try {
+      for (const client of allClients) {
+        if (client.adminUrl) {
+          await adminClient.clients.pushRevocation({
+            id: client.id!,
+            realm: realmName,
+          });
+        }
+      }
+      addAlert(t("success", { allClients }), AlertVariant.success);
+      refresh();
+    } catch {
+      addAlert(t("pushError", { allClients }), AlertVariant.danger);
+    }
+  };
+
   return (
     <Modal
       variant={ModalVariant.small}
@@ -96,7 +114,7 @@ export const RevocationModal = ({
       onClose={handleModalToggle}
       actions={[
         <Button
-          data-testid="modal-test-connection-button"
+          data-testid="modal-set-to-now-button"
           key="set-to-now"
           variant="tertiary"
           onClick={() => {
@@ -108,7 +126,7 @@ export const RevocationModal = ({
           {t("setToNow")}
         </Button>,
         <Button
-          data-testid="modal-test-connection-button"
+          data-testid="clear-not-before-button"
           key="clear"
           variant="tertiary"
           onClick={() => {
@@ -118,6 +136,18 @@ export const RevocationModal = ({
           form="revocation-modal-form"
         >
           {t("clear")}
+        </Button>,
+        <Button
+          data-testid="modal-test-connection-button"
+          key="push"
+          variant="secondary"
+          onClick={() => {
+            push(activeClients);
+            handleModalToggle();
+          }}
+          form="revocation-modal-form"
+        >
+          {t("push")}
         </Button>,
         <Button
           id="modal-cancel"
