@@ -33,9 +33,7 @@ const Clients = (row: UserSessionRepresentation) => {
 
 export const SessionsSection = () => {
   const { t } = useTranslation("sessions");
-  // const { realm: realmName } = useRealm();
   const adminClient = useAdminClient();
-  // const [realm, setRealm] = useState<RealmRepresentation>();
   const [filterDropdownOpen, setFilterDropdownOpen] = useState(false);
   const [revocationModalOpen, setRevocationModalOpen] = useState(false);
   const [activeClientDetails, setActiveClientDetails] = useState<

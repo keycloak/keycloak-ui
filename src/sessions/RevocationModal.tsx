@@ -174,7 +174,6 @@ export const RevocationModal = ({
           label={t("notBefore")}
           name="notBefore"
           fieldId="not-before"
-          helperTextInvalid={t("users:emailInvalid")}
           validated={
             errors.email ? ValidatedOptions.error : ValidatedOptions.default
           }
