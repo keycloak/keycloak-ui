@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Link, useHistory, useRouteMatch } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { Trans, useTranslation } from "react-i18next";
 import {
   AlertVariant,
@@ -25,6 +25,7 @@ import { useConfirmDialog } from "../components/confirm-dialog/ConfirmDialog";
 import { useAlerts } from "../components/alert/Alerts";
 import { toUpperCase } from "../util";
 import { DuplicateFlowModal } from "./DuplicateFlowModal";
+import { toCreateFlow, toFlowDetails } from "./routes/Authentication";
 
 import "./authentication-section.css";
 
@@ -50,8 +51,6 @@ export const AuthenticationSection = () => {
   const [key, setKey] = useState(0);
   const refresh = () => setKey(new Date().getTime());
   const { addAlert, addError } = useAlerts();
-  const { url } = useRouteMatch();
-  const history = useHistory();
 
   const [selectedFlow, setSelectedFlow] = useState<AuthenticationType>();
   const [open, setOpen] = useState(false);
@@ -176,9 +175,12 @@ export const AuthenticationSection = () => {
   }: AuthenticationType) => (
     <>
       <Link
-        to={`${url}/${id}/${usedBy.type || "notInUse"}${
-          builtIn ? "/buildIn" : ""
-        }`}
+        to={toFlowDetails({
+          realm,
+          id: id!,
+          usedBy: usedBy.type || "notInUse",
+          builtIn: builtIn ? "builtIn" : undefined,
+        })}
         key={`link-{id}`}
       >
         {toUpperCase(alias!)}
@@ -216,9 +218,9 @@ export const AuthenticationSection = () => {
               toolbarItem={
                 <ToolbarItem>
                   <Button
-                    onClick={() =>
-                      history.push(`/${realm}/authentication/create`)
-                    }
+                    component={Link}
+                    // @ts-ignore
+                    to={toCreateFlow({ realm })}
                   >
                     {t("createFlow")}
                   </Button>

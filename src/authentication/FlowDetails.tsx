@@ -15,6 +15,7 @@ import { CheckCircleIcon, TableIcon } from "@patternfly/react-icons";
 
 import type AuthenticationExecutionInfoRepresentation from "keycloak-admin/lib/defs/authenticationExecutionInfoRepresentation";
 import type AuthenticationFlowRepresentation from "keycloak-admin/lib/defs/authenticationFlowRepresentation";
+import type { FlowDetailsParams } from "./routes/Authentication";
 import { ViewHeader } from "../components/view-header/ViewHeader";
 import { useAdminClient, useFetch } from "../context/auth/AdminClient";
 import { EmptyExecutionState } from "./EmptyExecutionState";
@@ -34,11 +35,7 @@ export const FlowDetails = () => {
   const { t } = useTranslation("authentication");
   const adminClient = useAdminClient();
   const { addAlert } = useAlerts();
-  const { id, usedBy, buildIn } = useParams<{
-    id: string;
-    usedBy: string;
-    buildIn: string;
-  }>();
+  const { id, usedBy, builtIn } = useParams<FlowDetailsParams>();
   const [key, setKey] = useState(0);
   const refresh = () => setKey(new Date().getTime());
 
@@ -132,7 +129,7 @@ export const FlowDetails = () => {
         titleKey={toUpperCase(flow?.alias! || "")}
         badges={[
           { text: <Label>{t(usedBy)}</Label> },
-          buildIn
+          builtIn
             ? {
                 text: (
                   <Label
@@ -142,7 +139,7 @@ export const FlowDetails = () => {
                     {t("buildIn")}
                   </Label>
                 ),
-                id: "buildIn",
+                id: "builtIn",
               }
             : {},
         ]}
