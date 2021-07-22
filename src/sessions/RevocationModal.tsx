@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import {
+  AlertVariant,
   Button,
   ButtonVariant,
   Form,
@@ -18,27 +19,24 @@ import { emailRegexPattern } from "../util";
 import type RealmRepresentation from "keycloak-admin/lib/defs/realmRepresentation";
 import { useAdminClient, useFetch } from "../context/auth/AdminClient";
 import moment from "moment";
-// import "moment-timezone";
 import { useRealm } from "../context/realm-context/RealmContext";
+import type ClientRepresentation from "keycloak-admin/lib/defs/clientRepresentation";
+import { useAlerts } from "../components/alert/Alerts";
 
 type RevocationModalProps = {
   id?: string;
-  //   form: UseFormMethods<RealmRepresentation>;
-  //   rename?: string;
   handleModalToggle: () => void;
-  //   testConnection: () => void;
-  //   realm: RealmRepresentation;
-  // refresh: () => void;
+  activeClients: ClientRepresentation[];
   save: (realm?: UserRepresentation) => void;
 };
 
 export const RevocationModal = ({
   handleModalToggle,
   save,
-}: // refresh,
-//   realm,
-RevocationModalProps) => {
+}: RevocationModalProps) => {
   const { t } = useTranslation("sessions");
+  const { addAlert } = useAlerts();
+
   const { realm: realmName } = useRealm();
   const adminClient = useAdminClient();
   const { register, errors, handleSubmit } = useForm();
@@ -71,17 +69,23 @@ RevocationModalProps) => {
       }
     );
     adminClient.keycloak.logout({ redirectUri: "" });
+    addAlert(t("notBeforeSuccess"), AlertVariant.success);
   };
 
   const clearNotBefore = async () => {
-    await adminClient.realms.update(
-      { realm: realmName },
-      {
-        realm: realmName,
-        notBefore: 0,
-      }
-    );
-    refresh();
+    try {
+      await adminClient.realms.update(
+        { realm: realmName },
+        {
+          realm: realmName,
+          notBefore: 0,
+        }
+      );
+      addAlert(t("notBeforeClearedSuccess"), AlertVariant.success);
+      refresh();
+    } catch (error) {
+      addAlert(t("notBeforeError", { error }), AlertVariant.danger);
+    }
   };
 
   return (
@@ -99,7 +103,7 @@ RevocationModalProps) => {
             setToNow();
             handleModalToggle();
           }}
-          form="email-form"
+          form="revocation-modal-form"
         >
           {t("setToNow")}
         </Button>,
@@ -111,18 +115,9 @@ RevocationModalProps) => {
             clearNotBefore();
             handleModalToggle();
           }}
-          form="email-form"
+          form="revocation-modal-form"
         >
           {t("clear")}
-        </Button>,
-        <Button
-          data-testid="modal-test-connection-button"
-          key="push"
-          variant="secondary"
-          type="submit"
-          form="email-form"
-        >
-          {t("push")}
         </Button>,
         <Button
           id="modal-cancel"
@@ -136,23 +131,26 @@ RevocationModalProps) => {
         </Button>,
       ]}
     >
-      <TextContent className="kc-provide-email-text">
+      <TextContent className="kc-revocation-description-text">
         {t("revocationDescription")}
       </TextContent>
-      <Form id="email-form" isHorizontal onSubmit={handleSubmit(save)}>
+      <Form
+        id="revocation-modal-form"
+        isHorizontal
+        onSubmit={handleSubmit(save)}
+      >
         <FormGroup
-          className="kc-email-form-group"
+          className="kc-revocation-modal-form-group"
           label={t("notBefore")}
-          name="add-email-address"
-          fieldId="email-id"
+          name="notBefore"
+          fieldId="not-before"
           helperTextInvalid={t("users:emailInvalid")}
           validated={
             errors.email ? ValidatedOptions.error : ValidatedOptions.default
           }
-          //   isRequired
         >
           <TextInput
-            data-testid="email-address-input"
+            data-testid="not-before-input"
             ref={register({ required: true, pattern: emailRegexPattern })}
             autoFocus
             isReadOnly
@@ -162,7 +160,7 @@ RevocationModalProps) => {
                 : new Date(realm?.notBefore! * 1000).toString()
             }
             type="text"
-            id="add-email"
+            id="not-before"
             name="notBefore"
             validated={
               errors.email ? ValidatedOptions.error : ValidatedOptions.default
