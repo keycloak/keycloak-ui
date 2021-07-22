@@ -52,12 +52,12 @@ export const routes: RouteDef[] = [
   {
     path: "/:realm/authentication/create",
     component: CreateFlow,
-    breadcrumb: t("authentication:createFlow"),
+    breadcrumb: (t) => t("authentication:createFlow"),
     access: "manage-authorization",
   },
   {
     path: "/:realm/authentication/:id/:usedBy?/:buildIn?",
     component: FlowDetails,
-    breadcrumb: t("authentication:flowDetails"),
+    breadcrumb: (t) => t("authentication:flowDetails"),
     access: "manage-authorization",
 ];

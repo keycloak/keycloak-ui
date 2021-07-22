@@ -14,7 +14,13 @@ import {
   ToolbarContent,
   ToolbarItem,
 } from "@patternfly/react-core";
-import React, { ReactElement, ReactNode, useState, isValidElement } from "react";
+import React, {
+  ReactElement,
+  ReactNode,
+  useState,
+  isValidElement,
+  Fragment,
+} from "react";
 import { useTranslation } from "react-i18next";
 import {
   FormattedLink,
