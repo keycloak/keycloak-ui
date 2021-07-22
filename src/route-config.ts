@@ -42,7 +42,7 @@ import { UsersTabs } from "./user/UsersTabs";
 export type RouteDef = {
   path: string;
   component: ComponentType;
-  breadcrumb: ((t: TFunction) => string | ComponentType<any>) | null;
+  breadcrumb?: (t: TFunction) => string | ComponentType<any>;
   access: AccessType;
   matchOptions?: MatchOptions;
 };
@@ -187,7 +187,6 @@ export const routes: RouteDef[] = [
   {
     path: "/:realm/identity-providers/:id/:tab?",
     component: DetailSettings,
-    breadcrumb: null,
     access: "manage-identity-providers",
   },
   {
@@ -199,7 +198,6 @@ export const routes: RouteDef[] = [
   {
     path: "/:realm/user-federation/kerberos",
     component: UserFederationSection,
-    breadcrumb: null,
     access: "view-realm",
   },
   {
@@ -217,7 +215,6 @@ export const routes: RouteDef[] = [
   {
     path: "/:realm/user-federation/ldap",
     component: UserFederationSection,
-    breadcrumb: null,
     access: "view-realm",
   },
   {
@@ -253,7 +250,6 @@ export const routes: RouteDef[] = [
   {
     path: "/:realm/groups",
     component: GroupsSection,
-    breadcrumb: null,
     access: "query-groups",
     matchOptions: {
       exact: false,
@@ -268,7 +264,6 @@ export const routes: RouteDef[] = [
   {
     path: "*",
     component: PageNotFoundSection,
-    breadcrumb: null,
     access: "anyone",
   },
 ];
