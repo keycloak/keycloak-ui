@@ -50,12 +50,8 @@ export const RevocationModal = ({
   };
 
   useFetch(
-    async () => {
-      const realm = await adminClient.realms.findOne({ realm: realmName });
-
-      return { realm };
-    },
-    ({ realm }) => {
+    () => adminClient.realms.findOne({ realm: realmName }),
+    (realm) => {
       setRealm(realm);
     },
     [key]
