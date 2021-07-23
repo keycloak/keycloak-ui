@@ -72,10 +72,10 @@ describe("Realm settings", () => {
   };
 
   const deleteProvider = (providerName: string) => {
-    cy.getId("provider-name-link")
+    cy.getId("provider-name")
       .contains(providerName)
-      .parent()
-      .siblings(".pf-c-data-list__item-action")
+      .parentsUntil(".pf-c-data-list__item-row")
+      .find(".pf-c-dropdown__toggle")
       .click()
       .getId(realmSettingsPage.deleteAction)
       .click();
@@ -283,12 +283,9 @@ describe("Realm settings", () => {
   it("add session data", () => {
     sidebarPage.goToRealmSettings();
 
-    cy.wait(500);
-
     cy.getId("rs-sessions-tab").click();
 
     realmSettingsPage.populateSessionsPage();
-
     realmSettingsPage.save("sessions-tab-save");
 
     masthead.checkNotificationMessage("Realm successfully updated");
@@ -297,8 +294,6 @@ describe("Realm settings", () => {
   it("check that sessions data was saved", () => {
     sidebarPage.goToAuthentication();
     sidebarPage.goToRealmSettings();
-
-    cy.wait(500);
 
     cy.getId("rs-sessions-tab").click();
 
