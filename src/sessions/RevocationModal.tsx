@@ -135,7 +135,7 @@ export const RevocationModal = ({
       onClose={handleModalToggle}
       actions={[
         <Button
-          data-testid="modal-set-to-now-button"
+          data-testid="set-to-now-button"
           key="set-to-now"
           variant="tertiary"
           onClick={() => {
