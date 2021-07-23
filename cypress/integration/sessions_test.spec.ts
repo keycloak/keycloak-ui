@@ -15,33 +15,33 @@ describe("Sessions test", function () {
       sidebarPage.goToSessions();
     });
 
-    it("Check dropdown display", () => {
-      sessionsPage.shouldDisplay();
-    });
+    // it("Check dropdown display", () => {
+    //   sessionsPage.shouldDisplay();
+    // });
 
-    it("Check dropdown options exist", () => {
-      sessionsPage.shouldNotBeEmpty();
-    });
+    // it("Check dropdown options exist", () => {
+    //   sessionsPage.shouldNotBeEmpty();
+    // });
 
-    it("Select 'All session types' dropdown option", () => {
-      sessionsPage.selectAllSessionsType();
-    });
+    // it("Select 'All session types' dropdown option", () => {
+    //   sessionsPage.selectAllSessionsType();
+    // });
 
-    it("Select 'Regular SSO' dropdown option", () => {
-      sessionsPage.selectRegularSSO();
-    });
+    // it("Select 'Regular SSO' dropdown option", () => {
+    //   sessionsPage.selectRegularSSO();
+    // });
 
-    it("Select 'Offline' dropdown option", () => {
-      sessionsPage.selectOffline();
-    });
+    // it("Select 'Offline' dropdown option", () => {
+    //   sessionsPage.selectOffline();
+    // });
 
-    it("Select 'Direct grant' dropdown option", () => {
-      sessionsPage.selectDirectGrant();
-    });
+    // it("Select 'Direct grant' dropdown option", () => {
+    //   sessionsPage.selectDirectGrant();
+    // });
 
-    it("Select 'Service account' dropdown option", () => {
-      sessionsPage.selectServiceAccount();
-    });
+    // it("Select 'Service account' dropdown option", () => {
+    //   sessionsPage.selectServiceAccount();
+    // });
 
     it("Set revocation notBefore", () => {
       sessionsPage.setToNow();
@@ -57,6 +57,12 @@ describe("Sessions test", function () {
 
     it("Check if notBefore saved", () => {
       sessionsPage.checkNotBeforeCleared();
+    });
+
+    it("logout all sessions", () => {
+      sessionsPage.logoutAllSessions();
+
+      cy.get("#kc-page-title").contains("Sign in to your account");
     });
   });
 });

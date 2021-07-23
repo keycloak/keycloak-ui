@@ -98,7 +98,12 @@ export const SessionsSection = () => {
     >
       {t("revocation")}
     </DropdownItem>,
-    <DropdownItem key="delete-role" component="button">
+    <DropdownItem
+      key="delete-role"
+      data-testid="logout-all"
+      component="button"
+      onClick={() => handleLogoutAllSessionsModalToggle()}
+    >
       {t("signOutAllActiveSessions")}
     </DropdownItem>,
   ];
@@ -123,10 +128,6 @@ export const SessionsSection = () => {
         {logoutAllSessionsModalOpen && (
           <LogoutAllSessionsModal
             handleModalToggle={handleLogoutAllSessionsModalToggle}
-            // activeClients={activeClientDetails}
-            save={() => {
-              handleRevocationModalToggle();
-            }}
           />
         )}
         <KeycloakDataTable

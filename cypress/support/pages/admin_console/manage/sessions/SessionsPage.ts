@@ -12,6 +12,8 @@ export default class SessionsPage {
   actionDropdown = "action-dropdown";
   clearNotBeforeButton = "clear-not-before-button";
   notBeforeInput = "not-before-input";
+  logoutAll = "logout-all";
+  logoutAllConfirm = "logout-all-confirm-button";
 
   shouldDisplay() {
     cy.get(this.sessionTypeDrpDwn).should("exist");
@@ -76,5 +78,11 @@ export default class SessionsPage {
     cy.getId(this.actionDropdown).click();
     cy.getId(this.revocationActionItem).click();
     cy.getId(this.notBeforeInput).should("have.value", "None");
+  }
+
+  logoutAllSessions() {
+    cy.getId(this.actionDropdown).click();
+    cy.getId(this.logoutAll).click();
+    cy.getId(this.logoutAllConfirm).click();
   }
 }

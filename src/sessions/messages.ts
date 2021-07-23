@@ -25,6 +25,10 @@ export default {
     pushError:
       "Error! Failed to push notBefore to: {{adminURIList}}. Verify availability of failed hosts and try again.",
     setToNow: "Set to now",
+    logoutAllDescription:
+      "If you sign out all active sessions, active subjects in this realm will be signed out.",
+    logoutAllSessionsError:
+      "Error! Failed to log out of all sessions: {{error}}.",
     clear: "Clear",
     push: "Push",
     none: "None",
