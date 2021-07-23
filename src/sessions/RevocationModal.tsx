@@ -18,14 +18,12 @@ import type UserRepresentation from "keycloak-admin/lib/defs/userRepresentation"
 import { emailRegexPattern } from "../util";
 import type RealmRepresentation from "keycloak-admin/lib/defs/realmRepresentation";
 import { useAdminClient, useFetch } from "../context/auth/AdminClient";
-import moment from "moment";
 import { useRealm } from "../context/realm-context/RealmContext";
 import type ClientRepresentation from "keycloak-admin/lib/defs/clientRepresentation";
 import { useAlerts } from "../components/alert/Alerts";
 import type GlobalRequestResult from "keycloak-admin/lib/defs/globalRequestResult";
 
 type RevocationModalProps = {
-  id?: string;
   handleModalToggle: () => void;
   activeClients: ClientRepresentation[];
   save: (realm?: UserRepresentation) => void;
@@ -63,7 +61,7 @@ export const RevocationModal = ({
     const failedCount = result.failedRequests?.length || 0;
 
     if (successCount === 0 && failedCount === 0) {
-      addAlert(t("noAdminUrlSet"), AlertVariant.warning);
+      addAlert(t("clients:noAdminUrlSet"), AlertVariant.warning);
     } else if (failedCount > 0) {
       addAlert(
         t("clients:" + prefixKey + "Success", {
@@ -88,15 +86,19 @@ export const RevocationModal = ({
   };
 
   const setToNow = async () => {
-    await adminClient.realms.update(
-      { realm: realmName },
-      {
-        realm: realmName,
-        notBefore: Number(moment().unix()),
-      }
-    );
-    adminClient.keycloak.logout({ redirectUri: "" });
-    addAlert(t("notBeforeSuccess"), AlertVariant.success);
+    try {
+      await adminClient.realms.update(
+        { realm: realmName },
+        {
+          realm: realmName,
+          notBefore: Date.now() / 1000,
+        }
+      );
+      adminClient.keycloak.logout({ redirectUri: "" });
+      addAlert(t("notBeforeSuccess"), AlertVariant.success);
+    } catch (error) {
+      addAlert(t("setToNowError", { error }), AlertVariant.danger);
+    }
   };
 
   const clearNotBefore = async () => {
@@ -116,14 +118,17 @@ export const RevocationModal = ({
   };
 
   const push = async (allClients: ClientRepresentation[]) => {
-    for (const client of allClients) {
-      if (client.adminUrl) {
-        const result = (await adminClient.clients.pushRevocation({
-          id: client.id!,
-        })) as unknown as GlobalRequestResult;
-        parseResult(result, "notBeforePush");
-      }
-    }
+    await Promise.all(
+      allClients.map((client) => {
+        if (client.adminUrl) {
+          const result = adminClient.clients.pushRevocation({
+            id: client.id!,
+          }) as unknown as GlobalRequestResult;
+          parseResult(result, "notBeforePush");
+        }
+      })
+    );
+
     refresh();
   };
 

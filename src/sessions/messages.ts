@@ -22,13 +22,12 @@ export default {
     notBeforeError: 'Error clearing "Not Before" for realm: {{error}}',
     notBeforeClearedSuccess: 'Success! "Not Before" cleared for realm.',
     signOutAllActiveSessions: "Sign out all active sessions",
-    pushError:
-      "Error! Failed to push notBefore to: {{adminURIList}}. Verify availability of failed hosts and try again.",
     setToNow: "Set to now",
     logoutAllDescription:
       "If you sign out all active sessions, active subjects in this realm will be signed out.",
     logoutAllSessionsError:
       "Error! Failed to log out of all sessions: {{error}}.",
+    setToNowError: "Error! Failed to set notBefore to current date and time.",
     clear: "Clear",
     push: "Push",
     none: "None",
