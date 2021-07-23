@@ -22,6 +22,7 @@ import moment from "moment";
 import { useRealm } from "../context/realm-context/RealmContext";
 import type ClientRepresentation from "keycloak-admin/lib/defs/clientRepresentation";
 import { useAlerts } from "../components/alert/Alerts";
+import type GlobalRequestResult from "keycloak-admin/lib/defs/globalRequestResult";
 
 type RevocationModalProps = {
   id?: string;
@@ -57,6 +58,35 @@ export const RevocationModal = ({
     [key]
   );
 
+  const parseResult = (result: GlobalRequestResult, prefixKey: string) => {
+    const successCount = result.successRequests?.length || 0;
+    const failedCount = result.failedRequests?.length || 0;
+
+    if (successCount === 0 && failedCount === 0) {
+      addAlert(t("noAdminUrlSet"), AlertVariant.warning);
+    } else if (failedCount > 0) {
+      addAlert(
+        t("clients:" + prefixKey + "Success", {
+          successNodes: result.successRequests,
+        }),
+        AlertVariant.success
+      );
+      addAlert(
+        t("clients:" + prefixKey + "Fail", {
+          failedNodes: result.failedRequests,
+        }),
+        AlertVariant.danger
+      );
+    } else {
+      addAlert(
+        t("clients:" + prefixKey + "Success", {
+          successNodes: result.successRequests,
+        }),
+        AlertVariant.success
+      );
+    }
+  };
+
   const setToNow = async () => {
     await adminClient.realms.update(
       { realm: realmName },
@@ -86,20 +116,15 @@ export const RevocationModal = ({
   };
 
   const push = async (allClients: ClientRepresentation[]) => {
-    try {
-      for (const client of allClients) {
-        if (client.adminUrl) {
-          await adminClient.clients.pushRevocation({
-            id: client.id!,
-            realm: realmName,
-          });
-        }
+    for (const client of allClients) {
+      if (client.adminUrl) {
+        const result = (await adminClient.clients.pushRevocation({
+          id: client.id!,
+        })) as unknown as GlobalRequestResult;
+        parseResult(result, "notBeforePush");
       }
-      addAlert(t("success", { allClients }), AlertVariant.success);
-      refresh();
-    } catch {
-      addAlert(t("pushError", { allClients }), AlertVariant.danger);
     }
+    refresh();
   };
 
   return (
