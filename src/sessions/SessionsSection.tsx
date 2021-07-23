@@ -18,6 +18,7 @@ import { FilterIcon } from "@patternfly/react-icons";
 import "./SessionsSection.css";
 import { RevocationModal } from "./RevocationModal";
 import type ClientRepresentation from "keycloak-admin/lib/defs/clientRepresentation";
+import { LogoutAllSessionsModal } from "./LogoutAllSessionsModal";
 
 const Clients = (row: UserSessionRepresentation) => {
   return (
@@ -36,6 +37,8 @@ export const SessionsSection = () => {
   const adminClient = useAdminClient();
   const [filterDropdownOpen, setFilterDropdownOpen] = useState(false);
   const [revocationModalOpen, setRevocationModalOpen] = useState(false);
+  const [logoutAllSessionsModalOpen, setLogoutAllSessionsModalOpen] =
+    useState(false);
   const [activeClientDetails, setActiveClientDetails] = useState<
     ClientRepresentation[]
   >([]);
@@ -50,6 +53,10 @@ export const SessionsSection = () => {
 
   const handleRevocationModalToggle = () => {
     setRevocationModalOpen(!revocationModalOpen);
+  };
+
+  const handleLogoutAllSessionsModalToggle = () => {
+    setLogoutAllSessionsModalOpen(!logoutAllSessionsModalOpen);
   };
 
   const loader = async () => {
@@ -108,6 +115,15 @@ export const SessionsSection = () => {
           <RevocationModal
             handleModalToggle={handleRevocationModalToggle}
             activeClients={activeClientDetails}
+            save={() => {
+              handleRevocationModalToggle();
+            }}
+          />
+        )}
+        {logoutAllSessionsModalOpen && (
+          <LogoutAllSessionsModal
+            handleModalToggle={handleLogoutAllSessionsModalToggle}
+            // activeClients={activeClientDetails}
             save={() => {
               handleRevocationModalToggle();
             }}
