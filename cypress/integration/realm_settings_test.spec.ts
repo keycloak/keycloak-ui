@@ -72,6 +72,8 @@ describe("Realm settings", () => {
   };
 
   const deleteProvider = (providerName: string) => {
+    const url = `/auth/admin/realms/${realmName}/users/*`;
+    cy.intercept(url).as("reload");
     cy.getId("provider-name")
       .contains(providerName)
       .parentsUntil(".pf-c-data-list__item-row")
@@ -81,6 +83,7 @@ describe("Realm settings", () => {
       .click();
     cy.getId(realmSettingsPage.modalConfirm).click();
 
+    cy.wait(["@reload"]);
     return this;
   };
 
