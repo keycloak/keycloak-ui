@@ -116,11 +116,11 @@ export const SamlConnectSettings = () => {
 
       <FormGroup
         label={t("useEntityDescriptor")}
-        fieldId="kc-discovery-endpoint-switch"
+        fieldId="kc-use-entity-descriptor"
         labelIcon={
           <HelpItem
             helpText="identity-providers-help:useDiscoveryEndpoint"
-            forLabel={t("useDiscoveryEndpoint")}
+            forLabel={t("useEntityDescriptor")}
             forID="kc-use-entity-descriptor-switch"
           />
         }
@@ -176,7 +176,7 @@ export const SamlConnectSettings = () => {
         >
           <JsonFileUpload
             id="kc-import-config"
-            helpText="identity=providers-help:jsonFileUpload"
+            helpText="identity-providers-help:jsonFileUpload"
             hideDefaultPreview
             unWrap
             validated={
