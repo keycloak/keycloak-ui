@@ -244,10 +244,13 @@ describe("Realm settings", () => {
 
   it("delete providers", () => {
     sidebarPage.goToRealmSettings();
+    const url = `/auth/admin/realms/${realmName}/keys`;
+    cy.intercept(url).as("load");
+
     cy.getId("rs-keys-tab").click();
     cy.getId("rs-providers-tab").click();
 
-    cy.get(".pf-c-spinner__tail-ball").should("not.exist");
+    cy.wait("@load");
 
     deleteProvider("test_aes-generated");
     deleteProvider("test_ecdsa-generated");
