@@ -143,7 +143,7 @@ const RealmSettingsHeader = ({
   );
 };
 
-export const RealmSettingsSection = () => {
+const RealmSettingsSection = () => {
   const { t } = useTranslation("realm-settings");
   const adminClient = useAdminClient();
   const { realm: realmName } = useRealm();
@@ -350,3 +350,5 @@ export const RealmSettingsSection = () => {
     </>
   );
 };
+
+export default RealmSettingsSection;

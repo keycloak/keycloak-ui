@@ -26,7 +26,7 @@ import { useRealm } from "../context/realm-context/RealmContext";
 import { AdminEvents } from "./AdminEvents";
 import "./events-section.css";
 
-export const EventsSection = () => {
+const EventsSection = () => {
   const { t } = useTranslation("events");
   const adminClient = useAdminClient();
   const { realm } = useRealm();
@@ -188,3 +188,5 @@ export const EventsSection = () => {
     </>
   );
 };
+
+export default EventsSection;

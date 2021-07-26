@@ -33,7 +33,7 @@ import { toNewClientScope } from "./routes/NewClientScope";
 
 import "./client-scope.css";
 
-export const ClientScopesSection = () => {
+const ClientScopesSection = () => {
   const { realm } = useRealm();
   const { t } = useTranslation("client-scopes");
   const { url } = useRouteMatch();
@@ -256,3 +256,5 @@ export const ClientScopesSection = () => {
     </>
   );
 };
+
+export default ClientScopesSection;

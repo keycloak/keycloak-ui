@@ -1,7 +1,7 @@
 import type { LocationDescriptorObject } from "history";
+import { lazy } from "react";
 import { generatePath } from "react-router-dom";
 import type { RouteDef } from "../../route-config";
-import { RoleMappingForm } from "../add/RoleMappingForm";
 
 export type OidcRoleNameMapperParams = {
   realm: string;
@@ -10,7 +10,7 @@ export type OidcRoleNameMapperParams = {
 
 export const OidcRoleNameMapperRoute: RouteDef = {
   path: "/:realm/client-scopes/:id/mappers/oidc-role-name-mapper",
-  component: RoleMappingForm,
+  component: lazy(() => import("../add/RoleMappingForm")),
   breadcrumb: (t) => t("common:mappingDetails"),
   access: "view-clients",
 };

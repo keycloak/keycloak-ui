@@ -20,7 +20,7 @@ import { UserConsents } from "./UserConsents";
 import type GroupRepresentation from "keycloak-admin/lib/defs/groupRepresentation";
 import { useRealm } from "../context/realm-context/RealmContext";
 
-export const UsersTabs = () => {
+const UsersTabs = () => {
   const { t } = useTranslation("roles");
   const { addAlert } = useAlerts();
   const history = useHistory();
@@ -124,3 +124,5 @@ export const UsersTabs = () => {
     </>
   );
 };
+
+export default UsersTabs;

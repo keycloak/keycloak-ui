@@ -1,7 +1,7 @@
 import type { LocationDescriptorObject } from "history";
+import { lazy } from "react";
 import { generatePath } from "react-router-dom";
 import type { RouteDef } from "../../route-config";
-import { DetailSettings } from "../add/DetailSettings";
 
 export type IdentityProviderTab = "settings";
 
@@ -13,7 +13,7 @@ export type IdentityProviderTabParams = {
 
 export const IdentityProviderTabRoute: RouteDef = {
   path: "/:realm/identity-providers/:id/:tab?",
-  component: DetailSettings,
+  component: lazy(() => import("../add/DetailSettings")),
   access: "manage-identity-providers",
 };
 

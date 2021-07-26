@@ -27,7 +27,7 @@ import { ViewHeader } from "../../components/view-header/ViewHeader";
 import { useAdminClient, useFetch } from "../../context/auth/AdminClient";
 import { useRealm } from "../../context/realm-context/RealmContext";
 
-export const RoleMappingForm = () => {
+const RoleMappingForm = () => {
   const { realm } = useRealm();
   const adminClient = useAdminClient();
   const history = useHistory();
@@ -301,3 +301,5 @@ export const RoleMappingForm = () => {
     </>
   );
 };
+
+export default RoleMappingForm;

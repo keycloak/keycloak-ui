@@ -31,7 +31,7 @@ type BruteUser = UserRepresentation & {
   brute?: Record<string, object>;
 };
 
-export const UsersSection = () => {
+const UsersSection = () => {
   const { t } = useTranslation("users");
   const adminClient = useAdminClient();
   const { addAlert } = useAlerts();
@@ -262,3 +262,5 @@ export const UsersSection = () => {
     </>
   );
 };
+
+export default UsersSection;

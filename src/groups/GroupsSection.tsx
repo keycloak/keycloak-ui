@@ -26,7 +26,7 @@ import { GroupsModal } from "./GroupsModal";
 
 import "./GroupsSection.css";
 
-export const GroupsSection = () => {
+const GroupsSection = () => {
   const { t } = useTranslation("groups");
   const [activeTab, setActiveTab] = useState(0);
 
@@ -171,3 +171,5 @@ export const GroupsSection = () => {
     </>
   );
 };
+
+export default GroupsSection;

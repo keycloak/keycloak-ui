@@ -35,7 +35,7 @@ import { LdapMapperHardcodedAttribute } from "./LdapMapperHardcodedAttribute";
 import { LdapMapperRoleGroup } from "./LdapMapperRoleGroup";
 import { useRealm } from "../../../context/realm-context/RealmContext";
 
-export const LdapMapperDetails = () => {
+const LdapMapperDetails = () => {
   const form = useForm<ComponentRepresentation>();
   const [mapping, setMapping] = useState<ComponentRepresentation>();
 
@@ -398,3 +398,5 @@ export const LdapMapperDetails = () => {
     </>
   );
 };
+
+export default LdapMapperDetails;

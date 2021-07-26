@@ -344,7 +344,7 @@ export const AESGeneratedForm = ({
   );
 };
 
-export const AESGeneratedSettings = () => {
+const AESGeneratedSettings = () => {
   const { t } = useTranslation("realm-settings");
   const providerId = useRouteMatch<MatchParams>(
     "/:realm/realm-settings/keys/:id?/:providerType?/settings"
@@ -358,3 +358,5 @@ export const AESGeneratedSettings = () => {
     </>
   );
 };
+
+export default AESGeneratedSettings;

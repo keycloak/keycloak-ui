@@ -35,7 +35,7 @@ import { useConfirmDialog } from "../components/confirm-dialog/ConfirmDialog";
 import { ProviderIconMapper } from "./ProviderIconMapper";
 import { ManageOderDialog } from "./ManageOrderDialog";
 
-export const IdentityProvidersSection = () => {
+const IdentityProvidersSection = () => {
   const { t } = useTranslation("identity-providers");
   const identityProviders = _.groupBy(
     useServerInfo().identityProviders,
@@ -248,3 +248,5 @@ export const IdentityProvidersSection = () => {
     </>
   );
 };
+
+export default IdentityProvidersSection;

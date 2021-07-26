@@ -122,7 +122,7 @@ export type SaveOptions = {
   messageKey?: string;
 };
 
-export const ClientDetails = () => {
+const ClientDetails = () => {
   const { t } = useTranslation("clients");
   const adminClient = useAdminClient();
   const { addAlert } = useAlerts();
@@ -376,3 +376,5 @@ export const ClientDetails = () => {
     </>
   );
 };
+
+export default ClientDetails;

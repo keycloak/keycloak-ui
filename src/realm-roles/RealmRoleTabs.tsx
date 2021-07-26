@@ -42,7 +42,7 @@ type myRealmRepresentation = RealmRepresentation & {
   };
 };
 
-export const RealmRoleTabs = () => {
+const RealmRoleTabs = () => {
   const { t } = useTranslation("roles");
   const form = useForm<RoleFormType>({ mode: "onChange" });
   const history = useHistory();
@@ -397,3 +397,5 @@ export const RealmRoleTabs = () => {
     </>
   );
 };
+
+export default RealmRoleTabs;

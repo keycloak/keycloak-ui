@@ -79,7 +79,7 @@ const KerberosSettingsHeader = ({
   );
 };
 
-export const UserFederationKerberosSettings = () => {
+const UserFederationKerberosSettings = () => {
   const { t } = useTranslation("user-federation");
   const form = useForm<ComponentRepresentation>({ mode: "onChange" });
   const history = useHistory();
@@ -198,3 +198,5 @@ export const UserFederationKerberosSettings = () => {
     </>
   );
 };
+
+export default UserFederationKerberosSettings;

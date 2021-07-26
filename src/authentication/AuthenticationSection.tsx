@@ -42,7 +42,7 @@ const realmFlows = [
   "dockerAuthenticationFlow",
 ];
 
-export const AuthenticationSection = () => {
+const AuthenticationSection = () => {
   const { t } = useTranslation("authentication");
   const adminClient = useAdminClient();
   const { realm } = useRealm();
@@ -253,3 +253,5 @@ export const AuthenticationSection = () => {
     </>
   );
 };
+
+export default AuthenticationSection;

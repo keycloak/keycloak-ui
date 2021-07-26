@@ -20,7 +20,7 @@ import { useAdminClient } from "../../context/auth/AdminClient";
 import { useRealm } from "../../context/realm-context/RealmContext";
 import { useWhoAmI } from "../../context/whoami/WhoAmI";
 
-export const NewRealmForm = () => {
+const NewRealmForm = () => {
   const { t } = useTranslation("realm");
   const history = useHistory();
   const { refresh } = useWhoAmI();
@@ -118,3 +118,5 @@ export const NewRealmForm = () => {
     </>
   );
 };
+
+export default NewRealmForm;

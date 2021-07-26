@@ -387,7 +387,7 @@ export const RSAGeneratedForm = ({
   );
 };
 
-export const RSAGeneratedSettings = () => {
+const RSAGeneratedSettings = () => {
   const { t } = useTranslation("realm-settings");
   const providerId = useRouteMatch<MatchParams>(
     "/:realm/realm-settings/keys/:id?/:providerType?/settings"
@@ -401,3 +401,5 @@ export const RSAGeneratedSettings = () => {
     </>
   );
 };
+
+export default RSAGeneratedSettings;

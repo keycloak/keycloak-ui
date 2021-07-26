@@ -413,7 +413,7 @@ export const RSAForm = ({
   );
 };
 
-export const RSASettings = () => {
+const RSASettings = () => {
   const { t } = useTranslation("realm-settings");
   const providerId = useRouteMatch<MatchParams>(
     "/:realm/realm-settings/keys/:id?/:providerType?/settings"
@@ -427,3 +427,5 @@ export const RSASettings = () => {
     </>
   );
 };
+
+export default RSASettings;

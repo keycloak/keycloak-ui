@@ -455,7 +455,7 @@ export const JavaKeystoreForm = ({
   );
 };
 
-export const JavaKeystoreSettings = () => {
+const JavaKeystoreSettings = () => {
   const { t } = useTranslation("realm-settings");
   const providerId = useRouteMatch<MatchParams>(
     "/:realm/realm-settings/keys/:id?/:providerType?/settings"
@@ -469,3 +469,5 @@ export const JavaKeystoreSettings = () => {
     </>
   );
 };
+
+export default JavaKeystoreSettings;

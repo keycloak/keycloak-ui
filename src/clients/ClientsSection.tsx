@@ -27,7 +27,7 @@ import { toAddClient } from "./routes/AddClient";
 import { toClient } from "./routes/Client";
 import { toImportClient } from "./routes/ImportClient";
 
-export const ClientsSection = () => {
+const ClientsSection = () => {
   const { t } = useTranslation("clients");
   const { addAlert } = useAlerts();
 
@@ -198,3 +198,5 @@ export const ClientsSection = () => {
     </>
   );
 };
+
+export default ClientsSection;

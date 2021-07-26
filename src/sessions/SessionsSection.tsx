@@ -28,7 +28,7 @@ const Clients = (row: UserSessionRepresentation) => {
   );
 };
 
-export const SessionsSection = () => {
+const SessionsSection = () => {
   const { t } = useTranslation("sessions");
   const adminClient = useAdminClient();
   const [filterDropdownOpen, setFilterDropdownOpen] = useState(false);
@@ -141,3 +141,5 @@ export const SessionsSection = () => {
     </>
   );
 };
+
+export default SessionsSection;

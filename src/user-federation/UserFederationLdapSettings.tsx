@@ -172,7 +172,7 @@ const LdapSettingsHeader = ({
   );
 };
 
-export const UserFederationLdapSettings = () => {
+const UserFederationLdapSettings = () => {
   const { t } = useTranslation("user-federation");
   const form = useForm<ComponentRepresentation>({ mode: "onChange" });
   const history = useHistory();
@@ -375,3 +375,5 @@ export const UserFederationLdapSettings = () => {
     </>
   );
 };
+
+export default UserFederationLdapSettings;

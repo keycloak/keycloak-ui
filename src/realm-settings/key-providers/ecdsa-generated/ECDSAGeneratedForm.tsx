@@ -335,7 +335,7 @@ export const ECDSAGeneratedForm = ({
   );
 };
 
-export const ECDSAGeneratedSettings = () => {
+const ECDSAGeneratedSettings = () => {
   const { t } = useTranslation("realm-settings");
   const providerId = useRouteMatch<MatchParams>(
     "/:realm/realm-settings/keys/:id?/:providerType?/settings"
@@ -349,3 +349,5 @@ export const ECDSAGeneratedSettings = () => {
     </>
   );
 };
+
+export default ECDSAGeneratedSettings;

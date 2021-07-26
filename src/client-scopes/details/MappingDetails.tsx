@@ -38,7 +38,7 @@ type Params = {
   mapperId: string;
 };
 
-export const MappingDetails = () => {
+const MappingDetails = () => {
   const { t } = useTranslation("client-scopes");
   const adminClient = useAdminClient();
   const { addAlert } = useAlerts();
@@ -369,3 +369,5 @@ export const MappingDetails = () => {
     </>
   );
 };
+
+export default MappingDetails;

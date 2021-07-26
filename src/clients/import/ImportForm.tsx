@@ -23,7 +23,7 @@ import { ClientDescription } from "../ClientDescription";
 import { toClient } from "../routes/Client";
 import { toClients } from "../routes/Clients";
 
-export const ImportForm = () => {
+const ImportForm = () => {
   const { t } = useTranslation("clients");
   const history = useHistory();
   const adminClient = useAdminClient();
@@ -105,3 +105,5 @@ export const ImportForm = () => {
     </>
   );
 };
+
+export default ImportForm;

@@ -42,7 +42,7 @@ export const IdentityProviderCrumb = ({ match, location }: BreadcrumbData) => {
   );
 };
 
-export const AddIdentityProvider = () => {
+const AddIdentityProvider = () => {
   const { t } = useTranslation("identity-providers");
   const { id } = useParams<{ id: string }>();
   const form = useForm<IdentityProviderRepresentation>();
@@ -111,3 +111,5 @@ export const AddIdentityProvider = () => {
     </>
   );
 };
+
+export default AddIdentityProvider;

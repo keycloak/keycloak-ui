@@ -23,7 +23,7 @@ type DiscoveryIdentity = IdentityProviderRepresentation & {
   discoveryEndpoint?: string;
 };
 
-export const AddOpenIdConnect = () => {
+const AddOpenIdConnect = () => {
   const { t } = useTranslation("identity-providers");
   const history = useHistory();
   const { url } = useRouteMatch();
@@ -101,3 +101,5 @@ export const AddOpenIdConnect = () => {
     </>
   );
 };
+
+export default AddOpenIdConnect;

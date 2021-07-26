@@ -386,7 +386,7 @@ export const HMACGeneratedForm = ({
   );
 };
 
-export const HMACGeneratedSettings = () => {
+const HMACGeneratedSettings = () => {
   const { t } = useTranslation("realm-settings");
   const providerId = useRouteMatch<MatchParams>(
     "/:realm/realm-settings/keys/:id?/:providerType?/settings"
@@ -400,3 +400,5 @@ export const HMACGeneratedSettings = () => {
     </>
   );
 };
+
+export default HMACGeneratedSettings;

@@ -32,7 +32,7 @@ import {
 } from "../../components/client-scope/ClientScopeTypes";
 import { useRealm } from "../../context/realm-context/RealmContext";
 
-export const ClientScopeForm = () => {
+const ClientScopeForm = () => {
   const { t } = useTranslation("client-scopes");
   const [clientScope, setClientScope] =
     useState<ClientScopeDefaultOptionalType>();
@@ -257,3 +257,5 @@ export const ClientScopeForm = () => {
     </>
   );
 };
+
+export default ClientScopeForm;

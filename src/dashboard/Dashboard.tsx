@@ -169,7 +169,7 @@ const Dashboard = () => {
   );
 };
 
-export const DashboardSection = () => {
+const DashboardSection = () => {
   const { realm } = useRealm();
   const isMasterRealm = realm === "master";
   return (
@@ -179,3 +179,5 @@ export const DashboardSection = () => {
     </>
   );
 };
+
+export default DashboardSection;

@@ -78,7 +78,7 @@ const Header = ({ onChange, value, save, toggleDeleteDialog }: HeaderProps) => {
   );
 };
 
-export const DetailSettings = () => {
+const DetailSettings = () => {
   const { t } = useTranslation("identity-providers");
   const { id } = useParams<{ id: string }>();
 
@@ -217,3 +217,5 @@ export const DetailSettings = () => {
     </>
   );
 };
+
+export default DetailSettings;

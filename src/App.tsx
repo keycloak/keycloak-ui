@@ -1,5 +1,5 @@
-import React, { ReactNode, useEffect } from "react";
-import { Page } from "@patternfly/react-core";
+import React, { ReactNode, useEffect, Suspense } from "react";
+import { Page, Spinner } from "@patternfly/react-core";
 import {
   HashRouter as Router,
   Route,
@@ -58,6 +58,12 @@ const SecuredRoute = ({ route }: SecuredRouteProps) => {
   return <ForbiddenSection />;
 };
 
+const Loading = () => (
+  <div className="pf-u-text-align-center">
+    <Spinner />
+  </div>
+);
+
 export const App = () => {
   return (
     <AppContexts>
@@ -74,18 +80,20 @@ export const App = () => {
             onReset={() => window.location.reload()}
           >
             <Switch>
-              {routes.map((route, i) => (
-                <Route
-                  exact={route.matchOptions?.exact ?? true}
-                  key={i}
-                  path={route.path}
-                  component={() => (
-                    <RealmPathSelector>
-                      <SecuredRoute route={route} />
-                    </RealmPathSelector>
-                  )}
-                />
-              ))}
+              <Suspense fallback={<Loading />}>
+                {routes.map((route, i) => (
+                  <Route
+                    exact={route.matchOptions?.exact ?? true}
+                    key={i}
+                    path={route.path}
+                    component={() => (
+                      <RealmPathSelector>
+                        <SecuredRoute route={route} />
+                      </RealmPathSelector>
+                    )}
+                  />
+                ))}
+              </Suspense>
             </Switch>
           </ErrorBoundary>
         </Page>

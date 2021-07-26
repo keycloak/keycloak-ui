@@ -28,7 +28,7 @@ type SearchGroup = GroupRepresentation & {
   link?: string;
 };
 
-export const SearchGroups = () => {
+const SearchGroups = () => {
   const { t } = useTranslation("groups");
   const adminClient = useAdminClient();
   const { realm } = useRealm();
@@ -173,3 +173,5 @@ export const SearchGroups = () => {
     </>
   );
 };
+
+export default SearchGroups;
