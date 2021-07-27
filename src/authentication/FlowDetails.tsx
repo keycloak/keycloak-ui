@@ -126,7 +126,7 @@ export const FlowDetails = () => {
   return (
     <>
       <ViewHeader
-        titleKey={toUpperCase(flow?.alias! || "")}
+        titleKey={toUpperCase(flow?.alias!)}
         badges={[
           { text: <Label>{t(usedBy)}</Label> },
           builtIn
