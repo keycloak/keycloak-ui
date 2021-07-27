@@ -37,6 +37,7 @@ import { PartialImportDialog } from "./PartialImport";
 import { SecurityDefences } from "./security-defences/SecurityDefences";
 import { RealmSettingsSessionsTab } from "./SessionsTab";
 import { RealmSettingsThemesTab } from "./ThemesTab";
+import { RealmSettingsTokensTab } from "./TokensTab";
 
 type RealmSettingsHeaderProps = {
   onChange: (value: boolean) => void;
@@ -340,6 +341,15 @@ export const RealmSettingsSection = () => {
               }
             >
               <RealmSettingsSessionsTab key={key} realm={realm} />
+            </Tab>
+            <Tab
+              id="tokens"
+              eventKey="tokens"
+              data-testid="rs-tokens-tab"
+              aria-label="tokens-tab"
+              title={<TabTitleText>{t("realm-settings:tokens")}</TabTitleText>}
+            >
+              <RealmSettingsTokensTab key={key} realm={realm} />
             </Tab>
           </KeycloakTabs>
         </FormProvider>
