@@ -145,84 +145,84 @@ export const FlowDetails = () => {
       />
       <PageSection variant="light">
         {executionList?.expandableList?.length && (
-            <Toolbar id="toolbar">
-              <ToolbarContent>
-                <ToggleGroup>
-                  <ToggleGroupItem
-                    icon={<TableIcon />}
-                    aria-label="copy icon button"
-                    buttonId="third"
-                    isSelected={tableView}
-                    onChange={() => setTableView(true)}
-                  />
-                  <ToggleGroupItem
-                    icon={<i className="fas fa-project-diagram"></i>}
-                    aria-label="undo icon button"
-                    buttonId="fourth"
-                    isSelected={!tableView}
-                    onChange={() => setTableView(false)}
-                  />
-                </ToggleGroup>
-              </ToolbarContent>
-            </Toolbar>
-          )}
+          <Toolbar id="toolbar">
+            <ToolbarContent>
+              <ToggleGroup>
+                <ToggleGroupItem
+                  icon={<TableIcon />}
+                  aria-label={t("tableView")}
+                  buttonId="tableView"
+                  isSelected={tableView}
+                  onChange={() => setTableView(true)}
+                />
+                <ToggleGroupItem
+                  icon={<i className="fas fa-project-diagram"></i>}
+                  aria-label={t("diagramView")}
+                  buttonId="diagramView"
+                  isSelected={!tableView}
+                  onChange={() => setTableView(false)}
+                />
+              </ToggleGroup>
+            </ToolbarContent>
+          </Toolbar>
+        )}
         {tableView && executionList?.expandableList?.length && (
-            <>
-              <DataList
-                aria-label="flows"
-                onDragFinish={(order) => {
-                  const withoutHeaderId = order.slice(1);
-                  setLiveText(
-                    t("common:onDragFinish", { list: dragged?.displayName })
-                  );
-                  const change = executionList.getChange(
-                    dragged!,
-                    withoutHeaderId
-                  );
-                  executeChange(dragged!, change);
-                }}
-                onDragStart={(id) => {
-                  const item = executionList.findExecution(id)!;
-                  setLiveText(
-                    t("common:onDragStart", { item: item.displayName })
-                  );
-                  setDragged(item);
-                  if (item.executionList && !item.isCollapsed) {
-                    item.isCollapsed = true;
-                    setExecutionList(executionList.clone());
-                  }
-                }}
-                onDragMove={() =>
-                  setLiveText(
-                    t("common:onDragMove", { item: dragged?.displayName })
-                  )
+          <>
+            <DataList
+              aria-label="flows"
+              onDragFinish={(order) => {
+                const withoutHeaderId = order.slice(1);
+                setLiveText(
+                  t("common:onDragFinish", { list: dragged?.displayName })
+                );
+                const change = executionList.getChange(
+                  dragged!,
+                  withoutHeaderId
+                );
+                executeChange(dragged!, change);
+              }}
+              onDragStart={(id) => {
+                const item = executionList.findExecution(id)!;
+                setLiveText(
+                  t("common:onDragStart", { item: item.displayName })
+                );
+                setDragged(item);
+                if (item.executionList && !item.isCollapsed) {
+                  item.isCollapsed = true;
+                  setExecutionList(executionList.clone());
                 }
-                onDragCancel={() => setLiveText(t("common:onDragCancel"))}
-                itemOrder={[
-                  "header",
-                  ...executionList.order().map((ex) => ex.id!),
-                ]}
-              >
-                <FlowHeader />
-                <>
-                  {executionList.expandableList.map((execution) => (
-                    <FlowRow
-                      key={execution.id}
-                      execution={execution}
-                      onRowClick={(execution) => {
-                        execution.isCollapsed = !execution.isCollapsed;
-                        setExecutionList(executionList.clone());
-                      }}
-                      onRowChange={update}
-                    />
-                  ))}
-                </>
-              </DataList>
-              <div className="pf-screen-reader" aria-live="assertive">
-                {liveText}
-              </div>
-            </>
-          )}
+              }}
+              onDragMove={() =>
+                setLiveText(
+                  t("common:onDragMove", { item: dragged?.displayName })
+                )
+              }
+              onDragCancel={() => setLiveText(t("common:onDragCancel"))}
+              itemOrder={[
+                "header",
+                ...executionList.order().map((ex) => ex.id!),
+              ]}
+            >
+              <FlowHeader />
+              <>
+                {executionList.expandableList.map((execution) => (
+                  <FlowRow
+                    key={execution.id}
+                    execution={execution}
+                    onRowClick={(execution) => {
+                      execution.isCollapsed = !execution.isCollapsed;
+                      setExecutionList(executionList.clone());
+                    }}
+                    onRowChange={update}
+                  />
+                ))}
+              </>
+            </DataList>
+            <div className="pf-screen-reader" aria-live="assertive">
+              {liveText}
+            </div>
+          </>
+        )}
         {!tableView && executionList?.expandableList && (
           <FlowDiagram executionList={executionList} />
         )}

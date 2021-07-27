@@ -32,6 +32,8 @@ export default {
     flowCreatedSuccess: "Flow created",
     flowCreateError: "Could not create flow: {{error}}",
     flowDetails: "Flow details",
+    tableView: "Table view",
+    diagramView: "Diagram view",
     emptyExecution: "No steps",
     emptyExecutionInstructions:
       "You can start defining this flow by adding a sub-flow or an execution",
