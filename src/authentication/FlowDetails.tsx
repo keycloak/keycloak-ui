@@ -145,8 +145,7 @@ export const FlowDetails = () => {
         ]}
       />
       <PageSection variant="light">
-        {executionList?.expandableList &&
-          executionList.expandableList.length > 0 && (
+        {executionList?.expandableList?.length && (
             <Toolbar id="toolbar">
               <ToolbarContent>
                 <ToggleGroup>
