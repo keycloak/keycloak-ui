@@ -182,7 +182,7 @@ export const AuthenticationSection = () => {
           usedBy: usedBy.type || "notInUse",
           builtIn: builtIn ? "builtIn" : undefined,
         })}
-        key={`link-{id}`}
+        key={`link-${id}`}
       >
         {toUpperCase(alias!)}
       </Link>{" "}
