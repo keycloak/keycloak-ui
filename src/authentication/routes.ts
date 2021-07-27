@@ -1,14 +1,8 @@
 import type { RouteDef } from "../route-config";
-import {
-  AuthenticationRoute,
-  CreateFlowRoute,
-  FlowDetailsRoute,
-} from "./routes/Authentication";
+import { AuthenticationRoute } from "./routes/Authentication";
+import { CreateFlowRoute } from "./routes/CreateFlow";
+import { FlowRoute } from "./routes/Flow";
 
-const routes: RouteDef[] = [
-  AuthenticationRoute,
-  CreateFlowRoute,
-  FlowDetailsRoute,
-];
+const routes: RouteDef[] = [AuthenticationRoute, CreateFlowRoute, FlowRoute];
 
 export default routes;

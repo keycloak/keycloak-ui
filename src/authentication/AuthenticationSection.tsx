@@ -25,7 +25,8 @@ import { useConfirmDialog } from "../components/confirm-dialog/ConfirmDialog";
 import { useAlerts } from "../components/alert/Alerts";
 import { toUpperCase } from "../util";
 import { DuplicateFlowModal } from "./DuplicateFlowModal";
-import { toCreateFlow, toFlowDetails } from "./routes/Authentication";
+import { toCreateFlow } from "./routes/CreateFlow";
+import { toFlow } from "./routes/Flow";
 
 import "./authentication-section.css";
 
@@ -175,7 +176,7 @@ export const AuthenticationSection = () => {
   }: AuthenticationType) => (
     <>
       <Link
-        to={toFlowDetails({
+        to={toFlow({
           realm,
           id: id!,
           usedBy: usedBy.type || "notInUse",
