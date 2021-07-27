@@ -78,8 +78,7 @@ export const FlowDetails = () => {
           });
         id = result.id!;
       }
-      const c = change as IndexChange;
-      const times = c.newIndex - c.oldIndex;
+      const times = change.newIndex - change.oldIndex;
       for (let index = 0; index < Math.abs(times); index++) {
         if (times > 0) {
           await adminClient.authenticationManagement.lowerPriorityExecution({
