@@ -167,9 +167,7 @@ export const FlowDetails = () => {
               </ToolbarContent>
             </Toolbar>
           )}
-        {tableView &&
-          executionList?.expandableList &&
-          executionList.expandableList.length > 0 && (
+        {tableView && executionList?.expandableList?.length && (
             <>
               <DataList
                 aria-label="flows"
