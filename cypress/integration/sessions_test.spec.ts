@@ -55,7 +55,7 @@ describe("Sessions test", function () {
       sessionsPage.clearNotBefore();
     });
 
-    it("Check if notBefore saved", () => {
+    it("Check if notBefore cleared", () => {
       sessionsPage.checkNotBeforeCleared();
     });
 
