@@ -79,17 +79,23 @@ export const FlowDetails = () => {
         id = result.id!;
       }
       const times = change.newIndex - change.oldIndex;
+      const requests = [];
       for (let index = 0; index < Math.abs(times); index++) {
         if (times > 0) {
-          await adminClient.authenticationManagement.lowerPriorityExecution({
-            id,
-          });
+          requests.push(
+            adminClient.authenticationManagement.lowerPriorityExecution({
+              id,
+            })
+          );
         } else {
-          await adminClient.authenticationManagement.raisePriorityExecution({
-            id,
-          });
+          requests.push(
+            adminClient.authenticationManagement.raisePriorityExecution({
+              id,
+            })
+          );
         }
       }
+      await Promise.all(requests);
       refresh();
       addAlert(t("updateFlowSuccess"), AlertVariant.success);
     } catch (error) {
@@ -125,7 +131,7 @@ export const FlowDetails = () => {
   return (
     <>
       <ViewHeader
-        titleKey={toUpperCase(flow?.alias!)}
+        titleKey={toUpperCase(flow?.alias || "")}
         badges={[
           { text: <Label>{t(usedBy)}</Label> },
           builtIn
