@@ -22,6 +22,7 @@ export default {
     notBeforeError: 'Error clearing "Not Before" for realm: {{error}}',
     notBeforeClearedSuccess: 'Success! "Not Before" cleared for realm.',
     signOutAllActiveSessions: "Sign out all active sessions",
+    signOutAllActiveSessionsQuestion: "Sign out all active sessions?",
     setToNow: "Set to now",
     logoutAllDescription:
       "If you sign out all active sessions, active subjects in this realm will be signed out.",

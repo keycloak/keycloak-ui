@@ -213,7 +213,7 @@ export const RevocationModal = ({
             isReadOnly
             value={
               realm?.notBefore === 0
-                ? (t("None") as string)
+                ? (t("none") as string)
                 : new Date(realm?.notBefore! * 1000).toString()
             }
             type="text"

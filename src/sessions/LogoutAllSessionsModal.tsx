@@ -38,7 +38,7 @@ export const LogoutAllSessionsModal = ({
   return (
     <Modal
       variant={ModalVariant.small}
-      title={t("signOutAllActiveSessions") + "?"}
+      title={t("signOutAllActiveSessionsQuestion")}
       isOpen={true}
       onClose={handleModalToggle}
       actions={[
