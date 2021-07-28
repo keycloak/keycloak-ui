@@ -30,7 +30,7 @@ export const FlowRequirementDropdown = ({
           variant={SelectVariant.single}
           onToggle={() => setOpen(!open)}
           onSelect={(_event, value) => {
-            flow.requirement = value as string;
+            flow.requirement = value.toString();
             onChange(flow);
             setOpen(false);
           }}
