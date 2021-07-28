@@ -47,6 +47,7 @@ export const SessionsSection = () => {
     t("sessionsType.allSessions").toString()
   );
   const [key, setKey] = useState(0);
+  const [noSessions, setNoSessions] = useState(false);
 
   const refresh = () => {
     setKey(new Date().getTime());
@@ -69,6 +70,8 @@ export const SessionsSection = () => {
         )
       )
     ).flat();
+
+    setNoSessions(clientSessions.length === 0);
 
     const allClients = await adminClient.clients.find();
 
@@ -113,7 +116,7 @@ export const SessionsSection = () => {
     <>
       <ViewHeader
         dropdownItems={dropdownItems}
-        dropdownIsDisabled
+        dropdownIsDisabled={noSessions}
         titleKey="sessions:title"
         subKey="sessions:sessionExplain"
       />
