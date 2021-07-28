@@ -31,8 +31,7 @@ export const FlowRow = ({
   onRowChange,
 }: FlowRowProps) => {
   const { t } = useTranslation("authentication");
-  const hasSubList =
-    execution.executionList && execution.executionList.length > 0;
+  const hasSubList = !!execution.executionList?.length;
   return (
     <>
       <DataListItem
@@ -41,8 +40,6 @@ export const FlowRow = ({
         isExpanded={!execution.isCollapsed}
       >
         <DataListItemRow
-          key={execution.id}
-          id={execution.id}
           className="keycloak__authentication__flow-row"
           aria-level={execution.level}
         >

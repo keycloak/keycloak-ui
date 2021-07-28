@@ -73,10 +73,16 @@ export const DuplicateFlowModal = ({
       onClose={toggleDialog}
       variant={ModalVariant.small}
       actions={[
-        <Button id="modal-confirm" key="confirm" onClick={save}>
+        <Button
+          id="modal-confirm"
+          key="confirm"
+          onClick={save}
+          data-testid="confirm"
+        >
           {t("duplicate")}
         </Button>,
         <Button
+          data-testid="cancel"
           id="modal-cancel"
           key="cancel"
           variant={ButtonVariant.link}

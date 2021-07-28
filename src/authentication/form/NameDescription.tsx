@@ -36,6 +36,7 @@ export const NameDescription = () => {
           type="text"
           id="kc-name"
           name="alias"
+          data-testid="alias"
           ref={register({ required: true })}
           validated={
             errors.alias ? ValidatedOptions.error : ValidatedOptions.default
@@ -67,6 +68,7 @@ export const NameDescription = () => {
           type="text"
           id="kc-description"
           name="description"
+          data-testid="description"
           validated={
             errors.description
               ? ValidatedOptions.error
