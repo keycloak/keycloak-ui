@@ -14,11 +14,12 @@ import type UserSessionRepresentation from "keycloak-admin/lib/defs/userSessionR
 import { ViewHeader } from "../components/view-header/ViewHeader";
 import { KeycloakDataTable } from "../components/table-toolbar/KeycloakDataTable";
 import { useAdminClient } from "../context/auth/AdminClient";
-import { FilterIcon } from "@patternfly/react-icons";
+import { CubesIcon, FilterIcon } from "@patternfly/react-icons";
 import "./SessionsSection.css";
 import { RevocationModal } from "./RevocationModal";
 import type ClientRepresentation from "keycloak-admin/lib/defs/clientRepresentation";
 import { LogoutAllSessionsModal } from "./LogoutAllSessionsModal";
+import { ListEmptyState } from "../components/list-empty-state/ListEmptyState";
 
 const Clients = (row: UserSessionRepresentation) => {
   return (
@@ -112,6 +113,7 @@ export const SessionsSection = () => {
     <>
       <ViewHeader
         dropdownItems={dropdownItems}
+        dropdownIsDisabled
         titleKey="sessions:title"
         subKey="sessions:sessionExplain"
       />
@@ -135,6 +137,14 @@ export const SessionsSection = () => {
           loader={loader}
           ariaLabelKey="session:title"
           searchPlaceholderKey="sessions:searchForSession"
+          emptyState={
+            <ListEmptyState
+              hasIcon
+              icon={CubesIcon}
+              message={t("noSessions")}
+              instructions={t("noSessionsDescription")}
+            />
+          }
           searchTypeComponent={
             <Select
               data-testid="filter-session-type-select"

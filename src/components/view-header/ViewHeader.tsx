@@ -28,6 +28,7 @@ export type ViewHeaderProps = {
   badge?: string;
   badgeId?: string;
   badgeIsRead?: boolean;
+  dropdownIsDisabled?: boolean;
   subKey?: string | ReactNode;
   actionsDropdownId?: string;
   subKeyLinkProps?: FormattedLinkProps;
@@ -45,6 +46,7 @@ export const ViewHeader = ({
   titleKey,
   badge,
   badgeIsRead,
+  dropdownIsDisabled,
   subKey,
   subKeyLinkProps,
   dropdownItems,
@@ -124,6 +126,7 @@ export const ViewHeader = ({
                       position={DropdownPosition.right}
                       toggle={
                         <DropdownToggle
+                          isDisabled={dropdownIsDisabled}
                           id={actionsDropdownId}
                           onToggle={onDropdownToggle}
                         >

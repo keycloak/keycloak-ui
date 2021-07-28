@@ -31,5 +31,7 @@ export default {
     clear: "Clear",
     push: "Push",
     none: "None",
+    noSessions: "No sessions",
+    noSessionsDescription: "There are currently no sessions in this realm.",
   },
 };
