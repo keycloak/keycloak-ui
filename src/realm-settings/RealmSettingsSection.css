@@ -125,7 +125,9 @@ div#offline-session-max-label > .pf-c-form__group-label {
 .kc-access-token-lifespan-implicit-input,
 .kc-client-login-timeout-input,
 .kc-idp-email-verification-input,
-.kc-idp-forgot-password-input {
+.kc-idp-forgot-password-input,
+.kc-forgot-pw-input,
+.kc-execute-actions-input {
   width: 170px;
   margin-right: 12px;
 }

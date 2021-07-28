@@ -331,7 +331,7 @@ export const RealmSettingsSessionsTab = ({
                     label={t("common:enabled")}
                     labelOff={t("common:disabled")}
                     isChecked={value}
-                    onChange={onChange}
+                    onChange={(value) => onChange(value.toString())}
                   />
                 )}
               />
