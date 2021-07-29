@@ -24,7 +24,7 @@ export const FlowRequirementDropdown = ({
 
   return (
     <>
-      {flow.requirementChoices && flow.requirementChoices?.length > 1 && (
+      {flow.requirementChoices && flow.requirementChoices.length > 1 && (
         <Select
           className="keycloak__authentication__requirement-dropdown"
           variant={SelectVariant.single}

@@ -45,7 +45,6 @@ export const FlowRow = ({
         >
           <DataListControl>
             <DataListDragButton
-              aria-label={t("common:reorder")}
               aria-labelledby={execution.displayName}
               aria-describedby={t("common-help:dragHelp")}
             />

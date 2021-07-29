@@ -13,13 +13,13 @@ import "./flow-header.css";
 export const FlowHeader = () => {
   const { t } = useTranslation("authentication");
   return (
-    <DataListItem aria-labelledby="header" id="header">
+    <DataListItem aria-labelledby="headerName" id="header">
       <DataListItemRow>
         <DataListDragButton className="keycloak__authentication__header-drag-button" />
         <DataListItemCells
           className="keycloak__authentication__header"
           dataListCells={[
-            <DataListCell key="step">
+            <DataListCell key="step" id="headerName">
               <>{t("steps")}</>
             </DataListCell>,
             <DataListCell key="requirement">
