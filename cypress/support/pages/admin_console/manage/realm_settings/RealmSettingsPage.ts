@@ -87,6 +87,18 @@ export default class RealmSettingsPage {
   offlineSessionMaxSwitch = "offline-session-max-switch";
   loginTimeoutInput = "login-timeout-input";
   loginActionTimeoutInput = "login-action-timeout-input";
+  selectDefaultSignatureAlgorithm = "select-default-sig-alg";
+  revokeRefreshTokenSwitch = "revoke-refresh-token-switch";
+  accessTokenLifespanInput = "access-token-lifespan-input";
+  accessTokenLifespanImplicitInput = "access-token-lifespan-implicit-input";
+  clientLoginTimeoutInput = "client-login-timeout-input";
+  offlineSessionMaxInput = "offline-session-max-input";
+  userInitiatedActionLifespan = "user-initiated-action-lifespan";
+  defaultAdminInitatedInput = "default-admin-initated-input";
+  emailVerificationInput = "email-verification-input";
+  idpEmailVerificationInput = "idp-email-verification-input";
+  forgotPasswordInput = "forgot-pw-input";
+  executeActionsInput = "execute-actions-input";
 
   selectLoginThemeType(themeType: string) {
     cy.get(this.selectLoginTheme).click();
@@ -259,6 +271,62 @@ export default class RealmSettingsPage {
   }
 
   populateSessionsPage() {
+    cy.getId(this.ssoSessionIdleInput).clear().type("1");
+    this.changeTimeUnit(
+      "Minutes",
+      this.ssoSessionIdleSelectMenu,
+      this.ssoSessionIdleSelectMenuList
+    );
+    cy.getId(this.ssoSessionMaxInput).clear().type("2");
+    this.changeTimeUnit(
+      "Hours",
+      this.ssoSessionMaxSelectMenu,
+      this.ssoSessionMaxSelectMenuList
+    );
+    cy.getId(this.ssoSessionIdleRememberMeInput).clear().type("3");
+    this.changeTimeUnit(
+      "Days",
+      this.ssoSessionIdleRememberMeSelectMenu,
+      this.ssoSessionIdleRememberMeSelectMenuList
+    );
+    cy.getId(this.ssoSessionMaxRememberMeInput).clear().type("4");
+    this.changeTimeUnit(
+      "Minutes",
+      this.ssoSessionMaxRememberMeSelectMenu,
+      this.ssoSessionMaxRememberMeSelectMenuList
+    );
+
+    cy.getId(this.clientSessionIdleInput).clear().type("5");
+    this.changeTimeUnit(
+      "Hours",
+      this.clientSessionIdleSelectMenu,
+      this.clientSessionIdleSelectMenuList
+    );
+    cy.getId(this.clientSessionMaxInput).clear().type("6");
+    this.changeTimeUnit(
+      "Days",
+      this.clientSessionMaxSelectMenu,
+      this.clientSessionMaxSelectMenuList
+    );
+
+    cy.getId(this.offlineSessionIdleInput).clear().type("7");
+    this.toggleSwitch(this.offlineSessionMaxSwitch);
+
+    cy.getId(this.loginTimeoutInput).clear().type("9");
+    this.changeTimeUnit(
+      "Minutes",
+      this.loginTimeoutSelectMenu,
+      this.loginTimeoutSelectMenuList
+    );
+    cy.getId(this.loginActionTimeoutInput).clear().type("10");
+    this.changeTimeUnit(
+      "Days",
+      this.loginActionTimeoutSelectMenu,
+      this.loginActionTimeoutSelectMenuList
+    );
+  }
+
+  populateTokensPage() {
     cy.getId(this.ssoSessionIdleInput).clear().type("1");
     this.changeTimeUnit(
       "Minutes",

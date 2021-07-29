@@ -33,11 +33,13 @@ import { forHumans } from "../util";
 type RealmSettingsSessionsTabProps = {
   realm?: RealmRepresentation;
   user?: UserRepresentation;
+  // save: any;
 };
 
 export const RealmSettingsTokensTab = ({
   realm: initialRealm,
-}: RealmSettingsSessionsTabProps) => {
+}: // save,
+RealmSettingsSessionsTabProps) => {
   const { t } = useTranslation("realm-settings");
   const adminClient = useAdminClient();
   const { realm: realmName } = useRealm();
@@ -79,8 +81,14 @@ export const RealmSettingsTokensTab = ({
 
   const save = async (form: RealmRepresentation) => {
     try {
-      console.log(form);
-      const savedRealm = { ...realm, ...form };
+      const savedRealm = {
+        ...realm,
+        attributes: {
+          ...realm?.attributes,
+          ...form?.attributes,
+        },
+      };
+
       await adminClient.realms.update({ realm: realmName }, savedRealm);
       setRealm(savedRealm);
       addAlert(t("saveSuccess"), AlertVariant.success);
@@ -263,7 +271,7 @@ export const RealmSettingsTokensTab = ({
                         : "default"
                     }
                     className="kc-access-token-lifespan"
-                    data-testid="access-token-lifespan"
+                    data-testid="access-token-lifespan-input"
                     aria-label="access-token-lifespan"
                     value={value}
                     onChange={onChange}
@@ -292,7 +300,7 @@ export const RealmSettingsTokensTab = ({
                 render={({ onChange, value }) => (
                   <TimeSelector
                     className="kc-access-token-lifespan-implicit"
-                    data-testid="access-token-lifespan-implicit"
+                    data-testid="access-token-lifespan-implicit-input"
                     aria-label="access-token-lifespan-implicit"
                     value={value}
                     onChange={onChange}
@@ -320,7 +328,7 @@ export const RealmSettingsTokensTab = ({
                 render={({ onChange, value }) => (
                   <TimeSelector
                     className="kc-client-login-timeout"
-                    data-testid="client-login-timeout"
+                    data-testid="client-login-timeout-input"
                     aria-label="client-login-timeout"
                     value={value}
                     onChange={onChange}
@@ -392,9 +400,9 @@ export const RealmSettingsTokensTab = ({
                 control={control}
                 render={({ onChange, value }) => (
                   <TimeSelector
-                    className="kc-login-timeout"
-                    data-testid="login-timeout-input"
-                    aria-label="login-timeout-input"
+                    className="kc-user-initiated-action-lifespan"
+                    data-testid="user-initiated-action-lifespan"
+                    aria-label="user-initiated-action-lifespan"
                     value={value}
                     onChange={onChange}
                     units={["minutes", "hours", "days"]}
@@ -405,7 +413,7 @@ export const RealmSettingsTokensTab = ({
             <FormGroup
               label={t("defaultAdminInitiated")}
               fieldId="defaultAdminInitiated"
-              id="login-action-timeout-label"
+              id="default-admin-initiated-label"
               labelIcon={
                 <HelpItem
                   helpText="realm-settings-help:defaultAdminInitiated"
@@ -421,9 +429,9 @@ export const RealmSettingsTokensTab = ({
                 control={control}
                 render={({ onChange, value }) => (
                   <TimeSelector
-                    className="kc-login-action-timeout"
-                    data-testid="login-action-timeout-input"
-                    aria-label="login-action-timeout-input"
+                    className="kc-default-admin-initiated"
+                    data-testid="default-admin-initated-input"
+                    aria-label="default-admin-initated-input"
                     value={value}
                     onChange={onChange}
                     units={["minutes", "hours", "days"]}
@@ -439,51 +447,44 @@ export const RealmSettingsTokensTab = ({
             </Text>
             <FormGroup
               label={t("emailVerification")}
-              fieldId="loginActionTimeout"
-              id="login-action-timeout-label"
+              fieldId="emailVerification"
+              id="email-verification"
             >
               <Controller
-                name="attributes.actionTokenGeneratedByUserLifespan.verify-email"
-                defaultValue={
-                  realm?.attributes?.actionTokenGeneratedByUserLifespan?.[
-                    "verify-email"
-                  ]
-                }
+                name="'attributes.actionTokenGeneratedByUserLifespan.verify-email'"
+                defaultValue={realm?.attributes![
+                  "actionTokenGeneratedByUserLifespan.verify-email"
+                ].toString()}
                 control={control}
                 render={({ onChange, value }) => (
                   <TimeSelector
-                    className="kc-login-action-timeout"
-                    data-testid="login-action-timeout-input"
-                    aria-label="login-action-timeout-input"
+                    className="kc-email-verification-timeout"
+                    data-testid="email-verification-input"
+                    aria-label="email-verification-input"
                     value={value}
-                    onChange={onChange}
+                    onChange={(value) => onChange(value.toString())}
                     units={["minutes", "hours", "days"]}
                   />
                 )}
               />
             </FormGroup>
-            {/* <FormGroup
+            <FormGroup
               label={t("idpAccountEmailVerification")}
               fieldId="idpAccountEmailVerification"
               id="idp-acct-label"
             >
               <Controller
-                name="attributes.actionTokenGeneratedByUserLifespan.idp-verify-account-via-email"
-                defaultValue={
-                  realm?.attributes?.actionTokenGeneratedByUserLifespan?.[
-                    "idp-verify-account-via-email"
-                  ]
-                }
+                name="'attributes.actionTokenGeneratedByUserLifespan.idp-verify-account-via-email'"
+                defaultValue={realm?.attributes![
+                  "actionTokenGeneratedByUserLifespan.idp-verify-account-via-email"
+                ]?.toString()}
                 control={control}
                 render={({ onChange, value }) => (
                   <TimeSelector
                     className="kc-idp-email-verification"
                     data-testid="idp-email-verification-input"
                     aria-label="idp-email-verification"
-                    value={value?.toString()}
-                    // onChange={(value) => {
-                    //   onChange(value?.toString());
-                    // }}
+                    value={value}
                     onChange={onChange}
                     units={["minutes", "hours", "days"]}
                   />
@@ -496,24 +497,18 @@ export const RealmSettingsTokensTab = ({
               id="forgot-password-label"
             >
               <Controller
-                name="attributes.actionTokenGeneratedByUserLifespan.reset-credentials']"
-                defaultValue={
-                  realm?.attributes?.actionTokenGeneratedByUserLifespan?.[
-                    "reset-credentials"
-                  ]
-                }
+                name="'attributes.actionTokenGeneratedByUserLifespan.reset-credentials'"
+                defaultValue={realm?.attributes![
+                  "actionTokenGeneratedByUserLifespan.reset-credentials"
+                ].toString()}
                 control={control}
                 render={({ onChange, value }) => (
                   <TimeSelector
                     className="kc-forgot-pw"
                     data-testid="forgot-pw-input"
                     aria-label="forgot-pw-input"
-                    value={value / 60}
-                    // onChange={(value) => {
-                    //   onChange(value?.toString());
-                    // }}
+                    value={value}
                     onChange={onChange}
-
                     units={["minutes", "hours", "days"]}
                   />
                 )}
@@ -525,29 +520,25 @@ export const RealmSettingsTokensTab = ({
               id="execute-actions"
             >
               <Controller
-                name="attributes.actionTokenGeneratedByUserLifespan.execute-actions"
+                name="'attributes.actionTokenGeneratedByUserLifespan.execute-actions'"
                 defaultValue={
-                  realm?.attributes?.actionTokenGeneratedByUserLifespan?.[
-                    "execute-actions"
+                  realm?.attributes![
+                    "actionTokenGeneratedByUserLifespan.execute-actions"
                   ]
                 }
                 control={control}
                 render={({ onChange, value }) => (
                   <TimeSelector
                     className="kc-execute-actions"
-                    data-testid="execute-actions-time-selector"
-                    aria-label="execute-actions-time-selector"
-                    value={value / 60}
-                    // onChange={(value) => {
-                    //   onChange(value?.toString());
-                    // }}
+                    data-testid="execute-actions-input"
+                    aria-label="execute-actions-input"
+                    value={value}
                     onChange={onChange}
-
                     units={["minutes", "hours", "days"]}
                   />
                 )}
               />
-            </FormGroup> */}
+            </FormGroup>
             <ActionGroup>
               <Button
                 variant="primary"
