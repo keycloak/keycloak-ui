@@ -349,7 +349,11 @@ export const RealmSettingsSection = () => {
               aria-label="tokens-tab"
               title={<TabTitleText>{t("realm-settings:tokens")}</TabTitleText>}
             >
-              <RealmSettingsTokensTab key={key} realm={realm} />
+              <RealmSettingsTokensTab
+                key={key}
+                realm={realm}
+                reset={() => resetForm(realm!)}
+              />
             </Tab>
           </KeycloakTabs>
         </FormProvider>
