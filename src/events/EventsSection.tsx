@@ -1,13 +1,26 @@
 import {
+  ActionGroup,
   Button,
+  Chip,
+  ChipGroup,
   DescriptionList,
   DescriptionListDescription,
   DescriptionListGroup,
   DescriptionListTerm,
+  Divider,
+  Dropdown,
+  DropdownToggle,
+  Flex,
+  FlexItem,
+  Form,
+  FormGroup,
   PageSection,
+  Select,
+  SelectOption,
+  SelectVariant,
   Tab,
   TabTitleText,
-  ToolbarItem,
+  TextInput,
   Tooltip,
 } from "@patternfly/react-core";
 import { CheckCircleIcon, WarningTriangleIcon } from "@patternfly/react-icons";
@@ -21,29 +34,95 @@ import { KeycloakTabs } from "../components/keycloak-tabs/KeycloakTabs";
 import { ListEmptyState } from "../components/list-empty-state/ListEmptyState";
 import { KeycloakDataTable } from "../components/table-toolbar/KeycloakDataTable";
 import { ViewHeader } from "../components/view-header/ViewHeader";
-import { useAdminClient } from "../context/auth/AdminClient";
+import { useFetch, useAdminClient } from "../context/auth/AdminClient";
 import { useRealm } from "../context/realm-context/RealmContext";
 import { AdminEvents } from "./AdminEvents";
+import { useForm } from "react-hook-form";
+import type { RealmEventsConfigRepresentation } from "keycloak-admin/lib/defs/realmEventsConfigRepresentation";
 import "./events-section.css";
 
 export const EventsSection = () => {
   const { t } = useTranslation("events");
   const adminClient = useAdminClient();
   const { realm } = useRealm();
-
   const [key, setKey] = useState(0);
-  const refresh = () => setKey(new Date().getTime());
 
-  const loader = async (first?: number, max?: number, search?: string) => {
-    const params = {
+  const { getValues, register, reset, setValue } = useForm();
+  const [isDirty, setIsDirty] = useState(false);
+
+  const refresh = () => {
+    setKey(new Date().getTime());
+    setSearch(false);
+    setSelectedEvents([]);
+    setIsDirty(false);
+    reset();
+  };
+
+  const [searchDropdownOpen, setSearchDropdownOpen] = useState(false);
+  const [selectOpen, setSelectOpen] = useState(false);
+  const [selectedEvents, setSelectedEvents] = useState<string[]>([]);
+  const [events, setEvents] = useState<RealmEventsConfigRepresentation>();
+  const [search, setSearch] = useState(false);
+  const [chipsToDisplay, setChipsToDisplay] = useState<Record<string, any>>();
+
+  const onDropdownToggle = () => {
+    setSearchDropdownOpen(!searchDropdownOpen);
+  };
+
+  const onSelectToggle = () => {
+    setSelectOpen(!selectOpen);
+  };
+
+  useFetch(
+    () => adminClient.realms.getConfigEvents({ realm }),
+    (events) => setEvents(events),
+    []
+  );
+
+  const searchEvents = () => {
+    setSearchDropdownOpen(false);
+    setKey(new Date().getTime());
+    setSearch(true);
+  };
+
+  const formValues = getValues();
+
+  const loader = async (first?: number, max?: number) => {
+    const searchEventValuesFormatted = {
+      user: formValues["userId"],
+      type: formValues?.eventTypes,
+      client: formValues["client"],
+      dateFrom: formValues["dateFrom"],
+      dateTo: formValues["dateTo"],
+    };
+
+    const params: { [key: string]: any } = {
+      user: searchEventValuesFormatted?.user,
+      type: searchEventValuesFormatted?.type,
+      client: searchEventValuesFormatted?.client,
+      dateFrom: searchEventValuesFormatted?.dateFrom,
+      dateTo: searchEventValuesFormatted?.dateTo,
       first: first!,
       max: max!,
-      realm,
     };
-    if (search) {
-      console.log("how to search?", search);
-    }
-    return await adminClient.realms.findEvents({ ...params });
+
+    const reducedParams = Object.keys(params).reduce<Record<string, any>>(
+      (param, key) => {
+        if (!param[key] && params[key]) {
+          param[key] = params[key];
+        }
+        return param;
+      },
+      {}
+    );
+
+    const selectedChips = () => {
+      delete reducedParams?.["max"];
+      return reducedParams;
+    };
+
+    setChipsToDisplay(selectedChips);
+    return await adminClient.realms.findEvents({ realm, ...reducedParams });
   };
 
   const StatusRow = (event: EventRepresentation) => (
@@ -88,8 +167,8 @@ export const EventsSection = () => {
   const DetailCell = (event: EventRepresentation) => (
     <>
       <DescriptionList isHorizontal className="keycloak_eventsection_details">
-        {Object.keys(event.details!).map((k) => (
-          <DescriptionListGroup key={`detail-${event.time}-${event.type}`}>
+        {Object.keys(event.details!).map((k, index) => (
+          <DescriptionListGroup key={`detail-${index}`}>
             <DescriptionListTerm>{k}</DescriptionListTerm>
             <DescriptionListDescription>
               {event.details![k]}
@@ -99,6 +178,35 @@ export const EventsSection = () => {
       </DescriptionList>
     </>
   );
+
+  const clearSelection = (e: any) => {
+    e.stopPropagation();
+    setSelectedEvents([]);
+    setValue("eventTypes", []);
+  };
+
+  const deleteIndividualSelection = (e: any, chip: string) => {
+    const updatedEventSelection = selectedEvents.filter((obj) => obj !== chip);
+    setSelectedEvents(updatedEventSelection);
+    setValue("eventTypes", updatedEventSelection);
+    e.stopPropagation();
+  };
+
+  const chipGroupComponent = () => {
+    return (
+      <ChipGroup>
+        {(selectedEvents || []).map((chip, index) => (
+          <Chip
+            isReadOnly={index === 0 ? true : false}
+            key={chip}
+            onClick={(e) => deleteIndividualSelection(e, chip)}
+          >
+            {chip}
+          </Chip>
+        ))}
+      </ChipGroup>
+    );
+  };
 
   return (
     <>
@@ -122,60 +230,269 @@ export const EventsSection = () => {
             eventKey="userEvents"
             title={<TabTitleText>{t("userEvents")}</TabTitleText>}
           >
-            <KeycloakDataTable
-              key={key}
-              loader={loader}
-              detailColumns={[
-                {
-                  name: "details",
-                  enabled: (event) => event.details !== undefined,
-                  cellRenderer: DetailCell,
-                },
-              ]}
-              isPaginated
-              ariaLabelKey="events:title"
-              searchPlaceholderKey="events:searchForEvent"
-              toolbarItem={
-                <>
-                  <ToolbarItem>
-                    <Button onClick={refresh}>{t("refresh")}</Button>
-                  </ToolbarItem>
-                </>
-              }
-              columns={[
-                {
-                  name: "time",
-                  displayKey: "events:time",
-                  cellRenderer: (row) => moment(row.time).format("LLL"),
-                  cellFormatters: [expandable],
-                },
-                {
-                  name: "userId",
-                  displayKey: "events:user",
-                  cellRenderer: UserDetailLink,
-                },
-                {
-                  name: "type",
-                  displayKey: "events:eventType",
-                  cellRenderer: StatusRow,
-                },
-                {
-                  name: "ipAddress",
-                  displayKey: "events:ipAddress",
-                  transforms: [cellWidth(10)],
-                },
-                {
-                  name: "clientId",
-                  displayKey: "events:client",
-                },
-              ]}
-              emptyState={
-                <ListEmptyState
-                  message={t("emptyEvents")}
-                  instructions={t("emptyEventsInstructions")}
-                />
-              }
-            />
+            <Flex>
+              <FlexItem>
+                <Dropdown
+                  id="user-events-search-select"
+                  data-testid="UserEventsSearchSelector"
+                  toggle={
+                    <DropdownToggle
+                      data-testid="userEventsSearchSelectorToggle"
+                      onToggle={onDropdownToggle}
+                      className="keycloak__user_events_search_selector_dropdown__toggle pf-u-mt-md pf-u-ml-md pf-u-mb-md"
+                    >
+                      {t("searchForEvent")}
+                    </DropdownToggle>
+                  }
+                  isOpen={searchDropdownOpen}
+                >
+                  <Form
+                    isHorizontal
+                    className="keycloak__user_events_search__form"
+                    data-testid="searchForm"
+                  >
+                    <FormGroup
+                      label={t("userId")}
+                      fieldId="kc-userId"
+                      className="keycloak__user_events_search__form_label"
+                    >
+                      <TextInput
+                        ref={register()}
+                        type="text"
+                        id="kc-userId"
+                        name="userId"
+                        data-testid="userId-searchField"
+                        onChange={(_val, event) => {
+                          const { value } = event.currentTarget;
+                          setValue("userId", value);
+                          setIsDirty(true);
+                        }}
+                        defaultValue={
+                          formValues?.userId ? formValues?.userId : ""
+                        }
+                      />
+                    </FormGroup>
+                    <FormGroup
+                      label={t("eventType")}
+                      fieldId="kc-eventType"
+                      className="keycloak__user_events_search__form_label"
+                    >
+                      <Select
+                        id="kc-eventType"
+                        name="eventType"
+                        data-testid="event-type-searchField"
+                        chipGroupProps={{
+                          numChips: 1,
+                          expandedText: "Hide",
+                          collapsedText: "Show ${remaining}",
+                        }}
+                        variant={SelectVariant.typeaheadMulti}
+                        typeAheadAriaLabel="Select"
+                        onToggle={onSelectToggle}
+                        selections={selectedEvents}
+                        onSelect={(_, value) => {
+                          const option = value.toString();
+                          register("eventTypes");
+                          if (selectedEvents?.includes(option)) {
+                            setSelectedEvents(
+                              selectedEvents.filter((item) => item !== option)
+                            );
+                            setValue(
+                              "eventTypes",
+                              selectedEvents.filter((item) => item !== option)
+                            );
+                            setIsDirty(true);
+                          } else {
+                            setSelectedEvents([...selectedEvents, option]);
+                            setValue("eventTypes", [...selectedEvents, option]);
+                            setIsDirty(true);
+                          }
+                        }}
+                        onClear={clearSelection}
+                        isOpen={selectOpen}
+                        aria-labelledby={"eventType"}
+                        chipGroupComponent={chipGroupComponent()}
+                      >
+                        {events?.enabledEventTypes?.map((option, index) => (
+                          <SelectOption
+                            key={`eventType-${index}`}
+                            value={option}
+                          />
+                        ))}
+                      </Select>
+                    </FormGroup>
+                    <FormGroup
+                      label={t("client")}
+                      fieldId="kc-client"
+                      className="keycloak__user_events_search__form_label"
+                    >
+                      <TextInput
+                        ref={register()}
+                        type="text"
+                        id="kc-client"
+                        name="client"
+                        data-testid="client-searchField"
+                        onChange={(_val, event) => {
+                          const { value } = event.currentTarget;
+                          setValue("client", value);
+                          setIsDirty(true);
+                        }}
+                        defaultValue={
+                          formValues?.client ? formValues?.client : ""
+                        }
+                      />
+                    </FormGroup>
+                    <FormGroup
+                      label={t("dateFrom")}
+                      fieldId="kc-dateFrom"
+                      className="keycloak__user_events_search__form_label"
+                    >
+                      <TextInput
+                        ref={register()}
+                        type="text"
+                        id="kc-dateFrom"
+                        name="dateFrom"
+                        className="pf-c-form-control pf-m-icon pf-m-calendar"
+                        placeholder="yyyy-MM-dd"
+                        data-testid="dateFrom-searchField"
+                        onChange={(_val, event) => {
+                          const { value } = event.currentTarget;
+                          setValue("dateFrom", value);
+                          setIsDirty(true);
+                        }}
+                        defaultValue={
+                          formValues?.dateFrom ? formValues?.dateFrom : ""
+                        }
+                      />
+                    </FormGroup>
+                    <FormGroup
+                      label={t("dateTo")}
+                      fieldId="kc-dateTo"
+                      className="keycloak__user_events_search__form_label"
+                    >
+                      <TextInput
+                        ref={register()}
+                        type="text"
+                        id="kc-dateTo"
+                        name="dateTo"
+                        className="pf-c-form-control pf-m-icon pf-m-calendar"
+                        placeholder="yyyy-MM-dd"
+                        data-testid="dateTo-searchField"
+                        onChange={(_val, event) => {
+                          const { value } = event.currentTarget;
+                          setValue("dateTo", value);
+                        }}
+                        defaultValue={
+                          formValues?.dateTo ? formValues?.dateTo : ""
+                        }
+                      />
+                    </FormGroup>
+                    <ActionGroup>
+                      <Button
+                        className="keycloak__user_events_search__form_btn"
+                        variant={"primary"}
+                        onClick={searchEvents}
+                        data-testid="search-events-btn"
+                        isDisabled={!isDirty}
+                      >
+                        {t("searchBtn")}
+                      </Button>
+                    </ActionGroup>
+                  </Form>
+                </Dropdown>
+              </FlexItem>
+              <FlexItem className="keycloak__refresh_btn">
+                <Button onClick={refresh} data-testid="refresh-events-btn">
+                  {t("refresh")}
+                </Button>
+              </FlexItem>
+            </Flex>
+            {search && chipsToDisplay ? (
+              <div className="keycloak__searchChips pf-u-ml-md">
+                {Object.keys(chipsToDisplay).map((key, index) => (
+                  <>
+                    {key === "type" ? (
+                      <ChipGroup
+                        className="pf-u-mr-md pf-u-mb-md"
+                        key={`search-chip-group-type-${index}`}
+                        categoryName={key}
+                        isClosable
+                      >
+                        {chipsToDisplay.type.map(
+                          (typeChip: any, idx: number) => (
+                            <Chip key={`search-type-chip-type-${idx}`}>
+                              {typeChip}
+                            </Chip>
+                          )
+                        )}
+                      </ChipGroup>
+                    ) : (
+                      <ChipGroup
+                        className="pf-u-mr-md pf-u-mb-md"
+                        key={`search-chip-group-${index}`}
+                        categoryName={key}
+                        isClosable
+                      >
+                        <Chip key={`search-chip-${index}`} isReadOnly>
+                          {chipsToDisplay[key]}
+                        </Chip>
+                      </ChipGroup>
+                    )}
+                  </>
+                ))}
+              </div>
+            ) : null}
+            <div className="keycloak__events_table">
+              <KeycloakDataTable
+                key={key}
+                loader={loader}
+                detailColumns={[
+                  {
+                    name: "details",
+                    enabled: (event) => event.details !== undefined,
+                    cellRenderer: DetailCell,
+                  },
+                ]}
+                isPaginated
+                ariaLabelKey="events:title"
+                columns={[
+                  {
+                    name: "time",
+                    displayKey: "events:time",
+                    cellRenderer: (row) => moment(row.time).format("LLL"),
+                    cellFormatters: [expandable],
+                  },
+                  {
+                    name: "userId",
+                    displayKey: "events:user",
+                    cellRenderer: UserDetailLink,
+                  },
+                  {
+                    name: "type",
+                    displayKey: "events:eventType",
+                    cellRenderer: StatusRow,
+                  },
+                  {
+                    name: "ipAddress",
+                    displayKey: "events:ipAddress",
+                    transforms: [cellWidth(10)],
+                  },
+                  {
+                    name: "clientId",
+                    displayKey: "events:client",
+                  },
+                ]}
+                emptyState={
+                  <div className="pf-u-mt-md">
+                    <Divider className="keycloak__events_empty_state_divider" />
+                    <ListEmptyState
+                      message={t("emptyEvents")}
+                      instructions={t("emptyEventsInstructions")}
+                    />
+                  </div>
+                }
+              />
+            </div>
           </Tab>
           <Tab
             eventKey="adminEvents"
