@@ -123,8 +123,8 @@ export const RevocationModal = ({
     await Promise.all(
       allClients.map((client) => {
         if (client.adminUrl) {
-          const result = adminClient.clients.pushRevocation({
-            id: client.id!,
+          const result = adminClient.realms.pushRevocation({
+            realm: realmName,
           }) as unknown as GlobalRequestResult;
           parseResult(result, "notBeforePush");
         }
