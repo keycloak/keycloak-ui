@@ -29,7 +29,9 @@ import { useRealm } from "../../context/realm-context/RealmContext";
 import { KeycloakTabs } from "../../components/keycloak-tabs/KeycloakTabs";
 import { ExtendedNonDiscoverySettings } from "./ExtendedNonDiscoverySettings";
 import { DiscoverySettings } from "./DiscoverySettings";
+import { DescriptorSettings } from "./DescriptorSettings";
 import { OIDCGeneralSettings } from "./OIDCGeneralSettings";
+import { SamlGeneralSettings } from "./SamlGeneralSettings";
 import { OIDCAuthentication } from "./OIDCAuthentication";
 
 type HeaderProps = {
@@ -133,10 +135,16 @@ export const DetailSettings = () => {
   });
 
   const sections = [t("generalSettings"), t("advancedSettings")];
+
   const isOIDC = id.includes("oidc");
+  const isSAML = id.includes("saml");
 
   if (isOIDC) {
     sections.splice(1, 0, t("oidcSettings"));
+  }
+
+  if (isSAML) {
+    sections.splice(1, 0, t("samlSettings"));
   }
 
   return (
@@ -170,8 +178,11 @@ export const DetailSettings = () => {
                   isHorizontal
                   onSubmit={handleSubmit(save)}
                 >
-                  {!isOIDC && <GeneralSettings create={false} id={id} />}
+                  {!isOIDC && !isSAML && (
+                    <GeneralSettings create={false} id={id} />
+                  )}
                   {isOIDC && <OIDCGeneralSettings id={id} />}
+                  {isSAML && <SamlGeneralSettings id={id} />}
                 </FormAccess>
                 {isOIDC && (
                   <>
@@ -183,12 +194,25 @@ export const DetailSettings = () => {
                     <ExtendedNonDiscoverySettings />
                   </>
                 )}
+                {isSAML && (
+                  <>
+                    <DescriptorSettings readOnly={false} />
+                    {/* 
+                    TODO: Create a new component for Requested AuthnContext Constraints 
+                    (3 fields: Comparison select, AuthnContext ClassRefs textfield, AuthnContext DeclRefs textfield)
+                     and add it here  
+                     <AuthnConstraintsSettings />
+                    */}
+                  </>
+                )}
+
                 <FormAccess
                   role="manage-identity-providers"
                   isHorizontal
                   onSubmit={handleSubmit(save)}
                 >
-                  <AdvancedSettings isOIDC={isOIDC} />
+                  <AdvancedSettings isOIDC={isOIDC} isSAML={isSAML} />
+
                   <ActionGroup className="keycloak__form_actions">
                     <Button data-testid={"save"} type="submit">
                       {t("common:save")}

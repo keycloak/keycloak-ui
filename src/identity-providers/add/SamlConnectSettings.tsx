@@ -5,13 +5,15 @@ import { FormGroup, Switch, TextInput, Title } from "@patternfly/react-core";
 import { HelpItem } from "../../components/help-enabler/HelpItem";
 import { useTranslation } from "react-i18next";
 import { useAdminClient } from "../../context/auth/AdminClient";
-import type { SamlConfigurationRepresentation } from "../SamlConfigurationRepresentation";
+import type identityProviderRepresentation from "keycloak-admin/lib/defs/identityProviderRepresentation";
+
+// import type { SamlConfigurationRepresentation } from "../SamlConfigurationRepresentation";
 import { JsonFileUpload } from "../../components/json-file-upload/JsonFileUpload";
 import { useRealm } from "../../context/realm-context/RealmContext";
 import { DescriptorSettings } from "./DescriptorSettings";
 import { getBaseUrl } from "../../util";
 
-type Result = SamlConfigurationRepresentation & {
+type Result = identityProviderRepresentation & {
   error: string;
 };
 
@@ -50,7 +52,6 @@ export const SamlConnectSettings = () => {
           } catch (error) {
             result = { error };
           }
-
           setDiscoveryResult(result as Result);
           setupForm(result);
           setDiscovering(false);
@@ -105,7 +106,7 @@ export const SamlConnectSettings = () => {
       >
         <TextInput
           type="text"
-          name="serviceProviderEntityId"
+          name="config.entityId"
           data-testid="serviceProviderEntityId"
           id="kc-service-provider-entity-id"
           value={entityUrl || defaultEntityUrl}

@@ -10,7 +10,7 @@ import {
   TextInput,
   ValidatedOptions,
 } from "@patternfly/react-core";
-
+import { HelpItem } from "../../components/help-enabler/HelpItem";
 import { SwitchField } from "../component/SwitchField";
 import { TextField } from "../component/TextField";
 
@@ -22,20 +22,22 @@ type DescriptorSettingsProps = {
 
 const Fields = ({ readOnly }: DescriptorSettingsProps) => {
   const { t } = useTranslation("identity-providers");
+  const { t: th } = useTranslation("identity-providers-help");
+
   const { register, control, errors } = useFormContext();
   const [namedPolicyDropdownOpen, setNamedPolicyDropdownOpen] = useState(false);
   const [principalTypeDropdownOpen, setPrincipalTypeDropdownOpen] =
     useState(false);
-  const [signatureAlgorithmDropdownOpen, setSignatureAlgorithimDropdownOpen] =
+  const [signatureAlgorithmDropdownOpen, setSignatureAlgorithmDropdownOpen] =
     useState(false);
   const [
     samlSignatureKeyNameDropdownOpen,
     setSamlSignatureKeyNameDropdownOpen,
   ] = useState(false);
 
-  const wantauthnsigned = useWatch({
+  const wantAuthnSigned = useWatch({
     control: control,
-    name: "config.wantauthnsigned",
+    name: "config.wantAuthnRequestsSigned",
   });
 
   const validateSignature = useWatch({
@@ -47,6 +49,13 @@ const Fields = ({ readOnly }: DescriptorSettingsProps) => {
     <div className="pf-c-form pf-m-horizontal">
       <FormGroup
         label={t("Single Sign-On service URL")}
+        labelIcon={
+          <HelpItem
+            helpText={th("alias")}
+            forLabel={t("alias")}
+            forID="alias"
+          />
+        }
         fieldId="kc-sso-service-url"
         isRequired
         validated={
@@ -60,7 +69,7 @@ const Fields = ({ readOnly }: DescriptorSettingsProps) => {
           type="text"
           data-testid="sso-service-url"
           id="kc-sso-service-url"
-          name="config.ssoServiceUrl"
+          name="config.singleSignOnServiceUrl"
           ref={register({ required: true })}
           validated={
             errors.config && errors.config.authorizationUrl
@@ -74,7 +83,6 @@ const Fields = ({ readOnly }: DescriptorSettingsProps) => {
       <FormGroup
         label={t("Single logout service URL")}
         fieldId="single-logout-service-url"
-        isRequired
         validated={
           errors.config && errors.config.tokenUrl
             ? ValidatedOptions.error
@@ -86,18 +94,12 @@ const Fields = ({ readOnly }: DescriptorSettingsProps) => {
           type="text"
           id="single-logout-service-url"
           name="config.singleLogoutServiceUrl"
-          ref={register({ required: true })}
-          validated={
-            errors.config && errors.config.tokenUrl
-              ? ValidatedOptions.error
-              : ValidatedOptions.default
-          }
           isReadOnly={readOnly}
         />
       </FormGroup>
 
       <SwitchField
-        field="config.backchannel"
+        field="config.backchannelSupported"
         label="backchannelLogout"
         isReadOnly={readOnly}
       />
@@ -105,10 +107,10 @@ const Fields = ({ readOnly }: DescriptorSettingsProps) => {
       <FormGroup
         label={t("nameIdPolicyFormat")}
         fieldId="nameIdPolicy"
-        isRequired
         helperTextInvalid={t("common:required")}
       >
         <Select
+          name="config.nameIDPolicyFormat"
           data-testid="nameid-policy-format-select"
           isOpen={namedPolicyDropdownOpen}
           variant={SelectVariant.single}
@@ -116,7 +118,6 @@ const Fields = ({ readOnly }: DescriptorSettingsProps) => {
           onSelect={() => {
             setNamedPolicyDropdownOpen(false);
           }}
-          // selections={filterType}
         >
           <SelectOption
             key={0}
@@ -135,10 +136,10 @@ const Fields = ({ readOnly }: DescriptorSettingsProps) => {
       <FormGroup
         label={t("principalType")}
         fieldId="principalType"
-        isRequired
         helperTextInvalid={t("common:required")}
       >
         <Select
+          name="config.principalType"
           data-testid="principal-type-select"
           isOpen={principalTypeDropdownOpen}
           variant={SelectVariant.single}
@@ -146,7 +147,6 @@ const Fields = ({ readOnly }: DescriptorSettingsProps) => {
           onSelect={() => {
             setPrincipalTypeDropdownOpen(false);
           }}
-          // selections={filterType}
         >
           <SelectOption
             key={0}
@@ -163,47 +163,45 @@ const Fields = ({ readOnly }: DescriptorSettingsProps) => {
       </FormGroup>
 
       <SwitchField
-        field="config.httpostbindingresponse"
+        field="config.postBindingResponse"
         label={t("httpPostBindingResponse")}
         isReadOnly={readOnly}
       />
 
       <SwitchField
-        field="config.httppostbindingauthnrequest"
+        field="config.postBindingAuthnRequest"
         label={t("httpPostBindingAuthnRequest")}
         isReadOnly={readOnly}
       />
 
       <SwitchField
-        field="config.httppostbindinglogout"
+        field="config.postBindingLogout"
         label={t("httpPostBindingLogout")}
         isReadOnly={readOnly}
       />
 
       <SwitchField
-        field="config.wantauthnsigned"
+        field="config.wantAuthnRequestsSigned"
         label={t("wantAuthnRequestsSigned")}
         isReadOnly={readOnly}
       />
-      {wantauthnsigned === "true" && (
+      {wantAuthnSigned === "true" && (
         <>
           <FormGroup
             label={t("signatureAlgorithm")}
             fieldId="signatureAlgorithm"
-            isRequired
-            helperTextInvalid={t("common:required")}
           >
             <Select
+              name="config.signatureAlgorithm"
               data-testid="signature-algorithm-select"
               isOpen={signatureAlgorithmDropdownOpen}
               variant={SelectVariant.single}
               onToggle={(isExpanded) =>
-                setSignatureAlgorithimDropdownOpen(isExpanded)
+                setSignatureAlgorithmDropdownOpen(isExpanded)
               }
               onSelect={() => {
-                setSignatureAlgorithimDropdownOpen(false);
+                setSignatureAlgorithmDropdownOpen(false);
               }}
-              // selections={filterType}
             >
               <SelectOption
                 key={0}
@@ -223,10 +221,9 @@ const Fields = ({ readOnly }: DescriptorSettingsProps) => {
           <FormGroup
             label={t("samlSignatureKeyName")}
             fieldId="samlSignatureKeyName"
-            isRequired
-            helperTextInvalid={t("common:required")}
           >
             <Select
+              name="config.xmlSigKeyInfoKeyNameTransformer"
               data-testid="saml-signature-key-name-select"
               isOpen={samlSignatureKeyNameDropdownOpen}
               variant={SelectVariant.single}
@@ -236,7 +233,6 @@ const Fields = ({ readOnly }: DescriptorSettingsProps) => {
               onSelect={() => {
                 setSamlSignatureKeyNameDropdownOpen(false);
               }}
-              // selections={filterType}
             >
               <SelectOption
                 key={0}
@@ -255,18 +251,18 @@ const Fields = ({ readOnly }: DescriptorSettingsProps) => {
       )}
 
       <SwitchField
-        field="config.want-assertions-signed"
+        field="config.wantAssertionsSigned"
         label={t("wantAssertionsSigned")}
         isReadOnly={readOnly}
       />
 
       <SwitchField
-        field="config.want-assertions-encrypted"
+        field="config.wantAssertionsEncrypted"
         label={t("wantAssertionsEncrypted")}
         isReadOnly={readOnly}
       />
       <SwitchField
-        field="config.force-authentication"
+        field="config.forceAuthn"
         label={t("forceAuthentication")}
         isReadOnly={readOnly}
       />
@@ -279,19 +275,19 @@ const Fields = ({ readOnly }: DescriptorSettingsProps) => {
       {validateSignature === "true" && (
         <>
           <TextField
-            field="config.sig-algorithm"
+            field="config.signingCertificate"
             label={t("validatingX509Certs")}
             isReadOnly={readOnly}
           />
         </>
       )}
       <SwitchField
-        field="config.sign-sp-metadata"
+        field="config.signSpMetadata"
         label={t("signServiceProviderMetadata")}
         isReadOnly={readOnly}
       />
       <SwitchField
-        field="config.pass-subject"
+        field="config.passSubject"
         label={t("passSubject")}
         isReadOnly={readOnly}
       />
@@ -299,23 +295,12 @@ const Fields = ({ readOnly }: DescriptorSettingsProps) => {
       <FormGroup
         label={t("allowedClockSkew")}
         fieldId="allowedClockSkew"
-        validated={
-          errors.config && errors.config.tokenUrl
-            ? ValidatedOptions.error
-            : ValidatedOptions.default
-        }
         helperTextInvalid={t("common:required")}
       >
         <TextInput
           type="text"
-          id="tokenUrl"
+          id="allowedClockSkew"
           name="config.allowedClockSkew"
-          ref={register({ required: true })}
-          validated={
-            errors.config && errors.config.tokenUrl
-              ? ValidatedOptions.error
-              : ValidatedOptions.default
-          }
           isReadOnly={readOnly}
         />
       </FormGroup>
