@@ -59,9 +59,7 @@ export const convertToFormValues = (
   setValue: (name: string, value: any) => void
 ) => {
   return Object.keys(obj).map((key) => {
-    console.log("obj", obj);
     const newKey = key.replace(/\./g, "-");
-    console.log("nk1", newKey);
     setValue(prefix + "." + newKey, obj[key]);
   });
 };
@@ -85,7 +83,6 @@ export const flatten = (
 export const convertFormValuesToObject = (obj: any) => {
   const keyValues = Object.keys(obj).map((key) => {
     const newKey = key.replace(/-/g, ".");
-    console.log("newKey2", newKey);
     return { [newKey]: obj[key] };
   });
   return Object.assign({}, ...keyValues);

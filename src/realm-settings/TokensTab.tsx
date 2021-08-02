@@ -28,12 +28,7 @@ import "./RealmSettingsSection.css";
 import type UserRepresentation from "keycloak-admin/lib/defs/userRepresentation";
 import { TimeSelector } from "../components/time-selector/TimeSelector";
 import { useServerInfo } from "../context/server-info/ServerInfoProvider";
-import {
-  // convertFormValuesToObject,
-  convertToFormValues,
-  forHumans,
-  flatten,
-} from "../util";
+import { convertToFormValues, forHumans, flatten } from "../util";
 
 type RealmSettingsSessionsTabProps = {
   realm?: RealmRepresentation;
@@ -48,7 +43,7 @@ export const RealmSettingsTokensTab = ({
   const { t } = useTranslation("realm-settings");
   const adminClient = useAdminClient();
   const { realm: realmName } = useRealm();
-  const { addAlert } = useAlerts();
+  const { addAlert, addError } = useAlerts();
   const serverInfo = useServerInfo();
 
   const [realm, setRealm] = useState(initialRealm);
@@ -77,8 +72,6 @@ export const RealmSettingsTokensTab = ({
     name: "offlineSessionMaxLifespanEnabled",
     defaultValue: realm?.offlineSessionMaxLifespanEnabled,
   });
-
-  // useFetch here instead
 
   const setupForm = (realm: RealmRepresentation) => {
     const { ...formValues } = realm;
@@ -117,8 +110,7 @@ export const RealmSettingsTokensTab = ({
       setRealm(newRealm);
       addAlert(t("saveSuccess"), AlertVariant.success);
     } catch (error) {
-      //addError("realm-settings:saveError", error);
-      console.error(error);
+      addError("realm-settings:saveError", error);
     }
   };
   return (
