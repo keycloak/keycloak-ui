@@ -29,9 +29,10 @@ import type UserRepresentation from "keycloak-admin/lib/defs/userRepresentation"
 import { TimeSelector } from "../components/time-selector/TimeSelector";
 import { useServerInfo } from "../context/server-info/ServerInfoProvider";
 import {
-  convertFormValuesToObject,
+  // convertFormValuesToObject,
   convertToFormValues,
   forHumans,
+  flatten,
 } from "../util";
 
 type RealmSettingsSessionsTabProps = {
@@ -85,7 +86,6 @@ export const RealmSettingsTokensTab = ({
     Object.entries(realm).map((entry) => {
       if (entry[0] === "attributes") {
         convertToFormValues(entry[1], "attributes", form.setValue);
-        console.log("entry[1]:", entry[1]);
       } else {
         form.setValue(entry[0], entry[1]);
       }
@@ -101,14 +101,8 @@ export const RealmSettingsTokensTab = ({
     [realmName]
   );
 
-  // useEffect(() => resetForm(realm), [realm]);
-
   const save = async () => {
-    const attributes = convertFormValuesToObject(
-      form.getValues()["attributes"]
-    );
-
-    console.log("converted", attributes);
+    const attributes = flatten(form.getValues()["attributes"]);
 
     try {
       const newRealm: RealmRepresentation = {
@@ -118,6 +112,7 @@ export const RealmSettingsTokensTab = ({
       };
 
       await adminClient.realms.update({ realm: realmName }, newRealm);
+
       setupForm(newRealm);
       setRealm(newRealm);
       addAlert(t("saveSuccess"), AlertVariant.success);
@@ -126,34 +121,6 @@ export const RealmSettingsTokensTab = ({
       console.error(error);
     }
   };
-
-  // const save = async (form: RealmRepresentation) => {
-  //   try {
-  //     const savedRealm = {
-  //       ...realm,
-  //       attributes: {
-  //         ...realm?.attributes,
-  //         ...form?.attributes,
-  //       },
-  //     };
-
-  //     await adminClient.realms.update({ realm: realmName }, savedRealm);
-  //     setRealm(savedRealm);
-  //     addAlert(t("saveSuccess"), AlertVariant.success);
-  //   } catch (error) {
-  //     addAlert(
-  //       t("saveError", { error: error.response?.data?.errorMessage || error }),
-  //       AlertVariant.danger
-  //     );
-  //   }
-  // };
-
-  // const reset = () => {
-  //   if (realm) {
-  //     resetForm(realm);
-  //   }
-  // };
-
   return (
     <>
       <PageSection variant="light">
@@ -500,9 +467,7 @@ export const RealmSettingsTokensTab = ({
             >
               <Controller
                 name="attributes.actionTokenGeneratedByUserLifespan-verify-email"
-                defaultValue={realm?.attributes![
-                  "actionTokenGeneratedByUserLifespan.verify-email"
-                ]?.toString()}
+                defaultValue={0}
                 control={form.control}
                 render={({ onChange, value }) => (
                   <TimeSelector
@@ -510,7 +475,7 @@ export const RealmSettingsTokensTab = ({
                     data-testid="email-verification-input"
                     aria-label="email-verification-input"
                     value={value}
-                    onChange={(value) => onChange(value.toString())}
+                    onChange={(value: any) => onChange(value.toString())}
                     units={["minutes", "hours", "days"]}
                   />
                 )}
@@ -523,9 +488,7 @@ export const RealmSettingsTokensTab = ({
             >
               <Controller
                 name="attributes.actionTokenGeneratedByUserLifespan-idp-verify-account-via-email"
-                defaultValue={realm?.attributes![
-                  "actionTokenGeneratedByUserLifespan.idp-verify-account-via-email"
-                ]?.toString()}
+                defaultValue={0}
                 control={form.control}
                 render={({ onChange, value }) => (
                   <TimeSelector
@@ -546,9 +509,7 @@ export const RealmSettingsTokensTab = ({
             >
               <Controller
                 name="attributes.actionTokenGeneratedByUserLifespan-reset-credentials"
-                defaultValue={realm?.attributes![
-                  "actionTokenGeneratedByUserLifespan.reset-credentials"
-                ]?.toString()}
+                defaultValue={0}
                 control={form.control}
                 render={({ onChange, value }) => (
                   <TimeSelector
@@ -568,10 +529,8 @@ export const RealmSettingsTokensTab = ({
               id="execute-actions"
             >
               <Controller
-                name="'attributes.actionTokenGeneratedByUserLifespan-execute-actions'"
-                defaultValue={realm?.attributes![
-                  "actionTokenGeneratedByUserLifespan.execute-actions"
-                ]?.toString()}
+                name="attributes.actionTokenGeneratedByUserLifespan-execute-actions"
+                defaultValue={0}
                 control={form.control}
                 render={({ onChange, value }) => (
                   <TimeSelector

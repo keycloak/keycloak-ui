@@ -370,7 +370,10 @@ export default class RealmSettingsPage {
   populateTokensPage() {
     this.toggleSwitch(this.revokeRefreshTokenSwitch);
 
-    cy.getId(this.accessTokenLifespanInput).clear({ force: true }).type("1");
+    cy.getId(this.accessTokenLifespanInput)
+      .clear({ force: true })
+      .getId(this.accessTokenLifespanInput)
+      .type("1");
     this.changeTimeUnit(
       "Days",
       this.accessTokenLifespanSelectMenu,
