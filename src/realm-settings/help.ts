@@ -99,9 +99,9 @@ export default {
       "Max time before an access token issued during OpenID Connect Implicit Flow is expired. This value is recommended to be shorter than the SSO timeout. There is no possibility to refresh token during implicit flow, that's why there is a separate timeout different to 'Access Token Lifespan'",
     clientLoginTimeout:
       "Max time a client has to finish the access token protocol. This should normally be 1 minute.",
-    userInitiatedActionLifeSpan:
+    userInitiatedActionLifespan:
       "Maximum time before an action permit sent by a user (such as a forgot password e-mail) is expired. This value is recommended to be short because it's expected that the user would react to self-created action quickly.",
-    defaultAdminInitiatedActionLifeSpan:
+    defaultAdminInitiatedActionLifespan:
       "Maximum time before an action permit sent to a user by administrator is expired. This value is recommended to be long to allow administrators to send e-mails for users that are currently offline. The default timeout can be overridden immediately before issuing the token.",
     overrideActionTokens:
       "Override default settings of maximum time before an action permit sent by a user (such as a forgot password e-mail) is expired for specific action. This value is recommended to be short because it's expected that the user would react to self-created action quickly.",

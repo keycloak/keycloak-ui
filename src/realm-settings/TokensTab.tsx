@@ -423,7 +423,7 @@ export const RealmSettingsTokensTab = ({
               id="default-admin-initiated-label"
               labelIcon={
                 <HelpItem
-                  helpText="realm-settings-help:defaultAdminInitiated"
+                  helpText="realm-settings-help:defaultAdminInitiatedActionLifespan"
                   forLabel={t("defaultAdminInitiated")}
                   forID="defaultAdminInitiated"
                   id="defaultAdminInitiated"
