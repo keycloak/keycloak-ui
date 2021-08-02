@@ -17,10 +17,13 @@ import { useTranslation } from "react-i18next";
 import { Link, useHistory } from "react-router-dom";
 import { HelpHeader, useHelp } from "./components/help-enabler/HelpHeader";
 import { useAdminClient } from "./context/auth/AdminClient";
+import { useRealm } from "./context/realm-context/RealmContext";
 import { useWhoAmI } from "./context/whoami/WhoAmI";
+import { toDashboard } from "./dashboard/routes/Dashboard";
 import environment from "./environment";
 
 export const Header = () => {
+  const { realm } = useRealm();
   const adminClient = useAdminClient();
   const { t } = useTranslation();
 
@@ -182,7 +185,7 @@ export const Header = () => {
     <PageHeader
       showNavToggle
       logo={
-        <Link to="/">
+        <Link to={toDashboard({ realm })}>
           <Brand
             src={environment.resourceUrl + "/logo.svg"}
             id="masthead-logo"
