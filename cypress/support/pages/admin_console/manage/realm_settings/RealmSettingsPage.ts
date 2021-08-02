@@ -371,8 +371,10 @@ export default class RealmSettingsPage {
     this.toggleSwitch(this.revokeRefreshTokenSwitch);
 
     cy.getId(this.accessTokenLifespanInput)
+      .focus()
       .clear({ force: true })
       .getId(this.accessTokenLifespanInput)
+      .clear()
       .type("1");
     this.changeTimeUnit(
       "Days",
@@ -393,41 +395,41 @@ export default class RealmSettingsPage {
       this.clientLoginTimeoutSelectMenuList
     );
 
-    cy.getId(this.userInitiatedActionLifespanInput).clear().type("5");
+    cy.getId(this.userInitiatedActionLifespanInput).clear().type("4");
     this.changeTimeUnit(
       "Minutes",
       this.userInitiatedActionLifespanSelectMenu,
       this.userInitiatedActionLifespanSelectMenuList
     );
 
-    cy.getId(this.defaultAdminInitatedInput).clear().type("6");
+    cy.getId(this.defaultAdminInitatedInput).clear().type("5");
     this.changeTimeUnit(
       "Days",
       this.defaultAdminInitatedInputSelectMenu,
       this.defaultAdminInitatedInputSelectMenuList
     );
 
-    cy.getId(this.emailVerificationInput).clear().type("7");
+    cy.getId(this.emailVerificationInput).clear().type("6");
     this.changeTimeUnit(
       "Days",
       this.emailVerificationSelectMenu,
       this.emailVerificationSelectMenuList
     );
 
-    cy.getId(this.idpEmailVerificationInput).clear().type("8");
+    cy.getId(this.idpEmailVerificationInput).clear().type("7");
     this.changeTimeUnit(
       "Days",
       this.idpEmailVerificationSelectMenu,
       this.idpEmailVerificationSelectMenuList
     );
 
-    cy.getId(this.forgotPasswordInput).clear().type("9");
+    cy.getId(this.forgotPasswordInput).clear().type("8");
     this.changeTimeUnit(
       "Days",
       this.forgotPasswordSelectMenu,
       this.forgotPasswordSelectMenuList
     );
-    cy.getId(this.executeActionsInput).clear().type("10");
+    cy.getId(this.executeActionsInput).clear().type("9");
     this.changeTimeUnit(
       "Days",
       this.executeActionsSelectMenu,

@@ -548,8 +548,8 @@ export const RealmSettingsTokensTab = ({
               <Button
                 variant="primary"
                 type="submit"
-                data-testid="sessions-tab-save"
-                // isDisabled={!formState.isDirty}
+                data-testid="tokens-tab-save"
+                isDisabled={!form.formState.isDirty}
               >
                 {t("common:save")}
               </Button>

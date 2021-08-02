@@ -19,7 +19,7 @@ describe("Realm settings", () => {
   beforeEach(() => {
     keycloakBefore();
     loginPage.logIn();
-    // sidebarPage.goToRealm(realmName);
+    sidebarPage.goToRealm(realmName);
   });
 
   before(async () => {
@@ -341,35 +341,37 @@ describe("Realm settings", () => {
     masthead.checkNotificationMessage("Realm successfully updated");
   });
 
-  // it("check that token data was saved", () => {
-  //   sidebarPage.goToRealmSettings();
+  it("check that token data was saved", () => {
+    sidebarPage.goToRealmSettings();
 
-  //   cy.getId("rs-tokens-tab").click();
+    cy.getId("rs-tokens-tab").click();
 
-  //   cy.getId(realmSettingsPage.ssoSessionIdleInput).should("have.value", 1);
-  //   cy.getId(realmSettingsPage.ssoSessionMaxInput).should("have.value", 2);
-  //   cy.getId(realmSettingsPage.ssoSessionIdleRememberMeInput).should(
-  //     "have.value",
-  //     3
-  //   );
-  //   cy.getId(realmSettingsPage.ssoSessionMaxRememberMeInput).should(
-  //     "have.value",
-  //     4
-  //   );
+    cy.getId(realmSettingsPage.accessTokenLifespanInput).should(
+      "have.value",
+      1
+    );
+    cy.getId(realmSettingsPage.accessTokenLifespanImplicitInput).should(
+      "have.value",
+      2
+    );
+    cy.getId(realmSettingsPage.clientLoginTimeoutInput).should("have.value", 3);
+    cy.getId(realmSettingsPage.userInitiatedActionLifespanInput).should(
+      "have.value",
+      4
+    );
 
-  //   cy.getId(realmSettingsPage.clientSessionIdleInput).should("have.value", 5);
-  //   cy.getId(realmSettingsPage.clientSessionMaxInput).should("have.value", 6);
+    cy.getId(realmSettingsPage.defaultAdminInitatedInput).should(
+      "have.value",
+      5
+    );
+    cy.getId(realmSettingsPage.emailVerificationInput).should("have.value", 6);
 
-  //   cy.getId(realmSettingsPage.offlineSessionIdleInput).should("have.value", 7);
-  //   cy.getId(realmSettingsPage.offlineSessionMaxSwitch).should(
-  //     "have.value",
-  //     "on"
-  //   );
+    cy.getId(realmSettingsPage.idpEmailVerificationInput).should(
+      "have.value",
+      7
+    );
+    cy.getId(realmSettingsPage.forgotPasswordInput).should("have.value", 8);
 
-  //   cy.getId(realmSettingsPage.loginTimeoutInput).should("have.value", 9);
-  //   cy.getId(realmSettingsPage.loginActionTimeoutInput).should(
-  //     "have.value",
-  //     10
-  //   );
-  // });
+    cy.getId(realmSettingsPage.executeActionsInput).should("have.value", 9);
+  });
 });
