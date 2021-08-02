@@ -22,6 +22,7 @@ import { useRealm } from "../context/realm-context/RealmContext";
 import type ClientRepresentation from "keycloak-admin/lib/defs/clientRepresentation";
 import { useAlerts } from "../components/alert/Alerts";
 import type GlobalRequestResult from "keycloak-admin/lib/defs/globalRequestResult";
+import { useWhoAmI } from "../context/whoami/WhoAmI";
 
 type RevocationModalProps = {
   handleModalToggle: () => void;
@@ -41,6 +42,8 @@ export const RevocationModal = ({
   const adminClient = useAdminClient();
   const { register, errors, handleSubmit } = useForm();
   const [realm, setRealm] = useState<RealmRepresentation>();
+
+  const { whoAmI } = useWhoAmI();
 
   const [key, setKey] = useState(0);
 
@@ -94,6 +97,10 @@ export const RevocationModal = ({
           notBefore: Date.now() / 1000,
         }
       );
+
+      if (realmName === whoAmI.getRealm()) {
+        adminClient.keycloak.logout({ redirectUri: "" });
+      }
 
       addAlert(t("notBeforeSuccess"), AlertVariant.success);
     } catch (error) {

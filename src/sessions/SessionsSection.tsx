@@ -20,6 +20,7 @@ import { RevocationModal } from "./RevocationModal";
 import type ClientRepresentation from "keycloak-admin/lib/defs/clientRepresentation";
 import { LogoutAllSessionsModal } from "./LogoutAllSessionsModal";
 import { ListEmptyState } from "../components/list-empty-state/ListEmptyState";
+import { useWhoAmI } from "../context/whoami/WhoAmI";
 
 const Clients = (row: UserSessionRepresentation) => {
   return (
@@ -48,6 +49,10 @@ export const SessionsSection = () => {
   );
   const [key, setKey] = useState(0);
   const [noSessions, setNoSessions] = useState(false);
+
+  const { whoAmI } = useWhoAmI();
+
+  console.log("🤞", whoAmI);
 
   const refresh = () => {
     setKey(new Date().getTime());
@@ -106,6 +111,7 @@ export const SessionsSection = () => {
       key="delete-role"
       data-testid="logout-all"
       component="button"
+      isDisabled={noSessions}
       onClick={() => handleLogoutAllSessionsModalToggle()}
     >
       {t("signOutAllActiveSessions")}
@@ -116,7 +122,6 @@ export const SessionsSection = () => {
     <>
       <ViewHeader
         dropdownItems={dropdownItems}
-        dropdownIsDisabled={noSessions}
         titleKey="sessions:title"
         subKey="sessions:sessionExplain"
       />
