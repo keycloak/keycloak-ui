@@ -199,7 +199,7 @@ export const RealmSettingsSessionsTab = ({
           </FormAccess>
         </FormPanel>
         <FormPanel
-          title={t(".pf-c-data-list__item-draggable-iconclientSessionSettings")}
+          title={t("clientSessionSettings")}
           className="kc-client-session-template"
         >
           <FormAccess
