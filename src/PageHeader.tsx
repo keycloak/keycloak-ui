@@ -14,7 +14,7 @@ import {
 import { HelpIcon } from "@patternfly/react-icons";
 import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
-import { Link, useHistory } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { HelpHeader, useHelp } from "./components/help-enabler/HelpHeader";
 import { useAdminClient } from "./context/auth/AdminClient";
 import { useRealm } from "./context/realm-context/RealmContext";
@@ -60,14 +60,15 @@ export const Header = () => {
   };
 
   const ServerInfoDropdownItem = () => {
+    const { realm } = useRealm();
     const { t } = useTranslation();
-    const history = useHistory();
+
     return (
       <DropdownItem
         key="server info"
-        onClick={() => {
-          history.push("/master/");
-        }}
+        component={Link}
+        // @ts-ignore
+        to={toDashboard({ realm })}
       >
         {t("realmInfo")}
       </DropdownItem>
