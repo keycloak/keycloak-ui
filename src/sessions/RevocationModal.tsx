@@ -94,9 +94,7 @@ export const RevocationModal = ({
           notBefore: Date.now() / 1000,
         }
       );
-      if (realmName === "master") {
-        adminClient.keycloak.logout({ redirectUri: "" });
-      }
+
       addAlert(t("notBeforeSuccess"), AlertVariant.success);
     } catch (error) {
       addAlert(t("setToNowError", { error }), AlertVariant.danger);
