@@ -22,7 +22,6 @@ import { useRealm } from "../context/realm-context/RealmContext";
 import type ClientRepresentation from "keycloak-admin/lib/defs/clientRepresentation";
 import { useAlerts } from "../components/alert/Alerts";
 import type GlobalRequestResult from "keycloak-admin/lib/defs/globalRequestResult";
-import { useWhoAmI } from "../context/whoami/WhoAmI";
 
 type RevocationModalProps = {
   handleModalToggle: () => void;
@@ -33,7 +32,6 @@ type RevocationModalProps = {
 export const RevocationModal = ({
   handleModalToggle,
   save,
-  activeClients,
 }: RevocationModalProps) => {
   const { t } = useTranslation("sessions");
   const { addAlert } = useAlerts();
@@ -42,8 +40,6 @@ export const RevocationModal = ({
   const adminClient = useAdminClient();
   const { register, errors, handleSubmit } = useForm();
   const [realm, setRealm] = useState<RealmRepresentation>();
-
-  const { whoAmI } = useWhoAmI();
 
   const [key, setKey] = useState(0);
 
@@ -98,10 +94,6 @@ export const RevocationModal = ({
         }
       );
 
-      if (realmName === whoAmI.getRealm()) {
-        adminClient.keycloak.logout({ redirectUri: "" });
-      }
-
       addAlert(t("notBeforeSuccess"), AlertVariant.success);
     } catch (error) {
       addAlert(t("setToNowError", { error }), AlertVariant.danger);
@@ -124,17 +116,13 @@ export const RevocationModal = ({
     }
   };
 
-  const push = async (allClients: ClientRepresentation[]) => {
-    await Promise.all(
-      allClients.map((client) => {
-        if (client.adminUrl) {
-          const result = adminClient.realms.pushRevocation({
-            realm: realmName,
-          }) as unknown as GlobalRequestResult;
-          parseResult(result, "notBeforePush");
-        }
-      })
-    );
+  const push = async () => {
+    console.log("push called");
+
+    const result = adminClient.realms.pushRevocation({
+      realm: realmName,
+    }) as unknown as GlobalRequestResult;
+    parseResult(result, "notBeforePush");
 
     refresh();
   };
@@ -175,7 +163,7 @@ export const RevocationModal = ({
           key="push"
           variant="secondary"
           onClick={() => {
-            push(activeClients);
+            push();
             handleModalToggle();
           }}
           form="revocation-modal-form"
