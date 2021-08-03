@@ -41,13 +41,22 @@ import { useForm } from "react-hook-form";
 import type { RealmEventsConfigRepresentation } from "keycloak-admin/lib/defs/realmEventsConfigRepresentation";
 import "./events-section.css";
 
+type UserEventSearchForm = {
+  userId: string;
+  eventTypes: string[];
+  client: string;
+  dateFrom: string;
+  dateTo: string;
+};
+
 export const EventsSection = () => {
   const { t } = useTranslation("events");
   const adminClient = useAdminClient();
   const { realm } = useRealm();
   const [key, setKey] = useState(0);
 
-  const { getValues, register, reset, setValue } = useForm();
+  const { getValues, register, reset, setValue } =
+    useForm<UserEventSearchForm>();
   const [isDirty, setIsDirty] = useState(false);
 
   const refresh = () => {
@@ -106,20 +115,15 @@ export const EventsSection = () => {
       max: max!,
     };
 
-    const reducedParams = Object.keys(params).reduce<Record<string, any>>(
-      (param, key) => {
-        if (!param[key] && params[key]) {
-          param[key] = params[key];
-        }
-        return param;
-      },
-      {}
+    const reducedParams = Object.fromEntries(
+      Object.entries(params).filter(([key]) => key !== "" && params[key])
     );
 
-    const selectedChips = () => {
-      delete reducedParams?.["max"];
-      return reducedParams;
-    };
+    const selectedChips = Object.fromEntries(
+      Object.entries(reducedParams).filter(
+        ([key, value]) => key !== "max" && !!value
+      )
+    );
 
     setChipsToDisplay(selectedChips);
     return await adminClient.realms.findEvents({ realm, ...reducedParams });
@@ -267,9 +271,7 @@ export const EventsSection = () => {
                           setValue("userId", value);
                           setIsDirty(true);
                         }}
-                        defaultValue={
-                          formValues?.userId ? formValues?.userId : ""
-                        }
+                        defaultValue={formValues?.userId ?? ""}
                       />
                     </FormGroup>
                     <FormGroup
@@ -337,9 +339,7 @@ export const EventsSection = () => {
                           setValue("client", value);
                           setIsDirty(true);
                         }}
-                        defaultValue={
-                          formValues?.client ? formValues?.client : ""
-                        }
+                        defaultValue={formValues?.client ?? ""}
                       />
                     </FormGroup>
                     <FormGroup
@@ -360,9 +360,7 @@ export const EventsSection = () => {
                           setValue("dateFrom", value);
                           setIsDirty(true);
                         }}
-                        defaultValue={
-                          formValues?.dateFrom ? formValues?.dateFrom : ""
-                        }
+                        defaultValue={formValues?.dateFrom ?? ""}
                       />
                     </FormGroup>
                     <FormGroup
@@ -381,10 +379,9 @@ export const EventsSection = () => {
                         onChange={(_val, event) => {
                           const { value } = event.currentTarget;
                           setValue("dateTo", value);
+                          setIsDirty(true);
                         }}
-                        defaultValue={
-                          formValues?.dateTo ? formValues?.dateTo : ""
-                        }
+                        defaultValue={formValues?.dateTo ?? ""}
                       />
                     </FormGroup>
                     <ActionGroup>
@@ -419,7 +416,7 @@ export const EventsSection = () => {
                         isClosable
                       >
                         {chipsToDisplay.type.map(
-                          (typeChip: any, idx: number) => (
+                          (typeChip: string, idx: number) => (
                             <Chip key={`search-type-chip-type-${idx}`}>
                               {typeChip}
                             </Chip>

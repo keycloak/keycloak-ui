@@ -23,16 +23,16 @@ describe("Search events test", function () {
       eventsPage.shouldHaveFormFields();
     });
 
+    it("Check event type dropdown options exist", () => {
+      eventsPage.shouldHaveEventTypeOptions();
+    });
+
     it("Check `search events` button disabled by default", () => {
       eventsPage.shouldHaveSearchBtnDisabled();
     });
 
     it("Check `search events` button enabled", () => {
       eventsPage.shouldHaveSearchBtnEnabled();
-    });
-
-    it("Check search with no results", () => {
-      eventsPage.shouldDoNoResultsSearch();
     });
   });
 });

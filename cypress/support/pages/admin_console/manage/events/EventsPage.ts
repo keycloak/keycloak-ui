@@ -1,30 +1,18 @@
-export default class SessionsPage {
-  searchEventDrpDwn: string;
-  searchEventDrpDwnBtn: string;
-  searchForm: string;
-  userIdInputFld: string;
-  eventTypeDrpDwnFld: string;
-  clientInputFld: string;
-  dateFromInputFld: string;
-  dateToInputFld: string;
-  searchEventsBtn: string;
-  eventTypeList: string;
-  eventsPageTitle: string;
-
-  constructor() {
-    this.searchEventDrpDwn = ".pf-c-dropdown__toggle";
-    this.searchEventDrpDwnBtn =
-      ".keycloak__user_events_search_selector_dropdown__toggle";
-    this.searchForm = ".pf-c-dropdown__menu";
-    this.userIdInputFld = "userId-searchField";
-    this.eventTypeDrpDwnFld = "event-type-searchField";
-    this.clientInputFld = "client-searchField";
-    this.dateFromInputFld = "dateFrom-searchField";
-    this.dateToInputFld = "dateTo-searchField";
-    this.searchEventsBtn = "search-events-btn";
-    this.eventTypeList = ".pf-c-form-control";
-    this.eventsPageTitle = ".pf-c-title";
-  }
+export default class EventsPage {
+  searchEventDrpDwn: string = ".pf-c-dropdown__toggle";
+  searchEventDrpDwnBtn: string =
+    ".keycloak__user_events_search_selector_dropdown__toggle";
+  searchForm: string = ".pf-c-dropdown__menu";
+  userIdInputFld: string = "userId-searchField";
+  eventTypeDrpDwnFld: string = "event-type-searchField";
+  clientInputFld: string = "client-searchField";
+  dateFromInputFld: string = "dateFrom-searchField";
+  dateToInputFld: string = "dateTo-searchField";
+  searchEventsBtn: string = "search-events-btn";
+  eventTypeList: string = ".pf-c-form-control";
+  eventTypeOption: string = ".pf-c-select__menu-item";
+  eventTypeBtn: string = ".pf-c-button.pf-c-select__toggle-button.pf-m-plain";
+  eventsPageTitle: string = ".pf-c-title";
 
   shouldDisplay() {
     cy.get(this.searchEventDrpDwn).should("exist");
@@ -38,8 +26,11 @@ export default class SessionsPage {
     cy.get(this.searchForm).contains("Date(from)");
     cy.get(this.searchForm).contains("Date(to)");
     cy.get(this.searchForm).contains("Search events");
+  }
 
-    return this;
+  shouldHaveEventTypeOptions() {
+    cy.get(this.searchEventDrpDwnBtn).click();
+    cy.get(this.eventTypeList).should("exist");
   }
 
   shouldHaveSearchBtnDisabled() {
