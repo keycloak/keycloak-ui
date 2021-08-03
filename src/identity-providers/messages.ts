@@ -109,6 +109,7 @@ export default {
     oidcSettings: "OpenID Connect settings",
     samlSettings: "SAML settings",
     advancedSettings: "Advanced settings",
+    reqAuthnConstraints: "Requested AuthnContext Constraints",
     storeTokens: "Store tokens",
     storeTokensReadable: "Store tokens readable",
     comparison: "Comparison",

@@ -33,6 +33,7 @@ import { DescriptorSettings } from "./DescriptorSettings";
 import { OIDCGeneralSettings } from "./OIDCGeneralSettings";
 import { SamlGeneralSettings } from "./SamlGeneralSettings";
 import { OIDCAuthentication } from "./OIDCAuthentication";
+import { ReqAuthnConstraints } from "./ReqAuthnConstraintsSettings";
 
 type HeaderProps = {
   onChange: (value: boolean) => void;
@@ -145,6 +146,7 @@ export const DetailSettings = () => {
 
   if (isSAML) {
     sections.splice(1, 0, t("samlSettings"));
+    sections.splice(2, 0, t("reqAuthnConstraints"));
   }
 
   return (
@@ -197,15 +199,15 @@ export const DetailSettings = () => {
                 {isSAML && (
                   <>
                     <DescriptorSettings readOnly={false} />
-                    {/* 
-                    TODO: Create a new component for Requested AuthnContext Constraints 
-                    (3 fields: Comparison select, AuthnContext ClassRefs textfield, AuthnContext DeclRefs textfield)
-                     and add it here  
-                     <AuthnConstraintsSettings />
-                    */}
                   </>
                 )}
-
+                <FormAccess
+                  role="manage-identity-providers"
+                  isHorizontal
+                  onSubmit={handleSubmit(save)}
+                >
+                  <ReqAuthnConstraints />
+                </FormAccess>
                 <FormAccess
                   role="manage-identity-providers"
                   isHorizontal
