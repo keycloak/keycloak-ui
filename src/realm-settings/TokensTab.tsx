@@ -28,7 +28,12 @@ import "./RealmSettingsSection.css";
 import type UserRepresentation from "keycloak-admin/lib/defs/userRepresentation";
 import { TimeSelector } from "../components/time-selector/TimeSelector";
 import { useServerInfo } from "../context/server-info/ServerInfoProvider";
-import { convertToFormValues, forHumans, flatten } from "../util";
+import {
+  convertToFormValues,
+  forHumans,
+  flatten,
+  convertFormValuesToObject,
+} from "../util";
 
 type RealmSettingsSessionsTabProps = {
   realm?: RealmRepresentation;
@@ -95,13 +100,20 @@ export const RealmSettingsTokensTab = ({
   );
 
   const save = async () => {
-    const attributes = flatten(form.getValues()["attributes"]);
+    const firstInstanceOnly = true;
+    const attributes = convertFormValuesToObject(
+      flatten(form.getValues()["attributes"]),
+      firstInstanceOnly
+    );
 
     try {
       const newRealm: RealmRepresentation = {
         ...realm,
         ...form.getValues(),
-        attributes,
+        attributes: {
+          attributes,
+          ...realm?.attributes,
+        },
       };
 
       await adminClient.realms.update({ realm: realmName }, newRealm);

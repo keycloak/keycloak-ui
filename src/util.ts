@@ -81,9 +81,15 @@ export const flatten = (
   }, {});
 };
 
-export const convertFormValuesToObject = (obj: any) => {
+export const convertFormValuesToObject = (
+  obj: any,
+  firstInstanceOnly?: boolean
+) => {
   const keyValues = Object.keys(obj).map((key) => {
-    const newKey = key.replace(/-/g, ".");
+    const newKey = firstInstanceOnly
+      ? key.replace(/-/, ".")
+      : key.replace(/-/g, ".");
+    console.log(newKey);
     return { [newKey]: obj[key] };
   });
   return Object.assign({}, ...keyValues);
