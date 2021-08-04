@@ -459,7 +459,7 @@ export const RealmSettingsTokensTab = ({
             >
               <Controller
                 name="attributes.actionTokenGeneratedByUserLifespan-verify-email"
-                defaultValue={0}
+                defaultValue={""}
                 control={form.control}
                 render={({ onChange, value }) => (
                   <TimeSelector
@@ -480,7 +480,7 @@ export const RealmSettingsTokensTab = ({
             >
               <Controller
                 name="attributes.actionTokenGeneratedByUserLifespan-idp-verify-account-via-email"
-                defaultValue={0}
+                defaultValue={""}
                 control={form.control}
                 render={({ onChange, value }) => (
                   <TimeSelector
@@ -501,7 +501,7 @@ export const RealmSettingsTokensTab = ({
             >
               <Controller
                 name="attributes.actionTokenGeneratedByUserLifespan-reset-credentials"
-                defaultValue={0}
+                defaultValue={""}
                 control={form.control}
                 render={({ onChange, value }) => (
                   <TimeSelector
@@ -522,7 +522,7 @@ export const RealmSettingsTokensTab = ({
             >
               <Controller
                 name="attributes.actionTokenGeneratedByUserLifespan-execute-actions"
-                defaultValue={0}
+                defaultValue={""}
                 control={form.control}
                 render={({ onChange, value }) => (
                   <TimeSelector

@@ -228,7 +228,7 @@ export const RealmSettingsSection = () => {
             >
               <RealmSettingsGeneralTab
                 save={save}
-                reset={() => resetForm(realm!)}
+                reset={() => resetForm(realm)}
               />
             </Tab>
             <Tab
@@ -257,7 +257,7 @@ export const RealmSettingsSection = () => {
             >
               <RealmSettingsThemesTab
                 save={save}
-                reset={() => resetForm(realm!)}
+                reset={() => resetForm(realm)}
                 realm={realm!}
               />
             </Tab>
@@ -350,9 +350,8 @@ export const RealmSettingsSection = () => {
               title={<TabTitleText>{t("realm-settings:tokens")}</TabTitleText>}
             >
               <RealmSettingsTokensTab
-                key={key}
                 realm={realm}
-                reset={() => resetForm(realm!)}
+                reset={() => resetForm(realm)}
               />
             </Tab>
           </KeycloakTabs>

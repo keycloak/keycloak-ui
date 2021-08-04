@@ -4,6 +4,7 @@ import _ from "lodash";
 import type ClientRepresentation from "keycloak-admin/lib/defs/clientRepresentation";
 import type { ProviderRepresentation } from "keycloak-admin/lib/defs/serverInfoRepesentation";
 import type KeycloakAdminClient from "keycloak-admin";
+import { useTranslation } from "react-i18next";
 
 export const sortProviders = (providers: {
   [index: string]: ProviderRepresentation;
@@ -112,6 +113,7 @@ export const emailRegexPattern =
   /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 
 export const forHumans = (seconds: number) => {
+  const { t } = useTranslation();
   const levels: [
     [number, string],
     [number, string],
@@ -119,11 +121,17 @@ export const forHumans = (seconds: number) => {
     [number, string],
     [number, string]
   ] = [
-    [Math.floor(seconds / 31536000), "years"],
-    [Math.floor((seconds % 31536000) / 86400), "days"],
-    [Math.floor(((seconds % 31536000) % 86400) / 3600), "hours"],
-    [Math.floor((((seconds % 31536000) % 86400) % 3600) / 60), "minutes"],
-    [(((seconds % 31536000) % 86400) % 3600) % 60, "seconds"],
+    [Math.floor(seconds / 31536000), t("common:times.years")],
+    [Math.floor((seconds % 31536000) / 86400), t("common:times.days")],
+    [
+      Math.floor(((seconds % 31536000) % 86400) / 3600),
+      t("common:times.hours"),
+    ],
+    [
+      Math.floor((((seconds % 31536000) % 86400) % 3600) / 60),
+      t("common:times.minutes"),
+    ],
+    [(((seconds % 31536000) % 86400) % 3600) % 60, t("common:times.seconds")],
   ];
   let returntext = "";
 
