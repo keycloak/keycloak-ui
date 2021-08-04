@@ -55,12 +55,12 @@ export const EditProviderCrumb = () => {
     <>
       <Breadcrumb>
         <BreadcrumbItem
-          component={Link}
-          // @ts-ignore
-          to={toRealmSettings({ realm, tab: "keys" })}
-        >
-          {t("keys")}
-        </BreadcrumbItem>
+          render={(props) => (
+            <Link {...props} to={toRealmSettings({ realm, tab: "keys" })}>
+              {t("keys")}
+            </Link>
+          )}
+        />
         <BreadcrumbItem>{t("providers")}</BreadcrumbItem>
         <BreadcrumbItem isActive>{t("editProvider")}</BreadcrumbItem>
       </Breadcrumb>
