@@ -7,7 +7,6 @@ import { useTranslation } from "react-i18next";
 import { useAdminClient } from "../../context/auth/AdminClient";
 import type identityProviderRepresentation from "keycloak-admin/lib/defs/identityProviderRepresentation";
 
-// import type { SamlConfigurationRepresentation } from "../SamlConfigurationRepresentation";
 import { JsonFileUpload } from "../../components/json-file-upload/JsonFileUpload";
 import { useRealm } from "../../context/realm-context/RealmContext";
 import { DescriptorSettings } from "./DescriptorSettings";
@@ -129,6 +128,7 @@ export const SamlConnectSettings = () => {
         <Switch
           id="kc-use-entity-descriptor-switch"
           label={t("common:on")}
+          data-testid="useEntityDescriptor"
           labelOff={t("common:off")}
           isChecked={descriptor}
           onChange={setDescriptor}
