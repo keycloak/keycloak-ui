@@ -33,6 +33,7 @@ import {
   forHumans,
   flatten,
   convertFormValuesToObject,
+  interpolateTimespan,
 } from "../util";
 
 type RealmSettingsSessionsTabProps = {
@@ -264,8 +265,8 @@ export const RealmSettingsTokensTab = ({
             <FormGroup
               label={t("accessTokenLifespan")}
               fieldId="accessTokenLifespan"
-              helperText={`It is recommended for this value to be shorter than the SSO session idle timeout: ${forHumans(
-                realm?.ssoSessionIdleTimeout!
+              helperText={`It is recommended for this value to be shorter than the SSO session idle timeout: ${interpolateTimespan(
+                forHumans(realm?.ssoSessionIdleTimeout!)
               )}`}
               labelIcon={
                 <HelpItem

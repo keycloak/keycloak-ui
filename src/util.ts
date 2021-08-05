@@ -120,6 +120,32 @@ export const emailRegexPattern =
 
 export const forHumans = (seconds: number) => {
   const { t } = useTranslation();
+
+  // const convertedToYears =
+  //   Math.floor(seconds / 31536000).toString() + " " + t("common:times.years");
+
+  // const convertedToDays =
+  //   Math.floor((seconds % 31536000) / 86400).toString() +
+  //   " " +
+  //   t("common:times.days");
+
+  // const convertedToHours =
+  //   Math.floor(((seconds % 31536000) % 86400) / 3600).toString() +
+  //   " " +
+  //   t("common:times.hours");
+
+  // const convertedToMinutes =
+  //   Math.floor((((seconds % 31536000) % 86400) % 3600) / 60).toString() +
+  //   " " +
+  //   t("common:times.minutes");
+
+  // console.log(convertedToMinutes);
+
+  // const convertedToSeconds =
+  //   ((((seconds % 31536000) % 86400) % 3600) % 60).toString() +
+  //   " " +
+  //   t("common:times.seconds");
+
   const levels: [
     [number, string],
     [number, string],
@@ -152,4 +178,39 @@ export const forHumans = (seconds: number) => {
         : levels[i][1]);
   }
   return returntext.trim();
+};
+
+export const interpolateTimespan = (forHumans: string) => {
+  const { t } = useTranslation();
+  const timespan = forHumans.split(" ");
+
+  if (timespan[1] === "Years") {
+    return t(`realm-settings:convertedToYearsValue`, {
+      convertedToYears: forHumans,
+    });
+  }
+
+  if (timespan[1] === "Days") {
+    return t(`realm-settings:convertedToDaysValue`, {
+      convertedToYears: forHumans,
+    });
+  }
+
+  if (timespan[1] === "Hours") {
+    return t(`realm-settings:convertedToHoursValue`, {
+      convertedToHours: forHumans,
+    });
+  }
+
+  if (timespan[1] === "Minutes") {
+    return t(`realm-settings:convertedToMinutesValue`, {
+      convertedToMinutes: forHumans,
+    });
+  }
+
+  if (timespan[1] === "Seconds") {
+    return t(`realm-settings:convertedToSecondsValue`, {
+      convertedToSeconds: forHumans,
+    });
+  }
 };
