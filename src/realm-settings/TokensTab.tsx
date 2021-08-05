@@ -101,19 +101,18 @@ export const RealmSettingsTokensTab = ({
 
   const save = async () => {
     const firstInstanceOnly = true;
-    const attributes = convertFormValuesToObject(
+    const flattenedAttributes = convertFormValuesToObject(
       flatten(form.getValues()["attributes"]),
       firstInstanceOnly
     );
+
+    const attributes = { ...flattenedAttributes, ...realm?.attributes };
 
     try {
       const newRealm: RealmRepresentation = {
         ...realm,
         ...form.getValues(),
-        attributes: {
-          attributes,
-          ...realm?.attributes,
-        },
+        attributes,
       };
 
       await adminClient.realms.update({ realm: realmName }, newRealm);
