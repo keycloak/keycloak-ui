@@ -106,7 +106,7 @@ export const AdvancedSettings = ({ isOIDC, isSAML }: AdvancedSettingsProps) => {
         <>
           <SwitchField
             field="config.addReadTokenRoleOnCreate"
-            label="storeTokensReadable"
+            label="storedTokensReadable"
           />
         </>
       )}

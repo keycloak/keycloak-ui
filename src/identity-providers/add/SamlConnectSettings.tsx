@@ -120,7 +120,7 @@ export const SamlConnectSettings = () => {
         fieldId="kc-use-entity-descriptor"
         labelIcon={
           <HelpItem
-            helpText="identity-providers-help:useDiscoveryEndpoint"
+            helpText="identity-providers-help:useEntityDescriptor"
             forLabel={t("useEntityDescriptor")}
             forID="kc-use-entity-descriptor-switch"
           />
