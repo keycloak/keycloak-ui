@@ -70,6 +70,8 @@ export const EventsSection = () => {
   const [searchDropdownOpen, setSearchDropdownOpen] = useState(false);
   const [selectOpen, setSelectOpen] = useState(false);
   const [selectedEvents, setSelectedEvents] = useState<string[]>([]);
+  const [selectedFormValues, setSelectedFormValues] =
+    useState<UserEventSearchForm>();
   const [events, setEvents] = useState<RealmEventsConfigRepresentation>();
   const [search, setSearch] = useState(false);
   const [chipsToDisplay, setChipsToDisplay] = useState<Record<string, any>>();
@@ -94,23 +96,16 @@ export const EventsSection = () => {
     setSearch(true);
   };
 
-  const formValues = getValues();
-
   const loader = async (first?: number, max?: number) => {
-    const searchEventValuesFormatted = {
-      user: formValues["userId"],
-      type: formValues?.eventTypes,
-      client: formValues["client"],
-      dateFrom: formValues["dateFrom"],
-      dateTo: formValues["dateTo"],
-    };
+    const formValues = getValues();
+    setSelectedFormValues(formValues);
 
     const params: { [key: string]: any } = {
-      user: searchEventValuesFormatted?.user,
-      type: searchEventValuesFormatted?.type,
-      client: searchEventValuesFormatted?.client,
-      dateFrom: searchEventValuesFormatted?.dateFrom,
-      dateTo: searchEventValuesFormatted?.dateTo,
+      user: formValues?.userId,
+      type: formValues?.eventTypes,
+      client: formValues?.client,
+      dateFrom: formValues?.dateFrom,
+      dateTo: formValues?.dateTo,
       first: first!,
       max: max!,
     };
@@ -119,13 +114,23 @@ export const EventsSection = () => {
       Object.entries(params).filter(([key]) => key !== "" && params[key])
     );
 
-    const selectedChips = Object.fromEntries(
-      Object.entries(reducedParams).filter(
-        ([key, value]) => key !== "max" && !!value
-      )
-    );
+    const replacementKeys = {
+      user: "User ID",
+      type: "Event type",
+      client: "Client",
+      dateFrom: "Date(from)",
+      dateTo: "Date(to)",
+    } as { [key: string]: string };
 
-    setChipsToDisplay(selectedChips);
+    const replacedKeysInChips = Object.keys(reducedParams)
+      .filter((key) => key !== "max")
+      .reduce((acc: any, key: string) => {
+        const newKey = replacementKeys[key];
+        acc[newKey] = reducedParams[key];
+        return acc;
+      }, {});
+
+    setChipsToDisplay(replacedKeysInChips);
     return await adminClient.realms.findEvents({ realm, ...reducedParams });
   };
 
@@ -266,12 +271,10 @@ export const EventsSection = () => {
                         id="kc-userId"
                         name="userId"
                         data-testid="userId-searchField"
-                        onChange={(_val, event) => {
-                          const { value } = event.currentTarget;
-                          setValue("userId", value);
+                        onChange={() => {
                           setIsDirty(true);
                         }}
-                        defaultValue={formValues?.userId ?? ""}
+                        defaultValue={selectedFormValues?.userId ?? ""}
                       />
                     </FormGroup>
                     <FormGroup
@@ -334,12 +337,10 @@ export const EventsSection = () => {
                         id="kc-client"
                         name="client"
                         data-testid="client-searchField"
-                        onChange={(_val, event) => {
-                          const { value } = event.currentTarget;
-                          setValue("client", value);
+                        onChange={() => {
                           setIsDirty(true);
                         }}
-                        defaultValue={formValues?.client ?? ""}
+                        defaultValue={selectedFormValues?.client ?? ""}
                       />
                     </FormGroup>
                     <FormGroup
@@ -355,12 +356,10 @@ export const EventsSection = () => {
                         className="pf-c-form-control pf-m-icon pf-m-calendar"
                         placeholder="yyyy-MM-dd"
                         data-testid="dateFrom-searchField"
-                        onChange={(_val, event) => {
-                          const { value } = event.currentTarget;
-                          setValue("dateFrom", value);
+                        onChange={() => {
                           setIsDirty(true);
                         }}
-                        defaultValue={formValues?.dateFrom ?? ""}
+                        defaultValue={selectedFormValues?.dateFrom ?? ""}
                       />
                     </FormGroup>
                     <FormGroup
@@ -376,12 +375,10 @@ export const EventsSection = () => {
                         className="pf-c-form-control pf-m-icon pf-m-calendar"
                         placeholder="yyyy-MM-dd"
                         data-testid="dateTo-searchField"
-                        onChange={(_val, event) => {
-                          const { value } = event.currentTarget;
-                          setValue("dateTo", value);
+                        onChange={() => {
                           setIsDirty(true);
                         }}
-                        defaultValue={formValues?.dateTo ?? ""}
+                        defaultValue={selectedFormValues?.dateTo ?? ""}
                       />
                     </FormGroup>
                     <ActionGroup>
@@ -408,14 +405,14 @@ export const EventsSection = () => {
               <div className="keycloak__searchChips pf-u-ml-md">
                 {Object.keys(chipsToDisplay).map((key, index) => (
                   <>
-                    {key === "type" ? (
+                    {key === "Event type" ? (
                       <ChipGroup
                         className="pf-u-mr-md pf-u-mb-md"
                         key={`search-chip-group-type-${index}`}
                         categoryName={key}
                         isClosable
                       >
-                        {chipsToDisplay.type.map(
+                        {chipsToDisplay["Event type"].map(
                           (typeChip: string, idx: number) => (
                             <Chip key={`search-type-chip-type-${idx}`}>
                               {typeChip}
