@@ -121,31 +121,6 @@ export const emailRegexPattern =
 export const forHumans = (seconds: number) => {
   const { t } = useTranslation();
 
-  // const convertedToYears =
-  //   Math.floor(seconds / 31536000).toString() + " " + t("common:times.years");
-
-  // const convertedToDays =
-  //   Math.floor((seconds % 31536000) / 86400).toString() +
-  //   " " +
-  //   t("common:times.days");
-
-  // const convertedToHours =
-  //   Math.floor(((seconds % 31536000) % 86400) / 3600).toString() +
-  //   " " +
-  //   t("common:times.hours");
-
-  // const convertedToMinutes =
-  //   Math.floor((((seconds % 31536000) % 86400) % 3600) / 60).toString() +
-  //   " " +
-  //   t("common:times.minutes");
-
-  // console.log(convertedToMinutes);
-
-  // const convertedToSeconds =
-  //   ((((seconds % 31536000) % 86400) % 3600) % 60).toString() +
-  //   " " +
-  //   t("common:times.seconds");
-
   const levels: [
     [number, string],
     [number, string],
