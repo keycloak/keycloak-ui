@@ -188,13 +188,13 @@ export const EventsSection = () => {
     </>
   );
 
-  const clearSelection = (e: any) => {
+  const clearEventTypeSelectionDropdown = (e: any) => {
     e.stopPropagation();
     setSelectedEvents([]);
     setValue("eventTypes", []);
   };
 
-  const deleteIndividualSelection = (e: any, chip: string) => {
+  const clearSelectionDropdown = (e: any, chip: string) => {
     const updatedEventSelection = selectedEvents.filter((obj) => obj !== chip);
     setSelectedEvents(updatedEventSelection);
     setValue("eventTypes", updatedEventSelection);
@@ -208,13 +208,24 @@ export const EventsSection = () => {
           <Chip
             isReadOnly={index === 0 ? true : false}
             key={chip}
-            onClick={(e) => deleteIndividualSelection(e, chip)}
+            onClick={(e) => clearSelectionDropdown(e, chip)}
           >
             {chip}
           </Chip>
         ))}
       </ChipGroup>
     );
+  };
+
+  const deleteChip = (chip: string) => {
+    const chips = chipsToDisplay?.["Event type"];
+    const index = chips?.indexOf(chip);
+    if (index !== -1) {
+      chips?.splice(index, 1);
+      setChipsToDisplay(chipsToDisplay);
+      setSelectedEvents(chips);
+    }
+    setKey(new Date().getTime());
   };
 
   return (
@@ -313,7 +324,7 @@ export const EventsSection = () => {
                             setIsDirty(true);
                           }
                         }}
-                        onClear={clearSelection}
+                        onClear={clearEventTypeSelectionDropdown}
                         isOpen={selectOpen}
                         aria-labelledby={"eventType"}
                         chipGroupComponent={chipGroupComponent()}
@@ -405,31 +416,38 @@ export const EventsSection = () => {
               <div className="keycloak__searchChips pf-u-ml-md">
                 {Object.keys(chipsToDisplay).map((key, index) => (
                   <>
-                    {key === "Event type" ? (
+                    {key !== "Event type" && (
                       <ChipGroup
                         className="pf-u-mr-md pf-u-mb-md"
-                        key={`search-chip-group-type-${index}`}
+                        key={`chip-group-search-other-${index}`}
+                        categoryName={key}
+                        isClosable
+                      >
+                        <Chip key={`chip-other-${index}`} isReadOnly>
+                          {chipsToDisplay[key]}
+                        </Chip>
+                      </ChipGroup>
+                    )}
+
+                    {key === "Event type" && (
+                      <ChipGroup
+                        className="pf-u-mr-md pf-u-mb-md"
+                        key={`chip-group-search-event_type-${index}`}
                         categoryName={key}
                         isClosable
                       >
                         {chipsToDisplay["Event type"].map(
-                          (typeChip: string, idx: number) => (
-                            <Chip key={`search-type-chip-type-${idx}`}>
-                              {typeChip}
-                            </Chip>
+                          (key: string, idx: number) => (
+                            <>
+                              <Chip
+                                key={`chip-event-type-${idx}`}
+                                onClick={() => deleteChip(key)}
+                              >
+                                {key}
+                              </Chip>
+                            </>
                           )
                         )}
-                      </ChipGroup>
-                    ) : (
-                      <ChipGroup
-                        className="pf-u-mr-md pf-u-mb-md"
-                        key={`search-chip-group-${index}`}
-                        categoryName={key}
-                        isClosable
-                      >
-                        <Chip key={`search-chip-${index}`} isReadOnly>
-                          {chipsToDisplay[key]}
-                        </Chip>
                       </ChipGroup>
                     )}
                   </>
