@@ -128,30 +128,30 @@ describe("Identity provider test", () => {
     it("clean up providers", () => {
       const modalUtils = new ModalUtils();
 
-      listingPage.deleteItem("bitbucket");
+      sidebarPage.goToIdentityProviders();
+      listingPage.itemExist("bitbucket").deleteItem("bitbucket");
       modalUtils.checkModalTitle(deletePrompt).confirmModal();
       masthead.checkNotificationMessage(deleteSuccessMsg);
-      cy.wait(2000);
 
-      listingPage.deleteItem("facebook");
+      sidebarPage.goToIdentityProviders();
+      listingPage.itemExist("facebook").deleteItem("facebook");
       modalUtils.checkModalTitle(deletePrompt).confirmModal();
       masthead.checkNotificationMessage(deleteSuccessMsg);
-      cy.wait(2000);
 
-      listingPage.deleteItem("github");
+      sidebarPage.goToIdentityProviders();
+      listingPage.itemExist("github").deleteItem("github");
       modalUtils.checkModalTitle(deletePrompt).confirmModal();
       masthead.checkNotificationMessage(deleteSuccessMsg);
-      cy.wait(2000);
 
-      listingPage.deleteItem("oidc");
+      sidebarPage.goToIdentityProviders();
+      listingPage.itemExist("oidc").deleteItem("oidc");
       modalUtils.checkModalTitle(deletePrompt).confirmModal();
       masthead.checkNotificationMessage(deleteSuccessMsg);
-      cy.wait(2000);
 
-      listingPage.deleteItem("saml");
+      sidebarPage.goToIdentityProviders();
+      listingPage.itemExist("saml").deleteItem("saml");
       modalUtils.checkModalTitle(deletePrompt).confirmModal();
       masthead.checkNotificationMessage(deleteSuccessMsg);
-      cy.wait(2000);
     });
   });
 });
