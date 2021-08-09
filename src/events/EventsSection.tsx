@@ -55,8 +55,19 @@ export const EventsSection = () => {
   const { realm } = useRealm();
   const [key, setKey] = useState(0);
 
-  const { getValues, register, reset, setValue } =
-    useForm<UserEventSearchForm>();
+  const [searchDropdownOpen, setSearchDropdownOpen] = useState(false);
+  const [selectOpen, setSelectOpen] = useState(false);
+  const [selectedEvents, setSelectedEvents] = useState<string[]>([]);
+  const [selectedFormValues, setSelectedFormValues] =
+    useState<UserEventSearchForm>();
+  const [events, setEvents] = useState<RealmEventsConfigRepresentation>();
+  const [search, setSearch] = useState(false);
+  const [chipsToDisplay, setChipsToDisplay] = useState<Record<string, any>>();
+
+  const { getValues, register, reset, setValue } = useForm<UserEventSearchForm>(
+    { shouldUnregister: false }
+  );
+
   const [isDirty, setIsDirty] = useState(false);
 
   const refresh = () => {
@@ -66,15 +77,6 @@ export const EventsSection = () => {
     setIsDirty(false);
     reset();
   };
-
-  const [searchDropdownOpen, setSearchDropdownOpen] = useState(false);
-  const [selectOpen, setSelectOpen] = useState(false);
-  const [selectedEvents, setSelectedEvents] = useState<string[]>([]);
-  const [selectedFormValues, setSelectedFormValues] =
-    useState<UserEventSearchForm>();
-  const [events, setEvents] = useState<RealmEventsConfigRepresentation>();
-  const [search, setSearch] = useState(false);
-  const [chipsToDisplay, setChipsToDisplay] = useState<Record<string, any>>();
 
   const onDropdownToggle = () => {
     setSearchDropdownOpen(!searchDropdownOpen);
@@ -217,13 +219,14 @@ export const EventsSection = () => {
     );
   };
 
-  const deleteChip = (chip: string) => {
+  const deleteEventTypeChip = (chip: string) => {
     const chips = chipsToDisplay?.["Event type"];
     const index = chips?.indexOf(chip);
     if (index !== -1) {
       chips?.splice(index, 1);
       setChipsToDisplay(chipsToDisplay);
       setSelectedEvents(chips);
+      setValue("eventTypes", [...chips]);
     }
     setKey(new Date().getTime());
   };
@@ -414,36 +417,38 @@ export const EventsSection = () => {
             </Flex>
             {search && chipsToDisplay ? (
               <div className="keycloak__searchChips pf-u-ml-md">
-                {Object.keys(chipsToDisplay).map((key, index) => (
+                {Object.keys(chipsToDisplay).map((chip, index) => (
                   <>
-                    {key !== "Event type" && (
+                    {chip !== "Event type" && (
                       <ChipGroup
                         className="pf-u-mr-md pf-u-mb-md"
-                        key={`chip-group-search-other-${index}`}
-                        categoryName={key}
+                        key={`chip-group-${index}`}
+                        categoryName={chip}
                         isClosable
                       >
-                        <Chip key={`chip-other-${index}`} isReadOnly>
-                          {chipsToDisplay[key]}
+                        <Chip key={`chip-${index}`} isReadOnly>
+                          {chipsToDisplay[chip]}
                         </Chip>
                       </ChipGroup>
                     )}
 
-                    {key === "Event type" && (
+                    {chip === "Event type" && (
                       <ChipGroup
                         className="pf-u-mr-md pf-u-mb-md"
-                        key={`chip-group-search-event_type-${index}`}
-                        categoryName={key}
+                        key={`eventType-chip-group-${index}`}
+                        categoryName={chip}
                         isClosable
                       >
-                        {chipsToDisplay["Event type"].map(
-                          (key: string, idx: number) => (
+                        {chipsToDisplay?.["Event type"].map(
+                          (eventTypeChip: string, idx: number) => (
                             <>
                               <Chip
-                                key={`chip-event-type-${idx}`}
-                                onClick={() => deleteChip(key)}
+                                key={`eventType-chip-${idx}`}
+                                onClick={() =>
+                                  deleteEventTypeChip(eventTypeChip)
+                                }
                               >
-                                {key}
+                                {eventTypeChip}
                               </Chip>
                             </>
                           )
