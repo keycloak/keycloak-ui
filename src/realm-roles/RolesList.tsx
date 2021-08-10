@@ -1,4 +1,4 @@
-import React, { ReactNode, useState } from "react";
+import React, { FunctionComponent, useState } from "react";
 import { Link, useHistory, useRouteMatch } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { AlertVariant, Button, ButtonVariant } from "@patternfly/react-core";
@@ -73,9 +73,7 @@ export const RolesList = ({
 
   const RoleDetailLink = (role: RoleRepresentation) => (
     <>
-      <RoleLink role={role}>
-        {role.name}
-      </RoleLink>
+      <RoleLink role={role}>{role.name}</RoleLink>
       {role.name?.includes("default-role") ? (
         <HelpItem
           helpText={t("defaultRole")}
