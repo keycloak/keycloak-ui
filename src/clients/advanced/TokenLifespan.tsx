@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Control, Controller } from "react-hook-form";
+import { Control, Controller, FieldValues } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import {
   FormGroup,
@@ -20,7 +20,7 @@ type TokenLifespanProps = {
   id: string;
   name: string;
   defaultValue: string;
-  control: Control<Record<string, any>>;
+  control: Control<FieldValues>;
   units?: Unit[];
 };
 
@@ -59,7 +59,6 @@ export const TokenLifespan = ({
           <Split hasGutter>
             <SplitItem>
               <Select
-                toggleId={`toggle-${id}`}
                 variant={SelectVariant.single}
                 onToggle={(isExpanded) => setOpen(isExpanded)}
                 isOpen={open}
@@ -68,19 +67,17 @@ export const TokenLifespan = ({
                   setOpen(false);
                 }}
                 selections={[
-                  value === "" || value === -1 ? t(never) : t(expires),
+                  typeof value === "number" && value !== -1
+                    ? t(expires)
+                    : t(never),
                 ]}
               >
-                <SelectOption key={never} value={-1}>
-                  {t(never)}
-                </SelectOption>
-                <SelectOption key={expires} value={60}>
-                  {t(expires)}
-                </SelectOption>
+                <SelectOption value={-1}>{t(never)}</SelectOption>
+                <SelectOption value={60}>{t(expires)}</SelectOption>
               </Select>
             </SplitItem>
             <SplitItem>
-              {value !== "" && value !== -1 && (
+              {typeof value === "number" && value !== -1 && (
                 <TimeSelector units={units} value={value} onChange={onChange} />
               )}
             </SplitItem>
