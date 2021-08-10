@@ -76,7 +76,7 @@ export const RolesList = ({
   const RoleDetailLink = (role: RoleRepresentation) => (
     <>
       <RoleLink role={role}>
-        <>{role.name}</>
+        {role.name}
       </RoleLink>
       {role.name?.includes("default-role") ? (
         <HelpItem
