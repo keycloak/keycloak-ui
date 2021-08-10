@@ -34,13 +34,11 @@ type RolesListProps = {
   ) => Promise<RoleRepresentation[]>;
 };
 
-const RoleLink = ({
-  children,
-  role,
-}: {
+type RoleLinkProps = {
   role: RoleRepresentation;
-  children: ReactNode;
-}) => {
+};
+
+const RoleLink: FunctionComponent<RoleLinkProps> = ({ children, role }) => {
   const { url } = useRouteMatch();
   return (
     <Link key={role.id} to={`${url}/${role.id}/details`}>
