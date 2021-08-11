@@ -231,6 +231,35 @@ export const EventsSection = () => {
     setKey(new Date().getTime());
   };
 
+  const deleteCategory = (categoryChip: string) => {
+    const chips = chipsToDisplay;
+    const remainingCategories = Object.fromEntries(
+      Object.entries(chips!).filter(([key]) => key !== categoryChip)
+    );
+    setChipsToDisplay(remainingCategories);
+
+    const updatedFormSearchObj = {
+      userId: remainingCategories["User ID"] || "",
+      eventTypes: remainingCategories["Event type"] || [],
+      client: remainingCategories["Client"] || "",
+      dateFrom: remainingCategories["Date(from)"] || "",
+      dateTo: remainingCategories["Date(to)"] || "",
+    };
+
+    if (updatedFormSearchObj.eventTypes.length === 0) {
+      setSelectedEvents([]);
+    }
+
+    setSelectedFormValues(updatedFormSearchObj);
+    setValue("userId", updatedFormSearchObj.userId);
+    setValue("eventTypes", [...updatedFormSearchObj.eventTypes]);
+    setValue("client", updatedFormSearchObj.client);
+    setValue("dateFrom", updatedFormSearchObj.dateFrom);
+    setValue("dateTo", updatedFormSearchObj.dateTo);
+
+    setKey(new Date().getTime());
+  };
+
   return (
     <>
       <ViewHeader
@@ -425,6 +454,7 @@ export const EventsSection = () => {
                         key={`chip-group-${index}`}
                         categoryName={chip}
                         isClosable
+                        onClick={() => deleteCategory(chip)}
                       >
                         <Chip key={`chip-${index}`} isReadOnly>
                           {chipsToDisplay[chip]}
@@ -438,6 +468,7 @@ export const EventsSection = () => {
                         key={`eventType-chip-group-${index}`}
                         categoryName={chip}
                         isClosable
+                        onClick={() => deleteCategory(chip)}
                       >
                         {chipsToDisplay?.["Event type"].map(
                           (eventTypeChip: string, idx: number) => (
