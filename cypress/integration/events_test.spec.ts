@@ -1,15 +1,15 @@
 import LoginPage from "../support/pages/LoginPage";
 import SidebarPage from "../support/pages/admin_console/SidebarPage";
 import EventsPage from "../support/pages/admin_console/manage/events/EventsPage";
-import RealmSettingsPage from "../support/pages/admin_console/manage/realm_settings/RealmSettingsPage";
-import Masthead from "../support/pages/admin_console/Masthead";
+// import RealmSettingsPage from "../support/pages/admin_console/manage/realm_settings/RealmSettingsPage";
+// import Masthead from "../support/pages/admin_console/Masthead";
 import { keycloakBefore } from "../support/util/keycloak_before";
 
 const loginPage = new LoginPage();
 const sidebarPage = new SidebarPage();
 const eventsPage = new EventsPage();
-const realmSettingsPage = new RealmSettingsPage();
-const masthead = new Masthead();
+// const realmSettingsPage = new RealmSettingsPage();
+// const masthead = new Masthead();
 
 describe("Search events test", function () {
   describe("Search events dropdown", function () {
@@ -35,30 +35,30 @@ describe("Search events test", function () {
       eventsPage.shouldHaveSearchBtnDisabled();
     });
 
-    it("Check search by event type works", () => {
-      sidebarPage.goToRealmSettings();
-      cy.getId("rs-realm-events-tab").click();
+    // it("Check search by event type works", () => {
+    //   sidebarPage.goToRealmSettings();
+    //   cy.getId("rs-realm-events-tab").click();
 
-      cy.get("#eventsEnabled-switch-on")
-        .should("exist")
-        .then((exist) => {
-          if (exist) {
-            sidebarPage.goToEvents();
-            eventsPage.shouldDoSearchByEventType();
-          } else {
-            realmSettingsPage
-              .toggleSwitch(realmSettingsPage.enableEvents)
-              .save(realmSettingsPage.eventsUserSave);
+    //   cy.get("#eventsEnabled-switch-on")
+    //     .should("exist")
+    //     .then((exist) => {
+    //       if (exist) {
+    //         sidebarPage.goToEvents();
+    //         eventsPage.shouldDoSearchByEventType();
+    //       } else {
+    //         realmSettingsPage
+    //           .toggleSwitch(realmSettingsPage.enableEvents)
+    //           .save(realmSettingsPage.eventsUserSave);
 
-            masthead.checkNotificationMessage(
-              "Successfully saved configuration"
-            );
+    //         masthead.checkNotificationMessage(
+    //           "Successfully saved configuration"
+    //         );
 
-            sidebarPage.goToEvents();
-            eventsPage.shouldDoSearchByEventType();
-          }
-        });
-    });
+    //         sidebarPage.goToEvents();
+    //         eventsPage.shouldDoSearchByEventType();
+    //       }
+    //     });
+    // });
 
     it("Check `search events` button enabled", () => {
       eventsPage.shouldHaveSearchBtnEnabled();

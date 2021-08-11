@@ -71,8 +71,6 @@ export const EventsSection = () => {
     formState: { isDirty },
   } = useForm<UserEventSearchForm>({ shouldUnregister: false });
 
-  console.log(">>>> isDirty ", isDirty);
-
   const refresh = () => {
     setKey(new Date().getTime());
     setSelectedEvents([]);
