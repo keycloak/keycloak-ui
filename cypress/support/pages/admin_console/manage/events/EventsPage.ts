@@ -1,18 +1,19 @@
 export default class EventsPage {
-  searchEventDrpDwn: string = ".pf-c-dropdown__toggle";
-  searchEventDrpDwnBtn: string =
+  searchEventDrpDwn = ".pf-c-dropdown__toggle";
+  searchEventDrpDwnBtn =
     ".keycloak__user_events_search_selector_dropdown__toggle";
-  searchForm: string = ".pf-c-dropdown__menu";
-  userIdInputFld: string = "userId-searchField";
-  eventTypeDrpDwnFld: string = "event-type-searchField";
-  clientInputFld: string = "client-searchField";
-  dateFromInputFld: string = "dateFrom-searchField";
-  dateToInputFld: string = "dateTo-searchField";
-  searchEventsBtn: string = "search-events-btn";
-  eventTypeList: string = ".pf-c-form-control";
-  eventTypeOption: string = ".pf-c-select__menu-item";
-  eventTypeBtn: string = ".pf-c-button.pf-c-select__toggle-button.pf-m-plain";
-  eventsPageTitle: string = ".pf-c-title";
+  searchForm = ".pf-c-dropdown__menu";
+  userIdInputFld = "userId-searchField";
+  eventTypeDrpDwnFld = "event-type-searchField";
+  clientInputFld = "client-searchField";
+  dateFromInputFld = "dateFrom-searchField";
+  dateToInputFld = "dateTo-searchField";
+  searchEventsBtn = "search-events-btn";
+  eventTypeList = ".pf-c-form-control";
+  eventTypeOption = ".pf-c-select__menu-item";
+  eventTypeInputFld = ".pf-c-form-control.pf-c-select__toggle-typeahead";
+  eventTypeBtn = ".pf-c-button.pf-c-select__toggle-button.pf-m-plain";
+  eventsPageTitle = ".pf-c-title";
 
   shouldDisplay() {
     cy.get(this.searchEventDrpDwn).should("exist");
@@ -42,6 +43,18 @@ export default class EventsPage {
     cy.get(this.searchEventDrpDwnBtn).click();
     cy.getId(this.userIdInputFld).type("11111");
     cy.getId(this.searchEventsBtn).should("not.have.attr", "disabled");
+  }
+
+  shouldDoSearchByEventType() {
+    cy.get(this.searchEventDrpDwnBtn).click();
+    cy.get(this.eventTypeInputFld).type("LOGIN");
+    cy.get(this.eventTypeOption).contains("LOGIN").click();
+    cy.getId(this.searchEventsBtn).click();
+    cy.get("table").contains("td", "LOGIN");
+    cy.get("table").should("not.have.text", "CODE_TO_TOKEN");
+    cy.get("table").should("not.have.text", "CODE_TO_TOKEN_ERROR");
+    cy.get("table").should("not.have.text", "LOGIN_ERROR");
+    cy.get("table").should("not.have.text", "LOGOUT");
   }
 
   shouldDoNoResultsSearch() {
