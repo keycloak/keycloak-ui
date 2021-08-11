@@ -61,7 +61,6 @@ export const EventsSection = () => {
   const [selectedFormValues, setSelectedFormValues] =
     useState<UserEventSearchForm>();
   const [events, setEvents] = useState<RealmEventsConfigRepresentation>();
-  const [search, setSearch] = useState(false);
   const [chipsToDisplay, setChipsToDisplay] = useState<Record<string, any>>();
 
   const { getValues, register, reset, setValue } = useForm<UserEventSearchForm>(
@@ -72,18 +71,9 @@ export const EventsSection = () => {
 
   const refresh = () => {
     setKey(new Date().getTime());
-    setSearch(false);
     setSelectedEvents([]);
     setIsDirty(false);
     reset();
-  };
-
-  const onDropdownToggle = () => {
-    setSearchDropdownOpen(!searchDropdownOpen);
-  };
-
-  const onSelectToggle = () => {
-    setSelectOpen(!selectOpen);
   };
 
   useFetch(
@@ -95,10 +85,9 @@ export const EventsSection = () => {
   const searchEvents = () => {
     setSearchDropdownOpen(false);
     setKey(new Date().getTime());
-    setSearch(true);
   };
 
-  const loader = async (first?: number, max?: number) => {
+  const loader = (first?: number, max?: number) => {
     const formValues = getValues();
     setSelectedFormValues(formValues);
 
@@ -108,8 +97,8 @@ export const EventsSection = () => {
       client: formValues?.client,
       dateFrom: formValues?.dateFrom,
       dateTo: formValues?.dateTo,
-      first: first!,
-      max: max!,
+      first,
+      max,
     };
 
     const reducedParams = Object.fromEntries(
@@ -133,7 +122,7 @@ export const EventsSection = () => {
       }, {});
 
     setChipsToDisplay(replacedKeysInChips);
-    return await adminClient.realms.findEvents({ realm, ...reducedParams });
+    return adminClient.realms.findEvents({ realm, ...reducedParams });
   };
 
   const StatusRow = (event: EventRepresentation) => (
@@ -178,8 +167,8 @@ export const EventsSection = () => {
   const DetailCell = (event: EventRepresentation) => (
     <>
       <DescriptionList isHorizontal className="keycloak_eventsection_details">
-        {Object.keys(event.details!).map((k, index) => (
-          <DescriptionListGroup key={`detail-${index}`}>
+        {Object.keys(event.details!).map((k) => (
+          <DescriptionListGroup key={k}>
             <DescriptionListTerm>{k}</DescriptionListTerm>
             <DescriptionListDescription>
               {event.details![k]}
@@ -190,13 +179,13 @@ export const EventsSection = () => {
     </>
   );
 
-  const clearEventTypeSelectionDropdown = (e: any) => {
+  const clearEventTypeSelectionDropdown = (e: React.MouseEvent) => {
     e.stopPropagation();
     setSelectedEvents([]);
     setValue("eventTypes", []);
   };
 
-  const clearSelectionDropdown = (e: any, chip: string) => {
+  const clearSelectionDropdown = (e: React.MouseEvent, chip: string) => {
     const updatedEventSelection = selectedEvents.filter((obj) => obj !== chip);
     setSelectedEvents(updatedEventSelection);
     setValue("eventTypes", updatedEventSelection);
@@ -206,9 +195,9 @@ export const EventsSection = () => {
   const chipGroupComponent = () => {
     return (
       <ChipGroup>
-        {(selectedEvents || []).map((chip, index) => (
+        {selectedEvents.map((chip, index) => (
           <Chip
-            isReadOnly={index === 0 ? true : false}
+            isReadOnly={index === 0}
             key={chip}
             onClick={(e) => clearSelectionDropdown(e, chip)}
           >
@@ -290,7 +279,7 @@ export const EventsSection = () => {
                   toggle={
                     <DropdownToggle
                       data-testid="userEventsSearchSelectorToggle"
-                      onToggle={onDropdownToggle}
+                      onToggle={(isOpen) => setSearchDropdownOpen(isOpen)}
                       className="keycloak__user_events_search_selector_dropdown__toggle pf-u-mt-md pf-u-ml-md pf-u-mb-md"
                     >
                       {t("searchForEvent")}
@@ -336,25 +325,17 @@ export const EventsSection = () => {
                         }}
                         variant={SelectVariant.typeaheadMulti}
                         typeAheadAriaLabel="Select"
-                        onToggle={onSelectToggle}
+                        onToggle={(isOpen) => setSelectOpen(isOpen)}
                         selections={selectedEvents}
                         onSelect={(_, value) => {
                           const option = value.toString();
                           register("eventTypes");
-                          if (selectedEvents?.includes(option)) {
-                            setSelectedEvents(
-                              selectedEvents.filter((item) => item !== option)
-                            );
-                            setValue(
-                              "eventTypes",
-                              selectedEvents.filter((item) => item !== option)
-                            );
-                            setIsDirty(true);
-                          } else {
-                            setSelectedEvents([...selectedEvents, option]);
-                            setValue("eventTypes", [...selectedEvents, option]);
-                            setIsDirty(true);
-                          }
+                          const selected = selectedEvents.includes(option)
+                            ? selectedEvents.filter((item) => item !== option)
+                            : [...selectedEvents, option];
+                          setSelectedEvents(selected);
+                          setValue("eventTypes", selected);
+                          setIsDirty(true);
                         }}
                         onClear={clearEventTypeSelectionDropdown}
                         isOpen={selectOpen}
@@ -444,7 +425,7 @@ export const EventsSection = () => {
                 </Button>
               </FlexItem>
             </Flex>
-            {search && chipsToDisplay ? (
+            {chipsToDisplay ? (
               <div className="keycloak__searchChips pf-u-ml-md">
                 {Object.keys(chipsToDisplay).map((chip, index) => (
                   <>
