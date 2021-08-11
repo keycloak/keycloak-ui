@@ -63,16 +63,20 @@ export const EventsSection = () => {
   const [events, setEvents] = useState<RealmEventsConfigRepresentation>();
   const [chipsToDisplay, setChipsToDisplay] = useState<Record<string, any>>();
 
-  const { getValues, register, reset, setValue } = useForm<UserEventSearchForm>(
-    { shouldUnregister: false }
-  );
+  const {
+    getValues,
+    register,
+    reset,
+    setValue,
+    formState: { isDirty },
+  } = useForm<UserEventSearchForm>({ shouldUnregister: false });
 
-  const [isDirty, setIsDirty] = useState(false);
+  console.log(">>>> isDirty ", isDirty);
 
   const refresh = () => {
     setKey(new Date().getTime());
     setSelectedEvents([]);
-    setIsDirty(false);
+    !isDirty;
     reset();
   };
 
@@ -304,7 +308,7 @@ export const EventsSection = () => {
                         name="userId"
                         data-testid="userId-searchField"
                         onChange={() => {
-                          setIsDirty(true);
+                          isDirty;
                         }}
                         defaultValue={selectedFormValues?.userId ?? ""}
                       />
@@ -335,7 +339,7 @@ export const EventsSection = () => {
                             : [...selectedEvents, option];
                           setSelectedEvents(selected);
                           setValue("eventTypes", selected);
-                          setIsDirty(true);
+                          isDirty;
                         }}
                         onClear={clearEventTypeSelectionDropdown}
                         isOpen={selectOpen}
@@ -362,7 +366,7 @@ export const EventsSection = () => {
                         name="client"
                         data-testid="client-searchField"
                         onChange={() => {
-                          setIsDirty(true);
+                          isDirty;
                         }}
                         defaultValue={selectedFormValues?.client ?? ""}
                       />
@@ -381,7 +385,7 @@ export const EventsSection = () => {
                         placeholder="yyyy-MM-dd"
                         data-testid="dateFrom-searchField"
                         onChange={() => {
-                          setIsDirty(true);
+                          isDirty;
                         }}
                         defaultValue={selectedFormValues?.dateFrom ?? ""}
                       />
@@ -400,7 +404,7 @@ export const EventsSection = () => {
                         placeholder="yyyy-MM-dd"
                         data-testid="dateTo-searchField"
                         onChange={() => {
-                          setIsDirty(true);
+                          isDirty;
                         }}
                         defaultValue={selectedFormValues?.dateTo ?? ""}
                       />
