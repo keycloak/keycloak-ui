@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { FunctionComponent, useState } from "react";
 import { Link, useHistory, useRouteMatch } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { AlertVariant, Button, ButtonVariant } from "@patternfly/react-core";
@@ -15,6 +15,7 @@ import type RealmRepresentation from "keycloak-admin/lib/defs/realmRepresentatio
 import { HelpItem } from "../components/help-enabler/HelpItem";
 
 import "./RealmRolesSection.css";
+import { toRealmRole } from "./routes/RealmRole";
 
 type myRealmRepresentation = RealmRepresentation & {
   defaultRole?: {
@@ -34,11 +35,16 @@ type RolesListProps = {
   ) => Promise<RoleRepresentation[]>;
 };
 
-const RoleLink = ({ role }: { role: RoleRepresentation }) => {
-  const { url } = useRouteMatch();
+type RoleLinkProps = {
+  role: RoleRepresentation;
+};
+
+const RoleLink: FunctionComponent<RoleLinkProps> = ({ children, role }) => {
+  const { realm } = useRealm();
+
   return (
-    <Link key={role.id} to={`${url}/${role.id}/details`}>
-      {role.name}
+    <Link key={role.id} to={toRealmRole({ realm, id: role.id! })}>
+      {children}
     </Link>
   );
 };
@@ -69,7 +75,7 @@ export const RolesList = ({
 
   const RoleDetailLink = (role: RoleRepresentation) => (
     <>
-      <RoleLink role={role} />
+      <RoleLink role={role}>{role.name}</RoleLink>
       {role.name?.includes("default-role") ? (
         <HelpItem
           helpText={t("defaultRole")}

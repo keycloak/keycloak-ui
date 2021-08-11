@@ -16,7 +16,7 @@ import type UserRepresentation from "keycloak-admin/lib/defs/userRepresentation"
 import React, { useEffect, useState } from "react";
 import { Controller, FormProvider, useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
-import { useHistory } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
 import { useAlerts } from "../components/alert/Alerts";
 import { useConfirmDialog } from "../components/confirm-dialog/ConfirmDialog";
 import { KeycloakTabs } from "../components/keycloak-tabs/KeycloakTabs";
@@ -24,7 +24,7 @@ import { ViewHeader } from "../components/view-header/ViewHeader";
 import { useAdminClient, useFetch } from "../context/auth/AdminClient";
 import { useRealm } from "../context/realm-context/RealmContext";
 import { useServerInfo } from "../context/server-info/ServerInfoProvider";
-//import { LocalizationTab } from "./LocalizationTab";
+import { LocalizationTab } from "./LocalizationTab";
 import { useWhoAmI } from "../context/whoami/WhoAmI";
 import { toUpperCase } from "../util";
 import { RealmSettingsEmailTab } from "./EmailTab";
@@ -34,9 +34,11 @@ import { KeysListTab } from "./KeysListTab";
 import { KeysProvidersTab } from "./KeysProvidersTab";
 import { RealmSettingsLoginTab } from "./LoginTab";
 import { PartialImportDialog } from "./PartialImport";
+import { toRealmSettings } from "./routes/RealmSettings";
 import { SecurityDefences } from "./security-defences/SecurityDefences";
 import { RealmSettingsSessionsTab } from "./SessionsTab";
 import { RealmSettingsThemesTab } from "./ThemesTab";
+import { RealmSettingsTokensTab } from "./TokensTab";
 
 type RealmSettingsHeaderProps = {
   onChange: (value: boolean) => void;
@@ -52,9 +54,13 @@ export const EditProviderCrumb = () => {
   return (
     <>
       <Breadcrumb>
-        <BreadcrumbItem to={`#/${realm}/realm-settings/keys`}>
-          {t("keys")}
-        </BreadcrumbItem>
+        <BreadcrumbItem
+          render={(props) => (
+            <Link {...props} to={toRealmSettings({ realm, tab: "keys" })}>
+              {t("keys")}
+            </Link>
+          )}
+        />
         <BreadcrumbItem>{t("providers")}</BreadcrumbItem>
         <BreadcrumbItem isActive>{t("editProvider")}</BreadcrumbItem>
       </Breadcrumb>
@@ -227,7 +233,7 @@ export const RealmSettingsSection = () => {
             >
               <RealmSettingsGeneralTab
                 save={save}
-                reset={() => resetForm(realm!)}
+                reset={() => resetForm(realm)}
               />
             </Tab>
             <Tab
@@ -256,7 +262,7 @@ export const RealmSettingsSection = () => {
             >
               <RealmSettingsThemesTab
                 save={save}
-                reset={() => resetForm(realm!)}
+                reset={() => resetForm(realm)}
                 realm={realm!}
               />
             </Tab>
@@ -305,7 +311,7 @@ export const RealmSettingsSection = () => {
               <EventsTab />
             </Tab>
 
-            {/*     <Tab
+            <Tab
               id="localization"
               eventKey="localization"
               data-testid="rs-localization-tab"
@@ -320,7 +326,7 @@ export const RealmSettingsSection = () => {
                   realm={realm}
                 />
               )}
-              </Tab> */}
+            </Tab>
             <Tab
               id="securityDefences"
               eventKey="securityDefences"
@@ -339,7 +345,16 @@ export const RealmSettingsSection = () => {
                 <TabTitleText>{t("realm-settings:sessions")}</TabTitleText>
               }
             >
-              <RealmSettingsSessionsTab key={key} realm={realm} />
+              {realm && <RealmSettingsSessionsTab key={key} realm={realm} />}
+            </Tab>
+            <Tab
+              id="tokens"
+              eventKey="tokens"
+              data-testid="rs-tokens-tab"
+              aria-label="tokens-tab"
+              title={<TabTitleText>{t("realm-settings:tokens")}</TabTitleText>}
+            >
+              <RealmSettingsTokensTab reset={() => resetForm(realm)} />
             </Tab>
           </KeycloakTabs>
         </FormProvider>

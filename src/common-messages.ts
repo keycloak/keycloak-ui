@@ -107,6 +107,7 @@ export default {
       minutes: "Minutes",
       hours: "Hours",
       days: "Days",
+      years: "Years",
     },
 
     attributes: "Attributes",
@@ -136,5 +137,11 @@ export default {
     leaveDirtyConfirm:
       "Do you want to leave this page without saving? Any unsaved changes will be lost.",
     leave: "Leave",
+    reorder: "Reorder",
+
+    onDragStart: "Dragging started for item {{item}}",
+    onDragMove: "Dragging item {{item}}",
+    onDragCancel: "Dragging cancelled. List is unchanged.",
+    onDragFinish: "Dragging finished {{list}}",
   },
 };

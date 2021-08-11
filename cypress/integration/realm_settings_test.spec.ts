@@ -87,7 +87,7 @@ describe("Realm settings", () => {
     return this;
   };
 
-  /*const addBundle = () => {
+  const addBundle = () => {
     const localizationUrl = `/auth/admin/realms/${realmName}/localization/en`;
     cy.intercept(localizationUrl).as("localizationFetch");
 
@@ -99,7 +99,7 @@ describe("Realm settings", () => {
     cy.wait(["@localizationFetch"]);
 
     return this;
-  };*/
+  };
 
   it("Go to general tab", function () {
     sidebarPage.goToRealmSettings();
@@ -264,7 +264,7 @@ describe("Realm settings", () => {
     realmSettingsPage.testSelectFilter();
   });
 
-  /* it("add locale", () => {
+  it("add locale", () => {
     sidebarPage.goToRealmSettings();
 
     cy.getId("rs-localization-tab").click();
@@ -274,7 +274,7 @@ describe("Realm settings", () => {
     masthead.checkNotificationMessage(
       "Success! The localization text has been created."
     );
-  });*/
+  });
 
   it("Realm header settings", () => {
     sidebarPage.goToRealmSettings();
@@ -328,5 +328,50 @@ describe("Realm settings", () => {
       "have.value",
       10
     );
+  });
+
+  it("add token data", () => {
+    sidebarPage.goToRealmSettings();
+
+    cy.getId("rs-tokens-tab").click();
+
+    realmSettingsPage.populateTokensPage();
+    realmSettingsPage.save("tokens-tab-save");
+
+    masthead.checkNotificationMessage("Realm successfully updated");
+  });
+
+  it("check that token data was saved", () => {
+    sidebarPage.goToRealmSettings();
+
+    cy.getId("rs-tokens-tab").click();
+
+    cy.getId(realmSettingsPage.accessTokenLifespanInput).should(
+      "have.value",
+      1
+    );
+    cy.getId(realmSettingsPage.accessTokenLifespanImplicitInput).should(
+      "have.value",
+      2
+    );
+    cy.getId(realmSettingsPage.clientLoginTimeoutInput).should("have.value", 3);
+    cy.getId(realmSettingsPage.userInitiatedActionLifespanInput).should(
+      "have.value",
+      4
+    );
+
+    cy.getId(realmSettingsPage.defaultAdminInitatedInput).should(
+      "have.value",
+      5
+    );
+    cy.getId(realmSettingsPage.emailVerificationInput).should("have.value", 6);
+
+    cy.getId(realmSettingsPage.idpEmailVerificationInput).should(
+      "have.value",
+      7
+    );
+    cy.getId(realmSettingsPage.forgotPasswordInput).should("have.value", 8);
+
+    cy.getId(realmSettingsPage.executeActionsInput).should("have.value", 9);
   });
 });

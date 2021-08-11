@@ -12,7 +12,7 @@ import {
   TextArea,
 } from "@patternfly/react-core";
 import FileSaver from "file-saver";
-import React, { useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useAdminClient, useFetch } from "../../context/auth/AdminClient";
 import { useServerInfo } from "../../context/server-info/ServerInfoProvider";
@@ -45,6 +45,11 @@ export const DownloadDialog = ({
   const [snippet, setSnippet] = useState("");
   const [openType, setOpenType] = useState(false);
 
+  const selectedConfig = useMemo(
+    () => configFormats?.find((config) => config.id === selected) ?? null,
+    [selected]
+  );
+
   useFetch(
     async () => {
       const snippet = await adminClient.clients.getInstallationProviders({
@@ -60,6 +65,10 @@ export const DownloadDialog = ({
     (snippet) => setSnippet(snippet),
     [id, selected]
   );
+
+  // Clear snippet when selected config changes, this prevents old snippets from being displayed during fetch.
+  useEffect(() => setSnippet(""), [id, selected]);
+
   return (
     <ConfirmDialogModal
       titleKey={t("clients:downloadAdaptorTitle")}
@@ -108,17 +117,16 @@ export const DownloadDialog = ({
               <Select
                 toggleId="type"
                 isOpen={openType}
-                onToggle={() => {
-                  setOpenType(!openType);
-                }}
+                onToggle={(isExpanded) => setOpenType(isExpanded)}
                 variant={SelectVariant.single}
                 value={selected}
                 selections={selected}
                 onSelect={(_, value) => {
-                  setSelected(value as string);
+                  setSelected(value.toString());
                   setOpenType(false);
                 }}
                 aria-label="Select Input"
+                menuAppendTo={() => document.body}
               >
                 {configFormats.map((configFormat) => (
                   <SelectOption
@@ -132,28 +140,30 @@ export const DownloadDialog = ({
               </Select>
             </FormGroup>
           </StackItem>
-          <StackItem isFilled>
-            <FormGroup
-              fieldId="details"
-              label={t("clients:details")}
-              labelIcon={
-                <HelpItem
-                  helpText={t("clients-help:details")}
-                  forLabel={t("clients:details")}
-                  forID="details"
+          {!selectedConfig?.downloadOnly && (
+            <StackItem isFilled>
+              <FormGroup
+                fieldId="details"
+                label={t("clients:details")}
+                labelIcon={
+                  <HelpItem
+                    helpText={t("clients-help:details")}
+                    forLabel={t("clients:details")}
+                    forID="details"
+                  />
+                }
+              >
+                <TextArea
+                  id="details"
+                  readOnly
+                  rows={12}
+                  resizeOrientation="vertical"
+                  value={snippet}
+                  aria-label="text area example"
                 />
-              }
-            >
-              <TextArea
-                id="details"
-                readOnly
-                rows={12}
-                resizeOrientation="vertical"
-                value={snippet}
-                aria-label="text area example"
-              />
-            </FormGroup>
-          </StackItem>
+              </FormGroup>
+            </StackItem>
+          )}
         </Stack>
       </Form>
     </ConfirmDialogModal>

@@ -1,7 +1,12 @@
 import type RealmRepresentation from "keycloak-admin/lib/defs/realmRepresentation";
 import _ from "lodash";
-import React, { useState } from "react";
+import React, { FunctionComponent, useEffect, useState } from "react";
+import { useRouteMatch } from "react-router-dom";
 import { RecentUsed } from "../../components/realm-selector/recent-used";
+import {
+  DashboardParams,
+  DashboardRoute,
+} from "../../dashboard/routes/Dashboard";
 import environment from "../../environment";
 import useRequiredContext from "../../utils/useRequiredContext";
 import { useAdminClient, useFetch } from "../auth/AdminClient";
@@ -17,12 +22,11 @@ export const RealmContext = React.createContext<RealmContextType | undefined>(
   undefined
 );
 
-type RealmContextProviderProps = { children: React.ReactNode };
-
-export const RealmContextProvider = ({
-  children,
-}: RealmContextProviderProps) => {
-  const [realm, setRealm] = useState(environment.loginRealm);
+export const RealmContextProvider: FunctionComponent = ({ children }) => {
+  const routeMatch = useRouteMatch<DashboardParams>(DashboardRoute.path);
+  const [realm, setRealm] = useState(
+    routeMatch?.params.realm ?? environment.loginRealm
+  );
   const [realms, setRealms] = useState<RealmRepresentation[]>([]);
   const adminClient = useAdminClient();
   const recentUsed = new RecentUsed();
@@ -38,6 +42,8 @@ export const RealmContextProvider = ({
     []
   );
 
+  useEffect(() => adminClient.setConfig({ realmName: realm }), [realm]);
+
   const set = (realm: string) => {
     if (
       realms.length === 0 ||
@@ -45,9 +51,6 @@ export const RealmContextProvider = ({
     ) {
       recentUsed.setRecentUsed(realm);
       setRealm(realm);
-      adminClient.setConfig({
-        realmName: realm,
-      });
     }
   };
   return (

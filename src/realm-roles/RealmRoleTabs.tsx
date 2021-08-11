@@ -314,8 +314,13 @@ export const RealmRoleTabs = () => {
       />
       <ViewHeader
         titleKey={role?.name || t("createRole")}
-        badge={additionalRoles.length > 0 ? t("composite") : ""}
-        badgeIsRead={true}
+        badges={[
+          {
+            id: "composite-role-badge",
+            text: additionalRoles.length > 0 ? t("composite") : "",
+            readonly: true,
+          },
+        ]}
         subKey={id ? "" : "roles:roleCreateExplain"}
         actionsDropdownId="roles-actions-dropdown"
         dropdownItems={dropdownItems}
