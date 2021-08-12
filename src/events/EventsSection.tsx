@@ -63,7 +63,7 @@ export const EventsSection = () => {
   const [selectedFormValues, setSelectedFormValues] =
     useState<UserEventSearchForm>();
   const [events, setEvents] = useState<RealmEventsConfigRepresentation>();
-  const [chipsToDisplay, setChipsToDisplay] = useState<Record<string, any>>();
+  const [chipsToDisplay, setChipsToDisplay] = useState<Record<string, any>>({});
 
   const {
     getValues,
@@ -215,7 +215,7 @@ export const EventsSection = () => {
   };
 
   const deleteEventTypeChip = (chip: string) => {
-    const chips = chipsToDisplay?.["Event type"];
+    const chips = chipsToDisplay["Event type"];
     const index = chips?.indexOf(chip);
     if (index !== -1) {
       chips?.splice(index, 1);
@@ -418,7 +418,7 @@ export const EventsSection = () => {
                 </Button>
               </FlexItem>
             </Flex>
-            {chipsToDisplay ? (
+            {Object.keys(chipsToDisplay).length > 0 ? (
               <div className="keycloak__searchChips pf-u-ml-md">
                 {Object.keys(chipsToDisplay).map((chip) => (
                   <>
@@ -444,7 +444,7 @@ export const EventsSection = () => {
                         isClosable
                         onClick={() => deleteCategory(chip)}
                       >
-                        {chipsToDisplay?.["Event type"].map(
+                        {chipsToDisplay["Event type"].map(
                           (eventTypeChip: string) => (
                             <>
                               <Chip
