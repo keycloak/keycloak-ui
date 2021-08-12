@@ -71,12 +71,14 @@ export const EventsSection = () => {
     reset,
     setValue,
     formState: { isDirty },
-  } = useForm<UserEventSearchForm>({ shouldUnregister: false });
+  } = useForm<UserEventSearchForm>({
+    shouldUnregister: false,
+    mode: "onChange",
+  });
 
   const refresh = () => {
     setKey(new Date().getTime());
     setSelectedEvents([]);
-    !isDirty;
     reset();
   };
 
@@ -307,9 +309,6 @@ export const EventsSection = () => {
                         id="kc-userId"
                         name="userId"
                         data-testid="userId-searchField"
-                        onChange={() => {
-                          isDirty;
-                        }}
                         defaultValue={selectedFormValues?.userId ?? ""}
                       />
                     </FormGroup>
@@ -339,16 +338,15 @@ export const EventsSection = () => {
                             : [...selectedEvents, option];
                           setSelectedEvents(selected);
                           setValue("eventTypes", selected);
-                          isDirty;
                         }}
                         onClear={clearEventTypeSelectionDropdown}
                         isOpen={selectOpen}
                         aria-labelledby={"eventType"}
                         chipGroupComponent={chipGroupComponent()}
                       >
-                        {events?.enabledEventTypes?.map((option, index) => (
+                        {events?.enabledEventTypes?.map((option) => (
                           <SelectOption
-                            key={`eventType-${index}`}
+                            key={`eventType-${option}`}
                             value={option}
                           />
                         ))}
@@ -365,9 +363,6 @@ export const EventsSection = () => {
                         id="kc-client"
                         name="client"
                         data-testid="client-searchField"
-                        onChange={() => {
-                          isDirty;
-                        }}
                         defaultValue={selectedFormValues?.client ?? ""}
                       />
                     </FormGroup>
@@ -384,9 +379,6 @@ export const EventsSection = () => {
                         className="pf-c-form-control pf-m-icon pf-m-calendar"
                         placeholder="yyyy-MM-dd"
                         data-testid="dateFrom-searchField"
-                        onChange={() => {
-                          isDirty;
-                        }}
                         defaultValue={selectedFormValues?.dateFrom ?? ""}
                       />
                     </FormGroup>
@@ -403,9 +395,6 @@ export const EventsSection = () => {
                         className="pf-c-form-control pf-m-icon pf-m-calendar"
                         placeholder="yyyy-MM-dd"
                         data-testid="dateTo-searchField"
-                        onChange={() => {
-                          isDirty;
-                        }}
                         defaultValue={selectedFormValues?.dateTo ?? ""}
                       />
                     </FormGroup>
@@ -431,17 +420,17 @@ export const EventsSection = () => {
             </Flex>
             {chipsToDisplay ? (
               <div className="keycloak__searchChips pf-u-ml-md">
-                {Object.keys(chipsToDisplay).map((chip, index) => (
+                {Object.keys(chipsToDisplay).map((chip) => (
                   <>
                     {chip !== "Event type" && (
                       <ChipGroup
                         className="pf-u-mr-md pf-u-mb-md"
-                        key={`chip-group-${index}`}
+                        key={`chip-group-${chip}`}
                         categoryName={chip}
                         isClosable
                         onClick={() => deleteCategory(chip)}
                       >
-                        <Chip key={`chip-${index}`} isReadOnly>
+                        <Chip key={`chip-${chip}`} isReadOnly>
                           {chipsToDisplay[chip]}
                         </Chip>
                       </ChipGroup>
@@ -450,16 +439,16 @@ export const EventsSection = () => {
                     {chip === "Event type" && (
                       <ChipGroup
                         className="pf-u-mr-md pf-u-mb-md"
-                        key={`eventType-chip-group-${index}`}
+                        key={`eventType-chip-group-${chip}`}
                         categoryName={chip}
                         isClosable
                         onClick={() => deleteCategory(chip)}
                       >
                         {chipsToDisplay?.["Event type"].map(
-                          (eventTypeChip: string, idx: number) => (
+                          (eventTypeChip: string) => (
                             <>
                               <Chip
-                                key={`eventType-chip-${idx}`}
+                                key={`eventType-chip-${eventTypeChip}`}
                                 onClick={() =>
                                   deleteEventTypeChip(eventTypeChip)
                                 }
