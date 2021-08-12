@@ -46,7 +46,7 @@ export default {
     useEntityDescriptor: "Use entity descriptor",
     samlEntityDescriptor: "SAML entity descriptor",
     ssoServiceUrl: "Single Sign-On service URL",
-    entry: "Single logout service URL",
+    singleLogoutServiceUrl: "Single logout service URL",
     nameIdPolicyFormat: "NameID policy format",
     persistent: "Persistent",
     transient: "Transient",

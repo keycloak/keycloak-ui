@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
-import { useFormContext, useWatch } from "react-hook-form";
+import { Controller, useFormContext, useWatch } from "react-hook-form";
 import {
   ExpandableSection,
   FormGroup,
@@ -48,11 +48,11 @@ const Fields = ({ readOnly }: DescriptorSettingsProps) => {
   return (
     <div className="pf-c-form pf-m-horizontal">
       <FormGroup
-        label={t("Single Sign-On service URL")}
+        label={t("ssoServiceUrl")}
         labelIcon={
           <HelpItem
             helpText={th("ssoServiceUrl")}
-            forLabel={t("Single Sign-On service URL")}
+            forLabel={t("ssoServiceUrl")}
             forID="kc-sso-service-url"
           />
         }
@@ -81,11 +81,11 @@ const Fields = ({ readOnly }: DescriptorSettingsProps) => {
       </FormGroup>
 
       <FormGroup
-        label={t("Single logout service URL")}
+        label={t("singleLogoutServiceUrl")}
         labelIcon={
           <HelpItem
             helpText={th("singleLogoutServiceUrl")}
-            forLabel={t("Single logout service URL")}
+            forLabel={t("singleLogoutServiceUrl")}
             forID="single-logout-service-url"
           />
         }
@@ -117,51 +117,69 @@ const Fields = ({ readOnly }: DescriptorSettingsProps) => {
           <HelpItem
             helpText={th("nameIdPolicyFormat")}
             forLabel={t("nameIdPolicyFormat")}
-            forID="nameIdPolicyFormat"
+            forID="kc-nameIdPolicyFormat"
           />
         }
-        fieldId="nameIdPolicyFormat"
+        fieldId="kc-nameIdPolicyFormat"
         helperTextInvalid={t("common:required")}
       >
-        <Select
-          name="config.nameIDPolicyFormat"
-          data-testid="nameid-policy-format-select"
-          isOpen={namedPolicyDropdownOpen}
-          variant={SelectVariant.single}
-          onToggle={(isExpanded) => setNamedPolicyDropdownOpen(isExpanded)}
-          onSelect={() => {
-            setNamedPolicyDropdownOpen(false);
-          }}
-        >
-          <SelectOption
-            key={0}
-            data-testid="persistent-option"
-            value={t("persistent")}
-            isPlaceholder
-          />
-          <SelectOption
-            key={1}
-            data-testid="transient-option"
-            value={t("transient")}
-          />
-          <SelectOption key={2} data-testid="email-option" value={t("email")} />
-          <SelectOption
-            key={3}
-            data-testid="kerberos-option"
-            value={t("kerberos")}
-          />
-          <SelectOption key={4} data-testid="x509-option" value={t("x509")} />
-          <SelectOption
-            key={5}
-            data-testid="windowsDomainQN-option"
-            value={t("windowsDomainQN")}
-          />
-          <SelectOption
-            key={6}
-            data-testid="unspecified-option"
-            value={t("unspecified")}
-          />
-        </Select>
+        <Controller
+          name="config.nameIDPolicyFormat[0]"
+          defaultValue={t("persistent")}
+          control={control}
+          render={({ onChange, value }) => (
+            <Select
+              toggleId="kc-nameIdPolicyFormat"
+              onToggle={() =>
+                setNamedPolicyDropdownOpen(!namedPolicyDropdownOpen)
+              }
+              isOpen={namedPolicyDropdownOpen}
+              onSelect={(_, value) => {
+                onChange(value as string);
+                setNamedPolicyDropdownOpen(false);
+              }}
+              selections={value}
+              variant={SelectVariant.single}
+            >
+              <SelectOption
+                key={0}
+                data-testid="persistent-option"
+                value={t("persistent")}
+                isPlaceholder
+              />
+              <SelectOption
+                key={1}
+                data-testid="transient-option"
+                value={t("transient")}
+              />
+              <SelectOption
+                key={2}
+                data-testid="email-option"
+                value={t("email")}
+              />
+              <SelectOption
+                key={3}
+                data-testid="kerberos-option"
+                value={t("kerberos")}
+              />
+              <SelectOption
+                key={4}
+                data-testid="x509-option"
+                value={t("x509")}
+              />
+              <SelectOption
+                key={5}
+                data-testid="windowsDomainQN-option"
+                value={t("windowsDomainQN")}
+              />
+              <SelectOption
+                key={6}
+                data-testid="unspecified-option"
+                value={t("unspecified")}
+              />
+            </Select>
+          )}
+        ></Controller>
       </FormGroup>
 
       <FormGroup
@@ -170,39 +188,49 @@ const Fields = ({ readOnly }: DescriptorSettingsProps) => {
           <HelpItem
             helpText={th("principalType")}
             forLabel={t("principalType")}
-            forID="principalType"
+            forID="kc-principalType"
           />
         }
-        fieldId="principalType"
+        fieldId="kc-principalType"
         helperTextInvalid={t("common:required")}
       >
-        <Select
-          name="config.principalType"
-          data-testid="principal-type-select"
-          isOpen={principalTypeDropdownOpen}
-          variant={SelectVariant.single}
-          onToggle={(isExpanded) => setPrincipalTypeDropdownOpen(isExpanded)}
-          onSelect={() => {
-            setPrincipalTypeDropdownOpen(false);
-          }}
-        >
-          <SelectOption
-            key={0}
-            data-testid="subjectNameId-option"
-            value={t("subjectNameId")}
-            isPlaceholder
-          />
-          <SelectOption
-            key={1}
-            data-testid="attributeName-option"
-            value={t("attributeName")}
-          />
-          <SelectOption
-            key={1}
-            data-testid="attributeFriendlyName-option"
-            value={t("attributeFriendlyName")}
-          />
-        </Select>
+        <Controller
+          name="config.principalType[0]"
+          defaultValue={t("subjectNameId")}
+          control={control}
+          render={({ onChange, value }) => (
+            <Select
+              toggleId="kc-principalType"
+              onToggle={() =>
+                setPrincipalTypeDropdownOpen(!principalTypeDropdownOpen)
+              }
+              isOpen={principalTypeDropdownOpen}
+              onSelect={(_, value) => {
+                onChange(value as string);
+                setPrincipalTypeDropdownOpen(false);
+              }}
+              selections={value}
+              variant={SelectVariant.single}
+            >
+              <SelectOption
+                key={0}
+                data-testid="subjectNameId-option"
+                value={t("subjectNameId")}
+                isPlaceholder
+              />
+              <SelectOption
+                key={1}
+                data-testid="attributeName-option"
+                value={t("attributeName")}
+              />
+              <SelectOption
+                key={2}
+                data-testid="attributeFriendlyName-option"
+                value={t("attributeFriendlyName")}
+              />
+            </Select>
+          )}
+        ></Controller>
       </FormGroup>
 
       <SwitchField
@@ -233,96 +261,82 @@ const Fields = ({ readOnly }: DescriptorSettingsProps) => {
         <>
           <FormGroup
             label={t("signatureAlgorithm")}
-            fieldId="signatureAlgorithm"
             labelIcon={
               <HelpItem
-                helpText={th("singleLogoutServiceUrl")}
-                forLabel={t("Single logout service URL")}
-                forID="single-logout-service-url"
+                helpText={th("signatureAlgorithm")}
+                forLabel={t("signatureAlgorithm")}
+                forID="kc-signatureAlgorithm"
               />
             }
+            fieldId="kc-signatureAlgorithm"
           >
-            <Select
-              name="config.signatureAlgorithm"
-              data-testid="signature-algorithm-select"
-              isOpen={signatureAlgorithmDropdownOpen}
-              variant={SelectVariant.single}
-              onToggle={(isExpanded) =>
-                setSignatureAlgorithmDropdownOpen(isExpanded)
-              }
-              onSelect={() => {
-                setSignatureAlgorithmDropdownOpen(false);
-              }}
-            >
-              <SelectOption
-                key={0}
-                data-testid="rsa-sha1-option"
-                value="RSA_SHA1"
-              />
-              <SelectOption
-                key={1}
-                data-testid="rsa-sha256-option"
-                value="RSA_SHA256"
-                isPlaceholder
-              />
-              <SelectOption
-                key={2}
-                data-testid="rsa-sha256-mgf1-option"
-                value="RSA_SHA256_MGF1"
-              />
-              <SelectOption
-                key={3}
-                data-testid="rsa-sha512-option"
-                value="RSA_SHA512"
-              />
-              <SelectOption
-                key={4}
-                data-testid="rsa-sha512-mgf1-option"
-                value="RSA_SHA512_MGF1"
-              />
-              <SelectOption
-                key={5}
-                data-testid="dsa-sha1-option"
-                value="DSA_SHA1"
-              />
-            </Select>
+            <Controller
+              name="config.signatureAlgorithm[0]"
+              defaultValue="RSA_SHA256"
+              control={control}
+              render={({ onChange, value }) => (
+                <Select
+                  toggleId="kc-signatureAlgorithm"
+                  onToggle={() =>
+                    setSignatureAlgorithmDropdownOpen(
+                      !signatureAlgorithmDropdownOpen
+                    )
+                  }
+                  isOpen={signatureAlgorithmDropdownOpen}
+                  onSelect={(_, value) => {
+                    onChange(value as string);
+                    setSignatureAlgorithmDropdownOpen(false);
+                  }}
+                  selections={value}
+                  variant={SelectVariant.single}
+                >
+                  <SelectOption key={0} value="RSA_SHA1" />
+                  <SelectOption key={1} value="RSA_SHA256" isPlaceholder />
+                  <SelectOption key={2} value="RSA_SHA256_MGF1" />
+                  <SelectOption key={3} value="RSA_SHA512" />
+                  <SelectOption key={4} value="RSA_SHA512_MGF1" />
+                  <SelectOption key={5} value="DSA_SHA1" />
+                </Select>
+              )}
+            ></Controller>
           </FormGroup>
           <FormGroup
             label={t("samlSignatureKeyName")}
             labelIcon={
               <HelpItem
-                helpText={th("singleLogoutServiceUrl")}
-                forLabel={t("Single logout service URL")}
-                forID="single-logout-service-url"
+                helpText={th("samlSignatureKeyName")}
+                forLabel={t("samlSignatureKeyName")}
+                forID="kc-samlSignatureKeyName"
               />
             }
-            fieldId="samlSignatureKeyName"
+            fieldId="kc-samlSignatureKeyName"
           >
-            <Select
-              name="config.xmlSigKeyInfoKeyNameTransformer"
-              data-testid="saml-signature-key-name-select"
-              isOpen={samlSignatureKeyNameDropdownOpen}
-              variant={SelectVariant.single}
-              onToggle={(isExpanded) =>
-                setSamlSignatureKeyNameDropdownOpen(isExpanded)
-              }
-              onSelect={() => {
-                setSamlSignatureKeyNameDropdownOpen(false);
-              }}
-            >
-              <SelectOption key={0} data-testid="none-option" value="NONE" />
-              <SelectOption
-                key={0}
-                data-testid="keyID-option"
-                value={t("keyID")}
-                isPlaceholder
-              />
-              <SelectOption
-                key={1}
-                data-testid="certSubject-option"
-                value={t("certSubject")}
-              />
-            </Select>
+            <Controller
+              name="config.xmlSigKeyInfoKeyNameTransformer[0]"
+              defaultValue="keyID-option"
+              control={control}
+              render={({ onChange, value }) => (
+                <Select
+                  toggleId="kc-samlSignatureKeyName"
+                  onToggle={() =>
+                    setSamlSignatureKeyNameDropdownOpen(
+                      !samlSignatureKeyNameDropdownOpen
+                    )
+                  }
+                  isOpen={samlSignatureKeyNameDropdownOpen}
+                  onSelect={(_, value) => {
+                    onChange(value as string);
+                    setSamlSignatureKeyNameDropdownOpen(false);
+                  }}
+                  selections={value}
+                  variant={SelectVariant.single}
+                >
+                  <SelectOption key={0} value="NONE" />
+                  <SelectOption key={1} value={t("keyID")} isPlaceholder />
+                  <SelectOption key={2} value={t("certSubject")} />
+                </Select>
+              )}
+            ></Controller>
           </FormGroup>
         </>
       )}
