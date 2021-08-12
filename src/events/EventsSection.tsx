@@ -39,7 +39,7 @@ import { useRealm } from "../context/realm-context/RealmContext";
 import { toRealmSettings } from "../realm-settings/routes/RealmSettings";
 import { toUser } from "../user/routes/User";
 import { AdminEvents } from "./AdminEvents";
-import { useForm } from "react-hook-form";
+import { Controller, useForm } from "react-hook-form";
 import type { RealmEventsConfigRepresentation } from "keycloak-admin/lib/defs/realmEventsConfigRepresentation";
 import "./events-section.css";
 
@@ -71,6 +71,7 @@ export const EventsSection = () => {
     reset,
     setValue,
     formState: { isDirty },
+    control,
   } = useForm<UserEventSearchForm>({
     shouldUnregister: false,
     mode: "onChange",
@@ -317,40 +318,49 @@ export const EventsSection = () => {
                       fieldId="kc-eventType"
                       className="keycloak__user_events_search__form_label"
                     >
-                      <Select
-                        id="kc-eventType"
-                        name="eventType"
-                        data-testid="event-type-searchField"
-                        chipGroupProps={{
-                          numChips: 1,
-                          expandedText: "Hide",
-                          collapsedText: "Show ${remaining}",
-                        }}
-                        variant={SelectVariant.typeaheadMulti}
-                        typeAheadAriaLabel="Select"
-                        onToggle={(isOpen) => setSelectOpen(isOpen)}
-                        selections={selectedEvents}
-                        onSelect={(_, value) => {
-                          const option = value.toString();
-                          register("eventTypes");
-                          const selected = selectedEvents.includes(option)
-                            ? selectedEvents.filter((item) => item !== option)
-                            : [...selectedEvents, option];
-                          setSelectedEvents(selected);
-                          setValue("eventTypes", selected);
-                        }}
-                        onClear={clearEventTypeSelectionDropdown}
-                        isOpen={selectOpen}
-                        aria-labelledby={"eventType"}
-                        chipGroupComponent={chipGroupComponent()}
-                      >
-                        {events?.enabledEventTypes?.map((option) => (
-                          <SelectOption
-                            key={`eventType-${option}`}
-                            value={option}
-                          />
-                        ))}
-                      </Select>
+                      <Controller
+                        name="eventsSelect"
+                        defaultValue={selectedEvents}
+                        control={control}
+                        render={({ onChange }) => (
+                          <Select
+                            name="eventType"
+                            data-testid="event-type-searchField"
+                            chipGroupProps={{
+                              numChips: 1,
+                              expandedText: "Hide",
+                              collapsedText: "Show ${remaining}",
+                            }}
+                            variant={SelectVariant.typeaheadMulti}
+                            typeAheadAriaLabel="Select"
+                            onToggle={(isOpen) => setSelectOpen(isOpen)}
+                            selections={selectedEvents}
+                            onSelect={(_, value) => {
+                              const option = value.toString();
+                              register("eventTypes");
+                              const selected = selectedEvents.includes(option)
+                                ? selectedEvents.filter(
+                                    (item) => item !== option
+                                  )
+                                : [...selectedEvents, option];
+                              onChange(selected);
+                              setSelectedEvents(selected);
+                              setValue("eventTypes", selected);
+                            }}
+                            onClear={clearEventTypeSelectionDropdown}
+                            isOpen={selectOpen}
+                            aria-labelledby={"eventType"}
+                            chipGroupComponent={chipGroupComponent()}
+                          >
+                            {events?.enabledEventTypes?.map((option) => (
+                              <SelectOption
+                                key={`eventType-${option}`}
+                                value={option}
+                              />
+                            ))}
+                          </Select>
+                        )}
+                      />
                     </FormGroup>
                     <FormGroup
                       label={t("client")}
