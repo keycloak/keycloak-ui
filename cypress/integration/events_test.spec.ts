@@ -35,7 +35,7 @@ describe("Search events test", function () {
       eventsPage.shouldHaveSearchBtnDisabled();
     });
 
-    it("Check search by event type works", () => {
+    it("Check search and removal works", () => {
       sidebarPage.goToRealmSettings();
       cy.getId("rs-realm-events-tab").click();
 
@@ -44,7 +44,7 @@ describe("Search events test", function () {
         .then((exist) => {
           if (exist) {
             sidebarPage.goToEvents();
-            eventsPage.shouldDoSearchByEventType();
+            eventsPage.shouldDoSearchAndRemoveChips();
           } else {
             realmSettingsPage
               .toggleSwitch(realmSettingsPage.enableEvents)
@@ -53,9 +53,8 @@ describe("Search events test", function () {
             masthead.checkNotificationMessage(
               "Successfully saved configuration"
             );
-
             sidebarPage.goToEvents();
-            eventsPage.shouldDoSearchByEventType();
+            eventsPage.shouldDoSearchAndRemoveChips();
           }
         });
     });
