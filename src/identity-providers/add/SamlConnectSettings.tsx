@@ -1,18 +1,24 @@
 import React, { useEffect, useState } from "react";
 import { useFormContext } from "react-hook-form";
-import { FormGroup, Switch, TextInput, Title } from "@patternfly/react-core";
+import {
+  FormGroup,
+  Switch,
+  TextInput,
+  Title,
+  ValidatedOptions,
+} from "@patternfly/react-core";
 
 import { HelpItem } from "../../components/help-enabler/HelpItem";
 import { useTranslation } from "react-i18next";
 import { useAdminClient } from "../../context/auth/AdminClient";
-import type identityProviderRepresentation from "keycloak-admin/lib/defs/identityProviderRepresentation";
+import type IdentityProviderRepresentation from "keycloak-admin/lib/defs/identityProviderRepresentation";
 
 import { JsonFileUpload } from "../../components/json-file-upload/JsonFileUpload";
 import { useRealm } from "../../context/realm-context/RealmContext";
 import { DescriptorSettings } from "./DescriptorSettings";
 import { getBaseUrl } from "../../util";
 
-type Result = identityProviderRepresentation & {
+type Result = IdentityProviderRepresentation & {
   error: string;
 };
 
@@ -22,7 +28,7 @@ export const SamlConnectSettings = () => {
 
   const adminClient = useAdminClient();
   const { realm } = useRealm();
-  const { setValue, register } = useFormContext();
+  const { setValue, register, errors } = useFormContext();
 
   const [descriptor, setDescriptor] = useState(true);
 
@@ -34,7 +40,9 @@ export const SamlConnectSettings = () => {
   const defaultEntityUrl = `${getBaseUrl(adminClient)}realms/${realm}`;
 
   const setupForm = (result: any) => {
-    Object.keys(result).map((k) => setValue(`config.${k}`, result[k]));
+    Object.entries(result).map(([key, value]) =>
+      setValue(`config.${key}`, value)
+    );
   };
 
   useEffect(() => {
@@ -156,6 +164,11 @@ export const SamlConnectSettings = () => {
             value={descriptorUrl}
             onChange={setDescriptorUrl}
             ref={register({ required: true })}
+            validated={
+              errors.samlEntityDescriptor
+                ? ValidatedOptions.error
+                : ValidatedOptions.default
+            }
           />
         </FormGroup>
       )}
@@ -170,9 +183,7 @@ export const SamlConnectSettings = () => {
               forID="kc-import-config"
             />
           }
-          validated={
-            discoveryResult && discoveryResult.error ? "error" : "default"
-          }
+          validated={discoveryResult?.error ? "error" : "default"}
           helperTextInvalid={discoveryResult?.error?.toString()}
         >
           <JsonFileUpload
@@ -180,9 +191,7 @@ export const SamlConnectSettings = () => {
             helpText="identity-providers-help:jsonFileUpload"
             hideDefaultPreview
             unWrap
-            validated={
-              discoveryResult && discoveryResult.error ? "error" : "default"
-            }
+            validated={discoveryResult?.error ? "error" : "default"}
             onChange={(value) => fileUpload(value)}
           />
         </FormGroup>

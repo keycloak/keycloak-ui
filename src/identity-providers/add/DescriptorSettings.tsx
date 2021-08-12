@@ -59,7 +59,7 @@ const Fields = ({ readOnly }: DescriptorSettingsProps) => {
         fieldId="kc-sso-service-url"
         isRequired
         validated={
-          errors.config && errors.config.authorizationUrl
+          errors.config?.authorizationUrl
             ? ValidatedOptions.error
             : ValidatedOptions.default
         }
@@ -72,7 +72,7 @@ const Fields = ({ readOnly }: DescriptorSettingsProps) => {
           name="config.singleSignOnServiceUrl"
           ref={register({ required: true })}
           validated={
-            errors.config && errors.config.singleSignOnServiceUrl
+            errors.config?.singleSignOnServiceUrl
               ? ValidatedOptions.error
               : ValidatedOptions.default
           }
@@ -91,7 +91,7 @@ const Fields = ({ readOnly }: DescriptorSettingsProps) => {
         }
         fieldId="single-logout-service-url"
         validated={
-          errors.config && errors.config.singleLogoutServiceUrl
+          errors.config?.singleLogoutServiceUrl
             ? ValidatedOptions.error
             : ValidatedOptions.default
         }
@@ -124,7 +124,7 @@ const Fields = ({ readOnly }: DescriptorSettingsProps) => {
         helperTextInvalid={t("common:required")}
       >
         <Controller
-          name="config.nameIDPolicyFormat[0]"
+          name="config.nameIDPolicyFormat"
           defaultValue={t("persistent")}
           control={control}
           render={({ onChange, value }) => (
@@ -195,7 +195,7 @@ const Fields = ({ readOnly }: DescriptorSettingsProps) => {
         helperTextInvalid={t("common:required")}
       >
         <Controller
-          name="config.principalType[0]"
+          name="config.principalType"
           defaultValue={t("subjectNameId")}
           control={control}
           render={({ onChange, value }) => (
@@ -271,7 +271,7 @@ const Fields = ({ readOnly }: DescriptorSettingsProps) => {
             fieldId="kc-signatureAlgorithm"
           >
             <Controller
-              name="config.signatureAlgorithm[0]"
+              name="config.signatureAlgorithm"
               defaultValue="RSA_SHA256"
               control={control}
               render={({ onChange, value }) => (
@@ -312,7 +312,7 @@ const Fields = ({ readOnly }: DescriptorSettingsProps) => {
             fieldId="kc-samlSignatureKeyName"
           >
             <Controller
-              name="config.xmlSigKeyInfoKeyNameTransformer[0]"
+              name="config.xmlSigKeyInfoKeyNameTransformer"
               defaultValue="keyID-option"
               control={control}
               render={({ onChange, value }) => (

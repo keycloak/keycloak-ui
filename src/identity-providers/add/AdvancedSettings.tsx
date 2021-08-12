@@ -103,12 +103,10 @@ export const AdvancedSettings = ({ isOIDC, isSAML }: AdvancedSettingsProps) => {
       )}
       <SwitchField field="storeToken" label="storeTokens" fieldType="boolean" />
       {isSAML && (
-        <>
-          <SwitchField
-            field="config.addReadTokenRoleOnCreate"
-            label="storedTokensReadable"
-          />
-        </>
+        <SwitchField
+          field="config.addReadTokenRoleOnCreate"
+          label="storedTokensReadable"
+        />
       )}
       {!isOIDC && !isSAML && (
         <>

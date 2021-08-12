@@ -196,11 +196,7 @@ export const DetailSettings = () => {
                     <ExtendedNonDiscoverySettings />
                   </>
                 )}
-                {isSAML && (
-                  <>
-                    <DescriptorSettings readOnly={false} />
-                  </>
-                )}
+                {isSAML && <DescriptorSettings readOnly={false} />}
                 <FormAccess
                   role="manage-identity-providers"
                   isHorizontal

@@ -19,9 +19,6 @@ export const ReqAuthnConstraints = () => {
   const [syncModeOpen, setSyncModeOpen] = useState(false);
   return (
     <>
-      {/* <Title headingLevel="h4" size="xl" className="kc-form-panel__title">
-        {t("reqAuthnConstraints")}
-      </Title> */}
       <FormGroup
         label={t("comparison")}
         labelIcon={
@@ -44,10 +41,10 @@ export const ReqAuthnConstraints = () => {
               direction="up"
               onToggle={() => setSyncModeOpen(!syncModeOpen)}
               onSelect={(_, value) => {
-                onChange(value as string);
+                onChange(value.toString());
                 setSyncModeOpen(false);
               }}
-              selections={t(`${value}`)}
+              selections={t(value)}
               variant={SelectVariant.single}
               aria-label={t("syncMode")}
               isOpen={syncModeOpen}
@@ -56,9 +53,9 @@ export const ReqAuthnConstraints = () => {
                 <SelectOption
                   selected={option === value}
                   key={option}
-                  value={option.toUpperCase()}
+                  value={option}
                 >
-                  {t(`${option}`)}
+                  {t(option)}
                 </SelectOption>
               ))}
             </Select>
