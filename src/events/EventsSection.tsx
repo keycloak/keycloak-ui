@@ -26,34 +26,35 @@ import {
 import { CheckCircleIcon, WarningTriangleIcon } from "@patternfly/react-icons";
 import { cellWidth, expandable } from "@patternfly/react-table";
 import type EventRepresentation from "keycloak-admin/lib/defs/eventRepresentation";
+import type EventType from "keycloak-admin/lib/defs/eventTypes";
+import type { RealmEventsConfigRepresentation } from "keycloak-admin/lib/defs/realmEventsConfigRepresentation";
 import moment from "moment";
 import React, { useState } from "react";
+import { Controller, useForm } from "react-hook-form";
 import { Trans, useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
 import { KeycloakTabs } from "../components/keycloak-tabs/KeycloakTabs";
 import { ListEmptyState } from "../components/list-empty-state/ListEmptyState";
 import { KeycloakDataTable } from "../components/table-toolbar/KeycloakDataTable";
 import { ViewHeader } from "../components/view-header/ViewHeader";
-import { useFetch, useAdminClient } from "../context/auth/AdminClient";
+import { useAdminClient, useFetch } from "../context/auth/AdminClient";
 import { useRealm } from "../context/realm-context/RealmContext";
 import { toRealmSettings } from "../realm-settings/routes/RealmSettings";
 import { toUser } from "../user/routes/User";
 import { AdminEvents } from "./AdminEvents";
-import { Controller, useForm } from "react-hook-form";
-import type { RealmEventsConfigRepresentation } from "keycloak-admin/lib/defs/realmEventsConfigRepresentation";
 import "./events-section.css";
 
 type UserEventSearchForm = {
-  userId: string;
-  eventTypes: string[];
   client: string;
   dateFrom: string;
   dateTo: string;
+  user: string;
+  type: EventType[];
 };
 
 type ChipsToDisplay = {
   "User ID"?: string;
-  "Event type"?: string[];
+  "Event type"?: EventType[];
   Client?: string;
   "Date(from)"?: string;
   "Date(to)"?: string;
@@ -107,8 +108,8 @@ export const EventsSection = () => {
     setSelectedFormValues(formValues);
 
     const params: { [key: string]: any } = {
-      user: formValues?.userId,
-      type: formValues?.eventTypes,
+      user: formValues?.user,
+      type: formValues?.type,
       client: formValues?.client,
       dateFrom: formValues?.dateFrom,
       dateTo: formValues?.dateTo,
@@ -197,13 +198,13 @@ export const EventsSection = () => {
   const clearEventTypeSelectionDropdown = (e: React.MouseEvent) => {
     e.stopPropagation();
     setSelectedEvents([]);
-    setValue("eventTypes", []);
+    setValue("type", []);
   };
 
   const clearSelectionDropdown = (e: React.MouseEvent, chip: string) => {
     const updatedEventSelection = selectedEvents.filter((obj) => obj !== chip);
     setSelectedEvents(updatedEventSelection);
-    setValue("eventTypes", updatedEventSelection);
+    setValue("type", updatedEventSelection);
     e.stopPropagation();
   };
 
@@ -223,7 +224,7 @@ export const EventsSection = () => {
     );
   };
 
-  const deleteEventTypeChip = (chipToDelete: string) => {
+  const deleteEventTypeChip = (chipToDelete: EventType) => {
     const eventChips = chipsToDisplay["Event type"];
 
     if (eventChips?.includes(chipToDelete)) {
@@ -231,7 +232,7 @@ export const EventsSection = () => {
 
       setChipsToDisplay({ ...chipsToDisplay, "Event type": newEventChips });
       setSelectedEvents(newEventChips);
-      setValue("eventTypes", [...newEventChips]);
+      setValue("type", [...newEventChips]);
     }
 
     setKey(new Date().getTime());
@@ -244,23 +245,19 @@ export const EventsSection = () => {
     setChipsToDisplay(remainingCategories);
 
     const updatedFormSearchObj = {
-      userId: remainingCategories["User ID"] || "",
-      eventTypes: remainingCategories["Event type"] || [],
+      user: remainingCategories["User ID"] || "",
+      type: remainingCategories["Event type"] || ([] as EventType[]),
       client: remainingCategories["Client"] || "",
       dateFrom: remainingCategories["Date(from)"] || "",
       dateTo: remainingCategories["Date(to)"] || "",
     };
 
-    if (updatedFormSearchObj.eventTypes.length === 0) {
+    if (updatedFormSearchObj.type.length === 0) {
       setSelectedEvents([]);
     }
 
     setSelectedFormValues(updatedFormSearchObj);
-    setValue("userId", updatedFormSearchObj.userId);
-    setValue("eventTypes", [...updatedFormSearchObj.eventTypes]);
-    setValue("client", updatedFormSearchObj.client);
-    setValue("dateFrom", updatedFormSearchObj.dateFrom);
-    setValue("dateTo", updatedFormSearchObj.dateTo);
+    reset(updatedFormSearchObj);
 
     setKey(new Date().getTime());
   };
@@ -317,9 +314,9 @@ export const EventsSection = () => {
                         ref={register()}
                         type="text"
                         id="kc-userId"
-                        name="userId"
+                        name="user"
                         data-testid="userId-searchField"
-                        defaultValue={selectedFormValues?.userId ?? ""}
+                        defaultValue={selectedFormValues?.user ?? ""}
                       />
                     </FormGroup>
                     <FormGroup
@@ -346,7 +343,7 @@ export const EventsSection = () => {
                             selections={selectedEvents}
                             onSelect={(_, value) => {
                               const option = value.toString();
-                              register("eventTypes");
+                              register("type");
                               const selected = selectedEvents.includes(option)
                                 ? selectedEvents.filter(
                                     (item) => item !== option
@@ -354,7 +351,7 @@ export const EventsSection = () => {
                                 : [...selectedEvents, option];
                               onChange(selected);
                               setSelectedEvents(selected);
-                              setValue("eventTypes", selected);
+                              setValue("type", selected);
                             }}
                             onClear={clearEventTypeSelectionDropdown}
                             isOpen={selectOpen}
