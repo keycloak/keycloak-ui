@@ -60,6 +60,14 @@ type ChipsToDisplay = {
   "Date(to)"?: string;
 };
 
+const defaultValues: UserEventSearchForm = {
+  client: "",
+  dateFrom: "",
+  dateTo: "",
+  user: "",
+  type: [],
+};
+
 export const EventsSection = () => {
   const { t } = useTranslation("events");
   const adminClient = useAdminClient();
@@ -84,6 +92,7 @@ export const EventsSection = () => {
   } = useForm<UserEventSearchForm>({
     shouldUnregister: false,
     mode: "onChange",
+    defaultValues,
   });
 
   const refresh = () => {
@@ -108,11 +117,7 @@ export const EventsSection = () => {
     setSelectedFormValues(formValues);
 
     const params: { [key: string]: any } = {
-      user: formValues?.user,
-      type: formValues?.type,
-      client: formValues?.client,
-      dateFrom: formValues?.dateFrom,
-      dateTo: formValues?.dateTo,
+      ...formValues,
       first,
       max,
     };
