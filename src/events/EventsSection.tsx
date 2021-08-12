@@ -51,6 +51,14 @@ type UserEventSearchForm = {
   dateTo: string;
 };
 
+type ChipsToDisplay = {
+  "User ID"?: string;
+  "Event type"?: string[];
+  Client?: string;
+  "Date(from)"?: string;
+  "Date(to)"?: string;
+};
+
 export const EventsSection = () => {
   const { t } = useTranslation("events");
   const adminClient = useAdminClient();
@@ -63,7 +71,7 @@ export const EventsSection = () => {
   const [selectedFormValues, setSelectedFormValues] =
     useState<UserEventSearchForm>();
   const [events, setEvents] = useState<RealmEventsConfigRepresentation>();
-  const [chipsToDisplay, setChipsToDisplay] = useState<Record<string, any>>({});
+  const [chipsToDisplay, setChipsToDisplay] = useState<ChipsToDisplay>({});
 
   const {
     getValues,
@@ -215,23 +223,24 @@ export const EventsSection = () => {
     );
   };
 
-  const deleteEventTypeChip = (chip: string) => {
-    const chips = chipsToDisplay["Event type"];
-    const index = chips?.indexOf(chip);
-    if (index !== -1) {
-      chips?.splice(index, 1);
-      setChipsToDisplay(chipsToDisplay);
-      setSelectedEvents(chips);
-      setValue("eventTypes", [...chips]);
+  const deleteEventTypeChip = (chipToDelete: string) => {
+    const eventChips = chipsToDisplay["Event type"];
+
+    if (eventChips?.includes(chipToDelete)) {
+      const newEventChips = eventChips.filter((chip) => chip !== chipToDelete);
+
+      setChipsToDisplay({ ...chipsToDisplay, "Event type": newEventChips });
+      setSelectedEvents(newEventChips);
+      setValue("eventTypes", [...newEventChips]);
     }
+
     setKey(new Date().getTime());
   };
 
-  const deleteCategory = (categoryChip: string) => {
-    const chips = chipsToDisplay;
-    const remainingCategories = Object.fromEntries(
-      Object.entries(chips!).filter(([key]) => key !== categoryChip)
-    );
+  const deleteCategory = (categoryChip: keyof ChipsToDisplay) => {
+    const remainingCategories = { ...chipsToDisplay };
+    delete remainingCategories[categoryChip];
+
     setChipsToDisplay(remainingCategories);
 
     const updatedFormSearchObj = {
@@ -430,7 +439,7 @@ export const EventsSection = () => {
             </Flex>
             {Object.keys(chipsToDisplay).length > 0 ? (
               <div className="keycloak__searchChips pf-u-ml-md">
-                {Object.keys(chipsToDisplay).map((chip) => (
+                {Object.entries(chipsToDisplay).map(([chip, value]) => (
                   <>
                     {chip !== "Event type" && (
                       <ChipGroup
@@ -438,10 +447,12 @@ export const EventsSection = () => {
                         key={`chip-group-${chip}`}
                         categoryName={chip}
                         isClosable
-                        onClick={() => deleteCategory(chip)}
+                        onClick={() =>
+                          deleteCategory(chip as keyof ChipsToDisplay)
+                        }
                       >
                         <Chip key={`chip-${chip}`} isReadOnly>
-                          {chipsToDisplay[chip]}
+                          {value}
                         </Chip>
                       </ChipGroup>
                     )}
@@ -454,20 +465,16 @@ export const EventsSection = () => {
                         isClosable
                         onClick={() => deleteCategory(chip)}
                       >
-                        {chipsToDisplay["Event type"].map(
-                          (eventTypeChip: string) => (
-                            <>
-                              <Chip
-                                key={`eventType-chip-${eventTypeChip}`}
-                                onClick={() =>
-                                  deleteEventTypeChip(eventTypeChip)
-                                }
-                              >
-                                {eventTypeChip}
-                              </Chip>
-                            </>
-                          )
-                        )}
+                        {chipsToDisplay["Event type"]?.map((eventTypeChip) => (
+                          <>
+                            <Chip
+                              key={`eventType-chip-${eventTypeChip}`}
+                              onClick={() => deleteEventTypeChip(eventTypeChip)}
+                            >
+                              {eventTypeChip}
+                            </Chip>
+                          </>
+                        ))}
                       </ChipGroup>
                     )}
                   </>
