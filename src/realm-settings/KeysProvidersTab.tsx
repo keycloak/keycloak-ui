@@ -79,10 +79,12 @@ export const KeysTabInner = ({ components, refresh }: KeysTabInnerProps) => {
     "org.keycloak.keys.KeyProvider"
   ].map((item) => item.id);
 
-  const itemIds = components.map((_, idx) => "data" + idx);
+  const itemIds = components.map((component) => component.id);
 
-  const [itemOrder, setItemOrder] = useState<string[]>([]);
+  const [itemOrder, setItemOrder] = useState<(string | undefined)[]>([]);
   const [providerDropdownOpen, setProviderDropdownOpen] = useState(false);
+  const [currentComponent, setCurrentComponent] =
+    useState<ComponentRepresentation>();
 
   const [defaultConsoleDisplayName, setDefaultConsoleDisplayName] =
     useState("");
@@ -93,7 +95,7 @@ export const KeysTabInner = ({ components, refresh }: KeysTabInnerProps) => {
   const [liveText, setLiveText] = useState("");
 
   useEffect(() => {
-    setItemOrder(["data", ...itemIds]);
+    setItemOrder([...itemIds]);
   }, [components, searchVal]);
 
   const [toggleDeleteDialog, DeleteConfirm] = useConfirmDialog({
@@ -117,9 +119,10 @@ export const KeysTabInner = ({ components, refresh }: KeysTabInnerProps) => {
     },
   });
 
-  const onDragStart = (id: string) => {
+  const onDragStart = async (id: string) => {
     setLiveText(t("common:onDragStart", { item: id }));
     setId(id);
+    setCurrentComponent(await adminClient.components.findOne({ id }));
   };
 
   const onDragMove = () => {
@@ -130,9 +133,23 @@ export const KeysTabInner = ({ components, refresh }: KeysTabInnerProps) => {
     setLiveText(t("common:onDragCancel"));
   };
 
-  const onDragFinish = (itemOrder: string[]) => {
-    setItemOrder(["data", ...itemOrder.filter((i) => i !== "data")]);
+  const onDragFinish = async (itemOrder: string[]) => {
+    setItemOrder([...itemOrder]);
     setLiveText(t("common:onDragFinish"));
+    try {
+      await adminClient.components.update(
+        { id },
+        {
+          ...currentComponent,
+          parentId: currentComponent?.parentId,
+          providerId: currentComponent?.providerId,
+          providerType: "org.keycloak.keys.KeyProvider",
+          config: { priority: [(itemOrder.indexOf(id) + 100).toString()] },
+        }
+      );
+    } catch (error) {
+      addError("realm-settings:saveProviderError", error);
+    }
   };
 
   const onSearch = () => {
@@ -285,7 +302,7 @@ export const KeysTabInner = ({ components, refresh }: KeysTabInnerProps) => {
           onDragStart={onDragStart}
           onDragMove={onDragMove}
           onDragCancel={onDragCancel}
-          itemOrder={itemOrder}
+          itemOrder={itemOrder as string[]}
           isCompact
         >
           <DataListItem aria-labelledby={"aria"} id="data" key="data">
@@ -321,8 +338,8 @@ export const KeysTabInner = ({ components, refresh }: KeysTabInnerProps) => {
             <DataListItem
               draggable
               aria-labelledby={"aria"}
-              key={`data${idx}`}
-              id={`data${idx}`}
+              key={component.id}
+              id={component.id}
             >
               <DataListItemRow key={idx} data-testid={"data-list-row"}>
                 <DataListControl>
