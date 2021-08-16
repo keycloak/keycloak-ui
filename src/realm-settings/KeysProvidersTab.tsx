@@ -79,9 +79,9 @@ export const KeysTabInner = ({ components, refresh }: KeysTabInnerProps) => {
     "org.keycloak.keys.KeyProvider"
   ].map((item) => item.id);
 
-  const itemIds = components.map((component) => component.id);
+  const itemIds = components.map((component) => component.id!);
 
-  const [itemOrder, setItemOrder] = useState<(string | undefined)[]>([]);
+  const [itemOrder, setItemOrder] = useState<string[]>([]);
   const [providerDropdownOpen, setProviderDropdownOpen] = useState(false);
   const [currentComponent, setCurrentComponent] =
     useState<ComponentRepresentation>();
@@ -95,7 +95,7 @@ export const KeysTabInner = ({ components, refresh }: KeysTabInnerProps) => {
   const [liveText, setLiveText] = useState("");
 
   useEffect(() => {
-    setItemOrder([...itemIds]);
+    setItemOrder(itemIds);
   }, [components, searchVal]);
 
   const [toggleDeleteDialog, DeleteConfirm] = useConfirmDialog({
@@ -302,7 +302,7 @@ export const KeysTabInner = ({ components, refresh }: KeysTabInnerProps) => {
           onDragStart={onDragStart}
           onDragMove={onDragMove}
           onDragCancel={onDragCancel}
-          itemOrder={itemOrder as string[]}
+          itemOrder={itemOrder}
           isCompact
         >
           <DataListItem aria-labelledby={"aria"} id="data" key="data">
