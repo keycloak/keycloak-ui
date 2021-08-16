@@ -53,7 +53,7 @@
     "@testing-library/react": "^12.0.0",
     "@types/dagre": "^0.7.45",
     "@types/file-saver": "^2.0.3",
-    "@types/jest": "^26.0.24",
+    "@types/jest": "^27.0.1",
     "@types/lodash": "^4.14.172",
     "@types/react": "^17.0.16",
     "@types/react-dom": "^17.0.9",
