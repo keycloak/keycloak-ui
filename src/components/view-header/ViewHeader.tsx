@@ -32,6 +32,8 @@ import { HelpItem } from "../help-enabler/HelpItem";
 export type ViewHeaderProps = {
   titleKey: string;
   badges?: ViewHeaderBadge[];
+  badgeId?: string;
+  isDropdownDisabled?: boolean;
   subKey?: string | ReactNode;
   actionsDropdownId?: string;
   subKeyLinkProps?: FormattedLinkProps;
@@ -54,6 +56,7 @@ export const ViewHeader = ({
   actionsDropdownId,
   titleKey,
   badges,
+  isDropdownDisabled,
   subKey,
   subKeyLinkProps,
   dropdownItems,
@@ -138,6 +141,7 @@ export const ViewHeader = ({
                       position={DropdownPosition.right}
                       toggle={
                         <DropdownToggle
+                          isDisabled={isDropdownDisabled}
                           id={actionsDropdownId}
                           onToggle={onDropdownToggle}
                         >
