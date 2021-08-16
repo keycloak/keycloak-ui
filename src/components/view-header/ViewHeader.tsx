@@ -32,7 +32,6 @@ import { HelpItem } from "../help-enabler/HelpItem";
 export type ViewHeaderProps = {
   titleKey: string;
   badges?: ViewHeaderBadge[];
-  badgeId?: string;
   isDropdownDisabled?: boolean;
   subKey?: string | ReactNode;
   actionsDropdownId?: string;
