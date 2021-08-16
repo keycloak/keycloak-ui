@@ -84,12 +84,13 @@ export const LocalizationTab = ({
         selectedLocale: selectMenuLocale || getValues("defaultLocale") || "en",
       });
       return Object.keys(result).map((key) => [key, result[key]]);
+    } catch (error) {
+      return [[]];
     }
-    return [[]];
   };
 
   const tableLoader = async () => {
-    if (realm) {
+    try {
       const result = await adminClient.realms.getRealmLocalizationTexts({
         realm: currentRealm,
         selectedLocale: selectMenuLocale,
