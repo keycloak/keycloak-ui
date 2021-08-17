@@ -28,6 +28,7 @@ import { cellWidth, expandable } from "@patternfly/react-table";
 import type EventRepresentation from "keycloak-admin/lib/defs/eventRepresentation";
 import type EventType from "keycloak-admin/lib/defs/eventTypes";
 import type { RealmEventsConfigRepresentation } from "keycloak-admin/lib/defs/realmEventsConfigRepresentation";
+import { pickBy } from "lodash";
 import moment from "moment";
 import React, { useState } from "react";
 import { Controller, useForm } from "react-hook-form";
@@ -52,14 +53,6 @@ type UserEventSearchForm = {
   type: EventType[];
 };
 
-type ChipsToDisplay = {
-  "User ID"?: string;
-  "Event type"?: EventType[];
-  Client?: string;
-  "Date(from)"?: string;
-  "Date(to)"?: string;
-};
-
 const defaultValues: UserEventSearchForm = {
   client: "",
   dateFrom: "",
@@ -68,25 +61,54 @@ const defaultValues: UserEventSearchForm = {
   type: [],
 };
 
+const StatusRow = (event: EventRepresentation) =>
+  !event.error ? (
+    <span>
+      <CheckCircleIcon color="green" /> {event.type}
+    </span>
+  ) : (
+    <Tooltip content={event.error}>
+      <span>
+        <WarningTriangleIcon color="orange" /> {event.type}
+      </span>
+    </Tooltip>
+  );
+
+const DetailCell = (event: EventRepresentation) => (
+  <DescriptionList isHorizontal className="keycloak_eventsection_details">
+    {Object.entries(event.details!).map(([key, value]) => (
+      <DescriptionListGroup key={key}>
+        <DescriptionListTerm>{key}</DescriptionListTerm>
+        <DescriptionListDescription>{value}</DescriptionListDescription>
+      </DescriptionListGroup>
+    ))}
+  </DescriptionList>
+);
+
 export const EventsSection = () => {
   const { t } = useTranslation("events");
   const adminClient = useAdminClient();
   const { realm } = useRealm();
   const [key, setKey] = useState(0);
-
   const [searchDropdownOpen, setSearchDropdownOpen] = useState(false);
   const [selectOpen, setSelectOpen] = useState(false);
-  const [selectedEvents, setSelectedEvents] = useState<string[]>([]);
-  const [selectedFormValues, setSelectedFormValues] =
-    useState<UserEventSearchForm>();
   const [events, setEvents] = useState<RealmEventsConfigRepresentation>();
-  const [chipsToDisplay, setChipsToDisplay] = useState<ChipsToDisplay>({});
+  const [activeFilters, setActiveFilters] = useState<
+    Partial<UserEventSearchForm>
+  >({});
+
+  const filterLabels: Record<keyof UserEventSearchForm, string> = {
+    client: t("client"),
+    dateFrom: t("dateFrom"),
+    dateTo: t("dateTo"),
+    user: t("userId"),
+    type: t("eventType"),
+  };
 
   const {
     getValues,
     register,
     reset,
-    setValue,
     formState: { isDirty },
     control,
   } = useForm<UserEventSearchForm>({
@@ -95,177 +117,67 @@ export const EventsSection = () => {
     defaultValues,
   });
 
-  const refresh = () => {
-    setKey(new Date().getTime());
-    setSelectedEvents([]);
-    reset();
-  };
-
   useFetch(
     () => adminClient.realms.getConfigEvents({ realm }),
     (events) => setEvents(events),
     []
   );
 
-  const searchEvents = () => {
-    setSearchDropdownOpen(false);
-    setKey(new Date().getTime());
-  };
-
-  const loader = (first?: number, max?: number) => {
-    const formValues = getValues();
-    setSelectedFormValues(formValues);
-
-    const params: { [key: string]: any } = {
-      ...formValues,
+  function loader(first?: number, max?: number) {
+    return adminClient.realms.findEvents({
+      // The admin client wants 'dateFrom' and 'dateTo' to be Date objects, however it cannot actually handle them so we need to cast to any.
+      ...(activeFilters as any),
+      realm,
       first,
       max,
-    };
+    });
+  }
 
-    const reducedParams = Object.fromEntries(
-      Object.entries(params).filter(([key]) => key !== "" && params[key])
+  function submitSearch() {
+    setSearchDropdownOpen(false);
+    commitFilters();
+  }
+
+  function removeFilter(key: keyof UserEventSearchForm) {
+    const formValues: UserEventSearchForm = { ...getValues() };
+    delete formValues[key];
+
+    reset({ ...defaultValues, ...formValues });
+    commitFilters();
+  }
+
+  function removeFilterValue(
+    key: keyof UserEventSearchForm,
+    valueToRemove: EventType
+  ) {
+    const formValues = getValues();
+    const fieldValue = formValues[key];
+    const newFieldValue = Array.isArray(fieldValue)
+      ? fieldValue.filter((val) => val !== valueToRemove)
+      : fieldValue;
+
+    reset({ ...formValues, [key]: newFieldValue });
+    commitFilters();
+  }
+
+  function commitFilters() {
+    const newFilters: Partial<UserEventSearchForm> = pickBy(
+      getValues(),
+      (value) => value !== "" || (Array.isArray(value) && value.length > 0)
     );
 
-    const replacementKeys = {
-      user: "User ID",
-      type: "Event type",
-      client: "Client",
-      dateFrom: "Date(from)",
-      dateTo: "Date(to)",
-    } as { [key: string]: string };
-
-    const replacedKeysInChips = Object.keys(reducedParams)
-      .filter((key) => key !== "max")
-      .reduce((acc: any, key: string) => {
-        const newKey = replacementKeys[key];
-        acc[newKey] = reducedParams[key];
-        return acc;
-      }, {});
-
-    setChipsToDisplay(replacedKeysInChips);
-    return adminClient.realms.findEvents({ realm, ...reducedParams });
-  };
-
-  const StatusRow = (event: EventRepresentation) => (
-    <>
-      {!event.error && (
-        <span key={`status-${event.time}-${event.type}`}>
-          <CheckCircleIcon
-            color="green"
-            key={`circle-${event.time}-${event.type}`}
-          />{" "}
-          {event.type}
-        </span>
-      )}
-      {event.error && (
-        <Tooltip
-          content={event.error}
-          key={`tooltip-${event.time}-${event.type}`}
-        >
-          <span key={`label-${event.time}-${event.type}`}>
-            <WarningTriangleIcon
-              color="orange"
-              key={`triangle-${event.time}-${event.type}`}
-            />{" "}
-            {event.type}
-          </span>
-        </Tooltip>
-      )}
-    </>
-  );
+    setActiveFilters(newFilters);
+    setKey(key + 1);
+  }
 
   const UserDetailLink = (event: EventRepresentation) => (
-    <>
-      <Link
-        key={`link-${event.time}-${event.type}`}
-        to={toUser({ realm, id: event.userId!, tab: "settings" })}
-      >
-        {event.userId}
-      </Link>
-    </>
+    <Link
+      key={`link-${event.time}-${event.type}`}
+      to={toUser({ realm, id: event.userId!, tab: "settings" })}
+    >
+      {event.userId}
+    </Link>
   );
-
-  const DetailCell = (event: EventRepresentation) => (
-    <>
-      <DescriptionList isHorizontal className="keycloak_eventsection_details">
-        {Object.keys(event.details!).map((k) => (
-          <DescriptionListGroup key={k}>
-            <DescriptionListTerm>{k}</DescriptionListTerm>
-            <DescriptionListDescription>
-              {event.details![k]}
-            </DescriptionListDescription>
-          </DescriptionListGroup>
-        ))}
-      </DescriptionList>
-    </>
-  );
-
-  const clearEventTypeSelectionDropdown = (e: React.MouseEvent) => {
-    e.stopPropagation();
-    setSelectedEvents([]);
-    setValue("type", []);
-  };
-
-  const clearSelectionDropdown = (e: React.MouseEvent, chip: string) => {
-    const updatedEventSelection = selectedEvents.filter((obj) => obj !== chip);
-    setSelectedEvents(updatedEventSelection);
-    setValue("type", updatedEventSelection);
-    e.stopPropagation();
-  };
-
-  const chipGroupComponent = () => {
-    return (
-      <ChipGroup>
-        {selectedEvents.map((chip, index) => (
-          <Chip
-            isReadOnly={index === 0}
-            key={chip}
-            onClick={(e) => clearSelectionDropdown(e, chip)}
-          >
-            {chip}
-          </Chip>
-        ))}
-      </ChipGroup>
-    );
-  };
-
-  const deleteEventTypeChip = (chipToDelete: EventType) => {
-    const eventChips = chipsToDisplay["Event type"];
-
-    if (eventChips?.includes(chipToDelete)) {
-      const newEventChips = eventChips.filter((chip) => chip !== chipToDelete);
-
-      setChipsToDisplay({ ...chipsToDisplay, "Event type": newEventChips });
-      setSelectedEvents(newEventChips);
-      setValue("type", [...newEventChips]);
-    }
-
-    setKey(new Date().getTime());
-  };
-
-  const deleteCategory = (categoryChip: keyof ChipsToDisplay) => {
-    const remainingCategories = { ...chipsToDisplay };
-    delete remainingCategories[categoryChip];
-
-    setChipsToDisplay(remainingCategories);
-
-    const updatedFormSearchObj = {
-      user: remainingCategories["User ID"] || "",
-      type: remainingCategories["Event type"] || ([] as EventType[]),
-      client: remainingCategories["Client"] || "",
-      dateFrom: remainingCategories["Date(from)"] || "",
-      dateTo: remainingCategories["Date(to)"] || "",
-    };
-
-    if (updatedFormSearchObj.type.length === 0) {
-      setSelectedEvents([]);
-    }
-
-    setSelectedFormValues(updatedFormSearchObj);
-    reset(updatedFormSearchObj);
-
-    setKey(new Date().getTime());
-  };
 
   return (
     <>
@@ -321,7 +233,6 @@ export const EventsSection = () => {
                         id="kc-userId"
                         name="user"
                         data-testid="userId-searchField"
-                        defaultValue={selectedFormValues?.user ?? ""}
                       />
                     </FormGroup>
                     <FormGroup
@@ -330,10 +241,15 @@ export const EventsSection = () => {
                       className="keycloak__user_events_search__form_label"
                     >
                       <Controller
-                        name="eventsSelect"
-                        defaultValue={selectedEvents}
+                        name="type"
                         control={control}
-                        render={({ onChange }) => (
+                        render={({
+                          onChange,
+                          value,
+                        }: {
+                          onChange: (newValue: EventType[]) => void;
+                          value: EventType[];
+                        }) => (
                           <Select
                             name="eventType"
                             data-testid="event-type-searchField"
@@ -345,23 +261,41 @@ export const EventsSection = () => {
                             variant={SelectVariant.typeaheadMulti}
                             typeAheadAriaLabel="Select"
                             onToggle={(isOpen) => setSelectOpen(isOpen)}
-                            selections={selectedEvents}
-                            onSelect={(_, value) => {
-                              const option = value.toString();
-                              register("type");
-                              const selected = selectedEvents.includes(option)
-                                ? selectedEvents.filter(
-                                    (item) => item !== option
-                                  )
-                                : [...selectedEvents, option];
-                              onChange(selected);
-                              setSelectedEvents(selected);
-                              setValue("type", selected);
+                            selections={value}
+                            onSelect={(_, selectedValue) => {
+                              const option =
+                                selectedValue.toString() as EventType;
+                              const changedValue = value.includes(option)
+                                ? value.filter((item) => item !== option)
+                                : [...value, option];
+
+                              onChange(changedValue);
                             }}
-                            onClear={clearEventTypeSelectionDropdown}
+                            onClear={(event) => {
+                              event.stopPropagation();
+                              onChange([]);
+                            }}
                             isOpen={selectOpen}
                             aria-labelledby={"eventType"}
-                            chipGroupComponent={chipGroupComponent()}
+                            chipGroupComponent={
+                              <ChipGroup>
+                                {value.map((chip, index) => (
+                                  <Chip
+                                    isReadOnly={index === 0}
+                                    key={chip}
+                                    onClick={(event) => {
+                                      event.stopPropagation();
+
+                                      onChange(
+                                        value.filter((val) => val !== chip)
+                                      );
+                                    }}
+                                  >
+                                    {chip}
+                                  </Chip>
+                                ))}
+                              </ChipGroup>
+                            }
                           >
                             {events?.enabledEventTypes?.map((option) => (
                               <SelectOption
@@ -384,7 +318,6 @@ export const EventsSection = () => {
                         id="kc-client"
                         name="client"
                         data-testid="client-searchField"
-                        defaultValue={selectedFormValues?.client ?? ""}
                       />
                     </FormGroup>
                     <FormGroup
@@ -400,7 +333,6 @@ export const EventsSection = () => {
                         className="pf-c-form-control pf-m-icon pf-m-calendar"
                         placeholder="yyyy-MM-dd"
                         data-testid="dateFrom-searchField"
-                        defaultValue={selectedFormValues?.dateFrom ?? ""}
                       />
                     </FormGroup>
                     <FormGroup
@@ -416,14 +348,13 @@ export const EventsSection = () => {
                         className="pf-c-form-control pf-m-icon pf-m-calendar"
                         placeholder="yyyy-MM-dd"
                         data-testid="dateTo-searchField"
-                        defaultValue={selectedFormValues?.dateTo ?? ""}
                       />
                     </FormGroup>
                     <ActionGroup>
                       <Button
                         className="keycloak__user_events_search__form_btn"
                         variant={"primary"}
-                        onClick={searchEvents}
+                        onClick={submitSearch}
                         data-testid="search-events-btn"
                         isDisabled={!isDirty}
                       >
@@ -433,56 +364,40 @@ export const EventsSection = () => {
                   </Form>
                 </Dropdown>
               </FlexItem>
-              <FlexItem className="keycloak__refresh_btn">
-                <Button onClick={refresh} data-testid="refresh-events-btn">
-                  {t("refresh")}
-                </Button>
-              </FlexItem>
             </Flex>
-            {Object.keys(chipsToDisplay).length > 0 ? (
+            {Object.entries(activeFilters).length > 0 && (
               <div className="keycloak__searchChips pf-u-ml-md">
-                {Object.entries(chipsToDisplay).map(([chip, value]) => (
-                  <>
-                    {chip !== "Event type" && (
-                      <ChipGroup
-                        className="pf-u-mr-md pf-u-mb-md"
-                        key={`chip-group-${chip}`}
-                        categoryName={chip}
-                        isClosable
-                        onClick={() =>
-                          deleteCategory(chip as keyof ChipsToDisplay)
-                        }
-                      >
-                        <Chip key={`chip-${chip}`} isReadOnly>
-                          {value}
-                        </Chip>
-                      </ChipGroup>
-                    )}
+                {Object.entries(activeFilters).map((filter) => {
+                  const [key, value] = filter as [
+                    keyof UserEventSearchForm,
+                    string | EventType[]
+                  ];
 
-                    {chip === "Event type" && (
-                      <ChipGroup
-                        className="pf-u-mr-md pf-u-mb-md"
-                        key={`eventType-chip-group-${chip}`}
-                        categoryName={chip}
-                        isClosable
-                        onClick={() => deleteCategory(chip)}
-                      >
-                        {chipsToDisplay["Event type"]?.map((eventTypeChip) => (
-                          <>
-                            <Chip
-                              key={`eventType-chip-${eventTypeChip}`}
-                              onClick={() => deleteEventTypeChip(eventTypeChip)}
-                            >
-                              {eventTypeChip}
-                            </Chip>
-                          </>
-                        ))}
-                      </ChipGroup>
-                    )}
-                  </>
-                ))}
+                  return (
+                    <ChipGroup
+                      className="pf-u-mr-md pf-u-mb-md"
+                      key={key}
+                      categoryName={filterLabels[key]}
+                      isClosable
+                      onClick={() => removeFilter(key)}
+                    >
+                      {typeof value === "string" ? (
+                        <Chip isReadOnly>{value}</Chip>
+                      ) : (
+                        value.map((entry) => (
+                          <Chip
+                            key={entry}
+                            onClick={() => removeFilterValue(key, entry)}
+                          >
+                            {entry}
+                          </Chip>
+                        ))
+                      )}
+                    </ChipGroup>
+                  );
+                })}
               </div>
-            ) : null}
+            )}
             <div className="keycloak__events_table">
               <KeycloakDataTable
                 key={key}
