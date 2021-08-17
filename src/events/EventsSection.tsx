@@ -298,10 +298,7 @@ export const EventsSection = () => {
                             }
                           >
                             {events?.enabledEventTypes?.map((option) => (
-                              <SelectOption
-                                key={`eventType-${option}`}
-                                value={option}
-                              />
+                              <SelectOption key={option} value={option} />
                             ))}
                           </Select>
                         )}
