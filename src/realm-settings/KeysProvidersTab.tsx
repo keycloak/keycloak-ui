@@ -138,7 +138,7 @@ export const KeysTabInner = ({ components, refresh }: KeysTabInnerProps) => {
   };
 
   const onDragFinish = async (itemOrder: string[]) => {
-    setItemOrder([...itemOrder]);
+    setItemOrder(itemOrder);
     setLiveText(t("common:onDragFinish"));
     try {
       await adminClient.components.update(
