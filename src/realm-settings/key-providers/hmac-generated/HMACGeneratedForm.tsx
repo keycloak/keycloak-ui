@@ -22,7 +22,7 @@ import { useAdminClient, useFetch } from "../../../context/auth/AdminClient";
 import { useParams, useRouteMatch } from "react-router-dom";
 import { FormAccess } from "../../../components/form-access/FormAccess";
 import { ViewHeader } from "../../../components/view-header/ViewHeader";
-import { convertToFormValues } from "../../../util";
+import { convertToFormValues, KeyProviderType } from "../../../util";
 import { useAlerts } from "../../../components/alert/Alerts";
 
 type HMACGeneratedFormProps = {
@@ -65,7 +65,7 @@ export const HMACGeneratedForm = ({
             ...component,
             parentId: component.parentId,
             providerId: providerType,
-            providerType: "org.keycloak.keys.KeyProvider",
+            providerType: KeyProviderType,
           }
         );
         addAlert(t("saveProviderSuccess"), AlertVariant.success);
@@ -74,7 +74,7 @@ export const HMACGeneratedForm = ({
           ...component,
           parentId: component.parentId,
           providerId: providerType,
-          providerType: "org.keycloak.keys.KeyProvider",
+          providerType: KeyProviderType,
         });
         handleModalToggle?.();
         addAlert(t("saveProviderSuccess"), AlertVariant.success);
@@ -120,8 +120,7 @@ export const HMACGeneratedForm = ({
     []
   );
 
-  const allComponentTypes =
-    serverInfo.componentTypes?.["org.keycloak.keys.KeyProvider"] ?? [];
+  const allComponentTypes = serverInfo.componentTypes?.[KeyProviderType] ?? [];
 
   const hmacSecretSizeOptions = allComponentTypes[2].properties[3].options;
 

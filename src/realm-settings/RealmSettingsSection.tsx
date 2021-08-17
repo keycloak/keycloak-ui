@@ -26,7 +26,7 @@ import { useRealm } from "../context/realm-context/RealmContext";
 import { useServerInfo } from "../context/server-info/ServerInfoProvider";
 import { LocalizationTab } from "./LocalizationTab";
 import { useWhoAmI } from "../context/whoami/WhoAmI";
-import { toUpperCase } from "../util";
+import { KeyProviderType, toUpperCase } from "../util";
 import { RealmSettingsEmailTab } from "./EmailTab";
 import { EventsTab } from "./event-config/EventsTab";
 import { RealmSettingsGeneralTab } from "./GeneralTab";
@@ -164,22 +164,31 @@ export const RealmSettingsSection = () => {
   const [currentUser, setCurrentUser] = useState<UserRepresentation>();
   const { whoAmI } = useWhoAmI();
 
-  const kpComponentTypes =
-    useServerInfo().componentTypes!["org.keycloak.keys.KeyProvider"];
+  const kpComponentTypes = useServerInfo().componentTypes![KeyProviderType];
+
+  const sortByPriority = (components: ComponentRepresentation[]) => {
+    const sortedComponents = components?.sort(
+      (a, b) => Number(a.config?.priority) - Number(b?.config?.priority)
+    );
+
+    return sortedComponents;
+  };
 
   useFetch(
     async () => {
       const realm = await adminClient.realms.findOne({ realm: realmName });
       const realmComponents = await adminClient.components.find({
-        type: "org.keycloak.keys.KeyProvider",
+        type: KeyProviderType,
         realm: realmName,
       });
       const user = await adminClient.users.findOne({ id: whoAmI.getUserId()! });
 
+      console.log(sortByPriority(realmComponents));
+
       return { user, realm, realmComponents };
     },
     ({ user, realm, realmComponents }) => {
-      setRealmComponents(realmComponents);
+      setRealmComponents(sortByPriority(realmComponents));
       setCurrentUser(user);
       setRealm(realm);
     },

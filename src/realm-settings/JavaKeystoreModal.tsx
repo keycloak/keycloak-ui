@@ -21,6 +21,7 @@ import { useAlerts } from "../components/alert/Alerts";
 import type ComponentRepresentation from "keycloak-admin/lib/defs/componentRepresentation";
 import { HelpItem } from "../components/help-enabler/HelpItem";
 import { useServerInfo } from "../context/server-info/ServerInfoProvider";
+import { KeyProviderType } from "../util";
 
 type JavaKeystoreModalProps = {
   providerType: string;
@@ -44,8 +45,7 @@ JavaKeystoreModalProps) => {
   const [isEllipticCurveDropdownOpen, setIsEllipticCurveDropdownOpen] =
     useState(false);
 
-  const allComponentTypes =
-    serverInfo.componentTypes?.["org.keycloak.keys.KeyProvider"] ?? [];
+  const allComponentTypes = serverInfo.componentTypes?.[KeyProviderType] ?? [];
 
   const save = async (component: ComponentRepresentation) => {
     try {
@@ -53,7 +53,7 @@ JavaKeystoreModalProps) => {
         ...component,
         parentId: component.parentId,
         providerId: providerType,
-        providerType: "org.keycloak.keys.KeyProvider",
+        providerType: KeyProviderType,
       });
       handleModalToggle();
       addAlert(t("saveProviderSuccess"), AlertVariant.success);

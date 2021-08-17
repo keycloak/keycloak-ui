@@ -43,6 +43,7 @@ import { HMACGeneratedModal } from "./key-providers/hmac-generated/HMACGenerated
 import { ECDSAGeneratedModal } from "./key-providers/ecdsa-generated/ECDSAGeneratedModal";
 import { RSAModal } from "./RSAModal";
 import { RSAGeneratedModal } from "./key-providers/rsa-generated/RSAGeneratedModal";
+import { KeyProviderType } from "../util";
 
 type ComponentData = KeyMetadataRepresentation & {
   id?: string;
@@ -75,14 +76,17 @@ export const KeysTabInner = ({ components, refresh }: KeysTabInnerProps) => {
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
 
   const serverInfo = useServerInfo();
-  const providerTypes = serverInfo.componentTypes![
-    "org.keycloak.keys.KeyProvider"
-  ].map((item) => item.id);
+  const providerTypes = serverInfo.componentTypes![KeyProviderType].map(
+    (item) => item.id
+  );
 
   const itemIds = components.map((component) => component.id!);
 
   const [itemOrder, setItemOrder] = useState<string[]>([]);
   const [providerDropdownOpen, setProviderDropdownOpen] = useState(false);
+  // const [sortedByPriority, setSortedByPriority] = useState<
+  //   ComponentRepresentation[]
+  // >([]);
   const [currentComponent, setCurrentComponent] =
     useState<ComponentRepresentation>();
 
@@ -143,7 +147,7 @@ export const KeysTabInner = ({ components, refresh }: KeysTabInnerProps) => {
           ...currentComponent,
           parentId: currentComponent?.parentId,
           providerId: currentComponent?.providerId,
-          providerType: "org.keycloak.keys.KeyProvider",
+          providerType: KeyProviderType,
           config: { priority: [(itemOrder.indexOf(id) + 100).toString()] },
         }
       );
@@ -185,6 +189,14 @@ export const KeysTabInner = ({ components, refresh }: KeysTabInnerProps) => {
   const toggleActionList = (index: number) => {
     actionListOpen[index] = !actionListOpen[index];
     setActionListOpen([...actionListOpen]);
+  };
+
+  const sortByPriority = (components: ComponentData[]) => {
+    const sortedComponents = components?.sort(
+      (a, b) => Number(a.config?.priority) - Number(b?.config?.priority)
+    );
+
+    return sortedComponents;
   };
 
   return (
@@ -332,9 +344,9 @@ export const KeysTabInner = ({ components, refresh }: KeysTabInnerProps) => {
             </DataListItemRow>
           </DataListItem>
           {(filteredComponents.length === 0
-            ? components
-            : filteredComponents
-          ).map((component: ComponentData, idx) => (
+            ? sortByPriority(components)
+            : sortByPriority(filteredComponents)
+          ).map((component: ComponentData, idx: number) => (
             <DataListItem
               draggable
               aria-labelledby={"aria"}

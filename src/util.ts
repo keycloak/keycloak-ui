@@ -189,3 +189,5 @@ export const interpolateTimespan = (forHumans: string) => {
     });
   }
 };
+
+export const KeyProviderType = "org.keycloak.keys.KeyProvider";
