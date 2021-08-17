@@ -130,9 +130,7 @@ const Fields = ({ readOnly }: DescriptorSettingsProps) => {
           render={({ onChange, value }) => (
             <Select
               toggleId="kc-nameIdPolicyFormat"
-              onToggle={() =>
-                setNamedPolicyDropdownOpen(!namedPolicyDropdownOpen)
-              }
+              onToggle={(isExpanded) => setNamedPolicyDropdownOpen(isExpanded)}
               isOpen={namedPolicyDropdownOpen}
               onSelect={(_, value) => {
                 onChange(value as string);
@@ -142,38 +140,25 @@ const Fields = ({ readOnly }: DescriptorSettingsProps) => {
               variant={SelectVariant.single}
             >
               <SelectOption
-                key={0}
                 data-testid="persistent-option"
                 value={t("persistent")}
                 isPlaceholder
               />
               <SelectOption
-                key={1}
                 data-testid="transient-option"
                 value={t("transient")}
               />
+              <SelectOption data-testid="email-option" value={t("email")} />
               <SelectOption
-                key={2}
-                data-testid="email-option"
-                value={t("email")}
-              />
-              <SelectOption
-                key={3}
                 data-testid="kerberos-option"
                 value={t("kerberos")}
               />
+              <SelectOption data-testid="x509-option" value={t("x509")} />
               <SelectOption
-                key={4}
-                data-testid="x509-option"
-                value={t("x509")}
-              />
-              <SelectOption
-                key={5}
                 data-testid="windowsDomainQN-option"
                 value={t("windowsDomainQN")}
               />
               <SelectOption
-                key={6}
                 data-testid="unspecified-option"
                 value={t("unspecified")}
               />
@@ -201,30 +186,27 @@ const Fields = ({ readOnly }: DescriptorSettingsProps) => {
           render={({ onChange, value }) => (
             <Select
               toggleId="kc-principalType"
-              onToggle={() =>
-                setPrincipalTypeDropdownOpen(!principalTypeDropdownOpen)
+              onToggle={(isExpanded) =>
+                setPrincipalTypeDropdownOpen(isExpanded)
               }
               isOpen={principalTypeDropdownOpen}
               onSelect={(_, value) => {
-                onChange(value as string);
+                onChange(value.toString());
                 setPrincipalTypeDropdownOpen(false);
               }}
               selections={value}
               variant={SelectVariant.single}
             >
               <SelectOption
-                key={0}
                 data-testid="subjectNameId-option"
                 value={t("subjectNameId")}
                 isPlaceholder
               />
               <SelectOption
-                key={1}
                 data-testid="attributeName-option"
                 value={t("attributeName")}
               />
               <SelectOption
-                key={2}
                 data-testid="attributeFriendlyName-option"
                 value={t("attributeFriendlyName")}
               />
@@ -277,25 +259,23 @@ const Fields = ({ readOnly }: DescriptorSettingsProps) => {
               render={({ onChange, value }) => (
                 <Select
                   toggleId="kc-signatureAlgorithm"
-                  onToggle={() =>
-                    setSignatureAlgorithmDropdownOpen(
-                      !signatureAlgorithmDropdownOpen
-                    )
+                  onToggle={(isExpanded) =>
+                    setSignatureAlgorithmDropdownOpen(isExpanded)
                   }
                   isOpen={signatureAlgorithmDropdownOpen}
                   onSelect={(_, value) => {
-                    onChange(value as string);
+                    onChange(value.toString());
                     setSignatureAlgorithmDropdownOpen(false);
                   }}
                   selections={value}
                   variant={SelectVariant.single}
                 >
-                  <SelectOption key={0} value="RSA_SHA1" />
-                  <SelectOption key={1} value="RSA_SHA256" isPlaceholder />
-                  <SelectOption key={2} value="RSA_SHA256_MGF1" />
-                  <SelectOption key={3} value="RSA_SHA512" />
-                  <SelectOption key={4} value="RSA_SHA512_MGF1" />
-                  <SelectOption key={5} value="DSA_SHA1" />
+                  <SelectOption value="RSA_SHA1" />
+                  <SelectOption value="RSA_SHA256" isPlaceholder />
+                  <SelectOption value="RSA_SHA256_MGF1" />
+                  <SelectOption value="RSA_SHA512" />
+                  <SelectOption value="RSA_SHA512_MGF1" />
+                  <SelectOption value="DSA_SHA1" />
                 </Select>
               )}
             ></Controller>
@@ -318,22 +298,20 @@ const Fields = ({ readOnly }: DescriptorSettingsProps) => {
               render={({ onChange, value }) => (
                 <Select
                   toggleId="kc-samlSignatureKeyName"
-                  onToggle={() =>
-                    setSamlSignatureKeyNameDropdownOpen(
-                      !samlSignatureKeyNameDropdownOpen
-                    )
+                  onToggle={(isExpanded) =>
+                    setSamlSignatureKeyNameDropdownOpen(isExpanded)
                   }
                   isOpen={samlSignatureKeyNameDropdownOpen}
                   onSelect={(_, value) => {
-                    onChange(value as string);
+                    onChange(value.toString());
                     setSamlSignatureKeyNameDropdownOpen(false);
                   }}
                   selections={value}
                   variant={SelectVariant.single}
                 >
-                  <SelectOption key={0} value="NONE" />
-                  <SelectOption key={1} value={t("keyID")} isPlaceholder />
-                  <SelectOption key={2} value={t("certSubject")} />
+                  <SelectOption value="NONE" />
+                  <SelectOption value={t("keyID")} isPlaceholder />
+                  <SelectOption value={t("certSubject")} />
                 </Select>
               )}
             ></Controller>
@@ -364,13 +342,11 @@ const Fields = ({ readOnly }: DescriptorSettingsProps) => {
         isReadOnly={readOnly}
       />
       {validateSignature === "true" && (
-        <>
-          <TextField
-            field="config.signingCertificate"
-            label="validatingX509Certs"
-            isReadOnly={readOnly}
-          />
-        </>
+        <TextField
+          field="config.signingCertificate"
+          label="validatingX509Certs"
+          isReadOnly={readOnly}
+        />
       )}
       <SwitchField
         field="config.signSpMetadata"
@@ -410,19 +386,16 @@ export const DescriptorSettings = ({ readOnly }: DescriptorSettingsProps) => {
   const { t } = useTranslation("identity-providers");
   const [isExpanded, setIsExpanded] = useState(false);
 
-  return (
-    <>
-      {readOnly && (
-        <ExpandableSection
-          className="keycloak__discovery-settings__metadata"
-          toggleText={isExpanded ? t("hideMetaData") : t("showMetaData")}
-          onToggle={() => setIsExpanded(!isExpanded)}
-          isExpanded={isExpanded}
-        >
-          <Fields readOnly={readOnly} />
-        </ExpandableSection>
-      )}
-      {!readOnly && <Fields readOnly={readOnly} />}
-    </>
+  return readOnly ? (
+    <ExpandableSection
+      className="keycloak__discovery-settings__metadata"
+      toggleText={isExpanded ? t("hideMetaData") : t("showMetaData")}
+      onToggle={(isOpen) => setIsExpanded(isOpen)}
+      isExpanded={isExpanded}
+    >
+      <Fields readOnly={readOnly} />
+    </ExpandableSection>
+  ) : (
+    <Fields readOnly={readOnly} />
   );
 };

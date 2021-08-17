@@ -44,7 +44,7 @@ export const ReqAuthnConstraints = () => {
                 onChange(value.toString());
                 setSyncModeOpen(false);
               }}
-              selections={t(value)}
+              selections={value}
               variant={SelectVariant.single}
               aria-label={t("syncMode")}
               isOpen={syncModeOpen}

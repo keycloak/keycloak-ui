@@ -39,31 +39,38 @@ export const SamlConnectSettings = () => {
 
   const defaultEntityUrl = `${getBaseUrl(adminClient)}realms/${realm}`;
 
-  const setupForm = (result: any) => {
+  const setupForm = (result: IdentityProviderRepresentation) => {
     Object.entries(result).map(([key, value]) =>
       setValue(`config.${key}`, value)
     );
   };
 
   useEffect(() => {
-    if (discovering) {
-      setDiscovering(!!entityUrl);
-      if (entityUrl)
-        (async () => {
-          let result;
-          try {
-            result = await adminClient.identityProviders.importFromUrl({
-              providerId: id,
-              fromUrl: entityUrl,
-            });
-          } catch (error) {
-            result = { error };
-          }
-          setDiscoveryResult(result as Result);
-          setupForm(result);
-          setDiscovering(false);
-        })();
+    if (!discovering) {
+      return;
     }
+
+    setDiscovering(!!entityUrl);
+
+    if (!entityUrl) {
+      return;
+    }
+
+    (async () => {
+      let result;
+      try {
+        result = await adminClient.identityProviders.importFromUrl({
+          providerId: id,
+          fromUrl: entityUrl,
+        });
+      } catch (error) {
+        result = { error };
+      }
+
+      setDiscoveryResult(result as Result);
+      setupForm(result);
+      setDiscovering(false);
+    })();
   }, [discovering]);
 
   const fileUpload = async (obj: object) => {

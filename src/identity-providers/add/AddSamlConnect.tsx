@@ -18,10 +18,6 @@ import { SamlConnectSettings } from "./SamlConnectSettings";
 import { useRealm } from "../../context/realm-context/RealmContext";
 import { useAlerts } from "../../components/alert/Alerts";
 
-type DiscoveryIdentity = IdentityProviderRepresentation & {
-  discoveryEndpoint?: string;
-};
-
 export const AddSamlConnect = () => {
   const { t } = useTranslation("identity-providers");
   const history = useHistory();
@@ -39,8 +35,7 @@ export const AddSamlConnect = () => {
   const { addAlert } = useAlerts();
   const { realm } = useRealm();
 
-  const save = async (provider: DiscoveryIdentity) => {
-    delete provider.discoveryEndpoint;
+  const save = async (provider: IdentityProviderRepresentation) => {
     try {
       await adminClient.identityProviders.create({
         ...provider,
