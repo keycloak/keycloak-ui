@@ -83,9 +83,10 @@ export const LocalizationTab = ({
         realm: realm.realm!,
         selectedLocale: selectMenuLocale || getValues("defaultLocale") || "en",
       });
-      return Object.keys(result).map((key) => [key, result[key]]);
+
+      return Object.entries(result);
     } catch (error) {
-      return [[]];
+      return [];
     }
   };
 
@@ -95,9 +96,10 @@ export const LocalizationTab = ({
         realm: currentRealm,
         selectedLocale: selectMenuLocale,
       });
-      return Object.keys(result).map((key) => [key, result[key]]);
+
+      return Object.entries(result);
     } catch (error) {
-      return [[]];
+      return [];
     }
   };
 
