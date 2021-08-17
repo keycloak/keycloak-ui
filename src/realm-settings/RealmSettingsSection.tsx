@@ -183,8 +183,6 @@ export const RealmSettingsSection = () => {
       });
       const user = await adminClient.users.findOne({ id: whoAmI.getUserId()! });
 
-      console.log(sortByPriority(realmComponents));
-
       return { user, realm, realmComponents };
     },
     ({ user, realm, realmComponents }) => {
