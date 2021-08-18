@@ -193,7 +193,7 @@ export const KeysTabInner = ({ components, refresh }: KeysTabInnerProps) => {
 
   const sortByPriority = (components: ComponentData[]) => {
     const sortedComponents = components?.sort(
-      (a, b) => Number(a.config?.priority) - Number(b?.config?.priority)
+      (a, b) => Number(a.config?.priority) - Number(b?.config?.priority || 0)
     );
 
     return sortedComponents;

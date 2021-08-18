@@ -53,6 +53,7 @@ export const RSAGeneratedModal = ({
         parentId: component.parentId,
         providerId: providerType,
         providerType: KeyProviderType,
+        config: { priority: ["0"] },
       });
       handleModalToggle();
       addAlert(t("saveProviderSuccess"), AlertVariant.success);
