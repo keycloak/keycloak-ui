@@ -23,6 +23,7 @@ import {
   Toolbar,
   ToolbarGroup,
   ToolbarItem,
+  Tooltip,
 } from "@patternfly/react-core";
 import { SearchIcon } from "@patternfly/react-icons";
 
@@ -84,9 +85,6 @@ export const KeysTabInner = ({ components, refresh }: KeysTabInnerProps) => {
 
   const [itemOrder, setItemOrder] = useState<string[]>([]);
   const [providerDropdownOpen, setProviderDropdownOpen] = useState(false);
-  // const [sortedByPriority, setSortedByPriority] = useState<
-  //   ComponentRepresentation[]
-  // >([]);
   const [currentComponent, setCurrentComponent] =
     useState<ComponentRepresentation>();
 
@@ -347,13 +345,15 @@ export const KeysTabInner = ({ components, refresh }: KeysTabInnerProps) => {
             >
               <DataListItemRow key={idx} data-testid={"data-list-row"}>
                 <DataListControl>
-                  <DataListDragButton
-                    className="row-drag-button"
-                    aria-label="Reorder"
-                    aria-labelledby="simple-item2"
-                    aria-describedby="Press space or enter to begin dragging, and use the arrow keys to navigate up or down. Press enter to confirm the drag, or any other key to cancel the drag operation."
-                    aria-pressed="false"
-                  />
+                  <Tooltip content={t("dragInstruction")} position="top">
+                    <DataListDragButton
+                      className="row-drag-button"
+                      aria-label="Reorder"
+                      aria-labelledby="simple-item2"
+                      aria-describedby="Press space or enter to begin dragging, and use the arrow keys to navigate up or down. Press enter to confirm the drag, or any other key to cancel the drag operation."
+                      aria-pressed="false"
+                    />
+                  </Tooltip>
                 </DataListControl>
                 <DataListItemCells
                   dataListCells={[

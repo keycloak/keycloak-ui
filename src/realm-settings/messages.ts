@@ -4,6 +4,7 @@ export default {
     partialExport: "Partial export",
     deleteRealm: "Delete realm",
     deleteConfirmTitle: "Delete realm?",
+    dragInstruction: "Click and drag to change priority",
     deleteConfirm:
       "If you delete this realm, all associated data will be removed.",
     deleteProviderTitle: "Delete key provider?",
