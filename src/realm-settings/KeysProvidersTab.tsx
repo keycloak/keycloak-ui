@@ -191,14 +191,6 @@ export const KeysTabInner = ({ components, refresh }: KeysTabInnerProps) => {
     setActionListOpen([...actionListOpen]);
   };
 
-  const sortByPriority = (components: ComponentData[]) => {
-    const sortedComponents = components?.sort(
-      (a, b) => Number(a.config?.priority) - Number(b?.config?.priority || 0)
-    );
-
-    return sortedComponents;
-  };
-
   return (
     <>
       {defaultConsoleDisplayName === "aes-generated" && (
@@ -344,8 +336,8 @@ export const KeysTabInner = ({ components, refresh }: KeysTabInnerProps) => {
             </DataListItemRow>
           </DataListItem>
           {(filteredComponents.length === 0
-            ? sortByPriority(components)
-            : sortByPriority(filteredComponents)
+            ? components
+            : filteredComponents
           ).map((component: ComponentData, idx: number) => (
             <DataListItem
               draggable
