@@ -16,6 +16,8 @@ import {
 import { CogIcon, TrashIcon } from "@patternfly/react-icons";
 
 import type AuthenticatorConfigRepresentation from "keycloak-admin/lib/defs/authenticatorConfigRepresentation";
+import type AuthenticatorConfigInfoRepresentation from "keycloak-admin/lib/defs/authenticatorConfigInfoRepresentation";
+import type { ConfigPropertyRepresentation } from "keycloak-admin/lib/defs/authenticatorConfigInfoRepresentation";
 import type { ExpandableExecution } from "../execution-model";
 import { useAdminClient, useFetch } from "../../context/auth/AdminClient";
 import { useAlerts } from "../../components/alert/Alerts";
@@ -32,7 +34,8 @@ export const ExecutionConfigModal = ({
 
   const [show, setShow] = useState(false);
   const [config, setConfig] = useState<AuthenticatorConfigRepresentation>();
-  const [configDescription, setConfigDescription] = useState<any>();
+  const [configDescription, setConfigDescription] =
+    useState<AuthenticatorConfigInfoRepresentation>();
 
   const { register, errors, setValue, handleSubmit } = useForm();
 
@@ -40,12 +43,14 @@ export const ExecutionConfigModal = ({
     configDescription: any,
     config?: AuthenticatorConfigRepresentation
   ) => {
-    configDescription.properties.map((property) => {
-      setValue(
-        property.name,
-        config?.config?.[property.name] || property.defaultValue || ""
-      );
-    });
+    configDescription.properties.map(
+      (property: ConfigPropertyRepresentation) => {
+        setValue(
+          property.name!,
+          config?.config?.[property.name!] || property.defaultValue || ""
+        );
+      }
+    );
     if (config) {
       setValue("alias", config.alias);
       setValue("id", config.id);
@@ -151,16 +156,16 @@ export const ExecutionConfigModal = ({
                 }
               />
             </FormGroup>
-            {configDescription.properties.map((property) => (
+            {configDescription?.properties?.map((property) => (
               <FormGroup
                 key={property.name}
                 label={property.label}
-                fieldId={property.name}
+                fieldId={property.name!}
                 labelIcon={
                   <HelpItem
                     helpText={property.helpText}
-                    forLabel={property.name}
-                    forID={property.name}
+                    forLabel={property.name!}
+                    forID={property.name!}
                   />
                 }
               >
