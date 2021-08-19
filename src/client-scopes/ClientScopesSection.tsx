@@ -33,9 +33,11 @@ import { toNewClientScope } from "./routes/NewClientScope";
 
 import "./client-scope.css";
 import { toClientScope } from "./routes/ClientScope";
+import { useWhoAmI } from "../context/whoami/WhoAmI";
 
 export const ClientScopesSection = () => {
   const { realm } = useRealm();
+  const { whoAmI } = useWhoAmI();
   const { t } = useTranslation("client-scopes");
 
   const adminClient = useAdminClient();
@@ -55,9 +57,10 @@ export const ClientScopesSection = () => {
       await adminClient.clientScopes.listDefaultClientScopes();
     const optionalScopes =
       await adminClient.clientScopes.listDefaultOptionalClientScopes();
+    const clientScopes = await adminClient.clientScopes.find();
 
-    const clientScopes = (await adminClient.clientScopes.find()).map(
-      (scope) => {
+    return clientScopes
+      .map((scope) => {
         return {
           ...scope,
           type: defaultScopes.find(
@@ -70,10 +73,8 @@ export const ClientScopesSection = () => {
             ? ClientScope.optional
             : AllClientScopes.none,
         };
-      }
-    );
-
-    return clientScopes;
+      })
+      .sort((a, b) => a.name!.localeCompare(b.name!, whoAmI.getLocale()));
   };
 
   const [toggleDeleteDialog, DeleteConfirm] = useConfirmDialog({
