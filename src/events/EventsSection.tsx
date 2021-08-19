@@ -279,9 +279,8 @@ export const EventsSection = () => {
                             aria-labelledby={"eventType"}
                             chipGroupComponent={
                               <ChipGroup>
-                                {value.map((chip, index) => (
+                                {value.map((chip) => (
                                   <Chip
-                                    isReadOnly={index === 0}
                                     key={chip}
                                     onClick={(event) => {
                                       event.stopPropagation();
