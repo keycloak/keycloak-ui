@@ -49,7 +49,11 @@ export default class EventsPage {
     cy.get(this.searchEventDrpDwnBtn).click();
     cy.get(this.eventTypeInputFld).type("LOGIN");
     cy.get(this.eventTypeOption).contains("LOGIN").click();
+
+    cy.intercept("/auth/admin/realms/master/events*").as("eventsFetch");
     cy.getId(this.searchEventsBtn).click();
+    cy.wait("@eventsFetch");
+
     cy.get("table").contains("td", "LOGIN");
     cy.get("table").should("not.have.text", "CODE_TO_TOKEN");
     cy.get("table").should("not.have.text", "CODE_TO_TOKEN_ERROR");
