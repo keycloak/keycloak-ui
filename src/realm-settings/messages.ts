@@ -20,6 +20,8 @@ export default {
     editProvider: "Edit provider",
     saveSuccess: "Realm successfully updated",
     saveProviderSuccess: "The provider has been saved successfully.",
+    saveProviderListSuccess:
+      "The priority of the provider has been updated successfully.",
     saveProviderError: "Error saving provider: ",
     saveError: "Realm could not be updated: {error}",
     general: "General",

@@ -22,7 +22,7 @@ import { useAdminClient, useFetch } from "../../../context/auth/AdminClient";
 import { useParams, useRouteMatch } from "react-router-dom";
 import { FormAccess } from "../../../components/form-access/FormAccess";
 import { ViewHeader } from "../../../components/view-header/ViewHeader";
-import { convertToFormValues, KeyProviderType } from "../../../util";
+import { convertToFormValues, KEY_PROVIDER_TYPE } from "../../../util";
 import { useAlerts } from "../../../components/alert/Alerts";
 
 type JavaKeystoreFormProps = {
@@ -63,7 +63,7 @@ export const JavaKeystoreForm = ({
             ...component,
             parentId: component.parentId,
             providerId: providerType,
-            providerType: KeyProviderType,
+            providerType: KEY_PROVIDER_TYPE,
           }
         );
         addAlert(t("saveProviderSuccess"), AlertVariant.success);
@@ -72,7 +72,7 @@ export const JavaKeystoreForm = ({
           ...component,
           parentId: component.parentId,
           providerId: providerType,
-          providerType: KeyProviderType,
+          providerType: KEY_PROVIDER_TYPE,
           config: { priority: ["0"] },
         });
         handleModalToggle?.();
@@ -129,7 +129,8 @@ export const JavaKeystoreForm = ({
     []
   );
 
-  const allComponentTypes = serverInfo.componentTypes?.[KeyProviderType] ?? [];
+  const allComponentTypes =
+    serverInfo.componentTypes?.[KEY_PROVIDER_TYPE] ?? [];
 
   const javaKeystoreAlgorithmOptions =
     allComponentTypes[3].properties[3].options;

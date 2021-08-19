@@ -44,7 +44,7 @@ import { HMACGeneratedModal } from "./key-providers/hmac-generated/HMACGenerated
 import { ECDSAGeneratedModal } from "./key-providers/ecdsa-generated/ECDSAGeneratedModal";
 import { RSAModal } from "./RSAModal";
 import { RSAGeneratedModal } from "./key-providers/rsa-generated/RSAGeneratedModal";
-import { KeyProviderType } from "../util";
+import { KEY_PROVIDER_TYPE } from "../util";
 
 type ComponentData = KeyMetadataRepresentation & {
   id?: string;
@@ -78,9 +78,9 @@ export const KeysTabInner = ({ components, refresh }: KeysTabInnerProps) => {
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
 
   const serverInfo = useServerInfo();
-  const providerTypes = serverInfo.componentTypes![KeyProviderType].map(
-    (item) => item.id
-  );
+  const providerTypes = (
+    serverInfo.componentTypes?.[KEY_PROVIDER_TYPE] ?? []
+  ).map((item) => item.id);
 
   const itemIds = components.map((component) => component.id!);
 
@@ -133,7 +133,7 @@ export const KeysTabInner = ({ components, refresh }: KeysTabInnerProps) => {
     setLiveText(t("common:onDragCancel"));
   };
 
-  const onDragFinish = (itemOrder: string[]) => {
+  const onDragFinish = async (itemOrder: string[]) => {
     setItemOrder(itemOrder);
     setLiveText(t("common:onDragFinish"));
     const updateAll = components.map((component: ComponentData) => {
@@ -146,7 +146,7 @@ export const KeysTabInner = ({ components, refresh }: KeysTabInnerProps) => {
           ...componentToSave,
           parentId: component?.parentId,
           providerId: component?.providerId,
-          providerType: KeyProviderType,
+          providerType: KEY_PROVIDER_TYPE,
           config: {
             priority: [
               (
@@ -161,7 +161,12 @@ export const KeysTabInner = ({ components, refresh }: KeysTabInnerProps) => {
     });
 
     try {
-      Promise.all(updateAll);
+      await Promise.all(updateAll);
+      addAlert(
+        t("realm-settings:saveProviderListSuccess"),
+        AlertVariant.success
+      );
+      refresh();
     } catch (error) {
       addError("realm-settings:saveProviderError", error);
     }
