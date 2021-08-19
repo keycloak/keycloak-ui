@@ -36,12 +36,12 @@ const Fields = ({ readOnly }: DescriptorSettingsProps) => {
   ] = useState(false);
 
   const wantAuthnSigned = useWatch({
-    control: control,
+    control,
     name: "config.wantAuthnRequestsSigned",
   });
 
   const validateSignature = useWatch({
-    control: control,
+    control,
     name: "config.validateSignature",
   });
 
