@@ -206,11 +206,12 @@ export const EventsSection = () => {
                 <Dropdown
                   id="user-events-search-select"
                   data-testid="UserEventsSearchSelector"
+                  className="pf-u-mt-md pf-u-ml-md pf-u-mb-md"
                   toggle={
                     <DropdownToggle
                       data-testid="userEventsSearchSelectorToggle"
                       onToggle={(isOpen) => setSearchDropdownOpen(isOpen)}
-                      className="keycloak__user_events_search_selector_dropdown__toggle pf-u-mt-md pf-u-ml-md pf-u-mb-md"
+                      className="keycloak__user_events_search_selector_dropdown__toggle"
                     >
                       {t("searchForEvent")}
                     </DropdownToggle>
