@@ -95,7 +95,7 @@ export const KeysTabInner = ({ components, refresh }: KeysTabInnerProps) => {
 
   useEffect(() => {
     const itemIds = components.map((component) => component.id!);
-    setItemOrder(itemIds);
+    setItemOrder(["data", ...itemIds]);
   }, [components, searchVal]);
 
   const [toggleDeleteDialog, DeleteConfirm] = useConfirmDialog({
@@ -158,11 +158,11 @@ export const KeysTabInner = ({ components, refresh }: KeysTabInnerProps) => {
 
     try {
       await Promise.all(updateAll);
+      refresh();
       addAlert(
         t("realm-settings:saveProviderListSuccess"),
         AlertVariant.success
       );
-      refresh();
     } catch (error) {
       addError("realm-settings:saveProviderError", error);
     }
@@ -362,7 +362,7 @@ export const KeysTabInner = ({ components, refresh }: KeysTabInnerProps) => {
                 <DataListControl>
                   <Tooltip content={t("dragInstruction")} position="top">
                     <DataListDragButton
-                      className="row-drag-button"
+                      className="kc-row-drag-button"
                       aria-label="Reorder"
                       aria-describedby={t("common-help:dragHelp")}
                       aria-pressed="false"
