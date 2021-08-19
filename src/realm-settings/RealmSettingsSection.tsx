@@ -168,7 +168,8 @@ export const RealmSettingsSection = () => {
 
   const sortByPriority = (components: ComponentRepresentation[]) => {
     const sortedComponents = components?.sort(
-      (a, b) => Number(a.config?.priority) - Number(b?.config?.priority || 0)
+      // sort in descending order
+      (a, b) => Number(b.config?.priority) - Number(a?.config?.priority || 0)
     );
 
     return sortedComponents;

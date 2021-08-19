@@ -52,6 +52,7 @@ type ComponentData = KeyMetadataRepresentation & {
   name?: string;
   toggleHidden?: boolean;
   config?: any;
+  parentId?: string;
 };
 
 type KeysTabInnerProps = {
@@ -85,8 +86,6 @@ export const KeysTabInner = ({ components, refresh }: KeysTabInnerProps) => {
 
   const [itemOrder, setItemOrder] = useState<string[]>([]);
   const [providerDropdownOpen, setProviderDropdownOpen] = useState(false);
-  const [currentComponent, setCurrentComponent] =
-    useState<ComponentRepresentation>();
 
   const [defaultConsoleDisplayName, setDefaultConsoleDisplayName] =
     useState("");
@@ -124,7 +123,6 @@ export const KeysTabInner = ({ components, refresh }: KeysTabInnerProps) => {
   const onDragStart = async (id: string) => {
     setLiveText(t("common:onDragStart", { item: id }));
     setId(id);
-    setCurrentComponent(await adminClient.components.findOne({ id }));
   };
 
   const onDragMove = () => {
@@ -135,20 +133,35 @@ export const KeysTabInner = ({ components, refresh }: KeysTabInnerProps) => {
     setLiveText(t("common:onDragCancel"));
   };
 
-  const onDragFinish = async (itemOrder: string[]) => {
+  const onDragFinish = (itemOrder: string[]) => {
     setItemOrder(itemOrder);
     setLiveText(t("common:onDragFinish"));
-    try {
-      await adminClient.components.update(
-        { id },
+    const updateAll = components.map((component: ComponentData) => {
+      const componentToSave = { ...component };
+      componentToSave.providerDescription = undefined;
+
+      return adminClient.components.update(
+        { id: component.id! },
         {
-          ...currentComponent,
-          parentId: currentComponent?.parentId,
-          providerId: currentComponent?.providerId,
+          ...componentToSave,
+          parentId: component?.parentId,
+          providerId: component?.providerId,
           providerType: KeyProviderType,
-          config: { priority: [(itemOrder.indexOf(id) + 100).toString()] },
+          config: {
+            priority: [
+              (
+                itemOrder.length -
+                itemOrder.indexOf(component.id || "") +
+                100
+              ).toString(),
+            ],
+          },
         }
       );
+    });
+
+    try {
+      Promise.all(updateAll);
     } catch (error) {
       addError("realm-settings:saveProviderError", error);
     }

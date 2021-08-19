@@ -89,7 +89,6 @@ export const convertFormValuesToObject = (
     const newKey = firstInstanceOnly
       ? key.replace(/-/, ".")
       : key.replace(/-/g, ".");
-    console.log(newKey);
     return { [newKey]: obj[key] };
   });
   return Object.assign({}, ...keyValues);
