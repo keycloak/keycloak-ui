@@ -24,9 +24,9 @@
   --pf-c-form--m-horizontal__group-label--md--GridColumnWidth: 5rem;
 }
 
-.pf-c-select__menu {
+.keycloak__user_events_search__event_type_select .pf-c-select__menu {
   max-height: 200px;
-  overflow: scroll; 
+  overflow: auto;
 }
 
 .pf-c-toolbar {

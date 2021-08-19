@@ -251,6 +251,7 @@ export const EventsSection = () => {
                           value: EventType[];
                         }) => (
                           <Select
+                            className="keycloak__user_events_search__event_type_select"
                             name="eventType"
                             data-testid="event-type-searchField"
                             chipGroupProps={{
