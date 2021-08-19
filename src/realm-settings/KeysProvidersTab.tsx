@@ -325,7 +325,7 @@ export const KeysTabInner = ({ components, refresh }: KeysTabInnerProps) => {
               <DataListDragButton
                 className="header-drag-button"
                 aria-label="Reorder"
-                aria-describedby="Press space or enter to begin dragging, and use the arrow keys to navigate up or down. Press enter to confirm the drag, or any other key to cancel the drag operation."
+                aria-describedby={t("common-help:dragHelp")}
                 aria-pressed="false"
                 isDisabled
               />
@@ -364,7 +364,7 @@ export const KeysTabInner = ({ components, refresh }: KeysTabInnerProps) => {
                     <DataListDragButton
                       className="row-drag-button"
                       aria-label="Reorder"
-                      aria-describedby="Press space or enter to begin dragging, and use the arrow keys to navigate up or down. Press enter to confirm the drag, or any other key to cancel the drag operation."
+                      aria-describedby={t("common-help:dragHelp")}
                       aria-pressed="false"
                     />
                   </Tooltip>
