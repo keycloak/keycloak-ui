@@ -54,17 +54,6 @@ export const exportClient = (client: ClientRepresentation): void => {
 export const toUpperCase = (name: string) =>
   name.charAt(0).toUpperCase() + name.slice(1);
 
-export const convertToFormValues = (
-  obj: any,
-  prefix: string,
-  setValue: (name: string, value: any) => void
-) => {
-  return Object.keys(obj).map((key) => {
-    const newKey = key.replace(/\./g, "-");
-    setValue(prefix + "." + newKey, obj[key]);
-  });
-};
-
 export const flatten = (
   obj: Record<string, any> | undefined,
   path = ""
@@ -81,18 +70,20 @@ export const flatten = (
   }, {});
 };
 
-export const convertFormValuesToObject = (
-  obj: any,
-  firstInstanceOnly?: boolean
-) => {
-  const keyValues = Object.keys(obj).map((key) => {
-    const newKey = firstInstanceOnly
-      ? key.replace(/-/, ".")
-      : key.replace(/-/g, ".");
-    console.log(newKey);
-    return { [newKey]: obj[key] };
-  });
-  return Object.assign({}, ...keyValues);
+export const unflatten = (obj: Record<string, any> | undefined): {} => {
+  const regex = /\.?([^.\\[\]]+)|\[(\d+)\]/g;
+  const result: Record<string, any> = {};
+  for (const key in obj) {
+    let cur = result,
+      prop = "",
+      m;
+    while ((m = regex.exec(key))) {
+      cur = cur[prop] || (cur[prop] = m[2] ? [] : {});
+      prop = m[2] || m[1];
+    }
+    cur[prop] = obj[key];
+  }
+  return result[""] || result;
 };
 
 export const emptyFormatter =

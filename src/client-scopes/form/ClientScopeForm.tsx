@@ -15,7 +15,7 @@ import { useAdminClient, useFetch } from "../../context/auth/AdminClient";
 import { KeycloakTabs } from "../../components/keycloak-tabs/KeycloakTabs";
 import { useAlerts } from "../../components/alert/Alerts";
 import { ViewHeader } from "../../components/view-header/ViewHeader";
-import { convertFormValuesToObject } from "../../util";
+import { flatten } from "../../util";
 import { MapperList } from "../details/MapperList";
 import { ScopeForm } from "../details/ScopeForm";
 import { useConfirmDialog } from "../../components/confirm-dialog/ConfirmDialog";
@@ -97,9 +97,7 @@ export const ClientScopeForm = () => {
 
   const save = async (clientScopes: ClientScopeDefaultOptionalType) => {
     try {
-      clientScopes.attributes = convertFormValuesToObject(
-        clientScopes.attributes!
-      );
+      clientScopes.attributes = flatten(clientScopes.attributes!);
 
       if (id) {
         await adminClient.clientScopes.update({ id }, clientScopes);

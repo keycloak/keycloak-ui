@@ -52,7 +52,7 @@ export const Keys = ({ clientId, save }: KeysProps) => {
 
   const useJwksUrl = useWatch({
     control,
-    name: "attributes.use-jwks-url",
+    name: "attributes.use.jwks.url",
     defaultValue: "false",
   });
 
@@ -138,7 +138,7 @@ export const Keys = ({ clientId, save }: KeysProps) => {
               }
             >
               <Controller
-                name="attributes.use-jwks-url"
+                name="attributes.use.jwks.url"
                 defaultValue="false"
                 control={control}
                 render={({ onChange, value }) => (
@@ -194,7 +194,7 @@ export const Keys = ({ clientId, save }: KeysProps) => {
                 <TextInput
                   type="text"
                   id="jwksUrl"
-                  name="attributes.jwks-url"
+                  name="attributes.jwks.url"
                   ref={register}
                 />
               </FormGroup>

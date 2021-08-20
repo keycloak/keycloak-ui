@@ -32,11 +32,7 @@ import { ViewHeader } from "../components/view-header/ViewHeader";
 import { useAdminClient, useFetch } from "../context/auth/AdminClient";
 import { useRealm } from "../context/realm-context/RealmContext";
 import { RolesList } from "../realm-roles/RolesList";
-import {
-  convertFormValuesToObject,
-  convertToFormValues,
-  exportClient,
-} from "../util";
+import { exportClient, flatten, unflatten } from "../util";
 import { AdvancedTab } from "./AdvancedTab";
 import { ClientSettings } from "./ClientSettings";
 import { Credentials } from "./credentials/Credentials";
@@ -177,7 +173,7 @@ export const ClientDetails = () => {
       if (entry[0] === "redirectUris" || entry[0] === "webOrigins") {
         form.setValue(entry[0], convertToMultiline(entry[1]));
       } else if (entry[0] === "attributes") {
-        convertToFormValues(entry[1], "attributes", form.setValue);
+        form.setValue(entry[0], unflatten(entry[1]));
       } else {
         form.setValue(entry[0], entry[1]);
       }
@@ -210,9 +206,7 @@ export const ClientDetails = () => {
       }
       const redirectUris = toValue(form.getValues()["redirectUris"]);
       const webOrigins = toValue(form.getValues()["webOrigins"]);
-      const attributes = convertFormValuesToObject(
-        form.getValues()["attributes"]
-      );
+      const attributes = flatten(form.getValues()["attributes"]);
 
       try {
         const newClient: ClientRepresentation = {

@@ -22,7 +22,7 @@ import { useAdminClient, useFetch } from "../../../context/auth/AdminClient";
 import { useParams, useRouteMatch } from "react-router-dom";
 import { FormAccess } from "../../../components/form-access/FormAccess";
 import { ViewHeader } from "../../../components/view-header/ViewHeader";
-import { convertToFormValues } from "../../../util";
+import { unflatten } from "../../../util";
 import { useAlerts } from "../../../components/alert/Alerts";
 
 type HMACGeneratedFormProps = {
@@ -102,7 +102,7 @@ export const HMACGeneratedForm = ({
 
         form.setValue("config.algorithm", value.active[0]);
 
-        convertToFormValues(value, "config", form.setValue);
+        form.setValue("config", unflatten(value));
       }
       form.setValue(key, value);
     });

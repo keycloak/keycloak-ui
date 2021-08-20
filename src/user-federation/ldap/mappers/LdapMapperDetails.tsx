@@ -12,7 +12,7 @@ import {
   TextInput,
   ValidatedOptions,
 } from "@patternfly/react-core";
-import { convertFormValuesToObject, convertToFormValues } from "../../../util";
+import { flatten, unflatten } from "../../../util";
 import type ComponentRepresentation from "keycloak-admin/lib/defs/componentRepresentation";
 import { useAdminClient } from "../../../context/auth/AdminClient";
 import { ViewHeader } from "../../../components/view-header/ViewHeader";
@@ -68,7 +68,7 @@ export const LdapMapperDetails = () => {
   const setupForm = (mapper: ComponentRepresentation) => {
     Object.entries(mapper).map((entry) => {
       if (entry[0] === "config") {
-        convertToFormValues(entry[1], "config", form.setValue);
+        form.setValue(entry[0], unflatten(entry[1]));
       } else {
         form.setValue(entry[0], entry[1]);
       }
@@ -78,7 +78,7 @@ export const LdapMapperDetails = () => {
   const save = async (mapper: ComponentRepresentation) => {
     let config = {};
     if (mapper.config !== undefined) {
-      config = convertFormValuesToObject(mapper.config);
+      config = flatten(mapper.config);
     }
     const map = { ...mapper, config };
 

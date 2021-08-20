@@ -21,7 +21,7 @@ import { LdapSettingsConnection } from "./ldap/LdapSettingsConnection";
 import { LdapSettingsSearching } from "./ldap/LdapSettingsSearching";
 
 import { useRealm } from "../context/realm-context/RealmContext";
-import { convertToFormValues } from "../util";
+import { unflatten } from "../util";
 import type ComponentRepresentation from "keycloak-admin/lib/defs/componentRepresentation";
 
 import { Controller, useForm } from "react-hook-form";
@@ -210,7 +210,7 @@ export const UserFederationLdapSettings = () => {
           entry[1].fullSyncPeriod[0] !== "-1"
         );
 
-        convertToFormValues(entry[1], "config", form.setValue);
+        form.setValue(entry[0], unflatten(entry[1]));
       }
       form.setValue(entry[0], entry[1]);
     });

@@ -40,7 +40,7 @@ export const FineGrainSamlEndpointConfig = ({
           ref={register()}
           type="text"
           id="assertionConsumerServicePostBindingURL"
-          name="attributes.saml_assertion_consumer_url_post"
+          name="attributes.saml.assertion.consumer.url.post"
         />
       </FormGroup>
       <FormGroup
@@ -58,7 +58,7 @@ export const FineGrainSamlEndpointConfig = ({
           ref={register()}
           type="text"
           id="assertionConsumerServiceRedirectBindingURL"
-          name="attributes.saml_assertion_consumer_url_redirect"
+          name="attributes.saml.assertion.consumer.url.redirect"
         />
       </FormGroup>
       <FormGroup
@@ -76,7 +76,7 @@ export const FineGrainSamlEndpointConfig = ({
           ref={register()}
           type="text"
           id="logoutServicePostBindingURL"
-          name="attributes.saml_single_logout_service_url_post"
+          name="attributes.saml.single.logout.service.url.post"
         />
       </FormGroup>
       <FormGroup
@@ -94,7 +94,7 @@ export const FineGrainSamlEndpointConfig = ({
           ref={register()}
           type="text"
           id="logoutServiceRedirectBindingURL"
-          name="attributes.saml_single_logout_service_url_redirect"
+          name="attributes.saml.single.logout.service.url.redirect"
         />
       </FormGroup>
 

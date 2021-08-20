@@ -50,7 +50,7 @@ export const LdapMapperFullNameAttribute = ({
         hasNoPaddingTop
       >
         <Controller
-          name="config.read-only"
+          name="config.read.only"
           defaultValue={["false"]}
           control={form.control}
           render={({ onChange, value }) => (
@@ -78,7 +78,7 @@ export const LdapMapperFullNameAttribute = ({
         hasNoPaddingTop
       >
         <Controller
-          name="config.write-only"
+          name="config.write.only"
           defaultValue={["false"]}
           control={form.control}
           render={({ onChange, value }) => (

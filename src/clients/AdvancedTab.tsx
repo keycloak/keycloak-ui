@@ -29,7 +29,7 @@ import { KeycloakDataTable } from "../components/table-toolbar/KeycloakDataTable
 import { TimeSelector } from "../components/time-selector/TimeSelector";
 import { useAdminClient } from "../context/auth/AdminClient";
 import { useRealm } from "../context/realm-context/RealmContext";
-import { convertToFormValues, toUpperCase } from "../util";
+import { unflatten, toUpperCase } from "../util";
 import { AddHostDialog } from "./advanced/AddHostDialog";
 import { AdvancedSettings } from "./advanced/AdvancedSettings";
 import { AuthenticationOverrides } from "./advanced/AuthenticationOverrides";
@@ -100,9 +100,7 @@ export const AdvancedTab = ({
   const resetFields = (names: string[]) => {
     const values: { [name: string]: string } = {};
     for (const name of names) {
-      values[`attributes.${name}`] = attributes
-        ? attributes[name.replace(/-/g, ".")] || ""
-        : "";
+      values[`attributes.${name}`] = attributes?.[name];
     }
     reset(values);
   };
@@ -366,9 +364,7 @@ export const AdvancedTab = ({
               <FineGrainOpenIdConnect
                 control={control}
                 save={() => save()}
-                reset={() =>
-                  convertToFormValues(attributes, "attributes", setValue)
-                }
+                reset={() => setValue("attributes", unflatten(attributes))}
               />
             </>
           )}
@@ -380,9 +376,7 @@ export const AdvancedTab = ({
               <FineGrainSamlEndpointConfig
                 control={control}
                 save={() => save()}
-                reset={() =>
-                  convertToFormValues(attributes, "attributes", setValue)
-                }
+                reset={() => setValue("attributes", unflatten(attributes))}
               />
             </>
           )}
@@ -396,7 +390,7 @@ export const AdvancedTab = ({
               control={control}
               save={() => save()}
               reset={() =>
-                resetFields(["exclude-session-state-from-auth-response"])
+                resetFields(["exclude.session.state.from.auth.response"])
               }
             />
           </>
@@ -411,10 +405,10 @@ export const AdvancedTab = ({
             save={() => save()}
             reset={() => {
               resetFields([
-                "saml-assertion-lifespan",
-                "access-token-lifespan",
-                "tls-client-certificate-bound-access-tokens",
-                "pkce-code-challenge-method",
+                "saml.assertion.lifespan",
+                "access.token.lifespan",
+                "tls.client.certificate.bound.access.tokens",
+                "pkce.code.challenge.method",
               ]);
             }}
           />

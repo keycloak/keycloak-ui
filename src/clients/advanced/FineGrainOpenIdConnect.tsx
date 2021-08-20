@@ -118,7 +118,7 @@ export const FineGrainOpenIdConnect = ({
         }
       >
         <Controller
-          name="attributes.access-token-signed-response-alg"
+          name="attributes.access.token.signed.response.alg"
           defaultValue=""
           control={control}
           render={({ onChange, value }) => (
@@ -150,7 +150,7 @@ export const FineGrainOpenIdConnect = ({
         }
       >
         <Controller
-          name="attributes.id-token-signed-response-alg"
+          name="attributes.id.token.signed.response.alg"
           defaultValue=""
           control={control}
           render={({ onChange, value }) => (
@@ -182,7 +182,7 @@ export const FineGrainOpenIdConnect = ({
         }
       >
         <Controller
-          name="attributes.id-token-encrypted-response-alg"
+          name="attributes.id.token.encrypted.response.alg"
           defaultValue=""
           control={control}
           render={({ onChange, value }) => (
@@ -216,7 +216,7 @@ export const FineGrainOpenIdConnect = ({
         }
       >
         <Controller
-          name="attributes.id-token-encrypted-response-enc"
+          name="attributes.id.token.encrypted.response.enc"
           defaultValue=""
           control={control}
           render={({ onChange, value }) => (
@@ -248,7 +248,7 @@ export const FineGrainOpenIdConnect = ({
         }
       >
         <Controller
-          name="attributes.user-info-response-signature-alg"
+          name="attributes.user.info.response.signature.alg"
           defaultValue=""
           control={control}
           render={({ onChange, value }) => (
@@ -282,7 +282,7 @@ export const FineGrainOpenIdConnect = ({
         }
       >
         <Controller
-          name="attributes.request_object_signature_alg"
+          name="attributes.request.object.signature.alg"
           defaultValue=""
           control={control}
           render={({ onChange, value }) => (
@@ -316,7 +316,7 @@ export const FineGrainOpenIdConnect = ({
         }
       >
         <Controller
-          name="attributes.request-object-required"
+          name="attributes.request.object.required"
           defaultValue=""
           control={control}
           render={({ onChange, value }) => (

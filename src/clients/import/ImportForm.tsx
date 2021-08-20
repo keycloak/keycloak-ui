@@ -17,7 +17,7 @@ import { JsonFileUpload } from "../../components/json-file-upload/JsonFileUpload
 import { ViewHeader } from "../../components/view-header/ViewHeader";
 import { useAdminClient } from "../../context/auth/AdminClient";
 import { useRealm } from "../../context/realm-context/RealmContext";
-import { convertFormValuesToObject, convertToFormValues } from "../../util";
+import { flatten, unflatten } from "../../util";
 import { CapabilityConfig } from "../add/CapabilityConfig";
 import { ClientDescription } from "../ClientDescription";
 import { toClient } from "../routes/Client";
@@ -44,7 +44,7 @@ export const ImportForm = () => {
 
     Object.entries(obj || defaultClient).forEach((entries) => {
       if (entries[0] === "attributes") {
-        convertToFormValues(entries[1], "attributes", form.setValue);
+        setValue(entries[0], unflatten(entries[1]));
       } else {
         setValue(entries[0], entries[1]);
       }
@@ -57,7 +57,7 @@ export const ImportForm = () => {
       const newClient = await adminClient.clients.create({
         ...imported,
         ...client,
-        attributes: convertFormValuesToObject(client.attributes || {}),
+        attributes: flatten(client.attributes || {}),
       });
       addAlert(t("clientImportSuccess"), AlertVariant.success);
       history.push(

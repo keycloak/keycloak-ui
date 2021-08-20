@@ -29,7 +29,7 @@ import { useConfirmDialog } from "../../components/confirm-dialog/ConfirmDialog"
 import { useAlerts } from "../../components/alert/Alerts";
 import { HelpItem } from "../../components/help-enabler/HelpItem";
 import { useServerInfo } from "../../context/server-info/ServerInfoProvider";
-import { convertFormValuesToObject, convertToFormValues } from "../../util";
+import { flatten, unflatten } from "../../util";
 import { FormAccess } from "../../components/form-access/FormAccess";
 import { useRealm } from "../../context/realm-context/RealmContext";
 
@@ -64,7 +64,7 @@ export const MappingDetails = () => {
         });
         if (data) {
           Object.entries(data).map((entry) => {
-            convertToFormValues(entry[1], "config", setValue);
+            setValue("config", unflatten(entry[1]));
           });
         }
         const mapperTypes = serverInfo.protocolMapperTypes![data!.protocol!];
@@ -119,7 +119,7 @@ export const MappingDetails = () => {
   });
 
   const save = async (formMapping: ProtocolMapperRepresentation) => {
-    const config = convertFormValuesToObject(formMapping.config);
+    const config = flatten(formMapping.config);
     const map = { ...mapping, ...formMapping, config };
     const key = mapperId.match(isGuid) ? "Updated" : "Created";
     try {
@@ -213,7 +213,7 @@ export const MappingDetails = () => {
               ref={register()}
               type="text"
               id="prefix"
-              name="config.usermodel-realmRoleMapping-rolePrefix"
+              name="config.usermodel.realmRoleMapping.rolePrefix"
             />
           </FormGroup>
           <FormGroup
@@ -257,7 +257,7 @@ export const MappingDetails = () => {
               ref={register()}
               type="text"
               id="claimName"
-              name="config.claim-name"
+              name="config.claim.name"
             />
           </FormGroup>
           <FormGroup
@@ -272,7 +272,7 @@ export const MappingDetails = () => {
             fieldId="claimJsonType"
           >
             <Controller
-              name="config.jsonType-label"
+              name="config.jsonType.label"
               defaultValue=""
               control={control}
               render={({ onChange, value }) => (
@@ -310,7 +310,7 @@ export const MappingDetails = () => {
             <Flex>
               <FlexItem>
                 <Controller
-                  name="config.id-token-claim"
+                  name="config.id.token.claim"
                   defaultValue="false"
                   control={control}
                   render={({ onChange, value }) => (
@@ -325,7 +325,7 @@ export const MappingDetails = () => {
               </FlexItem>
               <FlexItem>
                 <Controller
-                  name="config.access-token-claim"
+                  name="config.access.token.claim"
                   defaultValue="false"
                   control={control}
                   render={({ onChange, value }) => (
@@ -340,7 +340,7 @@ export const MappingDetails = () => {
               </FlexItem>
               <FlexItem>
                 <Controller
-                  name="config.userinfo-token-claim"
+                  name="config.userinfo.token.claim"
                   defaultValue="false"
                   control={control}
                   render={({ onChange, value }) => (

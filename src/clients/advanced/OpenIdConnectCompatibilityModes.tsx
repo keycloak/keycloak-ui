@@ -34,7 +34,7 @@ export const OpenIdConnectCompatibilityModes = ({
         }
       >
         <Controller
-          name="attributes.exclude-session-state-from-auth-response"
+          name="attributes.exclude.session.state.from.auth.response"
           defaultValue=""
           control={control}
           render={({ onChange, value }) => (

@@ -167,7 +167,7 @@ export const LdapMapperRoleGroup = ({
             hasNoPaddingTop
           >
             <Controller
-              name="config.preserve-group-inheritance"
+              name="config.preserve.group.inheritance"
               defaultValue={["true"]}
               control={form.control}
               render={({ onChange, value }) => (
@@ -195,7 +195,7 @@ export const LdapMapperRoleGroup = ({
             hasNoPaddingTop
           >
             <Controller
-              name="config.ignore-missing-groups"
+              name="config.ignore.missing.groups"
               defaultValue={["false"]}
               control={form.control}
               render={({ onChange, value }) => (
@@ -230,7 +230,7 @@ export const LdapMapperRoleGroup = ({
           defaultValue="member"
           id="kc-membership-ldap-attribute"
           data-testid="membership-ldap-attribute"
-          name="config.membership-ldap-attribute[0]"
+          name="config.membership.ldap.attribute[0]"
           ref={form.register}
         />
       </FormGroup>
@@ -246,7 +246,7 @@ export const LdapMapperRoleGroup = ({
         fieldId="kc-membership-attribute-type"
       >
         <Controller
-          name="config.membership-attribute-type[0]"
+          name="config.membership.attribute.type[0]"
           defaultValue="DN"
           control={form.control}
           render={({ onChange, value }) => (
@@ -291,7 +291,7 @@ export const LdapMapperRoleGroup = ({
           id="kc-membership-user-ldap-attribute"
           data-testid="membership-user-ldap-attribute"
           defaultValue="cn"
-          name="config.membership-user-ldap-attribute[0]"
+          name="config.membership.user.ldap.attribute[0]"
           ref={form.register}
         />
       </FormGroup>
@@ -312,8 +312,8 @@ export const LdapMapperRoleGroup = ({
           data-testid="ldap-filter"
           name={
             isRole
-              ? "config.roles-ldap-filter[0]"
-              : "config.groups-ldap-filter[0]"
+              ? "config.roles.ldap.filter[0]"
+              : "config.groups.ldap.filter[0]"
           }
           ref={form.register}
         />
@@ -384,8 +384,8 @@ export const LdapMapperRoleGroup = ({
         <Controller
           name={
             isRole
-              ? "config.user-roles-retrieve-strategy[0]"
-              : "config.user-groups-retrieve-strategy[0]"
+              ? "config.user.roles.retrieve.strategy[0]"
+              : "config.user.groups.retrieve.strategy[0]"
           }
           defaultValue="LOAD_ROLES_BY_MEMBER_ATTRIBUTE"
           control={form.control}
@@ -440,7 +440,7 @@ export const LdapMapperRoleGroup = ({
           id="kc-member-of-attribute"
           defaultValue="memberOf"
           data-testid="member-of-attribute"
-          name="config.memberof-ldap-attribute[0]"
+          name="config.memberof.ldap.attribute[0]"
           ref={form.register}
         />
       </FormGroup>
@@ -459,7 +459,7 @@ export const LdapMapperRoleGroup = ({
             hasNoPaddingTop
           >
             <Controller
-              name="config.use-realm-roles-mapping"
+              name="config.use.realm.roles.mapping"
               defaultValue={["true"]}
               control={form.control}
               render={({ onChange, value }) => (
@@ -486,7 +486,7 @@ export const LdapMapperRoleGroup = ({
             fieldId="kc-client-id"
           >
             <Controller
-              name="config.client-id[0]"
+              name="config.client.id[0]"
               control={form.control}
               render={({ onChange, value }) => (
                 <Select
@@ -530,7 +530,7 @@ export const LdapMapperRoleGroup = ({
               type="text"
               id="kc-mapped-attributes"
               data-testid="mapped-attributes"
-              name="config.mapped-group-attributes[0]"
+              name="config.mapped.group.attributes[0]"
               ref={form.register}
             />
           </FormGroup>
@@ -547,7 +547,7 @@ export const LdapMapperRoleGroup = ({
             hasNoPaddingTop
           >
             <Controller
-              name="config.drop-non-existing-groups-during-sync"
+              name="config.drop.non.existing.groups.during.sync"
               defaultValue={["false"]}
               control={form.control}
               render={({ onChange, value }) => (
@@ -580,7 +580,7 @@ export const LdapMapperRoleGroup = ({
               id="kc-path"
               data-testid="path"
               defaultValue="/"
-              name="config.groups-path[0]"
+              name="config.groups.path[0]"
               ref={form.register({ required: true })}
               validated={
                 form.errors.config?.["groups-path"]

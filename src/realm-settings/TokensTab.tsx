@@ -28,13 +28,7 @@ import "./RealmSettingsSection.css";
 import type UserRepresentation from "keycloak-admin/lib/defs/userRepresentation";
 import { TimeSelector } from "../components/time-selector/TimeSelector";
 import { useServerInfo } from "../context/server-info/ServerInfoProvider";
-import {
-  convertToFormValues,
-  forHumans,
-  flatten,
-  convertFormValuesToObject,
-  interpolateTimespan,
-} from "../util";
+import { forHumans, flatten, interpolateTimespan, unflatten } from "../util";
 
 type RealmSettingsSessionsTabProps = {
   realm?: RealmRepresentation;
@@ -84,7 +78,7 @@ export const RealmSettingsTokensTab = ({
     form.reset(formValues);
     Object.entries(realm).map((entry) => {
       if (entry[0] === "attributes") {
-        convertToFormValues(entry[1], "attributes", form.setValue);
+        form.setValue(entry[0], unflatten(entry[1]));
       } else {
         form.setValue(entry[0], entry[1]);
       }
@@ -101,11 +95,7 @@ export const RealmSettingsTokensTab = ({
   );
 
   const save = async () => {
-    const firstInstanceOnly = true;
-    const flattenedAttributes = convertFormValuesToObject(
-      flatten(form.getValues()["attributes"]),
-      firstInstanceOnly
-    );
+    const flattenedAttributes = flatten(form.getValues()["attributes"]);
 
     const attributes = { ...flattenedAttributes, ...realm?.attributes };
 
@@ -470,7 +460,7 @@ export const RealmSettingsTokensTab = ({
               id="email-verification"
             >
               <Controller
-                name="attributes.actionTokenGeneratedByUserLifespan-verify-email"
+                name="attributes.actionTokenGeneratedByUserLifespan.verify-email"
                 defaultValue={""}
                 control={form.control}
                 render={({ onChange, value }) => (
@@ -491,7 +481,7 @@ export const RealmSettingsTokensTab = ({
               id="idp-acct-label"
             >
               <Controller
-                name="attributes.actionTokenGeneratedByUserLifespan-idp-verify-account-via-email"
+                name="attributes.actionTokenGeneratedByUserLifespan.idp-verify-account-via-email"
                 defaultValue={""}
                 control={form.control}
                 render={({ onChange, value }) => (
@@ -512,7 +502,7 @@ export const RealmSettingsTokensTab = ({
               id="forgot-password-label"
             >
               <Controller
-                name="attributes.actionTokenGeneratedByUserLifespan-reset-credentials"
+                name="attributes.actionTokenGeneratedByUserLifespan.reset-credentials"
                 defaultValue={""}
                 control={form.control}
                 render={({ onChange, value }) => (
@@ -533,7 +523,7 @@ export const RealmSettingsTokensTab = ({
               id="execute-actions"
             >
               <Controller
-                name="attributes.actionTokenGeneratedByUserLifespan-execute-actions"
+                name="attributes.actionTokenGeneratedByUserLifespan.execute-actions"
                 defaultValue={""}
                 control={form.control}
                 render={({ onChange, value }) => (
