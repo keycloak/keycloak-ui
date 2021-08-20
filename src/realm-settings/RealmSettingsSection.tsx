@@ -150,10 +150,14 @@ const RealmSettingsHeader = ({
 };
 
 const sortByPriority = (components: ComponentRepresentation[]) => {
-  const sortedComponents = [...components].sort(
-    // sort in descending order
-    (a, b) => Number(b.config?.priority) - Number(a?.config?.priority || 0)
-  );
+  const sortedComponents = [...components].sort((a, b) => {
+    const priorityA = Number(a.config?.priority);
+    const priorityB = Number(b.config?.priority);
+
+    return (
+      (!isNaN(priorityB) ? priorityB : 0) - (!isNaN(priorityA) ? priorityA : 0)
+    );
+  });
 
   return sortedComponents;
 };
