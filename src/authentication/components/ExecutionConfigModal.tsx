@@ -43,7 +43,7 @@ export const ExecutionConfigModal = ({
     configDescription: AuthenticatorConfigInfoRepresentation,
     config?: AuthenticatorConfigRepresentation
   ) => {
-    configDescription.properties.map(
+    configDescription.properties!.map(
       (property: ConfigPropertyRepresentation) => {
         setValue(
           property.name!,
@@ -79,8 +79,8 @@ export const ExecutionConfigModal = ({
   );
 
   useEffect(() => {
-    if (configDescription) setupForm(configDescription, config), [open];
-  });
+    if (configDescription) setupForm(configDescription, config);
+  }, [show]);
 
   const save = async (changedConfig: { [index: string]: string }) => {
     try {
