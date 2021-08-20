@@ -233,8 +233,11 @@ export const ClientScopesSection = () => {
               name: "name",
               cellRenderer: ClientScopeDetailLink,
             },
-            { name: "description", cellFormatters: [emptyFormatter()] },
-            { name: "type", cellRenderer: TypeSelector },
+            {
+              name: "type",
+              displayKey: "client-scopes:assignedType",
+              cellRenderer: TypeSelector,
+            },
             {
               name: "protocol",
               displayKey: "client-scopes:protocol",
@@ -247,6 +250,7 @@ export const ClientScopesSection = () => {
               cellFormatters: [emptyFormatter()],
               transforms: [cellWidth(15)],
             },
+            { name: "description", cellFormatters: [emptyFormatter()] },
           ]}
         />
       </PageSection>
