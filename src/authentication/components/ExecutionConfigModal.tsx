@@ -40,7 +40,7 @@ export const ExecutionConfigModal = ({
   const { register, errors, setValue, handleSubmit } = useForm();
 
   const setupForm = (
-    configDescription: any,
+    configDescription: AuthenticatorConfigInfoRepresentation,
     config?: AuthenticatorConfigRepresentation
   ) => {
     configDescription.properties.map(
