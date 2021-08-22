@@ -23,6 +23,10 @@ import { useAdminClient, useFetch } from "../../context/auth/AdminClient";
 import { useAlerts } from "../../components/alert/Alerts";
 import { HelpItem } from "../../components/help-enabler/HelpItem";
 
+type ExecutionConfigModalForm = {
+  [index: string]: string;
+};
+
 export const ExecutionConfigModal = ({
   execution,
 }: {
@@ -37,7 +41,8 @@ export const ExecutionConfigModal = ({
   const [configDescription, setConfigDescription] =
     useState<AuthenticatorConfigInfoRepresentation>();
 
-  const { register, errors, setValue, handleSubmit } = useForm();
+  const { register, errors, setValue, handleSubmit } =
+    useForm<ExecutionConfigModalForm>();
 
   const setupForm = (
     configDescription: AuthenticatorConfigInfoRepresentation,
@@ -82,7 +87,7 @@ export const ExecutionConfigModal = ({
     if (configDescription) setupForm(configDescription, config);
   }, [show]);
 
-  const save = async (changedConfig: { [index: string]: string }) => {
+  const save = async (changedConfig: ExecutionConfigModalForm) => {
     try {
       if (config) {
         const newConfig = {
