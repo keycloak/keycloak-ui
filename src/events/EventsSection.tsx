@@ -7,7 +7,6 @@ import {
   DescriptionListDescription,
   DescriptionListGroup,
   DescriptionListTerm,
-  Divider,
   Dropdown,
   DropdownToggle,
   Flex,
@@ -170,6 +169,11 @@ export const EventsSection = () => {
     setKey(key + 1);
   }
 
+  function refresh() {
+    reset({ ...defaultValues });
+    commitFilters();
+  }
+
   const UserDetailLink = (event: EventRepresentation) => (
     <Link
       key={`link-${event.time}-${event.type}`}
@@ -213,7 +217,7 @@ export const EventsSection = () => {
                       onToggle={(isOpen) => setSearchDropdownOpen(isOpen)}
                       className="keycloak__user_events_search_selector_dropdown__toggle"
                     >
-                      {t("searchForEvent")}
+                      {t("searchForUserEvent")}
                     </DropdownToggle>
                   }
                   isOpen={searchDropdownOpen}
@@ -362,6 +366,11 @@ export const EventsSection = () => {
                   </Form>
                 </Dropdown>
               </FlexItem>
+              <FlexItem>
+                <Button onClick={refresh} data-testid="refresh-btn">
+                  {t("refresh")}
+                </Button>
+              </FlexItem>
             </Flex>
             {Object.entries(activeFilters).length > 0 && (
               <div className="keycloak__searchChips pf-u-ml-md">
@@ -438,7 +447,6 @@ export const EventsSection = () => {
                 ]}
                 emptyState={
                   <div className="pf-u-mt-md">
-                    <Divider className="keycloak__events_empty_state_divider" />
                     <ListEmptyState
                       message={t("emptyEvents")}
                       instructions={t("emptyEventsInstructions")}

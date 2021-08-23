@@ -6,7 +6,6 @@
   --pf-c-dropdown__toggle--MinWidth: 21rem;
 }
 
-.keycloak__refresh_btn,
 .keycloak__searchChips,
 .keycloak__user_events_search_selector_dropdown__toggle {
   position: relative;
@@ -35,8 +34,4 @@
 
 .keycloak__events_table {
   margin-top: -4.25rem;
-}
-
-.keycloak__events_empty_state_divider {
-  margin-top: 4.25rem;
 }
