@@ -35,7 +35,7 @@ describe("Search events test", function () {
       eventsPage.shouldHaveSearchBtnDisabled();
     });
 
-    it.skip("Check search and removal works", () => {
+    it("Check search and removal works", () => {
       sidebarPage.goToRealmSettings();
       cy.getId("rs-realm-events-tab").click();
 
