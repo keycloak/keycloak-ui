@@ -116,7 +116,7 @@ export const SamlConnectSettings = () => {
             forID="kc-service-provider-entity-id"
           />
         }
-        isRequired
+        // isRequired
       >
         <TextInput
           type="text"
@@ -125,7 +125,7 @@ export const SamlConnectSettings = () => {
           id="kc-service-provider-entity-id"
           value={entityUrl || defaultEntityUrl}
           onChange={setEntityUrl}
-          ref={register({ required: true })}
+          ref={register()}
         />
       </FormGroup>
 
@@ -161,7 +161,7 @@ export const SamlConnectSettings = () => {
               forID="kc-saml-entity-descriptor"
             />
           }
-          isRequired
+          // isRequired
         >
           <TextInput
             type="text"
@@ -170,7 +170,7 @@ export const SamlConnectSettings = () => {
             id="kc-saml-entity-descriptor"
             value={descriptorUrl}
             onChange={setDescriptorUrl}
-            ref={register({ required: true })}
+            ref={register()}
             validated={
               errors.samlEntityDescriptor
                 ? ValidatedOptions.error

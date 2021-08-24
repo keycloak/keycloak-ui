@@ -7,6 +7,7 @@ import ListingPage from "../support/pages/admin_console/ListingPage";
 import CreateProviderPage from "../support/pages/admin_console/manage/identity_providers/CreateProviderPage";
 import ModalUtils from "../support/util/ModalUtils";
 import OrderDialog from "../support/pages/admin_console/manage/identity_providers/OrderDialog";
+import AddMapperPage from "../support/pages/admin_console/manage/identity_providers/AddMapperPage";
 
 describe("Identity provider test", () => {
   const loginPage = new LoginPage();
@@ -14,7 +15,10 @@ describe("Identity provider test", () => {
   const masthead = new Masthead();
   const listingPage = new ListingPage();
   const createProviderPage = new CreateProviderPage();
+  const addMapperPage = new AddMapperPage();
+
   const createSuccessMsg = "Identity provider successfully created";
+  const createMapperSuccessMsg = "Mapper created successfully.";
   const changeSuccessMsg =
     "Successfully changed display order of identity providers";
   const deletePrompt = "Delete provider?";
@@ -47,6 +51,14 @@ describe("Identity provider test", () => {
 
       sidebarPage.goToIdentityProviders();
       listingPage.itemExist(identityProviderName);
+    });
+
+    it("should create facebook provider", () => {
+      createProviderPage.clickCreateDropdown().clickItem("facebook");
+
+      createProviderPage.fill("facebook", "123").clickAdd();
+
+      masthead.checkNotificationMessage(createSuccessMsg);
     });
 
     it("should delete provider", () => {
@@ -152,6 +164,36 @@ describe("Identity provider test", () => {
       listingPage.itemExist("saml").deleteItem("saml");
       modalUtils.checkModalTitle(deletePrompt).confirmModal();
       masthead.checkNotificationMessage(deleteSuccessMsg);
+    });
+
+    it("should add facebook social mapper", () => {
+      sidebarPage.goToIdentityProviders();
+
+      listingPage.goToItemDetails("facebook");
+
+      addMapperPage.goToMappersTab();
+
+      addMapperPage.clickAdd();
+
+      addMapperPage.fillSocialMapper("facebook mapper");
+
+      addMapperPage.saveNewMapper();
+
+      masthead.checkNotificationMessage(createMapperSuccessMsg);
+    });
+
+    it("should add SAML mapper", () => {
+      sidebarPage.goToIdentityProviders();
+
+      listingPage.goToItemDetails("saml");
+
+      addMapperPage.goToMappersTab();
+
+      addMapperPage.clickAdd();
+
+      addMapperPage.fillSAMLorOIDCMapper("SAML mapper");
+
+      masthead.checkNotificationMessage(createMapperSuccessMsg);
     });
   });
 });
