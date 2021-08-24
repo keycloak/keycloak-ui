@@ -7,7 +7,6 @@ import {
   DescriptionListDescription,
   DescriptionListGroup,
   DescriptionListTerm,
-  Divider,
   Dropdown,
   DropdownToggle,
   Flex,
@@ -448,7 +447,6 @@ export const EventsSection = () => {
                 ]}
                 emptyState={
                   <div className="pf-u-mt-md">
-                    <Divider className="keycloak__events_empty_state_divider" />
                     <ListEmptyState
                       message={t("emptyEvents")}
                       instructions={t("emptyEventsInstructions")}
