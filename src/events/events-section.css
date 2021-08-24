@@ -13,9 +13,9 @@
 }
 
 .keycloak__user_events_search__form {
-  margin: 0 0 var(--pf-global--spacer--lg) var(--pf-global--spacer--lg);
+  margin: 0 var(--pf-global--spacer--lg) var(--pf-global--spacer--lg) var(--pf-global--spacer--lg);
   --pf-c-form__group--m-action--MarginTop: 0rem;
-  --pf-c-form--m-horizontal__group-control--md--GridColumnWidth: 12rem;
+  --pf-c-form--m-horizontal__group-control--md--GridColumnWidth: 24rem;
   --pf-c-form--m-horizontal__group-label--md--GridColumnWidth: 5rem;
 }
 
@@ -35,3 +35,7 @@
 .keycloak__events_table {
   margin-top: -4.25rem;
 }
+
+.keycloak__events_empty_state_divider {
+  margin-top: 4.25rem;
+} 
