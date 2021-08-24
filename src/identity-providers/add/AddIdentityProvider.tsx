@@ -61,7 +61,7 @@ export const AddIdentityProvider = () => {
       await adminClient.identityProviders.create({
         ...provider,
         providerId: id,
-        alias: id,
+        alias: provider.alias,
       });
       addAlert(t("createSuccess"), AlertVariant.success);
       history.push(`/${realm}/identity-providers/${id}/settings`);

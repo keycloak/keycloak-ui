@@ -33,6 +33,8 @@ import { OIDCGeneralSettings } from "./OIDCGeneralSettings";
 import { SamlGeneralSettings } from "./SamlGeneralSettings";
 import { OIDCAuthentication } from "./OIDCAuthentication";
 import { ReqAuthnConstraints } from "./ReqAuthnConstraintsSettings";
+import { KeycloakDataTable } from "../../components/table-toolbar/KeycloakDataTable";
+import { ListEmptyState } from "../../components/list-empty-state/ListEmptyState";
 
 type HeaderProps = {
   onChange: (value: boolean) => void;
@@ -96,11 +98,18 @@ export const DetailSettings = () => {
   const { realm } = useRealm();
 
   useFetch(
-    () => adminClient.identityProviders.findOne({ alias: alias }),
-    (provider) => {
-      if (provider) {
-        setProvider(provider);
-        Object.entries(provider).map((entry) => setValue(entry[0], entry[1]));
+    () =>
+      Promise.all([
+        adminClient.identityProviders.findOne({ alias: alias }),
+        adminClient.identityProviders.findMappers({ alias: alias }),
+        adminClient.identityProviders.findMapperTypes({ alias: alias }),
+      ]),
+    ([fetchedProvider]) => {
+      if (fetchedProvider) {
+        setProvider({ ...provider });
+        Object.entries(fetchedProvider).map(([key, value]) =>
+          setValue(key, value)
+        );
       }
     },
     []
@@ -118,6 +127,14 @@ export const DetailSettings = () => {
     } catch (error) {
       addError("identity-providers:updateError", error);
     }
+  };
+
+  type IdPWithMapperAttributes = {
+    name: string;
+    category: string;
+    helpText: string;
+    id: string;
+    identityProviderMapper: string;
   };
 
   const [toggleDeleteDialog, DeleteConfirm] = useConfirmDialog({
@@ -140,6 +157,31 @@ export const DetailSettings = () => {
 
   const isOIDC = providerId.includes("oidc");
   const isSAML = providerId.includes("saml");
+
+  const loader = async () => {
+    const loaderMappers = await adminClient.identityProviders.findMappers({
+      alias,
+    });
+
+    const loaderMapperTypes =
+      await adminClient.identityProviders.findMapperTypes({ alias });
+
+    const components = loaderMappers?.map((loaderMapper) => {
+      const provider = Object.values(loaderMapperTypes).filter(
+        (loaderMapperType) => {
+          return loaderMapper.identityProviderMapper! === loaderMapperType.id!;
+        }
+      ) as unknown as IdPWithMapperAttributes[];
+
+      return {
+        ...provider[0],
+        name: loaderMapper.name,
+        type: provider[0]?.name,
+      } as IdPWithMapperAttributes;
+    });
+
+    return components;
+  };
 
   if (isOIDC) {
     sections.splice(1, 0, t("oidcSettings"));
@@ -222,7 +264,7 @@ export const DetailSettings = () => {
                       data-testid={"revert"}
                       variant="link"
                       onClick={() => {
-                        reset(provider);
+                        reset();
                       }}
                     >
                       {t("common:revert")}
@@ -230,6 +272,39 @@ export const DetailSettings = () => {
                   </ActionGroup>
                 </FormAccess>
               </ScrollForm>
+            </Tab>
+            <Tab
+              id="mappers"
+              eventKey="mappers"
+              title={<TabTitleText>{t("common:mappers")}</TabTitleText>}
+            >
+              <KeycloakDataTable
+                emptyState={
+                  <ListEmptyState
+                    message={t("identity-providers:noMappers")}
+                    instructions={t("identity-providers:noMappersInstructions")}
+                    primaryActionText={t("identity-providers:addMapper")}
+                  />
+                }
+                loader={loader}
+                isPaginated
+                ariaLabelKey="identity-providers:mappersList"
+                searchPlaceholderKey="identity-providers:searchForMapper"
+                columns={[
+                  {
+                    name: "name",
+                    displayKey: "common:name",
+                  },
+                  {
+                    name: "category",
+                    displayKey: "common:category",
+                  },
+                  {
+                    name: "type",
+                    displayKey: "common:type",
+                  },
+                ]}
+              />
             </Tab>
           </KeycloakTabs>
         </FormProvider>
