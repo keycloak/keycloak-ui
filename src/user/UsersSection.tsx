@@ -42,7 +42,6 @@ export const UsersSection = () => {
   const { url } = useRouteMatch();
   const [listUsers, setListUsers] = useState(false);
   const [selectedRows, setSelectedRows] = useState<UserRepresentation[]>([]);
-  const [search, setSearch] = useState("");
 
   const [key, setKey] = useState("");
   const refresh = () => setKey(`${new Date().getTime()}`);
@@ -56,8 +55,9 @@ export const UsersSection = () => {
       return adminClient.components.find(testParams);
     },
     (response) => {
-      //should *only* list users when no user federation is configured and users count > 100
+      //should *only* list users when no user federation is configured
       setListUsers(!(response && response.length > 0));
+      refresh();
     },
     []
   );
@@ -79,19 +79,12 @@ export const UsersSection = () => {
       max: max!,
     };
 
-    const testParams = {
-      type: "org.keycloak.storage.UserStorageProvider",
-    };
-
-    const hasFederatedProviders = await adminClient.components.find(testParams);
-
     const searchParam = search || "";
     if (searchParam) {
       params.search = searchParam;
-      setSearch(searchParam);
     }
 
-    if (hasFederatedProviders.length > 0 && !searchParam) {
+    if (!listUsers && !searchParam) {
       return [];
     }
 
@@ -195,7 +188,7 @@ export const UsersSection = () => {
               <TextContent className="kc-search-users-text">
                 <Text>{t("searchForUserDescription")}</Text>
               </TextContent>
-            ) : !search && !listUsers ? (
+            ) : (
               <>
                 <ListEmptyState
                   message={t("noUsersFound")}
@@ -204,8 +197,6 @@ export const UsersSection = () => {
                   onPrimaryAction={goToCreate}
                 />
               </>
-            ) : (
-              ""
             )
           }
           toolbarItem={
