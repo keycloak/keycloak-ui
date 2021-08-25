@@ -170,7 +170,6 @@ export const EventsSection = () => {
   }
 
   function refresh() {
-    reset({ ...defaultValues });
     commitFilters();
   }
 
