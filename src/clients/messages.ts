@@ -38,8 +38,9 @@ export default {
     removeMappingConfirm_plural:
       "Are you sure you want to remove {{count}} mappings",
     clientScopeSearch: {
-      client: "Client scope",
-      assigned: "Assigned type",
+      name: "Name",
+      type: "Assigned type",
+      protocol: "Protocol",
     },
     assignedClientScope: "Assigned client scope",
     assignedType: "Assigned type",

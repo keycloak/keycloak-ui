@@ -5,12 +5,10 @@ import {
   Button,
   Dropdown,
   DropdownItem,
-  DropdownToggle,
   KebabToggle,
   Select,
   ToolbarItem,
 } from "@patternfly/react-core";
-import { FilterIcon } from "@patternfly/react-icons";
 import type ClientScopeRepresentation from "@keycloak/keycloak-admin-client/lib/defs/clientScopeRepresentation";
 import type KeycloakAdminClient from "@keycloak/keycloak-admin-client";
 
@@ -23,9 +21,17 @@ import {
   ClientScopeType,
   ClientScope,
   CellDropdown,
+  AllClientScopes,
 } from "../../components/client-scope/ClientScopeTypes";
 import { useAlerts } from "../../components/alert/Alerts";
 import { KeycloakDataTable } from "../../components/table-toolbar/KeycloakDataTable";
+import {
+  nameFilter,
+  SearchDropdown,
+  SearchToolbar,
+  SearchType,
+  typeFilter,
+} from "../../client-scopes/details/SearchFilter";
 
 import "./client-scopes.css";
 
@@ -34,7 +40,7 @@ export type ClientScopesProps = {
   protocol: string;
 };
 
-type Row = ClientScopeRepresentation & {
+export type Row = ClientScopeRepresentation & {
   type: ClientScopeType;
   description: string;
 };
@@ -81,16 +87,18 @@ const addScope = async (
   });
 };
 
-type SearchType = "client" | "assigned";
-
 export const ClientScopes = ({ clientId, protocol }: ClientScopesProps) => {
   const { t } = useTranslation("clients");
   const adminClient = useAdminClient();
   const { addAlert, addError } = useAlerts();
 
-  const [searchToggle, setSearchToggle] = useState(false);
-  const [searchType, setSearchType] = useState<SearchType>("client");
+  const [searchType, setSearchType] = useState<SearchType>("name");
   const [addToggle, setAddToggle] = useState(false);
+
+  const [searchTypeType, setSearchTypeType] = useState<AllClientScopes>(
+    AllClientScopes.none
+  );
+
   const [addDialogOpen, setAddDialogOpen] = useState(false);
   const [kebabOpen, setKebabOpen] = useState(false);
 
@@ -100,7 +108,7 @@ export const ClientScopes = ({ clientId, protocol }: ClientScopesProps) => {
   const [key, setKey] = useState(0);
   const refresh = () => setKey(new Date().getTime());
 
-  const loader = async () => {
+  const loader = async (first?: number, max?: number, search?: string) => {
     const defaultClientScopes =
       await adminClient.clients.listDefaultClientScopes({ id: clientId });
     const optionalClientScopes =
@@ -136,7 +144,9 @@ export const ClientScopes = ({ clientId, protocol }: ClientScopesProps) => {
         .filter((scope) => scope.protocol === protocol)
     );
 
-    return rows;
+    const filter =
+      searchType === "name" ? nameFilter(search) : typeFilter(searchTypeType);
+    return rows.filter(filter).slice(first, max);
   };
 
   const TypeSelector = (scope: Row) => (
@@ -194,46 +204,28 @@ export const ClientScopes = ({ clientId, protocol }: ClientScopesProps) => {
         key={key}
         loader={loader}
         ariaLabelKey="clients:clientScopeList"
-        searchPlaceholderKey="clients:searchByName"
+        searchPlaceholderKey={
+          searchType === "name" ? "clients:searchByName" : undefined
+        }
         canSelectAll
+        isPaginated
+        isSearching={searchType === "type"}
         onSelect={(rows) => setSelectedRows([...rows])}
         searchTypeComponent={
-          <Dropdown
-            className="keycloak__client-scopes__searchtype"
-            toggle={
-              <DropdownToggle
-                id="toggle-id"
-                onToggle={() => setSearchToggle(!searchToggle)}
-              >
-                <FilterIcon /> {t(`clientScopeSearch.${searchType}`)}
-              </DropdownToggle>
-            }
-            aria-label="Select Input"
-            isOpen={searchToggle}
-            dropdownItems={[
-              <DropdownItem
-                key="client"
-                onClick={() => {
-                  setSearchType("client");
-                  setSearchToggle(false);
-                }}
-              >
-                {t("clientScopeSearch.client")}
-              </DropdownItem>,
-              <DropdownItem
-                key="assigned"
-                onClick={() => {
-                  setSearchType("assigned");
-                  setSearchToggle(false);
-                }}
-              >
-                {t("clientScopeSearch.assigned")}
-              </DropdownItem>,
-            ]}
+          <SearchDropdown
+            onSelect={(searchType) => setSearchType(searchType)}
           />
         }
         toolbarItem={
           <>
+            <SearchToolbar
+              searchType={searchType}
+              onSelect={(searchType) => setSearchType(searchType)}
+              onType={(value) => {
+                setSearchTypeType(value);
+                refresh();
+              }}
+            />
             <ToolbarItem>
               <Button onClick={() => setAddDialogOpen(true)}>
                 {t("addClientScope")}
