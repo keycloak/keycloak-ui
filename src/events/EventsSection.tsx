@@ -337,7 +337,7 @@ export const EventsSection = () => {
                     data-testid="search-events-btn"
                     isDisabled={!isDirty}
                   >
-                    {t("searchBtn")}
+                    {t("searchUserEventsBtn")}
                   </Button>
                 </ActionGroup>
               </Form>
