@@ -34,6 +34,16 @@ import { toNewClientScope } from "./routes/NewClientScope";
 import "./client-scope.css";
 import { toClientScope } from "./routes/ClientScope";
 import { useWhoAmI } from "../context/whoami/WhoAmI";
+import {
+  nameFilter,
+  protocolFilter,
+  ProtocolType,
+  SearchDropdown,
+  SearchToolbar,
+  SearchType,
+  typeFilter,
+} from "./details/SearchFilter";
+import type { Row } from "../clients/scopes/ClientScopes";
 
 export const ClientScopesSection = () => {
   const { realm } = useRealm();
@@ -52,12 +62,27 @@ export const ClientScopesSection = () => {
     ClientScopeDefaultOptionalType[]
   >([]);
 
-  const loader = async () => {
+  const [searchType, setSearchType] = useState<SearchType>("name");
+  const [searchTypeType, setSearchTypeType] = useState<AllClientScopes>(
+    AllClientScopes.none
+  );
+  const [searchProtocol, setSearchProtocol] = useState<ProtocolType>(
+    ProtocolType.all
+  );
+
+  const loader = async (first?: number, max?: number, search?: string) => {
     const defaultScopes =
       await adminClient.clientScopes.listDefaultClientScopes();
     const optionalScopes =
       await adminClient.clientScopes.listDefaultOptionalClientScopes();
     const clientScopes = await adminClient.clientScopes.find();
+
+    const filter =
+      searchType === "name"
+        ? nameFilter(search)
+        : searchType === "type"
+        ? typeFilter(searchTypeType)
+        : protocolFilter(searchProtocol);
 
     return clientScopes
       .map((scope) => {
@@ -72,9 +97,11 @@ export const ClientScopesSection = () => {
               )
             ? ClientScope.optional
             : AllClientScopes.none,
-        };
+        } as Row;
       })
-      .sort((a, b) => a.name!.localeCompare(b.name!, whoAmI.getLocale()));
+      .filter(filter)
+      .sort((a, b) => a.name!.localeCompare(b.name!, whoAmI.getLocale()))
+      .slice(first, max);
   };
 
   const [toggleDeleteDialog, DeleteConfirm] = useConfirmDialog({
@@ -165,11 +192,37 @@ export const ClientScopesSection = () => {
           key={key}
           loader={loader}
           ariaLabelKey="client-scopes:clientScopeList"
-          searchPlaceholderKey="client-scopes:searchFor"
+          searchPlaceholderKey={
+            searchType === "name" ? "client-scopes:searchFor" : undefined
+          }
+          isSearching={searchType !== "name"}
+          searchTypeComponent={
+            <SearchDropdown
+              searchType={searchType}
+              onSelect={(searchType) => setSearchType(searchType)}
+              withProtocol
+            />
+          }
+          isPaginated
           onSelect={(clientScopes) => setSelectedScopes([...clientScopes])}
           canSelectAll
           toolbarItem={
             <>
+              <SearchToolbar
+                searchType={searchType}
+                type={searchTypeType}
+                onSelect={(searchType) => setSearchType(searchType)}
+                onType={(value) => {
+                  setSearchTypeType(value);
+                  refresh();
+                }}
+                protocol={searchProtocol}
+                onProtocol={(protocol) => {
+                  setSearchProtocol(protocol);
+                  refresh();
+                }}
+              />
+
               <ToolbarItem>
                 {/* @ts-ignore */}
                 <Button component={Link} to={toNewClientScope({ realm })}>

@@ -19,9 +19,11 @@ import type { Row } from "../../clients/scopes/ClientScopes";
 export type SearchType = "name" | "type" | "protocol";
 export enum ProtocolType {
   all = "all",
-  SAML = "SAML",
+  saml = "saml",
   openid = "openid-connect",
 }
+type ProtocolTypeKeys = keyof typeof ProtocolType;
+
 export const nameFilter =
   (search: string = "") =>
   (scope: Row) =>
@@ -29,30 +31,35 @@ export const nameFilter =
 export const typeFilter = (type: AllClientScopes) => (scope: Row) =>
   type === AllClientScopes.none || scope.type === type;
 
-type SearchToolbarProps = SearchDropdownProps & {
-  searchType: SearchType;
+export const protocolFilter = (protocol: ProtocolType) => (scope: Row) =>
+  protocol === ProtocolType.all ||
+  scope.protocol === (ProtocolType[protocol as ProtocolTypeKeys] as string);
+
+type SearchToolbarProps = Omit<SearchDropdownProps, "withProtocol"> & {
+  type: AllClientScopes;
   onType: (value: AllClientScopes) => void;
+  protocol?: ProtocolType;
   onProtocol?: (value: ProtocolType) => void;
 };
 
 type SearchDropdownProps = {
+  searchType: SearchType;
   onSelect: (value: SearchType) => void;
   withProtocol?: boolean;
 };
 
 export const SearchDropdown = ({
+  searchType,
   withProtocol = false,
   onSelect,
 }: SearchDropdownProps) => {
   const { t } = useTranslation("clients");
   const [searchToggle, setSearchToggle] = useState(false);
-  const [searchType, setSearchType] = useState<SearchType>("name");
 
   const options = [
     <DropdownItem
       key="all"
       onClick={() => {
-        setSearchType("name");
         onSelect("name");
         setSearchToggle(false);
       }}
@@ -62,7 +69,6 @@ export const SearchDropdown = ({
     <DropdownItem
       key="client"
       onClick={() => {
-        setSearchType("type");
         onSelect("type");
         setSearchToggle(false);
       }}
@@ -75,7 +81,6 @@ export const SearchDropdown = ({
       <DropdownItem
         key="protocol"
         onClick={() => {
-          setSearchType("protocol");
           onSelect("protocol");
           setSearchToggle(false);
         }}
@@ -106,23 +111,24 @@ export const SearchDropdown = ({
 export const SearchToolbar = ({
   searchType,
   onSelect,
+  type,
   onType,
-  withProtocol = false,
+  protocol,
   onProtocol,
 }: SearchToolbarProps) => {
-  const { t } = useTranslation("client-scope");
+  const { t } = useTranslation("client-scopes");
   const [open, setOpen] = useState(false);
-  const [value, setValue] = useState<AllClientScopes | ProtocolType>(
-    AllClientScopes.none
-  );
 
-  console.log("why", value);
   return (
     <>
       {searchType === "type" && (
         <>
           <ToolbarItem>
-            <SearchDropdown onSelect={onSelect} />
+            <SearchDropdown
+              searchType={searchType}
+              onSelect={onSelect}
+              withProtocol={!!protocol}
+            />
           </ToolbarItem>
           <ToolbarItem>
             <Select
@@ -130,13 +136,12 @@ export const SearchToolbar = ({
               onToggle={(open) => setOpen(open)}
               isOpen={open}
               selections={[
-                value === AllClientScopes.none
+                type === AllClientScopes.none
                   ? t("common:allTypes")
-                  : t(`common:clientScope.${value}`),
+                  : t(`common:clientScope.${type}`),
               ]}
               onSelect={(_, value) => {
                 console.log(value);
-                setValue(value as AllClientScopes);
                 onType(value as AllClientScopes);
                 setOpen(false);
               }}
@@ -149,25 +154,30 @@ export const SearchToolbar = ({
           </ToolbarItem>
         </>
       )}
-      {searchType === "protocol" && withProtocol && (
+      {searchType === "protocol" && !!protocol && (
         <>
           <ToolbarItem>
-            <SearchDropdown onSelect={onSelect} />
+            <SearchDropdown
+              searchType={searchType}
+              onSelect={onSelect}
+              withProtocol
+            />
           </ToolbarItem>
           <ToolbarItem>
             <Select
               className="keycloak__client-scopes__searchtype"
               onToggle={(open) => setOpen(open)}
               isOpen={open}
-              selections={[value]}
+              selections={[t(`protocolTypes.${protocol}`)]}
               onSelect={(_, value) => {
-                setValue(value as ProtocolType);
                 onProtocol?.(value as ProtocolType);
                 setOpen(false);
               }}
             >
               {Object.keys(ProtocolType).map((type) => (
-                <SelectOption key={type} value={type} />
+                <SelectOption key={type} value={type}>
+                  {t(`protocolTypes.${type}`)}
+                </SelectOption>
               ))}
             </Select>
           </ToolbarItem>

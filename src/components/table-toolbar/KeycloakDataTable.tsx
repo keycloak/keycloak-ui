@@ -413,9 +413,7 @@ export function KeycloakDataTable<T>({
           )}
           {!loading &&
             (!data || data.length === 0) &&
-            search !== "" &&
-            !isSearching &&
-            searchPlaceholderKey && (
+            (search !== "" || isSearching) && (
               <ListEmptyState
                 hasIcon={true}
                 icon={icon}
@@ -428,6 +426,7 @@ export function KeycloakDataTable<T>({
         </PaginatingTableToolbar>
       )}
       {!loading && (!data || data?.length === 0) && search === "" && emptyState}
+          !isSearching &&
     </>
   );
 }

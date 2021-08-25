@@ -213,6 +213,7 @@ export const ClientScopes = ({ clientId, protocol }: ClientScopesProps) => {
         onSelect={(rows) => setSelectedRows([...rows])}
         searchTypeComponent={
           <SearchDropdown
+            searchType={searchType}
             onSelect={(searchType) => setSearchType(searchType)}
           />
         }
@@ -220,6 +221,7 @@ export const ClientScopes = ({ clientId, protocol }: ClientScopesProps) => {
           <>
             <SearchToolbar
               searchType={searchType}
+              type={searchTypeType}
               onSelect={(searchType) => setSearchType(searchType)}
               onType={(value) => {
                 setSearchTypeType(value);
