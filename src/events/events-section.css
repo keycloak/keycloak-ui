@@ -6,7 +6,6 @@
   --pf-c-dropdown__toggle--MinWidth: 21rem;
 }
 
-.keycloak__searchChips,
 .keycloak__user_events_search_selector_dropdown__toggle {
   position: relative;
   z-index: 1;
@@ -30,8 +29,6 @@
 
 .pf-c-toolbar {
   background-color: transparent;
-}
-
-.keycloak__events_table {
-  margin-top: -4.25rem;
+  --pf-c-toolbar--PaddingTop: 0;
+  --pf-c-toolbar--PaddingBottom: 0;
 }

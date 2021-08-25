@@ -61,12 +61,11 @@ export default class EventsPage {
     cy.get("table").should("not.have.text", "LOGOUT");
 
     cy.get("[id^=remove_pf]").click();
-    cy.get("table").contains("LOGIN");
 
     cy.get(this.searchEventDrpDwnBtn).click();
     cy.getId(this.userIdInputFld).type("11111");
-    cy.get(this.eventsPageTitle).contains("No events logged");
     cy.getId(this.searchEventsBtn).click();
+    cy.get(this.eventsPageTitle).contains("No events logged");
     cy.get("[id^=remove_group]").click();
     cy.get("table").contains("LOGIN");
   }
