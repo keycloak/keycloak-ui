@@ -27,11 +27,13 @@ type ExecutionConfigModalForm = {
   [index: string]: string;
 };
 
+type ExecutionConfigModalProps = {
+  execution: ExpandableExecution;
+};
+
 export const ExecutionConfigModal = ({
   execution,
-}: {
-  execution: ExpandableExecution;
-}) => {
+}: ExecutionConfigModalProps) => {
   const { t } = useTranslation("authentication");
   const adminClient = useAdminClient();
   const { addAlert, addError } = useAlerts();
