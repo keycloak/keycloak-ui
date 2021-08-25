@@ -204,7 +204,7 @@ export const EventsSection = () => {
             >
               <Form
                 isHorizontal
-                className="keycloak__events_search__form"
+                className="keycloak__user_events_search__form"
                 data-testid="searchForm"
               >
                 <FormGroup

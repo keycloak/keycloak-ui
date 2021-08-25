@@ -179,13 +179,13 @@ export const AdminEvents = () => {
             >
               <Form
                 isHorizontal
-                className="keycloak__events_search__form"
+                className="keycloak__admin_events_search__form"
                 data-testid="searchForm"
               >
                 <FormGroup
                   label={t("resourceType")}
                   fieldId="kc-resourceType"
-                  className="keycloak__events_search__form_label"
+                  className="keycloak__events_search__form_multiline_label"
                 >
                   <Select
                     variant={SelectVariant.single}
@@ -196,7 +196,7 @@ export const AdminEvents = () => {
                 <FormGroup
                   label={t("operationType")}
                   fieldId="kc-operationType"
-                  className="keycloak__events_search__form_label"
+                  className="keycloak__events_search__form_multiline_label"
                 >
                   <Select
                     variant={SelectVariant.single}
