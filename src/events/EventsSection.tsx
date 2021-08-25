@@ -42,7 +42,7 @@ import { useRealm } from "../context/realm-context/RealmContext";
 import { toRealmSettings } from "../realm-settings/routes/RealmSettings";
 import { toUser } from "../user/routes/User";
 import { AdminEvents } from "./AdminEvents";
-import "./events-section.css";
+import "./events.css";
 
 type UserEventSearchForm = {
   client: string;
@@ -196,7 +196,7 @@ export const EventsSection = () => {
                 <DropdownToggle
                   data-testid="userEventsSearchSelectorToggle"
                   onToggle={(isOpen) => setSearchDropdownOpen(isOpen)}
-                  className="keycloak__user_events_search_selector_dropdown__toggle"
+                  className="keycloak__events_search_selector_dropdown__toggle"
                 >
                   {t("searchForUserEvent")}
                 </DropdownToggle>
@@ -205,13 +205,13 @@ export const EventsSection = () => {
             >
               <Form
                 isHorizontal
-                className="keycloak__user_events_search__form"
+                className="keycloak__events_search__form"
                 data-testid="searchForm"
               >
                 <FormGroup
                   label={t("userId")}
                   fieldId="kc-userId"
-                  className="keycloak__user_events_search__form_label"
+                  className="keycloak__events_search__form_label"
                 >
                   <TextInput
                     ref={register()}
@@ -224,7 +224,7 @@ export const EventsSection = () => {
                 <FormGroup
                   label={t("eventType")}
                   fieldId="kc-eventType"
-                  className="keycloak__user_events_search__form_label"
+                  className="keycloak__events_search__form_label"
                 >
                   <Controller
                     name="type"
@@ -237,7 +237,7 @@ export const EventsSection = () => {
                       value: EventType[];
                     }) => (
                       <Select
-                        className="keycloak__user_events_search__event_type_select"
+                        className="keycloak__events_search__event_type_select"
                         name="eventType"
                         data-testid="event-type-searchField"
                         chipGroupProps={{
@@ -289,7 +289,7 @@ export const EventsSection = () => {
                 <FormGroup
                   label={t("client")}
                   fieldId="kc-client"
-                  className="keycloak__user_events_search__form_label"
+                  className="keycloak__events_search__form_label"
                 >
                   <TextInput
                     ref={register()}
@@ -302,7 +302,7 @@ export const EventsSection = () => {
                 <FormGroup
                   label={t("dateFrom")}
                   fieldId="kc-dateFrom"
-                  className="keycloak__user_events_search__form_label"
+                  className="keycloak__events_search__form_label"
                 >
                   <TextInput
                     ref={register()}
@@ -317,7 +317,7 @@ export const EventsSection = () => {
                 <FormGroup
                   label={t("dateTo")}
                   fieldId="kc-dateTo"
-                  className="keycloak__user_events_search__form_label"
+                  className="keycloak__events_search__form_label"
                 >
                   <TextInput
                     ref={register()}
