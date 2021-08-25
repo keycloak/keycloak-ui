@@ -56,7 +56,7 @@ export const UsersSection = () => {
     },
     (response) => {
       //should *only* list users when no user federation is configured
-      setListUsers(!(response && response.length > 0));
+      setListUsers(!(response.length > 0));
       refresh();
     },
     []
@@ -189,14 +189,12 @@ export const UsersSection = () => {
                 <Text>{t("searchForUserDescription")}</Text>
               </TextContent>
             ) : (
-              <>
-                <ListEmptyState
-                  message={t("noUsersFound")}
-                  instructions={t("emptyInstructions")}
-                  primaryActionText={t("createNewUser")}
-                  onPrimaryAction={goToCreate}
-                />
-              </>
+              <ListEmptyState
+                message={t("noUsersFound")}
+                instructions={t("emptyInstructions")}
+                primaryActionText={t("createNewUser")}
+                onPrimaryAction={goToCreate}
+              />
             )
           }
           toolbarItem={
