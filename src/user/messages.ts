@@ -64,6 +64,13 @@ export default {
     noConsents: "No consents",
     noConsentsText:
       "The consents will only be recorded when users try to access a client that is configured to require consent. In that case, users will get a consent page which asks them to grant access to the client.",
+    identityProviderLinks: "Identity provider links",
+    linkedIdPs: "Linked identity providers",
+    linkedIdPsText:
+      "The identity providers which are already linked to this user account",
+    availableIdPs: "Available identity providers",
+    availableIdPsText:
+      "All the configured identity providers in this realm are listed here. You can link the user account to any of the IdP accounts.",
     whoWillAppearLinkText: "Who will appear in this group list?",
     whoWillAppearPopoverText:
       "Groups are hierarchical. When you select Direct Membership, you see only the child group that the user joined. Ancestor groups are not included.",
