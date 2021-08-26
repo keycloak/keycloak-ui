@@ -18,9 +18,9 @@ import type { Row } from "../../clients/scopes/ClientScopes";
 
 export type SearchType = "name" | "type" | "protocol";
 export enum ProtocolType {
-  all = "all",
-  saml = "saml",
-  openid = "openid-connect",
+  All = "all",
+  Saml = "saml",
+  Openid = "openid-connect",
 }
 type ProtocolTypeKeys = keyof typeof ProtocolType;
 
