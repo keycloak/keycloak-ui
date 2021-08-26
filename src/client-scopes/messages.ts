@@ -63,9 +63,9 @@ export default {
     roleMappingUpdatedSuccess: "Role mapping updated",
     roleMappingUpdatedError: "Could not update role mapping {{error}}",
     protocolTypes: {
-      All: "All",
-      Saml: "SAML",
-      Openid: "openid-connect",
+      all: "All",
+      saml: "SAML",
+      "openid-connect": "openid-connect",
     },
   },
 };

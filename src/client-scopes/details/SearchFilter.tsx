@@ -17,12 +17,8 @@ import {
 import type { Row } from "../../clients/scopes/ClientScopes";
 
 export type SearchType = "name" | "type" | "protocol";
-export enum ProtocolType {
-  All = "all",
-  Saml = "saml",
-  Openid = "openid-connect",
-}
-export type ProtocolTypeKeys = keyof typeof ProtocolType;
+export const Protocols = ["all", "saml", "openid-connect"];
+export type ProtocolType = typeof Protocols[number];
 
 export const nameFilter =
   (search = "") =>
@@ -31,14 +27,14 @@ export const nameFilter =
 export const typeFilter = (type: AllClientScopes) => (scope: Row) =>
   type === AllClientScopes.none || scope.type === type;
 
-export const protocolFilter = (protocol: ProtocolTypeKeys) => (scope: Row) =>
-  protocol === "All" || scope.protocol === ProtocolType[protocol].toString();
+export const protocolFilter = (protocol: ProtocolType) => (scope: Row) =>
+  protocol === "all" || scope.protocol === protocol;
 
 type SearchToolbarProps = Omit<SearchDropdownProps, "withProtocol"> & {
   type: AllClientScopes;
   onType: (value: AllClientScopes) => void;
-  protocol?: ProtocolTypeKeys;
-  onProtocol?: (value: ProtocolTypeKeys) => void;
+  protocol?: ProtocolType;
+  onProtocol?: (value: ProtocolType) => void;
 };
 
 type SearchDropdownProps = {
@@ -55,38 +51,20 @@ export const SearchDropdown = ({
   const { t } = useTranslation("clients");
   const [searchToggle, setSearchToggle] = useState(false);
 
-  const options = [
+  const createDropdown = (searchType: SearchType) => (
     <DropdownItem
-      key="all"
+      key={searchType}
       onClick={() => {
-        onSelect("name");
+        onSelect(searchType);
         setSearchToggle(false);
       }}
     >
-      {t("clientScopeSearch.name")}
-    </DropdownItem>,
-    <DropdownItem
-      key="client"
-      onClick={() => {
-        onSelect("type");
-        setSearchToggle(false);
-      }}
-    >
-      {t("clientScopeSearch.type")}
-    </DropdownItem>,
-  ];
+      {t(`clientScopeSearch.${searchType}`)}
+    </DropdownItem>
+  );
+  const options = [createDropdown("name"), createDropdown("type")];
   if (withProtocol) {
-    options.push(
-      <DropdownItem
-        key="protocol"
-        onClick={() => {
-          onSelect("protocol");
-          setSearchToggle(false);
-        }}
-      >
-        {t("clientScopeSearch.protocol")}
-      </DropdownItem>
-    );
+    options.push(createDropdown("protocol"));
   }
 
   return (
@@ -168,11 +146,11 @@ export const SearchToolbar = ({
               isOpen={open}
               selections={[t(`protocolTypes.${protocol}`)]}
               onSelect={(_, value) => {
-                onProtocol?.(value as ProtocolTypeKeys);
+                onProtocol?.(value as ProtocolType);
                 setOpen(false);
               }}
             >
-              {Object.keys(ProtocolType).map((type) => (
+              {Protocols.map((type) => (
                 <SelectOption key={type} value={type}>
                   {t(`protocolTypes.${type}`)}
                 </SelectOption>
