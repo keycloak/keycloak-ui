@@ -425,8 +425,11 @@ export function KeycloakDataTable<T>({
           {loading && <Loading />}
         </PaginatingTableToolbar>
       )}
-      {!loading && (!data || data?.length === 0) && search === "" && emptyState}
-          !isSearching &&
+      {!loading &&
+        (!data || data?.length === 0) &&
+        search === "" &&
+        !isSearching &&
+        emptyState}
     </>
   );
 }
