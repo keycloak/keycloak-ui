@@ -22,6 +22,7 @@ import {
   ClientScope,
   CellDropdown,
   AllClientScopes,
+  AllClientScopeType,
 } from "../../components/client-scope/ClientScopeTypes";
 import { useAlerts } from "../../components/alert/Alerts";
 import { KeycloakDataTable } from "../../components/table-toolbar/KeycloakDataTable";
@@ -41,8 +42,8 @@ export type ClientScopesProps = {
 };
 
 export type Row = ClientScopeRepresentation & {
-  type: ClientScopeType;
-  description: string;
+  type: AllClientScopeType;
+  description?: string;
 };
 
 const castAdminClient = (adminClient: KeycloakAdminClient) =>
@@ -54,7 +55,7 @@ const changeScope = async (
   adminClient: KeycloakAdminClient,
   clientId: string,
   clientScope: ClientScopeRepresentation,
-  type: ClientScopeType,
+  type: AllClientScopeType,
   changeTo: ClientScopeType
 ) => {
   await removeScope(adminClient, clientId, clientScope, type);
@@ -65,7 +66,7 @@ const removeScope = async (
   adminClient: KeycloakAdminClient,
   clientId: string,
   clientScope: ClientScopeRepresentation,
-  type: ClientScopeType
+  type: AllClientScopeType
 ) => {
   const typeToName = toUpperCase(type);
   await castAdminClient(adminClient)[`del${typeToName}ClientScope`]({
@@ -120,20 +121,22 @@ export const ClientScopes = ({ clientId, protocol }: ClientScopesProps) => {
 
     const optional = optionalClientScopes.map((c) => {
       const scope = find(c.id!);
-      return {
+      const row: Row = {
         ...c,
         type: ClientScope.optional,
         description: scope.description,
-      } as Row;
+      };
+      return row;
     });
 
     const defaultScopes = defaultClientScopes.map((c) => {
       const scope = find(c.id!);
-      return {
+      const row: Row = {
         ...c,
         type: ClientScope.default,
         description: scope.description,
-      } as Row;
+      };
+      return row;
     });
 
     const rows = [...optional, ...defaultScopes];

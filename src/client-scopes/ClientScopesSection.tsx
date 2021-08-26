@@ -84,7 +84,7 @@ export const ClientScopesSection = () => {
 
     return clientScopes
       .map((scope) => {
-        return {
+        const row: Row = {
           ...scope,
           type: defaultScopes.find(
             (defaultScope) => defaultScope.name === scope.name
@@ -95,7 +95,8 @@ export const ClientScopesSection = () => {
               )
             ? ClientScope.optional
             : AllClientScopes.none,
-        } as Row;
+        };
+        return row;
       })
       .filter(filter)
       .sort((a, b) => a.name!.localeCompare(b.name!, whoAmI.getLocale()))
