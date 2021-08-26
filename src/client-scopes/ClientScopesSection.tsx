@@ -37,7 +37,7 @@ import { useWhoAmI } from "../context/whoami/WhoAmI";
 import {
   nameFilter,
   protocolFilter,
-  ProtocolType,
+  ProtocolTypeKeys,
   SearchDropdown,
   SearchToolbar,
   SearchType,
@@ -66,9 +66,7 @@ export const ClientScopesSection = () => {
   const [searchTypeType, setSearchTypeType] = useState<AllClientScopes>(
     AllClientScopes.none
   );
-  const [searchProtocol, setSearchProtocol] = useState<ProtocolType>(
-    ProtocolType.all
-  );
+  const [searchProtocol, setSearchProtocol] = useState<ProtocolTypeKeys>("All");
 
   const loader = async (first?: number, max?: number, search?: string) => {
     const defaultScopes =

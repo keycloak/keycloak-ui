@@ -22,7 +22,7 @@ export enum ProtocolType {
   Saml = "saml",
   Openid = "openid-connect",
 }
-type ProtocolTypeKeys = keyof typeof ProtocolType;
+export type ProtocolTypeKeys = keyof typeof ProtocolType;
 
 export const nameFilter =
   (search = "") =>
@@ -31,15 +31,14 @@ export const nameFilter =
 export const typeFilter = (type: AllClientScopes) => (scope: Row) =>
   type === AllClientScopes.none || scope.type === type;
 
-export const protocolFilter = (protocol: ProtocolType) => (scope: Row) =>
-  protocol === ProtocolType.all ||
-  scope.protocol === (ProtocolType[protocol as ProtocolTypeKeys] as string);
+export const protocolFilter = (protocol: ProtocolTypeKeys) => (scope: Row) =>
+  protocol === "All" || scope.protocol === ProtocolType[protocol].toString();
 
 type SearchToolbarProps = Omit<SearchDropdownProps, "withProtocol"> & {
   type: AllClientScopes;
   onType: (value: AllClientScopes) => void;
-  protocol?: ProtocolType;
-  onProtocol?: (value: ProtocolType) => void;
+  protocol?: ProtocolTypeKeys;
+  onProtocol?: (value: ProtocolTypeKeys) => void;
 };
 
 type SearchDropdownProps = {
@@ -169,7 +168,7 @@ export const SearchToolbar = ({
               isOpen={open}
               selections={[t(`protocolTypes.${protocol}`)]}
               onSelect={(_, value) => {
-                onProtocol?.(value as ProtocolType);
+                onProtocol?.(value as ProtocolTypeKeys);
                 setOpen(false);
               }}
             >
