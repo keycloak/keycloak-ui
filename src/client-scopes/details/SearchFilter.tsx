@@ -141,7 +141,6 @@ export const SearchToolbar = ({
                   : t(`common:clientScope.${type}`),
               ]}
               onSelect={(_, value) => {
-                console.log(value);
                 onType(value as AllClientScopes);
                 setOpen(false);
               }}
