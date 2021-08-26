@@ -25,7 +25,7 @@ export enum ProtocolType {
 type ProtocolTypeKeys = keyof typeof ProtocolType;
 
 export const nameFilter =
-  (search: string = "") =>
+  (search = "") =>
   (scope: Row) =>
     scope.name?.includes(search);
 export const typeFilter = (type: AllClientScopes) => (scope: Row) =>
