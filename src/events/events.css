@@ -35,9 +35,3 @@
   max-height: 200px;
   overflow: auto;
 }
-
-.pf-c-toolbar {
-  background-color: transparent;
-  --pf-c-toolbar--PaddingTop: 0;
-  --pf-c-toolbar--PaddingBottom: 0;
-}
