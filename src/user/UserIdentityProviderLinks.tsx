@@ -230,7 +230,6 @@ export const UserIdentityProviderLinks = () => {
                 name: "alias",
                 displayKey: "common:name",
                 cellFormatters: [emptyFormatter(), upperCaseFormatter()],
-                // cellRenderer: idpNameRenderer,
                 transforms: [cellWidth(20)],
               },
               {

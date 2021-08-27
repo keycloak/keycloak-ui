@@ -79,6 +79,7 @@ export default {
     identityProviderLinks: "Identity provider links",
     noProvidersLinked:
       "No identity providers linked. Choose one from the list below.",
+    noAvailableIdentityProviders: "No available identity providers.",
     linkedIdPs: "Linked identity providers",
     linkedIdPsText:
       "The identity providers which are already linked to this user account",
