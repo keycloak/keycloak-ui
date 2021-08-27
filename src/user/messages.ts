@@ -62,6 +62,10 @@ export default {
     unlinkAccountTitle: "Unlink account from {{provider}}?",
     unlinkAccountConfirm:
       "Are you sure you want to permanently unlink this account from {{provider}}?",
+    link: "Link",
+    linkAccountTitle: "Link account to {{provider}}?",
+    idpLinkSuccess: "Identity provider has been linked",
+    couldNotLinkIdP: "Could not link identity provider {{error}}",
     configureOTP: "Configure OTP",
     updatePassword: "Update Password",
     updateProfile: "Update Profile",
@@ -71,6 +75,7 @@ export default {
     noConsents: "No consents",
     noConsentsText:
       "The consents will only be recorded when users try to access a client that is configured to require consent. In that case, users will get a consent page which asks them to grant access to the client.",
+    identityProvider: "Identity provider",
     identityProviderLinks: "Identity provider links",
     noProvidersLinked:
       "No identity providers linked. Choose one from the list below.",

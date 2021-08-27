@@ -22,10 +22,12 @@ import { useServerInfo } from "../context/server-info/ServerInfoProvider";
 import _ from "lodash";
 import { useConfirmDialog } from "../components/confirm-dialog/ConfirmDialog";
 import { useAlerts } from "../components/alert/Alerts";
+import { UserIdpModal } from "./UserIdPModal";
 
 export const UserIdentityProviderLinks = () => {
   const [key, setKey] = useState(0);
   const [federatedId, setFederatedId] = useState("");
+  const [isLinkIdPModalOpen, setIsLinkIdPModalOpen] = useState(false);
 
   const adminClient = useAdminClient();
   const { id } = useParams<{ id: string }>();
@@ -35,20 +37,32 @@ export const UserIdentityProviderLinks = () => {
 
   const refresh = () => setKey(new Date().getTime());
 
+  const handleModalToggle = () => {
+    setIsLinkIdPModalOpen(!isLinkIdPModalOpen);
+  };
+
   const identityProviders = useServerInfo().identityProviders;
 
-  const linkedIdPsLoader = async () => {
-    const federatedIdentities = await adminClient.users.listFederatedIdentities(
-      { id }
-    );
+  const getFederatedIdentities = async () => {
+    return await adminClient.users.listFederatedIdentities({ id });
+  };
 
-    return federatedIdentities;
+  const getAvailableIdPs = async () => {
+    return (await adminClient.realms.findOne({ realm })).identityProviders;
+  };
+
+  const linkedIdPsLoader = async () => {
+    return getFederatedIdentities();
   };
 
   const availableIdPsLoader = async () => {
-    const availableIdPs = await adminClient.realms.findOne({ realm });
+    const linkedNames = (await getFederatedIdentities()).map(
+      (x) => x.identityProvider
+    );
 
-    return availableIdPs?.identityProviders!;
+    return (await getAvailableIdPs())?.filter(
+      (item) => !linkedNames.includes(item.alias)
+    )!;
   };
 
   const [toggleUnlinkDialog, UnlinkConfirm] = useConfirmDialog({
@@ -89,8 +103,8 @@ export const UserIdentityProviderLinks = () => {
       (provider) => provider["id"] === idp.identityProvider
     )?.groupName!;
     return (
-      <Label color={groupName === "User-defined" ? "orange" : "blue"}>
-        {groupName === "User-defined" ? "Custom" : groupName!}
+      <Label color={groupName === "Social" ? "blue" : "orange"}>
+        {groupName === "Social" ? "Social" : "Custom"}
       </Label>
     );
   };
@@ -106,12 +120,12 @@ export const UserIdentityProviderLinks = () => {
     );
   };
 
-  const unlinkRenderer = (idp: FederatedIdentityRepresentation) => {
+  const unlinkRenderer = (fedIdentity: FederatedIdentityRepresentation) => {
     return (
       <Button
         variant="link"
         onClick={() => {
-          setFederatedId(idp.identityProvider!);
+          setFederatedId(fedIdentity.identityProvider!);
           toggleUnlinkDialog();
         }}
       >
@@ -120,12 +134,29 @@ export const UserIdentityProviderLinks = () => {
     );
   };
 
-  const linkRenderer = () => {
-    return <Button variant="link">{t("linkAccount")}</Button>;
+  const linkRenderer = (idp: IdentityProviderRepresentation) => {
+    return (
+      <Button
+        variant="link"
+        onClick={() => {
+          setFederatedId(idp.alias!);
+          setIsLinkIdPModalOpen(true);
+        }}
+      >
+        {t("linkAccount")}
+      </Button>
+    );
   };
 
   return (
     <>
+      {isLinkIdPModalOpen && (
+        <UserIdpModal
+          federatedId={federatedId}
+          handleModalToggle={handleModalToggle}
+          refresh={refresh}
+        />
+      )}
       <UnlinkConfirm />
       <PageSection variant="light">
         <FormPanel title={t("linkedIdPs")} className="kc-linked-idps">
