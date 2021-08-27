@@ -89,7 +89,7 @@ export const UserIdpModal = ({
         </Button>,
       ]}
     >
-      <Form id="group-form" isHorizontal onSubmit={handleSubmit(submitForm)}>
+      <Form id="group-form" onSubmit={handleSubmit(submitForm)}>
         <FormGroup
           name="idp-name-group"
           label={t("users:identityProvider")}
@@ -118,6 +118,7 @@ export const UserIdpModal = ({
           name="user-id-group"
           label={t("users:userID")}
           fieldId="user-id"
+          helperText={t("users-help:userIdHelperText")}
           helperTextInvalid={t("common:required")}
           validated={
             errors.name ? ValidatedOptions.error : ValidatedOptions.default
@@ -140,6 +141,7 @@ export const UserIdpModal = ({
           name="username-group"
           label={t("users:username")}
           fieldId="username"
+          helperText={t("users-help:usernameHelperText")}
           helperTextInvalid={t("common:required")}
           validated={
             errors.name ? ValidatedOptions.error : ValidatedOptions.default
