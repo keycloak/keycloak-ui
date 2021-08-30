@@ -19,6 +19,7 @@ import { useAlerts } from "../components/alert/Alerts";
 import _ from "lodash";
 import { useParams } from "react-router-dom";
 import type FederatedIdentityRepresentation from "@keycloak/keycloak-admin-client/lib/defs/federatedIdentityRepresentation";
+import type { UserParams } from "./routes/User";
 
 type UserIdpModalProps = {
   federatedId?: string;
@@ -38,7 +39,7 @@ export const UserIdpModal = ({
     mode: "onChange",
   });
 
-  const { id } = useParams<{ id: string }>();
+  const { id } = useParams<UserParams>();
 
   const submitForm = async (fedIdentity: FederatedIdentityRepresentation) => {
     try {
