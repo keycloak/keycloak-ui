@@ -195,7 +195,6 @@ export const UserIdentityProviderLinks = () => {
                 name: "userId",
                 displayKey: "users:userID",
                 cellFormatters: [emptyFormatter()],
-                // cellRenderer: clientScopesRenderer,
                 transforms: [cellWidth(30)],
               },
               {
