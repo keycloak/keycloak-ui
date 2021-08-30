@@ -124,6 +124,7 @@ export const UserIdpModal = ({
           validated={
             errors.userId ? ValidatedOptions.error : ValidatedOptions.default
           }
+          isRequired
         >
           <TextInput
             data-testid="userIdInput"
@@ -147,6 +148,7 @@ export const UserIdpModal = ({
           validated={
             errors.name ? ValidatedOptions.error : ValidatedOptions.default
           }
+          isRequired
         >
           <TextInput
             data-testid="usernameInput"
