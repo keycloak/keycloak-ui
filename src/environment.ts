@@ -1,7 +1,6 @@
 export type Environment = {
   /** The realm which should be used when signing into the application. */
   loginRealm: string;
-  foo: string;
   /** The URL to the root of the auth server. */
   authServerUrl: string;
   /** The URL to the path of the auth server where client requests can be sent. */
