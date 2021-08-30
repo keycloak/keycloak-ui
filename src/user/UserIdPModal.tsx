@@ -96,13 +96,13 @@ export const UserIdpModal = ({
           fieldId="idp-name"
           helperTextInvalid={t("common:required")}
           validated={
-            errors.name ? ValidatedOptions.error : ValidatedOptions.default
+            errors.identityProvider ? ValidatedOptions.error : ValidatedOptions.default
           }
         >
           <TextInput
             data-testid="idpNameInput"
             aria-label="Identity provider name input"
-            ref={register({})}
+            ref={register({ required: true })}
             autoFocus
             isReadOnly
             type="text"
@@ -110,7 +110,7 @@ export const UserIdpModal = ({
             name="identityProvider"
             value={_.capitalize(federatedId)}
             validated={
-              errors.name ? ValidatedOptions.error : ValidatedOptions.default
+              errors.identityProvider ? ValidatedOptions.error : ValidatedOptions.default
             }
           />
         </FormGroup>
@@ -121,7 +121,7 @@ export const UserIdpModal = ({
           helperText={t("users-help:userIdHelperText")}
           helperTextInvalid={t("common:required")}
           validated={
-            errors.name ? ValidatedOptions.error : ValidatedOptions.default
+            errors.userId ? ValidatedOptions.error : ValidatedOptions.default
           }
         >
           <TextInput
@@ -133,7 +133,7 @@ export const UserIdpModal = ({
             id="link-idp-user-id"
             name="userId"
             validated={
-              errors.name ? ValidatedOptions.error : ValidatedOptions.default
+              errors.userId ? ValidatedOptions.error : ValidatedOptions.default
             }
           />
         </FormGroup>
