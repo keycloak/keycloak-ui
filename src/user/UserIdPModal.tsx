@@ -22,14 +22,12 @@ import type FederatedIdentityRepresentation from "@keycloak/keycloak-admin-clien
 
 type UserIdpModalProps = {
   federatedId?: string;
-  rename?: string;
   handleModalToggle: () => void;
   refresh: (group?: GroupRepresentation) => void;
 };
 
 export const UserIdpModal = ({
   federatedId,
-  rename,
   handleModalToggle,
   refresh,
 }: UserIdpModalProps) => {
@@ -37,7 +35,6 @@ export const UserIdpModal = ({
   const adminClient = useAdminClient();
   const { addAlert, addError } = useAlerts();
   const { register, errors, handleSubmit, formState } = useForm({
-    defaultValues: { name: rename },
     mode: "onChange",
   });
 
@@ -96,7 +93,9 @@ export const UserIdpModal = ({
           fieldId="idp-name"
           helperTextInvalid={t("common:required")}
           validated={
-            errors.identityProvider ? ValidatedOptions.error : ValidatedOptions.default
+            errors.identityProvider
+              ? ValidatedOptions.error
+              : ValidatedOptions.default
           }
         >
           <TextInput
@@ -110,7 +109,9 @@ export const UserIdpModal = ({
             name="identityProvider"
             value={_.capitalize(federatedId)}
             validated={
-              errors.identityProvider ? ValidatedOptions.error : ValidatedOptions.default
+              errors.identityProvider
+                ? ValidatedOptions.error
+                : ValidatedOptions.default
             }
           />
         </FormGroup>

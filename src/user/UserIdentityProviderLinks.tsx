@@ -247,7 +247,7 @@ export const UserIdentityProviderLinks = () => {
             ]}
             emptyState={
               <TextContent className="kc-no-providers-text">
-                <Text>{t("users:noProvidersLinked")}</Text>
+                <Text>{t("users:noAvailableIdentityProviders")}</Text>
               </TextContent>
             }
           />
