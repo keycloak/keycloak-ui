@@ -23,6 +23,7 @@ import _ from "lodash";
 import { useConfirmDialog } from "../components/confirm-dialog/ConfirmDialog";
 import { useAlerts } from "../components/alert/Alerts";
 import { UserIdpModal } from "./UserIdPModal";
+import { toIdentityProviderTab } from "../identity-providers/routes/IdentityProviderTab";
 
 export const UserIdentityProviderLinks = () => {
   const [key, setKey] = useState(0);
@@ -91,7 +92,11 @@ export const UserIdentityProviderLinks = () => {
   const idpLinkRenderer = (idp: FederatedIdentityRepresentation) => {
     return (
       <Link
-        to={`/${realm}/identity-providers/${idp.identityProvider}/settings`}
+        to={toIdentityProviderTab({
+          realm,
+          id: idp.identityProvider!,
+          tab: "settings",
+        })}
       >
         {_.capitalize(idp.identityProvider)}
       </Link>
