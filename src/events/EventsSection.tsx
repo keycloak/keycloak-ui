@@ -454,12 +454,10 @@ export const EventsSection = () => {
                   },
                 ]}
                 emptyState={
-                  <div className="pf-u-mt-md">
-                    <ListEmptyState
-                      message={t("emptyEvents")}
-                      instructions={t("emptyEventsInstructions")}
-                    />
-                  </div>
+                  <ListEmptyState
+                    message={t("emptyEvents")}
+                    instructions={t("emptyEventsInstructions")}
+                  />
                 }
               />
             </div>
