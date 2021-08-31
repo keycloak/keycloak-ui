@@ -116,8 +116,9 @@ export const AdminEvents = () => {
 
   const [key, setKey] = useState(0);
   const [searchDropdownOpen, setSearchDropdownOpen] = useState(false);
-  const [selectResourceTypeOpen, setSelectResourceTypeOpen] = useState(false);
-  const [selectOperationTypeOpen, setSelectOperationTypeOpen] = useState(false);
+  const [selectResourceTypesOpen, setSelectResourceTypesOpen] = useState(false);
+  const [selectOperationTypesOpen, setSelectOperationTypesOpen] =
+    useState(false);
   const [activeFilters, setActiveFilters] = useState<
     Partial<AdminEventSearchForm>
   >({});
@@ -127,8 +128,8 @@ export const AdminEvents = () => {
     useState<AdminEventRepresentation>();
 
   const filterLabels: Record<keyof AdminEventSearchForm, string> = {
-    resourceTypes: t("resourceType"),
-    operationTypes: t("operationType"),
+    resourceTypes: t("resourceTypes"),
+    operationTypes: t("operationTypes"),
     resourcePath: t("resourcePath"),
     dateFrom: t("dateFrom"),
     dateTo: t("dateTo"),
@@ -245,8 +246,8 @@ export const AdminEvents = () => {
               data-testid="searchForm"
             >
               <FormGroup
-                label={t("resourceType")}
-                fieldId="kc-resourceType"
+                label={t("resourceTypes")}
+                fieldId="kc-resourceTypes"
                 className="keycloak__events_search__form_label"
               >
                 <Controller
@@ -262,7 +263,7 @@ export const AdminEvents = () => {
                     <Select
                       className="keycloak__events_search__type_select"
                       name="resourceTypes"
-                      data-testid="resource-type-searchField"
+                      data-testid="resource-types-searchField"
                       chipGroupProps={{
                         numChips: 1,
                         expandedText: "Hide",
@@ -270,7 +271,7 @@ export const AdminEvents = () => {
                       }}
                       variant={SelectVariant.typeaheadMulti}
                       typeAheadAriaLabel="Select"
-                      onToggle={(isOpen) => setSelectResourceTypeOpen(isOpen)}
+                      onToggle={(isOpen) => setSelectResourceTypesOpen(isOpen)}
                       selections={value}
                       onSelect={(_, selectedValue) => {
                         const option = selectedValue.toString();
@@ -284,8 +285,8 @@ export const AdminEvents = () => {
                         resource.stopPropagation();
                         onChange([]);
                       }}
-                      isOpen={selectResourceTypeOpen}
-                      aria-labelledby={"resourceType"}
+                      isOpen={selectResourceTypesOpen}
+                      aria-labelledby={"resourceTypes"}
                       chipGroupComponent={
                         <ChipGroup>
                           {value.map((chip) => (
@@ -310,8 +311,8 @@ export const AdminEvents = () => {
                 />
               </FormGroup>
               <FormGroup
-                label={t("operationType")}
-                fieldId="kc-operationType"
+                label={t("operationTypes")}
+                fieldId="kc-operationTypes"
                 className="keycloak__events_search__form_label"
               >
                 <Controller
@@ -327,7 +328,7 @@ export const AdminEvents = () => {
                     <Select
                       className="keycloak__events_search__type_select"
                       name="operationTypes"
-                      data-testid="operation-type-searchField"
+                      data-testid="operation-types-searchField"
                       chipGroupProps={{
                         numChips: 1,
                         expandedText: "Hide",
@@ -335,7 +336,7 @@ export const AdminEvents = () => {
                       }}
                       variant={SelectVariant.typeaheadMulti}
                       typeAheadAriaLabel="Select"
-                      onToggle={(isOpen) => setSelectOperationTypeOpen(isOpen)}
+                      onToggle={(isOpen) => setSelectOperationTypesOpen(isOpen)}
                       selections={value}
                       onSelect={(_, selectedValue) => {
                         const option = selectedValue.toString();
@@ -349,7 +350,7 @@ export const AdminEvents = () => {
                         operation.stopPropagation();
                         onChange([]);
                       }}
-                      isOpen={selectOperationTypeOpen}
+                      isOpen={selectOperationTypesOpen}
                       aria-labelledby={"operationTypes"}
                       chipGroupComponent={
                         <ChipGroup>
