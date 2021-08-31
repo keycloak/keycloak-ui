@@ -174,11 +174,14 @@ export const AdminEvents = () => {
     commitFilters();
   }
 
-  function removeFilterValue(key: keyof AdminEventSearchForm) {
+  function removeFilterValue(
+    key: keyof AdminEventSearchForm,
+    valueToRemove: string
+  ) {
     const formValues = getValues();
     const fieldValue = formValues[key];
     const newFieldValue = Array.isArray(fieldValue)
-      ? fieldValue.filter((val) => val)
+      ? fieldValue.filter((val) => val !== valueToRemove)
       : fieldValue;
 
     reset({ ...formValues, [key]: newFieldValue });
@@ -501,7 +504,7 @@ export const AdminEvents = () => {
                       value.map((entry) => (
                         <Chip
                           key={entry}
-                          onClick={() => removeFilterValue(key)}
+                          onClick={() => removeFilterValue(key, entry)}
                         >
                           {entry}
                         </Chip>
