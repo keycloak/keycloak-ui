@@ -44,8 +44,8 @@ type DisplayDialogProps = {
 };
 
 type AdminEventSearchForm = {
-  resourceType: string[];
-  operationType: string[];
+  resourceTypes: string[];
+  operationTypes: string[];
   resourcePath: string;
   dateFrom: string;
   dateTo: string;
@@ -56,8 +56,8 @@ type AdminEventSearchForm = {
 };
 
 const defaultValues: AdminEventSearchForm = {
-  resourceType: [],
-  operationType: [],
+  resourceTypes: [],
+  operationTypes: [],
   resourcePath: "",
   dateFrom: "",
   dateTo: "",
@@ -127,8 +127,8 @@ export const AdminEvents = () => {
     useState<AdminEventRepresentation>();
 
   const filterLabels: Record<keyof AdminEventSearchForm, string> = {
-    resourceType: t("resourceType"),
-    operationType: t("operationType"),
+    resourceTypes: t("resourceType"),
+    operationTypes: t("operationType"),
     resourcePath: t("resourcePath"),
     dateFrom: t("dateFrom"),
     dateTo: t("dateTo"),
@@ -250,7 +250,7 @@ export const AdminEvents = () => {
                 className="keycloak__events_search__form_label"
               >
                 <Controller
-                  name="resourceType"
+                  name="resourceTypes"
                   control={control}
                   render={({
                     onChange,
@@ -261,7 +261,7 @@ export const AdminEvents = () => {
                   }) => (
                     <Select
                       className="keycloak__events_search__type_select"
-                      name="resourceType"
+                      name="resourceTypes"
                       data-testid="resource-type-searchField"
                       chipGroupProps={{
                         numChips: 1,
@@ -315,7 +315,7 @@ export const AdminEvents = () => {
                 className="keycloak__events_search__form_label"
               >
                 <Controller
-                  name="operationType"
+                  name="operationTypes"
                   control={control}
                   render={({
                     onChange,
@@ -326,7 +326,7 @@ export const AdminEvents = () => {
                   }) => (
                     <Select
                       className="keycloak__events_search__type_select"
-                      name="operationType"
+                      name="operationTypes"
                       data-testid="operation-type-searchField"
                       chipGroupProps={{
                         numChips: 1,
@@ -350,7 +350,7 @@ export const AdminEvents = () => {
                         onChange([]);
                       }}
                       isOpen={selectOperationTypeOpen}
-                      aria-labelledby={"operationType"}
+                      aria-labelledby={"operationTypes"}
                       chipGroupComponent={
                         <ChipGroup>
                           {value.map((chip) => (
