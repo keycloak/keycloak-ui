@@ -25,12 +25,12 @@ import {
   TableVariant,
 } from "@patternfly/react-table";
 import type AdminEventRepresentation from "@keycloak/keycloak-admin-client/lib/defs/adminEventRepresentation";
-import type RealmRepresentation from "@keycloak/keycloak-admin-client/lib/defs/realmRepresentation";
 import moment from "moment";
 import React, { FunctionComponent, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
+import { pickBy } from "lodash";
 import { ListEmptyState } from "../components/list-empty-state/ListEmptyState";
 import { KeycloakDataTable } from "../components/table-toolbar/KeycloakDataTable";
 import { useAdminClient } from "../context/auth/AdminClient";
@@ -51,7 +51,7 @@ type AdminEventSearchForm = {
   dateTo: string;
   client: string;
   user: string;
-  realm: RealmRepresentation[];
+  realm: string;
   ipAddress: string;
 };
 
@@ -63,7 +63,7 @@ const defaultValues: AdminEventSearchForm = {
   dateTo: "",
   client: "",
   user: "",
-  realm: [],
+  realm: "",
   ipAddress: "",
 };
 
@@ -118,14 +118,30 @@ export const AdminEvents = () => {
   const [searchDropdownOpen, setSearchDropdownOpen] = useState(false);
   const [selectResourceTypeOpen, setSelectResourceTypeOpen] = useState(false);
   const [selectOperationTypeOpen, setSelectOperationTypeOpen] = useState(false);
-  const refresh = () => setKey(new Date().getTime());
+  const [activeFilters, setActiveFilters] = useState<
+    Partial<AdminEventSearchForm>
+  >({});
 
   const [authEvent, setAuthEvent] = useState<AdminEventRepresentation>();
   const [representationEvent, setRepresentationEvent] =
     useState<AdminEventRepresentation>();
 
+  const filterLabels: Record<keyof AdminEventSearchForm, string> = {
+    resourceType: t("resourceType"),
+    operationType: t("operationType"),
+    resourcePath: t("resourcePath"),
+    dateFrom: t("dateFrom"),
+    dateTo: t("dateTo"),
+    client: t("client"),
+    user: t("userId"),
+    realm: t("realm"),
+    ipAddress: t("ipAddress"),
+  };
+
   const {
+    getValues,
     register,
+    reset,
     formState: { isDirty },
     control,
   } = useForm<AdminEventSearchForm>({
@@ -134,17 +150,53 @@ export const AdminEvents = () => {
     defaultValues,
   });
 
-  const loader = async (first?: number, max?: number, search?: string) => {
-    const params = {
-      first: first!,
-      max: max!,
+  function loader(first?: number, max?: number) {
+    return adminClient.realms.findAdminEvents({
+      // The admin client wants 'dateFrom' and 'dateTo' to be Date objects, however it cannot actually handle them so we need to cast to any.
+      ...(activeFilters as any),
       realm,
-    };
-    if (search) {
-      console.log("how to search?", search);
-    }
-    return await adminClient.realms.findAdminEvents({ ...params });
-  };
+      first,
+      max,
+    });
+  }
+
+  function submitSearch() {
+    setSearchDropdownOpen(false);
+    commitFilters();
+  }
+
+  function removeFilter(key: keyof AdminEventSearchForm) {
+    const formValues: AdminEventSearchForm = { ...getValues() };
+    delete formValues[key];
+
+    reset({ ...defaultValues, ...formValues });
+    commitFilters();
+  }
+
+  function removeFilterValue(key: keyof AdminEventSearchForm) {
+    const formValues = getValues();
+    const fieldValue = formValues[key];
+    const newFieldValue = Array.isArray(fieldValue)
+      ? fieldValue.filter((val) => val)
+      : fieldValue;
+
+    reset({ ...formValues, [key]: newFieldValue });
+    commitFilters();
+  }
+
+  function commitFilters() {
+    const newFilters: Partial<AdminEventSearchForm> = pickBy(
+      getValues(),
+      (value) => value !== "" || (Array.isArray(value) && value.length > 0)
+    );
+
+    setActiveFilters(newFilters);
+    setKey(key + 1);
+  }
+
+  function refresh() {
+    commitFilters();
+  }
 
   const LinkResource = (row: AdminEventRepresentation) => (
     <Truncate text={row.resourcePath}>
@@ -195,7 +247,7 @@ export const AdminEvents = () => {
               <FormGroup
                 label={t("resourceType")}
                 fieldId="kc-resourceType"
-                className="keycloak__events_search__form_multiline_label"
+                className="keycloak__events_search__form_label"
               >
                 <Controller
                   name="resourceType"
@@ -260,7 +312,7 @@ export const AdminEvents = () => {
               <FormGroup
                 label={t("operationType")}
                 fieldId="kc-operationType"
-                className="keycloak__events_search__form_multiline_label"
+                className="keycloak__events_search__form_label"
               >
                 <Controller
                   name="operationType"
@@ -323,6 +375,19 @@ export const AdminEvents = () => {
                 />
               </FormGroup>
               <FormGroup
+                label={t("resourcePath")}
+                fieldId="kc-resourcePath"
+                className="keycloak__events_search__form_label"
+              >
+                <TextInput
+                  ref={register()}
+                  type="text"
+                  id="kc-resourcePath"
+                  name="resourcePath"
+                  data-testid="resourcePath-searchField"
+                />
+              </FormGroup>
+              <FormGroup
                 label={t("user")}
                 fieldId="kc-user"
                 className="keycloak__events_search__form_label"
@@ -333,6 +398,19 @@ export const AdminEvents = () => {
                   id="kc-user"
                   name="user"
                   data-testid="user-searchField"
+                />
+              </FormGroup>
+              <FormGroup
+                label={t("realm")}
+                fieldId="kc-realm"
+                className="keycloak__events_search__form_label"
+              >
+                <TextInput
+                  ref={register()}
+                  type="text"
+                  id="kc-realm"
+                  name="realm"
+                  data-testid="realm-searchField"
                 />
               </FormGroup>
               <FormGroup
@@ -380,8 +458,9 @@ export const AdminEvents = () => {
               </FormGroup>
               <ActionGroup>
                 <Button
-                  className="keycloak__admin_events_search__form_btn"
+                  className="keycloak__user_events_search__form_btn"
                   variant={"primary"}
+                  onClick={submitSearch}
                   data-testid="search-events-btn"
                   isDisabled={!isDirty}
                 >
@@ -397,6 +476,41 @@ export const AdminEvents = () => {
           >
             {t("refresh")}
           </Button>
+        </FlexItem>
+        <FlexItem>
+          {Object.entries(activeFilters).length > 0 && (
+            <div className="keycloak__searchChips pf-u-ml-md">
+              {Object.entries(activeFilters).map((filter) => {
+                const [key, value] = filter as [
+                  keyof AdminEventSearchForm,
+                  string | string[]
+                ];
+
+                return (
+                  <ChipGroup
+                    className="pf-u-mt-md pf-u-mr-md"
+                    key={key}
+                    categoryName={filterLabels[key]}
+                    isClosable
+                    onClick={() => removeFilter(key)}
+                  >
+                    {typeof value === "string" ? (
+                      <Chip isReadOnly>{value}</Chip>
+                    ) : (
+                      value.map((entry) => (
+                        <Chip
+                          key={entry}
+                          onClick={() => removeFilterValue(key)}
+                        >
+                          {entry}
+                        </Chip>
+                      ))
+                    )}
+                  </ChipGroup>
+                );
+              })}
+            </div>
+          )}
         </FlexItem>
       </Flex>
     );

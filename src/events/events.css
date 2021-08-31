@@ -17,10 +17,7 @@
 
 .keycloak__events_search__form_label {
   --pf-c-form--m-horizontal__group-label--md--GridColumnWidth: 5rem;
-}
-
-.keycloak__events_search__form_multiline_label {
-  height: 2.2rem;
+  line-height: 0px;
 }
 
 .keycloak__events_search__type_select .pf-c-select__menu {
