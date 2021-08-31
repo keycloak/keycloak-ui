@@ -37,7 +37,7 @@ describe("Search events tests", function () {
       userEventsTab.shouldHaveSearchBtnDisabled();
     });
 
-    it("Check search and removal work", () => {
+    it("Check user events search and removal work", () => {
       sidebarPage.goToRealmSettings();
       cy.getId("rs-realm-events-tab").click();
 
@@ -86,7 +86,7 @@ describe("Search events tests", function () {
       adminEventsTab.shouldHaveSearchBtnDisabled();
     });
 
-    it.skip("Check admin event search and removal work", () => {
+    it.skip("Check admin events search and removal work", () => {
       sidebarPage.goToRealmSettings();
       cy.getId("rs-admin-events-tab").click();
 
