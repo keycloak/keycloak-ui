@@ -72,7 +72,7 @@ export const IdentityProvidersSection = () => {
   const DetailLink = (identityProvider: IdentityProviderRepresentation) => (
     <Link
       key={identityProvider.providerId}
-      to={`/${realm}/identity-providers/${identityProvider.providerId}/settings`}
+      to={`/${realm}/identity-providers/${identityProvider.providerId}/${identityProvider.alias}/settings`}
     >
       {identityProvider.alias}
       {!identityProvider.enabled && (
