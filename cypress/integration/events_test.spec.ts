@@ -1,18 +1,20 @@
 import LoginPage from "../support/pages/LoginPage";
 import SidebarPage from "../support/pages/admin_console/SidebarPage";
-import EventsPage from "../support/pages/admin_console/manage/events/EventsPage";
+import UserEventsTab from "../support/pages/admin_console/manage/events/UserEventsTab";
+import AdminEventsTab from "../support/pages/admin_console/manage/events/AdminEventsTab";
 import RealmSettingsPage from "../support/pages/admin_console/manage/realm_settings/RealmSettingsPage";
 import Masthead from "../support/pages/admin_console/Masthead";
 import { keycloakBefore } from "../support/util/keycloak_before";
 
 const loginPage = new LoginPage();
 const sidebarPage = new SidebarPage();
-const eventsPage = new EventsPage();
+const userEventsTab = new UserEventsTab();
+const adminEventsTab = new AdminEventsTab();
 const realmSettingsPage = new RealmSettingsPage();
 const masthead = new Masthead();
 
-describe("Search events test", function () {
-  describe("Search events dropdown", function () {
+describe("Search events tests", function () {
+  describe("Search user events", function () {
     beforeEach(function () {
       keycloakBefore();
       loginPage.logIn();
@@ -20,22 +22,22 @@ describe("Search events test", function () {
     });
 
     it("Check search dropdown display", () => {
-      eventsPage.shouldDisplay();
+      userEventsTab.shouldDisplay();
     });
 
-    it("Check search form fields display", () => {
-      eventsPage.shouldHaveFormFields();
+    it("Check user events search form fields display", () => {
+      userEventsTab.shouldHaveFormFields();
     });
 
     it("Check event type dropdown options exist", () => {
-      eventsPage.shouldHaveEventTypeOptions();
+      userEventsTab.shouldHaveEventTypeOptions();
     });
 
     it("Check `search events` button disabled by default", () => {
-      eventsPage.shouldHaveSearchBtnDisabled();
+      userEventsTab.shouldHaveSearchBtnDisabled();
     });
 
-    it("Check search and removal works", () => {
+    it("Check search and removal work", () => {
       sidebarPage.goToRealmSettings();
       cy.getId("rs-realm-events-tab").click();
 
@@ -44,7 +46,7 @@ describe("Search events test", function () {
         .then((exist) => {
           if (exist) {
             sidebarPage.goToEvents();
-            eventsPage.shouldDoSearchAndRemoveChips();
+            userEventsTab.shouldDoSearchAndRemoveChips();
           } else {
             realmSettingsPage
               .toggleSwitch(realmSettingsPage.enableEvents)
@@ -54,13 +56,68 @@ describe("Search events test", function () {
               "Successfully saved configuration"
             );
             sidebarPage.goToEvents();
-            eventsPage.shouldDoSearchAndRemoveChips();
+            userEventsTab.shouldDoSearchAndRemoveChips();
           }
         });
     });
 
+    it("Check for no events logged", () => {
+      userEventsTab.shouldDoNoResultsSearch();
+    });
+
     it("Check `search events` button enabled", () => {
-      eventsPage.shouldHaveSearchBtnEnabled();
+      userEventsTab.shouldHaveSearchBtnEnabled();
+    });
+  });
+
+  describe("Search admin events", function () {
+    beforeEach(function () {
+      keycloakBefore();
+      loginPage.logIn();
+      sidebarPage.goToEvents();
+      cy.getId("admin-events-tab").click();
+    });
+
+    it("Check admin events search form fields display", () => {
+      adminEventsTab.shouldHaveFormFields();
+    });
+
+    it("Check `search admin events` button disabled by default", () => {
+      adminEventsTab.shouldHaveSearchBtnDisabled();
+    });
+
+    it.skip("Check admin event search and removal work", () => {
+      sidebarPage.goToRealmSettings();
+      cy.getId("rs-admin-events-tab").click();
+
+      cy.get("#eventsEnabled-switch-on")
+        .should("exist")
+        .then((exist) => {
+          if (exist) {
+            sidebarPage.goToEvents();
+            cy.getId("admin-events-tab").click();
+            adminEventsTab.shouldDoAdminEventsSearchAndRemoveChips();
+          } else {
+            realmSettingsPage
+              .toggleSwitch(realmSettingsPage.enableEvents)
+              .save(realmSettingsPage.eventsUserSave);
+
+            masthead.checkNotificationMessage(
+              "Successfully saved configuration"
+            );
+            sidebarPage.goToEvents();
+            cy.getId("admin-events-tab").click();
+            adminEventsTab.shouldDoAdminEventsSearchAndRemoveChips();
+          }
+        });
+    });
+
+    it("Check for no events logged", () => {
+      adminEventsTab.shouldDoNoResultsSearch();
+    });
+
+    it("Check `search admin events` button enabled", () => {
+      adminEventsTab.shouldHaveSearchBtnEnabled();
     });
   });
 });

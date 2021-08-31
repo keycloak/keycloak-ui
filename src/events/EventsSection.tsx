@@ -465,6 +465,7 @@ export const EventsSection = () => {
           <Tab
             eventKey="adminEvents"
             title={<TabTitleText>{t("adminEvents")}</TabTitleText>}
+            data-testid="admin-events-tab"
           >
             <AdminEvents />
           </Tab>
