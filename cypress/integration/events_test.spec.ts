@@ -86,11 +86,12 @@ describe("Search events tests", function () {
       adminEventsTab.shouldHaveSearchBtnDisabled();
     });
 
-    it.skip("Check admin events search and removal work", () => {
+    it("Check admin events search and removal work", () => {
       sidebarPage.goToRealmSettings();
+      cy.getId("rs-realm-events-tab").click();
       cy.getId("rs-admin-events-tab").click();
 
-      cy.get("#eventsEnabled-switch-on")
+      cy.getId("adminEventsEnabled")
         .should("exist")
         .then((exist) => {
           if (exist) {

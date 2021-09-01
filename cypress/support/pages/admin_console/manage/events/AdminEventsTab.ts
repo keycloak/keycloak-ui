@@ -38,15 +38,13 @@ export default class AdminEventsTab {
 
   shouldDoAdminEventsSearchAndRemoveChips() {
     cy.getId(this.searchAdminEventDrpDwnBtn).click();
-    cy.get(this.operationTypesInputFld).type("UPDATE");
-    cy.get(this.operationTypesOption).contains("UPDATE").click();
+    cy.getId(this.resourcePathInputFld).type("events/config");
 
-    cy.intercept("/auth/admin/realms/master/events*").as("eventsFetch");
+    cy.intercept("/auth/admin/realms/master/admin-events*").as("eventsFetch");
     cy.getId(this.searchEventsBtn).click();
     cy.wait("@eventsFetch");
 
-    cy.get("table").contains("td", "UPDATE");
-    cy.get("table").should("not.have.text", "CREATE");
+    cy.get("table").contains("td", "events/config").should("be.visible");
 
     cy.get("[id^=remove_group]").click();
     cy.wait("@eventsFetch");
