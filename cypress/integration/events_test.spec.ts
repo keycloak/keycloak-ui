@@ -41,24 +41,13 @@ describe("Search events tests", function () {
       sidebarPage.goToRealmSettings();
       cy.getId("rs-realm-events-tab").click();
 
-      cy.get("#eventsEnabled-switch-on")
-        .should("exist")
-        .then((exist) => {
-          if (exist) {
-            sidebarPage.goToEvents();
-            userEventsTab.shouldDoSearchAndRemoveChips();
-          } else {
-            realmSettingsPage
-              .toggleSwitch(realmSettingsPage.enableEvents)
-              .save(realmSettingsPage.eventsUserSave);
+      realmSettingsPage
+        .toggleSwitch(realmSettingsPage.enableEvents)
+        .save(realmSettingsPage.eventsUserSave);
 
-            masthead.checkNotificationMessage(
-              "Successfully saved configuration"
-            );
-            sidebarPage.goToEvents();
-            userEventsTab.shouldDoSearchAndRemoveChips();
-          }
-        });
+      masthead.checkNotificationMessage("Successfully saved configuration");
+      sidebarPage.goToEvents();
+      userEventsTab.shouldDoSearchAndRemoveChips();
     });
 
     it("Check for no events logged", () => {
@@ -91,26 +80,14 @@ describe("Search events tests", function () {
       cy.getId("rs-realm-events-tab").click();
       cy.getId("rs-admin-events-tab").click();
 
-      cy.getId("adminEventsEnabled")
-        .should("exist")
-        .then((exist) => {
-          if (exist) {
-            sidebarPage.goToEvents();
-            cy.getId("admin-events-tab").click();
-            adminEventsTab.shouldDoAdminEventsSearchAndRemoveChips();
-          } else {
-            realmSettingsPage
-              .toggleSwitch(realmSettingsPage.enableEvents)
-              .save(realmSettingsPage.eventsUserSave);
+      realmSettingsPage
+        .toggleSwitch(realmSettingsPage.enableEvents)
+        .save(realmSettingsPage.eventsUserSave);
 
-            masthead.checkNotificationMessage(
-              "Successfully saved configuration"
-            );
-            sidebarPage.goToEvents();
-            cy.getId("admin-events-tab").click();
-            adminEventsTab.shouldDoAdminEventsSearchAndRemoveChips();
-          }
-        });
+      masthead.checkNotificationMessage("Successfully saved configuration");
+      sidebarPage.goToEvents();
+      cy.getId("admin-events-tab").click();
+      adminEventsTab.shouldDoAdminEventsSearchAndRemoveChips();
     });
 
     it("Check for no events logged", () => {
