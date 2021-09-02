@@ -48,7 +48,7 @@ export default class AdminEventsTab {
 
     cy.get("[id^=remove_group]").click();
     cy.wait("@eventsFetch");
-    cy.get("table").contains("td", "UPDATE");
+    cy.get("table").should("be.visible").contains("td", "UPDATE");
   }
 
   shouldHaveSearchBtnEnabled() {
