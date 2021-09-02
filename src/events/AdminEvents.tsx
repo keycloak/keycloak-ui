@@ -49,10 +49,10 @@ type AdminEventSearchForm = {
   resourcePath: string;
   dateFrom: string;
   dateTo: string;
-  client: string;
-  user: string;
-  realm: string;
-  ipAddress: string;
+  authClient: string;
+  authUser: string;
+  authRealm: string;
+  authIpAddress: string;
 };
 
 const defaultValues: AdminEventSearchForm = {
@@ -61,10 +61,10 @@ const defaultValues: AdminEventSearchForm = {
   resourcePath: "",
   dateFrom: "",
   dateTo: "",
-  client: "",
-  user: "",
-  realm: "",
-  ipAddress: "",
+  authClient: "",
+  authUser: "",
+  authRealm: "",
+  authIpAddress: "",
 };
 
 const DisplayDialog: FunctionComponent<DisplayDialogProps> = ({
@@ -133,10 +133,10 @@ export const AdminEvents = () => {
     resourcePath: t("resourcePath"),
     dateFrom: t("dateFrom"),
     dateTo: t("dateTo"),
-    client: t("client"),
-    user: t("userId"),
-    realm: t("realm"),
-    ipAddress: t("ipAddress"),
+    authClient: t("client"),
+    authUser: t("userId"),
+    authRealm: t("realm"),
+    authIpAddress: t("ipAddress"),
   };
 
   const {
@@ -194,6 +194,7 @@ export const AdminEvents = () => {
       (value) => value !== "" || (Array.isArray(value) && value.length > 0)
     );
 
+    console.log(newFilters);
     setActiveFilters(newFilters);
     setKey(key + 1);
   }
@@ -392,19 +393,6 @@ export const AdminEvents = () => {
                 />
               </FormGroup>
               <FormGroup
-                label={t("user")}
-                fieldId="kc-user"
-                className="keycloak__events_search__form_label"
-              >
-                <TextInput
-                  ref={register()}
-                  type="text"
-                  id="kc-user"
-                  name="user"
-                  data-testid="user-searchField"
-                />
-              </FormGroup>
-              <FormGroup
                 label={t("realm")}
                 fieldId="kc-realm"
                 className="keycloak__events_search__form_label"
@@ -413,8 +401,34 @@ export const AdminEvents = () => {
                   ref={register()}
                   type="text"
                   id="kc-realm"
-                  name="realm"
+                  name="authRealm"
                   data-testid="realm-searchField"
+                />
+              </FormGroup>
+              <FormGroup
+                label={t("client")}
+                fieldId="kc-client"
+                className="keycloak__events_search__form_label"
+              >
+                <TextInput
+                  ref={register()}
+                  type="text"
+                  id="kc-client"
+                  name="authClient"
+                  data-testid="client-searchField"
+                />
+              </FormGroup>
+              <FormGroup
+                label={t("user")}
+                fieldId="kc-user"
+                className="keycloak__events_search__form_label"
+              >
+                <TextInput
+                  ref={register()}
+                  type="text"
+                  id="kc-user"
+                  name="authUser"
+                  data-testid="user-searchField"
                 />
               </FormGroup>
               <FormGroup
@@ -426,7 +440,7 @@ export const AdminEvents = () => {
                   ref={register()}
                   type="text"
                   id="kc-ipAddress"
-                  name="ipAddress"
+                  name="authIpAddress"
                   data-testid="ipAddress-searchField"
                 />
               </FormGroup>
