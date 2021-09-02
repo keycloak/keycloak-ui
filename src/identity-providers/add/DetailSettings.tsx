@@ -20,7 +20,6 @@ import { FormAccess } from "../../components/form-access/FormAccess";
 import { ScrollForm } from "../../components/scroll-form/ScrollForm";
 import { ViewHeader } from "../../components/view-header/ViewHeader";
 import { useFetch, useAdminClient } from "../../context/auth/AdminClient";
-import { toUpperCase } from "../../util";
 import { GeneralSettings } from "./GeneralSettings";
 import { AdvancedSettings } from "./AdvancedSettings";
 import { useConfirmDialog } from "../../components/confirm-dialog/ConfirmDialog";
@@ -61,7 +60,7 @@ const Header = ({ onChange, value, save, toggleDeleteDialog }: HeaderProps) => {
     <>
       <DisableConfirm />
       <ViewHeader
-        titleKey={toUpperCase(alias)}
+        titleKey={alias}
         divider={false}
         dropdownItems={[
           <DropdownItem key="delete" onClick={() => toggleDeleteDialog()}>
@@ -111,8 +110,8 @@ export const DetailSettings = () => {
     const p = provider || getValues();
     try {
       await adminClient.identityProviders.update(
-        { alias: alias },
-        { ...p, alias: alias, providerId: providerId }
+        { alias },
+        { ...p, alias, providerId }
       );
       setProvider(p);
       addAlert(t("updateSuccess"), AlertVariant.success);

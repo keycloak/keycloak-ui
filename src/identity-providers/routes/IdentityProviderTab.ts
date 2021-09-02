@@ -7,7 +7,7 @@ export type IdentityProviderTab = "settings";
 
 export type IdentityProviderTabParams = {
   realm: string;
-  providerId: string;
+  providerId?: string;
   alias: string;
   tab?: IdentityProviderTab;
 };
