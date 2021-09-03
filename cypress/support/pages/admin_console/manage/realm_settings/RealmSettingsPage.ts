@@ -64,6 +64,7 @@ export default class RealmSettingsPage {
   displayName = "display-name-input";
   enableEvents = "eventsEnabled";
   eventsUserSave = "save-user";
+  enableAdminEvents = "adminEventsEnabled";
   eventTypeColumn = 'tbody > tr > [data-label="Event saved type"]';
   filterSelectMenu = ".kc-filter-type-select";
   passiveKeysOption = "passive-keys-option";

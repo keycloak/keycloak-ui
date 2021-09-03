@@ -41,7 +41,10 @@ describe("Search events tests", function () {
       sidebarPage.goToRealmSettings();
       cy.getId("rs-realm-events-tab").click();
 
-      realmSettingsPage.toggleSwitch(realmSettingsPage.enableEvents);
+      realmSettingsPage
+        .toggleSwitch(realmSettingsPage.enableEvents)
+        .save(realmSettingsPage.eventsUserSave);
+
       masthead.signOut();
       loginPage.logIn();
 
@@ -80,7 +83,7 @@ describe("Search events tests", function () {
       cy.getId("rs-admin-events-tab").click();
 
       realmSettingsPage
-        .toggleSwitch(realmSettingsPage.enableEvents)
+        .toggleSwitch(realmSettingsPage.enableAdminEvents)
         .save(realmSettingsPage.modalConfirm);
 
       sidebarPage.goToEvents();
