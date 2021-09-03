@@ -84,7 +84,7 @@ describe("Search events tests", function () {
 
       realmSettingsPage
         .toggleSwitch(realmSettingsPage.enableAdminEvents)
-        .save(realmSettingsPage.modalConfirm);
+        .save(realmSettingsPage.eventsAdminSave);
 
       sidebarPage.goToEvents();
       cy.getId("admin-events-tab").click();
