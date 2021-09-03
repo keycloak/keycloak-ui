@@ -18,6 +18,7 @@ import { useAdminClient } from "../../context/auth/AdminClient";
 import { useRealm } from "../../context/realm-context/RealmContext";
 import { useAlerts } from "../../components/alert/Alerts";
 import { GeneralSettings } from "./GeneralSettings";
+import { toIdentityProviderTab } from "../routes/IdentityProviderTab";
 
 export const IdentityProviderCrumb = ({ match, location }: BreadcrumbData) => {
   const { t } = useTranslation();
@@ -61,10 +62,10 @@ export const AddIdentityProvider = () => {
       await adminClient.identityProviders.create({
         ...provider,
         providerId: id,
-        alias: provider.alias,
+        alias: id,
       });
       addAlert(t("createSuccess"), AlertVariant.success);
-      history.push(`/${realm}/identity-providers/${id}/settings`);
+      history.push(toIdentityProviderTab({ realm, providerId: id, alias: id }));
     } catch (error) {
       addError("identity-providers:createError", error);
     }
