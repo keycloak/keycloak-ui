@@ -3,6 +3,7 @@ import SidebarPage from "../support/pages/admin_console/SidebarPage";
 import UserEventsTab from "../support/pages/admin_console/manage/events/UserEventsTab";
 import AdminEventsTab from "../support/pages/admin_console/manage/events/AdminEventsTab";
 import RealmSettingsPage from "../support/pages/admin_console/manage/realm_settings/RealmSettingsPage";
+import Masthead from "../support/pages/admin_console/Masthead";
 import { keycloakBefore } from "../support/util/keycloak_before";
 
 const loginPage = new LoginPage();
@@ -10,6 +11,7 @@ const sidebarPage = new SidebarPage();
 const userEventsTab = new UserEventsTab();
 const adminEventsTab = new AdminEventsTab();
 const realmSettingsPage = new RealmSettingsPage();
+const masthead = new Masthead();
 
 describe("Search events tests", function () {
   describe("Search user events", function () {
@@ -40,6 +42,8 @@ describe("Search events tests", function () {
       cy.getId("rs-realm-events-tab").click();
 
       realmSettingsPage.toggleSwitch(realmSettingsPage.enableEvents);
+      masthead.signOut();
+      loginPage.logIn();
 
       sidebarPage.goToEvents();
       userEventsTab.shouldDoSearchAndRemoveChips();
