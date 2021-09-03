@@ -3,7 +3,6 @@ import SidebarPage from "../support/pages/admin_console/SidebarPage";
 import UserEventsTab from "../support/pages/admin_console/manage/events/UserEventsTab";
 import AdminEventsTab from "../support/pages/admin_console/manage/events/AdminEventsTab";
 import RealmSettingsPage from "../support/pages/admin_console/manage/realm_settings/RealmSettingsPage";
-import Masthead from "../support/pages/admin_console/Masthead";
 import { keycloakBefore } from "../support/util/keycloak_before";
 
 const loginPage = new LoginPage();
@@ -11,7 +10,6 @@ const sidebarPage = new SidebarPage();
 const userEventsTab = new UserEventsTab();
 const adminEventsTab = new AdminEventsTab();
 const realmSettingsPage = new RealmSettingsPage();
-const masthead = new Masthead();
 
 describe("Search events tests", function () {
   describe("Search user events", function () {
@@ -41,11 +39,8 @@ describe("Search events tests", function () {
       sidebarPage.goToRealmSettings();
       cy.getId("rs-realm-events-tab").click();
 
-      realmSettingsPage
-        .toggleSwitch(realmSettingsPage.enableEvents)
-        .save(realmSettingsPage.eventsUserSave);
+      realmSettingsPage.toggleSwitch(realmSettingsPage.enableEvents);
 
-      masthead.checkNotificationMessage("Successfully saved configuration");
       sidebarPage.goToEvents();
       userEventsTab.shouldDoSearchAndRemoveChips();
     });
@@ -82,9 +77,8 @@ describe("Search events tests", function () {
 
       realmSettingsPage
         .toggleSwitch(realmSettingsPage.enableEvents)
-        .save(realmSettingsPage.eventsUserSave);
+        .save(realmSettingsPage.modalConfirm);
 
-      masthead.checkNotificationMessage("Successfully saved configuration");
       sidebarPage.goToEvents();
       cy.getId("admin-events-tab").click();
       adminEventsTab.shouldDoAdminEventsSearchAndRemoveChips();
