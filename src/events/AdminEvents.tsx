@@ -194,7 +194,6 @@ export const AdminEvents = () => {
       (value) => value !== "" || (Array.isArray(value) && value.length > 0)
     );
 
-    console.log(newFilters);
     setActiveFilters(newFilters);
     setKey(key + 1);
   }
@@ -534,6 +533,13 @@ export const AdminEvents = () => {
     );
   };
 
+  const authRowsData = {
+    Realm: authEvent?.authDetails?.realmId,
+    Client: authEvent?.authDetails?.clientId,
+    User: authEvent?.authDetails?.userId,
+    "IP address": authEvent?.authDetails?.ipAddress,
+  };
+
   return (
     <>
       {authEvent && (
@@ -542,7 +548,7 @@ export const AdminEvents = () => {
             aria-label="authData"
             variant={TableVariant.compact}
             cells={[t("attribute"), t("value")]}
-            rows={Object.entries(authEvent.authDetails!)}
+            rows={Object.entries(authRowsData)}
           >
             <TableHeader />
             <TableBody />
