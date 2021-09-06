@@ -99,10 +99,10 @@ export const RSAForm = ({
       if (
         key === "config" &&
         component.config?.secretSize &&
-        component.config?.active &&
-        component.config?.algorithm &&
-        component.config?.privateKey &&
-        component.config?.certificate
+        component.config.active &&
+        component.config.algorithm &&
+        component.config.privateKey &&
+        component.config.certificate
       ) {
         form.setValue("config.secretSize", value.secretSize[0]);
 

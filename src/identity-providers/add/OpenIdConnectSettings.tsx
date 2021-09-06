@@ -167,7 +167,7 @@ export const OpenIdConnectSettings = () => {
             />
           }
           validated={discoveryResult?.error ? "error" : "default"}
-          helperTextInvalid={discoveryResult?.error?.toString()}
+          helperTextInvalid={discoveryResult?.error.toString()}
         >
           <JsonFileUpload
             id="kc-import-config"

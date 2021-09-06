@@ -92,7 +92,7 @@ export const AESGeneratedForm = ({
       if (
         key === "config" &&
         component.config?.secretSize &&
-        component.config?.active
+        component.config.active
       ) {
         form.setValue("config.secretSize", value.secretSize[0]);
 

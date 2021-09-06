@@ -92,7 +92,7 @@ export const ECDSAGeneratedForm = ({
       if (
         key === "config" &&
         component.config?.ecdsaEllipticCurveKey &&
-        component.config?.active
+        component.config.active
       ) {
         form.setValue("config.secretSize", value.ecdsaEllipticCurveKey[0]);
 

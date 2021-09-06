@@ -92,12 +92,12 @@ export const JavaKeystoreForm = ({
       if (
         key === "config" &&
         component.config?.secretSize &&
-        component.config?.active &&
-        component.config?.algorithm &&
-        component.config?.keystore &&
-        component.config?.keystorePassword &&
-        component.config?.keyAlias &&
-        component.config?.keyPassword
+        component.config.active &&
+        component.config.algorithm &&
+        component.config.keystore &&
+        component.config.keystorePassword &&
+        component.config.keyAlias &&
+        component.config.keyPassword
       ) {
         form.setValue("config.secretSize", value.secretSize[0]);
 

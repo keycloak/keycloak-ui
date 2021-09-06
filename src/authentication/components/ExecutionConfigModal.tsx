@@ -163,7 +163,7 @@ export const ExecutionConfigModal = ({
                 }
               />
             </FormGroup>
-            {configDescription?.properties?.map((property) => (
+            {configDescription.properties?.map((property) => (
               <FormGroup
                 key={property.name}
                 label={property.label}

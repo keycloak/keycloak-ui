@@ -50,7 +50,7 @@ export const UsersTabs = () => {
         const isLocked: boolean =
           isBruteForceProtected &&
           (await adminClient.attackDetection.findOne({ id: user.id! }))
-            ?.disabled;
+            .disabled;
         return { user, bruteForced: { isBruteForceProtected, isLocked } };
       }
       return { user: undefined };

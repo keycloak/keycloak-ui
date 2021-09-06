@@ -231,7 +231,7 @@ export const AddRoleMappingModal = ({
         <Button
           data-testid="assign"
           key="confirm"
-          isDisabled={selectedRows?.length === 0}
+          isDisabled={selectedRows.length === 0}
           variant="primary"
           onClick={() => {
             onAssign(selectedRows);

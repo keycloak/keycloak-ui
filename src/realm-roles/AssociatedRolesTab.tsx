@@ -177,7 +177,7 @@ export const AssociatedRolesTab = ({
     useConfirmDialog({
       titleKey: t("roles:removeAssociatedRoles") + "?",
       messageKey: t("roles:removeAllAssociatedRolesConfirmDialog", {
-        name: parentRole?.name || t("createRole"),
+        name: parentRole.name || t("createRole"),
       }),
       continueButtonLabel: "common:remove",
       continueButtonVariant: ButtonVariant.danger,

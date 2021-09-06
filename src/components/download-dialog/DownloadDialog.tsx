@@ -46,7 +46,7 @@ export const DownloadDialog = ({
   const [openType, setOpenType] = useState(false);
 
   const selectedConfig = useMemo(
-    () => configFormats?.find((config) => config.id === selected) ?? null,
+    () => configFormats.find((config) => config.id === selected) ?? null,
     [selected]
   );
 

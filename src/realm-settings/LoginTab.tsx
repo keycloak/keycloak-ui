@@ -41,7 +41,7 @@ export const RealmSettingsLoginTab = ({
               name="registrationAllowed"
               label={t("common:on")}
               labelOff={t("common:off")}
-              isChecked={realm?.registrationAllowed}
+              isChecked={realm.registrationAllowed}
               onChange={(value) => {
                 save({ ...realm, registrationAllowed: value });
               }}
@@ -65,7 +65,7 @@ export const RealmSettingsLoginTab = ({
               name="resetPasswordAllowed"
               label={t("common:on")}
               labelOff={t("common:off")}
-              isChecked={realm?.resetPasswordAllowed}
+              isChecked={realm.resetPasswordAllowed}
               onChange={(value) => {
                 save({ ...realm, resetPasswordAllowed: value });
               }}
@@ -89,7 +89,7 @@ export const RealmSettingsLoginTab = ({
               name="rememberMe"
               label={t("common:on")}
               labelOff={t("common:off")}
-              isChecked={realm?.rememberMe}
+              isChecked={realm.rememberMe}
               onChange={(value) => {
                 save({ ...realm, rememberMe: value });
               }}
@@ -117,7 +117,7 @@ export const RealmSettingsLoginTab = ({
               name="registrationEmailAsUsername"
               label={t("common:on")}
               labelOff={t("common:off")}
-              isChecked={realm?.registrationEmailAsUsername}
+              isChecked={realm.registrationEmailAsUsername}
               onChange={(value) => {
                 save({ ...realm, registrationEmailAsUsername: value });
               }}
@@ -141,7 +141,7 @@ export const RealmSettingsLoginTab = ({
               name="loginWithEmailAllowed"
               label={t("common:on")}
               labelOff={t("common:off")}
-              isChecked={realm?.loginWithEmailAllowed}
+              isChecked={realm.loginWithEmailAllowed}
               onChange={(value) => {
                 save({ ...realm, loginWithEmailAllowed: value });
               }}
@@ -166,16 +166,15 @@ export const RealmSettingsLoginTab = ({
               labelOff={t("common:off")}
               name="duplicateEmailsAllowed"
               isChecked={
-                realm?.duplicateEmailsAllowed &&
-                !realm?.loginWithEmailAllowed &&
-                !realm?.registrationEmailAsUsername
+                realm.duplicateEmailsAllowed &&
+                !realm.loginWithEmailAllowed &&
+                !realm.registrationEmailAsUsername
               }
               onChange={(value) => {
                 save({ ...realm, duplicateEmailsAllowed: value });
               }}
               isDisabled={
-                realm?.loginWithEmailAllowed ||
-                realm?.registrationEmailAsUsername
+                realm.loginWithEmailAllowed || realm.registrationEmailAsUsername
               }
             />
           </FormGroup>
@@ -197,7 +196,7 @@ export const RealmSettingsLoginTab = ({
               name="verifyEmail"
               label={t("common:on")}
               labelOff={t("common:off")}
-              isChecked={realm?.verifyEmail}
+              isChecked={realm.verifyEmail}
               onChange={(value) => {
                 save({ ...realm, verifyEmail: value });
               }}

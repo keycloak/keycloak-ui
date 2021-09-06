@@ -94,8 +94,8 @@ export const HMACGeneratedForm = ({
       if (
         key === "config" &&
         component.config?.secretSize &&
-        component.config?.active &&
-        component.config?.algorithm
+        component.config.active &&
+        component.config.algorithm
       ) {
         form.setValue("config.secretSize", value.secretSize[0]);
 

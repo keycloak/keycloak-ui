@@ -72,7 +72,7 @@ export const KeysListTab = ({ realmComponents }: KeysListTabProps) => {
 
     const activeKeysCopy = keys!.filter((i) => i.status === "ACTIVE");
 
-    return activeKeysCopy?.map((key) => {
+    return activeKeysCopy.map((key) => {
       const provider = realmComponents.find(
         (component: ComponentRepresentation) => component.id === key.providerId
       );
@@ -88,7 +88,7 @@ export const KeysListTab = ({ realmComponents }: KeysListTabProps) => {
 
     const passiveKeys = keys!.filter((i) => i.status === "PASSIVE");
 
-    return passiveKeys?.map((key) => {
+    return passiveKeys.map((key) => {
       const provider = realmComponents.find(
         (component: ComponentRepresentation) => component.id === key.providerId
       );
@@ -104,7 +104,7 @@ export const KeysListTab = ({ realmComponents }: KeysListTabProps) => {
 
     const disabledKeys = keys!.filter((i) => i.status === "DISABLED");
 
-    return disabledKeys?.map((key) => {
+    return disabledKeys.map((key) => {
       const provider = realmComponents!.find(
         (component: ComponentRepresentation) => component.id === key.providerId
       );

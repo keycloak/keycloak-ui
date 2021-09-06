@@ -123,7 +123,7 @@ export class ExecutionList {
       if (newLocation.level! > 0) {
         const parent = this.getParentNodes(newLocation.level);
         return new LevelChange(
-          parent?.executionList?.length || 0,
+          parent?.executionList.length || 0,
           newLocation.index!,
           parent
         );

@@ -167,7 +167,7 @@ export const AssociatedRolesModal = (props: AssociatedRolesModalProps) => {
           key="add"
           data-testid="add-associated-roles-button"
           variant="primary"
-          isDisabled={!selectedRows?.length}
+          isDisabled={!selectedRows.length}
           onClick={() => {
             props.toggleDialog();
             props.onConfirm(selectedRows);

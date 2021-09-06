@@ -56,10 +56,9 @@ export const LdapMapperDetails = () => {
           const fetchedMapper = await adminClient.components.findOne({
             id: mapperId,
           });
-          if (fetchedMapper) {
-            setMapping(fetchedMapper);
-            setupForm(fetchedMapper);
-          }
+
+          setMapping(fetchedMapper);
+          setupForm(fetchedMapper);
         }
       }
     })();
@@ -270,7 +269,7 @@ export const LdapMapperDetails = () => {
                 mapping.providerId! === "user-attribute-ldap-mapper") && (
                 <LdapMapperUserAttribute
                   form={form}
-                  mapperType={mapping?.providerId}
+                  mapperType={mapping.providerId}
                 />
               )
             : ""}

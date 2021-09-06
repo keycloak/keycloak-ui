@@ -176,7 +176,7 @@ export const ClientSettings = ({ save, reset }: ClientSettingsProps) => {
                 {/* The type for the children of Select are incorrect, so we need a fragment here. */}
                 {/* eslint-disable-next-line react/jsx-no-useless-fragment */}
                 <>
-                  {loginThemes?.map((theme) => (
+                  {loginThemes.map((theme) => (
                     <SelectOption
                       selected={theme.name === value}
                       key={theme.name}

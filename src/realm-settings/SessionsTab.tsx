@@ -41,9 +41,7 @@ export const RealmSettingsSessionsTab = ({
   });
 
   const reset = () => {
-    if (realm) {
-      resetForm(realm);
-    }
+    resetForm(realm);
   };
 
   return (

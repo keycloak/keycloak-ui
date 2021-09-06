@@ -161,7 +161,7 @@ export const FlowDetails = () => {
         ]}
       />
       <PageSection variant="light">
-        {executionList?.expandableList?.length && (
+        {executionList?.expandableList.length && (
           <Toolbar id="toolbar">
             <ToolbarContent>
               <ToggleGroup>
@@ -183,7 +183,7 @@ export const FlowDetails = () => {
             </ToolbarContent>
           </Toolbar>
         )}
-        {tableView && executionList?.expandableList?.length && (
+        {tableView && executionList?.expandableList.length && (
           <>
             <DataList
               aria-label="flows"

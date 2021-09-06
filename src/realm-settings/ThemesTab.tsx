@@ -45,13 +45,13 @@ export const RealmSettingsThemesTab = ({
   const watchSupportedLocales = useWatch({
     control,
     name: "supportedLocales",
-    defaultValue: themeTypes?.account![0].locales,
+    defaultValue: themeTypes.account![0].locales,
   });
 
   const internationalizationEnabled = useWatch({
     control,
     name: "internationalizationEnabled",
-    defaultValue: realm?.internationalizationEnabled,
+    defaultValue: realm.internationalizationEnabled,
   });
 
   return (
@@ -269,7 +269,7 @@ export const RealmSettingsThemesTab = ({
               <Controller
                 name="supportedLocales"
                 control={control}
-                defaultValue={themeTypes?.account![0].locales}
+                defaultValue={themeTypes.account![0].locales}
                 render={({ value, onChange }) => (
                   <Select
                     toggleId="kc-t-supported-locales"
@@ -297,7 +297,7 @@ export const RealmSettingsThemesTab = ({
                     isOpen={supportedLocalesOpen}
                     placeholderText={"Select locales"}
                   >
-                    {themeTypes?.login![0].locales.map(
+                    {themeTypes.login![0].locales.map(
                       (locale: string, idx: number) => (
                         <SelectOption
                           selected={true}
