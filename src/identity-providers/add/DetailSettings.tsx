@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import { useHistory, useParams } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { Controller, FormProvider, useForm } from "react-hook-form";
@@ -35,6 +35,7 @@ import { OIDCAuthentication } from "./OIDCAuthentication";
 import { ReqAuthnConstraints } from "./ReqAuthnConstraintsSettings";
 import { KeycloakDataTable } from "../../components/table-toolbar/KeycloakDataTable";
 import { ListEmptyState } from "../../components/list-empty-state/ListEmptyState";
+import type IdentityProviderMapperRepresentation from "@keycloak/keycloak-admin-client/lib/defs/identityProviderMapperRepresentation";
 
 type HeaderProps = {
   onChange: (value: boolean) => void;
@@ -43,12 +44,11 @@ type HeaderProps = {
   toggleDeleteDialog: () => void;
 };
 
-type IdPWithMapperAttributes = {
+type IdPWithMapperAttributes = IdentityProviderMapperRepresentation & {
   name: string;
-  category: string;
-  helpText: string;
-  id: string;
-  identityProviderMapper: string;
+  category?: string;
+  helpText?: string;
+  type: string;
 };
 
 const Header = ({ onChange, value, save, toggleDeleteDialog }: HeaderProps) => {
@@ -96,7 +96,6 @@ export const DetailSettings = () => {
   const { providerId, alias } =
     useParams<{ providerId: string; alias: string }>();
 
-  const [provider, setProvider] = useState<IdentityProviderRepresentation>();
   const form = useForm<IdentityProviderRepresentation>();
   const { handleSubmit, setValue, getValues, reset } = form;
 
@@ -110,9 +109,8 @@ export const DetailSettings = () => {
       Promise.resolve([
         adminClient.identityProviders.findOne({ alias: alias }),
       ]),
-    ([fetchedProvider]) => {
+    async ([fetchedProvider]) => {
       if (fetchedProvider) {
-        setProvider({ ...provider });
         Object.entries(fetchedProvider).map(([key, value]) =>
           setValue(key, value)
         );
@@ -128,7 +126,6 @@ export const DetailSettings = () => {
         { alias },
         { ...p, alias, providerId }
       );
-      setProvider(p);
       addAlert(t("updateSuccess"), AlertVariant.success);
     } catch (error) {
       addError("identity-providers:updateError", error);
@@ -166,13 +163,15 @@ export const DetailSettings = () => {
       const provider = Object.values(loaderMapperTypes).filter(
         (loaderMapperType) =>
           loaderMapper.identityProviderMapper! === loaderMapperType.id!
-      ) as unknown as IdPWithMapperAttributes[];
+      );
 
-      return {
+      const result: IdPWithMapperAttributes = {
         ...provider[0],
-        name: loaderMapper.name,
-        type: provider[0]?.name,
-      } as IdPWithMapperAttributes;
+        name: loaderMapper.name!,
+        type: provider[0].name!,
+      };
+
+      return result;
     });
 
     return components;
