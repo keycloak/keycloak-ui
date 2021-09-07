@@ -533,12 +533,12 @@ export const AdminEvents = () => {
     );
   };
 
-  const authData = {
-    [t("realm")]: authEvent?.authDetails?.realmId,
-    [t("client")]: authEvent?.authDetails?.clientId,
-    [t("user")]: authEvent?.authDetails?.userId,
-    [t("ipAddress")]: authEvent?.authDetails?.ipAddress,
-  };
+  const rows = [
+    [t("realm"), authEvent?.authDetails?.realmId],
+    [t("client"), authEvent?.authDetails?.clientId],
+    [t("user"), authEvent?.authDetails?.userId],
+    [t("ipAddress"), authEvent?.authDetails?.ipAddress],
+  ];
 
   return (
     <>
@@ -549,7 +549,7 @@ export const AdminEvents = () => {
             data-testid="auth-dialog"
             variant={TableVariant.compact}
             cells={[t("attribute"), t("value")]}
-            rows={Object.entries(authData)}
+            rows={rows}
           >
             <TableHeader />
             <TableBody />
