@@ -24,9 +24,8 @@ export const RealmContext = React.createContext<RealmContextType | undefined>(
 
 export const RealmContextProvider: FunctionComponent = ({ children }) => {
   const routeMatch = useRouteMatch<DashboardParams>(DashboardRoute.path);
-  const [realm, setRealm] = useState(
-    routeMatch?.params.realm ?? environment.loginRealm
-  );
+  const realmParam = routeMatch?.params.realm;
+  const [realm, setRealm] = useState(realmParam ?? environment.loginRealm);
   const [realms, setRealms] = useState<RealmRepresentation[]>([]);
   const adminClient = useAdminClient();
   const recentUsed = new RecentUsed();
@@ -42,6 +41,12 @@ export const RealmContextProvider: FunctionComponent = ({ children }) => {
     []
   );
 
+  // Keep realm value in sync when it changes in the URL.
+  useEffect(() => {
+    if (realmParam) setRealm(realmParam);
+  }, [realmParam]);
+
+  // Configure admin client to use selected realm when it changes.
   useEffect(() => adminClient.setConfig({ realmName: realm }), [realm]);
 
   const set = (realm: string) => {
