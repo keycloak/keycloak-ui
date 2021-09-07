@@ -111,5 +111,9 @@ describe("Events tests", function () {
     it("Check auth dialog opens and is not empty", () => {
       adminEventsTab.shouldCheckAuthDialogOpensAndIsNotEmpty();
     });
+
+    it("Check representation dialog opens and is not empty", () => {
+      adminEventsTab.shouldCheckRepDialogOpensAndIsNotEmpty();
+    });
   });
 });
