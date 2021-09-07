@@ -24,6 +24,7 @@ import {
   TableHeader,
   TableVariant,
 } from "@patternfly/react-table";
+import { CodeEditor, Language } from "@patternfly/react-code-editor";
 import type AdminEventRepresentation from "@keycloak/keycloak-admin-client/lib/defs/adminEventRepresentation";
 import moment from "moment";
 import React, { FunctionComponent, useState } from "react";
@@ -562,7 +563,14 @@ export const AdminEvents = () => {
           data-testid="representation-dialog"
           onClose={() => setRepresentationEvent(undefined)}
         >
-          some json from the changed values
+          <CodeEditor
+            isLineNumbersVisible={true}
+            isReadOnly={true}
+            isLanguageLabelVisible
+            code="Some example content"
+            language={Language.json}
+            height="125px"
+          />
         </DisplayDialog>
       )}
       <KeycloakDataTable
