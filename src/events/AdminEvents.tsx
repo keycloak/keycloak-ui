@@ -534,10 +534,10 @@ export const AdminEvents = () => {
   };
 
   const authData = {
-    Realm: authEvent?.authDetails?.realmId,
-    Client: authEvent?.authDetails?.clientId,
-    User: authEvent?.authDetails?.userId,
-    "IP address": authEvent?.authDetails?.ipAddress,
+    [t("realm")]: authEvent?.authDetails?.realmId,
+    [t("client")]: authEvent?.authDetails?.clientId,
+    [t("user")]: authEvent?.authDetails?.userId,
+    [t("ipAddress")]: authEvent?.authDetails?.ipAddress,
   };
 
   return (
