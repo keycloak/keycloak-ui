@@ -43,6 +43,14 @@ type HeaderProps = {
   toggleDeleteDialog: () => void;
 };
 
+type IdPWithMapperAttributes = {
+  name: string;
+  category: string;
+  helpText: string;
+  id: string;
+  identityProviderMapper: string;
+};
+
 const Header = ({ onChange, value, save, toggleDeleteDialog }: HeaderProps) => {
   const { t } = useTranslation("identity-providers");
   const { providerId, alias } =
@@ -99,10 +107,8 @@ export const DetailSettings = () => {
 
   useFetch(
     () =>
-      Promise.all([
+      Promise.resolve([
         adminClient.identityProviders.findOne({ alias: alias }),
-        adminClient.identityProviders.findMappers({ alias: alias }),
-        adminClient.identityProviders.findMapperTypes({ alias: alias }),
       ]),
     ([fetchedProvider]) => {
       if (fetchedProvider) {
@@ -129,14 +135,6 @@ export const DetailSettings = () => {
     }
   };
 
-  type IdPWithMapperAttributes = {
-    name: string;
-    category: string;
-    helpText: string;
-    id: string;
-    identityProviderMapper: string;
-  };
-
   const [toggleDeleteDialog, DeleteConfirm] = useConfirmDialog({
     titleKey: "identity-providers:deleteProvider",
     messageKey: t("identity-providers:deleteConfirm", { provider: providerId }),
@@ -159,18 +157,15 @@ export const DetailSettings = () => {
   const isSAML = providerId.includes("saml");
 
   const loader = async () => {
-    const loaderMappers = await adminClient.identityProviders.findMappers({
-      alias,
-    });
+    const [loaderMappers, loaderMapperTypes] = await Promise.all([
+      adminClient.identityProviders.findMappers({ alias }),
+      adminClient.identityProviders.findMapperTypes({ alias }),
+    ]);
 
-    const loaderMapperTypes =
-      await adminClient.identityProviders.findMapperTypes({ alias });
-
-    const components = loaderMappers?.map((loaderMapper) => {
+    const components = loaderMappers.map((loaderMapper) => {
       const provider = Object.values(loaderMapperTypes).filter(
-        (loaderMapperType) => {
-          return loaderMapper.identityProviderMapper! === loaderMapperType.id!;
-        }
+        (loaderMapperType) =>
+          loaderMapper.identityProviderMapper! === loaderMapperType.id!
       ) as unknown as IdPWithMapperAttributes[];
 
       return {
