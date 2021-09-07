@@ -46,8 +46,16 @@ export default {
     notVerified: "Not verified",
     requiredUserActions: "Required user actions",
     addUser: "Add user",
+    impersonate: "Impersonate",
+    impersonateConfirm: "Impersonate user?",
+    impersonateConfirmDialog:
+      "Are you sure you want to log in as this user? If this user is in the same realm with you, your current login session will be logged out before you log in as this user.",
+    impersonateError: "Could not impersonate the user: {{error}}",
+
     deleteUser: "Delete user",
     deleteConfirm: "Delete user?",
+    deleteConfirmCurrentUser:
+      "Are you sure you want to permanently delete this user",
     deleteConfirmDialog:
       "Are you sure you want to permanently delete {{count}} selected user",
     deleteConfirmDialog_plural:
@@ -98,6 +106,7 @@ export default {
       "Are you sure you want to revoke all granted client scopes for {{clientId}}?",
     deleteGrantsSuccess: "Grants successfully revoked.",
     deleteGrantsError: "Error deleting grants.",
+    roleMapping: "Role mapping",
     unlockAllUsers: "Unlock all users",
     unlockUsersConfirm:
       "All the users that are temporarily locked will be unlocked.",
