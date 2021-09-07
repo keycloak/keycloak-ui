@@ -1,6 +1,6 @@
 import type RealmRepresentation from "@keycloak/keycloak-admin-client/lib/defs/realmRepresentation";
 import _ from "lodash";
-import React, { FunctionComponent, useEffect, useState } from "react";
+import React, { FunctionComponent, useEffect, useMemo, useState } from "react";
 import { useRouteMatch } from "react-router-dom";
 import { RecentUsed } from "../../components/realm-selector/recent-used";
 import {
@@ -13,7 +13,6 @@ import { useAdminClient, useFetch } from "../auth/AdminClient";
 
 type RealmContextType = {
   realm: string;
-  setRealm: (realm: string) => void;
   realms: RealmRepresentation[];
   refresh: () => Promise<void>;
 };
@@ -25,7 +24,11 @@ export const RealmContext = React.createContext<RealmContextType | undefined>(
 export const RealmContextProvider: FunctionComponent = ({ children }) => {
   const routeMatch = useRouteMatch<DashboardParams>(DashboardRoute.path);
   const realmParam = routeMatch?.params.realm;
-  const [realm, setRealm] = useState(realmParam ?? environment.loginRealm);
+  const realm = useMemo(
+    () => realmParam ?? environment.loginRealm,
+    [realmParam]
+  );
+
   const [realms, setRealms] = useState<RealmRepresentation[]>([]);
   const adminClient = useAdminClient();
   const recentUsed = new RecentUsed();
@@ -41,24 +44,16 @@ export const RealmContextProvider: FunctionComponent = ({ children }) => {
     []
   );
 
-  // Keep realm value in sync when it changes in the URL.
-  useEffect(() => {
-    if (realmParam) setRealm(realmParam);
-  }, [realmParam]);
-
   // Configure admin client to use selected realm when it changes.
   useEffect(() => adminClient.setConfig({ realmName: realm }), [realm]);
 
-  const set = (realm: string) => {
-    recentUsed.setRecentUsed(realm);
-    setRealm(realm);
-  };
+  // Keep track of recently used realms when selected realm changes.
+  useEffect(() => recentUsed.setRecentUsed(realm), [realm]);
 
   return (
     <RealmContext.Provider
       value={{
         realm,
-        setRealm: set,
         realms,
         refresh: async () => {
           //this is needed otherwise the realm find function will not return
