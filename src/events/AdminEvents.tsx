@@ -533,7 +533,7 @@ export const AdminEvents = () => {
     );
   };
 
-  const authRowsData = {
+  const authData = {
     Realm: authEvent?.authDetails?.realmId,
     Client: authEvent?.authDetails?.clientId,
     User: authEvent?.authDetails?.userId,
@@ -546,9 +546,10 @@ export const AdminEvents = () => {
         <DisplayDialog titleKey="auth" onClose={() => setAuthEvent(undefined)}>
           <Table
             aria-label="authData"
+            data-testid="auth-dialog"
             variant={TableVariant.compact}
             cells={[t("attribute"), t("value")]}
-            rows={Object.entries(authRowsData)}
+            rows={Object.entries(authData)}
           >
             <TableHeader />
             <TableBody />
@@ -558,6 +559,7 @@ export const AdminEvents = () => {
       {representationEvent && (
         <DisplayDialog
           titleKey="representation"
+          data-testid="representation-dialog"
           onClose={() => setRepresentationEvent(undefined)}
         >
           some json from the changed values

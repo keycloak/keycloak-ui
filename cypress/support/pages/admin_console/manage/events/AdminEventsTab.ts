@@ -11,12 +11,17 @@ export default class AdminEventsTab {
   dateFromInputFld = "dateFrom-searchField";
   dateToInputFld = "dateTo-searchField";
   searchEventsBtn = "search-events-btn";
-
   operationTypesList = ".pf-c-form-control";
   operationTypesOption = ".pf-c-select__menu-item";
   operationTypesInputFld = ".pf-c-form-control.pf-c-select__toggle-typeahead";
   operationTypesBtn = ".pf-c-button.pf-c-select__toggle-button.pf-m-plain";
   adminEventsTabTitle = ".pf-c-title";
+  moreBtn = ".pf-c-dropdown__toggle.pf-m-plain";
+  moreDrpDwnItems = ".pf-c-dropdown__menu";
+  authDialogTitle = ".pf-c-modal-box__title-text";
+  authAttrDataRow = 'tbody > tr > [data-label="Attribute"]';
+  authValDataRow = 'tbody > tr > [data-label="Value"]';
+  authDialogClose = `[aria-label="Close"]`;
 
   shouldHaveFormFields() {
     cy.getId(this.searchAdminEventDrpDwnBtn).click();
@@ -62,5 +67,17 @@ export default class AdminEventsTab {
     cy.getId(this.resourcePathInputFld).type("events/test");
     cy.getId(this.searchEventsBtn).click();
     cy.get(this.adminEventsTabTitle).contains("No events logged");
+  }
+
+  shouldCheckAuthDialogOpensAndIsNotEmpty() {
+    cy.get(this.moreBtn).last().click();
+    cy.get(this.moreDrpDwnItems).contains("Auth").click();
+    cy.get(this.authDialogTitle).contains("Auth");
+    cy.get(this.authAttrDataRow).contains("Realm");
+    cy.get(this.authAttrDataRow).contains("Client");
+    cy.get(this.authAttrDataRow).contains("User");
+    cy.get(this.authAttrDataRow).contains("IP address");
+    cy.get(this.authValDataRow).should("exist");
+    cy.get(this.authDialogClose).click();
   }
 }
