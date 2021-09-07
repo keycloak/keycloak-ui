@@ -160,15 +160,15 @@ export const DetailSettings = () => {
     ]);
 
     const components = loaderMappers.map((loaderMapper) => {
-      const provider = Object.values(loaderMapperTypes).filter(
+      const mapperType = Object.values(loaderMapperTypes).find(
         (loaderMapperType) =>
           loaderMapper.identityProviderMapper! === loaderMapperType.id!
       );
 
       const result: IdPWithMapperAttributes = {
-        ...provider[0],
+        ...mapperType,
         name: loaderMapper.name!,
-        type: provider[0].name!,
+        type: mapperType?.name!,
       };
 
       return result;
