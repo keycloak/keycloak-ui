@@ -550,7 +550,7 @@ export const AdminEvents = () => {
   }
 
   const code = useMemo(
-    () => prettyPrintJSON(representationEvent?.representation!),
+    () => prettyPrintJSON(representationEvent?.representation ? prettyPrintJSON(representationEvent?.representation) : undefined),
     [representationEvent?.representation]
   );
 
