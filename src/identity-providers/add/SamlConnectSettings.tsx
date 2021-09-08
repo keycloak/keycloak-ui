@@ -116,7 +116,6 @@ export const SamlConnectSettings = () => {
             forID="kc-service-provider-entity-id"
           />
         }
-        // isRequired
       >
         <TextInput
           type="text"
@@ -161,7 +160,6 @@ export const SamlConnectSettings = () => {
               forID="kc-saml-entity-descriptor"
             />
           }
-          // isRequired
         >
           <TextInput
             type="text"
@@ -191,7 +189,7 @@ export const SamlConnectSettings = () => {
             />
           }
           validated={discoveryResult?.error ? "error" : "default"}
-          helperTextInvalid={discoveryResult?.error?.toString()}
+          helperTextInvalid={discoveryResult?.error.toString()}
         >
           <JsonFileUpload
             id="kc-import-config"
