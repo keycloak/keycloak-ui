@@ -81,7 +81,7 @@ export const AttributesForm = ({
   }, [fields]);
 
   return (
-    <FormAccess role="manage-realm" onSubmit={handleSubmit(save!)}>
+    <FormAccess role="manage-realm" onSubmit={save ? handleSubmit(save) : undefined}>
       <TableComposable
         className="kc-attributes__table"
         aria-label="Role attribute keys and values"
