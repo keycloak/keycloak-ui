@@ -245,7 +245,7 @@ export const AddMapper = () => {
                 aria-label={t("syncMode")}
                 isOpen={mapperTypeOpen}
               >
-                {Object.values(mapperTypes)?.map((option) => (
+                {Object.values(mapperTypes).map((option) => (
                   <SelectOption
                     selected={option === value}
                     datatest-id={option.id}

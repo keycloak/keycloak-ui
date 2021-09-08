@@ -74,29 +74,27 @@ export const SamlConnectSettings = () => {
   }, [discovering]);
 
   const fileUpload = async (obj: object) => {
-    if (obj) {
-      const formData = new FormData();
-      formData.append("providerId", id);
-      formData.append("file", new Blob([JSON.stringify(obj)]));
+    const formData = new FormData();
+    formData.append("providerId", id);
+    formData.append("file", new Blob([JSON.stringify(obj)]));
 
-      try {
-        const response = await fetch(
-          `${getBaseUrl(
-            adminClient
-          )}admin/realms/${realm}/identity-provider/import-config`,
-          {
-            method: "POST",
-            body: formData,
-            headers: {
-              Authorization: `bearer ${await adminClient.getAccessToken()}`,
-            },
-          }
-        );
-        const result = await response.json();
-        setupForm(result);
-      } catch (error: any) {
-        setDiscoveryResult({ error });
-      }
+    try {
+      const response = await fetch(
+        `${getBaseUrl(
+          adminClient
+        )}admin/realms/${realm}/identity-provider/import-config`,
+        {
+          method: "POST",
+          body: formData,
+          headers: {
+            Authorization: `bearer ${await adminClient.getAccessToken()}`,
+          },
+        }
+      );
+      const result = await response.json();
+      setupForm(result);
+    } catch (error: any) {
+      setDiscoveryResult({ error });
     }
   };
 

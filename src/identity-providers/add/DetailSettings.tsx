@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import { Link, useHistory, useParams } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { Controller, FormProvider, useForm } from "react-hook-form";
@@ -37,7 +37,7 @@ import { ReqAuthnConstraints } from "./ReqAuthnConstraintsSettings";
 import { KeycloakDataTable } from "../../components/table-toolbar/KeycloakDataTable";
 import { ListEmptyState } from "../../components/list-empty-state/ListEmptyState";
 import type IdentityProviderMapperRepresentation from "@keycloak/keycloak-admin-client/lib/defs/identityProviderMapperRepresentation";
-import { toAddIdentityProviderMapperTab } from "../routes/AddMapper";
+import { toIdentityProviderAddMapper } from "../routes/AddMapper";
 import { toUpperCase } from "../../util";
 
 type HeaderProps = {
@@ -276,7 +276,7 @@ export const DetailSettings = () => {
                     primaryActionText={t("identity-providers:addMapper")}
                     onPrimaryAction={() =>
                       history.push(
-                        toAddIdentityProviderMapperTab({
+                        toIdentityProviderAddMapper({
                           realm,
                           alias: alias!,
                           providerId: providerId,

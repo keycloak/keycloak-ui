@@ -7,10 +7,8 @@ export type IdentityProviderTab = "mappers";
 
 export type AddIdentityProviderMapperTabParams = {
   realm: string;
-  id?: string;
-  tab?: IdentityProviderTab;
-  alias?: string;
-  providerId?: string;
+  alias: string;
+  providerId: string;
 };
 
 export const IdentityProviderAddMapperRoute: RouteDef = {
@@ -19,7 +17,7 @@ export const IdentityProviderAddMapperRoute: RouteDef = {
   access: "manage-identity-providers",
 };
 
-export const toAddIdentityProviderMapperTab = (
+export const toIdentityProviderAddMapper = (
   params: AddIdentityProviderMapperTabParams
 ): LocationDescriptorObject => ({
   pathname: generatePath(IdentityProviderAddMapperRoute.path, params),
