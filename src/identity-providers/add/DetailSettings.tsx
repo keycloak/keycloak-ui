@@ -97,7 +97,7 @@ export const DetailSettings = () => {
     useParams<{ providerId: string; alias: string }>();
 
   const form = useForm<IdentityProviderRepresentation>();
-  const { handleSubmit, setValue, getValues, reset } = form;
+  const { handleSubmit, getValues, reset } = form;
 
   const adminClient = useAdminClient();
   const { addAlert, addError } = useAlerts();
@@ -106,9 +106,8 @@ export const DetailSettings = () => {
 
   useFetch(
     () => adminClient.identityProviders.findOne({ alias: alias }),
-    (provider) => {
-      Object.entries(provider).forEach(([key, value]) => setValue(key, value));
-    },
+    (fetchedProvider) => {
+      reset(fetchedProvider);
     },
     []
   );
