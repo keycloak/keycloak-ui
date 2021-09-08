@@ -63,6 +63,7 @@ export default {
     notBefore: "Revoke any tokens issued before this date for this client.",
     notBeforeIntro:
       "In order to successfully push a revocation policy to the client, you need to set an Admin URL under the <1>Settings</1> tab for this client first",
+    notBeforeTooltip: "The admin URL should be set in the Settings tab first.",
     nodeReRegistrationTimeout:
       "Interval to specify max time for registered clients cluster nodes to re-register. If cluster node will not send re-registration request to Keycloak within this time, it will be unregistered from Keycloak",
     fineGrainOpenIdConnectConfiguration:
