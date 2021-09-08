@@ -293,7 +293,7 @@ export const DetailSettings = () => {
                   <ToolbarItem>
                     <Link
                       // @ts-ignore
-                      to={toAddIdentityProviderMapperTab({
+                      to={toIdentityProviderAddMapper({
                         realm,
                         alias: alias!,
                         providerId: providerId,
