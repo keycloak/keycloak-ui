@@ -570,8 +570,8 @@ export const AdminEvents = () => {
           onClose={() => setRepresentationEvent(undefined)}
         >
           <CodeEditor
-            isLineNumbersVisible={true}
-            isReadOnly={true}
+            isLineNumbersVisible
+            isReadOnly
             code={representation}
             language={Language.json}
             height="125px"
