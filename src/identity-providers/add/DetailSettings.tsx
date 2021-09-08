@@ -105,16 +105,10 @@ export const DetailSettings = () => {
   const { realm } = useRealm();
 
   useFetch(
-    () =>
-      Promise.resolve([
-        adminClient.identityProviders.findOne({ alias: alias }),
-      ]),
-    async ([fetchedProvider]) => {
-      if (fetchedProvider) {
-        Object.entries(fetchedProvider).map(([key, value]) =>
-          setValue(key, value)
-        );
-      }
+    () => adminClient.identityProviders.findOne({ alias: alias }),
+    (provider) => {
+      Object.entries(provider).forEach(([key, value]) => setValue(key, value));
+    },
     },
     []
   );
