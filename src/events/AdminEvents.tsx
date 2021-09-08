@@ -541,6 +541,12 @@ export const AdminEvents = () => {
     [t("ipAddress"), authEvent?.authDetails?.ipAddress],
   ];
 
+  const representation = `{
+    "clientId": "dba5bf41-8a5c-465a-a41a-3f7ef97d9f34",
+    "description": "It has been changed three weeks",
+    "enabled": false
+  }`;
+
   return (
     <>
       {authEvent && (
@@ -566,8 +572,7 @@ export const AdminEvents = () => {
           <CodeEditor
             isLineNumbersVisible={true}
             isReadOnly={true}
-            isLanguageLabelVisible
-            code="Some example content"
+            code={representation}
             language={Language.json}
             height="125px"
           />
