@@ -255,7 +255,6 @@ export const RealmSettingsTabs = ({
               <RealmSettingsThemesTab
                 save={save}
                 reset={() => resetForm(realm)}
-                realm={realm}
               />
             </Tab>
             <Tab
