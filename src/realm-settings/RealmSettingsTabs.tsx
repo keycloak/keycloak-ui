@@ -356,7 +356,7 @@ export const RealmSettingsTabs = ({
                 </TabTitleText>
               }
               data-testid="rs-clientPolicies-tab"
-              aria-label="client policies tab"
+              aria-label={t("clientPoliciesTab")}
             >
               <Tabs
                 activeKey={activeTab}
@@ -366,7 +366,7 @@ export const RealmSettingsTabs = ({
                   id="profiles"
                   eventKey={0}
                   data-testid="rs-profiles-clientPolicies-tab"
-                  aria-label="profiles subtab"
+                  aria-label={t("clientProfilesSubTab")}
                   title={
                     <TabTitleText>
                       {t("profiles")}
@@ -387,7 +387,7 @@ export const RealmSettingsTabs = ({
                 <Tab
                   id="policies"
                   data-testid="rs-policies-clientPolicies-tab"
-                  aria-label="policies subtab"
+                  aria-label={t("clientPoliciesSubTab")}
                   eventKey={1}
                   title={
                     <TabTitleText>

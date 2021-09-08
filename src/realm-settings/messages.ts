@@ -199,6 +199,9 @@ export default {
     clientPoliciesPoliciesHelpText:
       "Client Policy allows to bind client profiles with various conditions to specify when exactly is enforced behavior specified by executors of the particular client profile.",
     clientPoliciesPolicies: "Client Policies Policies",
+    clientPoliciesTab: "Client policies tab",
+    clientProfilesSubTab: "Client profiles subtab",
+    clientPoliciesSubTab: "Client policies subtab",
     tokens: "Tokens",
     key: "Key",
     value: "Value",
