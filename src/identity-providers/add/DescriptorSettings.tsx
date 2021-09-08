@@ -101,6 +101,7 @@ const Fields = ({ readOnly }: DescriptorSettingsProps) => {
           type="text"
           id="single-logout-service-url"
           name="config.singleLogoutServiceUrl"
+          ref={register}
           isReadOnly={readOnly}
         />
       </FormGroup>
@@ -375,6 +376,7 @@ const Fields = ({ readOnly }: DescriptorSettingsProps) => {
           type="text"
           id="allowedClockSkew"
           name="config.allowedClockSkew"
+          ref={register}
           isReadOnly={readOnly}
         />
       </FormGroup>
