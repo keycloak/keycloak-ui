@@ -370,13 +370,15 @@ export const RealmSettingsTabs = ({
                   title={
                     <TabTitleText>
                       {t("profiles")}
-                      <HelpItem
-                        helpText={t("clientPoliciesProfilesHelpText")}
-                        forLabel={t("clientPoliciesProfiles")}
-                        forID={t(`common:helpLabel`, {
-                          label: t("clientPoliciesProfiles"),
-                        })}
-                      />
+                      <span className="kc-help-text">
+                        <HelpItem
+                          helpText={t("clientPoliciesProfilesHelpText")}
+                          forLabel={t("clientPoliciesProfiles")}
+                          forID={t(`common:helpLabel`, {
+                            label: t("clientPoliciesProfiles"),
+                          })}
+                        />
+                      </span>
                     </TabTitleText>
                   }
                 >
@@ -390,13 +392,15 @@ export const RealmSettingsTabs = ({
                   title={
                     <TabTitleText>
                       {t("policies")}
-                      <HelpItem
-                        helpText={t("clientPoliciesPoliciesHelpText")}
-                        forLabel={t("clientPoliciesPolicies")}
-                        forID={t(`common:helpLabel`, {
-                          label: t("clientPoliciesPolicies"),
-                        })}
-                      />
+                      <span className="kc-help-text">
+                        <HelpItem
+                          helpText={t("clientPoliciesPoliciesHelpText")}
+                          forLabel={t("clientPoliciesPolicies")}
+                          forID={t(`common:helpLabel`, {
+                            label: t("clientPoliciesPolicies"),
+                          })}
+                        />
+                      </span>
                     </TabTitleText>
                   }
                 >
