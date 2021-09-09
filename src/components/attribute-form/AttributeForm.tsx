@@ -34,7 +34,6 @@ export type AttributesFormProps = {
     ) => void;
     remove: (index?: number | number[] | undefined) => void;
   };
-  noSaveCancelButtons?: boolean;
   inConfig?: boolean;
 };
 
@@ -63,7 +62,6 @@ export const AttributesForm = ({
   array: { fields, append, remove },
   reset,
   save,
-  noSaveCancelButtons,
   inConfig,
 }: AttributesFormProps) => {
   const { t } = useTranslation("roles");
@@ -79,6 +77,8 @@ export const AttributesForm = ({
       append({ key: "", value: "" });
     }
   }, [fields]);
+
+  const noSaveCancelButtons = !save && !reset;
 
   return (
     <FormAccess

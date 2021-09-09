@@ -27,7 +27,7 @@ import {
 import { FormAccess } from "../../components/form-access/FormAccess";
 import { useAdminClient, useFetch } from "../../context/auth/AdminClient";
 import type IdentityProviderMapperRepresentation from "@keycloak/keycloak-admin-client/lib/defs/identityProviderMapperRepresentation";
-import type { AddIdentityProviderMapperTabParams } from "../routes/AddMapper";
+import type { IdentityProviderAddMapperParams } from "../routes/AddMapper";
 import _ from "lodash";
 import { AssociatedRolesModal } from "../../realm-roles/AssociatedRolesModal";
 import type { RoleRepresentation } from "../../model/role-model";
@@ -49,7 +49,7 @@ export const AddMapper = () => {
   const { realm } = useRealm();
   const adminClient = useAdminClient();
 
-  const { providerId, alias } = useParams<AddIdentityProviderMapperTabParams>();
+  const { providerId, alias } = useParams<IdentityProviderAddMapperParams>();
 
   const isSAMLorOIDC = providerId === "saml" || providerId === "oidc";
 
@@ -284,7 +284,6 @@ export const AddMapper = () => {
                 render={() => {
                   return (
                     <AttributesForm
-                      noSaveCancelButtons
                       form={form}
                       inConfig
                       array={{ fields, append, remove }}

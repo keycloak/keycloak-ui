@@ -16,7 +16,7 @@ export const IdentityProviderAddMapperRoute: RouteDef = {
 };
 
 export const toIdentityProviderAddMapper = (
-  params: AddIdentityProviderMapperTabParams
+  params: IdentityProviderAddMapperParams
 ): LocationDescriptorObject => ({
   pathname: generatePath(IdentityProviderAddMapperRoute.path, params),
 });
