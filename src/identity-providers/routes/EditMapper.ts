@@ -5,13 +5,11 @@ import { AddMapper } from "../add/AddMapper";
 
 export type IdentityProviderTab = "mappers";
 
-export type EditIdentityProviderMapperTabParams = {
+export type IdentityProviderEditMapperParams = {
   realm: string;
-  id?: string;
-  tab?: IdentityProviderTab;
-  alias?: string;
-  providerId?: string;
-  // editMode: string;
+  providerId: string;
+  alias: string;
+  id: string;
 };
 
 export const IdentityProviderEditMapperRoute: RouteDef = {
@@ -20,7 +18,7 @@ export const IdentityProviderEditMapperRoute: RouteDef = {
   access: "manage-identity-providers",
 };
 
-export const toEditIdentityProviderMapperTab = (
+export const toIdentityProviderEditMapper = (
   params: EditIdentityProviderMapperTabParams
 ): LocationDescriptorObject => ({
   pathname: generatePath(IdentityProviderEditMapperRoute.path, params),
