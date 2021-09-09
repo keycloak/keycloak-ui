@@ -7,8 +7,8 @@ export type IdentityProviderTab = "mappers";
 
 export type AddIdentityProviderMapperTabParams = {
   realm: string;
-  alias: string;
   providerId: string;
+  alias: string;
 };
 
 export const IdentityProviderAddMapperRoute: RouteDef = {
