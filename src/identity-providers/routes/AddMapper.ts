@@ -3,7 +3,7 @@ import { generatePath } from "react-router-dom";
 import type { RouteDef } from "../../route-config";
 import { AddMapper } from "../add/AddMapper";
 
-export type AddIdentityProviderMapperTabParams = {
+export type IdentityProviderAddMapperParams = {
   realm: string;
   providerId: string;
   alias: string;
