@@ -53,9 +53,8 @@ export const AddMapper = () => {
 
   const isSAMLorOIDC = providerId === "saml" || providerId === "oidc";
 
-  const [mapperTypes, setMapperTypes] = useState<
-    IdentityProviderMapperRepresentation[]
-  >([]);
+  const [mapperTypes, setMapperTypes] =
+    useState<Record<string, IdentityProviderMapperRepresentation>>();
   const [roles, setRoles] = useState<RoleRepresentation[]>([]);
 
   const [rolesModalOpen, setRolesModalOpen] = useState(false);
@@ -90,6 +89,7 @@ export const AddMapper = () => {
         await adminClient.identityProviders.findMapperTypes({
           alias: alias!,
         });
+
       const allRoles = await adminClient.roles.find();
       return { allMapperTypes, allRoles };
     },
@@ -227,16 +227,19 @@ export const AddMapper = () => {
                 direction="down"
                 onToggle={() => setMapperTypeOpen(!mapperTypeOpen)}
                 onSelect={(e, value) => {
-                  const theMapper = Object.values(mapperTypes).find(
-                    (item) =>
-                      item.name?.toLowerCase() ===
-                      value.toString().toLowerCase()
-                  );
+                  const theMapper =
+                    mapperTypes &&
+                    Object.values(mapperTypes).find(
+                      (item) =>
+                        item.name?.toLowerCase() ===
+                        value.toString().toLowerCase()
+                    );
 
                   onChange(theMapper?.id);
                   setMapperTypeOpen(false);
                 }}
                 selections={
+                  mapperTypes &&
                   Object.values(mapperTypes).find(
                     (item) => item.id?.toLowerCase() === value
                   )?.name
@@ -245,16 +248,17 @@ export const AddMapper = () => {
                 aria-label={t("syncMode")}
                 isOpen={mapperTypeOpen}
               >
-                {Object.values(mapperTypes).map((option) => (
-                  <SelectOption
-                    selected={option === value}
-                    datatest-id={option.id}
-                    key={option.name}
-                    value={option.name?.toUpperCase()}
-                  >
-                    {t(`mapperTypes.${_.camelCase(option.name)}`)}
-                  </SelectOption>
-                ))}
+                {mapperTypes &&
+                  Object.values(mapperTypes).map((option) => (
+                    <SelectOption
+                      selected={option === value}
+                      datatest-id={option.id}
+                      key={option.name}
+                      value={option.name?.toUpperCase()}
+                    >
+                      {t(`mapperTypes.${_.camelCase(option.name)}`)}
+                    </SelectOption>
+                  ))}
               </Select>
             )}
           />
