@@ -11,7 +11,6 @@ export default class AddMapperPage {
   private newMapperSaveButton = "new-mapper-save-button";
   private regexAttributeValuesSwitch = "regex-attribute-values-switch";
   private syncmodeSelectToggle = "#syncMode";
-  private syncmodeSelect = "syncmode-select";
   private attributesKeyInput = 'input[name="config.attributes[0].key"]';
   private attributesValueInput = 'input[name="config.attributes[0].value"]';
   private selectRoleButton = "select-role-button";
@@ -72,12 +71,9 @@ export default class AddMapperPage {
     const load = "/auth/admin/realms/master/roles";
     cy.intercept(load).as("load");
 
-    // cy.wait(["@load"]);
     cy.get(this.radio).eq(0).check();
 
     cy.getId(this.addAssociatedRolesModalButton).contains("Add").click();
-
-    // cy.wait(["@load"]);
 
     cy.getId(this.mapperRoleInput).should("have.value", "admin");
 
