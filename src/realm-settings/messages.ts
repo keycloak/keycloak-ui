@@ -202,6 +202,11 @@ export default {
     clientPoliciesTab: "Client policies tab",
     clientProfilesSubTab: "Client profiles subtab",
     clientPoliciesSubTab: "Client policies subtab",
+    profilesConfigType: "Configure via:",
+    profilesConfigTypes: {
+      fromView: "From view",
+      jsonEditor: "JSON editor",
+    },
     tokens: "Tokens",
     key: "Key",
     value: "Value",
