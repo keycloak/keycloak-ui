@@ -146,7 +146,7 @@ export const ProfilesTab = () => {
           },
           {
             name: "description",
-            displayKey: "description",
+            displayKey: t("clientProfileDescription"),
           },
         ]}
         emptyState={

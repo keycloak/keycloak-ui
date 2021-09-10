@@ -209,6 +209,7 @@ export default {
     },
     clientProfileSearch: "Search",
     clientProfileName: "Name",
+    clientProfileDescription: "Description",
     emptyClientProfiles: "No profiles",
     emptyClientProfilesInstructions:
       "There are no profiles, select 'Create client profile' to create a new client profile",
