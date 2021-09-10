@@ -207,6 +207,18 @@ export default {
       fromView: "From view",
       jsonEditor: "JSON editor",
     },
+    clientProfileSearch: "Search",
+    clientProfileName: "Name",
+    emptyClientProfiles: "No profiles",
+    emptyClientProfilesInstructions:
+      "There are no profiles, select 'Create client profile' to create a new client profile",
+    deleteClientProfileConfirmTitle: "Delete profile?",
+    deleteClientProfileConfirm:
+      "This action will permanently delete the profile custom-profile. This cannot be undone.",
+    deleteClientSuccess: "Client profile deleted",
+    deleteClientError: "Could not delete profile: {{error}}",
+    createClientProfile: "Create client profile",
+    global: "Global",
     tokens: "Tokens",
     key: "Key",
     value: "Value",
