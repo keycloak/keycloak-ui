@@ -53,34 +53,26 @@ describe("Identity provider test", () => {
       listingPage.itemExist(identityProviderName);
     });
 
-    it("should create facebook provider", () => {
-      createProviderPage.clickCreateDropdown().clickItem("facebook");
-
-      createProviderPage.fill("facebook", "123").clickAdd();
-
-      masthead.checkNotificationMessage(createSuccessMsg);
-    });
-
     it("should delete provider", () => {
       const modalUtils = new ModalUtils();
       listingPage.deleteItem(identityProviderName);
       modalUtils.checkModalTitle(deletePrompt).confirmModal();
 
       masthead.checkNotificationMessage(deleteSuccessMsg);
+    });
 
-      createProviderPage.checkGitHubCardVisible();
+    it("should create facebook provider", () => {
+      createProviderPage
+        .clickCard("facebook")
+        .fill("facebook", "123")
+        .clickAdd();
+      masthead.checkNotificationMessage(createSuccessMsg);
     });
 
     it("should change order of providers", () => {
       const orderDialog = new OrderDialog();
       const providers = ["facebook", identityProviderName, "bitbucket"];
 
-      createProviderPage
-        .clickCard("facebook")
-        .fill("facebook", "123")
-        .clickAdd();
-
-      cy.wait(2000);
       sidebarPage.goToIdentityProviders();
       listingPage.itemExist("facebook");
 
@@ -137,35 +129,6 @@ describe("Identity provider test", () => {
       masthead.checkNotificationMessage(createSuccessMsg);
     });
 
-    it("clean up providers", () => {
-      const modalUtils = new ModalUtils();
-
-      sidebarPage.goToIdentityProviders();
-      listingPage.itemExist("bitbucket").deleteItem("bitbucket");
-      modalUtils.checkModalTitle(deletePrompt).confirmModal();
-      masthead.checkNotificationMessage(deleteSuccessMsg);
-
-      sidebarPage.goToIdentityProviders();
-      listingPage.itemExist("facebook").deleteItem("facebook");
-      modalUtils.checkModalTitle(deletePrompt).confirmModal();
-      masthead.checkNotificationMessage(deleteSuccessMsg);
-
-      sidebarPage.goToIdentityProviders();
-      listingPage.itemExist("github").deleteItem("github");
-      modalUtils.checkModalTitle(deletePrompt).confirmModal();
-      masthead.checkNotificationMessage(deleteSuccessMsg);
-
-      sidebarPage.goToIdentityProviders();
-      listingPage.itemExist("oidc").deleteItem("oidc");
-      modalUtils.checkModalTitle(deletePrompt).confirmModal();
-      masthead.checkNotificationMessage(deleteSuccessMsg);
-
-      sidebarPage.goToIdentityProviders();
-      listingPage.itemExist("saml").deleteItem("saml");
-      modalUtils.checkModalTitle(deletePrompt).confirmModal();
-      masthead.checkNotificationMessage(deleteSuccessMsg);
-    });
-
     it("should add facebook social mapper", () => {
       sidebarPage.goToIdentityProviders();
 
@@ -194,6 +157,35 @@ describe("Identity provider test", () => {
       addMapperPage.fillSAMLorOIDCMapper("SAML mapper");
 
       masthead.checkNotificationMessage(createMapperSuccessMsg);
+    });
+
+    it("clean up providers", () => {
+      const modalUtils = new ModalUtils();
+
+      sidebarPage.goToIdentityProviders();
+      listingPage.itemExist("bitbucket").deleteItem("bitbucket");
+      modalUtils.checkModalTitle(deletePrompt).confirmModal();
+      masthead.checkNotificationMessage(deleteSuccessMsg);
+
+      sidebarPage.goToIdentityProviders();
+      listingPage.itemExist("facebook").deleteItem("facebook");
+      modalUtils.checkModalTitle(deletePrompt).confirmModal();
+      masthead.checkNotificationMessage(deleteSuccessMsg);
+
+      sidebarPage.goToIdentityProviders();
+      listingPage.itemExist("github").deleteItem("github");
+      modalUtils.checkModalTitle(deletePrompt).confirmModal();
+      masthead.checkNotificationMessage(deleteSuccessMsg);
+
+      sidebarPage.goToIdentityProviders();
+      listingPage.itemExist("oidc").deleteItem("oidc");
+      modalUtils.checkModalTitle(deletePrompt).confirmModal();
+      masthead.checkNotificationMessage(deleteSuccessMsg);
+
+      sidebarPage.goToIdentityProviders();
+      listingPage.itemExist("saml").deleteItem("saml");
+      modalUtils.checkModalTitle(deletePrompt).confirmModal();
+      masthead.checkNotificationMessage(deleteSuccessMsg);
     });
   });
 });
