@@ -158,13 +158,24 @@ export const ProfilesTab = () => {
           }
         />
       ) : (
-        <CodeEditor
-          isLineNumbersVisible
-          isLanguageLabelVisible
-          code={JSON.stringify(profiles, null, 2)}
-          language={Language.json}
-          height={"500px"}
-        />
+        <>
+          <CodeEditor
+            isLineNumbersVisible
+            isLanguageLabelVisible
+            code={JSON.stringify(profiles, null, 2)}
+            language={Language.json}
+            height={"30rem"}
+          />
+          <div className="pf-u-mt-md">
+            <Button
+              variant={ButtonVariant.primary}
+              className="pf-u-mr-md pf-u-ml-lg"
+            >
+              Save
+            </Button>
+            <Button variant={ButtonVariant.secondary}>Reload</Button>
+          </div>
+        </>
       )}
     </>
   );
