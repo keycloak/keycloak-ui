@@ -77,6 +77,7 @@ export const IdentityProvidersSection = () => {
         realm,
         providerId: identityProvider.providerId,
         alias: identityProvider.alias!,
+        tab: "settings",
       })}
     >
       {identityProvider.displayName

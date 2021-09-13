@@ -24,7 +24,7 @@
     "prepare": "husky install"
   },
   "dependencies": {
-    "@keycloak/keycloak-admin-client": "^16.0.0-dev.11",
+    "@keycloak/keycloak-admin-client": "^16.0.0-dev.15",
     "@patternfly/patternfly": "^4.132.2",
     "@patternfly/react-code-editor": "^4.3.42",
     "@patternfly/react-core": "4.152.4",
@@ -51,7 +51,7 @@
     "@snowpack/plugin-react-refresh": "^2.5.0",
     "@snowpack/plugin-typescript": "^1.2.1",
     "@testing-library/jest-dom": "^5.14.1",
-    "@testing-library/react": "^12.0.0",
+    "@testing-library/react": "^12.1.0",
     "@types/dagre": "^0.7.45",
     "@types/file-saver": "^2.0.3",
     "@types/jest": "^26.0.24",
@@ -80,7 +80,7 @@
     "snowpack": "^3.8.2",
     "ts-jest": "^26.5.6",
     "ts-node": "^10.2.1",
-    "typescript": "4.4.2"
+    "typescript": "4.4.3"
   },
   "lint-staged": {
     "*.{js,jsx,mjs,ts,tsx}": "eslint --cache --fix"
