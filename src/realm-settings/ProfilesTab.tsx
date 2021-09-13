@@ -118,6 +118,7 @@ export const ProfilesTab = () => {
         <KeycloakDataTable
           ariaLabelKey="userEventsRegistered"
           searchPlaceholderKey="realm-settings:clientProfileSearch"
+          isPaginated
           loader={loader}
           toolbarItem={
             <ToolbarItem>
