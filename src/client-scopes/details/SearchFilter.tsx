@@ -12,6 +12,7 @@ import { FilterIcon } from "@patternfly/react-icons";
 
 import {
   AllClientScopes,
+  AllClientScopeType,
   clientScopeTypesSelectOptions,
 } from "../../components/client-scope/ClientScopeTypes";
 import type { Row } from "../../clients/scopes/ClientScopes";
@@ -24,14 +25,14 @@ export const nameFilter =
   (search = "") =>
   (scope: Row) =>
     scope.name?.includes(search);
-export const typeFilter = (type: AllClientScopes) => (scope: Row) =>
+export const typeFilter = (type: AllClientScopeType) => (scope: Row) =>
   type === AllClientScopes.none || scope.type === type;
 
 export const protocolFilter = (protocol: ProtocolType) => (scope: Row) =>
   protocol === "all" || scope.protocol === protocol;
 
 type SearchToolbarProps = Omit<SearchDropdownProps, "withProtocol"> & {
-  type: AllClientScopes;
+  type: AllClientScopeType;
   onType: (value: AllClientScopes) => void;
   protocol?: ProtocolType;
   onProtocol?: (value: ProtocolType) => void;
