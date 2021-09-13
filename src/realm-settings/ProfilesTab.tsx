@@ -7,10 +7,11 @@ import {
   PageSection,
   ToolbarItem,
 } from "@patternfly/react-core";
-import { useTranslation } from "react-i18next";
 import { Divider, Flex, FlexItem, Radio, Title } from "@patternfly/react-core";
+import { CodeEditor, Language } from "@patternfly/react-code-editor";
 import { KeycloakDataTable } from "../components/table-toolbar/KeycloakDataTable";
 import { ListEmptyState } from "../components/list-empty-state/ListEmptyState";
+import { useTranslation } from "react-i18next";
 import { useAdminClient } from "../context/auth/AdminClient";
 import { useConfirmDialog } from "../components/confirm-dialog/ConfirmDialog";
 import { useRealm } from "../context/realm-context/RealmContext";
@@ -26,6 +27,7 @@ export const ProfilesTab = () => {
   const { realm: realmName } = useRealm();
   const { addAlert, addError } = useAlerts();
   const [profiles, setProfiles] = useState<ClientProfilesRepresentation>();
+  const [show, setShow] = useState(false);
 
   const loader = async () => {
     const clientProfiles = await adminClient.clientPolicies.listProfiles({
@@ -36,11 +38,11 @@ export const ProfilesTab = () => {
     return clientProfiles.globalProfiles;
   };
 
-  function configTypeChange() {
-    // change between fromView and JsonEditor
+  function formatChange(show: boolean) {
+    setShow(show);
   }
 
-  function createProfile() {
+  function createNewProfile() {
     // create a new profile
   }
 
@@ -93,69 +95,77 @@ export const ProfilesTab = () => {
           </FlexItem>
           <FlexItem>
             <Radio
-              isChecked={false}
+              isChecked={!show}
               name="fromView"
-              onChange={configTypeChange}
+              onChange={() => formatChange(false)}
               label={t("profilesConfigTypes.fromView")}
               id="fromView-radioBtn"
-              value=""
             />
           </FlexItem>
           <FlexItem>
             <Radio
-              isChecked={false}
+              isChecked={show}
               name="jsonEditor"
-              onChange={configTypeChange}
+              onChange={() => formatChange(true)}
               label={t("profilesConfigTypes.jsonEditor")}
               id="jsonEditor-radioBtn"
-              value=""
             />
           </FlexItem>
         </Flex>
       </PageSection>
       <Divider />
-      <KeycloakDataTable
-        ariaLabelKey="userEventsRegistered"
-        searchPlaceholderKey="realm-settings:clientProfileSearch"
-        loader={loader}
-        toolbarItem={
-          <ToolbarItem>
-            <Button
-              id="createProfile"
-              onClick={() => createProfile()}
-              data-testid="createProfile"
-            >
-              {t("createClientProfile")}
-            </Button>
-          </ToolbarItem>
-        }
-        actions={[
-          {
-            title: t("common:delete"),
-            onRowClick: () => {
-              toggleDeleteDialog();
+      {!show ? (
+        <KeycloakDataTable
+          ariaLabelKey="userEventsRegistered"
+          searchPlaceholderKey="realm-settings:clientProfileSearch"
+          loader={loader}
+          toolbarItem={
+            <ToolbarItem>
+              <Button
+                id="createProfile"
+                onClick={() => createNewProfile()}
+                data-testid="createProfile"
+              >
+                {t("createClientProfile")}
+              </Button>
+            </ToolbarItem>
+          }
+          actions={[
+            {
+              title: t("common:delete"),
+              onRowClick: () => {
+                toggleDeleteDialog();
+              },
             },
-          },
-        ]}
-        columns={[
-          {
-            name: "name",
-            displayKey: t("clientProfileName"),
-            cellFormatters: [cellFormatter],
-            transforms: [cellWidth(10)],
-          },
-          {
-            name: "description",
-            displayKey: t("clientProfileDescription"),
-          },
-        ]}
-        emptyState={
-          <ListEmptyState
-            message={t("emptyClientProfiles")}
-            instructions={t("emptyClientProfilesInstructions")}
-          />
-        }
-      />
+          ]}
+          columns={[
+            {
+              name: "name",
+              displayKey: t("clientProfileName"),
+              cellFormatters: [cellFormatter],
+              transforms: [cellWidth(10)],
+            },
+            {
+              name: "description",
+              displayKey: t("clientProfileDescription"),
+            },
+          ]}
+          emptyState={
+            <ListEmptyState
+              message={t("emptyClientProfiles")}
+              instructions={t("emptyClientProfilesInstructions")}
+            />
+          }
+        />
+      ) : (
+        <CodeEditor
+          isLineNumbersVisible
+          isLanguageLabelVisible
+          code={JSON.stringify(profiles, null, 2)}
+          language={Language.json}
+          height={"500px"}
+        />
+      )}
     </>
   );
 };
