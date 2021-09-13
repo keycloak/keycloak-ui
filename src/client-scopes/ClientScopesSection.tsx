@@ -28,7 +28,7 @@ import {
   changeScope,
   removeScope,
 } from "../components/client-scope/ClientScopeTypes";
-import { ChangeTypeDialog } from "./ChangeTypeDialog";
+import { ChangeTypeDropdown } from "./ChangeTypeDropdown";
 import { toNewClientScope } from "./routes/NewClientScope";
 
 import "./client-scope.css";
@@ -57,7 +57,6 @@ export const ClientScopesSection = () => {
   const refresh = () => setKey(new Date().getTime());
 
   const [kebabOpen, setKebabOpen] = useState(false);
-  const [changeTypeOpen, setChangeTypeOpen] = useState(false);
   const [selectedScopes, setSelectedScopes] = useState<
     ClientScopeDefaultOptionalType[]
   >([]);
@@ -164,24 +163,6 @@ export const ClientScopesSection = () => {
   return (
     <>
       <DeleteConfirm />
-      {changeTypeOpen && (
-        <ChangeTypeDialog
-          selectedClientScopes={selectedScopes.length}
-          onConfirm={(type) => {
-            selectedScopes.map(async (scope) => {
-              try {
-                await changeScope(adminClient, scope, type);
-                addAlert(t("clientScopeSuccess"), AlertVariant.success);
-                refresh();
-              } catch (error) {
-                addError("client-scopes:clientScopeError", error);
-              }
-            });
-            setChangeTypeOpen(false);
-          }}
-          onClose={() => setChangeTypeOpen(false)}
-        />
-      )}
       <ViewHeader
         titleKey="clientScopes"
         subKey="client-scopes:clientScopeExplain"
@@ -229,6 +210,12 @@ export const ClientScopesSection = () => {
                 </Button>
               </ToolbarItem>
               <ToolbarItem>
+                <ChangeTypeDropdown
+                  selectedRows={selectedScopes}
+                  refresh={refresh}
+                />
+              </ToolbarItem>
+              <ToolbarItem>
                 <Dropdown
                   toggle={
                     <KebabToggle onToggle={() => setKebabOpen(!kebabOpen)} />
@@ -236,18 +223,6 @@ export const ClientScopesSection = () => {
                   isOpen={kebabOpen}
                   isPlain
                   dropdownItems={[
-                    <DropdownItem
-                      key="changeType"
-                      component="button"
-                      isDisabled={selectedScopes.length === 0}
-                      onClick={() => {
-                        setChangeTypeOpen(true);
-                        setKebabOpen(false);
-                      }}
-                    >
-                      {t("changeType")}
-                    </DropdownItem>,
-
                     <DropdownItem
                       key="action"
                       component="button"

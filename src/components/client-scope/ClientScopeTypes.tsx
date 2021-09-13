@@ -6,6 +6,7 @@ import { DropdownItem, Select, SelectOption } from "@patternfly/react-core";
 
 import type ClientScopeRepresentation from "@keycloak/keycloak-admin-client/lib/defs/clientScopeRepresentation";
 import type KeycloakAdminClient from "@keycloak/keycloak-admin-client";
+import { toUpperCase } from "../../util";
 
 export enum ClientScope {
   default = "default",
@@ -126,4 +127,46 @@ const addScope = async (
     ]({
       id: clientScope.id!,
     });
+};
+
+const castAdminClientClient = (adminClient: KeycloakAdminClient) =>
+  adminClient.clients as unknown as {
+    [index: string]: Function;
+  };
+
+export const changeClientScope = async (
+  adminClient: KeycloakAdminClient,
+  clientId: string,
+  clientScope: ClientScopeRepresentation,
+  type: AllClientScopeType,
+  changeTo: ClientScopeType
+) => {
+  await removeClientScope(adminClient, clientId, clientScope, type);
+  await addClientScope(adminClient, clientId, clientScope, changeTo);
+};
+
+export const removeClientScope = async (
+  adminClient: KeycloakAdminClient,
+  clientId: string,
+  clientScope: ClientScopeRepresentation,
+  type: AllClientScopeType
+) => {
+  const typeToName = toUpperCase(type);
+  await castAdminClientClient(adminClient)[`del${typeToName}ClientScope`]({
+    id: clientId,
+    clientScopeId: clientScope.id!,
+  });
+};
+
+export const addClientScope = async (
+  adminClient: KeycloakAdminClient,
+  clientId: string,
+  clientScope: ClientScopeRepresentation,
+  type: ClientScopeType
+) => {
+  const typeToName = toUpperCase(type);
+  await castAdminClientClient(adminClient)[`add${typeToName}ClientScope`]({
+    id: clientId,
+    clientScopeId: clientScope.id!,
+  });
 };

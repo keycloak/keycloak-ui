@@ -30,7 +30,6 @@ export default {
     searchByName: "Search by name",
     setup: "Setup",
     evaluate: "Evaluate",
-    changeTypeTo: "Change type to",
     assignRole: "Assign role",
     unAssignRole: "Unassign",
     removeMappingTitle: "Remove mapping?",

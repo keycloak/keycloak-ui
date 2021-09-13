@@ -6,23 +6,21 @@ import {
   Dropdown,
   DropdownItem,
   KebabToggle,
-  Select,
   ToolbarItem,
 } from "@patternfly/react-core";
 import type ClientScopeRepresentation from "@keycloak/keycloak-admin-client/lib/defs/clientScopeRepresentation";
-import type KeycloakAdminClient from "@keycloak/keycloak-admin-client";
 
 import { useAdminClient } from "../../context/auth/AdminClient";
-import { toUpperCase } from "../../util";
 import { ListEmptyState } from "../../components/list-empty-state/ListEmptyState";
 import { AddScopeDialog } from "./AddScopeDialog";
 import {
-  clientScopeTypesSelectOptions,
-  ClientScopeType,
   ClientScope,
   CellDropdown,
   AllClientScopes,
   AllClientScopeType,
+  changeClientScope,
+  addClientScope,
+  removeClientScope,
 } from "../../components/client-scope/ClientScopeTypes";
 import { useAlerts } from "../../components/alert/Alerts";
 import { KeycloakDataTable } from "../../components/table-toolbar/KeycloakDataTable";
@@ -35,6 +33,7 @@ import {
 } from "../../client-scopes/details/SearchFilter";
 
 import "./client-scopes.css";
+import { ChangeTypeDropdown } from "../../client-scopes/ChangeTypeDropdown";
 
 export type ClientScopesProps = {
   clientId: string;
@@ -46,55 +45,12 @@ export type Row = ClientScopeRepresentation & {
   description?: string;
 };
 
-const castAdminClient = (adminClient: KeycloakAdminClient) =>
-  adminClient.clients as unknown as {
-    [index: string]: Function;
-  };
-
-const changeScope = async (
-  adminClient: KeycloakAdminClient,
-  clientId: string,
-  clientScope: ClientScopeRepresentation,
-  type: AllClientScopeType,
-  changeTo: ClientScopeType
-) => {
-  await removeScope(adminClient, clientId, clientScope, type);
-  await addScope(adminClient, clientId, clientScope, changeTo);
-};
-
-const removeScope = async (
-  adminClient: KeycloakAdminClient,
-  clientId: string,
-  clientScope: ClientScopeRepresentation,
-  type: AllClientScopeType
-) => {
-  const typeToName = toUpperCase(type);
-  await castAdminClient(adminClient)[`del${typeToName}ClientScope`]({
-    id: clientId,
-    clientScopeId: clientScope.id!,
-  });
-};
-
-const addScope = async (
-  adminClient: KeycloakAdminClient,
-  clientId: string,
-  clientScope: ClientScopeRepresentation,
-  type: ClientScopeType
-) => {
-  const typeToName = toUpperCase(type);
-  await castAdminClient(adminClient)[`add${typeToName}ClientScope`]({
-    id: clientId,
-    clientScopeId: clientScope.id!,
-  });
-};
-
 export const ClientScopes = ({ clientId, protocol }: ClientScopesProps) => {
   const { t } = useTranslation("clients");
   const adminClient = useAdminClient();
   const { addAlert, addError } = useAlerts();
 
   const [searchType, setSearchType] = useState<SearchType>("name");
-  const [addToggle, setAddToggle] = useState(false);
 
   const [searchTypeType, setSearchTypeType] = useState<AllClientScopes>(
     AllClientScopes.none
@@ -158,7 +114,7 @@ export const ClientScopes = ({ clientId, protocol }: ClientScopesProps) => {
       type={scope.type}
       onSelect={async (value) => {
         try {
-          await changeScope(
+          await changeClientScope(
             adminClient,
             clientId,
             scope,
@@ -186,7 +142,7 @@ export const ClientScopes = ({ clientId, protocol }: ClientScopesProps) => {
               await Promise.all(
                 scopes.map(
                   async (scope) =>
-                    await addScope(
+                    await addClientScope(
                       adminClient,
                       clientId,
                       scope.scope,
@@ -237,37 +193,11 @@ export const ClientScopes = ({ clientId, protocol }: ClientScopesProps) => {
               </Button>
             </ToolbarItem>
             <ToolbarItem>
-              <Select
-                id="add-dropdown"
-                key="add-dropdown"
-                isOpen={addToggle}
-                selections={[]}
-                isDisabled={selectedRows.length === 0}
-                placeholderText={t("changeTypeTo")}
-                onToggle={() => setAddToggle(!addToggle)}
-                onSelect={async (_, value) => {
-                  try {
-                    await Promise.all(
-                      selectedRows.map((row) => {
-                        return changeScope(
-                          adminClient,
-                          clientId,
-                          { ...row },
-                          row.type,
-                          value as ClientScope
-                        );
-                      })
-                    );
-                    setAddToggle(false);
-                    refresh();
-                    addAlert(t("clientScopeSuccess"), AlertVariant.success);
-                  } catch (error) {
-                    addError("clients:clientScopeError", error);
-                  }
-                }}
-              >
-                {clientScopeTypesSelectOptions(t)}
-              </Select>
+              <ChangeTypeDropdown
+                clientId={clientId}
+                selectedRows={selectedRows}
+                refresh={refresh}
+              />
             </ToolbarItem>
             <ToolbarItem>
               <Dropdown
@@ -284,7 +214,7 @@ export const ClientScopes = ({ clientId, protocol }: ClientScopesProps) => {
                       try {
                         await Promise.all(
                           selectedRows.map(async (row) => {
-                            await removeScope(
+                            await removeClientScope(
                               adminClient,
                               clientId,
                               { ...row },
@@ -328,7 +258,7 @@ export const ClientScopes = ({ clientId, protocol }: ClientScopesProps) => {
             title: t("common:remove"),
             onRowClick: async (row) => {
               try {
-                await removeScope(adminClient, clientId, row, row.type);
+                await removeClientScope(adminClient, clientId, row, row.type);
                 addAlert(t("clientScopeRemoveSuccess"), AlertVariant.success);
                 refresh();
               } catch (error) {
