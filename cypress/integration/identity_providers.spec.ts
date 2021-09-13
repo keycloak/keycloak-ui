@@ -19,6 +19,8 @@ describe("Identity provider test", () => {
 
   const createSuccessMsg = "Identity provider successfully created";
   const createMapperSuccessMsg = "Mapper created successfully.";
+  const saveMapperSuccessMsg = "Mapper saved successfully.";
+
   const changeSuccessMsg =
     "Successfully changed display order of identity providers";
   const deletePrompt = "Delete provider?";
@@ -157,6 +159,32 @@ describe("Identity provider test", () => {
       addMapperPage.fillSAMLorOIDCMapper("SAML mapper");
 
       masthead.checkNotificationMessage(createMapperSuccessMsg);
+    });
+
+    it("should edit facebook mapper", () => {
+      sidebarPage.goToIdentityProviders();
+
+      listingPage.goToItemDetails("facebook");
+
+      addMapperPage.goToMappersTab();
+
+      listingPage.goToItemDetails("facebook mapper");
+
+      addMapperPage.editSocialMapper();
+    });
+
+    it("should edit SAML mapper", () => {
+      sidebarPage.goToIdentityProviders();
+
+      listingPage.goToItemDetails("saml");
+
+      addMapperPage.goToMappersTab();
+
+      listingPage.goToItemDetails("SAML mapper");
+
+      addMapperPage.editSAMLorOIDCMapper();
+
+      masthead.checkNotificationMessage(saveMapperSuccessMsg);
     });
 
     it("clean up providers", () => {
