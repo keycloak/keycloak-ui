@@ -133,10 +133,12 @@ export const changeClientScope = async (
   adminClient: KeycloakAdminClient,
   clientId: string,
   clientScope: ClientScopeRepresentation,
-  type: ClientScopeType,
+  type: AllClientScopeType,
   changeTo: ClientScopeType
 ) => {
-  await removeClientScope(adminClient, clientId, clientScope, type);
+  if (type !== "none") {
+    await removeClientScope(adminClient, clientId, clientScope, type);
+  }
   await addClientScope(adminClient, clientId, clientScope, changeTo);
 };
 
