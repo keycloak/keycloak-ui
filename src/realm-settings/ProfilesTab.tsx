@@ -35,7 +35,11 @@ export const ProfilesTab = () => {
       includeGlobalProfiles: true,
     });
     setProfiles(clientProfiles);
-    return clientProfiles.globalProfiles ?? [];
+    const allClientProfiles = clientProfiles.globalProfiles?.concat(
+      clientProfiles.profiles!
+    );
+
+    return allClientProfiles ?? [];
   };
 
   function formatChange(show: boolean) {
@@ -53,7 +57,7 @@ export const ProfilesTab = () => {
     continueButtonVariant: ButtonVariant.danger,
     onConfirm: async () => {
       try {
-        // delete client profile here await
+        // delete client profile here
         addAlert(t("deleteClientSuccess"), AlertVariant.success);
       } catch (error) {
         addError(t("deleteClientError"), error);
