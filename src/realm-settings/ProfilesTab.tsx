@@ -68,20 +68,13 @@ export const ProfilesTab = () => {
   function cellFormatter(name?: IFormatterValueType) {
     return (
       <>
+        <Link to={""} key={`link-${name}`}>
+          {name}
+        </Link>{" "}
         {profiles?.globalProfiles?.length! > 0 && (
-          <>
-            <Link to={""} key={`link-${name}`}>
-              {name}
-            </Link>{" "}
-            <Label key={`label-${name}`} color="blue">
-              {t("global")}
-            </Label>
-          </>
-        )}
-        {profiles?.profiles?.length! > 0 && (
-          <Link to={""} key={`link-${name}`}>
-            {name}
-          </Link>
+          <Label key={`label-${name}`} color="blue">
+            {t("global")}
+          </Label>
         )}
       </>
     );
