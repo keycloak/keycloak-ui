@@ -35,7 +35,7 @@ export const ProfilesTab = () => {
       includeGlobalProfiles: true,
     });
     setProfiles(clientProfiles);
-    return clientProfiles.globalProfiles;
+    return clientProfiles.globalProfiles ?? [];
   };
 
   function formatChange(show: boolean) {
