@@ -96,10 +96,11 @@ export const ProfilesTab = () => {
           <FlexItem>
             <Radio
               isChecked={!show}
-              name="fromView"
+              name="formView"
               onChange={() => formatChange(false)}
-              label={t("profilesConfigTypes.fromView")}
-              id="fromView-radioBtn"
+              label={t("profilesConfigTypes.formView")}
+              id="formView-radioBtn"
+              className="kc-form-radio-btn pf-u-mr-sm pf-u-ml-sm"
             />
           </FlexItem>
           <FlexItem>
@@ -109,6 +110,7 @@ export const ProfilesTab = () => {
               onChange={() => formatChange(true)}
               label={t("profilesConfigTypes.jsonEditor")}
               id="jsonEditor-radioBtn"
+              className="kc-editor-radio-btn"
             />
           </FlexItem>
         </Flex>
@@ -144,7 +146,7 @@ export const ProfilesTab = () => {
               name: "name",
               displayKey: t("clientProfileName"),
               cellFormatters: [cellFormatter],
-              transforms: [cellWidth(10)],
+              transforms: [cellWidth(20)],
             },
             {
               name: "description",

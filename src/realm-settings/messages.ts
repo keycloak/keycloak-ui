@@ -204,7 +204,7 @@ export default {
     clientPoliciesSubTab: "Client policies subtab",
     profilesConfigType: "Configure via:",
     profilesConfigTypes: {
-      fromView: "From view",
+      formView: "Form view",
       jsonEditor: "JSON editor",
     },
     clientProfileSearch: "Search",
