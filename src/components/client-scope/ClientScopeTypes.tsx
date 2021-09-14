@@ -129,16 +129,11 @@ const addScope = async (
     });
 };
 
-const castAdminClientClient = (adminClient: KeycloakAdminClient) =>
-  adminClient.clients as unknown as {
-    [index: string]: Function;
-  };
-
 export const changeClientScope = async (
   adminClient: KeycloakAdminClient,
   clientId: string,
   clientScope: ClientScopeRepresentation,
-  type: AllClientScopeType,
+  type: ClientScopeType,
   changeTo: ClientScopeType
 ) => {
   await removeClientScope(adminClient, clientId, clientScope, type);
@@ -149,10 +144,11 @@ export const removeClientScope = async (
   adminClient: KeycloakAdminClient,
   clientId: string,
   clientScope: ClientScopeRepresentation,
-  type: AllClientScopeType
+  type: ClientScope
 ) => {
-  const typeToName = toUpperCase(type);
-  await castAdminClientClient(adminClient)[`del${typeToName}ClientScope`]({
+  const methodName = `del${toUpperCase(type)}ClientScope` as const;
+
+  await adminClient.clients[methodName]({
     id: clientId,
     clientScopeId: clientScope.id!,
   });
@@ -164,8 +160,9 @@ export const addClientScope = async (
   clientScope: ClientScopeRepresentation,
   type: ClientScopeType
 ) => {
-  const typeToName = toUpperCase(type);
-  await castAdminClientClient(adminClient)[`add${typeToName}ClientScope`]({
+  const methodName = `add${toUpperCase(type)}ClientScope` as const;
+
+  await adminClient.clients[methodName]({
     id: clientId,
     clientScopeId: clientScope.id!,
   });
