@@ -218,7 +218,7 @@ export const ClientScopes = ({ clientId, protocol }: ClientScopesProps) => {
                               adminClient,
                               clientId,
                               { ...row },
-                              row.type
+                              row.type as ClientScope
                             );
                           })
                         );
@@ -258,7 +258,12 @@ export const ClientScopes = ({ clientId, protocol }: ClientScopesProps) => {
             title: t("common:remove"),
             onRowClick: async (row) => {
               try {
-                await removeClientScope(adminClient, clientId, row, row.type);
+                await removeClientScope(
+                  adminClient,
+                  clientId,
+                  row,
+                  row.type as ClientScope
+                );
                 addAlert(t("clientScopeRemoveSuccess"), AlertVariant.success);
                 refresh();
               } catch (error) {

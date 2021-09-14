@@ -18,8 +18,8 @@ import {
 import type { Row } from "../../clients/scopes/ClientScopes";
 
 export type SearchType = "name" | "type" | "protocol";
-export const Protocols = ["all", "saml", "openid-connect"];
-export type ProtocolType = typeof Protocols[number];
+export const PROTOCOLS = ["all", "saml", "openid-connect"] as const;
+export type ProtocolType = typeof PROTOCOLS[number];
 
 export const nameFilter =
   (search = "") =>
@@ -79,7 +79,6 @@ export const SearchDropdown = ({
           <FilterIcon /> {t(`clientScopeSearch.${searchType}`)}
         </DropdownToggle>
       }
-      aria-label="Select Input"
       isOpen={searchToggle}
       dropdownItems={options}
     />
@@ -151,7 +150,7 @@ export const SearchToolbar = ({
                 setOpen(false);
               }}
             >
-              {Protocols.map((type) => (
+              {PROTOCOLS.map((type) => (
                 <SelectOption key={type} value={type}>
                   {t(`protocolTypes.${type}`)}
                 </SelectOption>
