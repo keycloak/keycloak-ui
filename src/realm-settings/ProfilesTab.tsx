@@ -24,7 +24,7 @@ type ClientProfile = {
   description?: string;
   executors?: ClientPolicyExecutorRepresentation[];
   name?: string;
-  global?: boolean;
+  global: boolean;
 };
 
 export const ProfilesTab = () => {
@@ -53,7 +53,7 @@ export const ProfilesTab = () => {
       global: false,
     }));
 
-    const allClientProfiles = globalProfiles?.concat(profiles!);
+    const allClientProfiles = globalProfiles?.concat(profiles ?? []);
     setProfiles(allClientProfiles);
 
     return allClientProfiles ?? [];
@@ -81,15 +81,9 @@ export const ProfilesTab = () => {
   });
 
   const cellFormatter = (row: ClientProfile) => (
-    <Link to={""} key={`label-${row.name}`}>
+    <Link to={""} key={row.name}>
       {row.name} {""}
-      {row.global ? (
-        <Label key={`label-${row.global}`} color="blue">
-          {t("global")}
-        </Label>
-      ) : (
-        ""
-      )}
+      {row.global && <Label color="blue">{t("global")}</Label>}
     </Link>
   );
 
