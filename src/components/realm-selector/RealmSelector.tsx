@@ -62,20 +62,6 @@ export const RealmSelector = () => {
     </Split>
   );
 
-  const AddRealm = () => (
-    <Button
-      data-testid="add-realm"
-      component="div"
-      isBlock
-      onClick={() => {
-        history.push(toAddRealm({ realm }));
-        setOpen(!open);
-      }}
-    >
-      {t("createRealm")}
-    </Button>
-  );
-
   const selectRealm = (realm: string) => {
     setOpen(!open);
     history.push(toDashboard({ realm }));
@@ -98,7 +84,17 @@ export const RealmSelector = () => {
         <>
           <Divider key="divider" />
           <DropdownItem key="add">
-            <AddRealm />
+            <Button
+              data-testid="add-realm"
+              component="div"
+              isBlock
+              onClick={() => {
+                history.push(toAddRealm({ realm }));
+                setOpen(!open);
+              }}
+            >
+              {t("createRealm")}
+            </Button>
           </DropdownItem>
         </>
       )}
@@ -131,7 +127,17 @@ export const RealmSelector = () => {
           className="keycloak__realm_selector__context_selector"
           footer={
             <ContextSelectorItem key="add">
-              <AddRealm />
+              <Button
+                data-testid="add-realm"
+                component="div"
+                isBlock
+                onClick={() => {
+                  history.push(toAddRealm({ realm }));
+                  setOpen(!open);
+                }}
+              >
+                {t("createRealm")}
+              </Button>{" "}
             </ContextSelectorItem>
           }
         >
