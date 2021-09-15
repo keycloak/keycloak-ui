@@ -80,6 +80,7 @@ describe("Events tests", () => {
         .save(realmSettingsPage.eventsAdminSave);
 
       sidebarPage.goToEvents();
+      cy.getId("admin-events-tab").click();
       sidebarPage.waitForPageLoad();
       adminEventsTab.shouldHaveFormFields();
     });
