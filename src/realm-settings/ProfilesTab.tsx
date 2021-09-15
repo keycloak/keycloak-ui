@@ -15,7 +15,6 @@ import { useTranslation } from "react-i18next";
 import { useAdminClient } from "../context/auth/AdminClient";
 import { useConfirmDialog } from "../components/confirm-dialog/ConfirmDialog";
 import { useRealm } from "../context/realm-context/RealmContext";
-import { cellWidth, IFormatterValueType } from "@patternfly/react-table";
 import { useAlerts } from "../components/alert/Alerts";
 import { Link } from "react-router-dom";
 import "./RealmSettingsSection.css";
@@ -81,26 +80,18 @@ export const ProfilesTab = () => {
     },
   });
 
-  function cellFormatterName(name?: IFormatterValueType) {
-    return (
-      <>
-        <Link to={""} key={`link-${name}`}>
-          {name}
-        </Link>{" "}
-      </>
-    );
-  }
-
-  function cellFormatterGlobal(global?: IFormatterValueType) {
-    if (global) {
-      return (
-        <Label key={`label-${global}`} color="blue">
+  const cellFormatter = (row: ClientProfile) => (
+    <Link to={""} key={`label-${row.name}`}>
+      {row.name} {""}
+      {row.global ? (
+        <Label key={`label-${row.global}`} color="blue">
           {t("global")}
         </Label>
-      );
-    }
-    return "";
-  }
+      ) : (
+        ""
+      )}
+    </Link>
+  );
 
   return (
     <>
@@ -164,14 +155,7 @@ export const ProfilesTab = () => {
             {
               name: "name",
               displayKey: t("clientProfileName"),
-              cellFormatters: [cellFormatterName],
-              transforms: [cellWidth(20)],
-            },
-            {
-              name: "global",
-              displayKey: t(""),
-              cellFormatters: [cellFormatterGlobal],
-              transforms: [cellWidth(10)],
+              cellRenderer: cellFormatter,
             },
             {
               name: "description",
