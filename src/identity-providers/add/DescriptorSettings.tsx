@@ -45,6 +45,12 @@ const Fields = ({ readOnly }: DescriptorSettingsProps) => {
     name: "config.validateSignature",
   });
 
+  const principalType = useWatch({
+    control: control,
+    name: "config.principalType",
+    defaultValue: "",
+  });
+
   return (
     <div className="pf-c-form pf-m-horizontal">
       <FormGroup
@@ -216,6 +222,27 @@ const Fields = ({ readOnly }: DescriptorSettingsProps) => {
         ></Controller>
       </FormGroup>
 
+      {principalType.includes("Attribute") && (
+        <FormGroup
+          label={t("principalAttribute")}
+          labelIcon={
+            <HelpItem
+              helpText={th("principalAttribute")}
+              forLabel={t("principalAttribute")}
+              forID="principalAttribute"
+            />
+          }
+          fieldId="principalAttribute"
+        >
+          <TextInput
+            type="text"
+            id="principalAttribute"
+            name="config.principalAttribute"
+            ref={register}
+            isReadOnly={readOnly}
+          />
+        </FormGroup>
+      )}
       <SwitchField
         field="config.postBindingResponse"
         label="httpPostBindingResponse"
