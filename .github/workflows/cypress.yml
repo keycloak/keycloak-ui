@@ -5,47 +5,12 @@ on:
   pull_request:
     branches: [master]
 jobs:
-  cypress-run:
+  build:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-
-      - name: Build Keycloak server
-        run: docker build --tag keycloak .
-
-      - name: Start Keycloak server
-        run: |
-          docker run --detach --publish 8080:8080 --env KEYCLOAK_USER=admin --env KEYCLOAK_PASSWORD=admin --name keycloak keycloak
-          sleep 10
-
-      - name: Configure Keycloak server
-        run: |
-          docker exec keycloak /opt/jboss/keycloak/bin/kcadm.sh config credentials --server http://localhost:8080/auth --realm master --user admin --password admin
-          docker exec keycloak /opt/jboss/keycloak/bin/kcadm.sh update realms/master -s "adminTheme=keycloak.v2"
-
-      - name: Setup Node
-        uses: actions/setup-node@v2
         with:
-          node-version: 16
-          check-latest: true
-          cache: npm
-
-      - name: Install dependencies
-        run: npm ci
-
-      - name: Run Cypress
-        run: CYPRESS_BASE_URL=http://localhost:8080/auth/admin/ CYPRESS_KEYCLOAK_SERVER=http://localhost:8080 npm run start:cypress-tests
-
-      - name: Add Cypress videos artifacts
-        uses: actions/upload-artifact@v2
-        if: failure()
+          path: admin-ui
+      - uses: actions/checkout@v2
         with:
-          name: cypress-videos
-          path: assets/videos
-
-      - name: Add Cypress screenshots artifacts
-        uses: actions/upload-artifact@v2
-        if: failure()
-        with:
-          name: cypress-screenshots
-          path: assets/screenshots
+          path: keycloak-server
