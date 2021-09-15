@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useMemo, useState } from "react";
 import {
   AlertVariant,
   Button,
@@ -18,33 +18,49 @@ import { useRealm } from "../context/realm-context/RealmContext";
 import { cellWidth, IFormatterValueType } from "@patternfly/react-table";
 import { useAlerts } from "../components/alert/Alerts";
 import { Link } from "react-router-dom";
-import type ClientProfilesRepresentation from "@keycloak/keycloak-admin-client/lib/defs/clientProfilesRepresentation";
 import "./RealmSettingsSection.css";
+import type ClientPolicyExecutorRepresentation from "@keycloak/keycloak-admin-client/lib/defs/clientPolicyExecutorRepresentation";
+
+type ClientProfile = {
+  description?: string;
+  executors?: ClientPolicyExecutorRepresentation[];
+  name?: string;
+  global?: boolean;
+};
 
 export const ProfilesTab = () => {
   const { t } = useTranslation("realm-settings");
   const adminClient = useAdminClient();
   const { realm: realmName } = useRealm();
   const { addAlert, addError } = useAlerts();
-  const [profiles, setProfiles] = useState<ClientProfilesRepresentation>();
+  const [profiles, setProfiles] = useState<ClientProfile[]>();
   const [show, setShow] = useState(false);
 
   const loader = async () => {
-    const clientProfiles = await adminClient.clientPolicies.listProfiles({
+    const allProfiles = await adminClient.clientPolicies.listProfiles({
       realm: realmName,
       includeGlobalProfiles: true,
     });
-    setProfiles(clientProfiles);
-    const allClientProfiles = clientProfiles.globalProfiles?.concat(
-      clientProfiles.profiles!
+
+    const globalProfiles = allProfiles.globalProfiles?.map(
+      (globalProfiles) => ({
+        ...globalProfiles,
+        global: true,
+      })
     );
+
+    const profiles = allProfiles.profiles?.map((profiles) => ({
+      ...profiles,
+      global: false,
+    }));
+
+    const allClientProfiles = globalProfiles?.concat(profiles!);
+    setProfiles(allClientProfiles);
 
     return allClientProfiles ?? [];
   };
 
-  function formatChange(show: boolean) {
-    setShow(show);
-  }
+  const code = useMemo(() => JSON.stringify(profiles, null, 2), [profiles]);
 
   function createNewProfile() {
     // create a new profile
@@ -53,7 +69,7 @@ export const ProfilesTab = () => {
   const [toggleDeleteDialog, DeleteConfirm] = useConfirmDialog({
     titleKey: t("deleteClientProfileConfirmTitle"),
     messageKey: t("deleteClientProfileConfirm"),
-    continueButtonLabel: "delete",
+    continueButtonLabel: t("delete"),
     continueButtonVariant: ButtonVariant.danger,
     onConfirm: async () => {
       try {
@@ -65,19 +81,25 @@ export const ProfilesTab = () => {
     },
   });
 
-  function cellFormatter(name?: IFormatterValueType) {
+  function cellFormatterName(name?: IFormatterValueType) {
     return (
       <>
         <Link to={""} key={`link-${name}`}>
           {name}
         </Link>{" "}
-        {profiles?.globalProfiles?.length! > 0 && (
-          <Label key={`label-${name}`} color="blue">
-            {t("global")}
-          </Label>
-        )}
       </>
     );
+  }
+
+  function cellFormatterGlobal(global?: IFormatterValueType) {
+    if (global) {
+      return (
+        <Label key={`label-${global}`} color="blue">
+          {t("global")}
+        </Label>
+      );
+    }
+    return "";
   }
 
   return (
@@ -94,7 +116,7 @@ export const ProfilesTab = () => {
             <Radio
               isChecked={!show}
               name="formView"
-              onChange={() => formatChange(false)}
+              onChange={() => setShow(false)}
               label={t("profilesConfigTypes.formView")}
               id="formView-radioBtn"
               className="kc-form-radio-btn pf-u-mr-sm pf-u-ml-sm"
@@ -104,7 +126,7 @@ export const ProfilesTab = () => {
             <Radio
               isChecked={show}
               name="jsonEditor"
-              onChange={() => formatChange(true)}
+              onChange={() => setShow(true)}
               label={t("profilesConfigTypes.jsonEditor")}
               id="jsonEditor-radioBtn"
               className="kc-editor-radio-btn"
@@ -142,8 +164,14 @@ export const ProfilesTab = () => {
             {
               name: "name",
               displayKey: t("clientProfileName"),
-              cellFormatters: [cellFormatter],
+              cellFormatters: [cellFormatterName],
               transforms: [cellWidth(20)],
+            },
+            {
+              name: "global",
+              displayKey: t(""),
+              cellFormatters: [cellFormatterGlobal],
+              transforms: [cellWidth(10)],
             },
             {
               name: "description",
@@ -163,9 +191,9 @@ export const ProfilesTab = () => {
             <CodeEditor
               isLineNumbersVisible
               isLanguageLabelVisible
-              code={JSON.stringify(profiles, null, 2)}
+              code={code}
               language={Language.json}
-              height={"30rem"}
+              height="30rem"
             />
           </div>
           <div className="pf-u-mt-md">
@@ -173,9 +201,9 @@ export const ProfilesTab = () => {
               variant={ButtonVariant.primary}
               className="pf-u-mr-md pf-u-ml-lg"
             >
-              Save
+              {t("save")}
             </Button>
-            <Button variant={ButtonVariant.secondary}>Reload</Button>
+            <Button variant={ButtonVariant.secondary}> {t("reload")}</Button>
           </div>
         </>
       )}
