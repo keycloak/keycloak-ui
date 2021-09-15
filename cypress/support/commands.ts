@@ -27,3 +27,15 @@
 Cypress.Commands.add("getId", (selector, ...args) => {
   return cy.get(`[data-testid="${selector}"]`, ...args);
 });
+
+declare namespace Cypress {
+  interface Chainable<Subject> {
+    /**
+     * Get one or more DOM elements by `data-testid`.
+     *
+     * @example
+     * cy.getId('searchButton')  // Gets the <button data-testid="searchButton">Search</button>
+     */
+    getId(selector: string, ...args): Chainable<any>;
+  }
+}
