@@ -294,7 +294,7 @@ const Fields = ({ readOnly }: DescriptorSettingsProps) => {
           >
             <Controller
               name="config.xmlSigKeyInfoKeyNameTransformer"
-              defaultValue="keyID-option"
+              defaultValue={t("keyID")}
               control={control}
               render={({ onChange, value }) => (
                 <Select

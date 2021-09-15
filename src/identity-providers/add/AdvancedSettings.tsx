@@ -30,7 +30,7 @@ const LoginFlow = ({
   useFetch(
     () => adminClient.authenticationManagement.getFlows(),
     (flows) =>
-      setFlows(flows?.filter((flow) => flow.providerId === "basic-flow")),
+      setFlows(flows.filter((flow) => flow.providerId === "basic-flow")),
     []
   );
 
