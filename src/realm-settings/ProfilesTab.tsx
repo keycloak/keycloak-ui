@@ -16,7 +16,7 @@ import { useAdminClient } from "../context/auth/AdminClient";
 import { useConfirmDialog } from "../components/confirm-dialog/ConfirmDialog";
 import { useRealm } from "../context/realm-context/RealmContext";
 import { useAlerts } from "../components/alert/Alerts";
-import { Link } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
 import "./RealmSettingsSection.css";
 import type ClientPolicyExecutorRepresentation from "@keycloak/keycloak-admin-client/lib/defs/clientPolicyExecutorRepresentation";
 
@@ -29,6 +29,7 @@ type ClientProfile = {
 
 export const ProfilesTab = () => {
   const { t } = useTranslation("realm-settings");
+  const history = useHistory();
   const adminClient = useAdminClient();
   const { realm: realmName } = useRealm();
   const { addAlert, addError } = useAlerts();
@@ -60,10 +61,6 @@ export const ProfilesTab = () => {
   };
 
   const code = useMemo(() => JSON.stringify(profiles, null, 2), [profiles]);
-
-  function createNewProfile() {
-    // create a new profile
-  }
 
   const [toggleDeleteDialog, DeleteConfirm] = useConfirmDialog({
     titleKey: t("deleteClientProfileConfirmTitle"),
@@ -130,7 +127,11 @@ export const ProfilesTab = () => {
             <ToolbarItem>
               <Button
                 id="createProfile"
-                onClick={() => createNewProfile()}
+                onClick={() =>
+                  history.push(
+                    `/${realmName}/realm-settings/clientPolicies/new-client-profile`
+                  )
+                }
                 data-testid="createProfile"
               >
                 {t("createClientProfile")}

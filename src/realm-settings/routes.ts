@@ -6,6 +6,7 @@ import { JavaKeystoreSettingsRoute } from "./routes/JavaKeystoreSettings";
 import { RealmSettingsRoute } from "./routes/RealmSettings";
 import { RsaGeneratedSettingsRoute } from "./routes/RsaGeneratedSettings";
 import { RsaSettingsRoute } from "./routes/RsaSettings";
+import { NewClientProfileRoute } from "./routes/NewClientProfile";
 
 const routes: RouteDef[] = [
   RealmSettingsRoute,
@@ -15,6 +16,7 @@ const routes: RouteDef[] = [
   JavaKeystoreSettingsRoute,
   RsaGeneratedSettingsRoute,
   RsaSettingsRoute,
+  NewClientProfileRoute,
 ];
 
 export default routes;
