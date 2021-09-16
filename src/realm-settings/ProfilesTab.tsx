@@ -137,6 +137,7 @@ export const ProfilesTab = () => {
               </Button>
             </ToolbarItem>
           }
+          isRowDisabled={(value) => value.global === true}
           actions={[
             {
               title: t("common:delete"),
