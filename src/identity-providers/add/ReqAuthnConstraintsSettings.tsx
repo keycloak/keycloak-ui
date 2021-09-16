@@ -13,15 +13,6 @@ import { HelpItem } from "../../components/help-enabler/HelpItem";
 
 const comparisonValues = ["exact", "minimum", "maximum", "better"];
 
-// nameIDPolicyFormat": THESE ARE THE VALID RETURN VALUES, DISPLAY IS SIMPLER THOUGH:
-// "urn:oasis:names:tc:SAML:2.0:nameid-format:persistent
-// "urn:oasis:names:tc:SAML:2.0:nameid-format:transient
-// "urn:oasis:names:tc:SAML:1.1:nameid-format:emailAddress
-// "urn:oasis:names:tc:SAML:2.0:nameid-format:kerberos
-// "urn:oasis:names:tc:SAML:1.1:nameid-format:X509SubjectName
-// "urn:oasis:names:tc:SAML:1.1:nameid-format:WindowsDomainQualifiedName
-// "urn:oasis:names:tc:SAML:1.1:nameid-format:unspecified
-
 export const ReqAuthnConstraints = () => {
   const { t } = useTranslation("identity-providers");
   const { control } = useFormContext();

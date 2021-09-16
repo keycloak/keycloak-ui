@@ -85,7 +85,6 @@ const Fields = ({ readOnly }: DescriptorSettingsProps) => {
           isReadOnly={readOnly}
         />
       </FormGroup>
-
       <FormGroup
         label={t("singleLogoutServiceUrl")}
         labelIcon={
@@ -111,13 +110,11 @@ const Fields = ({ readOnly }: DescriptorSettingsProps) => {
           isReadOnly={readOnly}
         />
       </FormGroup>
-
       <SwitchField
         field="config.backchannelSupported"
         label="backchannelLogout"
         isReadOnly={readOnly}
       />
-
       <FormGroup
         label={t("nameIdPolicyFormat")}
         labelIcon={
@@ -148,27 +145,50 @@ const Fields = ({ readOnly }: DescriptorSettingsProps) => {
             >
               <SelectOption
                 data-testid="persistent-option"
-                value={t("persistent")}
+                value={"urn:oasis:names:tc:SAML:2.0:nameid-format:persistent"}
                 isPlaceholder
-              />
+              >
+                {t("persistent")}
+              </SelectOption>
               <SelectOption
                 data-testid="transient-option"
-                value={t("transient")}
-              />
-              <SelectOption data-testid="email-option" value={t("email")} />
+                value="urn:oasis:names:tc:SAML:2.0:nameid-format:transient"
+              >
+                {t("transient")}
+              </SelectOption>
+              <SelectOption
+                data-testid="email-option"
+                value="urn:oasis:names:tc:SAML:1.1:nameid-format:emailAddress"
+              >
+                {t("email")}
+              </SelectOption>
               <SelectOption
                 data-testid="kerberos-option"
-                value={t("kerberos")}
-              />
-              <SelectOption data-testid="x509-option" value={t("x509")} />
+                value="urn:oasis:names:tc:SAML:2.0:nameid-format:kerberos"
+              >
+                {t("kerberos")}
+              </SelectOption>
+
+              <SelectOption
+                data-testid="x509-option"
+                value="urn:oasis:names:tc:SAML:1.1:nameid-format:X509SubjectName"
+              >
+                {t("x509")}
+              </SelectOption>
+
               <SelectOption
                 data-testid="windowsDomainQN-option"
-                value={t("windowsDomainQN")}
-              />
+                value="urn:oasis:names:tc:SAML:1.1:nameid-format:WindowsDomainQualifiedName"
+              >
+                {t("windowsDomainQN")}
+              </SelectOption>
+
               <SelectOption
                 data-testid="unspecified-option"
-                value={t("unspecified")}
-              />
+                value={"urn:oasis:names:tc:SAML:1.1:nameid-format:unspecified"}
+              >
+                {t("unspecified")}
+              </SelectOption>
             </Select>
           )}
         ></Controller>
