@@ -230,6 +230,7 @@ export default {
     tokens: "Tokens",
     key: "Key",
     value: "Value",
+    status: "Status",
     convertedToYearsValue: "{{convertedToYears}}",
     convertedToDaysValue: "{{convertedToDays}}",
     convertedToHoursValue: "{{convertedToHours}}",
