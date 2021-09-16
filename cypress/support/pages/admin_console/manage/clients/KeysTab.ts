@@ -14,22 +14,24 @@ export default class KeysTab {
   }
 
   checkSaveDisabled(disabled = true) {
-    cy.getId(this.saveKeys).should((!disabled ? "not." : "") + "be.disabled");
+    cy.findByTestId(this.saveKeys).should(
+      (!disabled ? "not." : "") + "be.disabled"
+    );
     return this;
   }
 
   toggleUseJwksUrl() {
-    cy.getId(this.useJwksUrl).click({ force: true });
+    cy.findByTestId(this.useJwksUrl).click({ force: true });
     return this;
   }
 
   clickGenerate() {
-    cy.getId(this.generate).click();
+    cy.findByTestId(this.generate).click();
     return this;
   }
 
   clickConfirm() {
-    cy.getId(this.confirm).click();
+    cy.findByTestId(this.confirm).click();
     return this;
   }
 
@@ -38,7 +40,7 @@ export default class KeysTab {
     keyPassword: string,
     storePassword: string
   ) {
-    cy.getId(this.keyAlias)
+    cy.findByTestId(this.keyAlias)
       .type(keyAlias)
       .getId(this.keyPassword)
       .type(keyPassword)
