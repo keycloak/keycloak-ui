@@ -46,7 +46,7 @@ const Fields = ({ readOnly }: DescriptorSettingsProps) => {
   });
 
   const principalType = useWatch({
-    control: control,
+    control,
     name: "config.principalType",
     defaultValue: "",
   });

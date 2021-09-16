@@ -39,7 +39,7 @@ export const ReqAuthnConstraints = () => {
               toggleId="comparison"
               required
               direction="up"
-              onToggle={() => setComparisonOpen(!comparisonOpen)}
+              onToggle={(isExpanded) => setComparisonOpen(isExpanded)}
               onSelect={(_, value) => {
                 onChange(value.toString());
                 setComparisonOpen(false);
