@@ -152,7 +152,7 @@ export const JsonFileUpload = ({
           >
             <CodeEditor
               isLineNumbersVisible
-              code={fileUpload.value as string}
+              code={fileUpload.value}
               language={Language.json}
               height="128px"
               onChange={(value, event) =>
