@@ -14,12 +14,12 @@ import { FormAccess } from "../components/form-access/FormAccess";
 import { ViewHeader } from "../components/view-header/ViewHeader";
 import { Link } from "react-router-dom";
 import { useRealm } from "../context/realm-context/RealmContext";
-import { toClientProfiles } from "./routes/NewClientProfile";
+import { toClientPolicies } from "./routes/ClientPolicies";
 
 export const NewClientProfileForm = () => {
   const { t } = useTranslation("realm-settings");
   const { register, errors } = useForm();
-  const { realm: realmName } = useRealm();
+  const { realm } = useRealm();
 
   function save() {
     //TODO
@@ -73,7 +73,7 @@ export const NewClientProfileForm = () => {
               id="cancelCreateProfile"
               component={Link}
               // @ts-ignore
-              to={toClientProfiles({ realmName })}
+              to={toClientPolicies({ realm })}
               data-testid="cancelCreateProfile"
             >
               {t("common:cancel")}

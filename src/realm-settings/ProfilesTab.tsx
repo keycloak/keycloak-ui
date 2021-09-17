@@ -31,14 +31,14 @@ type ClientProfile = {
 export const ProfilesTab = () => {
   const { t } = useTranslation("realm-settings");
   const adminClient = useAdminClient();
-  const { realm: realmName } = useRealm();
+  const { realm } = useRealm();
   const { addAlert, addError } = useAlerts();
   const [profiles, setProfiles] = useState<ClientProfile[]>();
   const [show, setShow] = useState(false);
 
   const loader = async () => {
     const allProfiles = await adminClient.clientPolicies.listProfiles({
-      realm: realmName,
+      realm,
       includeGlobalProfiles: true,
     });
 
@@ -129,7 +129,7 @@ export const ProfilesTab = () => {
                 id="createProfile"
                 component={Link}
                 // @ts-ignore
-                to={toNewClientProfile({ realmName })}
+                to={toNewClientProfile({ realm })}
                 data-testid="createProfile"
               >
                 {t("createClientProfile")}
