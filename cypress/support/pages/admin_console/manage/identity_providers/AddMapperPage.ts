@@ -117,13 +117,15 @@ export default class AddMapperPage {
   editSocialMapper() {
     cy.get(this.syncmodeSelectToggle).click();
 
-    cy.getId("inherit").click();
+    cy.findByTestId("inherit").click();
 
-    cy.getId(this.userSessionAttribute).clear();
-    cy.getId(this.userSessionAttribute).type("user session attribute_edited");
-    cy.getId(this.userSessionAttributeValue).clear();
+    cy.findByTestId(this.userSessionAttribute).clear();
+    cy.findByTestId(this.userSessionAttribute).type(
+      "user session attribute_edited"
+    );
+    cy.findByTestId(this.userSessionAttributeValue).clear();
 
-    cy.getId(this.userSessionAttributeValue).type(
+    cy.findByTestId(this.userSessionAttributeValue).type(
       "user session attribute value_edited"
     );
 
@@ -135,7 +137,7 @@ export default class AddMapperPage {
   editSAMLorOIDCMapper() {
     cy.get(this.syncmodeSelectToggle).click();
 
-    cy.getId("legacy").click();
+    cy.findByTestId("legacy").click();
 
     cy.get(this.attributesKeyInput).clear();
     cy.get(this.attributesKeyInput).type("key_edited");
