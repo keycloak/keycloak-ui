@@ -2,7 +2,7 @@
 // @ts-ignore
 import webpackPreprocessor from "@cypress/webpack-batteries-included-preprocessor";
 import ForkTsCheckerWebpackPlugin from "fork-ts-checker-webpack-plugin";
-import path from "node:path";
+import path from "path";
 
 // ***********************************************************
 // This example plugins/index.js can be used to load plugins
