@@ -46,7 +46,7 @@ describe("Realm settings", () => {
 
     cy.findByTestId("rs-keys-tab").click();
     cy.findByTestId("rs-providers-tab").click();
-    cy.findByTestId("provider-name-link")
+    cy.findAllByTestId("provider-name-link")
       .contains("test_aes-generated")
       .click();
 
@@ -54,7 +54,7 @@ describe("Realm settings", () => {
 
     cy.findByTestId("rs-keys-tab").click();
     cy.findByTestId("rs-providers-tab").click();
-    cy.findByTestId("provider-name-link")
+    cy.findAllByTestId("provider-name-link")
       .contains("test_hmac-generated")
       .click();
 
@@ -62,13 +62,13 @@ describe("Realm settings", () => {
 
     cy.findByTestId("rs-keys-tab").click();
     cy.findByTestId("rs-providers-tab").click();
-    cy.findByTestId("provider-name-link").contains("test_rsa").click();
+    cy.findAllByTestId("provider-name-link").contains("test_rsa").click();
 
     sidebarPage.goToRealmSettings();
 
     cy.findByTestId("rs-keys-tab").click();
     cy.findByTestId("rs-providers-tab").click();
-    cy.findByTestId("provider-name-link")
+    cy.findAllByTestId("provider-name-link")
       .contains("test_rsa-generated")
       .click();
 

@@ -251,7 +251,7 @@ export default class RealmSettingsPage {
   }
 
   deleteProvider(providerName: string) {
-    cy.findByTestId("provider-name-link")
+    cy.findAllByTestId("provider-name-link")
       .contains(providerName)
       .parent()
       .siblings(".pf-c-data-list__item-action")
