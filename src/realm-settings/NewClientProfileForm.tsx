@@ -72,6 +72,7 @@ export const NewClientProfileForm = () => {
             <Button
               id="cancelCreateProfile"
               component={Link}
+              // @ts-ignore
               to={toClientProfiles({ realmName })}
               data-testid="cancelCreateProfile"
             >

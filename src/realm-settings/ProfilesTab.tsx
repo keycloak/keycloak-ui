@@ -128,6 +128,7 @@ export const ProfilesTab = () => {
               <Button
                 id="createProfile"
                 component={Link}
+                // @ts-ignore
                 to={toNewClientProfile({ realmName })}
                 data-testid="createProfile"
               >
