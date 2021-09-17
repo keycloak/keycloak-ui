@@ -6,7 +6,7 @@
   ],
   "extends": "@snowpack/app-scripts-react/tsconfig.base.json",
   "compilerOptions": {
-    "types": ["jest", "snowpack-env"],
+    "types": ["snowpack-env"],
     "esModuleInterop": true
   }
 }
