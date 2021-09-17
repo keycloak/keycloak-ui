@@ -12,14 +12,14 @@ import { useTranslation } from "react-i18next";
 import { useForm } from "react-hook-form";
 import { FormAccess } from "../components/form-access/FormAccess";
 import { ViewHeader } from "../components/view-header/ViewHeader";
-import { useHistory } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { useRealm } from "../context/realm-context/RealmContext";
+import { toClientProfiles } from "./routes/NewClientProfile";
 
 export const NewClientProfileForm = () => {
   const { t } = useTranslation("realm-settings");
-  const history = useHistory();
   const { register, errors } = useForm();
-  const { realm } = useRealm();
+  const { realm: realmName } = useRealm();
 
   function save() {
     //TODO
@@ -70,10 +70,10 @@ export const NewClientProfileForm = () => {
               {t("common:save")}
             </Button>
             <Button
-              onClick={() =>
-                history.push(`/${realm}/realm-settings/clientPolicies`)
-              }
-              variant="link"
+              id="cancelCreateProfile"
+              component={Link}
+              to={toClientProfiles({ realmName })}
+              data-testid="cancelCreateProfile"
             >
               {t("common:cancel")}
             </Button>

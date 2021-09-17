@@ -16,9 +16,10 @@ import { useAdminClient } from "../context/auth/AdminClient";
 import { useConfirmDialog } from "../components/confirm-dialog/ConfirmDialog";
 import { useRealm } from "../context/realm-context/RealmContext";
 import { useAlerts } from "../components/alert/Alerts";
-import { Link, useHistory } from "react-router-dom";
+import { Link } from "react-router-dom";
 import "./RealmSettingsSection.css";
 import type ClientPolicyExecutorRepresentation from "@keycloak/keycloak-admin-client/lib/defs/clientPolicyExecutorRepresentation";
+import { toNewClientProfile } from "./routes/NewClientProfile";
 
 type ClientProfile = {
   description?: string;
@@ -29,7 +30,6 @@ type ClientProfile = {
 
 export const ProfilesTab = () => {
   const { t } = useTranslation("realm-settings");
-  const history = useHistory();
   const adminClient = useAdminClient();
   const { realm: realmName } = useRealm();
   const { addAlert, addError } = useAlerts();
@@ -127,11 +127,8 @@ export const ProfilesTab = () => {
             <ToolbarItem>
               <Button
                 id="createProfile"
-                onClick={() =>
-                  history.push(
-                    `/${realmName}/realm-settings/clientPolicies/new-client-profile`
-                  )
-                }
+                component={Link}
+                to={toNewClientProfile({ realmName })}
                 data-testid="createProfile"
               >
                 {t("createClientProfile")}

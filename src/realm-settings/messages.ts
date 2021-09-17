@@ -219,6 +219,7 @@ export default {
     deleteClientSuccess: "Client profile deleted",
     deleteClientError: "Could not delete profile: {{error}}",
     createClientProfile: "Create client profile",
+    allClientPolicies: "Client policies",
     newClientProfile: "Create client profile",
     newClientProfileName: "Client profile name",
     delete: "delete",
