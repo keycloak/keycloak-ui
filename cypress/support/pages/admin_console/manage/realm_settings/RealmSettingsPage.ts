@@ -374,10 +374,8 @@ export default class RealmSettingsPage {
 
     cy.findByTestId(this.accessTokenLifespanInput)
       .focus()
-      .clear({ force: true })
-      .findByTestId(this.accessTokenLifespanInput)
-      .clear()
-      .type("1");
+      .clear({ force: true });
+    cy.findByTestId(this.accessTokenLifespanInput).clear().type("1");
     this.changeTimeUnit(
       "Days",
       this.accessTokenLifespanSelectMenu,
