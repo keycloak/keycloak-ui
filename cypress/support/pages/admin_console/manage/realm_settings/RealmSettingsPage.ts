@@ -256,9 +256,9 @@ export default class RealmSettingsPage {
       .parent()
       .siblings(".pf-c-data-list__item-action")
       .click()
-      .getId(this.deleteAction)
+      .findByTestId(this.deleteAction)
       .click();
-    cy.wait(500).getId(this.modalConfirm).click();
+    cy.wait(500).findByTestId(this.modalConfirm).click();
   }
 
   enterConsoleDisplayName(name: string) {
@@ -375,7 +375,7 @@ export default class RealmSettingsPage {
     cy.findByTestId(this.accessTokenLifespanInput)
       .focus()
       .clear({ force: true })
-      .getId(this.accessTokenLifespanInput)
+      .findByTestId(this.accessTokenLifespanInput)
       .clear()
       .type("1");
     this.changeTimeUnit(

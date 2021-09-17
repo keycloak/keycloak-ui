@@ -52,6 +52,9 @@ export default class AssociatedRolesPage {
 
     cy.findByTestId(this.addAssociatedRolesModalButton).contains("Add").click();
 
-    cy.contains("Users in role").click().getId(this.usersPage).should("exist");
+    cy.contains("Users in role")
+      .click()
+      .findByTestId(this.usersPage)
+      .should("exist");
   }
 }

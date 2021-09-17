@@ -42,9 +42,9 @@ export default class KeysTab {
   ) {
     cy.findByTestId(this.keyAlias)
       .type(keyAlias)
-      .getId(this.keyPassword)
+      .findByTestId(this.keyPassword)
       .type(keyPassword)
-      .getId(this.storePassword)
+      .findByTestId(this.storePassword)
       .type(storePassword);
     return this;
   }

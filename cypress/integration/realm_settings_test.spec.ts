@@ -85,7 +85,7 @@ describe("Realm settings", () => {
       .parentsUntil(".pf-c-data-list__item-row")
       .find(".pf-c-dropdown__toggle")
       .click()
-      .getId(realmSettingsPage.deleteAction)
+      .findByTestId(realmSettingsPage.deleteAction)
       .click();
     cy.findByTestId(realmSettingsPage.modalConfirm).click();
 
