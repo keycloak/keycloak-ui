@@ -1,6 +1,7 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   ActionGroup,
+  AlertVariant,
   Button,
   FormGroup,
   PageSection,
@@ -14,15 +15,63 @@ import { FormAccess } from "../components/form-access/FormAccess";
 import { ViewHeader } from "../components/view-header/ViewHeader";
 import { Link } from "react-router-dom";
 import { useRealm } from "../context/realm-context/RealmContext";
+import { useAlerts } from "../components/alert/Alerts";
+import { useAdminClient, useFetch } from "../context/auth/AdminClient";
+import type ClientProfileRepresentation from "@keycloak/keycloak-admin-client/lib/defs/clientProfileRepresentation";
 
 export const NewClientProfileForm = () => {
   const { t } = useTranslation("realm-settings");
-  const { register, errors } = useForm();
+  const { getValues, register, errors } = useForm();
   const { realm } = useRealm();
+  const { addAlert, addError } = useAlerts();
+  const adminClient = useAdminClient();
+  const [globalProfiles, setGlobalProfiles] = useState<
+    ClientProfileRepresentation[]
+  >([]);
+  const [profiles, setProfiles] = useState<ClientProfileRepresentation[]>([]);
 
-  function save() {
-    //TODO
-  }
+  useFetch(
+    async () =>
+      await adminClient.clientPolicies.listProfiles({
+        includeGlobalProfiles: true,
+      }),
+    (profiles) => {
+      setGlobalProfiles(
+        profiles.globalProfiles as ClientProfileRepresentation[]
+      );
+      setProfiles(profiles.profiles as ClientProfileRepresentation[]);
+    },
+    []
+  );
+
+  const save = async () => {
+    const form = getValues();
+
+    const createdProfile = {
+      name: form.name,
+      executors: [],
+      description: form.description,
+    };
+
+    const allProfiles = profiles.concat(createdProfile);
+
+    const profilesToSave = {
+      profiles: allProfiles,
+      globalProfiles: globalProfiles,
+    };
+
+    try {
+      await adminClient.clientPolicies.createProfiles({
+        ...profilesToSave,
+      });
+      addAlert(
+        t("realm-settings:createClientProfileSuccess"),
+        AlertVariant.success
+      );
+    } catch (error) {
+      addError("realm-settings:createClientProfileError", error);
+    }
+  };
 
   return (
     <>
@@ -32,8 +81,12 @@ export const NewClientProfileForm = () => {
           <FormGroup
             label={t("newClientProfileName")}
             fieldId="kc-name"
+            helperText={t("createClientProfileNameHelperText")}
             isRequired
             helperTextInvalid={t("common:required")}
+            validated={
+              errors.name ? ValidatedOptions.error : ValidatedOptions.default
+            }
           >
             <TextInput
               ref={register({ required: true })}
@@ -42,16 +95,7 @@ export const NewClientProfileForm = () => {
               name="name"
             />
           </FormGroup>
-          <FormGroup
-            label={t("common:description")}
-            fieldId="kc-description"
-            validated={
-              errors.description
-                ? ValidatedOptions.error
-                : ValidatedOptions.default
-            }
-            helperTextInvalid={errors.description?.message}
-          >
+          <FormGroup label={t("common:description")} fieldId="kc-description">
             <TextArea
               name="description"
               aria-label={t("description")}
