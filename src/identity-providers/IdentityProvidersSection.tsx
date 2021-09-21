@@ -110,13 +110,13 @@ export const IdentityProvidersSection = () => {
           <DropdownItem
             key={provider.id}
             value={provider.id}
-            data-testid={provider.id}
             component={
               <Link
                 to={toIdentityProviderCreate({
                   realm,
                   providerId: provider.id,
                 })}
+                data-testid={provider.id}
               >
                 {provider.name}
               </Link>

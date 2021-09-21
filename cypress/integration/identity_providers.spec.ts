@@ -55,17 +55,10 @@ describe("Identity provider test", () => {
       listingPage.itemExist(identityProviderName);
     });
 
-    it("should delete provider", () => {
-      const modalUtils = new ModalUtils();
-      listingPage.deleteItem(identityProviderName);
-      modalUtils.checkModalTitle(deletePrompt).confirmModal();
-
-      masthead.checkNotificationMessage(deleteSuccessMsg);
-    });
-
     it("should create facebook provider", () => {
       createProviderPage
-        .clickCard("facebook")
+        .clickCreateDropdown()
+        .clickItem("facebook")
         .fill("facebook", "123")
         .clickAdd();
       masthead.checkNotificationMessage(createSuccessMsg);
@@ -73,18 +66,11 @@ describe("Identity provider test", () => {
 
     it("should change order of providers", () => {
       const orderDialog = new OrderDialog();
-      const providers = ["facebook", identityProviderName, "bitbucket"];
+      const providers = [identityProviderName, "facebook", "bitbucket"];
 
       sidebarPage.goToIdentityProviders();
       listingPage.itemExist("facebook");
 
-      createProviderPage
-        .clickCreateDropdown()
-        .clickItem(identityProviderName)
-        .fill(identityProviderName, "123")
-        .clickAdd();
-
-      cy.wait(2000);
       sidebarPage.goToIdentityProviders();
       listingPage.itemExist(identityProviderName);
 
@@ -95,13 +81,14 @@ describe("Identity provider test", () => {
         .clickAdd();
 
       cy.wait(2000);
+
       sidebarPage.goToIdentityProviders();
       listingPage.itemExist(identityProviderName);
 
       orderDialog.openDialog().checkOrder(providers);
       orderDialog.moveRowTo("facebook", identityProviderName);
 
-      orderDialog.checkOrder(["facebook", "bitbucket", identityProviderName]);
+      orderDialog.checkOrder(["bitbucket", identityProviderName, "facebook"]);
 
       orderDialog.clickSave();
       masthead.checkNotificationMessage(changeSuccessMsg);
@@ -129,6 +116,14 @@ describe("Identity provider test", () => {
         .fillSsoServiceUrl(ssoServiceUrl)
         .clickAdd();
       masthead.checkNotificationMessage(createSuccessMsg);
+    });
+
+    it("should delete provider", () => {
+      const modalUtils = new ModalUtils();
+      listingPage.deleteItem(identityProviderName);
+      modalUtils.checkModalTitle(deletePrompt).confirmModal();
+
+      masthead.checkNotificationMessage(deleteSuccessMsg);
     });
 
     it("should add facebook social mapper", () => {
