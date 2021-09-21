@@ -117,9 +117,9 @@ export const BruteForceDetection = ({
 
           {!permanentLockout && (
             <>
-              <Time name="waitIncrement" />
-              <Time name="maxFailureWait" />
-              <Time name="maxDeltaTime" />
+              <Time name="waitIncrementSeconds" />
+              <Time name="maxFailureWaitSeconds" />
+              <Time name="maxDeltaTimeSeconds" />
             </>
           )}
 
@@ -153,7 +153,7 @@ export const BruteForceDetection = ({
             />
           </FormGroup>
 
-          <Time name="minimumQuickLoginWait" />
+          <Time name="minimumQuickLoginWaitSeconds" />
         </>
       )}
 
