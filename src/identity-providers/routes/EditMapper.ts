@@ -5,9 +5,9 @@ import { AddMapper } from "../add/AddMapper";
 
 export type IdentityProviderEditMapperParams = {
   realm: string;
-  id: string;
-  alias: string;
   providerId: string;
+  alias: string;
+  id: string;
 };
 
 export const IdentityProviderEditMapperRoute: RouteDef = {

@@ -17,10 +17,8 @@ import { useAdminClient } from "../../context/auth/AdminClient";
 import { useRealm } from "../../context/realm-context/RealmContext";
 import { useAlerts } from "../../components/alert/Alerts";
 import { GeneralSettings } from "./GeneralSettings";
-import {
-  IdentityProviderCreateParams,
-  toIdentityProvider,
-} from "../routes/IdentityProvider";
+import { toIdentityProvider } from "../routes/IdentityProvider";
+import type { IdentityProviderCreateParams } from "../routes/IdentityProviderCreate";
 
 export const AddIdentityProvider = () => {
   const { t } = useTranslation("identity-providers");
@@ -40,14 +38,14 @@ export const AddIdentityProvider = () => {
     try {
       await adminClient.identityProviders.create({
         ...provider,
-        providerId: providerId,
+        providerId,
         alias: providerId,
       });
       addAlert(t("createSuccess"), AlertVariant.success);
       history.push(
         toIdentityProvider({
           realm,
-          providerId: providerId,
+          providerId,
           alias: providerId!,
           tab: "settings",
         })

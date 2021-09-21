@@ -34,11 +34,8 @@ import { upperCaseFormatter } from "../util";
 import { useConfirmDialog } from "../components/confirm-dialog/ConfirmDialog";
 import { ProviderIconMapper } from "./ProviderIconMapper";
 import { ManageOderDialog } from "./ManageOrderDialog";
-// import { toIdentityProviderTab } from "./routes/IdentityProviderTab";
-import {
-  toIdentityProvider,
-  toIdentityProviderCreate,
-} from "./routes/IdentityProvider";
+import { toIdentityProvider } from "./routes/IdentityProvider";
+import { toIdentityProviderCreate } from "./routes/IdentityProviderCreate";
 
 export const IdentityProvidersSection = () => {
   const { t } = useTranslation("identity-providers");
@@ -114,10 +111,17 @@ export const IdentityProvidersSection = () => {
             key={provider.id}
             value={provider.id}
             data-testid={provider.id}
-            onClick={() => navigateToCreate(provider.id)}
-          >
-            {provider.name}
-          </DropdownItem>
+            component={
+              <Link
+                to={toIdentityProviderCreate({
+                  realm,
+                  providerId: provider.id,
+                })}
+              >
+                {provider.name}
+              </Link>
+            }
+          />
         ))}
       </DropdownGroup>
     ));

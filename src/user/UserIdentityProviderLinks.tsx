@@ -94,7 +94,7 @@ export const UserIdentityProviderLinks = () => {
       <Link
         to={toIdentityProvider({
           realm,
-          // providerId: idp.identityProvider!,
+          providerId: idp.identityProvider,
           alias: idp.identityProvider!,
           tab: "settings",
         })}

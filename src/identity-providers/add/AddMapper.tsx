@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useHistory, useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { Controller, useFieldArray, useForm } from "react-hook-form";
 import {
@@ -48,7 +48,6 @@ export const AddMapper = () => {
   const { handleSubmit, control, register, errors } = form;
   const { addAlert, addError } = useAlerts();
 
-  const history = useHistory();
   const { realm } = useRealm();
   const adminClient = useAdminClient();
 
@@ -532,16 +531,17 @@ export const AddMapper = () => {
           </Button>
           <Button
             variant="link"
-            onClick={() =>
-              history.push(
-                toIdentityProvider({
+            component={(props) => (
+              <Link
+                {...props}
+                to={toIdentityProvider({
                   realm,
-                  providerId: providerId,
+                  providerId,
                   alias: alias!,
                   tab: "settings",
-                })
-              )
-            }
+                })}
+              />
+            )}
           >
             {t("common:cancel")}
           </Button>
