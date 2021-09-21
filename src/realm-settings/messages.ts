@@ -195,6 +195,7 @@ export default {
     noClientPoliciesInstructions:
       "There are no client policies. Select 'Create client policy' to create a new client policy.",
     createClientPolicy: "Create client policy",
+    clientPolicySearch: "Search client policy",
     policiesConfigType: "Configure via:",
     policiesConfigTypes: {
       formView: "Form view",
