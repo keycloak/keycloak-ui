@@ -51,10 +51,9 @@ export const UserIdentityProviderLinks = () => {
   const getFederatedIdentities = async () => {
     const allProviders = await adminClient.identityProviders.find();
 
-    const allFedIds: withProviderId[] =
-      (await adminClient.users.listFederatedIdentities({
-        id,
-      })) as unknown as withProviderId[];
+    const allFedIds = (await adminClient.users.listFederatedIdentities({
+      id,
+    })) as unknown as withProviderId[];
     for (const element of allFedIds) {
       element.providerId = allProviders.find(
         (item) => item.alias === element.identityProvider
