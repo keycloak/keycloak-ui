@@ -1,4 +1,4 @@
-import React from "react";
+import React, { CSSProperties } from "react";
 import { useTranslation } from "react-i18next";
 import { Controller, useFormContext } from "react-hook-form";
 import { FormGroup, ValidatedOptions } from "@patternfly/react-core";
@@ -6,11 +6,18 @@ import { FormGroup, ValidatedOptions } from "@patternfly/react-core";
 import { HelpItem } from "../../components/help-enabler/HelpItem";
 import { TimeSelector } from "../../components/time-selector/TimeSelector";
 
-export const Time = ({ name }: { name: string }) => {
+export const Time = ({
+  name,
+  style,
+}: {
+  name: string;
+  style?: CSSProperties;
+}) => {
   const { t } = useTranslation("realm-settings");
   const { control, errors } = useFormContext();
   return (
     <FormGroup
+      style={style}
       label={t(name)}
       fieldId={name}
       labelIcon={
