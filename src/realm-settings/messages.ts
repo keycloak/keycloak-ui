@@ -236,6 +236,7 @@ export default {
       "Executors, which will be applied for this client profile",
     executorsHelpItem: "Executors help item",
     addExecutor: "Add executor",
+    emptyExecutors: "No executors configured",
     tokens: "Tokens",
     key: "Key",
     value: "Value",

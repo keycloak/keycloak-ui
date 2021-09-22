@@ -6,8 +6,10 @@ import {
   Divider,
   FormGroup,
   PageSection,
+  Text,
   TextArea,
   TextInput,
+  TextVariants,
   ValidatedOptions,
 } from "@patternfly/react-core";
 import { useTranslation } from "react-i18next";
@@ -170,6 +172,9 @@ export const NewClientProfileForm = () => {
                 </Button>
               </FormGroup>
               <Divider />
+              <Text component={TextVariants.h6}>
+                {t("realm-settings:emptyExecutors")}
+              </Text>
             </>
           )}
         </FormAccess>
