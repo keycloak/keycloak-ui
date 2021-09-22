@@ -196,11 +196,6 @@ describe("Identity provider test", () => {
       masthead.checkNotificationMessage(deleteSuccessMsg);
 
       sidebarPage.goToIdentityProviders();
-      listingPage.itemExist("github").deleteItem("github");
-      modalUtils.checkModalTitle(deletePrompt).confirmModal();
-      masthead.checkNotificationMessage(deleteSuccessMsg);
-
-      sidebarPage.goToIdentityProviders();
       listingPage.itemExist("oidc").deleteItem("oidc");
       modalUtils.checkModalTitle(deletePrompt).confirmModal();
       masthead.checkNotificationMessage(deleteSuccessMsg);
