@@ -45,7 +45,7 @@ export const AddIdentityProvider = () => {
       history.push(
         toIdentityProvider({
           realm,
-          providerId,
+          providerId: providerId!,
           alias: providerId!,
           tab: "settings",
         })

@@ -42,10 +42,26 @@ export const UserIdentityProviderLinks = () => {
     setIsLinkIdPModalOpen(!isLinkIdPModalOpen);
   };
 
+  type withProviderId = FederatedIdentityRepresentation & {
+    providerId: string;
+  };
+
   const identityProviders = useServerInfo().identityProviders;
 
   const getFederatedIdentities = async () => {
-    return await adminClient.users.listFederatedIdentities({ id });
+    const allProviders = await adminClient.identityProviders.find();
+
+    const allFedIds: withProviderId[] =
+      (await adminClient.users.listFederatedIdentities({
+        id,
+      })) as unknown as withProviderId[];
+    for (const element of allFedIds) {
+      element.providerId = allProviders.find(
+        (item) => item.alias === element.identityProvider
+      )?.providerId!;
+    }
+
+    return allFedIds;
   };
 
   const getAvailableIdPs = async () => {
@@ -89,12 +105,12 @@ export const UserIdentityProviderLinks = () => {
     },
   });
 
-  const idpLinkRenderer = (idp: FederatedIdentityRepresentation) => {
+  const idpLinkRenderer = (idp: withProviderId) => {
     return (
       <Link
         to={toIdentityProvider({
           realm,
-          providerId: idp.identityProvider,
+          providerId: idp.providerId,
           alias: idp.identityProvider!,
           tab: "settings",
         })}

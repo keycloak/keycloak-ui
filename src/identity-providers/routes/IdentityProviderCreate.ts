@@ -5,7 +5,7 @@ import { AddIdentityProvider } from "../add/AddIdentityProvider";
 
 export type IdentityProviderCreateParams = {
   realm: string;
-  providerId?: string;
+  providerId: string;
 };
 
 export const IdentityProviderCreateRoute: RouteDef = {

@@ -100,7 +100,7 @@ const Header = ({ onChange, value, save, toggleDeleteDialog }: HeaderProps) => {
 
 export const DetailSettings = () => {
   const { t } = useTranslation("identity-providers");
-  const { alias } = useParams<IdentityProviderParams>();
+  const { alias, providerId } = useParams<IdentityProviderParams>();
 
   const form = useForm<IdentityProviderRepresentation>();
   const { handleSubmit, getValues, reset } = form;
@@ -136,7 +136,10 @@ export const DetailSettings = () => {
   const save = async (provider?: IdentityProviderRepresentation) => {
     const p = provider || getValues();
     try {
-      await adminClient.identityProviders.update({ alias }, { ...p, alias });
+      await adminClient.identityProviders.update(
+        { alias },
+        { ...p, alias, providerId }
+      );
       addAlert(t("updateSuccess"), AlertVariant.success);
     } catch (error) {
       addError("identity-providers:updateError", error);
