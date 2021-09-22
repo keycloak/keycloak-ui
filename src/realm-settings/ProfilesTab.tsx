@@ -20,12 +20,13 @@ import { Link } from "react-router-dom";
 import "./RealmSettingsSection.css";
 import type ClientPolicyExecutorRepresentation from "@keycloak/keycloak-admin-client/lib/defs/clientPolicyExecutorRepresentation";
 import { toNewClientProfile } from "./routes/NewClientProfile";
+import type ClientProfileRepresentation from "@keycloak/keycloak-admin-client/lib/defs/clientProfileRepresentation";
 
 type ClientProfile = {
   description?: string;
   executors?: ClientPolicyExecutorRepresentation[];
   name?: string;
-  global: boolean;
+  global?: boolean;
 };
 
 export const ProfilesTab = () => {
@@ -33,14 +34,21 @@ export const ProfilesTab = () => {
   const adminClient = useAdminClient();
   const { realm } = useRealm();
   const { addAlert, addError } = useAlerts();
-  const [profiles, setProfiles] = useState<ClientProfile[]>();
+  const [tableProfiles, setTableProfiles] = useState<ClientProfile[]>();
+  const [globalProfiles, setGlobalProfiles] =
+    useState<ClientProfileRepresentation[]>();
+  const [selectedProfile, setSelectedProfile] = useState<ClientProfile>();
   const [show, setShow] = useState(false);
+  const [key, setKey] = useState(0);
+  const refresh = () => setKey(new Date().getTime());
 
   const loader = async () => {
     const allProfiles = await adminClient.clientPolicies.listProfiles({
       realm,
       includeGlobalProfiles: true,
     });
+
+    setGlobalProfiles(allProfiles.globalProfiles);
 
     const globalProfiles = allProfiles.globalProfiles?.map(
       (globalProfiles) => ({
@@ -55,12 +63,15 @@ export const ProfilesTab = () => {
     }));
 
     const allClientProfiles = globalProfiles?.concat(profiles ?? []);
-    setProfiles(allClientProfiles);
+    setTableProfiles(allClientProfiles);
 
     return allClientProfiles ?? [];
   };
 
-  const code = useMemo(() => JSON.stringify(profiles, null, 2), [profiles]);
+  const code = useMemo(
+    () => JSON.stringify(tableProfiles, null, 2),
+    [tableProfiles]
+  );
 
   const [toggleDeleteDialog, DeleteConfirm] = useConfirmDialog({
     titleKey: t("deleteClientProfileConfirmTitle"),
@@ -68,9 +79,25 @@ export const ProfilesTab = () => {
     continueButtonLabel: t("delete"),
     continueButtonVariant: ButtonVariant.danger,
     onConfirm: async () => {
+      const filteredProfiles = tableProfiles?.filter(
+        (profile) => profile.name !== selectedProfile?.name && !profile.global
+      );
+
+      filteredProfiles?.forEach(function (profile) {
+        delete profile.global;
+      });
+
+      const profilesToUpdate = {
+        profiles: filteredProfiles,
+        globalProfiles: globalProfiles,
+      };
+
       try {
-        // delete client profile here
+        await adminClient.clientPolicies.createProfiles({
+          ...profilesToUpdate,
+        });
         addAlert(t("deleteClientSuccess"), AlertVariant.success);
+        refresh();
       } catch (error) {
         addError(t("deleteClientError"), error);
       }
@@ -119,6 +146,7 @@ export const ProfilesTab = () => {
       <Divider />
       {!show ? (
         <KeycloakDataTable
+          key={key}
           ariaLabelKey="userEventsRegistered"
           searchPlaceholderKey="realm-settings:clientProfileSearch"
           isPaginated
@@ -140,7 +168,8 @@ export const ProfilesTab = () => {
           actions={[
             {
               title: t("common:delete"),
-              onRowClick: () => {
+              onRowClick: (profile) => {
+                setSelectedProfile(profile);
                 toggleDeleteDialog();
               },
             },
