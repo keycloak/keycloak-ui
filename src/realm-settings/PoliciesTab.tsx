@@ -134,7 +134,7 @@ export const PoliciesTab = () => {
             },
             {
               name: "enabled",
-              displayKey: "realm-settings:status",
+              displayKey: "common:enabled",
               cellFormatters: [upperCaseFormatter()],
             },
             {
