@@ -231,6 +231,11 @@ export default {
     reload: "Reload",
     global: "Global",
     description: "description",
+    executors: "Executors",
+    executorsHelpText:
+      "Executors, which will be applied for this client profile",
+    executorsHelpItem: "Executors help item",
+    addExecutor: "Add executor",
     tokens: "Tokens",
     key: "Key",
     value: "Value",

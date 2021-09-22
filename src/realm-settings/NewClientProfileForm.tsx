@@ -3,6 +3,7 @@ import {
   ActionGroup,
   AlertVariant,
   Button,
+  Divider,
   FormGroup,
   PageSection,
   TextArea,
@@ -19,6 +20,9 @@ import { useAlerts } from "../components/alert/Alerts";
 import { useAdminClient, useFetch } from "../context/auth/AdminClient";
 import type ClientProfileRepresentation from "@keycloak/keycloak-admin-client/lib/defs/clientProfileRepresentation";
 import type ClientPolicyExecutorRepresentation from "@keycloak/keycloak-admin-client/lib/defs/clientPolicyExecutorRepresentation";
+import { HelpItem } from "../components/help-enabler/HelpItem";
+import { PlusCircleIcon } from "@patternfly/react-icons";
+import "./RealmSettingsSection.css";
 
 type NewClientProfileForm = {
   name: string;
@@ -44,6 +48,7 @@ export const NewClientProfileForm = () => {
     ClientProfileRepresentation[]
   >([]);
   const [profiles, setProfiles] = useState<ClientProfileRepresentation[]>([]);
+  const [showAddExecutorsForm, setShowAddExecutorsForm] = useState(false);
 
   useFetch(
     async () =>
@@ -83,6 +88,7 @@ export const NewClientProfileForm = () => {
         t("realm-settings:createClientProfileSuccess"),
         AlertVariant.success
       );
+      setShowAddExecutorsForm(true);
     } catch (error) {
       addError("realm-settings:createClientProfileError", error);
     }
@@ -137,6 +143,38 @@ export const NewClientProfileForm = () => {
               {t("common:cancel")}
             </Button>
           </ActionGroup>
+          {showAddExecutorsForm && (
+            <>
+              <FormGroup
+                label={t("executors")}
+                fieldId="kc-executors"
+                labelIcon={
+                  <HelpItem
+                    helpText={t("realm-settings:executorsHelpText")}
+                    forLabel={t("executorsHelpItem")}
+                    forID={t("executors")}
+                  />
+                }
+              >
+                <PlusCircleIcon
+                  className="kc-addExecutor-icon"
+                  key={`add-executor-icon`}
+                />{" "}
+                <Button
+                  id="addExecutor"
+                  component={Link}
+                  variant="link"
+                  className="kc-addExecutor"
+                  // @ts-ignore
+                  to={`/${realm}/realm-settings/clientPolicies`}
+                  data-testid="cancelCreateProfile"
+                >
+                  {t("realm-settings:addExecutor")}
+                </Button>
+              </FormGroup>
+              <Divider />
+            </>
+          )}
         </FormAccess>
       </PageSection>
     </>

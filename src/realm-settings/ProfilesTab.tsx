@@ -40,7 +40,6 @@ export const ProfilesTab = () => {
   const [selectedProfile, setSelectedProfile] = useState<ClientProfile>();
   const [show, setShow] = useState(false);
   const [key, setKey] = useState(0);
-  const refresh = () => setKey(new Date().getTime());
 
   const loader = async () => {
     const allProfiles = await adminClient.clientPolicies.listProfiles({
@@ -97,7 +96,7 @@ export const ProfilesTab = () => {
           ...profilesToUpdate,
         });
         addAlert(t("deleteClientSuccess"), AlertVariant.success);
-        refresh();
+        setKey(key + 1);
       } catch (error) {
         addError(t("deleteClientError"), error);
       }
@@ -210,7 +209,7 @@ export const ProfilesTab = () => {
             >
               {t("save")}
             </Button>
-            <Button variant={ButtonVariant.secondary}> {t("reload")}</Button>
+            <Button variant={ButtonVariant.link}> {t("reload")}</Button>
           </div>
         </>
       )}
