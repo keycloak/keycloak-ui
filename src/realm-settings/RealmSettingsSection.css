@@ -197,7 +197,3 @@ article.pf-c-card.pf-m-flat.kc-login-settings-template
 .kc-addExecutor {
   float: right;
 }
-
-.kc-addExecutor-icon {
-  color: var(--pf-global--link--Color);
-}
