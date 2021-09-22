@@ -167,6 +167,7 @@ export const NewClientProfileForm = () => {
                   to={`/${realm}/realm-settings/clientPolicies`}
                   data-testid="cancelCreateProfile"
                   icon={<PlusCircleIcon />}
+                  isDisabled
                 >
                   {t("realm-settings:addExecutor")}
                 </Button>
