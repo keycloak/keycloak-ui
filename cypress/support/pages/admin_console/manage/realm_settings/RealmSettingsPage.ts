@@ -143,6 +143,20 @@ export default class RealmSettingsPage {
   executeActionsSelectMenu = "#kc-execute-actions-select-menu";
   executeActionsSelectMenuList = "#kc-execute-actions-select-menu > div > ul";
 
+  createProfileBtn = "createProfile";
+  formViewSelect = "formView-radioBtn";
+  jsonEditorSelect = "formView-radioBtn";
+  newClientProfileNameInput = "client-profile-name";
+  newClientProfileDescriptionInput = "client-profile-description";
+  saveNewClientProfileBtn = "saveCreateProfile";
+  cancelNewClientProfile = "cancelCreateProfile";
+  alertMessage = ".pf-c-alert__title";
+  moreDrpDwn = ".pf-c-dropdown__toggle.pf-m-plain";
+  moreDrpDwnItems = ".pf-c-dropdown__menu-item";
+  deleteDialogTitle = ".pf-c-modal-box__title-text";
+  deleteDialogBodyText = ".pf-c-modal-box__body";
+  deleteDialogCancelBtn = ".pf-c-button.pf-m-link";
+
   selectLoginThemeType(themeType: string) {
     cy.get(this.selectLoginTheme).click();
     cy.get(this.loginThemeList).contains(themeType).click();
@@ -449,5 +463,63 @@ export default class RealmSettingsPage {
   clickAdd() {
     cy.findByTestId("addEventTypeConfirm").click();
     return this;
+  }
+
+  shouldDisplayProfilesTab() {
+    cy.findByTestId(this.createProfileBtn).should("exist");
+    cy.findByTestId(this.formViewSelect).should("exist");
+    cy.findByTestId(this.jsonEditorSelect).should("exist");
+    cy.get("table").should("be.visible").contains("td", "Global");
+  }
+
+  shouldDisplayNewClientProfileForm() {
+    cy.findByTestId(this.createProfileBtn).click();
+    cy.findByTestId(this.newClientProfileNameInput).should("exist");
+    cy.findByTestId(this.newClientProfileDescriptionInput).should("exist");
+    cy.findByTestId(this.saveNewClientProfileBtn).should("exist");
+    cy.findByTestId(this.cancelNewClientProfile).should("exist");
+  }
+
+  shouldCompleteAndCancelCreateNewClientProfile() {
+    cy.findByTestId(this.createProfileBtn).click();
+    cy.findByTestId(this.newClientProfileNameInput).type("Test");
+    cy.findByTestId(this.newClientProfileDescriptionInput).type(
+      "Test Description"
+    );
+    cy.findByTestId(this.cancelNewClientProfile).click();
+    cy.get("table").should("not.have.text", "Test");
+  }
+
+  shouldCompleteAndCreateNewClientProfile() {
+    cy.findByTestId(this.createProfileBtn).click();
+    cy.findByTestId(this.newClientProfileNameInput).type("Test");
+    cy.findByTestId(this.newClientProfileDescriptionInput).type(
+      "Test Description"
+    );
+    cy.findByTestId(this.saveNewClientProfileBtn).click();
+    cy.get(this.alertMessage).should(
+      "be.visible",
+      "New client profile created"
+    );
+  }
+
+  shouldDisplayDeleteClientProfileDialog() {
+    cy.get(this.moreDrpDwn).last().click();
+    cy.get(this.moreDrpDwnItems).click();
+    cy.get(this.deleteDialogTitle).contains("Delete profile?");
+    cy.get(this.deleteDialogBodyText).contains(
+      "This action will permanently delete the profile custom-profile. This cannot be undone."
+    );
+    cy.findByTestId("modalConfirm").contains("Delete");
+    cy.get(this.deleteDialogCancelBtn).contains("Cancel").click();
+    cy.get("table").should("not.have.text", "Test");
+  }
+
+  shouldDeleteClientProfileDialog() {
+    cy.get(this.moreDrpDwn).last().click();
+    cy.get(this.moreDrpDwnItems).click();
+    cy.findByTestId("modalConfirm").contains("Delete").click();
+    cy.get("table").should("not.have.text", "Test");
+    cy.get(this.alertMessage).should("be.visible", "Client profile deleted");
   }
 }
