@@ -168,5 +168,12 @@ export default {
     mapperSaveError: "Error saving mapper: {{error}}",
     userSessionAttribute: "User Session Attribute",
     userSessionAttributeValue: "User Session Attribute Value",
+    template: "Template",
+    target: "Target",
+    targetOptions: {
+      local: "LOCAL",
+      brokerId: "BROKER_ID",
+      brokerUsername: "BROKER_USERNAME",
+    },
   },
 };

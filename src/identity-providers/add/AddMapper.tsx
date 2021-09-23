@@ -164,12 +164,16 @@ export const AddMapper = () => {
 
   const syncModes = ["inherit", "import", "legacy", "force"];
   const [syncModeOpen, setSyncModeOpen] = useState(false);
+  const targetOptions = ["local", "brokerId", "brokerUsername"];
+  const [targetOptionsOpen, setTargetOptionsOpen] = useState(false);
   const [mapperTypeOpen, setMapperTypeOpen] = useState(false);
   const [selectedRole, setSelectedRole] = useState<RoleRepresentation[]>([]);
 
   const toggleModal = () => {
     setRolesModalOpen(!rolesModalOpen);
   };
+
+  console.log("mapperType", mapperType);
 
   return (
     <PageSection variant="light">
@@ -415,49 +419,175 @@ export const AddMapper = () => {
                     isChecked={value === "true"}
                     onChange={(value) => onChange("" + value)}
                   />
-                )}
-              />
-            </FormGroup>
-            <FormGroup
-              label={t("common:role")}
-              labelIcon={
-                <HelpItem
-                  id="name-help-icon"
-                  helpText="identity-providers-help:role"
-                  forLabel={t("identity-providers-help:role")}
-                  forID={t(`identity-providers:helpLabel`, {
-                    label: t("role"),
-                  })}
-                />
-              }
-              fieldId="kc-role"
-              validated={
-                errors.config?.role
-                  ? ValidatedOptions.error
-                  : ValidatedOptions.default
-              }
-              helperTextInvalid={t("common:required")}
-            >
-              <TextInput
-                ref={register()}
-                type="text"
-                id="kc-role"
-                data-testid="mapper-role-input"
-                name="config.role"
-                value={selectedRole[0]?.name}
+                </FormGroup>
+                <FormGroup
+                  label={t("regexAttributeValues")}
+                  labelIcon={
+                    <HelpItem
+                      helpText="identity-providers-help:regexAttributeValues"
+                      forLabel={t("regexAttributeValues")}
+                      forID={t(`common:helpLabel`, {
+                        label: t("regexAttributeValues"),
+                      })}
+                    />
+                  }
+                  fieldId="regexAttributeValues"
+                >
+                  <Controller
+                    name="config.are-attribute-values-regex"
+                    control={control}
+                    defaultValue="false"
+                    render={({ onChange, value }) => (
+                      <Switch
+                        id="regexAttributeValues"
+                        data-testid="regex-attribute-values-switch"
+                        label={t("common:on")}
+                        labelOff={t("common:off")}
+                        isChecked={value === "true"}
+                        onChange={(value) => onChange("" + value)}
+                      />
+                    )}
+                  />
+                </FormGroup>{" "}
+              </>
+            )}
+            {mapperType == "usernameTemplateImporter" && (
+              <>
+                <FormGroup
+                  label={t("template")}
+                  labelIcon={
+                    <HelpItem
+                      id="target-help-icon"
+                      helpText="identity-providers-help:template"
+                      forLabel={t("template")}
+                      forID={t(`common:helpLabel`, {
+                        label: t("template"),
+                      })}
+                    />
+                  }
+                  fieldId="kc-user-session-attribute"
+                  validated={
+                    errors.name
+                      ? ValidatedOptions.error
+                      : ValidatedOptions.default
+                  }
+                  helperTextInvalid={t("common:required")}
+                >
+                  <TextInput
+                    ref={register()}
+                    type="text"
+                    id="kc-template"
+                    data-testid="template"
+                    name="config.template"
+                    validated={
+                      errors.name
+                        ? ValidatedOptions.error
+                        : ValidatedOptions.default
+                    }
+                  />
+                </FormGroup>
+                <FormGroup
+                  label={t("target")}
+                  labelIcon={
+                    <HelpItem
+                      id="user-session-attribute-help-icon"
+                      helpText="identity-providers-help:target"
+                      forLabel={t("target")}
+                      forID={t(`common:helpLabel`, {
+                        label: t("target"),
+                      })}
+                    />
+                  }
+                  fieldId="kc-target"
+                  validated={
+                    errors.name
+                      ? ValidatedOptions.error
+                      : ValidatedOptions.default
+                  }
+                  helperTextInvalid={t("common:required")}
+                >
+                  <Controller
+                    name="config.target"
+                    defaultValue={""}
+                    control={control}
+                    render={({ onChange, value }) => (
+                      <Select
+                        toggleId="target"
+                        datatest-id="target-select"
+                        placeholderText={t("realm-settings:placeholderText")}
+                        direction="down"
+                        onToggle={() =>
+                          setTargetOptionsOpen(!targetOptionsOpen)
+                        }
+                        onSelect={(_, value) => {
+                          onChange(t(`targetOptions.${value}`));
+                          setTargetOptionsOpen(false);
+                        }}
+                        selections={value}
+                        variant={SelectVariant.single}
+                        aria-label={t("target")}
+                        isOpen={targetOptionsOpen}
+                      >
+                        {targetOptions.map((option) => (
+                          <SelectOption
+                            selected={option === value}
+                            key={option}
+                            data-testid={option}
+                            value={option}
+                          >
+                            {t(`targetOptions.${option}`)}
+                          </SelectOption>
+                        ))}
+                      </Select>
+                    )}
+                  />
+                </FormGroup>
+              </>
+            )}
+            {(mapperType === "advancedAttributeToRole" ||
+              mapperType === "hardcodedRole" ||
+              mapperType === "samlAttributeToRole") && (
+              <FormGroup
+                label={t("common:role")}
+                labelIcon={
+                  <HelpItem
+                    id="name-help-icon"
+                    helpText="identity-providers-help:role"
+                    forLabel={t("identity-providers-help:role")}
+                    forID={t(`identity-providers:helpLabel`, {
+                      label: t("role"),
+                    })}
+                  />
+                }
+                fieldId="kc-role"
                 validated={
                   errors.config?.role
                     ? ValidatedOptions.error
                     : ValidatedOptions.default
                 }
-              />
-              <Button
-                data-testid="select-role-button"
-                onClick={() => toggleModal()}
+                helperTextInvalid={t("common:required")}
               >
-                {t("selectRole")}
-              </Button>
-            </FormGroup>{" "}
+                <TextInput
+                  ref={register()}
+                  type="text"
+                  id="kc-role"
+                  data-testid="mapper-role-input"
+                  name="config.role"
+                  value={selectedRole[0]?.name}
+                  validated={
+                    errors.config?.role
+                      ? ValidatedOptions.error
+                      : ValidatedOptions.default
+                  }
+                />
+                <Button
+                  data-testid="select-role-button"
+                  onClick={() => toggleModal()}
+                >
+                  {t("selectRole")}
+                </Button>
+              </FormGroup>
+            )}{" "}
           </>
         ) : (
           <>
