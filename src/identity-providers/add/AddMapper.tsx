@@ -221,7 +221,7 @@ export const AddMapper = () => {
           labelIcon={
             <HelpItem
               id="name-help-icon"
-              helpText="identity-providers-help:name"
+              helpText="identity-providers-help:addIdpMapperName"
               forLabel={t("common:name")}
               forID={t(`common:helpLabel`, { label: t("common:name") })}
             />
