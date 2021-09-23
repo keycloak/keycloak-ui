@@ -10,6 +10,8 @@ export default class AddMapperPage {
   private attributeName = "attribute-name";
   private attributeFriendlyName = "attribute-friendly-name";
   private attributeValue = "attribute-value";
+  private claimInput = "claim";
+  private claimValueInput = "claim-value-input";
   private userAttribute = "user-attribute";
   private userAttributeName = "user-attribute-name";
   private userAttributeValue = "user-attribute-value";
@@ -199,11 +201,8 @@ export default class AddMapperPage {
       .contains("Attribute Importer")
       .click();
 
-    cy.findByTestId(this.attributeName).clear();
-    cy.findByTestId(this.attributeName).type("attribute name");
-
-    cy.findByTestId(this.attributeFriendlyName).clear();
-    cy.findByTestId(this.attributeFriendlyName).type("friendly name");
+    cy.findByTestId(this.claimInput).clear();
+    cy.findByTestId(this.claimInput).type("claim");
 
     cy.findByTestId(this.userAttributeName).clear();
     cy.findByTestId(this.userAttributeName).type("user attribute name");
@@ -333,6 +332,61 @@ export default class AddMapperPage {
     cy.get(this.attributesValueInput).type("value_edited");
 
     this.toggleSwitch(this.regexAttributeValuesSwitch);
+
+    this.saveNewMapper();
+
+    return this;
+  }
+
+  addOIDCAttributeImporterMapper(name: string) {
+    cy.get(this.mapperNameInput).clear();
+
+    cy.get(this.mapperNameInput).clear().type(name);
+
+    cy.get(this.syncmodeSelectToggle).click();
+
+    cy.findByTestId("inherit").click();
+
+    cy.get(this.idpMapperSelectToggle).click();
+
+    cy.findByTestId(this.idpMapperSelect)
+      .contains("Attribute Importer")
+      .click();
+
+    cy.findByTestId(this.claimInput).clear();
+    cy.findByTestId(this.claimInput).type("claim");
+
+    cy.findByTestId(this.userAttributeName).clear();
+    cy.findByTestId(this.userAttributeName).type("user attribute name");
+
+    this.saveNewMapper();
+
+    return this;
+  }
+
+  addOIDCClaimToRoleMapper(name: string) {
+    cy.get(this.mapperNameInput).clear();
+
+    cy.get(this.mapperNameInput).clear().type(name);
+
+    cy.get(this.syncmodeSelectToggle).click();
+
+    cy.findByTestId("inherit").click();
+
+    cy.get(this.idpMapperSelectToggle).click();
+
+    cy.findByTestId(this.idpMapperSelect).contains("Claim To Role").click();
+
+    cy.get(this.attributesKeyInput).clear();
+    cy.get(this.attributesKeyInput).type("key");
+
+    cy.get(this.attributesValueInput).clear();
+    cy.get(this.attributesValueInput).type("value");
+
+    this.toggleSwitch(this.regexAttributeValuesSwitch);
+
+    cy.findByTestId(this.mapperRoleInput).clear();
+    cy.findByTestId(this.mapperRoleInput).type("admin");
 
     this.saveNewMapper();
 

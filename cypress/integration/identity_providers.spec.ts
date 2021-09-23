@@ -244,6 +244,34 @@ describe("Identity provider test", () => {
       masthead.checkNotificationMessage(createMapperSuccessMsg);
     });
 
+    it("should add OIDC mapper of type Attribute Importer", () => {
+      sidebarPage.goToIdentityProviders();
+
+      listingPage.goToItemDetails("oidc");
+
+      addMapperPage.goToMappersTab();
+
+      addMapperPage.emptyStateAddMapper();
+
+      addMapperPage.addAttrImporterMapper("OIDC Attribute Importer");
+
+      masthead.checkNotificationMessage(createMapperSuccessMsg);
+    });
+
+    it("should add OIDC mapper of type Claim To Role", () => {
+      sidebarPage.goToIdentityProviders();
+
+      listingPage.goToItemDetails("oidc");
+
+      addMapperPage.goToMappersTab();
+
+      addMapperPage.addMapper();
+
+      addMapperPage.addOIDCClaimToRoleMapper("OIDC Claim to Role");
+
+      masthead.checkNotificationMessage(createMapperSuccessMsg);
+    });
+
     it("should edit Username Template Importer mapper", () => {
       sidebarPage.goToIdentityProviders();
 
