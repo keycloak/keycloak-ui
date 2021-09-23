@@ -26,7 +26,6 @@ import {
 } from "../../components/attribute-form/AttributeForm";
 import { FormAccess } from "../../components/form-access/FormAccess";
 import { useAdminClient, useFetch } from "../../context/auth/AdminClient";
-import type IdentityProviderMapperRepresentation from "@keycloak/keycloak-admin-client/lib/defs/identityProviderMapperRepresentation";
 import type { IdentityProviderAddMapperParams } from "../routes/AddMapper";
 import _ from "lodash";
 import { AssociatedRolesModal } from "../../realm-roles/AssociatedRolesModal";
@@ -35,6 +34,7 @@ import { useAlerts } from "../../components/alert/Alerts";
 import type { IdentityProviderEditMapperParams } from "../routes/EditMapper";
 import { convertToFormValues } from "../../util";
 import { toIdentityProvider } from "../routes/IdentityProvider";
+import type IdentityProviderMapperRepresentation from "@keycloak/keycloak-admin-client/lib/defs/identityProviderMapperRepresentation";
 
 type IdPMapperRepresentationWithAttributes =
   IdentityProviderMapperRepresentation & {
@@ -58,6 +58,7 @@ export const AddMapper = () => {
 
   const [mapperTypes, setMapperTypes] =
     useState<Record<string, IdentityProviderMapperRepresentation>>();
+  const [mapperType, setMapperType] = useState("advancedAttributeToRole");
   const [currentMapper, setCurrentMapper] =
     useState<IdentityProviderMapperRepresentation>();
   const [roles, setRoles] = useState<RoleRepresentation[]>([]);
@@ -294,7 +295,7 @@ export const AddMapper = () => {
           label={t("mapperType")}
           labelIcon={
             <HelpItem
-              helpText="identity-providers-help:mapperType"
+              helpText={`identity-providers-help:${mapperType}`}
               forLabel={t("mapperType")}
               forID={t(`common:helpLabel`, { label: t("mapperType") })}
             />
@@ -326,6 +327,7 @@ export const AddMapper = () => {
                         value.toString().toLowerCase()
                     );
 
+                  setMapperType(_.camelCase(value.toString()));
                   onChange(theMapper?.id);
                   setMapperTypeOpen(false);
                 }}
