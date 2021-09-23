@@ -97,7 +97,6 @@ export default class SidebarPage {
 
   goToUserFederation() {
     cy.get(this.userFederationBtn).click();
-    cy.wait(1000);
 
     return this;
   }

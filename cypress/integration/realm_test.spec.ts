@@ -3,7 +3,10 @@ import SidebarPage from "../support/pages/admin_console/SidebarPage";
 import CreateRealmPage from "../support/pages/admin_console/CreateRealmPage";
 import Masthead from "../support/pages/admin_console/Masthead";
 import AdminClient from "../support/util/AdminClient";
-import { keycloakBefore } from "../support/util/keycloak_before";
+import {
+  keycloakBefore,
+  keycloakBeforeEach,
+} from "../support/util/keycloak_hooks";
 
 const masthead = new Masthead();
 const loginPage = new LoginPage();
@@ -13,9 +16,14 @@ const createRealmPage = new CreateRealmPage();
 describe("Realms test", () => {
   const testRealmName = "Test realm";
   describe("Realm creation", () => {
-    beforeEach(() => {
+    before(() => {
       keycloakBefore();
       loginPage.logIn();
+    });
+
+    beforeEach(() => {
+      keycloakBeforeEach();
+      sidebarPage.goToCreateRealm();
     });
 
     after(async () => {
@@ -26,23 +34,21 @@ describe("Realms test", () => {
     });
 
     it("should fail creating Master realm", () => {
-      sidebarPage.goToCreateRealm();
       createRealmPage.fillRealmName("master").createRealm();
 
       masthead.checkNotificationMessage(
         "Could not create realm Conflict detected. See logs for details"
       );
+      createRealmPage.cancel();
     });
 
     it("should create Test realm", () => {
-      sidebarPage.goToCreateRealm();
       createRealmPage.fillRealmName(testRealmName).createRealm();
 
       masthead.checkNotificationMessage("Realm created");
     });
 
     it("should create realm from new a realm", () => {
-      sidebarPage.goToCreateRealm();
       createRealmPage.fillRealmName("one").createRealm();
 
       const fetchUrl = "/auth/admin/realms";
@@ -61,7 +67,7 @@ describe("Realms test", () => {
     });
 
     it("should change to Test realm", () => {
-      sidebarPage.getCurrentRealm().should("eq", "Master");
+      sidebarPage.getCurrentRealm().should("eq", "Two");
 
       sidebarPage
         .goToRealm(testRealmName)

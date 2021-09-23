@@ -3,7 +3,10 @@ import SidebarPage from "../support/pages/admin_console/SidebarPage";
 import ProviderPage from "../support/pages/admin_console/manage/providers/ProviderPage";
 import Masthead from "../support/pages/admin_console/Masthead";
 import ModalUtils from "../support/util/ModalUtils";
-import { keycloakBefore } from "../support/util/keycloak_before";
+import {
+  keycloakBefore,
+  keycloakBeforeEach,
+} from "../support/util/keycloak_hooks";
 
 const loginPage = new LoginPage();
 const masthead = new Masthead();
@@ -41,9 +44,13 @@ const deleteModalTitle = "Delete user federation provider?";
 const disableModalTitle = "Disable user federation provider?";
 
 describe("User Fed Kerberos tests", () => {
-  beforeEach(() => {
+  before(() => {
     keycloakBefore();
     loginPage.logIn();
+  });
+
+  beforeEach(() => {
+    keycloakBeforeEach();
     sidebarPage.goToUserFederation();
   });
 
@@ -92,7 +99,6 @@ describe("User Fed Kerberos tests", () => {
     providersPage.changeCacheTime("hour", defaultKerberosHour);
     providersPage.changeCacheTime("minute", defaultKerberosMinute);
     providersPage.cancel(provider);
-    cy.wait(1000);
 
     providersPage.clickExistingCard(firstKerberosName);
     providersPage.selectCacheType(newPolicy);
@@ -111,8 +117,6 @@ describe("User Fed Kerberos tests", () => {
 
     modalUtils.checkModalTitle(disableModalTitle).confirmModal();
 
-    masthead.checkNotificationMessage(savedSuccessMessage);
-    sidebarPage.goToUserFederation();
     masthead.checkNotificationMessage(savedSuccessMessage);
 
     sidebarPage.goToUserFederation();

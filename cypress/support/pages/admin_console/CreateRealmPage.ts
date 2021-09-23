@@ -30,4 +30,10 @@ export default class CreateRealmPage {
 
     return this;
   }
+
+  cancel() {
+    cy.get(this.cancelBtn).click();
+
+    return this;
+  }
 }

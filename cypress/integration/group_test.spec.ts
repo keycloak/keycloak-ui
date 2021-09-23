@@ -8,7 +8,10 @@ import SidebarPage from "../support/pages/admin_console/SidebarPage";
 import LoginPage from "../support/pages/LoginPage";
 import ViewHeaderPage from "../support/pages/ViewHeaderPage";
 import AdminClient from "../support/util/AdminClient";
-import { keycloakBefore } from "../support/util/keycloak_before";
+import {
+  keycloakBefore,
+  keycloakBeforeEach,
+} from "../support/util/keycloak_hooks";
 import ModalUtils from "../support/util/ModalUtils";
 
 describe("Group test", () => {
@@ -32,9 +35,13 @@ describe("Group test", () => {
   };
 
   describe("Group creation", () => {
-    beforeEach(() => {
+    before(() => {
       keycloakBefore();
       loginPage.logIn();
+    });
+
+    beforeEach(() => {
+      keycloakBeforeEach();
       sidebarPage.goToGroups();
     });
 
@@ -144,19 +151,22 @@ describe("Group test", () => {
     const groups = ["level", "level1", "level2"];
     const detailPage = new GroupDetailPage();
 
-    before(async () => {
-      const client = new AdminClient();
-      const createdGroups = await client.createSubGroups(groups);
-      for (let i = 0; i < 5; i++) {
-        const username = "user" + i;
-        client.createUserInGroup(username, createdGroups[i % 3].id);
-      }
-      client.createUser({ username: "new", enabled: true });
+    before(() => {
+      keycloakBefore();
+      loginPage.logIn();
+      cy.then(async () => {
+        const client = new AdminClient();
+        const createdGroups = await client.createSubGroups(groups);
+        for (let i = 0; i < 5; i++) {
+          const username = "user" + i;
+          client.createUserInGroup(username, createdGroups[i % 3].id);
+        }
+        client.createUser({ username: "new", enabled: true });
+      });
     });
 
     beforeEach(() => {
-      keycloakBefore();
-      loginPage.logIn();
+      keycloakBeforeEach();
       sidebarPage.goToGroups();
     });
 

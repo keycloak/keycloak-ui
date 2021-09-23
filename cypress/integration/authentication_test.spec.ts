@@ -1,4 +1,7 @@
-import { keycloakBefore } from "../support/util/keycloak_before";
+import {
+  keycloakBefore,
+  keycloakBeforeEach,
+} from "../support/util/keycloak_hooks";
 import LoginPage from "../support/pages/LoginPage";
 import SidebarPage from "../support/pages/admin_console/SidebarPage";
 import Masthead from "../support/pages/admin_console/Masthead";
@@ -14,9 +17,13 @@ describe("Authentication test", () => {
 
   const detailPage = new FlowDetails();
 
-  beforeEach(() => {
+  before(() => {
     keycloakBefore();
     loginPage.logIn();
+  });
+
+  beforeEach(() => {
+    keycloakBeforeEach();
     sidebarPage.goToAuthentication();
   });
 

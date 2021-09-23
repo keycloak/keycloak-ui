@@ -52,6 +52,9 @@ export default class Masthead {
 
   checkNotificationMessage(message: string) {
     cy.contains(message).should("exist");
+    cy.get(
+      "[data-testid=alerts] > .pf-c-alert__action > .pf-c-button:first"
+    ).click();
 
     return this;
   }

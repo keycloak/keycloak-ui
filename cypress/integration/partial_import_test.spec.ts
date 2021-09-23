@@ -3,7 +3,10 @@ import SidebarPage from "../support/pages/admin_console/SidebarPage";
 import LoginPage from "../support/pages/LoginPage";
 import PartialImportModal from "../support/pages/admin_console/configure/realm_settings/PartialImportModal";
 import RealmSettings from "../support/pages/admin_console/configure/realm_settings/RealmSettings";
-import { keycloakBefore } from "../support/util/keycloak_before";
+import {
+  keycloakBefore,
+  keycloakBeforeEach,
+} from "../support/util/keycloak_hooks";
 import AdminClient from "../support/util/AdminClient";
 
 describe("Partial import test", () => {
@@ -14,19 +17,23 @@ describe("Partial import test", () => {
   const modal = new PartialImportModal();
   const realmSettings = new RealmSettings();
 
-  beforeEach(() => {
+  before(() => {
     keycloakBefore();
     loginPage.logIn();
 
     // doing this from the UI has the added bonus of putting you in the test realm
     sidebarPage.goToCreateRealm();
     createRealmPage.fillRealmName(TEST_REALM).createRealm();
+  });
+
+  beforeEach(() => {
+    keycloakBeforeEach();
 
     sidebarPage.goToRealmSettings();
     realmSettings.clickActionMenu();
   });
 
-  afterEach(async () => {
+  after(async () => {
     const client = new AdminClient();
     await client.deleteRealm(TEST_REALM);
   });
@@ -42,6 +49,7 @@ describe("Partial import test", () => {
     modal.open();
     cy.get(".pf-c-code-editor__code textarea").type("{}");
     modal.importButton().should("be.disabled");
+    modal.cancelButton().click();
   });
 
   it("Displays user options after multi-realm import", () => {
@@ -73,6 +81,7 @@ describe("Partial import test", () => {
     modal.importButton().should("be.disabled");
 
     modal.clientCount().contains("2 clients");
+    modal.cancelButton().click();
   });
 
   it("Displays user options after realmless import", () => {

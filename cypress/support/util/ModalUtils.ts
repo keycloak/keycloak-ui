@@ -2,12 +2,12 @@ export default class ModalUtils {
   private modalTitle = ".pf-c-modal-box .pf-c-modal-box__title-text";
   private modalMessage = ".pf-c-modal-box .pf-c-modal-box__body";
 
-  private confirmModalBtn = "#modal-confirm";
+  private confirmModalBtn = "modalConfirm";
   private cancelModalBtn = "#modal-cancel";
   private closeModalBtn = ".pf-c-modal-box .pf-m-plain";
 
   confirmModal() {
-    cy.get(this.confirmModalBtn).click();
+    cy.findByTestId(this.confirmModalBtn).click();
 
     return this;
   }

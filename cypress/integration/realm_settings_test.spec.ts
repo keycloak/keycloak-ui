@@ -3,8 +3,10 @@ import LoginPage from "../support/pages/LoginPage";
 import RealmSettingsPage from "../support/pages/admin_console/manage/realm_settings/RealmSettingsPage";
 import Masthead from "../support/pages/admin_console/Masthead";
 import ModalUtils from "../support/util/ModalUtils";
-import { keycloakBefore } from "../support/util/keycloak_before";
-import AdminClient from "../support/util/AdminClient";
+import {
+  keycloakBefore,
+  keycloakBeforeEach,
+} from "../support/util/keycloak_hooks";
 import ListingPage from "../support/pages/admin_console/ListingPage";
 
 const loginPage = new LoginPage();
@@ -14,37 +16,26 @@ const modalUtils = new ModalUtils();
 const realmSettingsPage = new RealmSettingsPage();
 
 describe("Realm settings tests", () => {
-  describe("Realm settings tabs tests", () => {
-    const realmName = "Realm_" + (Math.random() + 1).toString(36).substring(7);
+  const realmName = "test";
 
-    beforeEach(() => {
+  before(() => {
       keycloakBefore();
       loginPage.logIn();
-      sidebarPage.goToRealm(realmName);
     });
 
-    before(async () => {
-      await new AdminClient().createRealm(realmName);
-    });
-
-    after(async () => {
-      await new AdminClient().deleteRealm(realmName);
+  beforeEach(() => {
+    keycloakBeforeEach();
+    sidebarPage.goToRealmSettings();
     });
 
     const goToKeys = () => {
-      const keysUrl = `/auth/admin/realms/${realmName}/keys`;
-      cy.intercept(keysUrl).as("keysFetch");
       cy.findByTestId("rs-keys-tab").click();
       cy.findByTestId("rs-keys-list-tab").click();
-      cy.wait(["@keysFetch"]);
 
       return this;
     };
 
     const goToDetails = () => {
-      const keysUrl = `/auth/admin/realms/${realmName}/keys`;
-      cy.intercept(keysUrl).as("keysFetch");
-
       cy.findByTestId("rs-keys-tab").click();
       cy.findByTestId("rs-providers-tab").click();
       cy.findAllByTestId("provider-name-link")
@@ -72,8 +63,6 @@ describe("Realm settings tests", () => {
       cy.findAllByTestId("provider-name-link")
         .contains("test_rsa-generated")
         .click();
-
-      cy.wait(["@keysFetch"]);
 
       return this;
     };
@@ -108,8 +97,7 @@ describe("Realm settings tests", () => {
       return this;
     };
 
-    it("Go to general tab", function () {
-      sidebarPage.goToRealmSettings();
+  it("Go to general tab", () => {
       realmSettingsPage.toggleSwitch(realmSettingsPage.managedAccessSwitch);
       realmSettingsPage.save(realmSettingsPage.generalSaveBtn);
       masthead.checkNotificationMessage("Realm successfully updated");
@@ -119,7 +107,6 @@ describe("Realm settings tests", () => {
     });
 
     it("Go to login tab", () => {
-      sidebarPage.goToRealmSettings();
       cy.findByTestId("rs-login-tab").click();
       realmSettingsPage.toggleSwitch(realmSettingsPage.userRegSwitch);
       realmSettingsPage.toggleSwitch(realmSettingsPage.forgotPwdSwitch);
@@ -136,7 +123,6 @@ describe("Realm settings tests", () => {
     });
 
     it("Go to email tab", () => {
-      sidebarPage.goToRealmSettings();
       cy.findByTestId("rs-email-tab").click();
 
       realmSettingsPage.addSenderEmail("example@example.com");
@@ -161,11 +147,7 @@ describe("Realm settings tests", () => {
     });
 
     it("Go to themes tab", () => {
-      sidebarPage.goToRealmSettings();
-      cy.intercept(`/auth/admin/realms/${realmName}/keys`).as("load");
-
       cy.findByTestId("rs-themes-tab").click();
-      cy.wait(["@load"]);
 
       realmSettingsPage.selectLoginThemeType("keycloak");
       realmSettingsPage.selectAccountThemeType("keycloak");
@@ -179,10 +161,7 @@ describe("Realm settings tests", () => {
       const listingPage = new ListingPage();
 
       it("Enable user events", () => {
-        cy.intercept("GET", `/auth/admin/realms/${realmName}/keys`).as("load");
-        sidebarPage.goToRealmSettings();
         cy.findByTestId("rs-realm-events-tab").click();
-        cy.wait(["@load"]);
 
         realmSettingsPage
           .toggleSwitch(realmSettingsPage.enableEvents)
@@ -216,14 +195,10 @@ describe("Realm settings tests", () => {
     });
 
     it("Go to keys tab", () => {
-      sidebarPage.goToRealmSettings();
-
       cy.findByTestId("rs-keys-tab").click();
     });
 
     it("add Providers", () => {
-      sidebarPage.goToRealmSettings();
-
       cy.findByTestId("rs-keys-tab").click();
 
       cy.findByTestId("rs-providers-tab").click();
@@ -250,14 +225,15 @@ describe("Realm settings tests", () => {
 
       cy.findByTestId("option-rsa-generated").click();
       realmSettingsPage.enterConsoleDisplayName("test_rsa-generated");
+
       realmSettingsPage.addProvider();
     });
 
     it("go to details", () => {
+    sidebarPage.goToAuthentication();
       sidebarPage.goToRealmSettings();
       goToDetails();
     });
-
     /*it("delete providers", () => {
     sidebarPage.goToRealmSettings();
     const url = `/auth/admin/realms/${realmName}/keys`;
@@ -274,15 +250,12 @@ describe("Realm settings tests", () => {
     deleteProvider("test_rsa-generated");
   });*/
     it("Test keys", () => {
-      sidebarPage.goToRealmSettings();
       goToKeys();
 
       realmSettingsPage.testSelectFilter();
     });
 
     it("add locale", () => {
-      sidebarPage.goToRealmSettings();
-
       cy.findByTestId("rs-localization-tab").click();
 
       addBundle();
@@ -293,7 +266,6 @@ describe("Realm settings tests", () => {
     });
 
     it("Realm header settings", () => {
-      sidebarPage.goToRealmSettings();
       cy.get("#pf-tab-securityDefences-securityDefences").click();
       cy.findByTestId("headers-form-tab-save").should("be.disabled");
       cy.get("#xFrameOptions").clear().type("DENY");
@@ -320,8 +292,6 @@ describe("Realm settings tests", () => {
     });
 
     it("add session data", () => {
-      sidebarPage.goToRealmSettings();
-
       cy.findByTestId("rs-sessions-tab").click();
 
       realmSettingsPage.populateSessionsPage();
@@ -382,8 +352,6 @@ describe("Realm settings tests", () => {
     });
 
     it("add token data", () => {
-      sidebarPage.goToRealmSettings();
-
       cy.findByTestId("rs-tokens-tab").click();
 
       realmSettingsPage.populateTokensPage();
@@ -393,8 +361,6 @@ describe("Realm settings tests", () => {
     });
 
     it("check that token data was saved", () => {
-      sidebarPage.goToRealmSettings();
-
       cy.findByTestId("rs-tokens-tab").click();
 
       cy.findByTestId(realmSettingsPage.accessTokenLifespanInput).should(

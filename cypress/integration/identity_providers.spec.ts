@@ -1,7 +1,10 @@
 import Masthead from "../support/pages/admin_console/Masthead";
 import SidebarPage from "../support/pages/admin_console/SidebarPage";
 import LoginPage from "../support/pages/LoginPage";
-import { keycloakBefore } from "../support/util/keycloak_before";
+import {
+  keycloakBefore,
+  keycloakBeforeEach,
+} from "../support/util/keycloak_hooks";
 import ListingPage from "../support/pages/admin_console/ListingPage";
 
 import CreateProviderPage from "../support/pages/admin_console/manage/identity_providers/CreateProviderPage";
@@ -33,10 +36,13 @@ describe("Identity provider test", () => {
 
   describe("Identity provider creation", () => {
     const identityProviderName = "github";
-
-    beforeEach(function () {
+    before(() => {
       keycloakBefore();
       loginPage.logIn();
+    });
+
+    beforeEach(() => {
+      keycloakBeforeEach();
       sidebarPage.goToIdentityProviders();
     });
 

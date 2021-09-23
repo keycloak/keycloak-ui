@@ -3,7 +3,10 @@ import Masthead from "../support/pages/admin_console/Masthead";
 import ListingPage from "../support/pages/admin_console/ListingPage";
 import SidebarPage from "../support/pages/admin_console/SidebarPage";
 import CreateClientScopePage from "../support/pages/admin_console/manage/client_scopes/CreateClientScopePage";
-import { keycloakBefore } from "../support/util/keycloak_before";
+import {
+  keycloakBefore,
+  keycloakBeforeEach,
+} from "../support/util/keycloak_hooks";
 import RoleMappingTab from "../support/pages/admin_console/manage/RoleMappingTab";
 import ModalUtils from "../support/util/ModalUtils";
 
@@ -15,15 +18,19 @@ const listingPage = new ListingPage();
 const createClientScopePage = new CreateClientScopePage();
 const modalUtils = new ModalUtils();
 
-describe("Client Scopes test", function () {
-  describe("Client Scope creation", function () {
-    beforeEach(function () {
+describe("Client Scopes test", () => {
+  describe("Client Scope creation", () => {
+    before(() => {
       keycloakBefore();
       loginPage.logIn();
+    });
+
+    beforeEach(() => {
+      keycloakBeforeEach();
       sidebarPage.goToClientScopes();
     });
 
-    it("should fail creating client scope", function () {
+    it("should fail creating client scope", () => {
       listingPage.goToCreateItem();
 
       createClientScopePage.save().checkClientNameRequiredMessage();
@@ -72,9 +79,13 @@ describe("Client Scopes test", function () {
     const scopeTab = new RoleMappingTab();
     const scopeName = "address";
 
-    beforeEach(() => {
+    before(() => {
       keycloakBefore();
       loginPage.logIn();
+    });
+
+    beforeEach(() => {
+      keycloakBeforeEach();
       sidebarPage.goToClientScopes();
     });
 

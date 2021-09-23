@@ -5,7 +5,10 @@ import ListingPage from "../support/pages/admin_console/ListingPage";
 import SidebarPage from "../support/pages/admin_console/SidebarPage";
 import CreateRealmRolePage from "../support/pages/admin_console/manage/realm_roles/CreateRealmRolePage";
 import AssociatedRolesPage from "../support/pages/admin_console/manage/realm_roles/AssociatedRolesPage";
-import { keycloakBefore } from "../support/util/keycloak_before";
+import {
+  keycloakBefore,
+  keycloakBeforeEach,
+} from "../support/util/keycloak_hooks";
 
 let itemId = "realm_role_crud";
 const loginPage = new LoginPage();
@@ -16,15 +19,19 @@ const listingPage = new ListingPage();
 const createRealmRolePage = new CreateRealmRolePage();
 const associatedRolesPage = new AssociatedRolesPage();
 
-describe("Realm roles test", function () {
-  describe("Realm roles creation", function () {
-    beforeEach(function () {
+describe("Realm roles test", () => {
+  describe("Realm roles creation", () => {
+    before(() => {
       keycloakBefore();
       loginPage.logIn();
+    });
+
+    beforeEach(() => {
+      keycloakBeforeEach();
       sidebarPage.goToRealmRoles();
     });
 
-    it("should fail creating realm role", function () {
+    it("should fail creating realm role", () => {
       listingPage.goToCreateItem();
 
       createRealmRolePage.save().checkRealmRoleNameRequiredMessage();
@@ -37,7 +44,7 @@ describe("Realm roles test", function () {
       );
     });
 
-    it("Realm role CRUD test", function () {
+    it("Realm role CRUD test", () => {
       itemId += "_" + (Math.random() + 1).toString(36).substring(7);
 
       // Create
@@ -51,7 +58,7 @@ describe("Realm roles test", function () {
 
       listingPage.searchItem(itemId).itemExist(itemId);
 
-      const fetchUrl = "/auth/admin/realms/master/roles?first=0&max=11";
+      const fetchUrl = "/auth/admin/realms/test/roles?first=0&max=11";
       cy.intercept(fetchUrl).as("fetch");
 
       listingPage.deleteItem(itemId);
@@ -63,7 +70,7 @@ describe("Realm roles test", function () {
       listingPage.itemExist(itemId, false);
     });
 
-    it("Associated roles test", function () {
+    it("Associated roles test", () => {
       itemId += "_" + (Math.random() + 1).toString(36).substring(7);
 
       // Create
@@ -74,11 +81,9 @@ describe("Realm roles test", function () {
       masthead.checkNotificationMessage("Role created");
 
       // Add associated realm role
-
       associatedRolesPage.addAssociatedRealmRole();
 
       // Add associated client role
-
       associatedRolesPage.addAssociatedClientRole();
     });
   });

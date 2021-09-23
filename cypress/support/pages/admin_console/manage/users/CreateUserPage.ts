@@ -34,7 +34,6 @@ export default class CreateUserPage {
   }
 
   goToCreateUser() {
-    cy.wait(100);
     cy.get("body").then((body) => {
       if (body.find("[data-testid=empty-state]").length > 0) {
         cy.findByTestId(this.emptyStateCreateUserBtn).click();

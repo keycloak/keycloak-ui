@@ -211,13 +211,9 @@ export default class ProviderPage {
 
   createRole(roleName: string) {
     cy.get(this.rolesTab).click();
-    cy.wait(1000);
     cy.get(`[${this.createRoleBtn}]`).click();
-    cy.wait(1000);
     cy.get(this.roleNameField).type(roleName);
-    cy.wait(1000);
     cy.get(`[${this.realmRolesSaveBtn}]`).click();
-    cy.wait(1000);
   }
 
   createNewMapper(mapperType: string) {
@@ -226,7 +222,6 @@ export default class ProviderPage {
     const ldapDnValue = "ou=groups";
 
     cy.contains("Add").click();
-    cy.wait(1000);
 
     cy.get("#kc-providerId").click();
     cy.get("button").contains(mapperType).click();
@@ -269,7 +264,6 @@ export default class ProviderPage {
 
       case this.hcLdapRoleMapper:
         cy.get(`[data-testid="selectRole"]`).click();
-        cy.wait(2000);
         cy.get(this.namesColumn)
           .contains(this.clientName)
           .parent()
@@ -324,7 +318,6 @@ export default class ProviderPage {
 
   clickExistingCard(cardName: string) {
     cy.get('[data-testid="keycloak-card-title"]').contains(cardName).click();
-    cy.wait(1000);
     return this;
   }
 
@@ -336,7 +329,6 @@ export default class ProviderPage {
 
   clickNewCard(providerType: string) {
     cy.get(`[data-testid=${providerType}-card]`).click();
-    cy.wait(1000);
     return this;
   }
 

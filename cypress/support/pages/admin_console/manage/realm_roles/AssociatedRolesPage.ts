@@ -12,7 +12,7 @@ export default class AssociatedRolesPage {
   addAssociatedRealmRole() {
     cy.findByTestId(this.actionDropdown).last().click();
 
-    const load = "/auth/admin/realms/master/clients";
+    const load = "/auth/admin/realms/test/clients";
     cy.intercept(load).as("load");
 
     cy.findByTestId(this.addRolesDropdownItem).click();

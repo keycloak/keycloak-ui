@@ -6,7 +6,10 @@ import ProviderPage from "../support/pages/admin_console/manage/providers/Provid
 import CreateClientPage from "../support/pages/admin_console/manage/clients/CreateClientPage";
 import Masthead from "../support/pages/admin_console/Masthead";
 import ModalUtils from "../support/util/ModalUtils";
-import { keycloakBefore } from "../support/util/keycloak_before";
+import {
+  keycloakBefore,
+  keycloakBeforeEach,
+} from "../support/util/keycloak_hooks";
 
 const loginPage = new LoginPage();
 const masthead = new Masthead();
@@ -79,9 +82,13 @@ const MsadAccountControlsMapper = "MSAD account controls";
 */
 
 describe("User Fed LDAP mapper tests", () => {
-  beforeEach(() => {
+  before(() => {
     keycloakBefore();
     loginPage.logIn();
+  });
+
+  beforeEach(() => {
+    keycloakBeforeEach();
     sidebarPage.goToUserFederation();
   });
 
@@ -236,7 +243,9 @@ describe("User Fed LDAP mapper tests", () => {
     providersPage.createNewMapper(msadLdsUserAcctMapper);
     providersPage.save("ldap-mapper");
     masthead.checkNotificationMessage(mapperCreatedSuccess);
-    listingPage.itemExist(msadLdsUserAcctMapper, true);
+    listingPage
+      .searchItem(msadLdsUserAcctMapper, false)
+      .itemExist(msadLdsUserAcctMapper);
   });
 
   it("Create certificate ldap mapper", () => {
@@ -245,7 +254,7 @@ describe("User Fed LDAP mapper tests", () => {
     providersPage.createNewMapper(certLdapMapper);
     providersPage.save("ldap-mapper");
     masthead.checkNotificationMessage(mapperCreatedSuccess);
-    listingPage.itemExist(certLdapMapper, true);
+    listingPage.searchItem(certLdapMapper, false).itemExist(certLdapMapper);
   });
 
   it("Create user attribute ldap mapper", () => {
@@ -254,7 +263,9 @@ describe("User Fed LDAP mapper tests", () => {
     providersPage.createNewMapper(userAttLdapMapper);
     providersPage.save("ldap-mapper");
     masthead.checkNotificationMessage(mapperCreatedSuccess);
-    listingPage.itemExist(userAttLdapMapper, true);
+    listingPage
+      .searchItem(userAttLdapMapper, false)
+      .itemExist(userAttLdapMapper);
   });
 
   it("Create hardcoded attribute mapper", () => {
@@ -263,7 +274,7 @@ describe("User Fed LDAP mapper tests", () => {
     providersPage.createNewMapper(hcAttMapper);
     providersPage.save("ldap-mapper");
     masthead.checkNotificationMessage(mapperCreatedSuccess);
-    listingPage.itemExist(hcAttMapper, true);
+    listingPage.searchItem(hcAttMapper, false).itemExist(hcAttMapper);
   });
 
   it("Create full name ldap mapper", () => {
@@ -272,7 +283,9 @@ describe("User Fed LDAP mapper tests", () => {
     providersPage.createNewMapper(fullNameLdapMapper);
     providersPage.save("ldap-mapper");
     masthead.checkNotificationMessage(mapperCreatedSuccess);
-    listingPage.itemExist(fullNameLdapMapper, true);
+    listingPage
+      .searchItem(fullNameLdapMapper, false)
+      .itemExist(fullNameLdapMapper);
   });
 
   it("Create hardcoded ldap group mapper", () => {
@@ -281,7 +294,9 @@ describe("User Fed LDAP mapper tests", () => {
     providersPage.createNewMapper(hcLdapGroupMapper);
     providersPage.save("ldap-mapper");
     masthead.checkNotificationMessage(mapperCreatedSuccess);
-    listingPage.itemExist(hcLdapGroupMapper, true);
+    listingPage
+      .searchItem(hcLdapGroupMapper, false)
+      .itemExist(hcLdapGroupMapper);
   });
 
   it("Create hardcoded ldap attribute mapper", () => {
@@ -290,7 +305,7 @@ describe("User Fed LDAP mapper tests", () => {
     providersPage.createNewMapper(hcLdapAttMapper);
     providersPage.save("ldap-mapper");
     masthead.checkNotificationMessage(mapperCreatedSuccess);
-    listingPage.itemExist(hcLdapAttMapper, true);
+    listingPage.searchItem(hcLdapAttMapper, false).itemExist(hcLdapAttMapper);
   });
 
   it("Create group ldap mapper", () => {
@@ -299,7 +314,7 @@ describe("User Fed LDAP mapper tests", () => {
     providersPage.createNewMapper(groupLdapMapper);
     providersPage.save("ldap-mapper");
     masthead.checkNotificationMessage(mapperCreatedSuccess);
-    listingPage.itemExist(groupLdapMapper, true);
+    listingPage.searchItem(groupLdapMapper, false).itemExist(groupLdapMapper);
 
     it("Create hardcoded ldap role mapper", () => {
       providersPage.clickExistingCard(ldapName);
@@ -307,7 +322,9 @@ describe("User Fed LDAP mapper tests", () => {
       providersPage.createNewMapper(hcLdapRoleMapper);
       providersPage.save("ldap-mapper");
       masthead.checkNotificationMessage(mapperCreatedSuccess);
-      listingPage.itemExist(hcLdapRoleMapper, true);
+      listingPage
+        .searchItem(hcLdapRoleMapper, false)
+        .itemExist(hcLdapRoleMapper);
     });
 
     it("Create role ldap mapper", () => {
