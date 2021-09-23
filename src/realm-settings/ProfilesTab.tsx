@@ -128,6 +128,7 @@ export const ProfilesTab = () => {
               label={t("profilesConfigTypes.formView")}
               id="formView-radioBtn"
               className="kc-form-radio-btn pf-u-mr-sm pf-u-ml-sm"
+              data-testid="formView-radioBtn"
             />
           </FlexItem>
           <FlexItem>
@@ -138,6 +139,7 @@ export const ProfilesTab = () => {
               label={t("profilesConfigTypes.jsonEditor")}
               id="jsonEditor-radioBtn"
               className="kc-editor-radio-btn"
+              data-testid="jsonEditor-radioBtn"
             />
           </FlexItem>
         </Flex>

@@ -116,6 +116,7 @@ export const NewClientProfileForm = () => {
               type="text"
               id="kc-client-profile-name"
               name="name"
+              data-testid="client-profile-name"
             />
           </FormGroup>
           <FormGroup label={t("common:description")} fieldId="kc-description">
@@ -125,13 +126,14 @@ export const NewClientProfileForm = () => {
               ref={register()}
               type="text"
               id="kc-client-profile-description"
+              data-testid="client-profile-description"
             />
           </FormGroup>
           <ActionGroup>
             <Button
               variant="primary"
               onClick={save}
-              data-testid="realm-settings-client-profile-save-button"
+              data-testid="saveCreateProfile"
             >
               {t("common:save")}
             </Button>
