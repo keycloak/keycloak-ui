@@ -181,6 +181,8 @@ export const AddMapper = () => {
     setRolesModalOpen(!rolesModalOpen);
   };
 
+  console.log("mapperType", mapperType);
+
   return (
     <PageSection variant="light">
       <ViewHeader
