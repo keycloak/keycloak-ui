@@ -272,6 +272,20 @@ describe("Identity provider test", () => {
       masthead.checkNotificationMessage(createMapperSuccessMsg);
     });
 
+    it("should add Social mapper of type Attribute Importer", () => {
+      sidebarPage.goToIdentityProviders();
+
+      listingPage.goToItemDetails("facebook");
+
+      addMapperPage.goToMappersTab();
+
+      addMapperPage.addMapper();
+
+      addMapperPage.fillSocialMapper("facebook attribute importer");
+
+      masthead.checkNotificationMessage(createMapperSuccessMsg);
+    });
+
     it("should edit Username Template Importer mapper", () => {
       sidebarPage.goToIdentityProviders();
 
