@@ -109,6 +109,7 @@ export default {
       "Overrides the default sync mode of the IDP for this mapper. Values are: 'legacy' to keep the behaviour before this option was introduced, 'import' to only import the user once during first login of the user with this identity provider, 'force' to always update the user during every login with this identity provider and 'inherit' to use the sync mode defined in the identity provider for this mapper.",
     advancedAttributeToRole:
       "If the set of attributes exists and can be matched, grant the user the specified realm or client role.",
+<<<<<<< HEAD
     usernameTemplateImporter: "Format the username to import.",
     hardcodedUserSessionAttribute:
       "When a user is imported from a provider, hardcode a value to a specific user session attribute.",
@@ -120,6 +121,11 @@ export default {
       "If a claim exists, grant the user the specified realm or client role.",
     oidcAttributeImporter:
       "Import declared claim if it exists in ID, access token, or the claim set returned by the user profile endpoint into the specified user property or attribute.",
+=======
+    usernameTemplateImporter: "Format the username to import",
+    hardcodedUserSessionAttribute:
+      "When a user is imported from a provider, hardcode a value to a specific user session attribute.",
+>>>>>>> fix help text for mapper types
     attributeImporter:
       "Import declared SAML attribute if it exists in assertion into the specified user property or attribute.",
     hardcodedRole:
