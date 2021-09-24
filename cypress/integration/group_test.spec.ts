@@ -82,7 +82,10 @@ describe("Group test", () => {
       groupModal.fillGroupForm(groupName).clickCreate();
 
       sidebarPage.waitForPageLoad();
-      groupModal.open().fillGroupForm(targetGroupName).clickCreate();
+      groupModal
+        .open("openCreateGroupModal")
+        .fillGroupForm(targetGroupName)
+        .clickCreate();
 
       // For some reason, this fixes clickDetailMenu
       sidebarPage.goToEvents();
@@ -114,7 +117,10 @@ describe("Group test", () => {
         .open("no-groups-in-this-realm-empty-action")
         .fillGroupForm(groups[0])
         .clickCreate();
-      groupModal.open().fillGroupForm(groups[1]).clickCreate();
+      groupModal
+        .open("openCreateGroupModal")
+        .fillGroupForm(groups[1])
+        .clickCreate();
       listingPage.clickRowDetails(groups[0]).clickDetailMenu("Move to");
 
       moveGroupModal.clickRoot().clickMove();
@@ -169,7 +175,10 @@ describe("Group test", () => {
       detailPage.checkListSubGroup([groups[1]]);
 
       const added = "addedGroup";
-      groupModal.open().fillGroupForm(added).clickCreate();
+      groupModal
+        .open("openCreateGroupModal")
+        .fillGroupForm(added)
+        .clickCreate();
 
       detailPage.checkListSubGroup([added, groups[1]]);
     });

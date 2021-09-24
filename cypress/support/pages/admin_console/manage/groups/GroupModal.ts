@@ -7,7 +7,7 @@ export default class GroupModal {
     if (name) {
       cy.findByTestId(name).click();
     } else {
-      cy.findByTestId("openCreateGroupModal").click();
+      cy.get("button").contains("Create").click();
     }
     return this;
   }
