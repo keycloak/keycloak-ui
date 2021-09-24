@@ -53,10 +53,8 @@ export const NewClientProfileForm = () => {
   const [showAddExecutorsForm, setShowAddExecutorsForm] = useState(false);
 
   useFetch(
-    async () =>
-      await adminClient.clientPolicies.listProfiles({
-        includeGlobalProfiles: true,
-      }),
+    () =>
+      adminClient.clientPolicies.listProfiles({ includeGlobalProfiles: true }),
     (profiles) => {
       setGlobalProfiles(
         profiles.globalProfiles as ClientProfileRepresentation[]
