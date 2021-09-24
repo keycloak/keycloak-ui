@@ -114,6 +114,38 @@ export default class AddMapperPage {
     return this;
   }
 
+  addUsernameTemplateImporterMapper(name: string) {
+    cy.get(this.mapperNameInput).clear();
+
+    cy.get(this.mapperNameInput).clear().type(name);
+
+    cy.get(this.syncmodeSelectToggle).click();
+
+    cy.findByTestId("inherit").click();
+
+    cy.get(this.idpMapperSelectToggle).click();
+
+    cy.findByTestId(this.idpMapperSelect)
+      .contains("Username Template Importer")
+      .click();
+
+    cy.get(this.attributesKeyInput).clear();
+    cy.get(this.attributesKeyInput).type("key");
+
+    cy.get(this.attributesValueInput).clear();
+    cy.get(this.attributesValueInput).type("value");
+
+    this.toggleSwitch(this.regexAttributeValuesSwitch);
+
+    cy.findByTestId(this.selectRoleButton).click();
+
+    this.addRoleToMapperForm();
+
+    this.saveNewMapper();
+
+    return this;
+  }
+
   editSocialMapper() {
     cy.get(this.syncmodeSelectToggle).click();
 
