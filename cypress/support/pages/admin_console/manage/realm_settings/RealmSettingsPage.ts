@@ -143,19 +143,19 @@ export default class RealmSettingsPage {
   executeActionsSelectMenu = "#kc-execute-actions-select-menu";
   executeActionsSelectMenuList = "#kc-execute-actions-select-menu > div > ul";
 
-  createProfileBtn = "createProfile";
-  formViewSelect = "formView-radioBtn";
-  jsonEditorSelect = "formView-radioBtn";
-  newClientProfileNameInput = "client-profile-name";
-  newClientProfileDescriptionInput = "client-profile-description";
-  saveNewClientProfileBtn = "saveCreateProfile";
-  cancelNewClientProfile = "cancelCreateProfile";
-  alertMessage = ".pf-c-alert__title";
-  moreDrpDwn = ".pf-c-dropdown__toggle.pf-m-plain";
-  moreDrpDwnItems = ".pf-c-dropdown__menu-item";
-  deleteDialogTitle = ".pf-c-modal-box__title-text";
-  deleteDialogBodyText = ".pf-c-modal-box__body";
-  deleteDialogCancelBtn = ".pf-c-button.pf-m-link";
+  private createProfileBtn = "createProfile";
+  private formViewSelect = "formView-radioBtn";
+  private jsonEditorSelect = "formView-radioBtn";
+  private newClientProfileNameInput = "client-profile-name";
+  private newClientProfileDescriptionInput = "client-profile-description";
+  private saveNewClientProfileBtn = "saveCreateProfile";
+  private cancelNewClientProfile = "cancelCreateProfile";
+  private alertMessage = ".pf-c-alert__title";
+  private moreDrpDwn = ".pf-c-dropdown__toggle.pf-m-plain";
+  private moreDrpDwnItems = ".pf-c-dropdown__menu-item";
+  private deleteDialogTitle = ".pf-c-modal-box__title-text";
+  private deleteDialogBodyText = ".pf-c-modal-box__body";
+  private deleteDialogCancelBtn = ".pf-c-button.pf-m-link";
 
   selectLoginThemeType(themeType: string) {
     cy.get(this.selectLoginTheme).click();
