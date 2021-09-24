@@ -1,4 +1,5 @@
 import React, { useMemo, useState } from "react";
+import { omit } from "lodash";
 import {
   AlertVariant,
   Button,
@@ -22,7 +23,7 @@ import { toNewClientProfile } from "./routes/NewClientProfile";
 import type ClientProfileRepresentation from "@keycloak/keycloak-admin-client/lib/defs/clientProfileRepresentation";
 
 type ClientProfile = ClientProfileRepresentation & {
-  global?: boolean;
+  global: boolean;
 };
 
 export const ProfilesTab = () => {
@@ -74,22 +75,16 @@ export const ProfilesTab = () => {
     continueButtonLabel: t("delete"),
     continueButtonVariant: ButtonVariant.danger,
     onConfirm: async () => {
-      const filteredProfiles = tableProfiles?.filter(
-        (profile) => profile.name !== selectedProfile?.name && !profile.global
-      );
-
-      filteredProfiles?.forEach(function (profile) {
-        delete profile.global;
-      });
-
-      const profilesToUpdate = {
-        profiles: filteredProfiles,
-        globalProfiles: globalProfiles,
-      };
+      const updatedProfiles = tableProfiles
+        ?.filter(
+          (profile) => profile.name !== selectedProfile?.name && !profile.global
+        )
+        .map<ClientProfileRepresentation>((profile) => omit(profile, "global"));
 
       try {
         await adminClient.clientPolicies.createProfiles({
-          ...profilesToUpdate,
+          profiles: updatedProfiles,
+          globalProfiles,
         });
         addAlert(t("deleteClientSuccess"), AlertVariant.success);
         setKey(key + 1);
@@ -161,7 +156,7 @@ export const ProfilesTab = () => {
               </Button>
             </ToolbarItem>
           }
-          isRowDisabled={(value) => value.global === true}
+          isRowDisabled={(value) => value.global}
           actions={[
             {
               title: t("common:delete"),
