@@ -1,3 +1,5 @@
+import { TEST_REALM } from "../../../../util/keycloak_hooks";
+
 const expect = chai.expect;
 export default class RealmSettingsPage {
   generalSaveBtn = "general-tab-save";
@@ -240,7 +242,7 @@ export default class RealmSettingsPage {
   }
 
   toggleAddProviderDropdown() {
-    const keysUrl = "/auth/admin/realms/test/keys";
+    const keysUrl = `/auth/admin/realms/${TEST_REALM}/keys`;
     cy.intercept(keysUrl).as("keysFetch");
     cy.findByTestId(this.addProviderDropdown).click();
 

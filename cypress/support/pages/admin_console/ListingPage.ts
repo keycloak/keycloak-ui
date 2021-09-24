@@ -1,3 +1,5 @@
+import { TEST_REALM } from "../../util/keycloak_hooks";
+
 export default class ListingPage {
   private searchInput = '.pf-c-toolbar__item [type="search"]:visible';
   private itemsRows = "table";
@@ -25,7 +27,7 @@ export default class ListingPage {
 
   searchItem(searchValue: string, wait = true) {
     if (wait) {
-      const searchUrl = `/auth/admin/realms/test/*${searchValue}*`;
+      const searchUrl = `/auth/admin/realms/${TEST_REALM}/*${searchValue}*`;
       cy.intercept(searchUrl).as("search");
     }
     cy.get(this.searchInput).clear().type(searchValue);

@@ -1,3 +1,5 @@
+import { TEST_REALM } from "../../../../util/keycloak_hooks";
+
 export default class AdminEventsTab {
   searchAdminEventDrpDwn = ".pf-c-dropdown__toggle";
   searchAdminEventDrpDwnBtn = "adminEventsSearchSelectorToggle";
@@ -45,7 +47,9 @@ export default class AdminEventsTab {
     cy.findByTestId(this.searchAdminEventDrpDwnBtn).click();
     cy.findByTestId(this.resourcePathInputFld).type("events/config");
 
-    cy.intercept("/auth/admin/realms/test/admin-events*").as("eventsFetch");
+    cy.intercept(`/auth/admin/realms/${TEST_REALM}/admin-events*`).as(
+      "eventsFetch"
+    );
     cy.findByTestId(this.searchEventsBtn).click();
     cy.wait("@eventsFetch");
 

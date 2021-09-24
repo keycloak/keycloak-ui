@@ -1,3 +1,5 @@
+import { TEST_REALM } from "../../../../util/keycloak_hooks";
+
 export default class AssociatedRolesPage {
   private actionDropdown = "action-dropdown";
   private addRolesDropdownItem = "add-roles";
@@ -12,7 +14,7 @@ export default class AssociatedRolesPage {
   addAssociatedRealmRole() {
     cy.findByTestId(this.actionDropdown).last().click();
 
-    const load = "/auth/admin/realms/test/clients";
+    const load = `/auth/admin/realms/${TEST_REALM}/clients`;
     cy.intercept(load).as("load");
 
     cy.findByTestId(this.addRolesDropdownItem).click();
