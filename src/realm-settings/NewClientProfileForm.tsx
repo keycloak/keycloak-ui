@@ -56,10 +56,8 @@ export const NewClientProfileForm = () => {
     () =>
       adminClient.clientPolicies.listProfiles({ includeGlobalProfiles: true }),
     (profiles) => {
-      setGlobalProfiles(
-        profiles.globalProfiles as ClientProfileRepresentation[]
-      );
-      setProfiles(profiles.profiles as ClientProfileRepresentation[]);
+      setGlobalProfiles(profiles.globalProfiles ?? []);
+      setProfiles(profiles.profiles ?? []);
     },
     []
   );
@@ -68,21 +66,16 @@ export const NewClientProfileForm = () => {
     const form = getValues();
 
     const createdProfile = {
-      name: form.name,
+      ...form,
       executors: [],
-      description: form.description,
     };
 
     const allProfiles = profiles.concat(createdProfile);
 
-    const profilesToSave = {
-      profiles: allProfiles,
-      globalProfiles: globalProfiles,
-    };
-
     try {
       await adminClient.clientPolicies.createProfiles({
-        ...profilesToSave,
+        profiles: allProfiles,
+        globalProfiles: globalProfiles,
       });
       addAlert(
         t("realm-settings:createClientProfileSuccess"),
