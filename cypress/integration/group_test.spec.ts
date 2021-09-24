@@ -84,6 +84,10 @@ describe("Group test", () => {
       sidebarPage.waitForPageLoad();
       groupModal.open().fillGroupForm(targetGroupName).clickCreate();
 
+      // For some reason, this fixes clickDetailMenu
+      sidebarPage.goToEvents();
+      sidebarPage.goToGroups();
+
       listingPage.clickRowDetails(groupName).clickDetailMenu("Move to");
       moveGroupModal
         .clickRow(targetGroupName)
@@ -102,6 +106,8 @@ describe("Group test", () => {
       masthead.checkNotificationMessage("Group deleted");
     });
 
+    // This test doesn't seem to do anything.  The "Move to" dialog never opens.
+    // But the test somehow still passes.
     it("Should move group to root", async () => {
       const groups = ["group1", "group2"];
       groupModal
