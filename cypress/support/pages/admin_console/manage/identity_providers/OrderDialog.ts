@@ -10,13 +10,17 @@ export default class OrderDialog {
   }
 
   moveRowTo(from: string, to: string) {
-    cy.findByTestId(from).trigger("dragstart").trigger("dragleave");
+    cy.findByTestId(from).trigger("dragstart", {
+      dataTransfer: new DataTransfer(),
+    });
 
-    cy.findByTestId(to)
-      .trigger("dragenter")
-      .trigger("dragover")
-      .trigger("drop")
-      .trigger("dragend");
+    cy.findByTestId(to).then(($el) => {
+      const { x, y } = $el.get(0).getBoundingClientRect();
+      cy.wrap($el.get(0)).trigger("drop", {
+        clientX: x,
+        clientY: y,
+      });
+    });
 
     return this;
   }

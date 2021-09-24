@@ -25,7 +25,7 @@ describe("Events tests", () => {
 
     beforeEach(() => {
       keycloakBeforeEach();
-      sidebarPage.goToEvents();
+      sidebarPage.goToRealm("Master").goToEvents();
     });
 
     it("Check search dropdown display", () => {
@@ -77,7 +77,7 @@ describe("Events tests", () => {
 
     beforeEach(() => {
       keycloakBeforeEach();
-      sidebarPage.goToEvents();
+      sidebarPage.goToRealm("Master").goToEvents();
       cy.findByTestId("admin-events-tab").click();
     });
 
@@ -123,7 +123,7 @@ describe("Events tests", () => {
 
     beforeEach(() => {
       keycloakBeforeEach();
-      sidebarPage.goToEvents();
+      sidebarPage.goToRealm("Master").goToEvents();
       cy.findByTestId("admin-events-tab").click();
     });
 

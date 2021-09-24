@@ -425,6 +425,7 @@ export const EventsSection = () => {
               <KeycloakDataTable
                 key={key}
                 loader={loader}
+                isSearching={!!activeFilters}
                 detailColumns={[
                   {
                     name: "details",

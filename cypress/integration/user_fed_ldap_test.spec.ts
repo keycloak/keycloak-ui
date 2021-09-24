@@ -6,6 +6,7 @@ import ModalUtils from "../support/util/ModalUtils";
 import {
   keycloakBefore,
   keycloakBeforeEach,
+  TEST_REALM,
 } from "../support/util/keycloak_hooks";
 
 const loginPage = new LoginPage();
@@ -143,7 +144,12 @@ describe("User Fed LDAP tests", () => {
   });
 
   it("Disable an existing LDAP provider", () => {
+    const loadUrl = `/auth/admin/realms/${TEST_REALM}`;
+    cy.intercept(loadUrl).as("load");
+
     providersPage.clickExistingCard(firstLdapName);
+    cy.wait("@load");
+
     providersPage.disableEnabledSwitch(allCapProvider);
 
     modalUtils.checkModalTitle(disableModalTitle).confirmModal();
@@ -157,7 +163,12 @@ describe("User Fed LDAP tests", () => {
   });
 
   it("Enable an existing previously-disabled LDAP provider", () => {
+    const loadUrl = `/auth/admin/realms/${TEST_REALM}`;
+    cy.intercept(loadUrl).as("load");
+
     providersPage.clickExistingCard(firstLdapName);
+    cy.wait("@load");
+
     providersPage.enableEnabledSwitch(allCapProvider);
 
     masthead.checkNotificationMessage(savedSuccessMessage);

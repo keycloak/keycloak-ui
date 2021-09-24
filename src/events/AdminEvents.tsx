@@ -593,6 +593,7 @@ export const AdminEvents = () => {
       <KeycloakDataTable
         key={key}
         loader={loader}
+        isSearching={!!activeFilters}
         isPaginated
         ariaLabelKey="events:adminEvents"
         toolbarItem={adminEventSearchFormDisplay()}

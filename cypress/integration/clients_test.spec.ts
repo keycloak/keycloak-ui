@@ -196,7 +196,7 @@ describe("Clients test", () => {
       serviceAccountTab
         .goToServiceAccountTab()
         .clickAssignRole(false)
-        .selectRow("view-realm")
+        .selectRow("manage-consent")
         .clickAssign();
       masthead.checkNotificationMessage("Role mapping updated");
     });

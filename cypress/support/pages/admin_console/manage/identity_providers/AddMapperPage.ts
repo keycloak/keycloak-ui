@@ -79,7 +79,10 @@ export default class AddMapperPage {
 
     cy.findByTestId(this.addAssociatedRolesModalButton).contains("Add").click();
 
-    cy.findByTestId(this.mapperRoleInput).should("have.value", "admin");
+    cy.findByTestId(this.mapperRoleInput).should(
+      "have.value",
+      "default-roles-test"
+    );
 
     return this;
   }

@@ -16,7 +16,9 @@ export default class FlowDetails {
   }
 
   moveRowTo(from: string, to: string) {
-    cy.findByTestId(from).trigger("dragstart").trigger("dragleave");
+    cy.findByTestId(from)
+      .trigger("dragstart", { dataTransfer: new DataTransfer() })
+      .trigger("dragleave");
 
     cy.findByTestId(to)
       .trigger("dragenter")

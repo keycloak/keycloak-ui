@@ -1,5 +1,3 @@
-import { TEST_REALM } from "../../../../util/keycloak_hooks";
-
 export default class AdminEventsTab {
   searchAdminEventDrpDwn = ".pf-c-dropdown__toggle";
   searchAdminEventDrpDwnBtn = "adminEventsSearchSelectorToggle";
@@ -18,7 +16,7 @@ export default class AdminEventsTab {
   operationTypesInputFld = ".pf-c-form-control.pf-c-select__toggle-typeahead";
   operationTypesBtn = ".pf-c-button.pf-c-select__toggle-button.pf-m-plain";
   adminEventsTabTitle = ".pf-c-title";
-  moreBtn = ".pf-c-dropdown__toggle.pf-m-plain";
+  moreBtn = "table .pf-c-dropdown__toggle.pf-m-plain:first";
   moreDrpDwnItems = ".pf-c-dropdown__menu";
   dialogTitle = ".pf-c-modal-box__title-text";
   dialogClose = `[aria-label="Close"]`;
@@ -47,9 +45,7 @@ export default class AdminEventsTab {
     cy.findByTestId(this.searchAdminEventDrpDwnBtn).click();
     cy.findByTestId(this.resourcePathInputFld).type("events/config");
 
-    cy.intercept(`/auth/admin/realms/${TEST_REALM}/admin-events*`).as(
-      "eventsFetch"
-    );
+    cy.intercept(`/auth/admin/realms/master/admin-events*`).as("eventsFetch");
     cy.findByTestId(this.searchEventsBtn).click();
     cy.wait("@eventsFetch");
 
@@ -70,7 +66,7 @@ export default class AdminEventsTab {
     cy.findByTestId(this.searchAdminEventDrpDwnBtn).click();
     cy.findByTestId(this.resourcePathInputFld).type("events/test");
     cy.findByTestId(this.searchEventsBtn).click();
-    cy.get(this.adminEventsTabTitle).contains("No events logged");
+    cy.get(this.adminEventsTabTitle).contains("No search results");
   }
 
   shouldCheckAuthDialogOpensAndIsNotEmpty() {

@@ -41,6 +41,7 @@ export const ManageOderDialog = ({
   );
 
   const onDragStart = (id: string) => {
+    console.log("drag start", id);
     setAlias(id);
     setLiveText(t("common:onDragStart", { item: id }));
   };
@@ -54,6 +55,7 @@ export const ManageOderDialog = ({
   };
 
   const onDragFinish = (providerOrder: string[]) => {
+    console.log("drag finished", providerOrder);
     setLiveText(t("common:onDragFinish", { list: providerOrder }));
     setOrder(providerOrder);
   };
@@ -115,7 +117,7 @@ export const ManageOderDialog = ({
             id={provider.alias}
             key={provider.alias}
           >
-            <DataListItemRow>
+            <DataListItemRow data-testid={provider.alias}>
               <DataListControl>
                 <DataListDragButton
                   aria-label="Reorder"
@@ -126,10 +128,7 @@ export const ManageOderDialog = ({
               </DataListControl>
               <DataListItemCells
                 dataListCells={[
-                  <DataListCell
-                    key={`${provider.alias}-cell`}
-                    data-testid={provider.alias}
-                  >
+                  <DataListCell key={`${provider.alias}-cell`}>
                     <span id={provider.alias}>{provider.alias}</span>
                   </DataListCell>,
                 ]}
