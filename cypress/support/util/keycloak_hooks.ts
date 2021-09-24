@@ -1,6 +1,6 @@
 import AdminClient from "./AdminClient";
 
-export const TEST_REALM = "test" as const;
+export const TEST_REALM = "test";
 
 export const keycloakBefore = () => {
   const adminClient = new AdminClient();
