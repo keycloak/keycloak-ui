@@ -175,7 +175,15 @@ export const AddMapper = () => {
     <PageSection variant="light">
       <ViewHeader
         className="kc-add-mapper-title"
-        titleKey={id ? t("editIdPMapper") : t("addIdPMapper")}
+        titleKey={
+          id
+            ? t("editIdPMapper", {
+                providerId: providerId.toUpperCase(),
+              })
+            : t("addIdPMapper", {
+                providerId: providerId.toUpperCase(),
+              })
+        }
         divider
       />
       <AssociatedRolesModal
@@ -295,7 +303,11 @@ export const AddMapper = () => {
           label={t("mapperType")}
           labelIcon={
             <HelpItem
-              helpText={`identity-providers-help:${mapperType}`}
+              helpText={
+                mapperType === "attributeImporter" && providerId === "saml"
+                  ? `identity-providers-help:${mapperType}`
+                  : `identity-providers-help:oidcAttributeImporter`
+              }
               forLabel={t("mapperType")}
               forID={t(`common:helpLabel`, { label: t("mapperType") })}
             />
@@ -370,19 +382,10 @@ export const AddMapper = () => {
               }
               fieldId="kc-gui-order"
             >
-              <Controller
-                name="config.attributes"
-                defaultValue={"[]"}
-                control={control}
-                render={() => {
-                  return (
-                    <AttributesForm
-                      form={form}
-                      inConfig
-                      array={{ fields, append, remove }}
-                    />
-                  );
-                }}
+              <AttributesForm
+                form={form}
+                inConfig
+                array={{ fields, append, remove }}
               />
             </FormGroup>
             <FormGroup
