@@ -153,11 +153,14 @@ export const NewClientProfileForm = () => {
               >
                 <Button
                   id="addExecutor"
-                  component={Link}
+                  component={(props) => (
+                    <Link
+                      {...props}
+                      to={`/${realm}/realm-settings/clientPolicies`}
+                    ></Link>
+                  )}
                   variant="link"
                   className="kc-addExecutor"
-                  // @ts-ignore
-                  to={`/${realm}/realm-settings/clientPolicies`}
                   data-testid="cancelCreateProfile"
                   icon={<PlusCircleIcon />}
                   isDisabled
