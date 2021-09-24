@@ -304,9 +304,10 @@ export const AddMapper = () => {
           labelIcon={
             <HelpItem
               helpText={
-                mapperType === "attributeImporter" && providerId === "saml"
-                  ? `identity-providers-help:${mapperType}`
-                  : `identity-providers-help:oidcAttributeImporter`
+                mapperType === "attributeImporter" &&
+                (providerId === "oidc" || providerId === "keycloak-oidc")
+                  ? `identity-providers-help:oidcAttributeImporter`
+                  : `identity-providers-help:${mapperType}`
               }
               forLabel={t("mapperType")}
               forID={t(`common:helpLabel`, { label: t("mapperType") })}
