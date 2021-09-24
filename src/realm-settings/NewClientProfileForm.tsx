@@ -21,16 +21,11 @@ import { useRealm } from "../context/realm-context/RealmContext";
 import { useAlerts } from "../components/alert/Alerts";
 import { useAdminClient, useFetch } from "../context/auth/AdminClient";
 import type ClientProfileRepresentation from "@keycloak/keycloak-admin-client/lib/defs/clientProfileRepresentation";
-import type ClientPolicyExecutorRepresentation from "@keycloak/keycloak-admin-client/lib/defs/clientPolicyExecutorRepresentation";
 import { HelpItem } from "../components/help-enabler/HelpItem";
 import { PlusCircleIcon } from "@patternfly/react-icons";
 import "./RealmSettingsSection.css";
 
-type NewClientProfileForm = {
-  name: string;
-  executors: ClientPolicyExecutorRepresentation[];
-  description: string;
-};
+type NewClientProfileForm = Required<ClientProfileRepresentation>;
 
 const defaultValues: NewClientProfileForm = {
   name: "",
