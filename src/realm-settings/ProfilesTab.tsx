@@ -18,14 +18,10 @@ import { useRealm } from "../context/realm-context/RealmContext";
 import { useAlerts } from "../components/alert/Alerts";
 import { Link } from "react-router-dom";
 import "./RealmSettingsSection.css";
-import type ClientPolicyExecutorRepresentation from "@keycloak/keycloak-admin-client/lib/defs/clientPolicyExecutorRepresentation";
 import { toNewClientProfile } from "./routes/NewClientProfile";
 import type ClientProfileRepresentation from "@keycloak/keycloak-admin-client/lib/defs/clientProfileRepresentation";
 
-type ClientProfile = {
-  description?: string;
-  executors?: ClientPolicyExecutorRepresentation[];
-  name?: string;
+type ClientProfile = ClientProfileRepresentation & {
   global?: boolean;
 };
 
