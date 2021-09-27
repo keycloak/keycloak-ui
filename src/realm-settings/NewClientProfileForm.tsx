@@ -3,6 +3,7 @@ import {
   ActionGroup,
   AlertVariant,
   Button,
+  ButtonVariant,
   Divider,
   DropdownItem,
   Flex,
@@ -19,7 +20,7 @@ import { useTranslation } from "react-i18next";
 import { useForm } from "react-hook-form";
 import { FormAccess } from "../components/form-access/FormAccess";
 import { ViewHeader } from "../components/view-header/ViewHeader";
-import { Link } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
 import { useRealm } from "../context/realm-context/RealmContext";
 import { useAlerts } from "../components/alert/Alerts";
 import { useAdminClient, useFetch } from "../context/auth/AdminClient";
@@ -27,13 +28,14 @@ import type ClientProfileRepresentation from "@keycloak/keycloak-admin-client/li
 import { HelpItem } from "../components/help-enabler/HelpItem";
 import { PlusCircleIcon } from "@patternfly/react-icons";
 import "./RealmSettingsSection.css";
+import { useConfirmDialog } from "../components/confirm-dialog/ConfirmDialog";
 
 type NewClientProfileForm = Required<ClientProfileRepresentation>;
 
 const defaultValues: NewClientProfileForm = {
   name: "",
-  executors: [],
   description: "",
+  executors: [],
 };
 
 export const NewClientProfileForm = () => {
@@ -49,7 +51,10 @@ export const NewClientProfileForm = () => {
   >([]);
   const [profiles, setProfiles] = useState<ClientProfileRepresentation[]>([]);
   const [showAddExecutorsForm, setShowAddExecutorsForm] = useState(false);
+  const [createdProfile, setCreatedProfile] =
+    useState<ClientProfileRepresentation>({});
   const form = getValues();
+  const history = useHistory();
 
   useFetch(
     () =>
@@ -60,6 +65,30 @@ export const NewClientProfileForm = () => {
     },
     []
   );
+
+  const [toggleDeleteDialog, DeleteConfirm] = useConfirmDialog({
+    titleKey: t("deleteClientProfileConfirmTitle"),
+    messageKey: t("deleteClientProfileConfirm"),
+    continueButtonLabel: t("delete"),
+    continueButtonVariant: ButtonVariant.danger,
+    onConfirm: async () => {
+      const cdProfile = createdProfile;
+      const updatedProfiles = profiles.filter(
+        (profile) => profile.name !== cdProfile.name
+      );
+
+      try {
+        await adminClient.clientPolicies.createProfiles({
+          profiles: updatedProfiles,
+          globalProfiles,
+        });
+        addAlert(t("deleteClientSuccess"), AlertVariant.success);
+        history.push(`/${realm}/realm-settings/clientPolicies`);
+      } catch (error) {
+        addError(t("deleteClientError"), error);
+      }
+    },
+  });
 
   const save = async () => {
     const form = getValues();
@@ -81,6 +110,7 @@ export const NewClientProfileForm = () => {
         AlertVariant.success
       );
       setShowAddExecutorsForm(true);
+      setCreatedProfile(createdProfile);
     } catch (error) {
       addError("realm-settings:createClientProfileError", error);
     }
@@ -88,6 +118,7 @@ export const NewClientProfileForm = () => {
 
   return (
     <>
+      <DeleteConfirm />
       <ViewHeader
         titleKey={showAddExecutorsForm ? form.name : t("newClientProfile")}
         divider
@@ -95,8 +126,9 @@ export const NewClientProfileForm = () => {
           showAddExecutorsForm
             ? [
                 <DropdownItem
-                  key="test"
-                  onClick={() => console.log(">>> delete client profile")}
+                  key="delete"
+                  value="delete"
+                  onClick={toggleDeleteDialog}
                 >
                   {t("deleteClientProfile")}
                 </DropdownItem>,
