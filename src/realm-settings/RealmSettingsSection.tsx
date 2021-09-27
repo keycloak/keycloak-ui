@@ -58,6 +58,7 @@ export const RealmSettingsSection = () => {
     setKey(key + 1);
   };
 
+  // delays realm fetch by 100ms in order to fetch newly updated value from server
   useEffect(() => {
     const update = async () => {
       const realm = await adminClient.realms.findOne({ realm: realmName });
