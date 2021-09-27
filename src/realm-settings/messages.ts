@@ -234,6 +234,7 @@ export default {
     deleteClientSuccess: "Client profile deleted",
     deleteClientError: "Could not delete profile: {{error}}",
     createClientProfile: "Create client profile",
+    deleteClientProfile: "Delete this client profile",
     createClientProfileSuccess: "New client profile created",
     createClientProfileError: "Could not create client profile: '{{error}}'",
     createClientProfileNameHelperText:

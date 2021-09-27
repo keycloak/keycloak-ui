@@ -4,6 +4,9 @@ import {
   AlertVariant,
   Button,
   Divider,
+  DropdownItem,
+  Flex,
+  FlexItem,
   FormGroup,
   PageSection,
   Text,
@@ -46,6 +49,7 @@ export const NewClientProfileForm = () => {
   >([]);
   const [profiles, setProfiles] = useState<ClientProfileRepresentation[]>([]);
   const [showAddExecutorsForm, setShowAddExecutorsForm] = useState(false);
+  const form = getValues();
 
   useFetch(
     () =>
@@ -84,7 +88,22 @@ export const NewClientProfileForm = () => {
 
   return (
     <>
-      <ViewHeader titleKey={t("newClientProfile")} divider />
+      <ViewHeader
+        titleKey={showAddExecutorsForm ? form.name : t("newClientProfile")}
+        divider
+        dropdownItems={
+          showAddExecutorsForm
+            ? [
+                <DropdownItem
+                  key="test"
+                  onClick={() => console.log(">>> delete client profile")}
+                >
+                  {t("deleteClientProfile")}
+                </DropdownItem>,
+              ]
+            : undefined
+        }
+      />
       <PageSection variant="light">
         <FormAccess isHorizontal role="view-realm" className="pf-u-mt-lg">
           <FormGroup
@@ -120,51 +139,56 @@ export const NewClientProfileForm = () => {
               variant="primary"
               onClick={save}
               data-testid="saveCreateProfile"
+              isDisabled={showAddExecutorsForm ? true : false}
             >
               {t("common:save")}
             </Button>
             <Button
               id="cancelCreateProfile"
               component={Link}
+              variant="link"
               // @ts-ignore
               to={`/${realm}/realm-settings/clientPolicies`}
               data-testid="cancelCreateProfile"
             >
-              {t("common:cancel")}
+              {showAddExecutorsForm
+                ? t("realm-settings:reload")
+                : t("common:cancel")}
             </Button>
           </ActionGroup>
           {showAddExecutorsForm && (
             <>
-              <FormGroup
-                label={t("executors")}
-                fieldId="kc-executors"
-                labelIcon={
-                  <HelpItem
-                    helpText={t("realm-settings:executorsHelpText")}
-                    forLabel={t("executorsHelpItem")}
-                    forID={t("executors")}
-                  />
-                }
-              >
-                <Button
-                  id="addExecutor"
-                  component={(props) => (
-                    <Link
-                      {...props}
-                      to={`/${realm}/realm-settings/clientPolicies`}
-                    ></Link>
-                  )}
-                  variant="link"
-                  className="kc-addExecutor"
-                  data-testid="cancelCreateProfile"
-                  icon={<PlusCircleIcon />}
-                  isDisabled
-                >
-                  {t("realm-settings:addExecutor")}
-                </Button>
-              </FormGroup>
+              <Flex>
+                <FlexItem>
+                  <Text className="kc-executors" component={TextVariants.h1}>
+                    {t("executors")}
+                    <HelpItem
+                      helpText={t("realm-settings:executorsHelpText")}
+                      forLabel={t("executorsHelpItem")}
+                      forID={t("executors")}
+                    />
+                  </Text>
+                </FlexItem>
+                <FlexItem align={{ default: "alignRight" }}>
+                  <Button
+                    id="addExecutor"
+                    component={(props) => (
+                      <Link
+                        {...props}
+                        to={`/${realm}/realm-settings/clientPolicies`}
+                      ></Link>
+                    )}
+                    variant="link"
+                    className="kc-addExecutor"
+                    data-testid="cancelCreateProfile"
+                    icon={<PlusCircleIcon />}
+                  >
+                    {t("realm-settings:addExecutor")}
+                  </Button>
+                </FlexItem>
+              </Flex>
               <Divider />
-              <Text component={TextVariants.h6}>
+              <Text className="kc-emptyExecutors" component={TextVariants.h6}>
                 {t("realm-settings:emptyExecutors")}
               </Text>
             </>
