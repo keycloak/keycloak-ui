@@ -155,6 +155,14 @@ export const AddMapper = () => {
           form.setValue("config.role", value.role[0]);
         }
 
+        if (mapper.config?.template) {
+          form.setValue("config.template", value.template);
+        }
+
+        if (mapper.config?.target) {
+          form.setValue("config.target", value.target);
+        }
+
         convertToFormValues(value, "config", form.setValue);
       }
 
@@ -173,21 +181,11 @@ export const AddMapper = () => {
     setRolesModalOpen(!rolesModalOpen);
   };
 
-  console.log("mapperType", mapperType);
-
   return (
     <PageSection variant="light">
       <ViewHeader
         className="kc-add-mapper-title"
-        titleKey={
-          id
-            ? t("editIdPMapper", {
-                providerId: providerId.toUpperCase(),
-              })
-            : t("addIdPMapper", {
-                providerId: providerId.toUpperCase(),
-              })
-        }
+        titleKey={id ? t("editIdPMapper") : t("addIdPMapper")}
         divider
       />
       <AssociatedRolesModal
@@ -307,12 +305,7 @@ export const AddMapper = () => {
           label={t("mapperType")}
           labelIcon={
             <HelpItem
-              helpText={
-                mapperType === "attributeImporter" &&
-                (providerId === "oidc" || providerId === "keycloak-oidc")
-                  ? `identity-providers-help:oidcAttributeImporter`
-                  : `identity-providers-help:${mapperType}`
-              }
+              helpText={`identity-providers-help:${mapperType}`}
               forLabel={t("mapperType")}
               forID={t(`common:helpLabel`, { label: t("mapperType") })}
             />
@@ -376,48 +369,25 @@ export const AddMapper = () => {
         {isSAMLorOIDC ? (
           <>
             {" "}
-            <FormGroup
-              label={t("common:attributes")}
-              labelIcon={
-                <HelpItem
-                  helpText="identity-providers-help:attributes"
-                  forLabel={t("attributes")}
-                  forID={t(`common:helpLabel`, { label: t("attributes") })}
-                />
-              }
-              fieldId="kc-gui-order"
-            >
-              <AttributesForm
-                form={form}
-                inConfig
-                array={{ fields, append, remove }}
-              />
-            </FormGroup>
-            <FormGroup
-              label={t("regexAttributeValues")}
-              labelIcon={
-                <HelpItem
-                  helpText="identity-providers-help:regexAttributeValues"
-                  forLabel={t("regexAttributeValues")}
-                  forID={t(`common:helpLabel`, {
-                    label: t("regexAttributeValues"),
-                  })}
-                />
-              }
-              fieldId="regexAttributeValues"
-            >
-              <Controller
-                name="config.are-attribute-values-regex"
-                control={control}
-                defaultValue="false"
-                render={({ onChange, value }) => (
-                  <Switch
-                    id="regexAttributeValues"
-                    data-testid="regex-attribute-values-switch"
-                    label={t("common:on")}
-                    labelOff={t("common:off")}
-                    isChecked={value === "true"}
-                    onChange={(value) => onChange("" + value)}
+            {form.getValues().identityProviderMapper ===
+              "saml-advanced-role-idp-mapper" && (
+              <>
+                {" "}
+                <FormGroup
+                  label={t("common:attributes")}
+                  labelIcon={
+                    <HelpItem
+                      helpText="identity-providers-help:attributes"
+                      forLabel={t("attributes")}
+                      forID={t(`common:helpLabel`, { label: t("attributes") })}
+                    />
+                  }
+                  fieldId="kc-gui-order"
+                >
+                  <AttributesForm
+                    form={form}
+                    inConfig
+                    array={{ fields, append, remove }}
                   />
                 </FormGroup>
                 <FormGroup
@@ -451,7 +421,8 @@ export const AddMapper = () => {
                 </FormGroup>{" "}
               </>
             )}
-            {mapperType == "usernameTemplateImporter" && (
+            {form.getValues().identityProviderMapper ===
+              "saml-username-idp-mapper" && (
               <>
                 <FormGroup
                   label={t("template")}
@@ -479,6 +450,7 @@ export const AddMapper = () => {
                     id="kc-template"
                     data-testid="template"
                     name="config.template"
+                    defaultValue={currentMapper?.config.template}
                     validated={
                       errors.name
                         ? ValidatedOptions.error
@@ -508,7 +480,7 @@ export const AddMapper = () => {
                 >
                   <Controller
                     name="config.target"
-                    defaultValue={""}
+                    defaultValue={currentMapper?.config.target}
                     control={control}
                     render={({ onChange, value }) => (
                       <Select
@@ -544,9 +516,12 @@ export const AddMapper = () => {
                 </FormGroup>
               </>
             )}
-            {(mapperType === "advancedAttributeToRole" ||
-              mapperType === "hardcodedRole" ||
-              mapperType === "samlAttributeToRole") && (
+            {(form.getValues().identityProviderMapper ===
+              "saml-advanced-role-idp-mapper" ||
+              form.getValues().identityProviderMapper ===
+                "oidc-hardcoded-role-idp-mapper" ||
+              form.getValues().identityProviderMapper ===
+                "saml-role-idp-mapper") && (
               <FormGroup
                 label={t("common:role")}
                 labelIcon={
