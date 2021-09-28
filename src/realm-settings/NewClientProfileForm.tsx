@@ -66,30 +66,6 @@ export const NewClientProfileForm = () => {
     []
   );
 
-  const [toggleDeleteDialog, DeleteConfirm] = useConfirmDialog({
-    titleKey: t("deleteClientProfileConfirmTitle"),
-    messageKey: t("deleteClientProfileConfirm"),
-    continueButtonLabel: t("delete"),
-    continueButtonVariant: ButtonVariant.danger,
-    onConfirm: async () => {
-      const cdProfile = createdProfile;
-      const updatedProfiles = profiles.filter(
-        (profile) => profile.name !== cdProfile.name
-      );
-
-      try {
-        await adminClient.clientPolicies.createProfiles({
-          profiles: updatedProfiles,
-          globalProfiles,
-        });
-        addAlert(t("deleteClientSuccess"), AlertVariant.success);
-        history.push(`/${realm}/realm-settings/clientPolicies`);
-      } catch (error) {
-        addError(t("deleteClientError"), error);
-      }
-    },
-  });
-
   const save = async () => {
     const form = getValues();
 
@@ -115,6 +91,30 @@ export const NewClientProfileForm = () => {
       addError("realm-settings:createClientProfileError", error);
     }
   };
+
+  const [toggleDeleteDialog, DeleteConfirm] = useConfirmDialog({
+    titleKey: t("deleteClientProfileConfirmTitle"),
+    messageKey: t("deleteClientProfileConfirm"),
+    continueButtonLabel: t("delete"),
+    continueButtonVariant: ButtonVariant.danger,
+    onConfirm: async () => {
+      const cdProfile = createdProfile;
+      const updatedProfiles = profiles.filter(
+        (profile) => profile.name !== cdProfile.name
+      );
+
+      try {
+        await adminClient.clientPolicies.createProfiles({
+          profiles: updatedProfiles,
+          globalProfiles,
+        });
+        addAlert(t("deleteClientSuccess"), AlertVariant.success);
+        history.push(`/${realm}/realm-settings/clientPolicies`);
+      } catch (error) {
+        addError(t("deleteClientError"), error);
+      }
+    },
+  });
 
   return (
     <>
