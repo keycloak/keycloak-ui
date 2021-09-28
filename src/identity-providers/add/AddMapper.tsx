@@ -147,6 +147,10 @@ export const AddMapper = () => {
           );
         }
 
+        if (mapper.config?.attribute) {
+          form.setValue("config.attributes", value.attribute);
+        }
+
         if (mapper.config?.attributes) {
           form.setValue("config.attributes", JSON.parse(value.attributes));
         }
@@ -181,7 +185,9 @@ export const AddMapper = () => {
     setRolesModalOpen(!rolesModalOpen);
   };
 
-  console.log("mapperType", mapperType);
+  // console.log("mapperType", mapperType);
+
+  console.log("lalala", form.getValues().identityProviderMapper);
 
   return (
     <PageSection variant="light">
@@ -579,6 +585,86 @@ export const AddMapper = () => {
                 </Button>
               </FormGroup>
             )}{" "}
+            {(form.getValues().identityProviderMapper ===
+              "hardcoded-user-session-attribute-idp-mapper" ||
+              form.getValues().identityProviderMapper ===
+                "hardcoded-attribute-idp-mapper") && (
+              <>
+                <FormGroup
+                  label={
+                    form.getValues().identityProviderMapper ===
+                    "hardcoded-user-session-attribute-idp-mapper"
+                      ? t("userSessionAttribute")
+                      : t("userAttribute")
+                  }
+                  labelIcon={
+                    <HelpItem
+                      id="user-session-attribute-help-icon"
+                      helpText="identity-providers-help:userSessionAttribute"
+                      forLabel={t("userSessionAttribute")}
+                      forID={t(`common:helpLabel`, {
+                        label: t("userSessionAttribute"),
+                      })}
+                    />
+                  }
+                  fieldId="kc-user-session-attribute"
+                  validated={
+                    errors.name
+                      ? ValidatedOptions.error
+                      : ValidatedOptions.default
+                  }
+                  helperTextInvalid={t("common:required")}
+                >
+                  <TextInput
+                    ref={register()}
+                    type="text"
+                    defaultValue={currentMapper?.config.attribute}
+                    id="kc-attribute"
+                    data-testid="user-session-attribute"
+                    name="config.attribute"
+                    validated={
+                      errors.name
+                        ? ValidatedOptions.error
+                        : ValidatedOptions.default
+                    }
+                  />
+                </FormGroup>
+                <FormGroup
+                  label={t("userSessionAttributeValue")}
+                  labelIcon={
+                    <HelpItem
+                      id="user-session-attribute-value-help-icon"
+                      helpText="identity-providers-help:userAttributeValue"
+                      forLabel={t("userSessionAttributeValue")}
+                      forID={t(`common:helpLabel`, {
+                        label: t("userSessionAttributeValue"),
+                      })}
+                    />
+                  }
+                  fieldId="kc-user-session-attribute-value"
+                  validated={
+                    errors.name
+                      ? ValidatedOptions.error
+                      : ValidatedOptions.default
+                  }
+                  helperTextInvalid={t("common:required")}
+                >
+                  <TextInput
+                    ref={register()}
+                    type="text"
+                    defaultValue={currentMapper?.config["attribute-value"]}
+                    data-testid="user-session-attribute-value"
+                    id="kc-user-session-attribute-value"
+                    name="config.attribute-value"
+                    validated={
+                      errors.name
+                        ? ValidatedOptions.error
+                        : ValidatedOptions.default
+                    }
+                  />
+                </FormGroup>
+              </>
+            )}
           </>
         ) : (
           <>
@@ -648,6 +734,7 @@ export const AddMapper = () => {
             </FormGroup>
           </>
         )}
+
         <ActionGroup>
           <Button
             data-testid="new-mapper-save-button"
