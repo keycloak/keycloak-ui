@@ -486,6 +486,7 @@ export const AddMapper = () => {
                       <Select
                         toggleId="target"
                         datatest-id="target-select"
+                        id="target-dropdown"
                         placeholderText={t("realm-settings:placeholderText")}
                         direction="down"
                         onToggle={() =>

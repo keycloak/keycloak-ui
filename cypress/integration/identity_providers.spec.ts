@@ -165,9 +165,25 @@ describe("Identity provider test", () => {
 
       addMapperPage.clickAdd();
 
-      addMapperPage.fillSAMLorOIDCMapper("SAML mapper 2");
+      addMapperPage.addUsernameTemplateImporterMapper(
+        "SAML Username Template Importer Mapper"
+      );
 
       masthead.checkNotificationMessage(createMapperSuccessMsg);
+    });
+
+    it("should edit Username Template Importer mapper", () => {
+      sidebarPage.goToIdentityProviders();
+
+      listingPage.goToItemDetails("saml");
+
+      addMapperPage.goToMappersTab();
+
+      listingPage.goToItemDetails("SAML Username Template Importer Mapper");
+
+      addMapperPage.editUsernameTemplateImporterMapper();
+
+      masthead.checkNotificationMessage(saveMapperSuccessMsg);
     });
 
     it("should edit facebook mapper", () => {

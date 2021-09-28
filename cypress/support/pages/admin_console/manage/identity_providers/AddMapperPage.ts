@@ -13,6 +13,9 @@ export default class AddMapperPage {
   private syncmodeSelectToggle = "#syncMode";
   private attributesKeyInput = 'input[name="config.attributes[0].key"]';
   private attributesValueInput = 'input[name="config.attributes[0].value"]';
+  private template = "template";
+  private target = "#target";
+  private targetDropdown = "#target-dropdown";
   private selectRoleButton = "select-role-button";
   private radio = "[type=radio]";
   private addAssociatedRolesModalButton = "add-associated-roles-button";
@@ -129,17 +132,28 @@ export default class AddMapperPage {
       .contains("Username Template Importer")
       .click();
 
-    cy.get(this.attributesKeyInput).clear();
-    cy.get(this.attributesKeyInput).type("key");
+    cy.findByTestId(this.template).clear();
+    cy.findByTestId(this.template).type("Template");
 
-    cy.get(this.attributesValueInput).clear();
-    cy.get(this.attributesValueInput).type("value");
+    cy.get(this.target).click();
 
-    this.toggleSwitch(this.regexAttributeValuesSwitch);
+    cy.get(this.targetDropdown).contains("LOCAL").click();
 
-    cy.findByTestId(this.selectRoleButton).click();
+    this.saveNewMapper();
 
-    this.addRoleToMapperForm();
+    return this;
+  }
+
+  editUsernameTemplateImporterMapper() {
+    cy.get(this.syncmodeSelectToggle).click();
+
+    cy.findByTestId("legacy").click();
+
+    cy.findByTestId(this.template).type("_edited");
+
+    cy.get(this.target).click();
+
+    cy.get(this.targetDropdown).contains("BROKER_ID").click();
 
     this.saveNewMapper();
 
