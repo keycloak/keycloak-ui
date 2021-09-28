@@ -109,7 +109,11 @@ const ClientDetailHeader = ({
     ...(!isRealmClient(client)
       ? [
           <Divider key="divider" />,
-          <DropdownItem key="delete" onClick={() => toggleDeleteDialog()}>
+          <DropdownItem
+            data-testid="delete-client"
+            key="delete"
+            onClick={() => toggleDeleteDialog()}
+          >
             {t("common:delete")}
           </DropdownItem>,
         ]
@@ -315,7 +319,7 @@ export const ClientDetails = () => {
       />
       <PageSection variant="light" className="pf-u-p-0">
         <FormProvider {...form}>
-          <KeycloakTabs isBox>
+          <KeycloakTabs data-testid="client-tabs" isBox>
             <Tab
               id="settings"
               eventKey="settings"
