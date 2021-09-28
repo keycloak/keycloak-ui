@@ -185,7 +185,15 @@ export const AddMapper = () => {
     <PageSection variant="light">
       <ViewHeader
         className="kc-add-mapper-title"
-        titleKey={id ? t("editIdPMapper") : t("addIdPMapper")}
+        titleKey={
+          id
+            ? t("editIdPMapper", {
+                providerId: providerId.toUpperCase(),
+              })
+            : t("addIdPMapper", {
+                providerId: providerId.toUpperCase(),
+              })
+        }
         divider
       />
       <AssociatedRolesModal
@@ -305,7 +313,12 @@ export const AddMapper = () => {
           label={t("mapperType")}
           labelIcon={
             <HelpItem
-              helpText={`identity-providers-help:${mapperType}`}
+              helpText={
+                mapperType === "attributeImporter" &&
+                (providerId === "oidc" || providerId === "keycloak-oidc")
+                  ? `identity-providers-help:oidcAttributeImporter`
+                  : `identity-providers-help:${mapperType}`
+              }
               forLabel={t("mapperType")}
               forID={t(`common:helpLabel`, { label: t("mapperType") })}
             />
