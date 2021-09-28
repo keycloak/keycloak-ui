@@ -227,7 +227,7 @@ describe("Clients test", function () {
     });
   });
 
-  describe.only("Realm client", () => {
+  describe("Realm client", () => {
     const clientName = "master-realm";
 
     beforeEach(() => {
