@@ -4,12 +4,15 @@ import {
   ButtonVariant,
   Divider,
   DropdownItem,
+  Label,
   PageSection,
   Spinner,
   Tab,
   Tabs,
   TabTitleText,
+  Tooltip,
 } from "@patternfly/react-core";
+import { InfoCircleIcon } from "@patternfly/react-icons";
 import type ClientRepresentation from "@keycloak/keycloak-admin-client/lib/defs/clientRepresentation";
 import _ from "lodash";
 import React, { useState } from "react";
@@ -74,13 +77,24 @@ const ClientDetailHeader = ({
       save();
     },
   });
+
   return (
     <>
       <DisableConfirm />
       <ViewHeader
         titleKey={client ? client.clientId! : ""}
         subKey="clients:clientsExplain"
-        badges={[{ text: client.protocol }]}
+        badges={[
+          {
+            text: client.bearerOnly ? (
+              <Tooltip content={t("explainBearerOnly")}>
+                <Label icon={<InfoCircleIcon />}>{client.protocol}</Label>
+              </Tooltip>
+            ) : (
+              <Label>{client.protocol}</Label>
+            ),
+          },
+        ]}
         divider={false}
         helpTextKey="clients-help:enableDisable"
         dropdownItems={[
