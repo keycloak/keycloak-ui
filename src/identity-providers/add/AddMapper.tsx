@@ -177,6 +177,8 @@ export const AddMapper = () => {
     setRolesModalOpen(!rolesModalOpen);
   };
 
+  const formValues = form.getValues();
+
   return (
     <PageSection variant="light">
       <ViewHeader
@@ -377,7 +379,7 @@ export const AddMapper = () => {
         </FormGroup>
         {isSAMLorOIDC ? (
           <>
-            {form.getValues().identityProviderMapper ===
+            {formValues.identityProviderMapper ===
               "saml-advanced-role-idp-mapper" && (
               <>
                 <FormGroup
@@ -428,7 +430,7 @@ export const AddMapper = () => {
                 </FormGroup>
               </>
             )}
-            {form.getValues().identityProviderMapper ===
+            {formValues.identityProviderMapper ===
               "saml-username-idp-mapper" && (
               <>
                 <FormGroup
@@ -528,7 +530,7 @@ export const AddMapper = () => {
               "saml-advanced-role-idp-mapper",
               "oidc-hardcoded-role-idp-mapper",
               "saml-role-idp-mapper",
-            ].includes(form.getValues().identityProviderMapper!) && (
+            ].includes(formValues.identityProviderMapper!) && (
               <FormGroup
                 label={t("common:role")}
                 labelIcon={
@@ -573,11 +575,11 @@ export const AddMapper = () => {
             {[
               "hardcoded-user-session-attribute-idp-mapper",
               "hardcoded-attribute-idp-mapper",
-            ].includes(form.getValues().identityProviderMapper!) && (
+            ].includes(formValues.identityProviderMapper!) && (
               <>
                 <FormGroup
                   label={
-                    form.getValues().identityProviderMapper ===
+                    formValues.identityProviderMapper ===
                     "hardcoded-user-session-attribute-idp-mapper"
                       ? t("userSessionAttribute")
                       : t("userAttribute")

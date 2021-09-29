@@ -3,6 +3,7 @@ export default class AddMapperPage {
   private noMappersAddMapperButton = "no-mappers-empty-action";
   private idpMapperSelectToggle = "#identityProviderMapper";
   private idpMapperSelect = "idp-mapper-select";
+  private addMapperButton = "#add-mapper-button";
 
   private mapperNameInput = "#kc-name";
   private mapperRoleInput = "mapper-role-input";
@@ -25,8 +26,13 @@ export default class AddMapperPage {
     return this;
   }
 
-  clickAdd() {
+  emptyStateAddMapper() {
     cy.findByTestId(this.noMappersAddMapperButton).click();
+    return this;
+  }
+
+  addMapper() {
+    cy.get(this.addMapperButton).click();
     return this;
   }
 
