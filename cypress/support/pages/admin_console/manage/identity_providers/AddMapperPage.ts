@@ -97,7 +97,7 @@ export default class AddMapperPage {
     cy.get(this.idpMapperSelectToggle).click();
 
     cy.findByTestId(this.idpMapperSelect)
-      .contains("Hardcoded User Session Attribute")
+      .contains("Advanced Attribute To Role")
       .click();
 
     cy.get(this.attributesKeyInput).clear();

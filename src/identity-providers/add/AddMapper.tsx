@@ -159,14 +159,6 @@ export const AddMapper = () => {
           form.setValue("config.role", value.role[0]);
         }
 
-        if (mapper.config?.template) {
-          form.setValue("config.template", value.template);
-        }
-
-        if (mapper.config?.target) {
-          form.setValue("config.target", value.target);
-        }
-
         convertToFormValues(value, "config", form.setValue);
       }
 
@@ -184,10 +176,6 @@ export const AddMapper = () => {
   const toggleModal = () => {
     setRolesModalOpen(!rolesModalOpen);
   };
-
-  // console.log("mapperType", mapperType);
-
-  console.log("lalala", form.getValues().identityProviderMapper);
 
   return (
     <PageSection variant="light">
@@ -389,11 +377,9 @@ export const AddMapper = () => {
         </FormGroup>
         {isSAMLorOIDC ? (
           <>
-            {" "}
             {form.getValues().identityProviderMapper ===
               "saml-advanced-role-idp-mapper" && (
               <>
-                {" "}
                 <FormGroup
                   label={t("common:attributes")}
                   labelIcon={
@@ -439,7 +425,7 @@ export const AddMapper = () => {
                       />
                     )}
                   />
-                </FormGroup>{" "}
+                </FormGroup>
               </>
             )}
             {form.getValues().identityProviderMapper ===
@@ -538,12 +524,11 @@ export const AddMapper = () => {
                 </FormGroup>
               </>
             )}
-            {(form.getValues().identityProviderMapper ===
-              "saml-advanced-role-idp-mapper" ||
-              form.getValues().identityProviderMapper ===
-                "oidc-hardcoded-role-idp-mapper" ||
-              form.getValues().identityProviderMapper ===
-                "saml-role-idp-mapper") && (
+            {[
+              "saml-advanced-role-idp-mapper",
+              "oidc-hardcoded-role-idp-mapper",
+              "saml-role-idp-mapper",
+            ].includes(form.getValues().identityProviderMapper!) && (
               <FormGroup
                 label={t("common:role")}
                 labelIcon={
@@ -584,11 +569,11 @@ export const AddMapper = () => {
                   {t("selectRole")}
                 </Button>
               </FormGroup>
-            )}{" "}
-            {(form.getValues().identityProviderMapper ===
-              "hardcoded-user-session-attribute-idp-mapper" ||
-              form.getValues().identityProviderMapper ===
-                "hardcoded-attribute-idp-mapper") && (
+            )}
+            {[
+              "hardcoded-user-session-attribute-idp-mapper",
+              "hardcoded-attribute-idp-mapper",
+            ].includes(form.getValues().identityProviderMapper!) && (
               <>
                 <FormGroup
                   label={
