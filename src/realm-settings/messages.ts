@@ -253,6 +253,10 @@ export default {
     executorsHelpItem: "Executors help item",
     addExecutor: "Add executor",
     emptyExecutors: "No executors configured",
+    updateClientProfilesSuccess:
+      "The client profiles configuration was updated",
+    updateClientProfilesError:
+      "Provided JSON is incorrect: Unexpected token { in JSON",
     tokens: "Tokens",
     key: "Key",
     value: "Value",

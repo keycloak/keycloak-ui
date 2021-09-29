@@ -1,9 +1,11 @@
 import React, { useMemo, useState } from "react";
 import { omit } from "lodash";
 import {
+  ActionGroup,
   AlertVariant,
   Button,
   ButtonVariant,
+  FormGroup,
   Label,
   PageSection,
   ToolbarItem,
@@ -35,6 +37,8 @@ export const ProfilesTab = () => {
   const [globalProfiles, setGlobalProfiles] =
     useState<ClientProfileRepresentation[]>();
   const [selectedProfile, setSelectedProfile] = useState<ClientProfile>();
+  const [changedClientProfilesJSON, setChangedClientProfilesJSON] =
+    useState("");
   const [show, setShow] = useState(false);
   const [key, setKey] = useState(0);
 
@@ -100,6 +104,42 @@ export const ProfilesTab = () => {
       {row.global && <Label color="blue">{t("global")}</Label>}
     </Link>
   );
+
+  const save = async () => {
+    if (changedClientProfilesJSON) {
+      let obj = [];
+      try {
+        obj = JSON.parse(changedClientProfilesJSON);
+
+        const changedProfiles = obj
+          .filter((profile: ClientProfile) => !profile.global)
+          .map((profile: ClientProfileRepresentation) =>
+            omit(profile, "global")
+          );
+
+        const changedGlobalProfiles = obj
+          .filter((profile: ClientProfile) => profile.global)
+          .map((profile: ClientProfileRepresentation) =>
+            omit(profile, "global")
+          );
+
+        try {
+          await adminClient.clientPolicies.createProfiles({
+            profiles: changedProfiles,
+            globalProfiles: changedGlobalProfiles,
+          });
+          addAlert(
+            t("realm-settings:updateClientProfilesSuccess"),
+            AlertVariant.success
+          );
+        } catch (error) {
+          addError("realm-settings:updateClientProfilesError", error);
+        }
+      } catch (error) {
+        console.warn("Invalid json, ignoring value using {}");
+      }
+    }
+  };
 
   return (
     <>
@@ -185,26 +225,31 @@ export const ProfilesTab = () => {
           }
         />
       ) : (
-        <>
+        <FormGroup fieldId={"jsonEditor"}>
           <div className="pf-u-mt-md pf-u-ml-lg">
             <CodeEditor
               isLineNumbersVisible
               isLanguageLabelVisible
+              isReadOnly={false}
               code={code}
               language={Language.json}
               height="30rem"
+              onChange={(value) => setChangedClientProfilesJSON(value ?? "")}
             />
           </div>
-          <div className="pf-u-mt-md">
-            <Button
-              variant={ButtonVariant.primary}
-              className="pf-u-mr-md pf-u-ml-lg"
-            >
-              {t("save")}
-            </Button>
-            <Button variant={ButtonVariant.link}> {t("reload")}</Button>
-          </div>
-        </>
+          <ActionGroup>
+            <div className="pf-u-mt-md">
+              <Button
+                variant={ButtonVariant.primary}
+                className="pf-u-mr-md pf-u-ml-lg"
+                onClick={save}
+              >
+                {t("save")}
+              </Button>
+              <Button variant={ButtonVariant.link}> {t("reload")}</Button>
+            </div>
+          </ActionGroup>
+        </FormGroup>
       )}
     </>
   );
