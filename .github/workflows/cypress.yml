@@ -39,15 +39,23 @@ jobs:
         working-directory: ${{ env.ADMIN_UI_PATH }}
         run: mvn clean install --batch-mode --file keycloak-theme/pom.xml
 
-      - name: Build Keycloak Server
-        working-directory: ${{ env.KEYCLOAK_SERVER_PATH }}
-        run: mvn clean install --no-snapshot-updates --batch-mode --errors -DskipTests -Pdistribution
-
       - name: Configure distribution path
         working-directory: ${{ env.KEYCLOAK_SERVER_PATH }}
         run: |
           VERSION=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)
           echo "KEYCLOAK_SERVER_BIN=keycloak-server/distribution/server-dist/target/keycloak-$VERSION/bin" >> $GITHUB_ENV
+
+      - name: Cache Keycloak Server build
+        uses: actions/cache@v2
+        with:
+          path: ${{ env.KEYCLOAK_SERVER_BIN }}
+          key: |
+            HASH=$(cd ${{ env.KEYCLOAK_SERVER_PATH }} && git show -s --format=%H)
+            ${{ runner.os }}-$$(cd ${{ env.KEYCLOAK_SERVER_PATH }} && git show -s --format=%H)
+
+      - name: Build Keycloak Server
+        working-directory: ${{ env.KEYCLOAK_SERVER_PATH }}
+        run: test -d ${{ env.KEYCLOAK_SERVER_BIN }} || mvn clean install --no-snapshot-updates --batch-mode --errors -DskipTests -Pdistribution
 
       - name: Start Keycloak Server
         working-directory: ${{ env.KEYCLOAK_SERVER_BIN }}
