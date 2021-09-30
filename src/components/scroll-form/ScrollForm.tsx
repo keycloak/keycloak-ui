@@ -67,7 +67,11 @@ export const ScrollForm: FunctionComponent<ScrollFormProps> = ({
           >
             {sections.map((cat) => (
               // note that JumpLinks currently does not work with spaces in the href
-              <JumpLinksItem key={cat} href={`#${spacesToHyphens(cat)}`}>
+              <JumpLinksItem
+                key={cat}
+                href={`#${spacesToHyphens(cat)}`}
+                data-testid={`jump-link-${spacesToHyphens(cat.toLowerCase())}`}
+              >
                 {cat}
               </JumpLinksItem>
             ))}
