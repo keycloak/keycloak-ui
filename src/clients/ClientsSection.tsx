@@ -117,11 +117,8 @@ export const ClientsSection = () => {
               toolbarItem={
                 <>
                   <ToolbarItem>
-                    <Button
-                      component={(props) => (
-                        <Link {...props} to={toAddClient({ realm })} />
-                      )}
-                    >
+                    {/* @ts-ignore */}
+                    <Button component={Link} to={toAddClient({ realm })}>
                       {t("createClient")}
                     </Button>
                   </ToolbarItem>
