@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from "react";
+import React, { useState } from "react";
 import { omit } from "lodash";
 import {
   ActionGroup,
@@ -37,9 +37,8 @@ export const ProfilesTab = () => {
   const [globalProfiles, setGlobalProfiles] =
     useState<ClientProfileRepresentation[]>();
   const [selectedProfile, setSelectedProfile] = useState<ClientProfile>();
-  const [changedClientProfilesJSON, setChangedClientProfilesJSON] =
-    useState("");
   const [show, setShow] = useState(false);
+  const [code, setCode] = useState("");
   const [key, setKey] = useState(0);
 
   const loader = async () => {
@@ -64,14 +63,10 @@ export const ProfilesTab = () => {
 
     const allClientProfiles = globalProfiles?.concat(profiles ?? []);
     setTableProfiles(allClientProfiles);
+    setCode(JSON.stringify(allClientProfiles, null, 2));
 
     return allClientProfiles ?? [];
   };
-
-  const code = useMemo(
-    () => JSON.stringify(tableProfiles, null, 2),
-    [tableProfiles]
-  );
 
   const [toggleDeleteDialog, DeleteConfirm] = useConfirmDialog({
     titleKey: t("deleteClientProfileConfirmTitle"),
@@ -106,10 +101,10 @@ export const ProfilesTab = () => {
   );
 
   const save = async () => {
-    if (changedClientProfilesJSON) {
+    if (code) {
       let obj = [];
       try {
-        obj = JSON.parse(changedClientProfilesJSON);
+        obj = JSON.parse(code);
 
         const changedProfiles = obj
           .filter((profile: ClientProfile) => !profile.global)
@@ -234,7 +229,9 @@ export const ProfilesTab = () => {
               code={code}
               language={Language.json}
               height="30rem"
-              onChange={(value) => setChangedClientProfilesJSON(value ?? "")}
+              onChange={(value) => {
+                setCode(value ?? "");
+              }}
             />
           </div>
           <ActionGroup>
@@ -246,7 +243,14 @@ export const ProfilesTab = () => {
               >
                 {t("save")}
               </Button>
-              <Button variant={ButtonVariant.link}> {t("reload")}</Button>
+              <Button
+                variant={ButtonVariant.link}
+                onClick={() => {
+                  setCode(JSON.stringify(tableProfiles, null, 2));
+                }}
+              >
+                {t("reload")}
+              </Button>
             </div>
           </ActionGroup>
         </FormGroup>
