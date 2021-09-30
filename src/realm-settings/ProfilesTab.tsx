@@ -251,6 +251,7 @@ export const ProfilesTab = () => {
                 variant={ButtonVariant.primary}
                 className="pf-u-mr-md pf-u-ml-lg"
                 onClick={save}
+                data-testid="jsonEditor-saveBtn"
               >
                 {t("save")}
               </Button>
@@ -259,6 +260,7 @@ export const ProfilesTab = () => {
                 onClick={() => {
                   setCode(JSON.stringify(tableProfiles, null, 2));
                 }}
+                data-testid="jsonEditor-reloadBtn"
               >
                 {t("reload")}
               </Button>

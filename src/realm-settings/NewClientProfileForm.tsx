@@ -129,6 +129,7 @@ export const NewClientProfileForm = () => {
                   key="delete"
                   value="delete"
                   onClick={toggleDeleteDialog}
+                  data-testid="deleteClientProfileDropdown"
                 >
                   {t("deleteClientProfile")}
                 </DropdownItem>,
