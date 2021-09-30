@@ -27,7 +27,6 @@ import {
 import { FormAccess } from "../../components/form-access/FormAccess";
 import { useAdminClient, useFetch } from "../../context/auth/AdminClient";
 import type { IdentityProviderAddMapperParams } from "../routes/AddMapper";
-// import _ from "lodash";
 import { AssociatedRolesModal } from "../../realm-roles/AssociatedRolesModal";
 import type { RoleRepresentation } from "../../model/role-model";
 import { useAlerts } from "../../components/alert/Alerts";
@@ -36,7 +35,6 @@ import { convertToFormValues } from "../../util";
 import { toIdentityProvider } from "../routes/IdentityProvider";
 import type IdentityProviderMapperRepresentation from "@keycloak/keycloak-admin-client/lib/defs/identityProviderMapperRepresentation";
 import { AddMapperForm } from "./AddMapperForm";
-// import { AddMapperForm } from "./AddMapperForm";
 
 export type IdPMapperRepresentationWithAttributes =
   IdentityProviderMapperRepresentation & {
@@ -204,8 +202,6 @@ export const AddMapper = () => {
   const toggleModal = () => {
     setRolesModalOpen(!rolesModalOpen);
   };
-
-  const formValues = form.getValues();
 
   return (
     <PageSection variant="light">
