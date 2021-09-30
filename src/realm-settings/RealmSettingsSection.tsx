@@ -52,6 +52,11 @@ export const RealmSettingsSection = () => {
     useState<ComponentRepresentation[]>();
   const [currentUser, setCurrentUser] = useState<UserRepresentation>();
   const { whoAmI } = useWhoAmI();
+  const [key, setKey] = useState(0);
+
+  const refresh = () => {
+    setKey(key + 1);
+  };
 
   useFetch(
     async () => {
@@ -69,7 +74,7 @@ export const RealmSettingsSection = () => {
       setCurrentUser(user);
       setRealm(realm);
     },
-    []
+    [key]
   );
 
   if (!realm || !realmComponents || !currentUser) {
@@ -82,6 +87,7 @@ export const RealmSettingsSection = () => {
   return (
     <RealmSettingsTabs
       realm={realm}
+      refresh={refresh}
       realmComponents={realmComponents}
       currentUser={currentUser}
     />

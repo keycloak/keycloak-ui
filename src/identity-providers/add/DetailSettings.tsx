@@ -127,6 +127,10 @@ export const DetailSettings = () => {
   useFetch(
     () => adminClient.identityProviders.findOne({ alias }),
     (fetchedProvider) => {
+      if (!fetchedProvider) {
+        throw new Error(t("common:notFound"));
+      }
+
       reset(fetchedProvider);
       setProvider(fetchedProvider);
     },
@@ -324,7 +328,7 @@ export const DetailSettings = () => {
                         providerId: provider.providerId!,
                         tab: "mappers",
                       })}
-                      datatest-id="add-mapper-button"
+                      id="add-mapper-button"
                     >
                       {t("addMapper")}
                     </Link>

@@ -4,15 +4,18 @@ import {
   ButtonVariant,
   Divider,
   DropdownItem,
+  Label,
   PageSection,
   Spinner,
   Tab,
   Tabs,
   TabTitleText,
+  Tooltip,
 } from "@patternfly/react-core";
+import { InfoCircleIcon } from "@patternfly/react-icons";
 import type ClientRepresentation from "@keycloak/keycloak-admin-client/lib/defs/clientRepresentation";
 import _ from "lodash";
-import React, { useState } from "react";
+import React, { useMemo, useState } from "react";
 import { Controller, FormProvider, useForm, useWatch } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { useHistory, useParams } from "react-router-dom";
@@ -28,7 +31,10 @@ import {
   MultiLine,
   toValue,
 } from "../components/multi-line-input/MultiLineInput";
-import { ViewHeader } from "../components/view-header/ViewHeader";
+import {
+  ViewHeader,
+  ViewHeaderBadge,
+} from "../components/view-header/ViewHeader";
 import { useAdminClient, useFetch } from "../context/auth/AdminClient";
 import { useRealm } from "../context/realm-context/RealmContext";
 import { RolesList } from "../realm-roles/RolesList";
@@ -46,6 +52,8 @@ import { toClients } from "./routes/Clients";
 import { ClientScopes } from "./scopes/ClientScopes";
 import { EvaluateScopes } from "./scopes/EvaluateScopes";
 import { ServiceAccount } from "./service-account/ServiceAccount";
+
+const isRealmClient = (client: ClientRepresentation) => !client.protocol;
 
 type ClientDetailHeaderProps = {
   onChange: (value: boolean) => void;
@@ -74,27 +82,62 @@ const ClientDetailHeader = ({
       save();
     },
   });
+
+  const badges = useMemo<ViewHeaderBadge[]>(() => {
+    if (!client.protocol) {
+      return [];
+    }
+
+    const text = client.bearerOnly ? (
+      <Tooltip
+        data-testid="bearer-only-explainer-tooltip"
+        content={t("explainBearerOnly")}
+      >
+        <Label
+          data-testid="bearer-only-explainer-label"
+          icon={<InfoCircleIcon />}
+        >
+          {client.protocol}
+        </Label>
+      </Tooltip>
+    ) : (
+      <Label>{client.protocol}</Label>
+    );
+
+    return [{ text }];
+  }, [client]);
+
+  const dropdownItems = [
+    <DropdownItem key="download" onClick={() => toggleDownloadDialog()}>
+      {t("downloadAdapterConfig")}
+    </DropdownItem>,
+    <DropdownItem key="export" onClick={() => exportClient(client)}>
+      {t("common:export")}
+    </DropdownItem>,
+    ...(!isRealmClient(client)
+      ? [
+          <Divider key="divider" />,
+          <DropdownItem
+            data-testid="delete-client"
+            key="delete"
+            onClick={() => toggleDeleteDialog()}
+          >
+            {t("common:delete")}
+          </DropdownItem>,
+        ]
+      : []),
+  ];
+
   return (
     <>
       <DisableConfirm />
       <ViewHeader
         titleKey={client ? client.clientId! : ""}
         subKey="clients:clientsExplain"
-        badges={[{ text: client.protocol }]}
+        badges={badges}
         divider={false}
         helpTextKey="clients-help:enableDisable"
-        dropdownItems={[
-          <DropdownItem key="download" onClick={() => toggleDownloadDialog()}>
-            {t("downloadAdapterConfig")}
-          </DropdownItem>,
-          <DropdownItem key="export" onClick={() => exportClient(client)}>
-            {t("common:export")}
-          </DropdownItem>,
-          <Divider key="divider" />,
-          <DropdownItem key="delete" onClick={() => toggleDeleteDialog()}>
-            {t("common:delete")}
-          </DropdownItem>,
-        ]}
+        dropdownItems={dropdownItems}
         isEnabled={value}
         onToggle={(value) => {
           if (!value) {
@@ -187,6 +230,9 @@ export const ClientDetails = () => {
   useFetch(
     () => adminClient.clients.findOne({ id: clientId }),
     (fetchedClient) => {
+      if (!fetchedClient) {
+        throw new Error(t("common:notFound"));
+      }
       setClient(fetchedClient);
       setupForm(fetchedClient);
     },
@@ -239,6 +285,7 @@ export const ClientDetails = () => {
       </div>
     );
   }
+
   return (
     <>
       <ConfirmDialogModal
@@ -283,7 +330,7 @@ export const ClientDetails = () => {
       />
       <PageSection variant="light" className="pf-u-p-0">
         <FormProvider {...form}>
-          <KeycloakTabs isBox>
+          <KeycloakTabs data-testid="client-tabs" isBox>
             <Tab
               id="settings"
               eventKey="settings"
@@ -294,7 +341,7 @@ export const ClientDetails = () => {
                 reset={() => setupForm(client)}
               />
             </Tab>
-            {!client.publicClient && (
+            {!client.publicClient && !isRealmClient(client) && (
               <Tab
                 id="keys"
                 eventKey="keys"
@@ -303,7 +350,7 @@ export const ClientDetails = () => {
                 <Keys clientId={clientId} save={() => save()} />
               </Tab>
             )}
-            {!client.publicClient && (
+            {!client.publicClient && !isRealmClient(client) && (
               <Tab
                 id="credentials"
                 eventKey="credentials"
@@ -323,37 +370,39 @@ export const ClientDetails = () => {
                 messageBundle="clients"
               />
             </Tab>
-            <Tab
-              id="clientScopes"
-              eventKey="clientScopes"
-              title={<TabTitleText>{t("clientScopes")}</TabTitleText>}
-            >
-              <Tabs
-                activeKey={activeTab2}
-                onSelect={(_, key) => setActiveTab2(key as number)}
+            {!isRealmClient(client) && (
+              <Tab
+                id="clientScopes"
+                eventKey="clientScopes"
+                title={<TabTitleText>{t("clientScopes")}</TabTitleText>}
               >
-                <Tab
-                  id="setup"
-                  eventKey={30}
-                  title={<TabTitleText>{t("setup")}</TabTitleText>}
+                <Tabs
+                  activeKey={activeTab2}
+                  onSelect={(_, key) => setActiveTab2(key as number)}
                 >
-                  <ClientScopes
-                    clientId={clientId}
-                    protocol={client!.protocol!}
-                  />
-                </Tab>
-                <Tab
-                  id="evaluate"
-                  eventKey={31}
-                  title={<TabTitleText>{t("evaluate")}</TabTitleText>}
-                >
-                  <EvaluateScopes
-                    clientId={clientId}
-                    protocol={client!.protocol!}
-                  />
-                </Tab>
-              </Tabs>
-            </Tab>
+                  <Tab
+                    id="setup"
+                    eventKey={30}
+                    title={<TabTitleText>{t("setup")}</TabTitleText>}
+                  >
+                    <ClientScopes
+                      clientId={clientId}
+                      protocol={client!.protocol!}
+                    />
+                  </Tab>
+                  <Tab
+                    id="evaluate"
+                    eventKey={31}
+                    title={<TabTitleText>{t("evaluate")}</TabTitleText>}
+                  >
+                    <EvaluateScopes
+                      clientId={clientId}
+                      protocol={client!.protocol!}
+                    />
+                  </Tab>
+                </Tabs>
+              </Tab>
+            )}
             {client!.serviceAccountsEnabled && (
               <Tab
                 id="serviceAccount"

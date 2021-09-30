@@ -107,14 +107,47 @@ export default {
     addIdpMapperName: "Name of the mapper.",
     syncModeOverride:
       "Overrides the default sync mode of the IDP for this mapper. Values are: 'legacy' to keep the behaviour before this option was introduced, 'import' to only import the user once during first login of the user with this identity provider, 'force' to always update the user during every login with this identity provider and 'inherit' to use the sync mode defined in the identity provider for this mapper.",
-    mapperType:
+    advancedAttributeToRole:
       "If the set of attributes exists and can be matched, grant the user the specified realm or client role.",
+    usernameTemplateImporter: "Format the username to import.",
+    hardcodedUserSessionAttribute:
+      "When a user is imported from a provider, hardcode a value to a specific user session attribute.",
+    externalRoleToRole:
+      "Looks for an external role in a keycloak access token. If external role exists, grant the user the specified realm or client role.",
+    advancedClaimToRole:
+      "If all claims exist, grant the user the specified realm or client role.",
+    claimToRole:
+      "If a claim exists, grant the user the specified realm or client role.",
+    oidcAttributeImporter:
+      "Import declared claim if it exists in ID, access token, or the claim set returned by the user profile endpoint into the specified user property or attribute.",
+    attributeImporter:
+      "Import declared SAML attribute if it exists in assertion into the specified user property or attribute.",
+    hardcodedRole:
+      "When user is imported from provider, hardcode a role mapping for it.",
+    hardcodedAttribute:
+      "When user is imported from provider, hardcode a value to a specific user attribute.",
+    samlAttributeToRole:
+      "If an attribute exists, grant the user the specified realm or client role.",
+    template:
+      "Template to use to format the username to import.  Substitutions are enclosed in ${}.  For example: '${ALIAS}.${CLAIM.sub}'.  ALIAS is the provider alias.  CLAIM.<NAME> references an ID or Access token claim. The substitution can be converted to upper or lower case by appending |uppercase or |lowercase to the substituted value, e.g. '${CLAIM.sub | lowercase}",
+    target:
+      "Destination field for the mapper. LOCAL (default) means that the changes are applied to the username stored in local database upon user import. BROKER_ID and BROKER_USERNAME means that the changes are stored into the ID or username used for federation user lookup, respectively.",
+    userSessionAttribute: "Name of user session attribute you want to hardcode",
+    userAttribute: "Name of user attribute you want to hardcode",
+
+    userAttributeValue: "Value you want to hardcode",
+    attributeName:
+      "Name of attribute to search for in assertion. You can leave this blank and specify a friendly name instead.",
+    friendlyName:
+      "Friendly name of attribute to search for in assertion. You can leave this blank and specify a name instead.",
+    userAttributeName:
+      "User attribute name to store SAML attribute. Use email, lastName, and firstName to map to those predefined user properties.",
+    attributeValue:
+      "Value the attribute must have. If the attribute is a list, then the value must be contained in the list.",
     attributes:
       "Name and (regex) value of the attributes to search for in token. The configured name of an attribute is searched in SAML attribute name and attribute friendly name fields. Every given attribute description must be met to set the role. If the attribute is an array, then the value must be contained in the array. If an attribute can be found several times, then one match is sufficient.",
     regexAttributeValues:
       "If enabled attribute values are interpreted as regular expressions.",
     role: "Role to grant to user if all attributes are present. Click 'Select Role' button to browse roles, or just type it in the textbox. To reference a client role the syntax is clientname.clientrole, i.e. myclient.myrole",
-    userSessionAttribute: "Name of user session attribute you want to hardcode",
-    userSessionAttributeValue: "Value you want to hardcode",
   },
 };
