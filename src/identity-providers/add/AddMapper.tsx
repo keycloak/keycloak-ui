@@ -502,8 +502,7 @@ export const AddMapper = () => {
                 </FormGroup>
                 <FormGroup
                   label={
-                    form.getValues().identityProviderMapper ===
-                    "hardcoded-user-session-attribute-idp-mapper"
+                    isHardcodedUserSessionAttribute
                       ? t("userSessionAttributeValue")
                       : t("userAttributeValue")
                   }
@@ -512,17 +511,14 @@ export const AddMapper = () => {
                       id="user-session-attribute-value-help-icon"
                       helpText="identity-providers-help:userAttributeValue"
                       forLabel={
-                        form.getValues().identityProviderMapper ===
-                        "hardcoded-user-session-attribute-idp-mapper"
+                        isHardcodedUserSessionAttribute
                           ? t("userSessionAttributeValue")
                           : t("userAttributeValue")
                       }
                       forID={t(`common:helpLabel`, {
-                        label:
-                          form.getValues().identityProviderMapper ===
-                          "hardcoded-user-session-attribute-idp-mapper"
-                            ? t("userSessionAttributeValue")
-                            : t("userAttributeValue"),
+                        label: isHardcodedUserSessionAttribute
+                          ? t("userSessionAttributeValue")
+                          : t("userAttributeValue"),
                       })}
                     />
                   }
