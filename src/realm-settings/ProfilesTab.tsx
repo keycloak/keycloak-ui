@@ -40,7 +40,7 @@ export const ProfilesTab = () => {
     useState<ClientProfileRepresentation[]>();
   const [selectedProfile, setSelectedProfile] = useState<ClientProfile>();
   const [show, setShow] = useState(false);
-  const [code, setCode] = useState("");
+  const [code, setCode] = useState<string>();
   const [key, setKey] = useState(0);
 
   useFetch(
@@ -111,40 +111,40 @@ export const ProfilesTab = () => {
     );
   }
 
+  const normalizeProfile = (
+    profile: ClientProfile
+  ): ClientProfileRepresentation => omit(profile, "global");
+
   const save = async () => {
-    if (code) {
-      let obj = [];
+    if (!code) {
+      return;
+    }
+
+    try {
+      const obj: ClientProfile[] = JSON.parse(code);
+      const changedProfiles = obj
+        .filter((profile) => !profile.global)
+        .map((profile) => normalizeProfile(profile));
+
+      const changedGlobalProfiles = obj
+        .filter((profile) => profile.global)
+        .map((profile) => normalizeProfile(profile));
+
       try {
-        obj = JSON.parse(code);
-
-        const changedProfiles = obj
-          .filter((profile: ClientProfile) => !profile.global)
-          .map((profile: ClientProfileRepresentation) =>
-            omit(profile, "global")
-          );
-
-        const changedGlobalProfiles = obj
-          .filter((profile: ClientProfile) => profile.global)
-          .map((profile: ClientProfileRepresentation) =>
-            omit(profile, "global")
-          );
-
-        try {
-          await adminClient.clientPolicies.createProfiles({
-            profiles: changedProfiles,
-            globalProfiles: changedGlobalProfiles,
-          });
-          addAlert(
-            t("realm-settings:updateClientProfilesSuccess"),
-            AlertVariant.success
-          );
-          setKey(key + 1);
-        } catch (error) {
-          addError("realm-settings:updateClientProfilesError", error);
-        }
+        await adminClient.clientPolicies.createProfiles({
+          profiles: changedProfiles,
+          globalProfiles: changedGlobalProfiles,
+        });
+        addAlert(
+          t("realm-settings:updateClientProfilesSuccess"),
+          AlertVariant.success
+        );
+        setKey(key + 1);
       } catch (error) {
-        console.warn("Invalid json, ignoring value using {}");
+        addError("realm-settings:updateClientProfilesError", error);
       }
+    } catch (error) {
+      console.warn("Invalid json, ignoring value using {}");
     }
   };
 

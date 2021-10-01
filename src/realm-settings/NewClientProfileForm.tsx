@@ -29,6 +29,7 @@ import { HelpItem } from "../components/help-enabler/HelpItem";
 import { PlusCircleIcon } from "@patternfly/react-icons";
 import "./RealmSettingsSection.css";
 import { useConfirmDialog } from "../components/confirm-dialog/ConfirmDialog";
+import { toClientPolicies } from "./routes/ClientPolicies";
 
 type NewClientProfileForm = Required<ClientProfileRepresentation>;
 
@@ -52,7 +53,7 @@ export const NewClientProfileForm = () => {
   const [profiles, setProfiles] = useState<ClientProfileRepresentation[]>([]);
   const [showAddExecutorsForm, setShowAddExecutorsForm] = useState(false);
   const [createdProfile, setCreatedProfile] =
-    useState<ClientProfileRepresentation>({});
+    useState<ClientProfileRepresentation>();
   const form = getValues();
   const history = useHistory();
 
@@ -98,9 +99,8 @@ export const NewClientProfileForm = () => {
     continueButtonLabel: t("delete"),
     continueButtonVariant: ButtonVariant.danger,
     onConfirm: async () => {
-      const cdProfile = createdProfile;
       const updatedProfiles = profiles.filter(
-        (profile) => profile.name !== cdProfile.name
+        (profile) => profile.name !== createdProfile?.name
       );
 
       try {
@@ -208,10 +208,7 @@ export const NewClientProfileForm = () => {
                   <Button
                     id="addExecutor"
                     component={(props) => (
-                      <Link
-                        {...props}
-                        to={`/${realm}/realm-settings/clientPolicies`}
-                      ></Link>
+                      <Link {...props} to={toClientPolicies({ realm })}></Link>
                     )}
                     variant="link"
                     className="kc-addExecutor"
