@@ -546,12 +546,9 @@ export default class RealmSettingsPage {
       "global": false
     `);
     cy.findByTestId(this.jsonEditorSaveBtn).click();
-
-    cy.wait(2000);
-
     cy.get(this.alertMessage).should(
       "be.visible",
-      "New client profile created"
+      "The client profiles configuration was updated"
     );
     cy.findByTestId(this.formViewProfilesView).check();
     cy.get("table").should("be.visible").contains("td", "Test");
