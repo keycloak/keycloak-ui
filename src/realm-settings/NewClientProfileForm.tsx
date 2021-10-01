@@ -29,7 +29,6 @@ import { HelpItem } from "../components/help-enabler/HelpItem";
 import { PlusCircleIcon } from "@patternfly/react-icons";
 import "./RealmSettingsSection.css";
 import { useConfirmDialog } from "../components/confirm-dialog/ConfirmDialog";
-import { toClientPolicies } from "./routes/ClientPolicies";
 
 type NewClientProfileForm = Required<ClientProfileRepresentation>;
 
@@ -208,7 +207,10 @@ export const NewClientProfileForm = () => {
                   <Button
                     id="addExecutor"
                     component={(props) => (
-                      <Link {...props} to={toClientPolicies({ realm })}></Link>
+                      <Link
+                        {...props}
+                        to={`/${realm}/realm-settings/clientPolicies`}
+                      ></Link>
                     )}
                     variant="link"
                     className="kc-addExecutor"
