@@ -188,6 +188,7 @@ export const ScopeForm = ({ clientScope, save }: ScopeFormProps) => {
                     selected={option === value}
                     key={option}
                     value={option}
+                    data-testid={`option-${option}`}
                   >
                     {getProtocolName(tc, option)}
                   </SelectOption>

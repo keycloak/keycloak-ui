@@ -57,6 +57,7 @@ export const GeneralSettings = () => {
                   selected={option === value}
                   key={option}
                   value={option}
+                  data-testid={`option-${option}`}
                 >
                   {getProtocolName(t, option)}
                 </SelectOption>
