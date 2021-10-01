@@ -546,6 +546,9 @@ export default class RealmSettingsPage {
       "global": false
     `);
     cy.findByTestId(this.jsonEditorSaveBtn).click();
+
+    cy.wait(2000);
+
     cy.get(this.alertMessage).should(
       "be.visible",
       "New client profile created"
