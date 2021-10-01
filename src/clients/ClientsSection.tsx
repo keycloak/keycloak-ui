@@ -139,7 +139,7 @@ export const ClientsSection = () => {
                 const actions: Action<ClientRepresentation>[] = [
                   {
                     title: t("common:export"),
-                    onRowClick: (client) => {
+                    onClick() {
                       exportClient(client);
                     },
                   },
@@ -148,7 +148,7 @@ export const ClientsSection = () => {
                 if (!isRealmClient(client)) {
                   actions.push({
                     title: t("common:delete"),
-                    onRowClick: (client) => {
+                    onClick() {
                       setSelectedClient(client);
                       toggleDeleteDialog();
                     },
