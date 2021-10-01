@@ -178,10 +178,12 @@ export const NewClientProfileForm = () => {
             </Button>
             <Button
               id="cancelCreateProfile"
-              component={Link}
-              variant="link"
-              // @ts-ignore
-              to={`/${realm}/realm-settings/clientPolicies`}
+              component={(props) => (
+                <Link
+                  {...props}
+                  to={`/${realm}/realm-settings/clientPolicies`}
+                />
+              )}
               data-testid="cancelCreateProfile"
             >
               {showAddExecutorsForm

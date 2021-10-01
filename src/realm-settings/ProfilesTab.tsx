@@ -193,9 +193,9 @@ export const ProfilesTab = () => {
             <ToolbarItem>
               <Button
                 id="createProfile"
-                component={Link}
-                // @ts-ignore
-                to={toNewClientProfile({ realm })}
+                component={(props) => (
+                  <Link {...props} to={toNewClientProfile({ realm })} />
+                )}
                 data-testid="createProfile"
               >
                 {t("createClientProfile")}
