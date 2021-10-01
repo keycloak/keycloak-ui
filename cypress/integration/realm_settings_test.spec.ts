@@ -470,7 +470,7 @@ describe("Realm settings tests", () => {
       realmSettingsPage.shouldDeleteClientProfileDialog();
     });
 
-    it("Check navigating between Form View and JSON editor", function () {
+    it("Check navigating between Form View and JSON editor", () => {
       realmSettingsPage.shouldNavigateBetweenFormAndJSONView();
     });
 
