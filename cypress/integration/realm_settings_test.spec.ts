@@ -446,27 +446,27 @@ describe("Realm settings tests", () => {
       cy.findByTestId("rs-profiles-clientPolicies-tab").click();
     });
 
-    it("Go to client policies profiles tab", function () {
+    it("Go to client policies profiles tab", () => {
       realmSettingsPage.shouldDisplayProfilesTab();
     });
 
-    it("Check new client form is displaying", function () {
+    it("Check new client form is displaying", () => {
       realmSettingsPage.shouldDisplayNewClientProfileForm();
     });
 
-    it("Complete new client form and cancel", function () {
+    it("Complete new client form and cancel", () => {
       realmSettingsPage.shouldCompleteAndCancelCreateNewClientProfile();
     });
 
-    it("Complete new client form and submit", function () {
+    it("Complete new client form and submit", () => {
       realmSettingsPage.shouldCompleteAndCreateNewClientProfile();
     });
 
-    it("Check cancelling the client profile deletion", function () {
+    it("Check cancelling the client profile deletion", () => {
       realmSettingsPage.shouldDisplayDeleteClientProfileDialog();
     });
 
-    it("Check deleting the client profile", function () {
+    it("Check deleting the client profile", () => {
       realmSettingsPage.shouldDeleteClientProfileDialog();
     });
 
@@ -475,12 +475,12 @@ describe("Realm settings tests", () => {
     });
 
     // Test works locally but not in CI
-    // it("Check saving changed JSON profiles", function () {
+    // it("Check saving changed JSON profiles", () => {
     //   realmSettingsPage.shouldSaveChangedJSONProfiles();
     //   realmSettingsPage.shouldDeleteClientProfileDialog();
     // });
 
-    it("Should not create duplicate client profile", function () {
+    it("Should not create duplicate client profile", () => {
       realmSettingsPage.shouldCompleteAndCreateNewClientProfile();
 
       sidebarPage.goToRealmSettings();
@@ -495,11 +495,11 @@ describe("Realm settings tests", () => {
       realmSettingsPage.shouldDeleteClientProfileDialog();
     });
 
-    it("Check deleting newly created client profile from create view via dropdown", function () {
+    it("Check deleting newly created client profile from create view via dropdown", () => {
       realmSettingsPage.shouldRemoveClientFromCreateView();
     });
 
-    it("Check reloading JSON profiles", function () {
+    it("Check reloading JSON profiles", () => {
       realmSettingsPage.shouldReloadJSONProfiles();
     });
   });
