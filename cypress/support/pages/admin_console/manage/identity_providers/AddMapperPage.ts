@@ -186,7 +186,36 @@ export default class AddMapperPage {
     return this;
   }
 
-  addAttrImporterMapper(name: string) {
+  addSAMLAttrImporterMapper(name: string) {
+    cy.get(this.mapperNameInput).clear();
+
+    cy.get(this.mapperNameInput).clear().type(name);
+
+    cy.get(this.syncmodeSelectToggle).click();
+
+    cy.findByTestId("inherit").click();
+
+    cy.get(this.idpMapperSelectToggle).click();
+
+    cy.findByTestId(this.idpMapperSelect)
+      .contains("Attribute Importer")
+      .click();
+
+    cy.findByTestId(this.attributeName).clear();
+    cy.findByTestId(this.attributeName).type("attribute name");
+
+    cy.findByTestId(this.attributeFriendlyName).clear();
+    cy.findByTestId(this.attributeFriendlyName).type("attribute friendly name");
+
+    cy.findByTestId(this.userAttributeName).clear();
+    cy.findByTestId(this.userAttributeName).type("user attribute name");
+
+    this.saveNewMapper();
+
+    return this;
+  }
+
+  addOIDCAttrImporterMapper(name: string) {
     cy.get(this.mapperNameInput).clear();
 
     cy.get(this.mapperNameInput).clear().type(name);

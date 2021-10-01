@@ -197,7 +197,7 @@ describe("Identity provider test", () => {
 
       addMapperPage.addMapper();
 
-      addMapperPage.addAttrImporterMapper("Attribute Importer");
+      addMapperPage.addSAMLAttrImporterMapper("Attribute Importer");
 
       masthead.checkNotificationMessage(createMapperSuccessMsg);
     });
@@ -253,7 +253,7 @@ describe("Identity provider test", () => {
 
       addMapperPage.emptyStateAddMapper();
 
-      addMapperPage.addAttrImporterMapper("OIDC Attribute Importer");
+      addMapperPage.addOIDCAttrImporterMapper("OIDC Attribute Importer");
 
       masthead.checkNotificationMessage(createMapperSuccessMsg);
     });
