@@ -9,9 +9,7 @@ export default class AddMapperPage {
   private mapperRoleInput = "mapper-role-input";
   private attributeName = "attribute-name";
   private attributeFriendlyName = "attribute-friendly-name";
-  private attributeValue = "attribute-value";
   private claimInput = "claim";
-  private claimValueInput = "claim-value-input";
   private userAttribute = "user-attribute";
   private userAttributeName = "user-attribute-name";
   private userAttributeValue = "user-attribute-value";
