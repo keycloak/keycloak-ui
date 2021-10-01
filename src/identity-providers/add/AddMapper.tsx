@@ -65,10 +65,6 @@ export const AddMapper = () => {
 
   const [rolesModalOpen, setRolesModalOpen] = useState(false);
 
-  const updateMapperType = (mapperType: string) => {
-    setMapperType(mapperType);
-  };
-
   const save = async (idpMapper: IdentityProviderMapperRepresentation) => {
     if (id) {
       const updatedMapper = {
@@ -261,7 +257,7 @@ export const AddMapper = () => {
           id={id}
           providerId={providerId}
           mapperTypes={mapperTypes}
-          updateMapperType={updateMapperType}
+          updateMapperType={setMapperType}
           formValues={formValues}
           mapperType={mapperType}
         />
