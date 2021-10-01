@@ -474,11 +474,10 @@ describe("Realm settings tests", () => {
       realmSettingsPage.shouldNavigateBetweenFormAndJSONView();
     });
 
-    // Test works locally but not in CI
-    // it("Check saving changed JSON profiles", () => {
-    //   realmSettingsPage.shouldSaveChangedJSONProfiles();
-    //   realmSettingsPage.shouldDeleteClientProfileDialog();
-    // });
+    it("Check saving changed JSON profiles", () => {
+      realmSettingsPage.shouldSaveChangedJSONProfiles();
+      realmSettingsPage.shouldDeleteClientProfileDialog();
+    });
 
     it("Should not create duplicate client profile", () => {
       realmSettingsPage.shouldCompleteAndCreateNewClientProfile();
