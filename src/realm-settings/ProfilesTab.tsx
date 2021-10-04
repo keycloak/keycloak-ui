@@ -72,6 +72,10 @@ export const ProfilesTab = () => {
 
   const loader = async () => tableProfiles ?? [];
 
+  const normalizeProfile = (
+    profile: ClientProfile
+  ): ClientProfileRepresentation => omit(profile, "global");
+
   const [toggleDeleteDialog, DeleteConfirm] = useConfirmDialog({
     titleKey: t("deleteClientProfileConfirmTitle"),
     messageKey: t("deleteClientProfileConfirm"),
@@ -82,7 +86,9 @@ export const ProfilesTab = () => {
         ?.filter(
           (profile) => profile.name !== selectedProfile?.name && !profile.global
         )
-        .map<ClientProfileRepresentation>((profile) => omit(profile, "global"));
+        .map<ClientProfileRepresentation>((profile) =>
+          normalizeProfile(profile)
+        );
 
       try {
         await adminClient.clientPolicies.createProfiles({
@@ -110,10 +116,6 @@ export const ProfilesTab = () => {
       </div>
     );
   }
-
-  const normalizeProfile = (
-    profile: ClientProfile
-  ): ClientProfileRepresentation => omit(profile, "global");
 
   const save = async () => {
     if (!code) {
