@@ -539,13 +539,17 @@ export default class RealmSettingsPage {
 
   shouldSaveChangedJSONProfiles() {
     cy.findByTestId(this.jsonEditorProfilesView).check();
-    cy.get(this.jsonEditor).type(`{command+a}[{
+    cy.get(this.jsonEditor).type(`{pageup}{del} [{
       "name": "Test",
       "description": "Test Description",
       "executors": [],
       "global": false
-    `);
+    }, {downarrow}{end}{backspace}{backspace}`);
     cy.findByTestId(this.jsonEditorSaveBtn).click();
+    cy.get(this.alertMessage).should(
+      "be.visible",
+      "The client profiles configuration was updated"
+    );
     cy.findByTestId(this.formViewProfilesView).check();
     cy.get("table").should("be.visible").contains("td", "Test");
   }
