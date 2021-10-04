@@ -163,7 +163,7 @@ describe("Identity provider test", () => {
 
       addMapperPage.goToMappersTab();
 
-      addMapperPage.emptyStateAddMapper();
+      addMapperPage.addMapper();
 
       addMapperPage.addUsernameTemplateImporterMapper(
         "SAML Username Template Importer Mapper"
@@ -279,7 +279,7 @@ describe("Identity provider test", () => {
 
       addMapperPage.goToMappersTab();
 
-      addMapperPage.emptyStateAddMapper();
+      addMapperPage.addMapper();
 
       addMapperPage.fillSocialMapper("facebook attribute importer");
 
