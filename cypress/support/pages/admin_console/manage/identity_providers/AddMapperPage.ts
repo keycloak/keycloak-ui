@@ -85,6 +85,8 @@ export default class AddMapperPage {
 
     cy.findByTestId(this.userAttributeName).type("user attribute name");
 
+    this.saveNewMapper();
+
     return this;
   }
 
