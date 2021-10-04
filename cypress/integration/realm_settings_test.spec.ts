@@ -108,7 +108,7 @@ describe("Realm settings tests", () => {
       return this;
     };
 
-    it("Go to general tab", function () {
+    it("Go to general tab", () => {
       sidebarPage.goToRealmSettings();
       realmSettingsPage.toggleSwitch(realmSettingsPage.managedAccessSwitch);
       realmSettingsPage.save(realmSettingsPage.generalSaveBtn);
