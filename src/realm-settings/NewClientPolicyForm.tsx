@@ -334,8 +334,6 @@ export default function NewClientPolicyForm() {
     }
   };
 
-  console.log("NY", policyConditions);
-
   return (
     <>
       <DeleteConfirm />
