@@ -338,10 +338,6 @@ export default class AddMapperPage {
 
     cy.findByTestId("inherit").click();
 
-    cy.findByTestId(this.userSessionAttribute).clear();
-    cy.findByTestId(this.userSessionAttribute).type(
-      "user session attribute_edited"
-    );
     cy.findByTestId(this.socialProfileJSONfieldPath).clear();
 
     cy.findByTestId(this.socialProfileJSONfieldPath).type(
