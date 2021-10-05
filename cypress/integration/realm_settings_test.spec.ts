@@ -443,7 +443,11 @@ describe("Realm settings tests", () => {
       loginPage.logIn();
       sidebarPage.goToRealmSettings();
       cy.findByTestId("rs-clientPolicies-tab").click();
+<<<<<<< HEAD
       cy.findByTestId("rs-policies-clientProfiles-tab").click();
+=======
+      cy.findByTestId("rs-policies-clientPolicies-tab").click();
+>>>>>>> add create client policy form; WIP
     });
 
     it("Go to client policies profiles tab", () => {
@@ -486,9 +490,20 @@ describe("Realm settings tests", () => {
     it("Should not create duplicate client profile", () => {
       sidebarPage.goToRealmSettings();
       cy.findByTestId("rs-clientPolicies-tab").click();
+<<<<<<< HEAD
       cy.findByTestId("rs-policies-clientProfiles-tab").click();
       realmSettingsPage.shouldCompleteAndCreateNewClientProfile();
       realmSettingsPage.shouldNotCreateDuplicateClientProfile();
+=======
+      cy.findByTestId("rs-policies-clientPolicies-tab").click();
+      realmSettingsPage.shouldCompleteAndCreateNewClientProfile();
+      realmSettingsPage.shouldNotCreateDuplicateClientProfile();
+
+      sidebarPage.goToRealmSettings();
+      cy.findByTestId("rs-clientPolicies-tab").click();
+      cy.findByTestId("rs-policies-clientPolicies-tab").click();
+      realmSettingsPage.shouldDeleteClientProfileDialog();
+>>>>>>> add create client policy form; WIP
     });
 
     it("Check deleting newly created client profile from create view via dropdown", () => {
