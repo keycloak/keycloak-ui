@@ -36,7 +36,7 @@ import { toIdentityProvider } from "../routes/IdentityProvider";
 import type IdentityProviderMapperRepresentation from "@keycloak/keycloak-admin-client/lib/defs/identityProviderMapperRepresentation";
 import { AddMapperForm } from "./AddMapperForm";
 import { useServerInfo } from "../../context/server-info/ServerInfoProvider";
-import _ from "lodash";
+import { groupBy } from "lodash";
 
 export type IdPMapperRepresentationWithAttributes =
   IdentityProviderMapperRepresentation & {
@@ -56,19 +56,24 @@ export const AddMapper = () => {
   const { providerId, alias } = useParams<IdentityProviderAddMapperParams>();
   const { id } = useParams<IdentityProviderEditMapperParams>();
 
-  const identityProviders = _.groupBy(
-    useServerInfo().identityProviders,
-    "groupName"
+  const serverInfo = useServerInfo();
+  const identityProviders = useMemo(
+    () => groupBy(serverInfo.identityProviders, "groupName"),
+    [serverInfo]
   );
 
-  const isSocialIdP = identityProviders["Social"]
-    .map((item) => item.id)
-    .includes(providerId.toLowerCase());
+  const isSocialIdP = useMemo(
+    () =>
+      identityProviders["Social"]
+        .map((item) => item.id)
+        .includes(providerId.toLowerCase()),
+    [identityProviders, providerId]
+  );
 
   const [mapperTypes, setMapperTypes] =
     useState<Record<string, IdentityProviderMapperRepresentation>>();
   const [mapperType, setMapperType] = useState(
-    !isSocialIdP ? "hardcodedRole" : "attributeImporter"
+    isSocialIdP ? "attributeImporter" : "hardcodedRole"
   );
 
   const [currentMapper, setCurrentMapper] =
@@ -219,8 +224,9 @@ export const AddMapper = () => {
   const isOIDCUsernameTemplateImporter =
     formValues.identityProviderMapper === "oidc-username-idp-mapper";
 
-  const isSocialAttributeImporter = formValues.identityProviderMapper?.includes(
-    "user-attribute-mapper"
+  const isSocialAttributeImporter = useMemo(
+    () => formValues.identityProviderMapper?.includes("user-attribute-mapper"),
+    [formValues.identityProviderMapper]
   );
 
   const toggleModal = () => {
