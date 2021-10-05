@@ -443,7 +443,7 @@ describe("Realm settings tests", () => {
       loginPage.logIn();
       sidebarPage.goToRealmSettings();
       cy.findByTestId("rs-clientPolicies-tab").click();
-      cy.findByTestId("rs-profiles-clientPolicies-tab").click();
+      cy.findByTestId("rs-policies-clientPolicies-tab").click();
     });
 
     it("Go to client policies profiles tab", () => {
@@ -488,13 +488,13 @@ describe("Realm settings tests", () => {
 
       sidebarPage.goToRealmSettings();
       cy.findByTestId("rs-clientPolicies-tab").click();
-      cy.findByTestId("rs-profiles-clientPolicies-tab").click();
+      cy.findByTestId("rs-policies-clientPolicies-tab").click();
       realmSettingsPage.shouldCompleteAndCreateNewClientProfile();
       realmSettingsPage.shouldNotCreateDuplicateClientProfile();
 
       sidebarPage.goToRealmSettings();
       cy.findByTestId("rs-clientPolicies-tab").click();
-      cy.findByTestId("rs-profiles-clientPolicies-tab").click();
+      cy.findByTestId("rs-policies-clientPolicies-tab").click();
       realmSettingsPage.shouldDeleteClientProfileDialog();
     });
 
