@@ -242,6 +242,7 @@ export default {
     allClientPolicies: "Client policies",
     newClientProfile: "Create client profile",
     newClientProfileName: "Client profile name",
+    updateClientProfile: "Client profile details",
     delete: "delete",
     save: "Save",
     reload: "Reload",

@@ -23,8 +23,8 @@ import { useAlerts } from "../components/alert/Alerts";
 import { Link } from "react-router-dom";
 import { toNewClientProfile } from "./routes/NewClientProfile";
 import type ClientProfileRepresentation from "@keycloak/keycloak-admin-client/lib/defs/clientProfileRepresentation";
-
 import "./RealmSettingsSection.css";
+import { toUpdateClientProfile } from "./routes/UpdateClientProfile";
 
 type ClientProfile = ClientProfileRepresentation & {
   global: boolean;
@@ -104,7 +104,10 @@ export const ProfilesTab = () => {
   });
 
   const cellFormatter = (row: ClientProfile) => (
-    <Link to={""} key={row.name}>
+    <Link
+      to={toUpdateClientProfile({ realm, profileName: row.name! })}
+      key={row.name}
+    >
       {row.name} {row.global && <Label color="blue">{t("global")}</Label>}
     </Link>
   );
