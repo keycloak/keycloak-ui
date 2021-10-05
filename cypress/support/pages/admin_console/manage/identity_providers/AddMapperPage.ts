@@ -342,11 +342,15 @@ export default class AddMapperPage {
     cy.findByTestId(this.userSessionAttribute).type(
       "user session attribute_edited"
     );
-    cy.findByTestId(this.userSessionAttributeValue).clear();
+    cy.findByTestId(this.socialProfileJSONfieldPath).clear();
 
-    cy.findByTestId(this.userSessionAttributeValue).type(
-      "user session attribute value_edited"
+    cy.findByTestId(this.socialProfileJSONfieldPath).type(
+      "social profile JSON field path edited"
     );
+
+    cy.findByTestId(this.userAttributeName).clear();
+
+    cy.findByTestId(this.userAttributeName).type("user attribute name edited");
 
     this.saveNewMapper();
 
