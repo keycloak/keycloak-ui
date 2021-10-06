@@ -116,7 +116,7 @@ export const DetailSettings = () => {
   const history = useHistory();
   const { realm } = useRealm();
   const [key, setKey] = useState(0);
-  const refresh = () => setKey(new Date().getTime());
+  const refresh = () => setKey(key + 1);
 
   const MapperLink = ({ name, mapperId }: IdPWithMapperAttributes) => (
     <Link
@@ -239,8 +239,6 @@ export const DetailSettings = () => {
     sections.splice(1, 0, t("samlSettings"));
     sections.splice(2, 0, t("reqAuthnConstraints"));
   }
-
-  console.log("hey", selectedMapper);
 
   return (
     <>
