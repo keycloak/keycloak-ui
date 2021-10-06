@@ -60,7 +60,7 @@ export const RealmSettingsEmailTab = ({
   const authenticationEnabled = useWatch({
     control,
     name: "smtpServer.authentication",
-    defaultValue: {},
+    defaultValue: "",
   });
 
   const handleModalToggle = () => {
@@ -332,7 +332,7 @@ export const RealmSettingsEmailTab = ({
               <Controller
                 name="smtpServer.authentication"
                 control={control}
-                defaultValue={{}}
+                defaultValue=""
                 render={({ onChange, value }) => (
                   <Switch
                     id="kc-authentication-switch"
