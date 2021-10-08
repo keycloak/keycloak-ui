@@ -13,10 +13,13 @@ import { FormAccess } from "../components/form-access/FormAccess";
 import { ViewHeader } from "../components/view-header/ViewHeader";
 import { useServerInfo } from "../context/server-info/ServerInfoProvider";
 import { Controller, useForm } from "react-hook-form";
+import type ComponentTypeRepresentation from "@keycloak/keycloak-admin-client/lib/defs/componentTypeRepresentation";
 
 export const ExecutorForm = () => {
   const { t } = useTranslation("realm-settings");
   const [open, setOpen] = useState(false);
+  const [executor, setExecutor] = useState<ComponentTypeRepresentation[]>();
+
   const {
     register,
     control,
@@ -49,6 +52,10 @@ export const ExecutorForm = () => {
                   onToggle={() => setOpen(!open)}
                   onSelect={(_, value) => {
                     onChange(value.toString());
+                    const selectedExecutor = executorTypes?.filter(
+                      (type) => type.id === value
+                    );
+                    setExecutor(selectedExecutor);
                     setOpen(false);
                   }}
                   selections={value}
