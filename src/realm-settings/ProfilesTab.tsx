@@ -21,10 +21,10 @@ import { useConfirmDialog } from "../components/confirm-dialog/ConfirmDialog";
 import { useRealm } from "../context/realm-context/RealmContext";
 import { useAlerts } from "../components/alert/Alerts";
 import { Link } from "react-router-dom";
-import { toNewClientProfile } from "./routes/NewClientProfile";
+import { toAddClientProfile } from "./routes/AddClientProfile";
 import type ClientProfileRepresentation from "@keycloak/keycloak-admin-client/lib/defs/clientProfileRepresentation";
 import "./RealmSettingsSection.css";
-import { toUpdateClientProfile } from "./routes/UpdateClientProfile";
+import { toClientProfile } from "./routes/ClientProfile";
 
 type ClientProfile = ClientProfileRepresentation & {
   global: boolean;
@@ -105,7 +105,10 @@ export const ProfilesTab = () => {
 
   const cellFormatter = (row: ClientProfile) => (
     <Link
-      to={toUpdateClientProfile({ realm, profileName: row.name! })}
+      to={toClientProfile({
+        realm,
+        profileName: row.name!,
+      })}
       key={row.name}
     >
       {row.name} {row.global && <Label color="blue">{t("global")}</Label>}
@@ -199,7 +202,7 @@ export const ProfilesTab = () => {
               <Button
                 id="createProfile"
                 component={(props) => (
-                  <Link {...props} to={toNewClientProfile({ realm })} />
+                  <Link {...props} to={toAddClientProfile({ realm })} />
                 )}
                 data-testid="createProfile"
               >

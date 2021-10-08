@@ -242,7 +242,7 @@ export default {
     allClientPolicies: "Client policies",
     newClientProfile: "Create client profile",
     newClientProfileName: "Client profile name",
-    updateClientProfile: "Client profile details",
+    clientProfile: "Client profile details",
     delete: "delete",
     save: "Save",
     reload: "Reload",
@@ -253,6 +253,7 @@ export default {
       "Executors, which will be applied for this client profile",
     executorsHelpItem: "Executors help item",
     addExecutor: "Add executor",
+    executorType: "Executor type",
     emptyExecutors: "No executors configured",
     updateClientProfilesSuccess:
       "The client profiles configuration was updated",

@@ -20,7 +20,7 @@ import { useTranslation } from "react-i18next";
 import { useForm } from "react-hook-form";
 import { FormAccess } from "../components/form-access/FormAccess";
 import { ViewHeader } from "../components/view-header/ViewHeader";
-import { Link, useHistory } from "react-router-dom";
+import { Link, useHistory, useParams } from "react-router-dom";
 import { useRealm } from "../context/realm-context/RealmContext";
 import { useAlerts } from "../components/alert/Alerts";
 import { useAdminClient, useFetch } from "../context/auth/AdminClient";
@@ -29,18 +29,19 @@ import { HelpItem } from "../components/help-enabler/HelpItem";
 import { PlusCircleIcon } from "@patternfly/react-icons";
 import "./RealmSettingsSection.css";
 import { useConfirmDialog } from "../components/confirm-dialog/ConfirmDialog";
+import { toAddExecutor } from "./routes/AddExecutor";
 
-type NewClientProfileForm = Required<ClientProfileRepresentation>;
+type ClientProfileForm = Required<ClientProfileRepresentation>;
 
-const defaultValues: NewClientProfileForm = {
+const defaultValues: ClientProfileForm = {
   name: "",
   description: "",
   executors: [],
 };
 
-export const NewClientProfileForm = () => {
+export const ClientProfileForm = () => {
   const { t } = useTranslation("realm-settings");
-  const { getValues, register, errors } = useForm<NewClientProfileForm>({
+  const { getValues, register, errors } = useForm<ClientProfileForm>({
     defaultValues,
   });
   const { realm } = useRealm();
@@ -55,6 +56,8 @@ export const NewClientProfileForm = () => {
     useState<ClientProfileRepresentation>();
   const form = getValues();
   const history = useHistory();
+  const { profileName } = useParams<{ profileName: string }>();
+  const editMode = profileName ? true : false;
 
   useFetch(
     () =>
@@ -119,7 +122,13 @@ export const NewClientProfileForm = () => {
     <>
       <DeleteConfirm />
       <ViewHeader
-        titleKey={showAddExecutorsForm ? form.name : t("newClientProfile")}
+        titleKey={
+          showAddExecutorsForm
+            ? form.name
+            : editMode
+            ? profileName
+            : t("newClientProfile")
+        }
         divider
         dropdownItems={
           showAddExecutorsForm
@@ -209,7 +218,10 @@ export const NewClientProfileForm = () => {
                     component={(props) => (
                       <Link
                         {...props}
-                        to={`/${realm}/realm-settings/clientPolicies`}
+                        to={toAddExecutor({
+                          realm,
+                          profileName: form.name,
+                        })}
                       ></Link>
                     )}
                     variant="link"
