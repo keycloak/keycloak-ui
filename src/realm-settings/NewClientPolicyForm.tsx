@@ -140,6 +140,12 @@ export const NewClientPolicyForm = () => {
     },
   });
 
+  const getCurrentPolicy = () => {
+    return policies.find((item) => item.name === policyName);
+  };
+
+  console.log(getCurrentPolicy()?.description);
+
   return (
     <>
       <DeleteConfirm />
