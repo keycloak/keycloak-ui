@@ -20,13 +20,14 @@ import { HelpItem } from "../components/help-enabler/HelpItem";
 
 export const ExecutorForm = () => {
   const { t } = useTranslation("realm-settings");
-  const [open, setOpen] = useState(false);
+  const [selectExecutorTypeOpen, setSelectExecutorTypeOpen] = useState(false);
+  const [selectAlgorithmTypeOpen, setSelectAlgorithmTypeOpen] = useState(false);
   const serverInfo = useServerInfo();
   const executorTypes =
     serverInfo.componentTypes?.[
       "org.keycloak.services.clientpolicy.executor.ClientPolicyExecutorProvider"
     ];
-//   const [executor, setExecutor] = useState<ComponentTypeRepresentation[]>([]);
+  const [executor, setExecutor] = useState<ComponentTypeRepresentation[]>([]);
   const [executorProperties, setExecutorProperties] = useState<
     ConfigPropertyRepresentation[]
   >([]);
@@ -41,12 +42,26 @@ export const ExecutorForm = () => {
     console.log("save");
   };
 
+  console.log(selectAlgorithmTypeOpen);
+
   return (
     <>
       <ViewHeader titleKey={t("addExecutor")} divider />
       <PageSection variant="light">
         <FormAccess isHorizontal role="manage-realm" className="pf-u-mt-lg">
-          <FormGroup label={t("executorType")} fieldId="kc-executorType">
+          <FormGroup
+            label={t("executorType")}
+            fieldId="kc-executorType"
+            labelIcon={
+              <HelpItem
+                helpText={executor.length > 0 ? executor[0].helpText : ""}
+                forLabel={t("executorTypeHelpText")}
+                forID={t(`common:helpLabel`, {
+                  label: t("executorTypeHelpText"),
+                })}
+              />
+            }
+          >
             <Controller
               name="executorType"
               control={control}
@@ -54,22 +69,22 @@ export const ExecutorForm = () => {
                 <Select
                   toggleId="kc-executorType"
                   placeholderText="Select an executor"
-                  onToggle={() => setOpen(!open)}
+                  onToggle={(isOpen) => setSelectExecutorTypeOpen(isOpen)}
                   onSelect={(_, value) => {
                     onChange(value.toString());
                     const selectedExecutor = executorTypes?.filter(
                       (type) => type.id === value
                     );
-                    // setExecutor(selectedExecutor ?? []);
+                    setExecutor(selectedExecutor ?? []);
                     setExecutorProperties(
                       selectedExecutor?.[0].properties ?? []
                     );
-                    setOpen(false);
+                    setSelectExecutorTypeOpen(false);
                   }}
                   selections={value}
                   variant={SelectVariant.single}
                   aria-label={t("executorType")}
-                  isOpen={open}
+                  isOpen={selectExecutorTypeOpen}
                   maxHeight={580}
                 >
                   {executorTypes?.map((option) => (
@@ -88,7 +103,7 @@ export const ExecutorForm = () => {
             executorProperties[0].type === "boolean" && (
               <FormGroup
                 label={executorProperties[0].label}
-                fieldId="kc-switchType"
+                fieldId="kc-executorTypeSwitch"
                 labelIcon={
                   <HelpItem
                     helpText={executorProperties[0].helpText}
@@ -107,6 +122,54 @@ export const ExecutorForm = () => {
                   onChange={() => {
                     console.log("onChange");
                   }}
+                />
+              </FormGroup>
+            )}
+          {executorProperties.length > 0 &&
+            executorProperties[0].type === "List" && (
+              <FormGroup
+                label={executorProperties[0].label}
+                fieldId="kc-executorTypeSelect"
+                labelIcon={
+                  <HelpItem
+                    helpText={executorProperties[0].helpText}
+                    forLabel={t("executorTypeSelectHelpText")}
+                    forID={t(`common:helpLabel`, {
+                      label: t("executorTypeSelectHelpText"),
+                    })}
+                  />
+                }
+              >
+                <Controller
+                  name="executorTypeSelectAlgorithm"
+                  control={control}
+                  render={({ onChange, value }) => (
+                    <Select
+                      toggleId="kc-executorTypeSelect"
+                      onToggle={(isOpen) => setSelectAlgorithmTypeOpen(isOpen)}
+                      onSelect={(_, value) => {
+                        onChange(value.toString());
+                        executorProperties[0].options?.filter(
+                          (option) => option === value
+                        );
+                        setSelectAlgorithmTypeOpen(false);
+                      }}
+                      selections={value}
+                      variant={SelectVariant.single}
+                      aria-label={t("executorTypeSelectAlgorithm")}
+                      isOpen={selectAlgorithmTypeOpen}
+                      maxHeight={300}
+                      defaultValue={executorProperties[0].defaultValue}
+                    >
+                      {executorProperties[0].options?.map((option) => (
+                        <SelectOption
+                          selected={option === value}
+                          key={option}
+                          value={option}
+                        />
+                      ))}
+                    </Select>
+                  )}
                 />
               </FormGroup>
             )}
