@@ -83,6 +83,7 @@ export const ExecutorForm = () => {
                   }}
                   selections={value}
                   variant={SelectVariant.single}
+                  data-testid="executorType-select"
                   aria-label={t("executorType")}
                   isOpen={selectExecutorTypeOpen}
                   maxHeight={580}
@@ -114,14 +115,22 @@ export const ExecutorForm = () => {
                   />
                 }
               >
-                <Switch
-                  id="executorType-switch"
-                  label={t("executorTypeSwitch: On")}
-                  labelOff={t("executorTypeSwitch: Off")}
-                  isChecked={executorProperties[0].defaultValue}
-                  onChange={() => {
-                    console.log("onChange");
-                  }}
+                <Controller
+                  name="executorTypeSwitch"
+                  control={control}
+                  defaultValue={{}}
+                  render={({ onChange, value }) => (
+                    <Switch
+                      id="kc-executorType-switch"
+                      data-testid="executorType-switch"
+                      label={t("executorTypeSwitch: On")}
+                      labelOff={t("executorTypeSwitch: Off")}
+                      isChecked={value === "true"}
+                      onChange={(value) => {
+                        onChange("" + value);
+                      }}
+                    />
+                  )}
                 />
               </FormGroup>
             )}
@@ -143,10 +152,10 @@ export const ExecutorForm = () => {
                 <TextInput
                   ref={register()}
                   type="text"
-                  id="executorType-text"
+                  id="kc-executorType-text"
                   name="executorTypeText"
                   defaultValue={executorProperties[0].defaultValue}
-                  data-testid="executorType-textField"
+                  data-testid="executorType-text"
                 />
               </FormGroup>
             )}
