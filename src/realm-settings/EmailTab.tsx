@@ -405,7 +405,7 @@ export const RealmSettingsEmailTab = ({
               </Button>
               <Button
                 variant="secondary"
-                onClick={() => saveAndTestEmail()}
+                onClick={() => testConnection()}
                 data-testid="test-connection-button"
                 isDisabled={
                   !(emailRegexPattern.test(watchFromValue) && watchHostValue)
