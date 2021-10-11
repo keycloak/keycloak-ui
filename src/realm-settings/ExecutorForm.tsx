@@ -8,6 +8,7 @@ import {
   SelectOption,
   SelectVariant,
   Switch,
+  TextInput,
 } from "@patternfly/react-core";
 import { useTranslation } from "react-i18next";
 import { FormAccess } from "../components/form-access/FormAccess";
@@ -35,14 +36,13 @@ export const ExecutorForm = () => {
   const {
     control,
     handleSubmit,
+    register,
     formState: { isDirty },
   } = useForm();
 
   const save = () => {
     console.log("save");
   };
-
-  console.log(selectAlgorithmTypeOpen);
 
   return (
     <>
@@ -122,6 +122,31 @@ export const ExecutorForm = () => {
                   onChange={() => {
                     console.log("onChange");
                   }}
+                />
+              </FormGroup>
+            )}
+          {executorProperties.length > 0 &&
+            executorProperties[0].type === "String" && (
+              <FormGroup
+                label={executorProperties[0].label}
+                fieldId="kc-executorTypeText"
+                labelIcon={
+                  <HelpItem
+                    helpText={executorProperties[0].helpText}
+                    forLabel={t("executorTypeTextHelpText")}
+                    forID={t(`common:helpLabel`, {
+                      label: t("executorTypeTextHelpText"),
+                    })}
+                  />
+                }
+              >
+                <TextInput
+                  ref={register()}
+                  type="text"
+                  id="executorType-text"
+                  name="executorTypeText"
+                  defaultValue={executorProperties[0].defaultValue}
+                  data-testid="executorType-textField"
                 />
               </FormGroup>
             )}
