@@ -254,6 +254,11 @@ export default {
     executorsHelpItem: "Executors help item",
     addExecutor: "Add executor",
     executorType: "Executor type",
+    executorTypeSwitch: {
+      on: "On",
+      off: "Off",
+    },
+    executorTypeSwitchHelpText: "Executor Type Switch Help Text",
     emptyExecutors: "No executors configured",
     updateClientProfilesSuccess:
       "The client profiles configuration was updated",

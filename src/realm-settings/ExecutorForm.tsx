@@ -7,6 +7,7 @@ import {
   Select,
   SelectOption,
   SelectVariant,
+  Switch,
 } from "@patternfly/react-core";
 import { useTranslation } from "react-i18next";
 import { FormAccess } from "../components/form-access/FormAccess";
@@ -14,23 +15,27 @@ import { ViewHeader } from "../components/view-header/ViewHeader";
 import { useServerInfo } from "../context/server-info/ServerInfoProvider";
 import { Controller, useForm } from "react-hook-form";
 import type ComponentTypeRepresentation from "@keycloak/keycloak-admin-client/lib/defs/componentTypeRepresentation";
+import type { ConfigPropertyRepresentation } from "@keycloak/keycloak-admin-client/lib/defs/authenticatorConfigInfoRepresentation";
+import { HelpItem } from "../components/help-enabler/HelpItem";
 
 export const ExecutorForm = () => {
   const { t } = useTranslation("realm-settings");
   const [open, setOpen] = useState(false);
-  const [executor, setExecutor] = useState<ComponentTypeRepresentation[]>();
-
-  const {
-    register,
-    control,
-    handleSubmit,
-    formState: { isDirty },
-  } = useForm();
   const serverInfo = useServerInfo();
   const executorTypes =
     serverInfo.componentTypes?.[
       "org.keycloak.services.clientpolicy.executor.ClientPolicyExecutorProvider"
     ];
+//   const [executor, setExecutor] = useState<ComponentTypeRepresentation[]>([]);
+  const [executorProperties, setExecutorProperties] = useState<
+    ConfigPropertyRepresentation[]
+  >([]);
+
+  const {
+    control,
+    handleSubmit,
+    formState: { isDirty },
+  } = useForm();
 
   const save = () => {
     console.log("save");
@@ -47,7 +52,7 @@ export const ExecutorForm = () => {
               control={control}
               render={({ onChange, value }) => (
                 <Select
-                  toggleId="kc-clientPolicy-executorType"
+                  toggleId="kc-executorType"
                   placeholderText="Select an executor"
                   onToggle={() => setOpen(!open)}
                   onSelect={(_, value) => {
@@ -55,7 +60,10 @@ export const ExecutorForm = () => {
                     const selectedExecutor = executorTypes?.filter(
                       (type) => type.id === value
                     );
-                    setExecutor(selectedExecutor);
+                    // setExecutor(selectedExecutor ?? []);
+                    setExecutorProperties(
+                      selectedExecutor?.[0].properties ?? []
+                    );
                     setOpen(false);
                   }}
                   selections={value}
@@ -76,6 +84,32 @@ export const ExecutorForm = () => {
               )}
             />
           </FormGroup>
+          {executorProperties.length > 0 &&
+            executorProperties[0].type === "boolean" && (
+              <FormGroup
+                label={executorProperties[0].label}
+                fieldId="kc-switchType"
+                labelIcon={
+                  <HelpItem
+                    helpText={executorProperties[0].helpText}
+                    forLabel={t("executorTypeSwitchHelpText")}
+                    forID={t(`common:helpLabel`, {
+                      label: t("executorTypeSwitchHelpText"),
+                    })}
+                  />
+                }
+              >
+                <Switch
+                  id="executorType-switch"
+                  label={t("executorTypeSwitch: On")}
+                  labelOff={t("executorTypeSwitch: Off")}
+                  isChecked={executorProperties[0].defaultValue}
+                  onChange={() => {
+                    console.log("onChange");
+                  }}
+                />
+              </FormGroup>
+            )}
           <ActionGroup>
             <Button
               variant="primary"
