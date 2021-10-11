@@ -27,7 +27,6 @@ import { useAlerts } from "../components/alert/Alerts";
 import "./RealmSettingsSection.css";
 import { useRealm } from "../context/realm-context/RealmContext";
 import { toNewClientPolicy } from "./routes/NewClientPolicy";
-import { toClientPolicies } from "./routes/ClientPolicies";
 export const PoliciesTab = () => {
   const { t } = useTranslation("realm-settings");
   const adminClient = useAdminClient();
@@ -101,7 +100,6 @@ export const PoliciesTab = () => {
         });
         addAlert(t("deleteClientPolicySuccess"), AlertVariant.success);
         refresh();
-        history.push(toClientPolicies({ realm }));
       } catch (error) {
         addError(t("deleteClientPolicyError"), error);
       }
