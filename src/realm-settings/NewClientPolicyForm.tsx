@@ -20,7 +20,7 @@ import { useTranslation } from "react-i18next";
 import { useForm } from "react-hook-form";
 import { FormAccess } from "../components/form-access/FormAccess";
 import { ViewHeader } from "../components/view-header/ViewHeader";
-import { Link, useHistory } from "react-router-dom";
+import { Link, useHistory, useParams } from "react-router-dom";
 import { useRealm } from "../context/realm-context/RealmContext";
 import { useAlerts } from "../components/alert/Alerts";
 import { useAdminClient, useFetch } from "../context/auth/AdminClient";
@@ -31,6 +31,7 @@ import "./RealmSettingsSection.css";
 import { useConfirmDialog } from "../components/confirm-dialog/ConfirmDialog";
 import type ClientPolicyRepresentation from "@keycloak/keycloak-admin-client/lib/defs/clientPolicyRepresentation";
 import { toClientPolicies } from "./routes/ClientPolicies";
+import type { EditClientPolicyParams } from "./routes/EditClientPolicy";
 
 type NewClientPolicyForm = Required<ClientPolicyRepresentation>;
 
@@ -44,15 +45,11 @@ const defaultValues: NewClientPolicyForm = {
 
 export const NewClientPolicyForm = () => {
   const { t } = useTranslation("realm-settings");
-  const {
-    register,
-    errors,
-    handleSubmit,
-    reset: resetForm,
-  } = useForm<NewClientPolicyForm>({
+  const { errors, reset: resetForm } = useForm<NewClientPolicyForm>({
     defaultValues,
   });
   const { realm } = useRealm();
+  const { policyName } = useParams<EditClientPolicyParams>();
   const { addAlert, addError } = useAlerts();
   const adminClient = useAdminClient();
   const [policies, setPolicies] = useState<ClientProfileRepresentation[]>([]);
@@ -65,23 +62,49 @@ export const NewClientPolicyForm = () => {
     useState<ClientPolicyRepresentation>();
 
   const history = useHistory();
+  const form = useForm<ClientPolicyRepresentation>({ mode: "onChange" });
 
   useFetch(
     () => adminClient.clientPolicies.listPolicies(),
     (policies) => {
       setPolicies(policies.policies ?? []);
+      if (policyName) {
+        const currentPolicy = policies.policies?.find(
+          (item) => item.name === policyName
+        );
+        console.log("huuuh", currentPolicy);
+        setupForm(currentPolicy!);
+      }
     },
     []
   );
 
-  const save = async (form: NewClientPolicyForm) => {
+  const setupForm = (policy: ClientPolicyRepresentation) => {
+    resetForm();
+    Object.entries(policy).map(([key, value]) => {
+      form.setValue(key, value);
+    });
+  };
+
+  const save = async () => {
+    const createdForm = form.getValues();
     const createdPolicy = {
-      ...form,
+      ...createdForm,
       profiles: [],
       conditions: [],
     };
 
-    const allPolicies = policies.concat(createdPolicy);
+    const test = policies.find((policy) => policy.name === createdPolicy.name);
+    console.log("forest", test);
+
+    const res = policies.map((policy) =>
+      policy.name === createdPolicy.name ? createdPolicy : policy
+    );
+    // let res2 = createdPolicy.description;
+
+    console.log("lalala", res);
+
+    const allPolicies = test ? res : policies.concat(createdForm);
 
     try {
       await adminClient.clientPolicies.updatePolicy({
@@ -120,13 +143,19 @@ export const NewClientPolicyForm = () => {
     },
   });
 
+  const getCurrentPolicy = () => {
+    return policies.find((item) => item.name === policyName);
+  };
+
+  console.log(getCurrentPolicy()?.description);
+
   return (
     <>
       <DeleteConfirm />
       <ViewHeader
         titleKey={
-          showAddConditionsAndProfilesForm
-            ? createdPolicy?.name!
+          showAddConditionsAndProfilesForm || policyName
+            ? createdPolicy?.name! || policyName
             : t("createPolicy")
         }
         divider
@@ -159,7 +188,7 @@ export const NewClientPolicyForm = () => {
             }
           >
             <TextInput
-              ref={register({ required: true })}
+              ref={form.register({ required: true })}
               type="text"
               id="kc-client-profile-name"
               name="name"
@@ -170,7 +199,7 @@ export const NewClientPolicyForm = () => {
             <TextArea
               name="description"
               aria-label={t("description")}
-              ref={register()}
+              ref={form.register()}
               type="text"
               id="kc-client-policy-description"
               data-testid="client-policy-description"
@@ -179,14 +208,15 @@ export const NewClientPolicyForm = () => {
           <ActionGroup>
             <Button
               variant="primary"
-              onClick={handleSubmit(save)}
+              onClick={save}
               data-testid="saveCreatePolicy"
-              isDisabled={showAddConditionsAndProfilesForm}
+              isDisabled={form.formState.isDirty}
             >
               {t("common:save")}
             </Button>
             <Button
               id="cancelCreatePolicy"
+              variant="secondary"
               onClick={() =>
                 showAddConditionsAndProfilesForm
                   ? resetForm(createdPolicy)
@@ -199,7 +229,7 @@ export const NewClientPolicyForm = () => {
                 : t("common:cancel")}
             </Button>
           </ActionGroup>
-          {showAddConditionsAndProfilesForm && (
+          {(showAddConditionsAndProfilesForm || policyName) && (
             <>
               <Flex>
                 <FlexItem>
@@ -236,7 +266,7 @@ export const NewClientPolicyForm = () => {
               </Text>
             </>
           )}
-          {showAddConditionsAndProfilesForm && (
+          {(showAddConditionsAndProfilesForm || policyName) && (
             <>
               <Flex>
                 <FlexItem>
