@@ -72,7 +72,6 @@ export const NewClientPolicyForm = () => {
         const currentPolicy = policies.policies?.find(
           (item) => item.name === policyName
         );
-        console.log("huuuh", currentPolicy);
         setupForm(currentPolicy!);
       }
     },
@@ -95,14 +94,10 @@ export const NewClientPolicyForm = () => {
     };
 
     const test = policies.find((policy) => policy.name === createdPolicy.name);
-    console.log("forest", test);
 
     const res = policies.map((policy) =>
       policy.name === createdPolicy.name ? createdPolicy : policy
     );
-    // let res2 = createdPolicy.description;
-
-    console.log("lalala", res);
 
     const allPolicies = test ? res : policies.concat(createdForm);
 
@@ -142,12 +137,6 @@ export const NewClientPolicyForm = () => {
       }
     },
   });
-
-  const getCurrentPolicy = () => {
-    return policies.find((item) => item.name === policyName);
-  };
-
-  console.log(getCurrentPolicy()?.description);
 
   return (
     <>
