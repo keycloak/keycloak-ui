@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import {
   ActionGroup,
+  AlertVariant,
   Button,
   FormGroup,
   PageSection,
@@ -13,22 +14,27 @@ import {
 import { useTranslation } from "react-i18next";
 import { FormAccess } from "../components/form-access/FormAccess";
 import { ViewHeader } from "../components/view-header/ViewHeader";
+import { useAlerts } from "../components/alert/Alerts";
 import { useServerInfo } from "../context/server-info/ServerInfoProvider";
 import { Controller, useForm } from "react-hook-form";
 import type ComponentTypeRepresentation from "@keycloak/keycloak-admin-client/lib/defs/componentTypeRepresentation";
 import type { ConfigPropertyRepresentation } from "@keycloak/keycloak-admin-client/lib/defs/authenticatorConfigInfoRepresentation";
 import { HelpItem } from "../components/help-enabler/HelpItem";
 import { Link, useParams } from "react-router-dom";
+import { useAdminClient, useFetch } from "../context/auth/AdminClient";
+import type ClientProfileRepresentation from "@keycloak/keycloak-admin-client/lib/defs/clientProfileRepresentation";
 
 export const ExecutorForm = () => {
   const { t } = useTranslation("realm-settings");
   const { realm, profileName } =
     useParams<{ realm: string; profileName: string }>();
+  const { addAlert, addError } = useAlerts();
   const [selectExecutorTypeOpen, setSelectExecutorTypeOpen] = useState(false);
   const [selectAlgorithmTypeOpen, setSelectAlgorithmTypeOpen] = useState(false);
   const [selectMultiAuthenticatorOpen, setSelectMultiAuthenticatorOpen] =
     useState(false);
   const serverInfo = useServerInfo();
+  const adminClient = useAdminClient();
   const executorTypes =
     serverInfo.componentTypes?.[
       "org.keycloak.services.clientpolicy.executor.ClientPolicyExecutorProvider"
@@ -37,14 +43,55 @@ export const ExecutorForm = () => {
   const [executorProperties, setExecutorProperties] = useState<
     ConfigPropertyRepresentation[]
   >([]);
+  const [globalProfiles, setGlobalProfiles] = useState<
+    ClientProfileRepresentation[]
+  >([]);
+  const [profiles, setProfiles] = useState<ClientProfileRepresentation[]>([]);
 
-  const { control, handleSubmit, register } = useForm();
+  const { control, getValues, register } = useForm();
 
-  const save = () => {
-    console.log("save");
+  useFetch(
+    () =>
+      adminClient.clientPolicies.listProfiles({ includeGlobalProfiles: true }),
+    (profiles) => {
+      setGlobalProfiles(profiles.globalProfiles ?? []);
+      setProfiles(profiles.profiles ?? []);
+    },
+    []
+  );
+
+  const fldNameFormatter = (name: string) => {
+    return name.toLowerCase().trim().split(/\s+/).join("-");
   };
 
-  console.log(executorProperties);
+  const save = async () => {
+    const form = getValues();
+
+    const createdExecutors = {
+      executor: form.executor,
+      configuration: { ...form },
+    };
+
+    console.log(createdExecutors);
+
+    const updatedProfile = {
+      executors: [createdExecutors],
+    };
+
+    // console.log(createdExecutor);
+
+    // const allProfiles = profiles.concat(createdProfile);
+
+    // try {
+    //   await adminClient.clientPolicies.createProfiles({
+    //     profiles: allProfiles,
+    //     globalProfiles: globalProfiles,
+    //   });
+    //   addAlert(t("realm-settings:addExecutorSuccess"), AlertVariant.success);
+    // } catch (error) {
+    //   addError("realm-settings:addExecutorError", error);
+    // }
+  };
 
   return (
     <>
@@ -69,11 +116,11 @@ export const ExecutorForm = () => {
             }
           >
             <Controller
-              name="executorType"
+              name="executor"
               control={control}
               render={({ onChange, value }) => (
                 <Select
-                  toggleId="kc-executorType"
+                  toggleId="kc-executor"
                   placeholderText="Select an executor"
                   onToggle={(isOpen) => setSelectExecutorTypeOpen(isOpen)}
                   onSelect={(_, value) => {
@@ -125,7 +172,7 @@ export const ExecutorForm = () => {
                     }
                   >
                     <Controller
-                      name="executorTypeSwitch"
+                      name={fldNameFormatter(option.label!)}
                       control={control}
                       defaultValue={{}}
                       render={({ onChange, value }) => (
@@ -163,10 +210,10 @@ export const ExecutorForm = () => {
                     }
                   >
                     <TextInput
+                      name={fldNameFormatter(option.label!)}
                       ref={register()}
                       type="text"
                       id="kc-executorType-text"
-                      name="executorTypeText"
                       defaultValue={option.defaultValue}
                       data-testid="executorType-text"
                     />
@@ -192,7 +239,7 @@ export const ExecutorForm = () => {
                     }
                   >
                     <Controller
-                      name="executorTypeSelectAlgorithm"
+                      name={fldNameFormatter(option.label!)}
                       control={control}
                       render={({ onChange, value }) => (
                         <Select
@@ -246,7 +293,7 @@ export const ExecutorForm = () => {
                     }
                   >
                     <Controller
-                      name="executorClientAuthenticator"
+                      name={fldNameFormatter(option.label!)}
                       control={control}
                       render={({ onChange, value }) => (
                         <Select

@@ -266,6 +266,8 @@ export default {
       "Executor Authenticator MultiSelect Help Text",
     executorClientAuthenticator: "Executor Client Authenticator",
     emptyExecutors: "No executors configured",
+    addExecutorSuccess: "Success! Executor created successfully",
+    addExecutorError: "Executor not created",
     updateClientProfilesSuccess:
       "The client profiles configuration was updated",
     updateClientProfilesError:
