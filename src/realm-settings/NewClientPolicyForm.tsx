@@ -93,13 +93,15 @@ export const NewClientPolicyForm = () => {
       conditions: [],
     };
 
-    const test = policies.find((policy) => policy.name === createdPolicy.name);
+    const policyNameExists = policies.find(
+      (policy) => policy.name === createdPolicy.name
+    );
 
     const res = policies.map((policy) =>
       policy.name === createdPolicy.name ? createdPolicy : policy
     );
 
-    const allPolicies = test ? res : policies.concat(createdForm);
+    const allPolicies = policyNameExists ? res : policies.concat(createdForm);
 
     try {
       await adminClient.clientPolicies.updatePolicy({
