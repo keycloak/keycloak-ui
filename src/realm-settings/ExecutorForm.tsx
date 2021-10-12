@@ -72,6 +72,8 @@ export const ExecutorForm = () => {
       configuration: { ...form },
     };
 
+    delete createdExecutors.configuration.executor;
+
     console.log(createdExecutors);
 
     const updatedProfile = {
@@ -174,7 +176,7 @@ export const ExecutorForm = () => {
                     <Controller
                       name={fldNameFormatter(option.label!)}
                       control={control}
-                      defaultValue={{}}
+                      defaultValue={option.defaultValue.toString()}
                       render={({ onChange, value }) => (
                         <Switch
                           id="kc-executorType-switch"
