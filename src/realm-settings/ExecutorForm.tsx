@@ -57,8 +57,7 @@ export const ExecutorForm = () => {
             label={t("executorType")}
             fieldId="kc-executorType"
             labelIcon={
-              executors.length > 0 &&
-              executors[0].helpText !== "" && (
+              executors.length > 0 && executors[0].helpText !== "" ? (
                 <HelpItem
                   helpText={executors.length > 0 && executors[0].helpText}
                   forLabel={t("executorTypeHelpText")}
@@ -66,6 +65,8 @@ export const ExecutorForm = () => {
                     label: t("executorTypeHelpText"),
                   })}
                 />
+              ) : (
+                <> </>
               )
             }
           >
