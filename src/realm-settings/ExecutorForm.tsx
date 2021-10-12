@@ -23,12 +23,14 @@ export const ExecutorForm = () => {
   const { t } = useTranslation("realm-settings");
   const [selectExecutorTypeOpen, setSelectExecutorTypeOpen] = useState(false);
   const [selectAlgorithmTypeOpen, setSelectAlgorithmTypeOpen] = useState(false);
+  const [selectMultiAuthenticatorOpen, setSelectMultiAuthenticatorOpen] =
+    useState(false);
   const serverInfo = useServerInfo();
   const executorTypes =
     serverInfo.componentTypes?.[
       "org.keycloak.services.clientpolicy.executor.ClientPolicyExecutorProvider"
     ];
-  const [executor, setExecutor] = useState<ComponentTypeRepresentation[]>([]);
+  const [executors, setExecutors] = useState<ComponentTypeRepresentation[]>([]);
   const [executorProperties, setExecutorProperties] = useState<
     ConfigPropertyRepresentation[]
   >([]);
@@ -44,6 +46,8 @@ export const ExecutorForm = () => {
     console.log("save");
   };
 
+  console.log(executorProperties);
+
   return (
     <>
       <ViewHeader titleKey={t("addExecutor")} divider />
@@ -53,13 +57,16 @@ export const ExecutorForm = () => {
             label={t("executorType")}
             fieldId="kc-executorType"
             labelIcon={
-              <HelpItem
-                helpText={executor.length > 0 ? executor[0].helpText : ""}
-                forLabel={t("executorTypeHelpText")}
-                forID={t(`common:helpLabel`, {
-                  label: t("executorTypeHelpText"),
-                })}
-              />
+              executors.length > 0 &&
+              executors[0].helpText !== "" && (
+                <HelpItem
+                  helpText={executors.length > 0 && executors[0].helpText}
+                  forLabel={t("executorTypeHelpText")}
+                  forID={t(`common:helpLabel`, {
+                    label: t("executorTypeHelpText"),
+                  })}
+                />
+              )
             }
           >
             <Controller
@@ -75,7 +82,7 @@ export const ExecutorForm = () => {
                     const selectedExecutor = executorTypes?.filter(
                       (type) => type.id === value
                     );
-                    setExecutor(selectedExecutor ?? []);
+                    setExecutors(selectedExecutor ?? []);
                     setExecutorProperties(
                       selectedExecutor?.[0].properties ?? []
                     );
@@ -101,112 +108,182 @@ export const ExecutorForm = () => {
             />
           </FormGroup>
           {executorProperties.length > 0 &&
-            executorProperties[0].type === "boolean" && (
-              <FormGroup
-                label={executorProperties[0].label}
-                fieldId="kc-executorTypeSwitch"
-                labelIcon={
-                  <HelpItem
-                    helpText={executorProperties[0].helpText}
-                    forLabel={t("executorTypeSwitchHelpText")}
-                    forID={t(`common:helpLabel`, {
-                      label: t("executorTypeSwitchHelpText"),
-                    })}
-                  />
-                }
-              >
-                <Controller
-                  name="executorTypeSwitch"
-                  control={control}
-                  defaultValue={{}}
-                  render={({ onChange, value }) => (
-                    <Switch
-                      id="kc-executorType-switch"
-                      data-testid="executorType-switch"
-                      label={t("executorTypeSwitch: On")}
-                      labelOff={t("executorTypeSwitch: Off")}
-                      isChecked={value === "true"}
-                      onChange={(value) => {
-                        onChange("" + value);
-                      }}
-                    />
-                  )}
-                />
-              </FormGroup>
-            )}
-          {executorProperties.length > 0 &&
-            executorProperties[0].type === "String" && (
-              <FormGroup
-                label={executorProperties[0].label}
-                fieldId="kc-executorTypeText"
-                labelIcon={
-                  <HelpItem
-                    helpText={executorProperties[0].helpText}
-                    forLabel={t("executorTypeTextHelpText")}
-                    forID={t(`common:helpLabel`, {
-                      label: t("executorTypeTextHelpText"),
-                    })}
-                  />
-                }
-              >
-                <TextInput
-                  ref={register()}
-                  type="text"
-                  id="kc-executorType-text"
-                  name="executorTypeText"
-                  defaultValue={executorProperties[0].defaultValue}
-                  data-testid="executorType-text"
-                />
-              </FormGroup>
-            )}
-          {executorProperties.length > 0 &&
-            executorProperties[0].type === "List" && (
-              <FormGroup
-                label={executorProperties[0].label}
-                fieldId="kc-executorTypeSelect"
-                labelIcon={
-                  <HelpItem
-                    helpText={executorProperties[0].helpText}
-                    forLabel={t("executorTypeSelectHelpText")}
-                    forID={t(`common:helpLabel`, {
-                      label: t("executorTypeSelectHelpText"),
-                    })}
-                  />
-                }
-              >
-                <Controller
-                  name="executorTypeSelectAlgorithm"
-                  control={control}
-                  render={({ onChange, value }) => (
-                    <Select
-                      toggleId="kc-executorTypeSelect"
-                      onToggle={(isOpen) => setSelectAlgorithmTypeOpen(isOpen)}
-                      onSelect={(_, value) => {
-                        onChange(value.toString());
-                        executorProperties[0].options?.filter(
-                          (option) => option === value
-                        );
-                        setSelectAlgorithmTypeOpen(false);
-                      }}
-                      selections={value}
-                      variant={SelectVariant.single}
-                      aria-label={t("executorTypeSelectAlgorithm")}
-                      isOpen={selectAlgorithmTypeOpen}
-                      maxHeight={300}
-                      defaultValue={executorProperties[0].defaultValue}
-                    >
-                      {executorProperties[0].options?.map((option) => (
-                        <SelectOption
-                          selected={option === value}
-                          key={option}
-                          value={option}
+            executorProperties.map((option) => {
+              return (
+                option.type === "boolean" && (
+                  <FormGroup
+                    key="kc-executorType"
+                    label={option.label}
+                    fieldId="kc-executorTypeSwitch"
+                    labelIcon={
+                      <HelpItem
+                        helpText={option.helpText}
+                        forLabel={t("executorTypeSwitchHelpText")}
+                        forID={t(`common:helpLabel`, {
+                          label: t("executorTypeSwitchHelpText"),
+                        })}
+                      />
+                    }
+                  >
+                    <Controller
+                      name="executorTypeSwitch"
+                      control={control}
+                      defaultValue={{}}
+                      render={({ onChange, value }) => (
+                        <Switch
+                          id="kc-executorType-switch"
+                          data-testid="executorType-switch"
+                          label={t("executorTypeSwitch: On")}
+                          labelOff={t("executorTypeSwitch: Off")}
+                          isChecked={value === "true"}
+                          onChange={(value) => {
+                            onChange("" + value);
+                          }}
                         />
-                      ))}
-                    </Select>
-                  )}
-                />
-              </FormGroup>
-            )}
+                      )}
+                    />
+                  </FormGroup>
+                )
+              );
+            })}
+          {executorProperties.length > 0 &&
+            executorProperties.map((option) => {
+              return (
+                option.type === "String" && (
+                  <FormGroup
+                    label={option.label}
+                    fieldId="kc-executorTypeText"
+                    labelIcon={
+                      <HelpItem
+                        helpText={option.helpText}
+                        forLabel={t("executorTypeTextHelpText")}
+                        forID={t(`common:helpLabel`, {
+                          label: t("executorTypeTextHelpText"),
+                        })}
+                      />
+                    }
+                  >
+                    <TextInput
+                      ref={register()}
+                      type="text"
+                      id="kc-executorType-text"
+                      name="executorTypeText"
+                      defaultValue={option.defaultValue}
+                      data-testid="executorType-text"
+                    />
+                  </FormGroup>
+                )
+              );
+            })}
+          {executorProperties.length > 0 &&
+            executorProperties.map((option) => {
+              return (
+                option.type === "List" && (
+                  <FormGroup
+                    label={option.label}
+                    fieldId="kc-executorTypeSelect"
+                    labelIcon={
+                      <HelpItem
+                        helpText={option.helpText}
+                        forLabel={t("executorTypeSelectHelpText")}
+                        forID={t(`common:helpLabel`, {
+                          label: t("executorTypeSelectHelpText"),
+                        })}
+                      />
+                    }
+                  >
+                    <Controller
+                      name="executorTypeSelectAlgorithm"
+                      control={control}
+                      render={({ onChange, value }) => (
+                        <Select
+                          toggleId="kc-executorTypeSelect"
+                          onToggle={(isOpen) =>
+                            setSelectAlgorithmTypeOpen(isOpen)
+                          }
+                          onSelect={(_, value) => {
+                            onChange(value.toString());
+                            option.options?.filter(
+                              (option) => option === value
+                            );
+                            setSelectAlgorithmTypeOpen(false);
+                          }}
+                          selections={value}
+                          variant={SelectVariant.single}
+                          aria-label={t("executorTypeSelectAlgorithm")}
+                          isOpen={selectAlgorithmTypeOpen}
+                          maxHeight={300}
+                          defaultValue={option.defaultValue}
+                        >
+                          {option.options?.map((option) => (
+                            <SelectOption
+                              selected={option === value}
+                              key={option}
+                              value={option}
+                            />
+                          ))}
+                        </Select>
+                      )}
+                    />
+                  </FormGroup>
+                )
+              );
+            })}
+          {executorProperties.length > 0 &&
+            executorProperties.map((option) => {
+              return (
+                option.type === "MultivaluedList" && (
+                  <FormGroup
+                    label={t("executorClientAuthenticator")}
+                    fieldId="kc-executorAuthenticatorMultiSelect"
+                  >
+                    <Controller
+                      name="executorClientAuthenticator"
+                      control={control}
+                      render={({ onChange, value }) => (
+                        <Select
+                          name="executorClientAuthenticator"
+                          data-testid="executorClientAuthenticator-multiSelect"
+                          chipGroupProps={{
+                            numChips: 1,
+                            expandedText: "Hide",
+                            collapsedText: "Show ${remaining}",
+                          }}
+                          variant={SelectVariant.typeaheadMulti}
+                          typeAheadAriaLabel="Select"
+                          onToggle={(isOpen) =>
+                            setSelectMultiAuthenticatorOpen(isOpen)
+                          }
+                          selections={value}
+                          onSelect={(_, v) => {
+                            const option = v as string;
+                            if (!value) {
+                              onChange([option]);
+                            } else if (value.includes(option)) {
+                              onChange(
+                                value.filter((item: string) => item !== option)
+                              );
+                            } else {
+                              onChange([...value, option]);
+                            }
+                          }}
+                          onClear={(event) => {
+                            event.stopPropagation();
+                            onChange([]);
+                          }}
+                          isOpen={selectMultiAuthenticatorOpen}
+                          aria-labelledby={"client-authenticator"}
+                        >
+                          {option.options?.map((option) => (
+                            <SelectOption key={option} value={option} />
+                          ))}
+                        </Select>
+                      )}
+                    />
+                  </FormGroup>
+                )
+              );
+            })}
           <ActionGroup>
             <Button
               variant="primary"

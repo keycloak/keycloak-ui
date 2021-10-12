@@ -262,6 +262,7 @@ export default {
     executorTypeSelectHelpText: "Executor Type Select Help Text",
     executorTypeSelectAlgorithm: "Executor Type Select Algorithm",
     executorTypeTextHelpText: "Executor Type Text Help Text",
+    executorClientAuthenticator: "Executor Client Authenticator",
     emptyExecutors: "No executors configured",
     updateClientProfilesSuccess:
       "The client profiles configuration was updated",
