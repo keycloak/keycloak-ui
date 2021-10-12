@@ -18,9 +18,12 @@ import { Controller, useForm } from "react-hook-form";
 import type ComponentTypeRepresentation from "@keycloak/keycloak-admin-client/lib/defs/componentTypeRepresentation";
 import type { ConfigPropertyRepresentation } from "@keycloak/keycloak-admin-client/lib/defs/authenticatorConfigInfoRepresentation";
 import { HelpItem } from "../components/help-enabler/HelpItem";
+import { Link, useParams } from "react-router-dom";
 
 export const ExecutorForm = () => {
   const { t } = useTranslation("realm-settings");
+  const { realm, profileName } =
+    useParams<{ realm: string; profileName: string }>();
   const [selectExecutorTypeOpen, setSelectExecutorTypeOpen] = useState(false);
   const [selectAlgorithmTypeOpen, setSelectAlgorithmTypeOpen] = useState(false);
   const [selectMultiAuthenticatorOpen, setSelectMultiAuthenticatorOpen] =
@@ -35,12 +38,7 @@ export const ExecutorForm = () => {
     ConfigPropertyRepresentation[]
   >([]);
 
-  const {
-    control,
-    handleSubmit,
-    register,
-    formState: { isDirty },
-  } = useForm();
+  const { control, handleSubmit, register } = useForm();
 
   const save = () => {
     console.log("save");
@@ -235,8 +233,17 @@ export const ExecutorForm = () => {
               return (
                 option.type === "MultivaluedList" && (
                   <FormGroup
-                    label={t("executorClientAuthenticator")}
+                    label={option.label}
                     fieldId="kc-executorAuthenticatorMultiSelect"
+                    labelIcon={
+                      <HelpItem
+                        helpText={option.helpText}
+                        forLabel={t("executorAuthenticatorMultiSelectHelpText")}
+                        forID={t(`common:helpLabel`, {
+                          label: t("executorAuthenticatorMultiSelectHelpText"),
+                        })}
+                      />
+                    }
                   >
                     <Controller
                       name="executorClientAuthenticator"
@@ -294,8 +301,13 @@ export const ExecutorForm = () => {
               {t("common:add")}
             </Button>
             <Button
-              onClick={() => console.log("reset")}
               variant="link"
+              component={(props) => (
+                <Link
+                  {...props}
+                  to={`/${realm}/realm-settings/clientPolicies/${profileName}`}
+                />
+              )}
               data-testid="realm-settings-add-executor-cancel-button"
             >
               {t("common:cancel")}

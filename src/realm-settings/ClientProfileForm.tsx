@@ -21,7 +21,6 @@ import { useForm } from "react-hook-form";
 import { FormAccess } from "../components/form-access/FormAccess";
 import { ViewHeader } from "../components/view-header/ViewHeader";
 import { Link, useHistory, useParams } from "react-router-dom";
-import { useRealm } from "../context/realm-context/RealmContext";
 import { useAlerts } from "../components/alert/Alerts";
 import { useAdminClient, useFetch } from "../context/auth/AdminClient";
 import type ClientProfileRepresentation from "@keycloak/keycloak-admin-client/lib/defs/clientProfileRepresentation";
@@ -44,7 +43,6 @@ export const ClientProfileForm = () => {
   const { getValues, register, errors } = useForm<ClientProfileForm>({
     defaultValues,
   });
-  const { realm } = useRealm();
   const { addAlert, addError } = useAlerts();
   const adminClient = useAdminClient();
   const [globalProfiles, setGlobalProfiles] = useState<
@@ -56,7 +54,8 @@ export const ClientProfileForm = () => {
     useState<ClientProfileRepresentation>();
   const form = getValues();
   const history = useHistory();
-  const { profileName } = useParams<{ profileName: string }>();
+  const { realm, profileName } =
+    useParams<{ realm: string; profileName: string }>();
   const editMode = profileName ? true : false;
 
   useFetch(
