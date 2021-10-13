@@ -17,7 +17,6 @@ import {
   ValidatedOptions,
 } from "@patternfly/react-core";
 import { useTranslation } from "react-i18next";
-import { useForm } from "react-hook-form";
 import { FormAccess } from "../components/form-access/FormAccess";
 import { ViewHeader } from "../components/view-header/ViewHeader";
 import { Link, useHistory, useParams } from "react-router-dom";
@@ -29,6 +28,8 @@ import { PlusCircleIcon } from "@patternfly/react-icons";
 import "./RealmSettingsSection.css";
 import { useConfirmDialog } from "../components/confirm-dialog/ConfirmDialog";
 import { toAddExecutor } from "./routes/AddExecutor";
+import { KeycloakDataTable } from "../components/table-toolbar/KeycloakDataTable";
+import type ClientPolicyExecutorRepresentation from "@keycloak/keycloak-admin-client/lib/defs/clientPolicyExecutorRepresentation";
 
 type ClientProfileForm = Required<ClientProfileRepresentation>;
 
@@ -49,10 +50,8 @@ export const ClientProfileForm = () => {
     ClientProfileRepresentation[]
   >([]);
   const [profiles, setProfiles] = useState<ClientProfileRepresentation[]>([]);
-  const [showAddExecutorsForm, setShowAddExecutorsForm] = useState(false);
   const [createdProfile, setCreatedProfile] =
     useState<ClientProfileRepresentation>();
-  const form = getValues();
   const history = useHistory();
   const { realm, profileName } =
     useParams<{ realm: string; profileName: string }>();
@@ -87,8 +86,10 @@ export const ClientProfileForm = () => {
         t("realm-settings:createClientProfileSuccess"),
         AlertVariant.success
       );
-      setShowAddExecutorsForm(true);
       setCreatedProfile(createdProfile);
+      history.push(
+        `/${realm}/realm-settings/clientPolicies/${createdProfile.name}`
+      );
     } catch (error) {
       addError("realm-settings:createClientProfileError", error);
     }
@@ -117,20 +118,22 @@ export const ClientProfileForm = () => {
     },
   });
 
+  const profile = profiles.filter((profile) => profile.name === profileName);
+  const profileExecutors = profile[0]?.executors || [];
+  const loader = async () => [profileExecutors[0]];
+
+  const cellFormatter = (row: ClientPolicyExecutorRepresentation) => (
+    <Link to="/">{row.executor}</Link>
+  );
+
   return (
     <>
       <DeleteConfirm />
       <ViewHeader
-        titleKey={
-          showAddExecutorsForm
-            ? form.name
-            : editMode
-            ? profileName
-            : t("newClientProfile")
-        }
+        titleKey={editMode ? profileName : t("newClientProfile")}
         divider
         dropdownItems={
-          showAddExecutorsForm
+          editMode
             ? [
                 <DropdownItem
                   key="delete"
@@ -179,7 +182,7 @@ export const ClientProfileForm = () => {
               variant="primary"
               onClick={save}
               data-testid="saveCreateProfile"
-              isDisabled={showAddExecutorsForm ? true : false}
+              isDisabled={editMode ? true : false}
             >
               {t("common:save")}
             </Button>
@@ -193,12 +196,10 @@ export const ClientProfileForm = () => {
               )}
               data-testid="cancelCreateProfile"
             >
-              {showAddExecutorsForm
-                ? t("realm-settings:reload")
-                : t("common:cancel")}
+              {editMode ? t("realm-settings:reload") : t("common:cancel")}
             </Button>
           </ActionGroup>
-          {showAddExecutorsForm && (
+          {editMode && (
             <>
               <Flex>
                 <FlexItem>
@@ -219,7 +220,7 @@ export const ClientProfileForm = () => {
                         {...props}
                         to={toAddExecutor({
                           realm,
-                          profileName: form.name,
+                          profileName,
                         })}
                       ></Link>
                     )}
@@ -233,9 +234,33 @@ export const ClientProfileForm = () => {
                 </FlexItem>
               </Flex>
               <Divider />
-              <Text className="kc-emptyExecutors" component={TextVariants.h6}>
-                {t("realm-settings:emptyExecutors")}
-              </Text>
+              {profileExecutors.length > 0 ? (
+                <KeycloakDataTable
+                  key={profileExecutors.length}
+                  ariaLabelKey="realm-settings:profiles"
+                  loader={loader}
+                  actions={[
+                    {
+                      title: t("common:delete"),
+                      onRowClick: (executor) => {
+                        console.log(executor);
+                        toggleDeleteDialog();
+                      },
+                    },
+                  ]}
+                  columns={[
+                    {
+                      name: "name",
+                      displayKey: t("clientProfileName"),
+                      cellRenderer: cellFormatter,
+                    },
+                  ]}
+                />
+              ) : (
+                <Text className="kc-emptyExecutors" component={TextVariants.h6}>
+                  {t("realm-settings:emptyExecutors")}
+                </Text>
+              )}
             </>
           )}
         </FormAccess>

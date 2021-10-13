@@ -47,7 +47,6 @@ export const ExecutorForm = () => {
     ClientProfileRepresentation[]
   >([]);
   const [profiles, setProfiles] = useState<ClientProfileRepresentation[]>([]);
-
   const { control, getValues, register } = useForm();
 
   useFetch(
