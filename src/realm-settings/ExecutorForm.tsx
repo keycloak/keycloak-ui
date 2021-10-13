@@ -74,25 +74,28 @@ export const ExecutorForm = () => {
 
     delete createdExecutors.configuration.executor;
 
-    console.log(createdExecutors);
+    const profileToUpdate = profiles.filter(
+      (profile) => profile.name === profileName
+    );
 
-    const updatedProfile = {
-      executors: [createdExecutors],
-    };
+    profileToUpdate[0].executors = [createdExecutors];
 
-    // console.log(createdExecutor);
+    const updatedProfilesList = profiles.map(
+      (profile) =>
+        profileToUpdate.find(
+          (updatedProfile) => updatedProfile.name === profile.name
+        ) || profile
+    );
 
-    // const allProfiles = profiles.concat(createdProfile);
-
-    // try {
-    //   await adminClient.clientPolicies.createProfiles({
-    //     profiles: allProfiles,
-    //     globalProfiles: globalProfiles,
-    //   });
-    //   addAlert(t("realm-settings:addExecutorSuccess"), AlertVariant.success);
-    // } catch (error) {
-    //   addError("realm-settings:addExecutorError", error);
-    // }
+    try {
+      await adminClient.clientPolicies.createProfiles({
+        profiles: updatedProfilesList,
+        globalProfiles: globalProfiles,
+      });
+      addAlert(t("realm-settings:addExecutorSuccess"), AlertVariant.success);
+    } catch (error) {
+      addError("realm-settings:addExecutorError", error);
+    }
   };
 
   return (
@@ -176,14 +179,14 @@ export const ExecutorForm = () => {
                     <Controller
                       name={fldNameFormatter(option.label!)}
                       control={control}
-                      defaultValue={option.defaultValue.toString()}
+                      defaultValue={option.defaultValue}
                       render={({ onChange, value }) => (
                         <Switch
                           id="kc-executorType-switch"
                           data-testid="executorType-switch"
                           label={t("executorTypeSwitch: On")}
                           labelOff={t("executorTypeSwitch: Off")}
-                          isChecked={value === "true"}
+                          isChecked={value}
                           onChange={(value) => {
                             onChange("" + value);
                           }}
