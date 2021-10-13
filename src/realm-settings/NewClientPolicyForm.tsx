@@ -68,11 +68,11 @@ export const NewClientPolicyForm = () => {
     () => adminClient.clientPolicies.listPolicies(),
     (policies) => {
       setPolicies(policies.policies ?? []);
-      if (policyName) {
-        const currentPolicy = policies.policies?.find(
-          (item) => item.name === policyName
-        );
-        setupForm(currentPolicy!);
+      const currentPolicy = policies.policies?.find(
+        (item) => item.name === policyName
+      );
+      if (currentPolicy) {
+        setupForm(currentPolicy);
       }
     },
     []
@@ -201,7 +201,6 @@ export const NewClientPolicyForm = () => {
               variant="primary"
               onClick={save}
               data-testid="saveCreatePolicy"
-              isDisabled={form.formState.isDirty}
             >
               {t("common:save")}
             </Button>
