@@ -238,13 +238,12 @@ export const ClientProfileForm = () => {
               {profileExecutors.length > 0 ? (
                 <KeycloakDataTable
                   key={profileExecutors.length}
-                  ariaLabelKey="realm-settings:profiles"
+                  ariaLabelKey="realm-settings:executorsTable"
                   loader={loader}
                   actions={[
                     {
                       title: t("common:delete"),
-                      onRowClick: (executor) => {
-                        console.log(executor);
+                      onRowClick: () => {
                         toggleDeleteDialog();
                       },
                     },
@@ -252,7 +251,7 @@ export const ClientProfileForm = () => {
                   columns={[
                     {
                       name: "name",
-                      displayKey: t("clientProfileName"),
+                      displayKey: t("executorName"),
                       cellRenderer: cellFormatter,
                     },
                   ]}

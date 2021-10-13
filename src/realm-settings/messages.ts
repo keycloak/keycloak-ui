@@ -265,6 +265,8 @@ export default {
     executorAuthenticatorMultiSelectHelpText:
       "Executor Authenticator MultiSelect Help Text",
     executorClientAuthenticator: "Executor Client Authenticator",
+    executorsTable: "Executors table",
+    executorName: "Name",
     emptyExecutors: "No executors configured",
     addExecutorSuccess: "Success! Executor created successfully",
     addExecutorError: "Executor not created",

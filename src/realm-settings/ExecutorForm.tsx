@@ -20,12 +20,13 @@ import { Controller, useForm } from "react-hook-form";
 import type ComponentTypeRepresentation from "@keycloak/keycloak-admin-client/lib/defs/componentTypeRepresentation";
 import type { ConfigPropertyRepresentation } from "@keycloak/keycloak-admin-client/lib/defs/authenticatorConfigInfoRepresentation";
 import { HelpItem } from "../components/help-enabler/HelpItem";
-import { Link, useParams } from "react-router-dom";
+import { Link, useHistory, useParams } from "react-router-dom";
 import { useAdminClient, useFetch } from "../context/auth/AdminClient";
 import type ClientProfileRepresentation from "@keycloak/keycloak-admin-client/lib/defs/clientProfileRepresentation";
 
 export const ExecutorForm = () => {
   const { t } = useTranslation("realm-settings");
+  const history = useHistory();
   const { realm, profileName } =
     useParams<{ realm: string; profileName: string }>();
   const { addAlert, addError } = useAlerts();
@@ -92,6 +93,7 @@ export const ExecutorForm = () => {
         globalProfiles: globalProfiles,
       });
       addAlert(t("realm-settings:addExecutorSuccess"), AlertVariant.success);
+      history.push(`/${realm}/realm-settings/clientPolicies/${profileName}`);
     } catch (error) {
       addError("realm-settings:addExecutorError", error);
     }
