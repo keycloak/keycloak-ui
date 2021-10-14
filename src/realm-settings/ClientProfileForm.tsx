@@ -34,6 +34,7 @@ import { PlusCircleIcon, TrashIcon } from "@patternfly/react-icons";
 import "./RealmSettingsSection.css";
 import { useConfirmDialog } from "../components/confirm-dialog/ConfirmDialog";
 import { toAddExecutor } from "./routes/AddExecutor";
+import { useServerInfo } from "../context/server-info/ServerInfoProvider";
 
 type ClientProfileForm = Required<ClientProfileRepresentation>;
 
@@ -59,6 +60,11 @@ export const ClientProfileForm = () => {
   const history = useHistory();
   const { realm, profileName } =
     useParams<{ realm: string; profileName: string }>();
+  const serverInfo = useServerInfo();
+  const executorTypes =
+    serverInfo.componentTypes?.[
+      "org.keycloak.services.clientpolicy.executor.ClientPolicyExecutorProvider"
+    ];
   const editMode = profileName ? true : false;
 
   useFetch(
@@ -129,7 +135,7 @@ export const ClientProfileForm = () => {
   const profile = profiles.filter((profile) => profile.name === profileName);
   const profileExecutors = profile[0]?.executors || [];
 
-  console.log(profile);
+  console.log(executorTypes);
 
   return (
     <>
@@ -170,9 +176,6 @@ export const ClientProfileForm = () => {
               id="kc-client-profile-name"
               name="name"
               data-testid="client-profile-name"
-              value={
-                editMode ? (profile.length > 0 ? profile[0].name! : "") : ""
-              }
             />
           </FormGroup>
           <FormGroup label={t("common:description")} fieldId="kc-description">
@@ -183,13 +186,6 @@ export const ClientProfileForm = () => {
               type="text"
               id="kc-client-profile-description"
               data-testid="client-profile-description"
-              value={
-                editMode
-                  ? profile.length > 0
-                    ? profile[0].description!
-                    : ""
-                  : ""
-              }
             />
           </FormGroup>
           <ActionGroup>
@@ -287,18 +283,28 @@ export const ClientProfileForm = () => {
                                 // eslint-disable-next-line react/jsx-no-useless-fragment
                                 <>{executor.executor}</>
                               )}
-                              <HelpItem
-                                helpText={"test help teks"}
-                                forLabel={t("executorTypeTextHelpText")}
-                                forID={t(`common:helpLabel`, {
-                                  label: t("executorTypeTextHelpText"),
-                                })}
-                              />
-                              <TrashIcon
-                                className="kc-executor-trash-icon"
-                                data-testid="deleteClientProfileDropdown"
-                                onClick={toggleDeleteDialog}
-                              />
+                              {executorTypes?.map((type) => (
+                                <>
+                                  {""}
+                                  {type.id === executor.executor && (
+                                    <>
+                                      <HelpItem
+                                        key={`executorType-${type.id}`}
+                                        helpText={type.helpText}
+                                        forLabel={t("executorTypeTextHelpText")}
+                                        forID={t(`common:helpLabel`, {
+                                          label: t("executorTypeTextHelpText"),
+                                        })}
+                                      />
+                                      <TrashIcon
+                                        className="kc-executor-trash-icon"
+                                        data-testid="deleteClientProfileDropdown"
+                                        onClick={() => console.log(idx)}
+                                      />
+                                    </>
+                                  )}
+                                </>
+                              ))}
                             </DataListCell>,
                           ]}
                         />
