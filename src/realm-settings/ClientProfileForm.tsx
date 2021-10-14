@@ -71,6 +71,8 @@ export const ClientProfileForm = () => {
     []
   );
 
+  console.log(createdProfile);
+
   const save = async () => {
     const form = getValues();
 
@@ -80,6 +82,10 @@ export const ClientProfileForm = () => {
     };
 
     const allProfiles = profiles.concat(createdProfile);
+
+    if (editMode) {
+      console.log(editMode);
+    }
 
     try {
       await adminClient.clientPolicies.createProfiles({
@@ -97,6 +103,10 @@ export const ClientProfileForm = () => {
     } catch (error) {
       addError("realm-settings:createClientProfileError", error);
     }
+  };
+
+  const reload = () => {
+    console.log(profiles);
   };
 
   const [toggleDeleteDialog, DeleteConfirm] = useConfirmDialog({
@@ -181,22 +191,32 @@ export const ClientProfileForm = () => {
               variant="primary"
               onClick={save}
               data-testid="saveCreateProfile"
-              isDisabled={editMode ? true : false}
             >
               {t("common:save")}
             </Button>
-            <Button
-              id="cancelCreateProfile"
-              component={(props) => (
-                <Link
-                  {...props}
-                  to={`/${realm}/realm-settings/clientPolicies`}
-                />
-              )}
-              data-testid="cancelCreateProfile"
-            >
-              {editMode ? t("realm-settings:reload") : t("common:cancel")}
-            </Button>
+            {editMode ? (
+              <Button
+                id={"reloadProfile"}
+                variant="link"
+                onClick={reload}
+                data-testid={"reloadProfile"}
+              >
+                {t("realm-settings:reload")}
+              </Button>
+            ) : (
+              <Button
+                id={"cancelCreateProfile"}
+                component={(props) => (
+                  <Link
+                    {...props}
+                    to={`/${realm}/realm-settings/clientPolicies`}
+                  />
+                )}
+                data-testid={"cancelCreateProfile"}
+              >
+                {t("common:cancel")}
+              </Button>
+            )}
           </ActionGroup>
           {editMode && (
             <>
@@ -237,7 +257,7 @@ export const ClientProfileForm = () => {
                   {profileExecutors.map((executor, idx) => (
                     <DataListItem
                       aria-labelledby={"executors-list-item"}
-                      key={executor.executor}
+                      key={`list-item-${idx}`}
                       id={executor.executor}
                     >
                       <DataListItemRow data-testid="executors-list-row">
@@ -262,7 +282,11 @@ export const ClientProfileForm = () => {
                                   label: t("executorTypeTextHelpText"),
                                 })}
                               />
-                              <TrashIcon className="kc-executor-trash-icon" />
+                              <TrashIcon
+                                className="kc-executor-trash-icon"
+                                data-testid="deleteClientProfileDropdown"
+                                onClick={toggleDeleteDialog}
+                              />
                             </DataListCell>,
                           ]}
                         />
