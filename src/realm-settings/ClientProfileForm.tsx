@@ -66,8 +66,8 @@ export const ClientProfileForm = () => {
       ],
     []
   );
-  const [executorToDeleteIdx, setExecutorToDeleteIdx] = useState(0);
-  const [executorName, setExecutorName] = useState("");
+  const [executorToDelete, setExecutorToDelete] =
+    useState<{ idx: number; name: string }>();
   const editMode = profileName ? true : false;
 
   useFetch(
@@ -135,12 +135,12 @@ export const ClientProfileForm = () => {
   const [toggleExecutorDeleteDialog, DeleteExecutorConfirm] = useConfirmDialog({
     titleKey: t("deleteExecutorProfileConfirmTitle"),
     messageKey: t("deleteExecutorProfileConfirm", {
-      executorName,
+      executorName: executorToDelete?.name!,
     }),
     continueButtonLabel: t("delete"),
     continueButtonVariant: ButtonVariant.danger,
     onConfirm: async () => {
-      profileExecutors.splice(executorToDeleteIdx, 1);
+      profileExecutors.splice(executorToDelete?.idx!, 1);
 
       try {
         await adminClient.clientPolicies.createProfiles({
@@ -324,8 +324,10 @@ export const ClientProfileForm = () => {
                                         data-testid="deleteClientProfileDropdown"
                                         onClick={() => {
                                           toggleExecutorDeleteDialog();
-                                          setExecutorToDeleteIdx(idx);
-                                          setExecutorName(type.id);
+                                          setExecutorToDelete({
+                                            idx: idx,
+                                            name: type.id,
+                                          });
                                         }}
                                       />
                                     </>

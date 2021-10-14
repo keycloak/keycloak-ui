@@ -78,7 +78,9 @@ export const ProfilesTab = () => {
 
   const [toggleDeleteDialog, DeleteConfirm] = useConfirmDialog({
     titleKey: t("deleteClientProfileConfirmTitle"),
-    messageKey: t("deleteClientProfileConfirm"),
+    messageKey: t("deleteClientProfileConfirm", {
+      profileName: selectedProfile?.name,
+    }),
     continueButtonLabel: t("delete"),
     continueButtonVariant: ButtonVariant.danger,
     onConfirm: async () => {
