@@ -197,6 +197,8 @@ export default {
     createPolicy: "Create policy",
     createClientPolicy: "Create client policy",
     createClientPolicySuccess: "New policy created",
+    createClientConditionSuccess: "Condition created successfully.",
+    createClientConditionError: "Error creating condition: {{error}}",
     clientPolicySearch: "Search client policy",
     policiesConfigType: "Configure via:",
     policiesConfigTypes: {

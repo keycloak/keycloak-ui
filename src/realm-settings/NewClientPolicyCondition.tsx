@@ -95,11 +95,11 @@ export const NewClientPolicyCondition = () => {
       });
       setPolicies(newPolicies);
       addAlert(
-        t("realm-settings:createClientPolicySuccess"),
+        t("realm-settings:createClientConditionSuccess"),
         AlertVariant.success
       );
     } catch (error) {
-      addError("realm-settings:createClientProfileError", error);
+      addError("realm-settings:createClientConditionError", error);
     }
   };
 
