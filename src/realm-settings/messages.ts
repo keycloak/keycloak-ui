@@ -230,7 +230,7 @@ export default {
       "There are no profiles, select 'Create client profile' to create a new client profile",
     deleteClientProfileConfirmTitle: "Delete profile?",
     deleteClientProfileConfirm:
-      "This action will permanently delete the profile custom-profile. This cannot be undone.",
+      "This action will permanently delete the profile {{profileName}}. This cannot be undone.",
     deleteClientSuccess: "Client profile deleted",
     deleteClientError: "Could not delete profile: {{error}}",
     createClientProfile: "Create client profile",
@@ -272,7 +272,7 @@ export default {
     addExecutorError: "Executor not created",
     deleteExecutorProfileConfirmTitle: "Delete executor?",
     deleteExecutorProfileConfirm:
-      "The action will permanently delete <executorName>. This cannot be undone.",
+      "The action will permanently delete {{executorName}}. This cannot be undone.",
     deleteExecutorSuccess: "Success! The executor was deleted.",
     deleteExecutorError: "Could not delete executor: {{error}}",
     updateClientProfilesSuccess:

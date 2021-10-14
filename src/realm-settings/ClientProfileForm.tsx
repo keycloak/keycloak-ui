@@ -55,8 +55,6 @@ export const ClientProfileForm = () => {
     ClientProfileRepresentation[]
   >([]);
   const [profiles, setProfiles] = useState<ClientProfileRepresentation[]>([]);
-  const [createdProfile, setCreatedProfile] =
-    useState<ClientProfileRepresentation>();
   const history = useHistory();
   const { realm, profileName } =
     useParams<{ realm: string; profileName: string }>();
@@ -68,7 +66,8 @@ export const ClientProfileForm = () => {
       ],
     []
   );
-  const [executorToDelete, setExecutorToDelete] = useState(0);
+  const [executorToDeleteIdx, setExecutorToDeleteIdx] = useState(0);
+  const [executorName, setExecutorName] = useState("");
   const editMode = profileName ? true : false;
 
   useFetch(
@@ -100,7 +99,6 @@ export const ClientProfileForm = () => {
         t("realm-settings:createClientProfileSuccess"),
         AlertVariant.success
       );
-      setCreatedProfile(createdProfile);
       history.push(
         `/${realm}/realm-settings/clientPolicies/${createdProfile.name}`
       );
@@ -111,12 +109,14 @@ export const ClientProfileForm = () => {
 
   const [toggleDeleteDialog, DeleteConfirm] = useConfirmDialog({
     titleKey: t("deleteClientProfileConfirmTitle"),
-    messageKey: t("deleteClientProfileConfirm"),
+    messageKey: t("deleteClientProfileConfirm", {
+      profileName,
+    }),
     continueButtonLabel: t("delete"),
     continueButtonVariant: ButtonVariant.danger,
     onConfirm: async () => {
       const updatedProfiles = profiles.filter(
-        (profile) => profile.name !== createdProfile?.name
+        (profile) => profile.name !== profileName
       );
 
       try {
@@ -134,11 +134,13 @@ export const ClientProfileForm = () => {
 
   const [toggleExecutorDeleteDialog, DeleteExecutorConfirm] = useConfirmDialog({
     titleKey: t("deleteExecutorProfileConfirmTitle"),
-    messageKey: t("deleteExecutorProfileConfirm"),
+    messageKey: t("deleteExecutorProfileConfirm", {
+      executorName,
+    }),
     continueButtonLabel: t("delete"),
     continueButtonVariant: ButtonVariant.danger,
     onConfirm: async () => {
-      profileExecutors.splice(executorToDelete, 1);
+      profileExecutors.splice(executorToDeleteIdx, 1);
 
       try {
         await adminClient.clientPolicies.createProfiles({
@@ -322,7 +324,8 @@ export const ClientProfileForm = () => {
                                         data-testid="deleteClientProfileDropdown"
                                         onClick={() => {
                                           toggleExecutorDeleteDialog();
-                                          setExecutorToDelete(idx);
+                                          setExecutorToDeleteIdx(idx);
+                                          setExecutorName(type.id);
                                         }}
                                       />
                                     </>
