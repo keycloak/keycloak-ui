@@ -103,11 +103,6 @@ export const ClientProfileForm = () => {
     }
   };
 
-  const reload = () => {
-    //Todo - possibly needed for edit, but need a confirmation
-    console.log("reload");
-  };
-
   const [toggleDeleteDialog, DeleteConfirm] = useConfirmDialog({
     titleKey: t("deleteClientProfileConfirmTitle"),
     messageKey: t("deleteClientProfileConfirm"),
@@ -133,6 +128,8 @@ export const ClientProfileForm = () => {
 
   const profile = profiles.filter((profile) => profile.name === profileName);
   const profileExecutors = profile[0]?.executors || [];
+
+  console.log(profile);
 
   return (
     <>
@@ -173,6 +170,9 @@ export const ClientProfileForm = () => {
               id="kc-client-profile-name"
               name="name"
               data-testid="client-profile-name"
+              value={
+                editMode ? (profile.length > 0 ? profile[0].name! : "") : ""
+              }
             />
           </FormGroup>
           <FormGroup label={t("common:description")} fieldId="kc-description">
@@ -183,6 +183,13 @@ export const ClientProfileForm = () => {
               type="text"
               id="kc-client-profile-description"
               data-testid="client-profile-description"
+              value={
+                editMode
+                  ? profile.length > 0
+                    ? profile[0].description!
+                    : ""
+                  : ""
+              }
             />
           </FormGroup>
           <ActionGroup>
@@ -190,6 +197,7 @@ export const ClientProfileForm = () => {
               variant="primary"
               onClick={save}
               data-testid="saveCreateProfile"
+              isDisabled={editMode ? true : false}
             >
               {t("common:save")}
             </Button>
@@ -197,7 +205,6 @@ export const ClientProfileForm = () => {
               <Button
                 id={"reloadProfile"}
                 variant="link"
-                onClick={reload}
                 data-testid={"reloadProfile"}
               >
                 {t("realm-settings:reload")}
