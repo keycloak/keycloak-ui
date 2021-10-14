@@ -32,6 +32,7 @@ import { useConfirmDialog } from "../components/confirm-dialog/ConfirmDialog";
 import type ClientPolicyRepresentation from "@keycloak/keycloak-admin-client/lib/defs/clientPolicyRepresentation";
 import { toClientPolicies } from "./routes/ClientPolicies";
 import type { EditClientPolicyParams } from "./routes/EditClientPolicy";
+import { toNewClientPolicyCondition } from "./routes/AddCondition";
 
 type NewClientPolicyForm = Required<ClientPolicyRepresentation>;
 
@@ -238,7 +239,10 @@ export const NewClientPolicyForm = () => {
                     component={(props) => (
                       <Link
                         {...props}
-                        to={`/${realm}/realm-settings/clientPolicies`}
+                        to={toNewClientPolicyCondition({
+                          realm,
+                          policyName: policyName,
+                        })}
                       ></Link>
                     )}
                     variant="link"
