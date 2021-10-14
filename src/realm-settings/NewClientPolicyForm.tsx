@@ -114,11 +114,6 @@ export const NewClientPolicyForm = () => {
         AlertVariant.success
       );
       setShowAddConditionsAndProfilesForm(true);
-      // history.push(
-      //   `/${realm}/realm-settings/clientPolicies/${
-      //     form.getValues().name
-      //   }/edit-policy`
-      // );
       setCreatedPolicy(createdPolicy);
     } catch (error) {
       addError("realm-settings:createClientProfileError", error);
@@ -153,10 +148,8 @@ export const NewClientPolicyForm = () => {
       <ViewHeader
         titleKey={
           showAddConditionsAndProfilesForm
-            ? // || policyName
-              createdPolicy?.name!
-            : // || policyName
-              t("createPolicy")
+            ? createdPolicy?.name!
+            : t("createPolicy")
         }
         divider
         dropdownItems={

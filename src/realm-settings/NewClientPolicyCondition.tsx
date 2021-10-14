@@ -166,18 +166,12 @@ export const NewClientPolicyCondition = () => {
           <ActionGroup>
             <Button
               variant="primary"
-              // isDisabled={!formState.isDirty}
               type="submit"
               data-testid="localization-tab-save"
             >
               {t("common:save")}
             </Button>
-            <Button
-              variant="link"
-              //  onClick={reset}
-            >
-              {t("common:revert")}
-            </Button>
+            <Button variant="link">{t("common:revert")}</Button>
           </ActionGroup>
         </FormAccess>
       </FormPanel>
