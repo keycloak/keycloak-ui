@@ -71,8 +71,6 @@ export const ClientProfileForm = () => {
     []
   );
 
-  console.log(createdProfile);
-
   const save = async () => {
     const form = getValues();
 
@@ -106,7 +104,8 @@ export const ClientProfileForm = () => {
   };
 
   const reload = () => {
-    console.log(profiles);
+    //Todo - possibly needed for edit, but need a confirmation
+    console.log("reload");
   };
 
   const [toggleDeleteDialog, DeleteConfirm] = useConfirmDialog({
@@ -267,14 +266,20 @@ export const ClientProfileForm = () => {
                               data-testid="executor-type"
                               key={`name-${idx}`}
                             >
-                              <Link
-                                key={executor.executor}
-                                data-testid="executor-type-link"
-                                to={""}
-                                className="kc-executor-link"
-                              >
-                                {executor.executor}
-                              </Link>
+                              {Object.keys(executor.configuration!).length !==
+                              0 ? (
+                                <Link
+                                  key={executor.executor}
+                                  data-testid="executor-type-link"
+                                  to={""}
+                                  className="kc-executor-link"
+                                >
+                                  {executor.executor}
+                                </Link>
+                              ) : (
+                                // eslint-disable-next-line react/jsx-no-useless-fragment
+                                <>{executor.executor}</>
+                              )}
                               <HelpItem
                                 helpText={"test help teks"}
                                 forLabel={t("executorTypeTextHelpText")}
