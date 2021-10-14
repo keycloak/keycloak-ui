@@ -4,6 +4,11 @@ import {
   AlertVariant,
   Button,
   ButtonVariant,
+  DataList,
+  DataListCell,
+  DataListItem,
+  DataListItemCells,
+  DataListItemRow,
   Divider,
   DropdownItem,
   Flex,
@@ -25,12 +30,10 @@ import { useAlerts } from "../components/alert/Alerts";
 import { useAdminClient, useFetch } from "../context/auth/AdminClient";
 import type ClientProfileRepresentation from "@keycloak/keycloak-admin-client/lib/defs/clientProfileRepresentation";
 import { HelpItem } from "../components/help-enabler/HelpItem";
-import { PlusCircleIcon } from "@patternfly/react-icons";
+import { PlusCircleIcon, TrashIcon } from "@patternfly/react-icons";
 import "./RealmSettingsSection.css";
 import { useConfirmDialog } from "../components/confirm-dialog/ConfirmDialog";
 import { toAddExecutor } from "./routes/AddExecutor";
-import { KeycloakDataTable } from "../components/table-toolbar/KeycloakDataTable";
-import type ClientPolicyExecutorRepresentation from "@keycloak/keycloak-admin-client/lib/defs/clientPolicyExecutorRepresentation";
 
 type ClientProfileForm = Required<ClientProfileRepresentation>;
 
@@ -121,11 +124,6 @@ export const ClientProfileForm = () => {
 
   const profile = profiles.filter((profile) => profile.name === profileName);
   const profileExecutors = profile[0]?.executors || [];
-  const loader = async () => [profileExecutors[0]];
-
-  const cellFormatter = (row: ClientPolicyExecutorRepresentation) => (
-    <Link to="/">{row.executor}</Link>
-  );
 
   return (
     <>
@@ -234,32 +232,54 @@ export const ClientProfileForm = () => {
                   </Button>
                 </FlexItem>
               </Flex>
-              <Divider />
               {profileExecutors.length > 0 ? (
-                <KeycloakDataTable
-                  key={profileExecutors.length}
-                  ariaLabelKey="realm-settings:executorsTable"
-                  loader={loader}
-                  actions={[
-                    {
-                      title: t("common:delete"),
-                      onRowClick: () => {
-                        toggleDeleteDialog();
-                      },
-                    },
-                  ]}
-                  columns={[
-                    {
-                      name: "name",
-                      displayKey: t("executorName"),
-                      cellRenderer: cellFormatter,
-                    },
-                  ]}
-                />
+                <DataList aria-label={t("executors")} isCompact>
+                  {profileExecutors.map((executor, idx) => (
+                    <DataListItem
+                      aria-labelledby={"executors-list-item"}
+                      key={executor.executor}
+                      id={executor.executor}
+                    >
+                      <DataListItemRow data-testid="executors-list-row">
+                        <DataListItemCells
+                          dataListCells={[
+                            <DataListCell
+                              data-testid="executor-type"
+                              key={`name-${idx}`}
+                            >
+                              <Link
+                                key={executor.executor}
+                                data-testid="executor-type-link"
+                                to={""}
+                                className="kc-executor-link"
+                              >
+                                {executor.executor}
+                              </Link>
+                              <HelpItem
+                                helpText={"test help teks"}
+                                forLabel={t("executorTypeTextHelpText")}
+                                forID={t(`common:helpLabel`, {
+                                  label: t("executorTypeTextHelpText"),
+                                })}
+                              />
+                              <TrashIcon className="kc-executor-trash-icon" />
+                            </DataListCell>,
+                          ]}
+                        />
+                      </DataListItemRow>
+                    </DataListItem>
+                  ))}
+                </DataList>
               ) : (
-                <Text className="kc-emptyExecutors" component={TextVariants.h6}>
-                  {t("realm-settings:emptyExecutors")}
-                </Text>
+                <>
+                  <Divider />
+                  <Text
+                    className="kc-emptyExecutors"
+                    component={TextVariants.h6}
+                  >
+                    {t("realm-settings:emptyExecutors")}
+                  </Text>
+                </>
               )}
             </>
           )}

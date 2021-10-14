@@ -201,3 +201,11 @@ article.pf-c-card.pf-m-flat.kc-login-settings-template
 .kc-action-dropdown {
   background-color: transparent;
 }
+
+.kc-executor-link {
+  margin-right: 10px;
+}
+
+.kc-executor-trash-icon {
+  margin-left: 10px;
+}

@@ -78,7 +78,12 @@ export const ExecutorForm = () => {
       (profile) => profile.name === profileName
     );
 
-    profileToUpdate[0].executors = [createdExecutors];
+    if (profileToUpdate[0].executors!.length > 0) {
+      const executors = profileToUpdate[0].executors;
+      profileToUpdate[0].executors = executors?.concat([createdExecutors]);
+    } else {
+      profileToUpdate[0].executors = [createdExecutors];
+    }
 
     const updatedProfilesList = profiles.map(
       (profile) =>
