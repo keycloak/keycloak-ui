@@ -87,10 +87,6 @@ export const ClientProfileForm = () => {
 
     const allProfiles = profiles.concat(createdProfile);
 
-    if (editMode) {
-      console.log(editMode);
-    }
-
     try {
       await adminClient.clientPolicies.createProfiles({
         profiles: allProfiles,
@@ -134,8 +130,6 @@ export const ClientProfileForm = () => {
 
   const profile = profiles.filter((profile) => profile.name === profileName);
   const profileExecutors = profile[0]?.executors || [];
-
-  console.log(executorTypes);
 
   return (
     <>
