@@ -270,6 +270,11 @@ export default {
     emptyExecutors: "No executors configured",
     addExecutorSuccess: "Success! Executor created successfully",
     addExecutorError: "Executor not created",
+    deleteExecutorProfileConfirmTitle: "Delete executor?",
+    deleteExecutorProfileConfirm:
+      "The action will permanently delete <executorName>. This cannot be undone.",
+    deleteExecutorSuccess: "Success! The executor was deleted.",
+    deleteExecutorError: "Could not delete executor: {{error}}",
     updateClientProfilesSuccess:
       "The client profiles configuration was updated",
     updateClientProfilesError:

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useMemo, useState } from "react";
 import {
   ActionGroup,
   AlertVariant,
@@ -61,10 +61,14 @@ export const ClientProfileForm = () => {
   const { realm, profileName } =
     useParams<{ realm: string; profileName: string }>();
   const serverInfo = useServerInfo();
-  const executorTypes =
-    serverInfo.componentTypes?.[
-      "org.keycloak.services.clientpolicy.executor.ClientPolicyExecutorProvider"
-    ];
+  const executorTypes = useMemo(
+    () =>
+      serverInfo.componentTypes?.[
+        "org.keycloak.services.clientpolicy.executor.ClientPolicyExecutorProvider"
+      ],
+    []
+  );
+  const [executorToDelete, setExecutorToDelete] = useState(0);
   const editMode = profileName ? true : false;
 
   useFetch(
@@ -128,12 +132,34 @@ export const ClientProfileForm = () => {
     },
   });
 
+  const [toggleExecutorDeleteDialog, DeleteExecutorConfirm] = useConfirmDialog({
+    titleKey: t("deleteExecutorProfileConfirmTitle"),
+    messageKey: t("deleteExecutorProfileConfirm"),
+    continueButtonLabel: t("delete"),
+    continueButtonVariant: ButtonVariant.danger,
+    onConfirm: async () => {
+      profileExecutors.splice(executorToDelete, 1);
+
+      try {
+        await adminClient.clientPolicies.createProfiles({
+          profiles: profiles,
+          globalProfiles,
+        });
+        addAlert(t("deleteExecutorSuccess"), AlertVariant.success);
+        history.push(`/${realm}/realm-settings/clientPolicies/${profileName}`);
+      } catch (error) {
+        addError(t("deleteExecutorError"), error);
+      }
+    },
+  });
+
   const profile = profiles.filter((profile) => profile.name === profileName);
   const profileExecutors = profile[0]?.executors || [];
 
   return (
     <>
       <DeleteConfirm />
+      <DeleteExecutorConfirm />
       <ViewHeader
         titleKey={editMode ? profileName : t("newClientProfile")}
         divider
@@ -260,8 +286,8 @@ export const ClientProfileForm = () => {
                         <DataListItemCells
                           dataListCells={[
                             <DataListCell
-                              data-testid="executor-type"
                               key={`name-${idx}`}
+                              data-testid="executor-type"
                             >
                               {Object.keys(executor.configuration!).length !==
                               0 ? (
@@ -291,9 +317,13 @@ export const ClientProfileForm = () => {
                                         })}
                                       />
                                       <TrashIcon
+                                        key={`executorType-trash-icon-${type.id}`}
                                         className="kc-executor-trash-icon"
                                         data-testid="deleteClientProfileDropdown"
-                                        onClick={() => console.log(idx)}
+                                        onClick={() => {
+                                          toggleExecutorDeleteDialog();
+                                          setExecutorToDelete(idx);
+                                        }}
                                       />
                                     </>
                                   )}
