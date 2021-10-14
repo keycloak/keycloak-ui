@@ -31,8 +31,8 @@ import "./RealmSettingsSection.css";
 import { useConfirmDialog } from "../components/confirm-dialog/ConfirmDialog";
 import type ClientPolicyRepresentation from "@keycloak/keycloak-admin-client/lib/defs/clientPolicyRepresentation";
 import { toClientPolicies } from "./routes/ClientPolicies";
-import type { EditClientPolicyParams } from "./routes/EditClientPolicy";
 import { toNewClientPolicyCondition } from "./routes/AddCondition";
+import type { EditClientPolicyParams } from "./routes/EditClientPolicy";
 
 type NewClientPolicyForm = Required<ClientPolicyRepresentation>;
 
@@ -50,7 +50,6 @@ export const NewClientPolicyForm = () => {
     defaultValues,
   });
   const { realm } = useRealm();
-  const { policyName } = useParams<EditClientPolicyParams>();
   const { addAlert, addError } = useAlerts();
   const adminClient = useAdminClient();
   const [policies, setPolicies] = useState<ClientProfileRepresentation[]>([]);
@@ -61,6 +60,8 @@ export const NewClientPolicyForm = () => {
 
   const [createdPolicy, setCreatedPolicy] =
     useState<ClientPolicyRepresentation>();
+
+  const { policyName } = useParams<EditClientPolicyParams>();
 
   const history = useHistory();
   const form = useForm<ClientPolicyRepresentation>({ mode: "onChange" });
@@ -113,6 +114,11 @@ export const NewClientPolicyForm = () => {
         AlertVariant.success
       );
       setShowAddConditionsAndProfilesForm(true);
+      // history.push(
+      //   `/${realm}/realm-settings/clientPolicies/${
+      //     form.getValues().name
+      //   }/edit-policy`
+      // );
       setCreatedPolicy(createdPolicy);
     } catch (error) {
       addError("realm-settings:createClientProfileError", error);
@@ -146,9 +152,11 @@ export const NewClientPolicyForm = () => {
       <DeleteConfirm />
       <ViewHeader
         titleKey={
-          showAddConditionsAndProfilesForm || policyName
-            ? createdPolicy?.name! || policyName
-            : t("createPolicy")
+          showAddConditionsAndProfilesForm
+            ? // || policyName
+              createdPolicy?.name!
+            : // || policyName
+              t("createPolicy")
         }
         divider
         dropdownItems={
@@ -220,7 +228,7 @@ export const NewClientPolicyForm = () => {
                 : t("common:cancel")}
             </Button>
           </ActionGroup>
-          {(showAddConditionsAndProfilesForm || policyName) && (
+          {showAddConditionsAndProfilesForm && (
             <>
               <Flex>
                 <FlexItem>
@@ -241,7 +249,7 @@ export const NewClientPolicyForm = () => {
                         {...props}
                         to={toNewClientPolicyCondition({
                           realm,
-                          policyName: policyName,
+                          policyName: form.getValues().name!,
                         })}
                       ></Link>
                     )}
@@ -260,7 +268,7 @@ export const NewClientPolicyForm = () => {
               </Text>
             </>
           )}
-          {(showAddConditionsAndProfilesForm || policyName) && (
+          {showAddConditionsAndProfilesForm && (
             <>
               <Flex>
                 <FlexItem>
