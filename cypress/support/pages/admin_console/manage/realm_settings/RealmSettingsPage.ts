@@ -521,7 +521,7 @@ export default class RealmSettingsPage {
     cy.get(this.moreDrpDwnItems).click();
     cy.get(this.deleteDialogTitle).contains("Delete profile?");
     cy.get(this.deleteDialogBodyText).contains(
-      "This action will permanently delete the profile custom-profile. This cannot be undone."
+      "This action will permanently delete the profile Test. This cannot be undone."
     );
     cy.findByTestId("modalConfirm").contains("Delete");
     cy.get(this.deleteDialogCancelBtn).contains("Cancel").click();
