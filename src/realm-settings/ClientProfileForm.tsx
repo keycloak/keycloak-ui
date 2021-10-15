@@ -9,6 +9,7 @@ import {
   DataListItem,
   DataListItemCells,
   DataListItemRow,
+  Divider,
   DropdownItem,
   Flex,
   FlexItem,
@@ -283,7 +284,7 @@ export const ClientProfileForm = () => {
                   <></>
                 )}
               </Flex>
-              {profileExecutors.length > 0 ? (
+              {profileExecutors.length > 0 && (
                 <DataList aria-label={t("executors")} isCompact>
                   {profileExecutors.map((executor, idx) => (
                     <DataListItem
@@ -348,67 +349,70 @@ export const ClientProfileForm = () => {
                     </DataListItem>
                   ))}
                 </DataList>
-              ) : (
+              )}
+              {globalProfileExecutors.length > 0 && (
                 <DataList aria-label={t("executors")} isCompact>
-                  {globalProfileExecutors.length > 0 &&
-                    globalProfileExecutors.map((executor, idx) => (
-                      <DataListItem
-                        aria-labelledby={"global-executors-list-item"}
-                        key={`global-list-item-${idx}`}
-                        id={executor.executor}
-                      >
-                        <DataListItemRow data-testid="global-executors-list-row">
-                          <DataListItemCells
-                            dataListCells={[
-                              <DataListCell
-                                key={`global-name-${idx}`}
-                                data-testid="global-executor-type"
-                              >
-                                {Object.keys(executor.configuration!).length !==
-                                0 ? (
-                                  <Link
-                                    key={executor.executor}
-                                    data-testid="global-executor-type-link"
-                                    to={""}
-                                    className="kc-global-executor-link"
-                                  >
-                                    {executor.executor}
-                                  </Link>
-                                ) : (
-                                  // eslint-disable-next-line react/jsx-no-useless-fragment
-                                  <>{executor.executor}</>
-                                )}
-                                {executorTypes?.map((type) => (
-                                  <>
-                                    {""}
-                                    {type.id === executor.executor && (
-                                      <HelpItem
-                                        key={`global-executorType-${type.id}`}
-                                        helpText={type.helpText}
-                                        forLabel={t("executorTypeTextHelpText")}
-                                        forID={t(`common:helpLabel`, {
-                                          label: t("executorTypeTextHelpText"),
-                                        })}
-                                      />
-                                    )}
-                                  </>
-                                ))}
-                              </DataListCell>,
-                            ]}
-                          />
-                        </DataListItemRow>
-                      </DataListItem>
-                    ))}
+                  {globalProfileExecutors.map((executor, idx) => (
+                    <DataListItem
+                      aria-labelledby={"global-executors-list-item"}
+                      key={`global-list-item-${idx}`}
+                      id={executor.executor}
+                    >
+                      <DataListItemRow data-testid="global-executors-list-row">
+                        <DataListItemCells
+                          dataListCells={[
+                            <DataListCell
+                              key={`global-name-${idx}`}
+                              data-testid="global-executor-type"
+                            >
+                              {Object.keys(executor.configuration!).length !==
+                              0 ? (
+                                <Link
+                                  key={executor.executor}
+                                  data-testid="global-executor-type-link"
+                                  to={""}
+                                  className="kc-global-executor-link"
+                                >
+                                  {executor.executor}
+                                </Link>
+                              ) : (
+                                // eslint-disable-next-line react/jsx-no-useless-fragment
+                                <>{executor.executor}</>
+                              )}
+                              {executorTypes?.map((type) => (
+                                <>
+                                  {""}
+                                  {type.id === executor.executor && (
+                                    <HelpItem
+                                      key={`global-executorType-${type.id}`}
+                                      helpText={type.helpText}
+                                      forLabel={t("executorTypeTextHelpText")}
+                                      forID={t(`common:helpLabel`, {
+                                        label: t("executorTypeTextHelpText"),
+                                      })}
+                                    />
+                                  )}
+                                </>
+                              ))}
+                            </DataListCell>,
+                          ]}
+                        />
+                      </DataListItemRow>
+                    </DataListItem>
+                  ))}
                 </DataList>
               )}
               {profileExecutors.length === 0 &&
                 globalProfileExecutors.length === 0 && (
-                  <Text
-                    className="kc-emptyExecutors"
-                    component={TextVariants.h6}
-                  >
-                    {t("realm-settings:emptyExecutors")}
-                  </Text>
+                  <>
+                    <Divider />
+                    <Text
+                      className="kc-emptyExecutors"
+                      component={TextVariants.h6}
+                    >
+                      {t("realm-settings:emptyExecutors")}
+                    </Text>
+                  </>
                 )}
             </>
           )}
