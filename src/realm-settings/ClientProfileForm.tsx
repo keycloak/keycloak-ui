@@ -9,7 +9,6 @@ import {
   DataListItem,
   DataListItemCells,
   DataListItemRow,
-  Divider,
   DropdownItem,
   Flex,
   FlexItem,
@@ -157,6 +156,8 @@ export const ClientProfileForm = () => {
 
   const profile = profiles.filter((profile) => profile.name === profileName);
   const profileExecutors = profile[0]?.executors || [];
+  const globalProfile = globalProfiles.filter((globalProfile) => globalProfile.name === profileName);
+  const globalProfileExecutors = globalProfile[0]?.executors || [];
 
   return (
     <>
@@ -254,26 +255,28 @@ export const ClientProfileForm = () => {
                     />
                   </Text>
                 </FlexItem>
-                <FlexItem align={{ default: "alignRight" }}>
-                  <Button
-                    id="addExecutor"
-                    component={(props) => (
-                      <Link
-                        {...props}
-                        to={toAddExecutor({
-                          realm,
-                          profileName,
-                        })}
-                      ></Link>
-                    )}
-                    variant="link"
-                    className="kc-addExecutor"
-                    data-testid="cancelCreateProfile"
-                    icon={<PlusCircleIcon />}
-                  >
-                    {t("realm-settings:addExecutor")}
-                  </Button>
-                </FlexItem>
+                {Object.keys(profile).length !== 0 ?
+                  <FlexItem align={{ default: "alignRight" }}>
+                    <Button
+                      id="addExecutor"
+                      component={(props) => (
+                        <Link
+                          {...props}
+                          to={toAddExecutor({
+                            realm,
+                            profileName,
+                          })}
+                        ></Link>
+                      )}
+                      variant="link"
+                      className="kc-addExecutor"
+                      data-testid="cancelCreateProfile"
+                      icon={<PlusCircleIcon />}
+                    >
+                      {t("realm-settings:addExecutor")}
+                    </Button>
+                  </FlexItem>
+                : <></>}
               </Flex>
               {profileExecutors.length > 0 ? (
                 <DataList aria-label={t("executors")} isCompact>
@@ -341,8 +344,61 @@ export const ClientProfileForm = () => {
                   ))}
                 </DataList>
               ) : (
+                <DataList aria-label={t("executors")} isCompact>
+                  {globalProfileExecutors.length > 0 && globalProfileExecutors.map((executor, idx) => (
+                    <DataListItem
+                      aria-labelledby={"global-executors-list-item"}
+                      key={`global-list-item-${idx}`}
+                      id={executor.executor}
+                    >
+                      <DataListItemRow data-testid="global-executors-list-row">
+                        <DataListItemCells
+                          dataListCells={[
+                            <DataListCell
+                              key={`global-name-${idx}`}
+                              data-testid="global-executor-type"
+                            >
+                              {Object.keys(executor.configuration!).length !==
+                              0 ? (
+                                <Link
+                                  key={executor.executor}
+                                  data-testid="global-executor-type-link"
+                                  to={""}
+                                  className="kc-global-executor-link"
+                                >
+                                  {executor.executor}
+                                </Link>
+                              ) : (
+                                // eslint-disable-next-line react/jsx-no-useless-fragment
+                                <>{executor.executor}</>
+                              )}
+                              {executorTypes?.map((type) => (
+                                <>
+                                  {""}
+                                  {type.id === executor.executor && (
+                                    <>
+                                      <HelpItem
+                                        key={`global-executorType-${type.id}`}
+                                        helpText={type.helpText}
+                                        forLabel={t("executorTypeTextHelpText")}
+                                        forID={t(`common:helpLabel`, {
+                                          label: t("executorTypeTextHelpText"),
+                                        })}
+                                      />
+                                    </>
+                                  )}
+                                </>
+                              ))}
+                            </DataListCell>,
+                          ]}
+                        />
+                      </DataListItemRow>
+                    </DataListItem>
+                  ))}
+                </DataList>
+              )}
+              {profileExecutors.length === 0 && globalProfileExecutors.length === 0 && (
                 <>
-                  <Divider />
                   <Text
                     className="kc-emptyExecutors"
                     component={TextVariants.h6}
