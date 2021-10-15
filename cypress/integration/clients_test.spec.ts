@@ -279,12 +279,119 @@ describe("Clients test", () => {
       keycloakBefore();
       loginPage.logIn();
       sidebarPage.goToClients();
+      cy.intercept("/auth/admin/realms/master/clients/*").as("fetchClient");
       listingPage.searchItem(clientId).goToItemDetails(clientId);
+      cy.wait("@fetchClient");
     });
 
     it("shows an explainer text for bearer only clients", () => {
       cy.findByTestId("bearer-only-explainer-label").trigger("mouseenter");
       cy.findByTestId("bearer-only-explainer-tooltip").should("exist");
+    });
+
+    it("hides the capability config section", () => {
+      cy.findByTestId("capability-config-form").should("not.exist");
+      cy.findByTestId("jump-link-capability-config").should("not.exist");
+    });
+  });
+  describe("SAML test", () => {
+    const samlClientName = "saml";
+
+    before(() => {
+      new AdminClient().createClient({
+        protocol: "saml",
+        clientId: samlClientName,
+        publicClient: false,
+      });
+    });
+
+    after(() => {
+      new AdminClient().deleteClient(samlClientName);
+    });
+
+    beforeEach(() => {
+      keycloakBefore();
+      loginPage.logIn();
+      sidebarPage.goToClients();
+      listingPage.searchItem(samlClientName).goToItemDetails(samlClientName);
+    });
+
+    it("should display the saml sections on details screen", () => {
+      cy.get(".pf-c-jump-links__list").should(($ul) => {
+        expect($ul)
+          .to.contain("SAML capabilities")
+          .to.contain("Signature and Encryption");
+      });
+    });
+
+    it("should save force name id format", () => {
+      const load = "auth/admin/realms/master/client-scopes";
+      cy.intercept(load).as("load");
+
+      cy.get(".pf-c-jump-links__list").contains("SAML capabilities").click();
+      cy.wait("@load");
+
+      cy.findByTestId("forceNameIdFormat").click({
+        force: true,
+      });
+      cy.findByTestId("settingsSave").click();
+      masthead.checkNotificationMessage("Client successfully updated");
+    });
+  });
+
+  describe("SAML keys tab", () => {
+    const clientId = "saml-keys";
+
+    before(() => {
+      new AdminClient().createClient({
+        clientId,
+        protocol: "saml",
+      });
+    });
+
+    after(() => {
+      new AdminClient().deleteClient(clientId);
+    });
+
+    beforeEach(() => {
+      keycloakBefore();
+      loginPage.logIn();
+      sidebarPage.goToClients();
+      listingPage.searchItem(clientId).goToItemDetails(clientId);
+      cy.get("#pf-tab-keys-keys").click();
+    });
+
+    it("doesn't disable when no", () => {
+      cy.findByTestId("clientSignature").click({ force: true });
+
+      modalUtils
+        .checkModalTitle('Disable "Client signature required"')
+        .cancelModal();
+
+      cy.findAllByTestId("certificate").should("have.length", 1);
+    });
+
+    it("disable client signature", () => {
+      cy.findByTestId("clientSignature").click({ force: true });
+
+      modalUtils
+        .checkModalTitle('Disable "Client signature required"')
+        .confirmModal();
+
+      masthead.checkNotificationMessage("Client successfully updated");
+      cy.findAllByTestId("certificate").should("have.length", 0);
+    });
+
+    it("should enable Encryption keys config", () => {
+      cy.findByTestId("encryptAssertions").click({ force: true });
+
+      cy.findByTestId("generate").click();
+      masthead.checkNotificationMessage(
+        "New key pair and certificate generated successfully"
+      );
+
+      modalUtils.confirmModal();
+      cy.findAllByTestId("certificate").should("have.length", 1);
     });
   });
 });

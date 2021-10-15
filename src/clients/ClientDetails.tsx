@@ -53,6 +53,7 @@ import { ClientScopes } from "./scopes/ClientScopes";
 import { EvaluateScopes } from "./scopes/EvaluateScopes";
 import { ServiceAccount } from "./service-account/ServiceAccount";
 import { isRealmClient, getProtocolName } from "./utils";
+import { SamlKeys } from "./keys/SamlKeys";
 
 type ClientDetailHeaderProps = {
   onChange: (value: boolean) => void;
@@ -180,7 +181,7 @@ export const ClientDetails = () => {
     setChangeAuthenticatorOpen(!changeAuthenticatorOpen);
   const [activeTab2, setActiveTab2] = useState(30);
 
-  const form = useForm<ClientForm>();
+  const form = useForm<ClientForm>({ shouldUnregister: false });
   const { clientId } = useParams<ClientParams>();
 
   const clientAuthenticatorType = useWatch({
@@ -337,17 +338,24 @@ export const ClientDetails = () => {
               title={<TabTitleText>{t("common:settings")}</TabTitleText>}
             >
               <ClientSettings
+                client={client}
                 save={() => save()}
                 reset={() => setupForm(client)}
               />
             </Tab>
-            {!client.publicClient && !isRealmClient(client) && (
+            {((!client.publicClient && !isRealmClient(client)) ||
+              client.protocol === "saml") && (
               <Tab
                 id="keys"
                 eventKey="keys"
                 title={<TabTitleText>{t("keys")}</TabTitleText>}
               >
-                <Keys clientId={clientId} save={() => save()} />
+                {client.protocol === "openid-connect" && (
+                  <Keys clientId={clientId} save={save} />
+                )}
+                {client.protocol === "saml" && (
+                  <SamlKeys clientId={clientId} save={save} />
+                )}
               </Tab>
             )}
             {!client.publicClient && !isRealmClient(client) && (

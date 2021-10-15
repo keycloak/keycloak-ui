@@ -20,10 +20,11 @@ export default {
     deleteProvider: "Delete provider?",
     deleteProviderMapper: "Delete mapper?",
     deleteConfirm:
-      "Are you sure you want to permanently delete the provider '{{provider}}'",
+      "Are you sure you want to permanently delete the provider '{{provider}}'?",
     deleteMapperConfirm:
-      "Are you sure you want to permanently delete the mapper '{{mapper}}'",
-    deletedSuccess: "Provider successfully deleted",
+      "Are you sure you want to permanently delete the mapper {{mapper}}?",
+    deleteMapperSuccess: "Mapper successfully deleted.",
+    deletedSuccess: "Provider successfully deleted.",
     deleteError: "Could not delete the provider {{error}}",
     disableProvider: "Disable provider?",
     disableConfirm:
@@ -74,6 +75,7 @@ export default {
     claim: "Claim",
     claimValue: "Claim Value",
     claims: "Claims",
+    socialProfileJSONFieldPath: "Social Profile JSON Field Path",
     mapperAttributeName: "Attribute Name",
     mapperUserAttributeName: "User Attribute Name",
     mapperAttributeFriendlyName: "Friendly name",

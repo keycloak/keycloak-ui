@@ -9,7 +9,6 @@ import {
   TextInput,
 } from "@patternfly/react-core";
 import type RealmRepresentation from "@keycloak/keycloak-admin-client/lib/defs/realmRepresentation";
-import type UserRepresentation from "@keycloak/keycloak-admin-client/lib/defs/userRepresentation";
 import React, { useState } from "react";
 import { Controller, useForm, useWatch } from "react-hook-form";
 import { useTranslation } from "react-i18next";
@@ -26,12 +25,12 @@ import "./RealmSettingsSection.css";
 
 type RealmSettingsEmailTabProps = {
   realm: RealmRepresentation;
-  user: UserRepresentation;
 };
+
+export type EmailRegistrationCallback = (registered: boolean) => void;
 
 export const RealmSettingsEmailTab = ({
   realm: initialRealm,
-  user,
 }: RealmSettingsEmailTabProps) => {
   const { t } = useTranslation("realm-settings");
   const adminClient = useAdminClient();
@@ -40,35 +39,35 @@ export const RealmSettingsEmailTab = ({
   const { whoAmI } = useWhoAmI();
 
   const [realm, setRealm] = useState(initialRealm);
-  const [userEmailModalOpen, setUserEmailModalOpen] = useState(false);
-  const [currentUser, setCurrentUser] = useState<UserRepresentation>(user);
+  const [callback, setCallback] = useState<EmailRegistrationCallback>();
   const {
     register,
     control,
     handleSubmit,
     errors,
     watch,
-    setValue,
     reset: resetForm,
     getValues,
   } = useForm<RealmRepresentation>({ defaultValues: realm });
 
-  const userForm = useForm<UserRepresentation>({ mode: "onChange" });
+  const reset = () => resetForm(realm);
   const watchFromValue = watch("smtpServer.from", "");
   const watchHostValue = watch("smtpServer.host", "");
 
   const authenticationEnabled = useWatch({
     control,
     name: "smtpServer.authentication",
-    defaultValue: {},
+    defaultValue: "",
   });
-
-  const handleModalToggle = () => {
-    setUserEmailModalOpen(!userEmailModalOpen);
-  };
 
   const save = async (form: RealmRepresentation) => {
     try {
+      const registered = await registerEmailIfNeeded();
+
+      if (!registered) {
+        return;
+      }
+
       const savedRealm = { ...realm, ...form };
       await adminClient.realms.update({ realm: realmName }, savedRealm);
       setRealm(savedRealm);
@@ -78,36 +77,38 @@ export const RealmSettingsEmailTab = ({
     }
   };
 
-  const saveAndTestEmail = async (email?: UserRepresentation) => {
-    if (email) {
-      await adminClient.users.update({ id: whoAmI.getUserId() }, email);
-      setCurrentUser(email);
-
-      await save(getValues());
-      testConnection();
-    } else {
-      const user = await adminClient.users.findOne({ id: whoAmI.getUserId() });
-      if (user && !user.email) {
-        handleModalToggle();
-      } else {
-        await save(getValues());
-        testConnection();
-      }
-    }
-  };
-
-  const reset = () => {
-    if (realm) {
-      resetForm(realm);
-      Object.entries(realm).map((entry) => setValue(entry[0], entry[1]));
-    }
-  };
-
   const testConnection = async () => {
+    const serverSettings = { ...getValues()["smtpServer"] };
+
+    // Code below uses defensive coding as the server configuration uses an ambiguous record type.
+    if (typeof serverSettings.port === "string") {
+      serverSettings.port = Number(serverSettings.port);
+    }
+
+    if (typeof serverSettings.ssl === "string") {
+      serverSettings.ssl = serverSettings.ssl === true.toString();
+    }
+
+    if (typeof serverSettings.starttls === "string") {
+      serverSettings.starttls = serverSettings.starttls === true.toString();
+    }
+
+    // For some reason the API wants a duplicate field for the authentication status.
+    // Somebody thought this was a good idea, so here we are.
+    if (serverSettings.authentication === true.toString()) {
+      serverSettings.auth = true;
+    }
+
     try {
+      const registered = await registerEmailIfNeeded();
+
+      if (!registered) {
+        return;
+      }
+
       await adminClient.realms.testSMTPConnection(
         { realm: realm.realm! },
-        getValues()["smtpServer"] || {}
+        serverSettings
       );
       addAlert(t("testConnectionSuccess"), AlertVariant.success);
     } catch (error) {
@@ -115,20 +116,36 @@ export const RealmSettingsEmailTab = ({
     }
   };
 
+  /**
+   * Triggers the flow to register the user's email if the user does not yet have one configured, if successful resolves true, otherwise false.
+   */
+  const registerEmailIfNeeded = async () => {
+    const user = await adminClient.users.findOne({ id: whoAmI.getUserId() });
+
+    // A user should always be found, throw if it is not.
+    if (!user) {
+      throw new Error("Unable to find user.");
+    }
+
+    // User already has an e-mail associated with it, no need to register.
+    if (user.email) {
+      return true;
+    }
+
+    // User needs to register, show modal to do so.
+    return new Promise<boolean>((resolve) => {
+      const callback: EmailRegistrationCallback = (registered) => {
+        setCallback(undefined);
+        resolve(registered);
+      };
+
+      setCallback(() => callback);
+    });
+  };
+
   return (
     <>
-      {userEmailModalOpen && (
-        <AddUserEmailModal
-          handleModalToggle={handleModalToggle}
-          testConnection={testConnection}
-          save={(email) => {
-            saveAndTestEmail(email!);
-            handleModalToggle();
-          }}
-          form={userForm}
-          user={currentUser!}
-        />
-      )}
+      {callback && <AddUserEmailModal callback={callback} />}
       <PageSection variant="light">
         <FormPanel title={t("template")} className="kc-email-template">
           <FormAccess
@@ -311,7 +328,7 @@ export const RealmSettingsEmailTab = ({
               <Controller
                 name="smtpServer.authentication"
                 control={control}
-                defaultValue={{}}
+                defaultValue=""
                 render={({ onChange, value }) => (
                   <Switch
                     id="kc-authentication-switch"
@@ -384,13 +401,13 @@ export const RealmSettingsEmailTab = ({
               </Button>
               <Button
                 variant="secondary"
-                onClick={() => saveAndTestEmail()}
+                onClick={() => testConnection()}
                 data-testid="test-connection-button"
                 isDisabled={
                   !(emailRegexPattern.test(watchFromValue) && watchHostValue)
                 }
               >
-                {t("realm-settings:testConnection")}
+                {t("common:testConnection")}
               </Button>
               <Button variant="link" onClick={reset}>
                 {t("common:revert")}

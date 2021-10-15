@@ -10,6 +10,7 @@ import { ClientPoliciesRoute } from "./routes/ClientPolicies";
 import { AddClientProfileRoute } from "./routes/AddClientProfile";
 import { ClientProfileRoute } from "./routes/ClientProfile";
 import { AddExecutorRoute } from "./routes/AddExecutor";
+import { EditClientPolicyRoute } from "./routes/EditClientPolicy";
 
 const routes: RouteDef[] = [
   RealmSettingsRoute,
@@ -21,8 +22,9 @@ const routes: RouteDef[] = [
   RsaSettingsRoute,
   ClientPoliciesRoute,
   AddClientProfileRoute,
-  ClientProfileRoute,
   AddExecutorRoute,
+  ClientProfileRoute,
+  EditClientPolicyRoute,
 ];
 
 export default routes;

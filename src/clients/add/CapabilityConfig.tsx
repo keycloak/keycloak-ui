@@ -37,6 +37,7 @@ export const CapabilityConfig = ({
       role="manage-clients"
       unWrap={unWrap}
       className="keycloak__capability-config__form"
+      data-testid="capability-config-form"
     >
       {protocol === "openid-connect" && (
         <>
@@ -247,7 +248,7 @@ export const CapabilityConfig = ({
             hasNoPaddingTop
           >
             <Controller
-              name="attributes.saml_encrypt"
+              name="attributes.saml-encrypt"
               control={control}
               defaultValue="false"
               render={({ onChange, value }) => (
@@ -275,7 +276,7 @@ export const CapabilityConfig = ({
             hasNoPaddingTop
           >
             <Controller
-              name="attributes.saml_client_signature"
+              name="attributes.saml-client-signature"
               control={control}
               defaultValue="false"
               render={({ onChange, value }) => (

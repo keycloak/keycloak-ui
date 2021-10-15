@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import type ClientRepresentation from "@keycloak/keycloak-admin-client/lib/defs/clientRepresentation";
+import React, { useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import {
   FormGroup,
@@ -20,37 +21,58 @@ import { FormAccess } from "../components/form-access/FormAccess";
 import { HelpItem } from "../components/help-enabler/HelpItem";
 import { useServerInfo } from "../context/server-info/ServerInfoProvider";
 import { SaveReset } from "./advanced/SaveReset";
+import { SamlConfig } from "./add/SamlConfig";
+import { SamlSignature } from "./add/SamlSignature";
+import type { ClientForm } from "./ClientDetails";
 
 type ClientSettingsProps = {
+  client: ClientRepresentation;
   save: () => void;
   reset: () => void;
 };
 
-export const ClientSettings = ({ save, reset }: ClientSettingsProps) => {
-  const { register, control, watch } = useFormContext();
+export const ClientSettings = ({
+  client,
+  save,
+  reset,
+}: ClientSettingsProps) => {
+  const { register, control, watch } = useFormContext<ClientForm>();
   const { t } = useTranslation("clients");
 
   const [loginThemeOpen, setLoginThemeOpen] = useState(false);
   const loginThemes = useServerInfo().themes!["login"];
-  const consentRequired: boolean = watch("consentRequired");
+  const consentRequired = watch("consentRequired");
   const displayOnConsentScreen: string = watch(
     "attributes.display-on-consent-screen"
   );
+  const protocol = watch("protocol");
+
+  const sections = useMemo(() => {
+    let result = ["generalSettings"];
+
+    if (protocol === "saml") {
+      result = [...result, "samlCapabilityConfig", "signatureAndEncryption"];
+    } else if (!client.bearerOnly) {
+      result = [...result, "capabilityConfig"];
+    }
+
+    return [...result, "accessSettings", "loginSettings"];
+  }, [protocol, client]);
 
   return (
     <ScrollForm
       className="pf-u-px-lg"
-      sections={[
-        t("generalSettings"),
-        t("capabilityConfig"),
-        t("accessSettings"),
-        t("loginSettings"),
-      ]}
+      sections={sections.map((section) => t(section))}
     >
       <Form isHorizontal>
         <ClientDescription />
       </Form>
-      <CapabilityConfig />
+      {protocol === "saml" ? (
+        <SamlConfig />
+      ) : (
+        !client.bearerOnly && <CapabilityConfig />
+      )}
+      {protocol === "saml" && <SamlSignature />}
       <FormAccess isHorizontal role="manage-clients">
         <FormGroup
           label={t("rootUrl")}
