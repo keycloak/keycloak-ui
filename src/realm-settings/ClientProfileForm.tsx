@@ -108,49 +108,49 @@ export const ClientProfileForm = () => {
   };
 
   const [toggleDeleteDialog, DeleteConfirm] = useConfirmDialog({
-    titleKey: t("deleteClientProfileConfirmTitle"),
-    messageKey: t("deleteClientProfileConfirm", {
-      profileName,
-    }),
+    titleKey: executorToDelete?.name!
+      ? t("deleteExecutorProfileConfirmTitle")
+      : t("deleteClientProfileConfirmTitle"),
+    messageKey: executorToDelete?.name!
+      ? t("deleteExecutorProfileConfirm", {
+          executorName: executorToDelete.name!,
+        })
+      : t("deleteClientProfileConfirm", {
+          profileName,
+        }),
     continueButtonLabel: t("delete"),
     continueButtonVariant: ButtonVariant.danger,
+
     onConfirm: async () => {
-      const updatedProfiles = profiles.filter(
-        (profile) => profile.name !== profileName
-      );
+      if (executorToDelete?.name!) {
+        profileExecutors.splice(executorToDelete.idx!, 1);
+        try {
+          await adminClient.clientPolicies.createProfiles({
+            profiles: profiles,
+            globalProfiles,
+          });
+          addAlert(t("deleteExecutorSuccess"), AlertVariant.success);
+          history.push(
+            `/${realm}/realm-settings/clientPolicies/${profileName}`
+          );
+        } catch (error) {
+          addError(t("deleteExecutorError"), error);
+        }
+      } else {
+        const updatedProfiles = profiles.filter(
+          (profile) => profile.name !== profileName
+        );
 
-      try {
-        await adminClient.clientPolicies.createProfiles({
-          profiles: updatedProfiles,
-          globalProfiles,
-        });
-        addAlert(t("deleteClientSuccess"), AlertVariant.success);
-        history.push(`/${realm}/realm-settings/clientPolicies`);
-      } catch (error) {
-        addError(t("deleteClientError"), error);
-      }
-    },
-  });
-
-  const [toggleExecutorDeleteDialog, DeleteExecutorConfirm] = useConfirmDialog({
-    titleKey: t("deleteExecutorProfileConfirmTitle"),
-    messageKey: t("deleteExecutorProfileConfirm", {
-      executorName: executorToDelete?.name!,
-    }),
-    continueButtonLabel: t("delete"),
-    continueButtonVariant: ButtonVariant.danger,
-    onConfirm: async () => {
-      profileExecutors.splice(executorToDelete?.idx!, 1);
-
-      try {
-        await adminClient.clientPolicies.createProfiles({
-          profiles: profiles,
-          globalProfiles,
-        });
-        addAlert(t("deleteExecutorSuccess"), AlertVariant.success);
-        history.push(`/${realm}/realm-settings/clientPolicies/${profileName}`);
-      } catch (error) {
-        addError(t("deleteExecutorError"), error);
+        try {
+          await adminClient.clientPolicies.createProfiles({
+            profiles: updatedProfiles,
+            globalProfiles,
+          });
+          addAlert(t("deleteClientSuccess"), AlertVariant.success);
+          history.push(`/${realm}/realm-settings/clientPolicies`);
+        } catch (error) {
+          addError(t("deleteClientError"), error);
+        }
       }
     },
   });
@@ -161,7 +161,6 @@ export const ClientProfileForm = () => {
   return (
     <>
       <DeleteConfirm />
-      <DeleteExecutorConfirm />
       <ViewHeader
         titleKey={editMode ? profileName : t("newClientProfile")}
         divider
@@ -323,7 +322,7 @@ export const ClientProfileForm = () => {
                                         className="kc-executor-trash-icon"
                                         data-testid="deleteClientProfileDropdown"
                                         onClick={() => {
-                                          toggleExecutorDeleteDialog();
+                                          toggleDeleteDialog();
                                           setExecutorToDelete({
                                             idx: idx,
                                             name: type.id,
