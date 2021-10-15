@@ -27,7 +27,7 @@ describe("Events tests", () => {
 
       realmSettingsPage
         .toggleSwitch(realmSettingsPage.enableEvents)
-        .save(realmSettingsPage.eventsUserSave);
+        .save(realmSettingsPage.modalConfirm);
 
       masthead.signOut();
       loginPage.logIn();
@@ -77,7 +77,7 @@ describe("Events tests", () => {
 
       realmSettingsPage
         .toggleSwitch(realmSettingsPage.enableAdminEvents)
-        .save(realmSettingsPage.eventsAdminSave);
+        .save(realmSettingsPage.modalConfirm);
 
       sidebarPage.goToEvents();
       cy.findByTestId("admin-events-tab").click();

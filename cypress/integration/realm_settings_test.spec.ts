@@ -148,16 +148,16 @@ describe("Realm settings tests", () => {
 
       realmSettingsPage.fillHostField("localhost");
       cy.findByTestId(realmSettingsPage.testConnectionButton).click();
-
-      realmSettingsPage.fillEmailField(
-        "example" +
-          (Math.random() + 1).toString(36).substring(7) +
-          "@example.com"
-      );
-
-      cy.findByTestId(realmSettingsPage.modalTestConnectionButton).click();
-
       masthead.checkNotificationMessage("Error! Failed to send email.");
+
+      /* this modal is never displayed, always fails to send mail
+      // realmSettingsPage.fillEmailField(
+      //   "example" +
+      //     (Math.random() + 1).toString(36).substring(7) +
+      //     "@example.com"
+      // );
+      // cy.findByTestId(realmSettingsPage.modalTestConnectionButton).click();
+      */
     });
 
     it("Go to themes tab", () => {
@@ -273,6 +273,7 @@ describe("Realm settings tests", () => {
         deleteProvider("test_hmac-generated");
         deleteProvider("test_rsa-generated");
       });*/
+
     it("Test keys", () => {
       sidebarPage.goToRealmSettings();
       goToKeys();
