@@ -264,6 +264,7 @@ export default {
 
     conditions: "Conditions",
     conditionType: "Condition type",
+    policyDetails: "Policy details",
     anyClient: "The condition is satisfied by any client on any event.",
     clientAccessType:
       "It uses the client's access type (confidential, public, bearer-only) to determine whether the policy is applied. Condition is checked during most of OpenID Connect requests (Authorization requests, token requests, introspection endpoint request, etc.)",

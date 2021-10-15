@@ -5,13 +5,13 @@ import { NewClientPolicyCondition } from "../NewClientPolicyCondition";
 
 export type NewClientPolicyConditionParams = {
   realm: string;
-  policyName: string;
+  policyName?: string;
 };
 
 export const NewClientPolicyConditionRoute: RouteDef = {
-  path: "/:realm/realm-settings/clientPolicies/:policyName/create-condition",
+  path: "/:realm/realm-settings/clientPolicies/:policyName?/edit-policy/create-condition",
   component: NewClientPolicyCondition,
-  breadcrumb: (t) => t("realm-settings:createPolicy"),
+  breadcrumb: (t) => t("realm-settings:addCondition"),
   access: "manage-clients",
 };
 

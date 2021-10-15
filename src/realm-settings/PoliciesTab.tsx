@@ -58,7 +58,11 @@ export const PoliciesTab = () => {
   const loader = async () => policies ?? [];
 
   const ClientPolicyDetailLink = ({ name }: ClientPolicyRepresentation) => (
-    <Link to={toEditClientPolicy({ realm, policyName: name! })}>{name}</Link>
+    <Link
+      to={toEditClientPolicy({ realm, policyName: name!, tab: "edit-policy" })}
+    >
+      {name}
+    </Link>
   );
 
   const save = async () => {
