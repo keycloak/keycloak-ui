@@ -211,9 +211,13 @@ article.pf-c-card.pf-m-flat.kc-login-settings-template
 }
 
 .kc-executor-link {
-  margin-right: 10px;
+  margin-right: 0.625rem;
 }
 
 .kc-executor-trash-icon {
-  margin-left: 10px;
+  margin-left: 0.625rem;
+}
+
+.kc-backToPolicies {
+  width: 5rem;
 }

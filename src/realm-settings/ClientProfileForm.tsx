@@ -351,56 +351,72 @@ export const ClientProfileForm = () => {
                 </DataList>
               )}
               {globalProfileExecutors.length > 0 && (
-                <DataList aria-label={t("executors")} isCompact>
-                  {globalProfileExecutors.map((executor, idx) => (
-                    <DataListItem
-                      aria-labelledby={"global-executors-list-item"}
-                      key={`global-list-item-${idx}`}
-                      id={executor.executor}
-                    >
-                      <DataListItemRow data-testid="global-executors-list-row">
-                        <DataListItemCells
-                          dataListCells={[
-                            <DataListCell
-                              key={`global-name-${idx}`}
-                              data-testid="global-executor-type"
-                            >
-                              {Object.keys(executor.configuration!).length !==
-                              0 ? (
-                                <Link
-                                  key={executor.executor}
-                                  data-testid="global-executor-type-link"
-                                  to={""}
-                                  className="kc-global-executor-link"
-                                >
-                                  {executor.executor}
-                                </Link>
-                              ) : (
-                                // eslint-disable-next-line react/jsx-no-useless-fragment
-                                <>{executor.executor}</>
-                              )}
-                              {executorTypes?.map((type) => (
-                                <>
-                                  {""}
-                                  {type.id === executor.executor && (
-                                    <HelpItem
-                                      key={`global-executorType-${type.id}`}
-                                      helpText={type.helpText}
-                                      forLabel={t("executorTypeTextHelpText")}
-                                      forID={t(`common:helpLabel`, {
-                                        label: t("executorTypeTextHelpText"),
-                                      })}
-                                    />
-                                  )}
-                                </>
-                              ))}
-                            </DataListCell>,
-                          ]}
-                        />
-                      </DataListItemRow>
-                    </DataListItem>
-                  ))}
-                </DataList>
+                <>
+                  <DataList aria-label={t("executors")} isCompact>
+                    {globalProfileExecutors.map((executor, idx) => (
+                      <DataListItem
+                        aria-labelledby={"global-executors-list-item"}
+                        key={`global-list-item-${idx}`}
+                        id={executor.executor}
+                      >
+                        <DataListItemRow data-testid="global-executors-list-row">
+                          <DataListItemCells
+                            dataListCells={[
+                              <DataListCell
+                                key={`global-name-${idx}`}
+                                data-testid="global-executor-type"
+                              >
+                                {Object.keys(executor.configuration!).length !==
+                                0 ? (
+                                  <Link
+                                    key={executor.executor}
+                                    data-testid="global-executor-type-link"
+                                    to={""}
+                                    className="kc-global-executor-link"
+                                  >
+                                    {executor.executor}
+                                  </Link>
+                                ) : (
+                                  // eslint-disable-next-line react/jsx-no-useless-fragment
+                                  <>{executor.executor}</>
+                                )}
+                                {executorTypes?.map((type) => (
+                                  <>
+                                    {""}
+                                    {type.id === executor.executor && (
+                                      <HelpItem
+                                        key={`global-executorType-${type.id}`}
+                                        helpText={type.helpText}
+                                        forLabel={t("executorTypeTextHelpText")}
+                                        forID={t(`common:helpLabel`, {
+                                          label: t("executorTypeTextHelpText"),
+                                        })}
+                                      />
+                                    )}
+                                  </>
+                                ))}
+                              </DataListCell>,
+                            ]}
+                          />
+                        </DataListItemRow>
+                      </DataListItem>
+                    ))}
+                  </DataList>
+                  <Button
+                    id="backToClientPolicies"
+                    component={(props) => (
+                      <Link
+                        {...props}
+                        to={`/${realm}/realm-settings/clientPolicies`}
+                      />
+                    )}
+                    variant="primary"
+                    className="kc-backToPolicies"
+                    data-testid="backToClientPolicies"
+                  >
+                    {t("realm-settings:back")}
+                  </Button>
+                </>
               )}
               {profileExecutors.length === 0 &&
                 globalProfileExecutors.length === 0 && (
