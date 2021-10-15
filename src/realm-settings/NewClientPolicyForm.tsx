@@ -75,6 +75,7 @@ export const NewClientPolicyForm = () => {
       );
       if (currentPolicy) {
         setupForm(currentPolicy);
+        setShowAddConditionsAndProfilesForm(true);
       }
     },
     []
@@ -113,6 +114,11 @@ export const NewClientPolicyForm = () => {
         t("realm-settings:createClientPolicySuccess"),
         AlertVariant.success
       );
+      history.push(
+        `/${realm}/realm-settings/clientPolicies/${
+          form.getValues().name
+        }/edit-policy`
+      );
       setShowAddConditionsAndProfilesForm(true);
       setCreatedPolicy(createdPolicy);
     } catch (error) {
@@ -147,8 +153,8 @@ export const NewClientPolicyForm = () => {
       <DeleteConfirm />
       <ViewHeader
         titleKey={
-          showAddConditionsAndProfilesForm
-            ? createdPolicy?.name!
+          showAddConditionsAndProfilesForm || policyName
+            ? policyName!
             : t("createPolicy")
         }
         divider
@@ -221,7 +227,7 @@ export const NewClientPolicyForm = () => {
                 : t("common:cancel")}
             </Button>
           </ActionGroup>
-          {showAddConditionsAndProfilesForm && (
+          {(showAddConditionsAndProfilesForm || form.formState.isSubmitted) && (
             <>
               <Flex>
                 <FlexItem>
@@ -261,7 +267,7 @@ export const NewClientPolicyForm = () => {
               </Text>
             </>
           )}
-          {showAddConditionsAndProfilesForm && (
+          {(showAddConditionsAndProfilesForm || form.formState.isSubmitted) && (
             <>
               <Flex>
                 <FlexItem>

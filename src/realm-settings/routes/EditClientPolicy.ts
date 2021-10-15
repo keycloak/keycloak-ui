@@ -9,7 +9,7 @@ export type EditClientPolicyParams = {
 };
 
 export const EditClientPolicyRoute: RouteDef = {
-  path: "/:realm/realm-settings/clientPolicies/:policyName?/edit-policy",
+  path: "/:realm/realm-settings/clientPolicies/:policyName/edit-policy",
   component: NewClientPolicyForm,
   access: "manage-realm",
   breadcrumb: (t) => t("identity-providers:editIdPMapper"),

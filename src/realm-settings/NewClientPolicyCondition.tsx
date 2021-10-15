@@ -21,7 +21,6 @@ import { camelCase } from "lodash";
 import { useAdminClient, useFetch } from "../context/auth/AdminClient";
 import { useAlerts } from "../components/alert/Alerts";
 import { useParams } from "react-router";
-import type ClientProfileRepresentation from "@keycloak/keycloak-admin-client/lib/defs/clientProfileRepresentation";
 import type ClientPolicyConditionRepresentation from "@keycloak/keycloak-admin-client/lib/defs/clientPolicyConditionRepresentation";
 import type ComponentTypeRepresentation from "@keycloak/keycloak-admin-client/lib/defs/componentTypeRepresentation";
 import type { EditClientPolicyParams } from "./routes/EditClientPolicy";
@@ -32,15 +31,20 @@ export const NewClientPolicyCondition = () => {
   const { t } = useTranslation("realm-settings");
   const { addAlert, addError } = useAlerts();
 
-  const form = useForm<ClientPolicyRepresentation>({
+  const {
+    handleSubmit,
+    control,
+    reset: resetForm,
+  } = useForm<ClientPolicyRepresentation>({
     mode: "onChange",
   });
 
   const [openProvider, setOpenProvider] = useState(false);
-  const [policies, setPolicies] = useState<ClientProfileRepresentation[]>([]);
+  const [policies, setPolicies] = useState<ClientPolicyRepresentation[]>([]);
   const [conditions, setConditions] = useState<
     ClientPolicyConditionRepresentation[]
   >([]);
+  const [conditionType, setConditionType] = useState("");
   const [theCurrentPolicy, setTheCurrentPolicy] =
     useState<ClientPolicyRepresentation>();
 
@@ -67,6 +71,14 @@ export const NewClientPolicyCondition = () => {
     },
     []
   );
+
+  const reset = () => {
+    resetForm();
+    setConditionType(
+      policies.find((policy) => policy.name === theCurrentPolicy?.name)
+        ?.conditions?.[0].condition!
+    );
+  };
 
   const save = async () => {
     const createdPolicy = {
@@ -110,23 +122,27 @@ export const NewClientPolicyCondition = () => {
           isHorizontal
           role="manage-realm"
           className="pf-u-mt-lg"
-          onSubmit={form.handleSubmit(save)}
+          onSubmit={handleSubmit(save)}
         >
           <FormGroup
             label={t("conditionType")}
+            fieldId="conditionType"
             labelIcon={
               <HelpItem
-                helpText="authentication-help:flowType"
+                helpText={
+                  conditionType
+                    ? t(`${camelCase(conditionType.replace(/-/g, " "))}`)
+                    : t("anyClient")
+                }
                 forLabel={t("conditionType")}
                 forID="conditionType"
               />
             }
-            fieldId="conditionType"
           >
             <Controller
               name="conditions"
               defaultValue={conditionTypes![0].id}
-              control={form.control}
+              control={control}
               render={({ onChange, value }) => (
                 <Select
                   menuAppendTo="parent"
@@ -134,6 +150,7 @@ export const NewClientPolicyCondition = () => {
                   onToggle={(toggle) => setOpenProvider(toggle)}
                   onSelect={(_, value) => {
                     onChange(value as string);
+                    setConditionType((value as ComponentTypeRepresentation).id);
                     setConditions([
                       {
                         condition: (value as ComponentTypeRepresentation).id,
@@ -142,7 +159,7 @@ export const NewClientPolicyCondition = () => {
                     ]);
                     setOpenProvider(false);
                   }}
-                  selections={value.id}
+                  selections={conditionType}
                   variant={SelectVariant.single}
                   aria-label={t("flowType")}
                   isOpen={openProvider}
@@ -171,7 +188,9 @@ export const NewClientPolicyCondition = () => {
             >
               {t("common:save")}
             </Button>
-            <Button variant="link">{t("common:revert")}</Button>
+            <Button variant="link" onClick={reset}>
+              {t("common:revert")}
+            </Button>
           </ActionGroup>
         </FormAccess>
       </FormPanel>
