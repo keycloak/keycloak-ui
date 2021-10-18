@@ -270,6 +270,12 @@ const Fields = ({ readOnly }: DescriptorSettingsProps) => {
         </FormGroup>
       )}
       <SwitchField
+        field="config.allowCreate"
+        label="allowCreate"
+        isReadOnly={readOnly}
+      />
+
+      <SwitchField
         field="config.postBindingResponse"
         label="httpPostBindingResponse"
         isReadOnly={readOnly}
