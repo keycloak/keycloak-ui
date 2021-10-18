@@ -35,6 +35,7 @@ import "./RealmSettingsSection.css";
 import { useConfirmDialog } from "../components/confirm-dialog/ConfirmDialog";
 import { toAddExecutor } from "./routes/AddExecutor";
 import { useServerInfo } from "../context/server-info/ServerInfoProvider";
+import type { ClientProfileParams } from "./routes/ClientProfile";
 
 type ClientProfileForm = Required<ClientProfileRepresentation>;
 
@@ -64,8 +65,7 @@ export const ClientProfileForm = () => {
     ClientProfileRepresentation[]
   >([]);
   const [profiles, setProfiles] = useState<ClientProfileRepresentation[]>([]);
-  const { realm, profileName } =
-    useParams<{ realm: string; profileName: string }>();
+  const { realm, profileName } = useParams<ClientProfileParams>();
   const serverInfo = useServerInfo();
   const executorTypes = useMemo(
     () =>

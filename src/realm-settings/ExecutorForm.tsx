@@ -23,12 +23,12 @@ import { HelpItem } from "../components/help-enabler/HelpItem";
 import { Link, useHistory, useParams } from "react-router-dom";
 import { useAdminClient, useFetch } from "../context/auth/AdminClient";
 import type ClientProfileRepresentation from "@keycloak/keycloak-admin-client/lib/defs/clientProfileRepresentation";
+import type { ClientProfileParams } from "./routes/ClientProfile";
 
 export const ExecutorForm = () => {
   const { t } = useTranslation("realm-settings");
   const history = useHistory();
-  const { realm, profileName } =
-    useParams<{ realm: string; profileName: string }>();
+  const { realm, profileName } = useParams<ClientProfileParams>();
   const { addAlert, addError } = useAlerts();
   const [selectExecutorTypeOpen, setSelectExecutorTypeOpen] = useState(false);
   const [selectAlgorithmTypeOpen, setSelectAlgorithmTypeOpen] = useState(false);
@@ -60,9 +60,8 @@ export const ExecutorForm = () => {
     []
   );
 
-  const fldNameFormatter = (name: string) => {
-    return name.toLowerCase().trim().split(/\s+/).join("-");
-  };
+  const fldNameFormatter = (name: string) =>
+    name.toLowerCase().trim().split(/\s+/).join("-");
 
   const save = async () => {
     const form = getValues();
@@ -115,7 +114,7 @@ export const ExecutorForm = () => {
             labelIcon={
               executors.length > 0 && executors[0].helpText !== "" ? (
                 <HelpItem
-                  helpText={executors.length > 0 && executors[0].helpText}
+                  helpText={executors[0].helpText}
                   forLabel={t("executorTypeHelpText")}
                   forID={t(`common:helpLabel`, {
                     label: t("executorTypeHelpText"),
@@ -164,192 +163,186 @@ export const ExecutorForm = () => {
               )}
             />
           </FormGroup>
-          {executorProperties.length > 0 &&
-            executorProperties.map((option) => {
-              return (
-                option.type === "boolean" && (
-                  <FormGroup
-                    key="kc-executorType"
-                    label={option.label}
-                    fieldId="kc-executorTypeSwitch"
-                    labelIcon={
-                      <HelpItem
-                        helpText={option.helpText}
-                        forLabel={t("executorTypeSwitchHelpText")}
-                        forID={t(`common:helpLabel`, {
-                          label: t("executorTypeSwitchHelpText"),
-                        })}
-                      />
-                    }
-                  >
-                    <Controller
-                      name={fldNameFormatter(option.label!)}
-                      control={control}
-                      defaultValue={option.defaultValue}
-                      render={({ onChange, value }) => (
-                        <Switch
-                          id="kc-executorType-switch"
-                          data-testid="executorType-switch"
-                          label={t("executorTypeSwitch.on")}
-                          labelOff={t("executorTypeSwitch.off")}
-                          isChecked={value}
-                          onChange={(value) => {
-                            onChange("" + value);
-                          }}
-                        />
-                      )}
+          {executorProperties.map((option) => {
+            return (
+              option.type === "boolean" && (
+                <FormGroup
+                  key="kc-executorType"
+                  label={option.label}
+                  fieldId="kc-executorTypeSwitch"
+                  labelIcon={
+                    <HelpItem
+                      helpText={option.helpText}
+                      forLabel={t("executorTypeSwitchHelpText")}
+                      forID={t(`common:helpLabel`, {
+                        label: t("executorTypeSwitchHelpText"),
+                      })}
                     />
-                  </FormGroup>
-                )
-              );
-            })}
-          {executorProperties.length > 0 &&
-            executorProperties.map((option) => {
-              return (
-                option.type === "String" && (
-                  <FormGroup
-                    label={option.label}
-                    fieldId="kc-executorTypeText"
-                    labelIcon={
-                      <HelpItem
-                        helpText={option.helpText}
-                        forLabel={t("executorTypeTextHelpText")}
-                        forID={t(`common:helpLabel`, {
-                          label: t("executorTypeTextHelpText"),
-                        })}
+                  }
+                >
+                  <Controller
+                    name={fldNameFormatter(option.label!)}
+                    control={control}
+                    defaultValue={option.defaultValue}
+                    render={({ onChange, value }) => (
+                      <Switch
+                        id="kc-executorType-switch"
+                        data-testid="executorType-switch"
+                        label={t("executorTypeSwitch.on")}
+                        labelOff={t("executorTypeSwitch.off")}
+                        isChecked={value}
+                        onChange={(value) => {
+                          onChange("" + value);
+                        }}
                       />
-                    }
-                  >
-                    <TextInput
-                      name={fldNameFormatter(option.label!)}
-                      ref={register()}
-                      type="text"
-                      id="kc-executorType-text"
-                      defaultValue={option.defaultValue}
-                      data-testid="executorType-text"
+                    )}
+                  />
+                </FormGroup>
+              )
+            );
+          })}
+          {executorProperties.map((option) => {
+            return (
+              option.type === "String" && (
+                <FormGroup
+                  label={option.label}
+                  fieldId="kc-executorTypeText"
+                  labelIcon={
+                    <HelpItem
+                      helpText={option.helpText}
+                      forLabel={t("executorTypeTextHelpText")}
+                      forID={t(`common:helpLabel`, {
+                        label: t("executorTypeTextHelpText"),
+                      })}
                     />
-                  </FormGroup>
-                )
-              );
-            })}
-          {executorProperties.length > 0 &&
-            executorProperties.map((option) => {
-              return (
-                option.type === "List" && (
-                  <FormGroup
-                    label={option.label}
-                    fieldId="kc-executorTypeSelect"
-                    labelIcon={
-                      <HelpItem
-                        helpText={option.helpText}
-                        forLabel={t("executorTypeSelectHelpText")}
-                        forID={t(`common:helpLabel`, {
-                          label: t("executorTypeSelectHelpText"),
-                        })}
-                      />
-                    }
-                  >
-                    <Controller
-                      name={fldNameFormatter(option.label!)}
-                      control={control}
-                      render={({ onChange, value }) => (
-                        <Select
-                          toggleId="kc-executorTypeSelect"
-                          onToggle={(isOpen) =>
-                            setSelectAlgorithmTypeOpen(isOpen)
-                          }
-                          onSelect={(_, value) => {
-                            onChange(value.toString());
-                            option.options?.filter(
-                              (option) => option === value
+                  }
+                >
+                  <TextInput
+                    name={fldNameFormatter(option.label!)}
+                    ref={register()}
+                    type="text"
+                    id="kc-executorType-text"
+                    defaultValue={option.defaultValue}
+                    data-testid="executorType-text"
+                  />
+                </FormGroup>
+              )
+            );
+          })}
+          {executorProperties.map((option) => {
+            return (
+              option.type === "List" && (
+                <FormGroup
+                  label={option.label}
+                  fieldId="kc-executorTypeSelect"
+                  labelIcon={
+                    <HelpItem
+                      helpText={option.helpText}
+                      forLabel={t("executorTypeSelectHelpText")}
+                      forID={t(`common:helpLabel`, {
+                        label: t("executorTypeSelectHelpText"),
+                      })}
+                    />
+                  }
+                >
+                  <Controller
+                    name={fldNameFormatter(option.label!)}
+                    control={control}
+                    render={({ onChange, value }) => (
+                      <Select
+                        toggleId="kc-executorTypeSelect"
+                        onToggle={(isOpen) =>
+                          setSelectAlgorithmTypeOpen(isOpen)
+                        }
+                        onSelect={(_, value) => {
+                          onChange(value.toString());
+                          option.options?.filter((option) => option === value);
+                          setSelectAlgorithmTypeOpen(false);
+                        }}
+                        selections={value}
+                        variant={SelectVariant.single}
+                        aria-label={t("executorTypeSelectAlgorithm")}
+                        isOpen={selectAlgorithmTypeOpen}
+                        maxHeight={300}
+                        defaultValue={option.defaultValue}
+                      >
+                        {option.options?.map((option) => (
+                          <SelectOption
+                            selected={option === value}
+                            key={option}
+                            value={option}
+                          />
+                        ))}
+                      </Select>
+                    )}
+                  />
+                </FormGroup>
+              )
+            );
+          })}
+          {executorProperties.map((option) => {
+            return (
+              option.type === "MultivaluedList" && (
+                <FormGroup
+                  label={option.label}
+                  fieldId="kc-executorAuthenticatorMultiSelect"
+                  labelIcon={
+                    <HelpItem
+                      helpText={option.helpText}
+                      forLabel={t("executorAuthenticatorMultiSelectHelpText")}
+                      forID={t(`common:helpLabel`, {
+                        label: t("executorAuthenticatorMultiSelectHelpText"),
+                      })}
+                    />
+                  }
+                >
+                  <Controller
+                    name={fldNameFormatter(option.label!)}
+                    control={control}
+                    render={({ onChange, value }) => (
+                      <Select
+                        name="executorClientAuthenticator"
+                        data-testid="executorClientAuthenticator-multiSelect"
+                        chipGroupProps={{
+                          numChips: 1,
+                          expandedText: "Hide",
+                          collapsedText: "Show ${remaining}",
+                        }}
+                        variant={SelectVariant.typeaheadMulti}
+                        typeAheadAriaLabel="Select"
+                        onToggle={(isOpen) =>
+                          setSelectMultiAuthenticatorOpen(isOpen)
+                        }
+                        selections={value}
+                        onSelect={(_, v) => {
+                          const option = v as string;
+                          if (!value) {
+                            onChange([option]);
+                          } else if (value.includes(option)) {
+                            onChange(
+                              value.filter((item: string) => item !== option)
                             );
-                            setSelectAlgorithmTypeOpen(false);
-                          }}
-                          selections={value}
-                          variant={SelectVariant.single}
-                          aria-label={t("executorTypeSelectAlgorithm")}
-                          isOpen={selectAlgorithmTypeOpen}
-                          maxHeight={300}
-                          defaultValue={option.defaultValue}
-                        >
-                          {option.options?.map((option) => (
-                            <SelectOption
-                              selected={option === value}
-                              key={option}
-                              value={option}
-                            />
-                          ))}
-                        </Select>
-                      )}
-                    />
-                  </FormGroup>
-                )
-              );
-            })}
-          {executorProperties.length > 0 &&
-            executorProperties.map((option) => {
-              return (
-                option.type === "MultivaluedList" && (
-                  <FormGroup
-                    label={option.label}
-                    fieldId="kc-executorAuthenticatorMultiSelect"
-                    labelIcon={
-                      <HelpItem
-                        helpText={option.helpText}
-                        forLabel={t("executorAuthenticatorMultiSelectHelpText")}
-                        forID={t(`common:helpLabel`, {
-                          label: t("executorAuthenticatorMultiSelectHelpText"),
-                        })}
-                      />
-                    }
-                  >
-                    <Controller
-                      name={fldNameFormatter(option.label!)}
-                      control={control}
-                      render={({ onChange, value }) => (
-                        <Select
-                          name="executorClientAuthenticator"
-                          data-testid="executorClientAuthenticator-multiSelect"
-                          chipGroupProps={{
-                            numChips: 1,
-                            expandedText: "Hide",
-                            collapsedText: "Show ${remaining}",
-                          }}
-                          variant={SelectVariant.typeaheadMulti}
-                          typeAheadAriaLabel="Select"
-                          onToggle={(isOpen) =>
-                            setSelectMultiAuthenticatorOpen(isOpen)
+                          } else {
+                            onChange([...value, option]);
                           }
-                          selections={value}
-                          onSelect={(_, v) => {
-                            const option = v as string;
-                            if (!value) {
-                              onChange([option]);
-                            } else if (value.includes(option)) {
-                              onChange(
-                                value.filter((item: string) => item !== option)
-                              );
-                            } else {
-                              onChange([...value, option]);
-                            }
-                          }}
-                          onClear={(event) => {
-                            event.stopPropagation();
-                            onChange([]);
-                          }}
-                          isOpen={selectMultiAuthenticatorOpen}
-                          aria-labelledby={"client-authenticator"}
-                        >
-                          {option.options?.map((option) => (
-                            <SelectOption key={option} value={option} />
-                          ))}
-                        </Select>
-                      )}
-                    />
-                  </FormGroup>
-                )
-              );
-            })}
+                        }}
+                        onClear={(event) => {
+                          event.stopPropagation();
+                          onChange([]);
+                        }}
+                        isOpen={selectMultiAuthenticatorOpen}
+                        aria-labelledby={"client-authenticator"}
+                      >
+                        {option.options?.map((option) => (
+                          <SelectOption key={option} value={option} />
+                        ))}
+                      </Select>
+                    )}
+                  />
+                </FormGroup>
+              )
+            );
+          })}
           <ActionGroup>
             <Button
               variant="primary"
