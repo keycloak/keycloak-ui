@@ -416,20 +416,22 @@ export const ClientDetails = () => {
                 <Credentials clientId={clientId} save={() => save()} />
               </Tab>
             )}
-            <Tab
-              id="mappers"
-              eventKey="mappers"
-              title={<TabTitleText>{t("mappers")}</TabTitleText>}
-            >
-              <MapperList
-                model={client}
-                onAdd={addMappers}
-                onDelete={onDeleteMapper}
-                detailLink={(mapperId) =>
-                  toMapper({ realm, id: client.id!, mapperId })
-                }
-              />
-            </Tab>
+            {!isRealmClient(client) && (
+              <Tab
+                id="mappers"
+                eventKey="mappers"
+                title={<TabTitleText>{t("mappers")}</TabTitleText>}
+              >
+                <MapperList
+                  model={client}
+                  onAdd={addMappers}
+                  onDelete={onDeleteMapper}
+                  detailLink={(mapperId) =>
+                    toMapper({ realm, id: client.id!, mapperId })
+                  }
+                />
+              </Tab>
+            )}
             <Tab
               id="roles"
               eventKey="roles"
