@@ -42,9 +42,7 @@ export const AddScopeDialog = ({
   const loader = () => Promise.resolve(clientScopes);
 
   const action = (scope: ClientScopeType) => {
-    const scopes = rows.map((row) => {
-      return { scope: row, type: scope };
-    });
+    const scopes = rows.map((row) => ({ scope: row, type: scope }));
     onAdd(scopes);
     setAddToggle(false);
     toggleDialog();

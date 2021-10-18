@@ -152,39 +152,35 @@ export const UsersSection = () => {
     },
   });
 
-  const StatusRow = (user: BruteUser) => {
-    return (
-      <>
-        {!user.enabled && (
-          <Label key={user.id} color="red" icon={<InfoCircleIcon />}>
-            {t("disabled")}
-          </Label>
-        )}
-        {user.brute?.disabled && (
-          <Label key={user.id} color="orange" icon={<WarningTriangleIcon />}>
-            {t("temporaryDisabled")}
-          </Label>
-        )}
-        {user.enabled && !user.brute?.disabled && "—"}
-      </>
-    );
-  };
+  const StatusRow = (user: BruteUser) => (
+    <>
+      {!user.enabled && (
+        <Label key={user.id} color="red" icon={<InfoCircleIcon />}>
+          {t("disabled")}
+        </Label>
+      )}
+      {user.brute?.disabled && (
+        <Label key={user.id} color="orange" icon={<WarningTriangleIcon />}>
+          {t("temporaryDisabled")}
+        </Label>
+      )}
+      {user.enabled && !user.brute?.disabled && "—"}
+    </>
+  );
 
-  const ValidatedEmail = (user: UserRepresentation) => {
-    return (
-      <>
-        {!user.emailVerified && (
-          <Tooltip
-            key={`email-verified-${user.id}`}
-            content={<>{t("notVerified")}</>}
-          >
-            <ExclamationCircleIcon className="keycloak__user-section__email-verified" />
-          </Tooltip>
-        )}{" "}
-        {emptyFormatter()(user.email)}
-      </>
-    );
-  };
+  const ValidatedEmail = (user: UserRepresentation) => (
+    <>
+      {!user.emailVerified && (
+        <Tooltip
+          key={`email-verified-${user.id}`}
+          content={<>{t("notVerified")}</>}
+        >
+          <ExclamationCircleIcon className="keycloak__user-section__email-verified" />
+        </Tooltip>
+      )}{" "}
+      {emptyFormatter()(user.email)}
+    </>
+  );
 
   const goToCreate = () => history.push(`${url}/add-user`);
 

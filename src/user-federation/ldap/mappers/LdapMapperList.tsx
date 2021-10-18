@@ -38,13 +38,12 @@ export const LdapMapperList = () => {
     };
 
     const mappersList = (await adminClient.components.find(testParams)).map(
-      (mapper) => {
-        return {
+      (mapper) =>
+        ({
           ...mapper,
           name: mapper.name,
           type: mapper.providerId,
-        } as ComponentRepresentation;
-      }
+        } as ComponentRepresentation)
     );
     return mappersList;
   };

@@ -86,9 +86,8 @@ export const AssociatedRolesTab = ({
   };
 
   const loader = async () => {
-    const alphabetize = (rolesList: Role[]) => {
-      return _.sortBy(rolesList, (role) => role.name?.toUpperCase());
-    };
+    const alphabetize = (rolesList: Role[]) =>
+      _.sortBy(rolesList, (role) => role.name?.toUpperCase());
     const clients = await adminClient.clients.find();
 
     if (isInheritedHidden) {
@@ -137,18 +136,16 @@ export const AssociatedRolesTab = ({
   const InheritedRoleName = (role: RoleRepresentation) =>
     inheritanceMap.current[role.id!];
 
-  const AliasRenderer = ({ id, name, clientId }: Role) => {
-    return (
-      <>
-        {clientId && (
-          <Label color="blue" key={`label-${id}`}>
-            {clientId}
-          </Label>
-        )}{" "}
-        {name}
-      </>
-    );
-  };
+  const AliasRenderer = ({ id, name, clientId }: Role) => (
+    <>
+      {clientId && (
+        <Label color="blue" key={`label-${id}`}>
+          {clientId}
+        </Label>
+      )}{" "}
+      {name}
+    </>
+  );
 
   const toggleModal = () => setOpen(!open);
 
@@ -177,7 +174,7 @@ export const AssociatedRolesTab = ({
     useConfirmDialog({
       titleKey: t("roles:removeAssociatedRoles") + "?",
       messageKey: t("roles:removeAllAssociatedRolesConfirmDialog", {
-        name: parentRole?.name || t("createRole"),
+        name: parentRole.name || t("createRole"),
       }),
       continueButtonLabel: "common:remove",
       continueButtonVariant: ButtonVariant.danger,

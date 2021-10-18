@@ -8,9 +8,7 @@ import { useTranslation } from "react-i18next";
 
 export const sortProviders = (providers: {
   [index: string]: ProviderRepresentation;
-}) => {
-  return [...new Map(Object.entries(providers).sort(sortProvider)).keys()];
-};
+}) => [...new Map(Object.entries(providers).sort(sortProvider)).keys()];
 
 const sortProvider = (
   a: [string, ProviderRepresentation],
@@ -58,12 +56,11 @@ export const convertToFormValues = (
   obj: any,
   prefix: string,
   setValue: (name: string, value: any) => void
-) => {
-  return Object.keys(obj).map((key) => {
+) =>
+  Object.keys(obj).map((key) => {
     const newKey = key.replace(/\./g, "-");
     setValue(prefix + "." + newKey, obj[key]);
   });
-};
 
 export const flatten = (
   obj: Record<string, any> | undefined,
@@ -71,14 +68,16 @@ export const flatten = (
 ): {} => {
   if (!(obj instanceof Object)) return { [path.replace(/\.$/g, "")]: obj };
 
-  return Object.keys(obj).reduce((output, key) => {
-    return obj instanceof Array
-      ? {
-          ...output,
-          ...flatten(obj[key as unknown as number], path + "[" + key + "]."),
-        }
-      : { ...output, ...flatten(obj[key], path + key + ".") };
-  }, {});
+  return Object.keys(obj).reduce(
+    (output, key) =>
+      obj instanceof Array
+        ? {
+            ...output,
+            ...flatten(obj[key as unknown as number], path + "[" + key + "]."),
+          }
+        : { ...output, ...flatten(obj[key], path + key + ".") },
+    {}
+  );
 };
 
 export const convertFormValuesToObject = (
@@ -94,10 +93,8 @@ export const convertFormValuesToObject = (
   return Object.assign({}, ...keyValues);
 };
 
-export const emptyFormatter =
-  (): IFormatter => (data?: IFormatterValueType) => {
-    return data ? data : "—";
-  };
+export const emptyFormatter = (): IFormatter => (data?: IFormatterValueType) =>
+  data ? data : "—";
 
 export const upperCaseFormatter =
   (): IFormatter => (data?: IFormatterValueType) => {
@@ -106,13 +103,10 @@ export const upperCaseFormatter =
     return (value ? toUpperCase(value) : undefined) as string;
   };
 
-export const getBaseUrl = (adminClient: KeycloakAdminClient) => {
-  return (
-    (adminClient.keycloak
-      ? adminClient.keycloak.authServerUrl!
-      : adminClient.baseUrl) + "/"
-  );
-};
+export const getBaseUrl = (adminClient: KeycloakAdminClient) =>
+  (adminClient.keycloak
+    ? adminClient.keycloak.authServerUrl!
+    : adminClient.baseUrl) + "/";
 
 export const emailRegexPattern =
   /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;

@@ -59,8 +59,8 @@ export const FormAccess: FunctionComponent<FormAccessProps> = ({
   const recursiveCloneChildren = (
     children: ReactNode,
     newProps: any
-  ): ReactNode => {
-    return Children.map(children, (child) => {
+  ): ReactNode =>
+    Children.map(children, (child) => {
       if (!isValidElement(child)) {
         return child;
       }
@@ -105,7 +105,6 @@ export const FormAccess: FunctionComponent<FormAccessProps> = ({
       }
       return child;
     });
-  };
 
   const isDisabled = !hasAccess(role) && !fineGrainedAccess;
 

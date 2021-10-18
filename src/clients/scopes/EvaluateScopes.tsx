@@ -150,16 +150,13 @@ export const EvaluateScopes = ({ clientId, protocol }: EvaluateScopesProps) => {
     []
   );
 
-  const toString = (user: UserRepresentation) => {
-    return (
-      t("common:fullName", {
-        givenName: user.firstName,
-        familyName: user.lastName,
-      }).trim() ||
-      user.username ||
-      ""
-    );
-  };
+  const toString = (user: UserRepresentation) =>
+    t("common:fullName", {
+      givenName: user.firstName,
+      familyName: user.lastName,
+    }).trim() ||
+    user.username ||
+    "";
 
   useFetch(
     () => {

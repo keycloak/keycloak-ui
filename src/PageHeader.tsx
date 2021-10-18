@@ -90,44 +90,42 @@ export const Header = () => {
     <SignOutDropdownItem key="Sign out" />,
   ];
 
-  const headerTools = () => {
-    return (
-      <PageHeaderTools>
-        <PageHeaderToolsGroup
+  const headerTools = () => (
+    <PageHeaderTools>
+      <PageHeaderToolsGroup
+        visibility={{
+          default: "hidden",
+          md: "visible",
+        }} /** the settings and help icon buttons are only visible on desktop sizes and replaced by a kebab dropdown for other sizes */
+      >
+        <PageHeaderToolsItem>
+          <HelpHeader />
+        </PageHeaderToolsItem>
+      </PageHeaderToolsGroup>
+
+      <PageHeaderToolsGroup>
+        <PageHeaderToolsItem
+          visibility={{
+            md: "hidden",
+          }} /** this kebab dropdown replaces the icon buttons and is hidden for desktop sizes */
+        >
+          <KebabDropdown />
+        </PageHeaderToolsItem>
+        <PageHeaderToolsItem
           visibility={{
             default: "hidden",
             md: "visible",
-          }} /** the settings and help icon buttons are only visible on desktop sizes and replaced by a kebab dropdown for other sizes */
+          }} /** this user dropdown is hidden on mobile sizes */
         >
-          <PageHeaderToolsItem>
-            <HelpHeader />
-          </PageHeaderToolsItem>
-        </PageHeaderToolsGroup>
-
-        <PageHeaderToolsGroup>
-          <PageHeaderToolsItem
-            visibility={{
-              md: "hidden",
-            }} /** this kebab dropdown replaces the icon buttons and is hidden for desktop sizes */
-          >
-            <KebabDropdown />
-          </PageHeaderToolsItem>
-          <PageHeaderToolsItem
-            visibility={{
-              default: "hidden",
-              md: "visible",
-            }} /** this user dropdown is hidden on mobile sizes */
-          >
-            <UserDropdown />
-          </PageHeaderToolsItem>
-        </PageHeaderToolsGroup>
-        <Avatar
-          src={environment.resourceUrl + "/img_avatar.svg"}
-          alt="Avatar image"
-        />
-      </PageHeaderTools>
-    );
-  };
+          <UserDropdown />
+        </PageHeaderToolsItem>
+      </PageHeaderToolsGroup>
+      <Avatar
+        src={environment.resourceUrl + "/img_avatar.svg"}
+        alt="Avatar image"
+      />
+    </PageHeaderTools>
+  );
 
   const KebabDropdown = () => {
     const [isDropdownOpen, setDropdownOpen] = useState(false);

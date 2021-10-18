@@ -30,6 +30,8 @@ module.exports = {
     "@typescript-eslint/no-empty-function": "error",
     "@typescript-eslint/no-unnecessary-condition": "warn",
     "@typescript-eslint/no-unused-vars": "error",
+    // Only add a body to arrow functions if needed.
+    "arrow-body-style": "error",
     // react/prop-types cannot handle generic props, so we need to disable it.
     // https://github.com/yannickcr/eslint-plugin-react/issues/2777#issuecomment-814968432
     "react/prop-types": "off",

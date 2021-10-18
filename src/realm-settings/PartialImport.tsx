@@ -141,17 +141,15 @@ export const PartialImportDialog = (props: PartialImportProps) => {
   const realmSelectOptions = () => {
     if (!isMultiRealm) return [];
 
-    const mapper = (realm: ImportedRealm) => {
-      return (
-        <SelectOption
-          key={realm.id}
-          value={realm}
-          data-testid={realm.id + "-select-option"}
-        >
-          {realm.realm || realm.id}
-        </SelectOption>
-      );
-    };
+    const mapper = (realm: ImportedRealm) => (
+      <SelectOption
+        key={realm.id}
+        value={realm}
+        data-testid={realm.id + "-select-option"}
+      >
+        {realm.realm || realm.id}
+      </SelectOption>
+    );
 
     return (importedFile as [ImportedRealm]).map(mapper);
   };
@@ -164,60 +162,43 @@ export const PartialImportDialog = (props: PartialImportProps) => {
     setIsCollisionSelectOpen(false);
   };
 
-  const collisionOptions = () => {
-    return [
-      <SelectOption key="fail" value="FAIL">
-        {t("FAIL")}
-      </SelectOption>,
-      <SelectOption key="skip" value="SKIP">
-        {t("SKIP")}
-      </SelectOption>,
-      <SelectOption key="overwrite" value="OVERWRITE">
-        {t("OVERWRITE")}
-      </SelectOption>,
-    ];
-  };
+  const collisionOptions = () => [
+    <SelectOption key="fail" value="FAIL">
+      {t("FAIL")}
+    </SelectOption>,
+    <SelectOption key="skip" value="SKIP">
+      {t("SKIP")}
+    </SelectOption>,
+    <SelectOption key="overwrite" value="OVERWRITE">
+      {t("OVERWRITE")}
+    </SelectOption>,
+  ];
 
-  const targetHasResources = () => {
-    return (
-      targetHasResource("users") ||
-      targetHasResource("groups") ||
-      targetHasResource("clients") ||
-      targetHasResource("identityProviders") ||
-      targetHasRealmRoles() ||
-      targetHasClientRoles()
-    );
-  };
+  const targetHasResources = () =>
+    targetHasResource("users") ||
+    targetHasResource("groups") ||
+    targetHasResource("clients") ||
+    targetHasResource("identityProviders") ||
+    targetHasRealmRoles() ||
+    targetHasClientRoles();
 
-  const targetHasResource = (resource: NonRoleResource) => {
-    return (
-      targetRealm &&
-      targetRealm[resource] instanceof Array &&
-      targetRealm[resource]!.length > 0
-    );
-  };
+  const targetHasResource = (resource: NonRoleResource) =>
+    targetRealm &&
+    targetRealm[resource] instanceof Array &&
+    targetRealm[resource]!.length > 0;
 
-  const targetHasRoles = () => {
-    return (
-      targetRealm && Object.prototype.hasOwnProperty.call(targetRealm, "roles")
-    );
-  };
+  const targetHasRoles = () =>
+    targetRealm && Object.prototype.hasOwnProperty.call(targetRealm, "roles");
 
-  const targetHasRealmRoles = () => {
-    return (
-      targetHasRoles() &&
-      targetRealm.roles!.realm instanceof Array &&
-      targetRealm.roles!.realm.length > 0
-    );
-  };
+  const targetHasRealmRoles = () =>
+    targetHasRoles() &&
+    targetRealm.roles!.realm instanceof Array &&
+    targetRealm.roles!.realm.length > 0;
 
-  const targetHasClientRoles = () => {
-    return (
-      targetHasRoles() &&
-      Object.prototype.hasOwnProperty.call(targetRealm.roles, "client") &&
-      Object.keys(targetRealm.roles!.client!).length > 0
-    );
-  };
+  const targetHasClientRoles = () =>
+    targetHasRoles() &&
+    Object.prototype.hasOwnProperty.call(targetRealm.roles, "client") &&
+    Object.keys(targetRealm.roles!.client!).length > 0;
 
   const itemCount = (resource: Resource) => {
     if (!isFileSelected) return 0;
@@ -253,30 +234,28 @@ export const PartialImportDialog = (props: PartialImportProps) => {
   const resourceDataListItem = (
     resource: Resource,
     resourceDisplayName: string
-  ) => {
-    return (
-      <DataListItem aria-labelledby={`${resource}-list-item`}>
-        <DataListItemRow>
-          <DataListCheck
-            aria-labelledby={`${resource}-checkbox`}
-            name={resource}
-            isChecked={resourcesToImport[resource]}
-            onChange={handleResourceCheckBox}
-            data-testid={resource + "-checkbox"}
-          />
-          <DataListItemCells
-            dataListCells={[
-              <DataListCell key={resource}>
-                <span data-testid={resource + "-count"}>
-                  {itemCount(resource)} {resourceDisplayName}
-                </span>
-              </DataListCell>,
-            ]}
-          />
-        </DataListItemRow>
-      </DataListItem>
-    );
-  };
+  ) => (
+    <DataListItem aria-labelledby={`${resource}-list-item`}>
+      <DataListItemRow>
+        <DataListCheck
+          aria-labelledby={`${resource}-checkbox`}
+          name={resource}
+          isChecked={resourcesToImport[resource]}
+          onChange={handleResourceCheckBox}
+          data-testid={resource + "-checkbox"}
+        />
+        <DataListItemCells
+          dataListCells={[
+            <DataListCell key={resource}>
+              <span data-testid={resource + "-count"}>
+                {itemCount(resource)} {resourceDisplayName}
+              </span>
+            </DataListCell>,
+          ]}
+        />
+      </DataListItemRow>
+    </DataListItem>
+  );
 
   return (
     <Modal

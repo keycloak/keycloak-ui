@@ -229,8 +229,8 @@ export const LocalizationTab = ({
               <Controller
                 name="supportedLocales"
                 control={control}
-                render={({ onChange, value }) => {
-                  return internationalizationEnabled ? (
+                render={({ onChange, value }) =>
+                  internationalizationEnabled ? (
                     <Select
                       toggleId="kc-l-supported-locales"
                       onToggle={(open) => {
@@ -271,8 +271,8 @@ export const LocalizationTab = ({
                     </Select>
                   ) : (
                     <div />
-                  );
-                }}
+                  )
+                }
               />
             </FormGroup>
             <FormGroup
@@ -289,8 +289,8 @@ export const LocalizationTab = ({
               <Controller
                 name="defaultLocale"
                 control={control}
-                render={({ onChange, value }) => {
-                  return internationalizationEnabled ? (
+                render={({ onChange, value }) =>
+                  internationalizationEnabled ? (
                     <Select
                       toggleId="kc-default-locale"
                       onToggle={() => setDefaultLocaleOpen(!defaultLocaleOpen)}
@@ -329,8 +329,8 @@ export const LocalizationTab = ({
                     </Select>
                   ) : (
                     <div />
-                  );
-                }}
+                  )
+                }
               />
             </FormGroup>
             <ActionGroup>

@@ -20,9 +20,7 @@ type ScrollFormProps = GridProps & {
   borders?: boolean;
 };
 
-const spacesToHyphens = (string: string): string => {
-  return string.replace(/\s+/g, "-");
-};
+const spacesToHyphens = (string: string): string => string.replace(/\s+/g, "-");
 
 export const ScrollForm: FunctionComponent<ScrollFormProps> = ({
   sections,

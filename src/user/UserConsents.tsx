@@ -28,9 +28,8 @@ export const UserConsents = () => {
 
   const adminClient = useAdminClient();
   const { id } = useParams<{ id: string }>();
-  const alphabetize = (consentsList: UserConsentRepresentation[]) => {
-    return _.sortBy(consentsList, (client) => client.clientId?.toUpperCase());
-  };
+  const alphabetize = (consentsList: UserConsentRepresentation[]) =>
+    _.sortBy(consentsList, (client) => client.clientId?.toUpperCase());
 
   const refresh = () => setKey(new Date().getTime());
 
@@ -42,32 +41,30 @@ export const UserConsents = () => {
 
   const clientScopesRenderer = ({
     grantedClientScopes,
-  }: UserConsentRepresentation) => {
-    return (
-      <ChipGroup className="kc-consents-chip-group">
-        {grantedClientScopes!.map((currentChip) => (
-          <Chip
-            key={currentChip}
-            isReadOnly
-            className="kc-consents-chip"
-            id="consents-chip-text"
-          >
-            {currentChip}
-          </Chip>
-        ))}
-      </ChipGroup>
-    );
-  };
+  }: UserConsentRepresentation) => (
+    <ChipGroup className="kc-consents-chip-group">
+      {grantedClientScopes!.map((currentChip) => (
+        <Chip
+          key={currentChip}
+          isReadOnly
+          className="kc-consents-chip"
+          id="consents-chip-text"
+        >
+          {currentChip}
+        </Chip>
+      ))}
+    </ChipGroup>
+  );
 
-  const createdRenderer = ({ createDate }: UserConsentRepresentation) => {
-    return <>{moment(createDate).format("MM/DD/YY hh:MM A")}</>;
-  };
+  const createdRenderer = ({ createDate }: UserConsentRepresentation) => (
+    <>{moment(createDate).format("MM/DD/YY hh:MM A")}</>
+  );
 
   const lastUpdatedRenderer = ({
     lastUpdatedDate,
-  }: UserConsentRepresentation) => {
-    return <>{moment(lastUpdatedDate).format("MM/DD/YY hh:MM A")}</>;
-  };
+  }: UserConsentRepresentation) => (
+    <>{moment(lastUpdatedDate).format("MM/DD/YY hh:MM A")}</>
+  );
 
   const [toggleDeleteDialog, DeleteConfirm] = useConfirmDialog({
     titleKey: "users:revokeClientScopesTitle",

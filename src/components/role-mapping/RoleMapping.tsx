@@ -35,27 +35,24 @@ export const mapRoles = (
   assignedRoles: Row[],
   effectiveRoles: Row[],
   hide: boolean
-) => {
-  return [
-    ...(hide
-      ? assignedRoles.map((row) => ({
-          ...row,
-          role: {
-            ...row.role,
-            isInherited: false,
-          },
-        }))
-      : effectiveRoles.map((row) => ({
-          ...row,
-          role: {
-            ...row.role,
-            isInherited:
-              assignedRoles.find((r) => r.role.id === row.role.id) ===
-              undefined,
-          },
-        }))),
-  ];
-};
+) => [
+  ...(hide
+    ? assignedRoles.map((row) => ({
+        ...row,
+        role: {
+          ...row.role,
+          isInherited: false,
+        },
+      }))
+    : effectiveRoles.map((row) => ({
+        ...row,
+        role: {
+          ...row.role,
+          isInherited:
+            assignedRoles.find((r) => r.role.id === row.role.id) === undefined,
+        },
+      }))),
+];
 
 export const ServiceRole = ({ role, client }: Row) => (
   <>

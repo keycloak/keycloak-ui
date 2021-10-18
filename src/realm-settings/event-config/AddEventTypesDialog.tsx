@@ -51,9 +51,7 @@ export const AddEventTypesDialog = ({
           Promise.resolve(
             enums!["eventType"]
               .filter((type) => !configured.includes(type))
-              .map((id) => {
-                return { id };
-              })
+              .map((id) => ({ id }))
           )
         }
       />

@@ -92,7 +92,7 @@ export const ECDSAGeneratedForm = ({
       if (
         key === "config" &&
         component.config?.ecdsaEllipticCurveKey &&
-        component.config?.active
+        component.config.active
       ) {
         form.setValue("config.secretSize", value.ecdsaEllipticCurveKey[0]);
 
@@ -179,18 +179,16 @@ export const ECDSAGeneratedForm = ({
             name="name"
             control={form.control}
             defaultValue={providerType}
-            render={({ onChange, value }) => {
-              return (
-                <TextInput
-                  id="name"
-                  type="text"
-                  aria-label={t("consoleDisplayName")}
-                  value={value}
-                  onChange={(value) => onChange(value)}
-                  data-testid="display-name-input"
-                />
-              );
-            }}
+            render={({ onChange, value }) => (
+              <TextInput
+                id="name"
+                type="text"
+                aria-label={t("consoleDisplayName")}
+                value={value}
+                onChange={(value) => onChange(value)}
+                data-testid="display-name-input"
+              />
+            )}
           />
         )}
         {editMode && (
@@ -252,20 +250,18 @@ export const ECDSAGeneratedForm = ({
           name="config.active"
           control={form.control}
           defaultValue={["true"]}
-          render={({ onChange, value }) => {
-            return (
-              <Switch
-                id="kc-active-switch"
-                label={t("common:on")}
-                labelOff={t("common:off")}
-                isChecked={value[0] === "true"}
-                data-testid={value[0] === "true" ? "active" : "passive"}
-                onChange={(value) => {
-                  onChange([value.toString()]);
-                }}
-              />
-            );
-          }}
+          render={({ onChange, value }) => (
+            <Switch
+              id="kc-active-switch"
+              label={t("common:on")}
+              labelOff={t("common:off")}
+              isChecked={value[0] === "true"}
+              data-testid={value[0] === "true" ? "active" : "passive"}
+              onChange={(value) => {
+                onChange([value.toString()]);
+              }}
+            />
+          )}
         />
       </FormGroup>
       <FormGroup

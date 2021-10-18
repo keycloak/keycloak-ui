@@ -66,13 +66,11 @@ const Dashboard = () => {
     serverInfo.profileInfo?.previewFeatures
   );
 
-  const isExperimentalFeature = (feature: string) => {
-    return serverInfo.profileInfo?.experimentalFeatures?.includes(feature);
-  };
+  const isExperimentalFeature = (feature: string) =>
+    serverInfo.profileInfo?.experimentalFeatures?.includes(feature);
 
-  const isPreviewFeature = (feature: string) => {
-    return serverInfo.profileInfo?.previewFeatures?.includes(feature);
-  };
+  const isPreviewFeature = (feature: string) =>
+    serverInfo.profileInfo?.previewFeatures?.includes(feature);
 
   return (
     <>

@@ -63,13 +63,10 @@ export const UserIdentityProviderLinks = () => {
     return allFedIds;
   };
 
-  const getAvailableIdPs = async () => {
-    return (await adminClient.realms.findOne({ realm }))!.identityProviders;
-  };
+  const getAvailableIdPs = async () =>
+    (await adminClient.realms.findOne({ realm }))!.identityProviders;
 
-  const linkedIdPsLoader = async () => {
-    return getFederatedIdentities();
-  };
+  const linkedIdPsLoader = async () => getFederatedIdentities();
 
   const availableIdPsLoader = async () => {
     const linkedNames = (await getFederatedIdentities()).map(
@@ -104,20 +101,18 @@ export const UserIdentityProviderLinks = () => {
     },
   });
 
-  const idpLinkRenderer = (idp: withProviderId) => {
-    return (
-      <Link
-        to={toIdentityProvider({
-          realm,
-          providerId: idp.providerId,
-          alias: idp.identityProvider!,
-          tab: "settings",
-        })}
-      >
-        {_.capitalize(idp.identityProvider)}
-      </Link>
-    );
-  };
+  const idpLinkRenderer = (idp: withProviderId) => (
+    <Link
+      to={toIdentityProvider({
+        realm,
+        providerId: idp.providerId,
+        alias: idp.identityProvider!,
+        tab: "settings",
+      })}
+    >
+      {_.capitalize(idp.identityProvider)}
+    </Link>
+  );
 
   const badgeRenderer1 = (idp: FederatedIdentityRepresentation) => {
     const groupName = identityProviders?.find(
@@ -141,33 +136,29 @@ export const UserIdentityProviderLinks = () => {
     );
   };
 
-  const unlinkRenderer = (fedIdentity: FederatedIdentityRepresentation) => {
-    return (
-      <Button
-        variant="link"
-        onClick={() => {
-          setFederatedId(fedIdentity.identityProvider!);
-          toggleUnlinkDialog();
-        }}
-      >
-        {t("unlinkAccount")}
-      </Button>
-    );
-  };
+  const unlinkRenderer = (fedIdentity: FederatedIdentityRepresentation) => (
+    <Button
+      variant="link"
+      onClick={() => {
+        setFederatedId(fedIdentity.identityProvider!);
+        toggleUnlinkDialog();
+      }}
+    >
+      {t("unlinkAccount")}
+    </Button>
+  );
 
-  const linkRenderer = (idp: IdentityProviderRepresentation) => {
-    return (
-      <Button
-        variant="link"
-        onClick={() => {
-          setFederatedId(idp.alias!);
-          setIsLinkIdPModalOpen(true);
-        }}
-      >
-        {t("linkAccount")}
-      </Button>
-    );
-  };
+  const linkRenderer = (idp: IdentityProviderRepresentation) => (
+    <Button
+      variant="link"
+      onClick={() => {
+        setFederatedId(idp.alias!);
+        setIsLinkIdPModalOpen(true);
+      }}
+    >
+      {t("linkAccount")}
+    </Button>
+  );
 
   return (
     <>

@@ -80,23 +80,22 @@ export const Members = () => {
     const memberOfPromises = await Promise.all(
       members.map((member) => getMembership(member.id!))
     );
-    return members.map((member: UserRepresentation, i) => {
-      return { ...member, membership: memberOfPromises[i] };
-    });
+    return members.map((member: UserRepresentation, i) => ({
+      ...member,
+      membership: memberOfPromises[i],
+    }));
   };
 
-  const MemberOfRenderer = (member: MembersOf) => {
-    return (
-      <>
-        {member.membership.map((group, index) => (
-          <>
-            <GroupPath key={group.id} group={group} />
-            {member.membership[index + 1] ? ", " : ""}
-          </>
-        ))}
-      </>
-    );
-  };
+  const MemberOfRenderer = (member: MembersOf) => (
+    <>
+      {member.membership.map((group, index) => (
+        <>
+          <GroupPath key={group.id} group={group} />
+          {member.membership[index + 1] ? ", " : ""}
+        </>
+      ))}
+    </>
+  );
 
   const UserDetailLink = (user: MembersOf) => (
     <Link key={user.id} to={toUser({ realm, id: user.id!, tab: "settings" })}>

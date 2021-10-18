@@ -171,9 +171,9 @@ export const KeysTabInner = ({ components, refresh }: KeysTabInnerProps) => {
   const onSearch = () => {
     if (searchVal !== "") {
       setSearchVal(searchVal);
-      const x = components.filter((v) => {
-        return v.name?.includes(searchVal) || v.providerId?.includes(searchVal);
-      });
+      const x = components.filter(
+        (v) => v.name?.includes(searchVal) || v.providerId?.includes(searchVal)
+      );
       setFilteredComponents(x);
     } else {
       setSearchVal("");
@@ -447,24 +447,22 @@ export const KeysProvidersTab = ({
   realmComponents,
   refresh,
   ...props
-}: KeysProps) => {
-  return (
-    <KeysTabInner
-      components={realmComponents?.map((component) => {
-        const provider = keyProviderComponentTypes.find(
-          (componentType: ComponentTypeRepresentation) =>
-            component.providerId === componentType.id
-        );
+}: KeysProps) => (
+  <KeysTabInner
+    components={realmComponents.map((component) => {
+      const provider = keyProviderComponentTypes.find(
+        (componentType: ComponentTypeRepresentation) =>
+          component.providerId === componentType.id
+      );
 
-        return {
-          ...component,
-          providerDescription: provider?.helpText,
-        };
-      })}
-      keyProviderComponentTypes={keyProviderComponentTypes}
-      refresh={refresh}
-      realmComponents={realmComponents}
-      {...props}
-    />
-  );
-};
+      return {
+        ...component,
+        providerDescription: provider?.helpText,
+      };
+    })}
+    keyProviderComponentTypes={keyProviderComponentTypes}
+    refresh={refresh}
+    realmComponents={realmComponents}
+    {...props}
+  />
+);

@@ -7,14 +7,8 @@ type FlowTitleProps = {
   title: string;
 };
 
-export const FlowTitle = ({ title }: FlowTitleProps) => {
-  return (
-    <Card
-      data-testid={title}
-      className="keycloak__authentication__title"
-      isFlat
-    >
-      <CardBody>{title}</CardBody>
-    </Card>
-  );
-};
+export const FlowTitle = ({ title }: FlowTitleProps) => (
+  <Card data-testid={title} className="keycloak__authentication__title" isFlat>
+    <CardBody>{title}</CardBody>
+  </Card>
+);

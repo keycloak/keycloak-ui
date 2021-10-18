@@ -15,13 +15,13 @@ export type MultiLine = {
 };
 
 export function convertToMultiline(fields: string[]): MultiLine[] {
-  return (fields && fields.length > 0 ? fields : [""]).map((field) => {
-    return { value: field };
-  });
+  return (fields && fields.length > 0 ? fields : [""]).map((field) => ({
+    value: field,
+  }));
 }
 
 export function toValue(formValue: MultiLine[]): string[] {
-  return formValue?.map((field) => field.value);
+  return formValue.map((field) => field.value);
 }
 
 export type MultiLineInputProps = Omit<TextInputProps, "form"> & {
@@ -76,7 +76,7 @@ export const MultiLineInput = ({
               onClick={() => append({})}
               tabIndex={-1}
               aria-label={t("common:add")}
-              isDisabled={rest.isDisabled || !currentValues?.[index]?.value}
+              isDisabled={rest.isDisabled || !currentValues?.[index].value}
             >
               <PlusCircleIcon /> {t(addButtonLabel || "common:add")}
             </Button>

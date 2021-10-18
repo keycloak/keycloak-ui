@@ -14,13 +14,15 @@ export const GroupBreadCrumbs = () => {
   const history = useHistory();
   const location = useLocation();
 
-  useEffect(() => {
-    return history.listen(({ pathname }) => {
-      if (!pathname.includes("/groups") || pathname.endsWith("/groups")) {
-        clear();
-      }
-    });
-  }, [history]);
+  useEffect(
+    () =>
+      history.listen(({ pathname }) => {
+        if (!pathname.includes("/groups") || pathname.endsWith("/groups")) {
+          clear();
+        }
+      }),
+    [history]
+  );
 
   return subGroups.length !== 0 ? (
     <Breadcrumb>

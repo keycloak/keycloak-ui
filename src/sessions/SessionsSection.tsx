@@ -23,17 +23,15 @@ import { RevocationModal } from "./RevocationModal";
 import type ClientRepresentation from "@keycloak/keycloak-admin-client/lib/defs/clientRepresentation";
 import { LogoutAllSessionsModal } from "./LogoutAllSessionsModal";
 
-const Clients = (row: UserSessionRepresentation) => {
-  return (
-    <>
-      {Object.values(row.clients!).map((client) => (
-        <Link key={client} to="" className="pf-u-mx-sm">
-          {client}
-        </Link>
-      ))}
-    </>
-  );
-};
+const Clients = (row: UserSessionRepresentation) => (
+  <>
+    {Object.values(row.clients!).map((client) => (
+      <Link key={client} to="" className="pf-u-mx-sm">
+        {client}
+      </Link>
+    ))}
+  </>
+);
 
 export const SessionsSection = () => {
   const { t } = useTranslation("sessions");

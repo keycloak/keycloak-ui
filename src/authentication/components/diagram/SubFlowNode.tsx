@@ -14,23 +14,21 @@ const SubFlowNodeInner = ({
   data: { label },
   prefix,
   selected,
-}: SubFlowNodeProps) => {
-  return (
-    <>
-      <Handle position={Position.Right} type="source" />
-      <div
-        className={`react-flow__node-default keycloak__authentication__subflow_node ${
-          selected ? "selected" : ""
-        }`}
-      >
-        <div>
-          {prefix} {label}
-        </div>
+}: SubFlowNodeProps) => (
+  <>
+    <Handle position={Position.Right} type="source" />
+    <div
+      className={`react-flow__node-default keycloak__authentication__subflow_node ${
+        selected ? "selected" : ""
+      }`}
+    >
+      <div>
+        {prefix} {label}
       </div>
-      <Handle position={Position.Left} type="target" />
-    </>
-  );
-};
+    </div>
+    <Handle position={Position.Left} type="target" />
+  </>
+);
 
 export const SubFlowNode = memo(SubFlowNodeInner);
 

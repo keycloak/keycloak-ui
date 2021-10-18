@@ -11,24 +11,18 @@ export const FormattedLink = ({
   href,
   isInline,
   ...rest
-}: FormattedLinkProps) => {
-  return (
-    <a
-      href={href}
-      target="_blank"
-      rel="noreferrer noopener"
-      className={isInline ? "pf-m-link pf-m-inline" : ""}
-      {...rest}
-    >
-      {title ? title : href}{" "}
-      {href?.startsWith("http") && <ExternalLinkAltIcon />}
-    </a>
-  );
-};
+}: FormattedLinkProps) => (
+  <a
+    href={href}
+    target="_blank"
+    rel="noreferrer noopener"
+    className={isInline ? "pf-m-link pf-m-inline" : ""}
+    {...rest}
+  >
+    {title ? title : href} {href?.startsWith("http") && <ExternalLinkAltIcon />}
+  </a>
+);
 
 export const formattedLinkTableCell =
-  (): IFormatter => (data?: IFormatterValueType) => {
-    return (
-      data ? <FormattedLink href={data.toString()} /> : undefined
-    ) as object;
-  };
+  (): IFormatter => (data?: IFormatterValueType) =>
+    (data ? <FormattedLink href={data.toString()} /> : undefined) as object;

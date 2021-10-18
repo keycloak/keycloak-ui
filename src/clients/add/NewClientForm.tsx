@@ -78,36 +78,34 @@ export const NewClientForm = () => {
   const Footer = () => (
     <WizardFooter>
       <WizardContextConsumer>
-        {({ activeStep, onNext, onBack, onClose }) => {
-          return (
-            <>
-              <Button
-                variant="primary"
-                type="submit"
-                onClick={() => {
-                  forward(onNext);
-                }}
-              >
-                {activeStep.name === t("capabilityConfig")
-                  ? t("common:save")
-                  : t("common:next")}
-              </Button>
-              <Button
-                variant="secondary"
-                onClick={() => {
-                  back();
-                  onBack();
-                }}
-                isDisabled={activeStep.name === t("generalSettings")}
-              >
-                {t("common:back")}
-              </Button>
-              <Button variant="link" onClick={onClose}>
-                {t("common:cancel")}
-              </Button>
-            </>
-          );
-        }}
+        {({ activeStep, onNext, onBack, onClose }) => (
+          <>
+            <Button
+              variant="primary"
+              type="submit"
+              onClick={() => {
+                forward(onNext);
+              }}
+            >
+              {activeStep.name === t("capabilityConfig")
+                ? t("common:save")
+                : t("common:next")}
+            </Button>
+            <Button
+              variant="secondary"
+              onClick={() => {
+                back();
+                onBack();
+              }}
+              isDisabled={activeStep.name === t("generalSettings")}
+            >
+              {t("common:back")}
+            </Button>
+            <Button variant="link" onClick={onClose}>
+              {t("common:cancel")}
+            </Button>
+          </>
+        )}
       </WizardContextConsumer>
     </WizardFooter>
   );

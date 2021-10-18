@@ -11,15 +11,12 @@ export const ServerInfoContext = createContext<
 
 export const useServerInfo = () => useRequiredContext(ServerInfoContext);
 
-export const useLoginProviders = () => {
-  return sortProviders(useServerInfo().providers!["login-protocol"].providers);
-};
+export const useLoginProviders = () =>
+  sortProviders(useServerInfo().providers!["login-protocol"].providers);
 
 export const ServerInfoProvider: FunctionComponent = ({ children }) => {
   const adminClient = useAdminClient();
-  const loader = async () => {
-    return await adminClient.serverInfo.find();
-  };
+  const loader = async () => await adminClient.serverInfo.find();
   return (
     <DataLoader loader={loader}>
       {(serverInfo) => (

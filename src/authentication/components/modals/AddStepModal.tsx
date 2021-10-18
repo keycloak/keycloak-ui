@@ -23,29 +23,27 @@ type AuthenticationProviderListProps = {
 const AuthenticationProviderList = ({
   list,
   setValue,
-}: AuthenticationProviderListProps) => {
-  return (
-    <PageSection variant="light" className="pf-u-py-lg">
-      <Form isHorizontal>
-        {list?.map((provider) => (
-          <Radio
-            id={provider.id!}
-            key={provider.id}
-            name="provider"
-            label={provider.displayName}
-            data-testid={provider.id}
-            description={provider.description}
-            onChange={(_val, event) => {
-              const { id } = event.currentTarget;
-              const value = list.find((p) => p.id === id);
-              setValue(value);
-            }}
-          />
-        ))}
-      </Form>
-    </PageSection>
-  );
-};
+}: AuthenticationProviderListProps) => (
+  <PageSection variant="light" className="pf-u-py-lg">
+    <Form isHorizontal>
+      {list?.map((provider) => (
+        <Radio
+          id={provider.id!}
+          key={provider.id}
+          name="provider"
+          label={provider.displayName}
+          data-testid={provider.id}
+          description={provider.description}
+          onChange={(_val, event) => {
+            const { id } = event.currentTarget;
+            const value = list.find((p) => p.id === id);
+            setValue(value);
+          }}
+        />
+      ))}
+    </Form>
+  </PageSection>
+);
 
 export type FlowType = "client" | "form" | "basic" | "condition" | "subFlow";
 

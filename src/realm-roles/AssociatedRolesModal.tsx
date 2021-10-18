@@ -46,9 +46,8 @@ export const AssociatedRolesModal = (props: AssociatedRolesModalProps) => {
 
   const { id } = useParams<RealmRoleParams>();
 
-  const alphabetize = (rolesList: RoleRepresentation[]) => {
-    return _.sortBy(rolesList, (role) => role.name?.toUpperCase());
-  };
+  const alphabetize = (rolesList: RoleRepresentation[]) =>
+    _.sortBy(rolesList, (role) => role.name?.toUpperCase());
 
   const loader = async () => {
     const roles = await adminClient.roles.find();
@@ -76,29 +75,26 @@ export const AssociatedRolesModal = (props: AssociatedRolesModalProps) => {
             )!.clientId!)
         );
 
-      return alphabetize(filterDupes).filter((role: RoleRepresentation) => {
-        return (
+      return alphabetize(filterDupes).filter(
+        (role: RoleRepresentation) =>
           props.existingCompositeRoles?.find(
             (existing: RoleRepresentation) => existing.name === role.name
           ) === undefined && role.name !== name
-        );
-      });
+      );
     }
     return alphabetize(roles);
   };
 
-  const AliasRenderer = ({ id, name, clientId }: Role) => {
-    return (
-      <>
-        {clientId && (
-          <Label color="blue" key={`label-${id}`}>
-            {clientId}
-          </Label>
-        )}{" "}
-        {name}
-      </>
-    );
-  };
+  const AliasRenderer = ({ id, name, clientId }: Role) => (
+    <>
+      {clientId && (
+        <Label color="blue" key={`label-${id}`}>
+          {clientId}
+        </Label>
+      )}{" "}
+      {name}
+    </>
+  );
 
   const clientRolesLoader = async () => {
     const clients = await adminClient.clients.find();
@@ -129,13 +125,12 @@ export const AssociatedRolesModal = (props: AssociatedRolesModalProps) => {
         }
       );
 
-      return alphabetize(rolesList).filter((role: RoleRepresentation) => {
-        return (
+      return alphabetize(rolesList).filter(
+        (role: RoleRepresentation) =>
           existingAdditionalRoles.find(
             (existing: RoleRepresentation) => existing.name === role.name
           ) === undefined && role.name !== name
-        );
-      });
+      );
     }
 
     return alphabetize(rolesList);

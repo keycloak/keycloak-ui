@@ -1,5 +1,3 @@
 import React from "react";
 
-export const ForbiddenSection = () => {
-  return <>Forbidden</>;
-};
+export const ForbiddenSection = () => <>Forbidden</>;

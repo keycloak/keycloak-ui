@@ -65,35 +65,33 @@ const SecuredRoute = ({ route }: SecuredRouteProps) => {
   return <ForbiddenSection />;
 };
 
-export const App = ({ adminClient }: AdminClientProps) => {
-  return (
-    <AppContexts adminClient={adminClient}>
-      <Page
-        header={<Header />}
-        isManagedSidebar
-        sidebar={<PageNav />}
-        breadcrumb={<PageBreadCrumbs />}
-        mainContainerId={mainPageContentId}
+export const App = ({ adminClient }: AdminClientProps) => (
+  <AppContexts adminClient={adminClient}>
+    <Page
+      header={<Header />}
+      isManagedSidebar
+      sidebar={<PageNav />}
+      breadcrumb={<PageBreadCrumbs />}
+      mainContainerId={mainPageContentId}
+    >
+      <ErrorBoundary
+        FallbackComponent={ErrorRenderer}
+        onReset={() =>
+          (window.location.href =
+            window.location.origin + window.location.pathname)
+        }
       >
-        <ErrorBoundary
-          FallbackComponent={ErrorRenderer}
-          onReset={() =>
-            (window.location.href =
-              window.location.origin + window.location.pathname)
-          }
-        >
-          <Switch>
-            {routes.map((route, i) => (
-              <Route
-                exact={route.matchOptions?.exact ?? true}
-                key={i}
-                path={route.path}
-                component={() => <SecuredRoute route={route} />}
-              />
-            ))}
-          </Switch>
-        </ErrorBoundary>
-      </Page>
-    </AppContexts>
-  );
-};
+        <Switch>
+          {routes.map((route, i) => (
+            <Route
+              exact={route.matchOptions?.exact ?? true}
+              key={i}
+              path={route.path}
+              component={() => <SecuredRoute route={route} />}
+            />
+          ))}
+        </Switch>
+      </ErrorBoundary>
+    </Page>
+  </AppContexts>
+);

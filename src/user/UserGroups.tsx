@@ -44,9 +44,8 @@ export const UserGroups = ({ user }: UserGroupsProps) => {
   const { enabled } = useHelp();
 
   const adminClient = useAdminClient();
-  const alphabetize = (groupsList: GroupRepresentation[]) => {
-    return _.sortBy(groupsList, (group) => group.path?.toUpperCase());
-  };
+  const alphabetize = (groupsList: GroupRepresentation[]) =>
+    _.sortBy(groupsList, (group) => group.path?.toUpperCase());
 
   const loader = async (first?: number, max?: number, search?: string) => {
     const params: { [name: string]: string | number } = {

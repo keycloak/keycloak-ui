@@ -153,9 +153,7 @@ export const EventsTab = () => {
                 addTypes={() => setAddEventType(true)}
                 loader={() =>
                   Promise.resolve(
-                    events?.enabledEventTypes?.map((id) => {
-                      return { id };
-                    }) || []
+                    events?.enabledEventTypes?.map((id) => ({ id })) || []
                   )
                 }
                 onDelete={(value) => {

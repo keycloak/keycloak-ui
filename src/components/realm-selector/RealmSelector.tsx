@@ -34,15 +34,11 @@ export const RealmSelector = () => {
   const recentUsed = new RecentUsed();
   const all = recentUsed.used
     .filter((r) => r !== realm)
-    .map((name) => {
-      return { name, used: true };
-    })
+    .map((name) => ({ name, used: true }))
     .concat(
       realms
         .filter((r) => !recentUsed.used.includes(r.realm!))
-        .map((r) => {
-          return { name: r.realm!, used: false };
-        })
+        .map((r) => ({ name: r.realm!, used: false }))
     );
 
   const filteredItems = useMemo(() => {

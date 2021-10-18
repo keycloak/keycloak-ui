@@ -285,50 +285,48 @@ export const UserFederationLdapSettings = () => {
     },
   });
 
-  const addLdapFormContent = () => {
-    return (
-      <>
-        <ScrollForm
-          sections={[
-            t("generalOptions"),
-            t("connectionAndAuthenticationSettings"),
-            t("ldapSearchingAndUpdatingSettings"),
-            t("synchronizationSettings"),
-            t("kerberosIntegration"),
-            t("cacheSettings"),
-            t("advancedSettings"),
-          ]}
-        >
-          <LdapSettingsGeneral form={form} />
-          <LdapSettingsConnection form={form} edit={!!id} />
-          <LdapSettingsSearching form={form} />
-          <LdapSettingsSynchronization form={form} />
-          <LdapSettingsKerberosIntegration form={form} />
-          <SettingsCache form={form} />
-          <LdapSettingsAdvanced form={form} />
-        </ScrollForm>
-        <Form onSubmit={form.handleSubmit(save)}>
-          <ActionGroup className="keycloak__form_actions">
-            <Button
-              isDisabled={!form.formState.isDirty}
-              variant="primary"
-              type="submit"
-              data-testid="ldap-save"
-            >
-              {t("common:save")}
-            </Button>
-            <Button
-              variant="link"
-              onClick={() => history.push(`/${realm}/user-federation`)}
-              data-testid="ldap-cancel"
-            >
-              {t("common:cancel")}
-            </Button>
-          </ActionGroup>
-        </Form>
-      </>
-    );
-  };
+  const addLdapFormContent = () => (
+    <>
+      <ScrollForm
+        sections={[
+          t("generalOptions"),
+          t("connectionAndAuthenticationSettings"),
+          t("ldapSearchingAndUpdatingSettings"),
+          t("synchronizationSettings"),
+          t("kerberosIntegration"),
+          t("cacheSettings"),
+          t("advancedSettings"),
+        ]}
+      >
+        <LdapSettingsGeneral form={form} />
+        <LdapSettingsConnection form={form} edit={!!id} />
+        <LdapSettingsSearching form={form} />
+        <LdapSettingsSynchronization form={form} />
+        <LdapSettingsKerberosIntegration form={form} />
+        <SettingsCache form={form} />
+        <LdapSettingsAdvanced form={form} />
+      </ScrollForm>
+      <Form onSubmit={form.handleSubmit(save)}>
+        <ActionGroup className="keycloak__form_actions">
+          <Button
+            isDisabled={!form.formState.isDirty}
+            variant="primary"
+            type="submit"
+            data-testid="ldap-save"
+          >
+            {t("common:save")}
+          </Button>
+          <Button
+            variant="link"
+            onClick={() => history.push(`/${realm}/user-federation`)}
+            data-testid="ldap-cancel"
+          >
+            {t("common:cancel")}
+          </Button>
+        </ActionGroup>
+      </Form>
+    </>
+  );
 
   return (
     <>

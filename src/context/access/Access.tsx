@@ -31,13 +31,11 @@ export const AccessContextProvider: FunctionComponent = ({ children }) => {
     }
   }, [whoAmI, realm]);
 
-  const hasAccess = (...types: AccessType[]) => {
-    return types.every((type) => type === "anyone" || access.includes(type));
-  };
+  const hasAccess = (...types: AccessType[]) =>
+    types.every((type) => type === "anyone" || access.includes(type));
 
-  const hasSomeAccess = (...types: AccessType[]) => {
-    return types.some((type) => type === "anyone" || access.includes(type));
-  };
+  const hasSomeAccess = (...types: AccessType[]) =>
+    types.some((type) => type === "anyone" || access.includes(type));
 
   return (
     <AccessContext.Provider value={{ hasAccess, hasSomeAccess }}>

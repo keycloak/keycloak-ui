@@ -30,38 +30,36 @@ import { DataLoader } from "./DataLoader";
  */
 export const MockAdminClient: FunctionComponent<{ mock?: object }> = (
   props
-) => {
-  return (
-    <HashRouter>
-      <ServerInfoContext.Provider
-        value={serverInfo as unknown as ServerInfoRepresentation}
+) => (
+  <HashRouter>
+    <ServerInfoContext.Provider
+      value={serverInfo as unknown as ServerInfoRepresentation}
+    >
+      <AdminClient.Provider
+        value={
+          {
+            ...props.mock,
+            keycloak: {},
+            whoAmI: { find: () => Promise.resolve(whoamiMock) },
+            setConfig: () => {},
+          } as unknown as KeycloakAdminClient
+        }
       >
-        <AdminClient.Provider
-          value={
-            {
-              ...props.mock,
-              keycloak: {},
-              whoAmI: { find: () => Promise.resolve(whoamiMock) },
-              setConfig: () => {},
-            } as unknown as KeycloakAdminClient
-          }
-        >
-          <WhoAmIContextProvider>
-            <RealmContext.Provider
-              value={{
-                realm: "master",
-                realms: [],
-                refresh: () => Promise.resolve(),
-              }}
-            >
-              <AccessContextProvider>{props.children}</AccessContextProvider>
-            </RealmContext.Provider>
-          </WhoAmIContextProvider>
-        </AdminClient.Provider>
-      </ServerInfoContext.Provider>
-    </HashRouter>
-  );
-};
+        <WhoAmIContextProvider>
+          <RealmContext.Provider
+            value={{
+              realm: "master",
+              realms: [],
+              refresh: () => Promise.resolve(),
+            }}
+          >
+            <AccessContextProvider>{props.children}</AccessContextProvider>
+          </RealmContext.Provider>
+        </WhoAmIContextProvider>
+      </AdminClient.Provider>
+    </ServerInfoContext.Provider>
+  </HashRouter>
+);
 
 describe("DataLoader", () => {
   it("loads the data and renders the result", async () => {

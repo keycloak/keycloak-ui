@@ -41,8 +41,8 @@ export const ChangeTypeDropdown = ({
       onSelect={async (_, value) => {
         try {
           await Promise.all(
-            selectedRows.map((row) => {
-              return clientId
+            selectedRows.map((row) =>
+              clientId
                 ? changeClientScope(
                     adminClient,
                     clientId,
@@ -50,8 +50,8 @@ export const ChangeTypeDropdown = ({
                     row.type,
                     value as ClientScope
                   )
-                : changeScope(adminClient, row, value as ClientScope);
-            })
+                : changeScope(adminClient, row, value as ClientScope)
+            )
           );
           setOpen(false);
           refresh();

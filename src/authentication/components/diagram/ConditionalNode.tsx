@@ -6,20 +6,18 @@ type ConditionalNodeProps = {
   selected: boolean;
 };
 
-const ConditionalNodeInner = ({ data, selected }: ConditionalNodeProps) => {
-  return (
-    <>
-      <Handle position={Position.Right} type="source" />
-      <div
-        className={`react-flow__node-default keycloak__authentication__conditional_node ${
-          selected ? "selected" : ""
-        }`}
-      >
-        <div>{data.label}</div>
-      </div>
-      <Handle position={Position.Left} type="target" />
-    </>
-  );
-};
+const ConditionalNodeInner = ({ data, selected }: ConditionalNodeProps) => (
+  <>
+    <Handle position={Position.Right} type="source" />
+    <div
+      className={`react-flow__node-default keycloak__authentication__conditional_node ${
+        selected ? "selected" : ""
+      }`}
+    >
+      <div>{data.label}</div>
+    </div>
+    <Handle position={Position.Left} type="target" />
+  </>
+);
 
 export const ConditionalNode = memo(ConditionalNodeInner);

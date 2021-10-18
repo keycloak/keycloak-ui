@@ -99,15 +99,13 @@ export const GroupPickerDialog = ({
     [groupId, filter, first, max]
   );
 
-  const isRowDisabled = (row?: GroupRepresentation) => {
-    return !![...joinedGroups, ...(filterGroups || [])].find(
+  const isRowDisabled = (row?: GroupRepresentation) =>
+    !![...joinedGroups, ...(filterGroups || [])].find(
       (group) => group.id === row?.id
     );
-  };
 
-  const hasSubgroups = (group: GroupRepresentation) => {
-    return group.subGroups!.length !== 0;
-  };
+  const hasSubgroups = (group: GroupRepresentation) =>
+    group.subGroups!.length !== 0;
 
   const findSubGroup = (
     group: GroupRepresentation,

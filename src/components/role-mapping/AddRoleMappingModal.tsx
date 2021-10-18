@@ -102,9 +102,7 @@ export const AddRoleMappingModal = ({
       )
         .flat()
         .filter((row) => row.roles.length !== 0)
-        .map((row) => {
-          return { ...row.client, numberOfRoles: row.roles.length };
-        });
+        .map((row) => ({ ...row.client, numberOfRoles: row.roles.length }));
     },
     (clients) => {
       setClients(clients);
@@ -151,13 +149,11 @@ export const AddRoleMappingModal = ({
         break;
     }
 
-    const realmRoles = availableRoles.map((role) => {
-      return {
-        id: role.id,
-        role,
-        client: undefined,
-      };
-    });
+    const realmRoles = availableRoles.map((role) => ({
+      id: role.id,
+      role,
+      client: undefined,
+    }));
 
     const allClients =
       selectedClients.length !== 0
@@ -190,13 +186,11 @@ export const AddRoleMappingModal = ({
               break;
           }
 
-          return clientAvailableRoles.map((role) => {
-            return {
-              id: role.id,
-              role,
-              client,
-            };
-          });
+          return clientAvailableRoles.map((role) => ({
+            id: role.id,
+            role,
+            client,
+          }));
         })
       )
     ).flat();

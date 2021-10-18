@@ -63,31 +63,29 @@ export const RoleComponent = ({ name, label, helpText }: ComponentProps) => {
     []
   );
 
-  const createSelectGroup = (clients: ClientRepresentation[]) => {
-    return [
-      <SelectGroup key="role" label={t("roleGroup")}>
-        <SelectOption
-          key="realmRoles"
-          value={
-            {
-              name: "realmRoles",
-              toString: () => t("realmRoles"),
-            } as ClientRepresentation
-          }
-        >
-          {realm}
+  const createSelectGroup = (clients: ClientRepresentation[]) => [
+    <SelectGroup key="role" label={t("roleGroup")}>
+      <SelectOption
+        key="realmRoles"
+        value={
+          {
+            name: "realmRoles",
+            toString: () => t("realmRoles"),
+          } as ClientRepresentation
+        }
+      >
+        {realm}
+      </SelectOption>
+    </SelectGroup>,
+    <Divider key="divider" />,
+    <SelectGroup key="group" label={t("clientGroup")}>
+      {clients.map((client) => (
+        <SelectOption key={client.id} value={client}>
+          {client.clientId}
         </SelectOption>
-      </SelectGroup>,
-      <Divider key="divider" />,
-      <SelectGroup key="group" label={t("clientGroup")}>
-        {clients.map((client) => (
-          <SelectOption key={client.id} value={client}>
-            {client.clientId}
-          </SelectOption>
-        ))}
-      </SelectGroup>,
-    ];
-  };
+      ))}
+    </SelectGroup>,
+  ];
 
   const roleSelectOptions = () => {
     const createItem = (role: RoleRepresentation) => (
