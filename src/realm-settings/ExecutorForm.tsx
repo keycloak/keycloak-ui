@@ -190,8 +190,8 @@ export const ExecutorForm = () => {
                         <Switch
                           id="kc-executorType-switch"
                           data-testid="executorType-switch"
-                          label={t("executorTypeSwitch: On")}
-                          labelOff={t("executorTypeSwitch: Off")}
+                          label={t("executorTypeSwitch.on")}
+                          labelOff={t("executorTypeSwitch.off")}
                           isChecked={value}
                           onChange={(value) => {
                             onChange("" + value);
