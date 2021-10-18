@@ -46,16 +46,19 @@ const defaultValues: ClientProfileForm = {
 
 export const ClientProfileForm = () => {
   const { t } = useTranslation("realm-settings");
-  const { getValues, register, errors } = useForm<ClientProfileForm>({
+  const history = useHistory();
+  const { getValues, setValue, register, errors } = useForm<ClientProfileForm>({
     defaultValues,
+    mode: "onChange",
   });
+
+  //const { control, getValues, register, errors } = useForm({mode: "onChange"});
   const { addAlert, addError } = useAlerts();
   const adminClient = useAdminClient();
   const [globalProfiles, setGlobalProfiles] = useState<
     ClientProfileRepresentation[]
   >([]);
   const [profiles, setProfiles] = useState<ClientProfileRepresentation[]>([]);
-  const history = useHistory();
   const { realm, profileName } =
     useParams<{ realm: string; profileName: string }>();
   const serverInfo = useServerInfo();
@@ -162,19 +165,22 @@ export const ClientProfileForm = () => {
   );
   const globalProfileExecutors = globalProfile[0]?.executors || [];
 
+  setValue(
+    "name",
+    globalProfile.length > 0 ? globalProfile[0]?.name : profile[0]?.name
+  );
+  setValue(
+    "description",
+    globalProfile.length > 0
+      ? globalProfile[0]?.description
+      : profile[0]?.description
+  );
+
   return (
     <>
       <DeleteConfirm />
       <ViewHeader
-        titleKey={
-          editMode
-            ? globalProfile.length > 0
-              ? globalProfile[0].name!
-              : profile.length > 0
-              ? profile[0].name!
-              : ""
-            : t("newClientProfile")
-        }
+        titleKey={editMode ? profileName : t("newClientProfile")}
         badges={[
           {
             id: "global-client-profile-badge",
@@ -211,32 +217,37 @@ export const ClientProfileForm = () => {
           >
             <TextInput
               ref={register({ required: true })}
-              type="text"
-              id="kc-client-profile-name"
               name="name"
+              type="text"
+              id="name"
+              aria-label={t("name")}
               data-testid="client-profile-name"
+              isReadOnly={globalProfile.length > 0}
             />
           </FormGroup>
           <FormGroup label={t("common:description")} fieldId="kc-description">
             <TextArea
-              name="description"
-              aria-label={t("description")}
               ref={register()}
+              name="description"
               type="text"
-              id="kc-client-profile-description"
+              id="description"
+              aria-label={t("description")}
               data-testid="client-profile-description"
+              isReadOnly={globalProfile.length > 0}
             />
           </FormGroup>
           <ActionGroup>
-            <Button
-              variant="primary"
-              onClick={save}
-              data-testid="saveCreateProfile"
-              isDisabled={editMode ? true : false}
-            >
-              {t("common:save")}
-            </Button>
-            {editMode ? (
+            {globalProfile.length === 0 && (
+              <Button
+                variant="primary"
+                onClick={save}
+                data-testid="saveCreateProfile"
+                isDisabled={editMode ? true : false}
+              >
+                {t("common:save")}
+              </Button>
+            )}
+            {editMode && globalProfile.length === 0 && (
               <Button
                 id={"reloadProfile"}
                 variant="link"
@@ -244,7 +255,8 @@ export const ClientProfileForm = () => {
               >
                 {t("realm-settings:reload")}
               </Button>
-            ) : (
+            )}
+            {!editMode && globalProfile.length === 0 && (
               <Button
                 id={"cancelCreateProfile"}
                 component={(props) => (
