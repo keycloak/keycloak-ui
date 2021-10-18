@@ -47,12 +47,17 @@ const defaultValues: ClientProfileForm = {
 export const ClientProfileForm = () => {
   const { t } = useTranslation("realm-settings");
   const history = useHistory();
-  const { getValues, setValue, register, errors } = useForm<ClientProfileForm>({
+  const {
+    getValues,
+    setValue,
+    register,
+    errors,
+    formState: { isDirty },
+  } = useForm<ClientProfileForm>({
     defaultValues,
     mode: "onChange",
   });
 
-  //const { control, getValues, register, errors } = useForm({mode: "onChange"});
   const { addAlert, addError } = useAlerts();
   const adminClient = useAdminClient();
   const [globalProfiles, setGlobalProfiles] = useState<
@@ -242,7 +247,7 @@ export const ClientProfileForm = () => {
                 variant="primary"
                 onClick={save}
                 data-testid="saveCreateProfile"
-                isDisabled={editMode ? true : false}
+                isDisabled={!isDirty}
               >
                 {t("common:save")}
               </Button>
@@ -252,6 +257,7 @@ export const ClientProfileForm = () => {
                 id={"reloadProfile"}
                 variant="link"
                 data-testid={"reloadProfile"}
+                isDisabled={!isDirty}
               >
                 {t("realm-settings:reload")}
               </Button>
