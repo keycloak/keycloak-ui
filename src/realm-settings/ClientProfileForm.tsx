@@ -166,10 +166,24 @@ export const ClientProfileForm = () => {
     <>
       <DeleteConfirm />
       <ViewHeader
-        titleKey={editMode ? profileName : t("newClientProfile")}
+        titleKey={
+          editMode
+            ? globalProfile.length > 0
+              ? globalProfile[0].name!
+              : profile.length > 0
+              ? profile[0].name!
+              : ""
+            : t("newClientProfile")
+        }
+        badges={[
+          {
+            id: "global-client-profile-badge",
+            text: globalProfile.length > 0 ? t("global") : "",
+          },
+        ]}
         divider
         dropdownItems={
-          editMode
+          globalProfile.length === 0
             ? [
                 <DropdownItem
                   key="delete"
