@@ -290,7 +290,7 @@ export const ClientProfileForm = () => {
                     />
                   </Text>
                 </FlexItem>
-                {Object.keys(profile).length !== 0 ? (
+                {Object.keys(profile).length !== 0 && (
                   <FlexItem align={{ default: "alignRight" }}>
                     <Button
                       id="addExecutor"
@@ -311,9 +311,6 @@ export const ClientProfileForm = () => {
                       {t("realm-settings:addExecutor")}
                     </Button>
                   </FlexItem>
-                ) : (
-                  // eslint-disable-next-line react/jsx-no-useless-fragment
-                  <></>
                 )}
               </Flex>
               {profileExecutors.length > 0 && (
