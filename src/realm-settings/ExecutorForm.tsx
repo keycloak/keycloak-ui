@@ -163,9 +163,9 @@ export const ExecutorForm = () => {
               )}
             />
           </FormGroup>
-          {executorProperties.map(
-            (option) =>
-              option.type === "boolean" && (
+          {executorProperties.map((option) => (
+            <>
+              {option.type === "boolean" && (
                 <FormGroup
                   key="kc-executorType"
                   label={option.label}
@@ -198,11 +198,8 @@ export const ExecutorForm = () => {
                     )}
                   />
                 </FormGroup>
-              )
-          )}
-          {executorProperties.map(
-            (option) =>
-              option.type === "String" && (
+              )}
+              {option.type === "String" && (
                 <FormGroup
                   label={option.label}
                   fieldId="kc-executorTypeText"
@@ -225,11 +222,8 @@ export const ExecutorForm = () => {
                     data-testid="executorType-text"
                   />
                 </FormGroup>
-              )
-          )}
-          {executorProperties.map(
-            (option) =>
-              option.type === "List" && (
+              )}
+              {option.type === "List" && (
                 <FormGroup
                   label={option.label}
                   fieldId="kc-executorTypeSelect"
@@ -274,11 +268,8 @@ export const ExecutorForm = () => {
                     )}
                   />
                 </FormGroup>
-              )
-          )}
-          {executorProperties.map(
-            (option) =>
-              option.type === "MultivaluedList" && (
+              )}
+              {option.type === "MultivaluedList" && (
                 <FormGroup
                   label={option.label}
                   fieldId="kc-executorAuthenticatorMultiSelect"
@@ -336,8 +327,9 @@ export const ExecutorForm = () => {
                     )}
                   />
                 </FormGroup>
-              )
-          )}
+              )}
+            </>
+          ))}
           <ActionGroup>
             <Button
               variant="primary"
