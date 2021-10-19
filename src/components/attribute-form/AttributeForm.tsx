@@ -40,7 +40,9 @@ export type AttributesFormProps = {
 export const arrayToAttributes = (attributeArray: KeyValueType[]) => {
   const initValue: { [index: string]: string[] } = {};
   return attributeArray.reduce((acc, attribute) => {
-    acc[attribute.key] = [attribute.value];
+    acc[attribute.key] = !acc[attribute.key]
+      ? [attribute.value]
+      : acc[attribute.key].concat(attribute.value);
     return acc;
   }, initValue);
 };
@@ -51,10 +53,17 @@ export const attributesToArray = (attributes?: {
   if (!attributes || Object.keys(attributes).length == 0) {
     return [];
   }
-  return Object.keys(attributes).map((key) => ({
-    key: key,
-    value: attributes[key][0],
-  }));
+  const initValue: KeyValueType[] = [];
+  return Object.keys(attributes).reduce((acc, key) => {
+    return acc.concat(
+      attributes[key].map((value) => {
+        return {
+          key: key,
+          value: value,
+        };
+      })
+    );
+  }, initValue);
 };
 
 export const AttributesForm = ({
