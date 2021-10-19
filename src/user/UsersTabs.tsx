@@ -26,6 +26,7 @@ import { useConfirmDialog } from "../components/confirm-dialog/ConfirmDialog";
 import { toUser } from "./routes/User";
 import { toUsers } from "./routes/Users";
 import { UserRoleMapping } from "./UserRoleMapping";
+import { UserAttributes } from "./UserAttributes";
 
 export const UsersTabs = () => {
   const { t } = useTranslation("users");
@@ -204,6 +205,13 @@ export const UsersTabs = () => {
                 }
               >
                 <UserIdentityProviderLinks />
+              </Tab>
+              <Tab
+                eventKey="attributes"
+                data-testid="attributes"
+                title={<TabTitleText>{t("common:attributes")}</TabTitleText>}
+              >
+                <UserAttributes user={user} />
               </Tab>
             </KeycloakTabs>
           )}
