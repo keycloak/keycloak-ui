@@ -71,7 +71,7 @@ export const ClientSelectComponent = ({
               return clients;
             }}
             onSelect={(_, value) => {
-              onChange(value as string);
+              onChange(value.toString());
               setOpen(false);
             }}
             aria-label={t(label!)}
