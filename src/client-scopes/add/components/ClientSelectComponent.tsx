@@ -28,7 +28,7 @@ export const ClientSelectComponent = ({
   const adminClient = useAdminClient();
 
   useFetch(
-    async () => {
+    () => {
       const params: { [name: string]: string | number } = {
         max: 20,
       };
@@ -36,7 +36,7 @@ export const ClientSelectComponent = ({
         params.clientId = search;
         params.search = "true";
       }
-      return await adminClient.clients.find(params);
+      return adminClient.clients.find(params);
     },
     (clients) =>
       setClients(
