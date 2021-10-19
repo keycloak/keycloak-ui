@@ -17,11 +17,11 @@ import { ViewHeader } from "../components/view-header/ViewHeader";
 import { useAlerts } from "../components/alert/Alerts";
 import { useServerInfo } from "../context/server-info/ServerInfoProvider";
 import { Controller, useForm } from "react-hook-form";
-import type ComponentTypeRepresentation from "@keycloak/keycloak-admin-client/lib/defs/componentTypeRepresentation";
-import type { ConfigPropertyRepresentation } from "@keycloak/keycloak-admin-client/lib/defs/authenticatorConfigInfoRepresentation";
 import { HelpItem } from "../components/help-enabler/HelpItem";
 import { Link, useHistory, useParams } from "react-router-dom";
 import { useAdminClient, useFetch } from "../context/auth/AdminClient";
+import type ComponentTypeRepresentation from "@keycloak/keycloak-admin-client/lib/defs/componentTypeRepresentation";
+import type { ConfigPropertyRepresentation } from "@keycloak/keycloak-admin-client/lib/defs/authenticatorConfigInfoRepresentation";
 import type ClientProfileRepresentation from "@keycloak/keycloak-admin-client/lib/defs/clientProfileRepresentation";
 import type { ClientProfileParams } from "./routes/ClientProfile";
 
@@ -163,8 +163,8 @@ export const ExecutorForm = () => {
               )}
             />
           </FormGroup>
-          {executorProperties.map((option) => {
-            return (
+          {executorProperties.map(
+            (option) =>
               option.type === "boolean" && (
                 <FormGroup
                   key="kc-executorType"
@@ -199,10 +199,9 @@ export const ExecutorForm = () => {
                   />
                 </FormGroup>
               )
-            );
-          })}
-          {executorProperties.map((option) => {
-            return (
+          )}
+          {executorProperties.map(
+            (option) =>
               option.type === "String" && (
                 <FormGroup
                   label={option.label}
@@ -227,10 +226,9 @@ export const ExecutorForm = () => {
                   />
                 </FormGroup>
               )
-            );
-          })}
-          {executorProperties.map((option) => {
-            return (
+          )}
+          {executorProperties.map(
+            (option) =>
               option.type === "List" && (
                 <FormGroup
                   label={option.label}
@@ -256,7 +254,6 @@ export const ExecutorForm = () => {
                         }
                         onSelect={(_, value) => {
                           onChange(value.toString());
-                          option.options?.filter((option) => option === value);
                           setSelectAlgorithmTypeOpen(false);
                         }}
                         selections={value}
@@ -278,10 +275,9 @@ export const ExecutorForm = () => {
                   />
                 </FormGroup>
               )
-            );
-          })}
-          {executorProperties.map((option) => {
-            return (
+          )}
+          {executorProperties.map(
+            (option) =>
               option.type === "MultivaluedList" && (
                 <FormGroup
                   label={option.label}
@@ -315,7 +311,7 @@ export const ExecutorForm = () => {
                         }
                         selections={value}
                         onSelect={(_, v) => {
-                          const option = v as string;
+                          const option = v.toString();
                           if (!value) {
                             onChange([option]);
                           } else if (value.includes(option)) {
@@ -341,8 +337,7 @@ export const ExecutorForm = () => {
                   />
                 </FormGroup>
               )
-            );
-          })}
+          )}
           <ActionGroup>
             <Button
               variant="primary"
