@@ -52,6 +52,7 @@ export const ClientProfileForm = () => {
     getValues,
     setValue,
     register,
+    trigger,
     errors,
     formState: { isDirty },
   } = useForm<ClientProfileForm>({
@@ -77,6 +78,8 @@ export const ClientProfileForm = () => {
   const [executorToDelete, setExecutorToDelete] =
     useState<{ idx: number; name: string }>();
   const editMode = profileName ? true : false;
+  const [key, setKey] = useState(0);
+  const reload = () => setKey(new Date().getTime());
 
   useFetch(
     () =>
@@ -85,11 +88,12 @@ export const ClientProfileForm = () => {
       setGlobalProfiles(profiles.globalProfiles ?? []);
       setProfiles(profiles.profiles ?? []);
     },
-    []
+    [key]
   );
 
   const save = async () => {
     const form = getValues();
+    trigger();
 
     const createdProfile = {
       ...form,
@@ -258,6 +262,7 @@ export const ClientProfileForm = () => {
                 variant="link"
                 data-testid={"reloadProfile"}
                 isDisabled={!isDirty}
+                onClick={reload}
               >
                 {t("realm-settings:reload")}
               </Button>
