@@ -33,7 +33,6 @@ export const ExecutorForm = () => {
   const { realm, profileName } = useParams<ClientProfileParams>();
   const { addAlert, addError } = useAlerts();
   const [selectExecutorTypeOpen, setSelectExecutorTypeOpen] = useState(false);
-  //   const [selectAlgorithmTypeOpen, setSelectAlgorithmTypeOpen] = useState(false);
   const serverInfo = useServerInfo();
   const adminClient = useAdminClient();
   const executorTypes =
@@ -175,7 +174,8 @@ export const ExecutorForm = () => {
                   <Component
                     key={option.name}
                     {...option}
-                    label={fldNameFormatter(option.label!)}
+                    name={fldNameFormatter(option.label!)}
+                    label={option.label}
                   />
                 );
               } else {
