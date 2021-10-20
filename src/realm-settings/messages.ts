@@ -265,7 +265,6 @@ export default {
       "The client profiles configuration was updated",
     updateClientProfilesError:
       "Provided JSON is incorrect: Unexpected token { in JSON",
-    deleteClientPolicy: "Delete client policy",
     deleteClientPolicyConditionConfirmTitle: "Delete condition?",
     deleteClientPolicyConditionConfirm:
       "This action will permanently delete {{condition}}. This cannot be undone.",
