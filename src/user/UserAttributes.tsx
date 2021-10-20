@@ -48,7 +48,7 @@ export const UserAttributes = ({ user }: UserAttributesProps) => {
       await adminClient.users.update({ id: user.id! }, { ...user, attributes });
 
       form.setValue("attributes", convertAttributes(attributes));
-      addAlert(t("groupUpdated"), AlertVariant.success);
+      addAlert(t("userSaved"), AlertVariant.success);
     } catch (error) {
       addError("groups:groupUpdateError", error);
     }

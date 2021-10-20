@@ -178,7 +178,7 @@ export const UsersTabs = () => {
               </Tab>
               <Tab
                 eventKey="attributes"
-                data-testid="attributes"
+                data-testid="user-attributes-tab"
                 title={<TabTitleText>{t("common:attributes")}</TabTitleText>}
               >
                 <UserAttributes user={user} />
