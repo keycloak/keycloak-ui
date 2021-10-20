@@ -64,11 +64,11 @@ export const ExecutorForm = () => {
     name.toLowerCase().trim().split(/\s+/).join("-");
 
   const save = async () => {
-    const formVals = form.getValues();
+    const formValues = form.getValues();
 
     const createdExecutors = {
-      executor: formVals.executor,
-      configuration: { ...formVals },
+      executor: formValues.executor,
+      configuration: { ...formValues },
     };
 
     delete createdExecutors.configuration.executor;
