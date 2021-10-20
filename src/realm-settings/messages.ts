@@ -239,6 +239,7 @@ export default {
     createClientProfile: "Create client profile",
     deleteClientProfile: "Delete this client profile",
     createClientProfileSuccess: "New client profile created",
+    updateClientProfileSuccess: "Client profile updated successfully",
     createClientProfileError: "Could not create client profile: '{{error}}'",
     createClientProfileNameHelperText:
       "The name must be unique within the realm",

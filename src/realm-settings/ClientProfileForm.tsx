@@ -91,24 +91,48 @@ export const ClientProfileForm = () => {
   );
 
   const save = async (form: ClientProfileForm) => {
-    const createdProfile = {
-      ...form,
-      executors: [],
-    };
+    let allProfiles: ClientProfileRepresentation[] = [];
+    let createdProfileName: string = "";
 
-    const allProfiles = profiles.concat(createdProfile);
+    if (editMode) {
+      const profileToUpdate = profiles.filter(
+        (profile) => profile.name === profileName
+      );
+      profileToUpdate[0].name = form.name;
+      profileToUpdate[0].description = form.description;
+
+      createdProfileName = profileToUpdate[0].name;
+      allProfiles = profiles;
+    } else {
+      const createdProfile = {
+        ...form,
+        executors: [],
+      };
+
+      createdProfileName = createdProfile.name;
+      allProfiles = profiles.concat(createdProfile);
+    }
 
     try {
       await adminClient.clientPolicies.createProfiles({
         profiles: allProfiles,
         globalProfiles: globalProfiles,
       });
-      addAlert(
-        t("realm-settings:createClientProfileSuccess"),
-        AlertVariant.success
-      );
+
+      if (editMode) {
+        addAlert(
+          t("realm-settings:updateClientProfileSuccess"),
+          AlertVariant.success
+        );
+      } else {
+        addAlert(
+          t("realm-settings:createClientProfileSuccess"),
+          AlertVariant.success
+        );
+      }
+
       history.push(
-        `/${realm}/realm-settings/clientPolicies/${createdProfile.name}`
+        `/${realm}/realm-settings/clientPolicies/${createdProfileName}`
       );
     } catch (error) {
       addError("realm-settings:createClientProfileError", error);
