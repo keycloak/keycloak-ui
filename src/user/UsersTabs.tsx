@@ -177,6 +177,13 @@ export const UsersTabs = () => {
                 </PageSection>
               </Tab>
               <Tab
+                eventKey="attributes"
+                data-testid="attributes"
+                title={<TabTitleText>{t("common:attributes")}</TabTitleText>}
+              >
+                <UserAttributes user={user} />
+              </Tab>
+              <Tab
                 eventKey="groups"
                 data-testid="user-groups-tab"
                 title={<TabTitleText>{t("common:groups")}</TabTitleText>}
@@ -205,13 +212,6 @@ export const UsersTabs = () => {
                 }
               >
                 <UserIdentityProviderLinks />
-              </Tab>
-              <Tab
-                eventKey="attributes"
-                data-testid="attributes"
-                title={<TabTitleText>{t("common:attributes")}</TabTitleText>}
-              >
-                <UserAttributes user={user} />
               </Tab>
             </KeycloakTabs>
           )}
