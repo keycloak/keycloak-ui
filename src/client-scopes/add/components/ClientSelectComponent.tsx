@@ -8,6 +8,7 @@ import {
   SelectVariant,
 } from "@patternfly/react-core";
 
+import type { ClientQuery } from "@keycloak/keycloak-admin-client/lib/resources/clients";
 import { useAdminClient, useFetch } from "../../../context/auth/AdminClient";
 import { HelpItem } from "../../../components/help-enabler/HelpItem";
 import type { ComponentProps } from "./components";
@@ -29,12 +30,12 @@ export const ClientSelectComponent = ({
 
   useFetch(
     () => {
-      const params: { [name: string]: string | number } = {
+      const params: ClientQuery = {
         max: 20,
       };
       if (search) {
         params.clientId = search;
-        params.search = "true";
+        params.search = true;
       }
       return adminClient.clients.find(params);
     },
