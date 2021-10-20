@@ -344,8 +344,7 @@ export const ClientProfileForm = () => {
                                   {executor.executor}
                                 </Link>
                               ) : (
-                                // eslint-disable-next-line react/jsx-no-useless-fragment
-                                <>{executor.executor}</>
+                                executor.executor
                               )}
                               {executorTypes?.map((type) => (
                                 <>
@@ -411,8 +410,7 @@ export const ClientProfileForm = () => {
                                     {executor.executor}
                                   </Link>
                                 ) : (
-                                  // eslint-disable-next-line react/jsx-no-useless-fragment
-                                  <>{executor.executor}</>
+                                  executor.executor
                                 )}
                                 {executorTypes?.map((type) => (
                                   <>

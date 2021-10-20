@@ -258,10 +258,6 @@ export default {
     executorsHelpItem: "Executors help item",
     addExecutor: "Add executor",
     executorType: "Executor type",
-    executorTypeSwitch: {
-      on: "On",
-      off: "Off",
-    },
     executorTypeSwitchHelpText: "Executor Type Switch Help Text",
     executorTypeSelectHelpText: "Executor Type Select Help Text",
     executorTypeSelectAlgorithm: "Executor Type Select Algorithm",

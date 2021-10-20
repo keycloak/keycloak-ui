@@ -8,18 +8,19 @@ import {
   Select,
   SelectOption,
   SelectVariant,
-  Switch,
-  TextInput,
 } from "@patternfly/react-core";
 import { useTranslation } from "react-i18next";
 import { FormAccess } from "../components/form-access/FormAccess";
 import { ViewHeader } from "../components/view-header/ViewHeader";
 import { useAlerts } from "../components/alert/Alerts";
 import { useServerInfo } from "../context/server-info/ServerInfoProvider";
-import { Controller, useForm } from "react-hook-form";
+import { Controller, FormProvider, useForm } from "react-hook-form";
 import { HelpItem } from "../components/help-enabler/HelpItem";
 import { Link, useHistory, useParams } from "react-router-dom";
 import { useAdminClient, useFetch } from "../context/auth/AdminClient";
+import { StringComponent } from "../../src/client-scopes/add/components/StringComponent";
+import { BooleanComponent } from "../../src/client-scopes/add/components/BooleanComponent";
+import { ListComponent } from "../../src/client-scopes/add/components/ListComponent";
 import type ComponentTypeRepresentation from "@keycloak/keycloak-admin-client/lib/defs/componentTypeRepresentation";
 import type { ConfigPropertyRepresentation } from "@keycloak/keycloak-admin-client/lib/defs/authenticatorConfigInfoRepresentation";
 import type ClientProfileRepresentation from "@keycloak/keycloak-admin-client/lib/defs/clientProfileRepresentation";
@@ -31,7 +32,7 @@ export const ExecutorForm = () => {
   const { realm, profileName } = useParams<ClientProfileParams>();
   const { addAlert, addError } = useAlerts();
   const [selectExecutorTypeOpen, setSelectExecutorTypeOpen] = useState(false);
-  const [selectAlgorithmTypeOpen, setSelectAlgorithmTypeOpen] = useState(false);
+  //   const [selectAlgorithmTypeOpen, setSelectAlgorithmTypeOpen] = useState(false);
   const [selectMultiAuthenticatorOpen, setSelectMultiAuthenticatorOpen] =
     useState(false);
   const serverInfo = useServerInfo();
@@ -48,7 +49,9 @@ export const ExecutorForm = () => {
     ClientProfileRepresentation[]
   >([]);
   const [profiles, setProfiles] = useState<ClientProfileRepresentation[]>([]);
-  const { control, getValues, register } = useForm();
+  const { getValues } = useForm();
+  const form = useForm();
+  const { control } = form;
 
   useFetch(
     () =>
@@ -165,110 +168,35 @@ export const ExecutorForm = () => {
           </FormGroup>
           {executorProperties.map((option) => (
             <>
-              {option.type === "boolean" && (
-                <FormGroup
-                  key="kc-executorType"
-                  label={option.label}
-                  fieldId="kc-executorTypeSwitch"
-                  labelIcon={
-                    <HelpItem
-                      helpText={option.helpText}
-                      forLabel={t("executorTypeSwitchHelpText")}
-                      forID={t(`common:helpLabel`, {
-                        label: t("executorTypeSwitchHelpText"),
-                      })}
-                    />
-                  }
-                >
-                  <Controller
+              <FormProvider {...form}>
+                {option.type === "boolean" && (
+                  <BooleanComponent
                     name={fldNameFormatter(option.label!)}
-                    control={control}
+                    label={option.label}
+                    helpText={option.helpText}
                     defaultValue={option.defaultValue}
-                    render={({ onChange, value }) => (
-                      <Switch
-                        id="kc-executorType-switch"
-                        data-testid="executorType-switch"
-                        label={t("executorTypeSwitch.on")}
-                        labelOff={t("executorTypeSwitch.off")}
-                        isChecked={value}
-                        onChange={(value) => {
-                          onChange("" + value);
-                        }}
-                      />
-                    )}
+                    data-testid="executor-optionType-boolean"
                   />
-                </FormGroup>
-              )}
-              {option.type === "String" && (
-                <FormGroup
-                  label={option.label}
-                  fieldId="kc-executorTypeText"
-                  labelIcon={
-                    <HelpItem
-                      helpText={option.helpText}
-                      forLabel={t("executorTypeTextHelpText")}
-                      forID={t(`common:helpLabel`, {
-                        label: t("executorTypeTextHelpText"),
-                      })}
-                    />
-                  }
-                >
-                  <TextInput
+                )}
+                {option.type === "String" && (
+                  <StringComponent
                     name={fldNameFormatter(option.label!)}
-                    ref={register()}
-                    type="text"
-                    id="kc-executorType-text"
+                    label={option.label}
+                    helpText={option.helpText}
                     defaultValue={option.defaultValue}
-                    data-testid="executorType-text"
+                    data-testid="executor-optionType-string"
                   />
-                </FormGroup>
-              )}
-              {option.type === "List" && (
-                <FormGroup
-                  label={option.label}
-                  fieldId="kc-executorTypeSelect"
-                  labelIcon={
-                    <HelpItem
-                      helpText={option.helpText}
-                      forLabel={t("executorTypeSelectHelpText")}
-                      forID={t(`common:helpLabel`, {
-                        label: t("executorTypeSelectHelpText"),
-                      })}
-                    />
-                  }
-                >
-                  <Controller
+                )}
+                {option.type === "List" && (
+                  <ListComponent
                     name={fldNameFormatter(option.label!)}
-                    control={control}
-                    render={({ onChange, value }) => (
-                      <Select
-                        toggleId="kc-executorTypeSelect"
-                        onToggle={(isOpen) =>
-                          setSelectAlgorithmTypeOpen(isOpen)
-                        }
-                        onSelect={(_, value) => {
-                          onChange(value.toString());
-                          setSelectAlgorithmTypeOpen(false);
-                        }}
-                        selections={value}
-                        variant={SelectVariant.single}
-                        aria-label={t("executorTypeSelectAlgorithm")}
-                        isOpen={selectAlgorithmTypeOpen}
-                        maxHeight={300}
-                        defaultValue={option.defaultValue}
-                      >
-                        {option.options?.map((option) => (
-                          <SelectOption
-                            selected={option === value}
-                            key={option}
-                            value={option}
-                          />
-                        ))}
-                      </Select>
-                    )}
+                    label={option.label}
+                    helpText={option.helpText}
+                    defaultValue={option.defaultValue}
+                    data-testid="executor-optionType-list"
                   />
-                </FormGroup>
-              )}
+                )}
+              </FormProvider>
               {option.type === "MultivaluedList" && (
                 <FormGroup
                   label={option.label}
