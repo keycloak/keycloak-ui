@@ -47,7 +47,6 @@ export const ExecutorForm = () => {
     ClientProfileRepresentation[]
   >([]);
   const [profiles, setProfiles] = useState<ClientProfileRepresentation[]>([]);
-  const { getValues } = useForm();
   const form = useForm();
   const { control } = form;
 
@@ -65,11 +64,11 @@ export const ExecutorForm = () => {
     name.toLowerCase().trim().split(/\s+/).join("-");
 
   const save = async () => {
-    const form = getValues();
+    const formVals = form.getValues();
 
     const createdExecutors = {
-      executor: form.executor,
-      configuration: { ...form },
+      executor: formVals.executor,
+      configuration: { ...formVals },
     };
 
     delete createdExecutors.configuration.executor;
