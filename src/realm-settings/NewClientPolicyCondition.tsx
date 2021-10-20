@@ -38,7 +38,7 @@ export const NewClientPolicyCondition = () => {
 
   const [openConditionType, setOpenConditionType] = useState(false);
   const [policies, setPolicies] = useState<ClientPolicyRepresentation[]>([]);
-  const [conditions, setConditions] = useState<
+  const [condition, setCondition] = useState<
     ClientPolicyConditionRepresentation[]
   >([]);
   const [conditionType, setConditionType] = useState("");
@@ -71,7 +71,7 @@ export const NewClientPolicyCondition = () => {
     const createdPolicy = {
       ...currentPolicy,
       profiles: [],
-      conditions: currentPolicy?.conditions?.concat(conditions),
+      conditions: currentPolicy?.conditions?.concat(condition),
     };
 
     const index = policies.findIndex(
@@ -135,15 +135,13 @@ export const NewClientPolicyCondition = () => {
               control={control}
               render={({ onChange, value }) => (
                 <Select
-                  menuAppendTo="parent"
                   placeholderText={t("selectACondition")}
                   toggleId="provider"
                   onToggle={(toggle) => setOpenConditionType(toggle)}
                   onSelect={(_, value) => {
                     onChange(value);
                     setConditionType((value as ComponentTypeRepresentation).id);
-                    setConditions([
-                      ...conditions,
+                    setCondition([
                       {
                         condition: (value as ComponentTypeRepresentation).id,
                         configuration: {},
