@@ -26,6 +26,7 @@ export const BooleanComponent = ({
     >
       <Controller
         name={`config.${name?.replaceAll(".", "-")}`}
+        data-testid={name}
         defaultValue={defaultValue}
         control={control}
         render={({ onChange, value }) => (

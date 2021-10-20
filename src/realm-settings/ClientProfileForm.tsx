@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import {
   ActionGroup,
   AlertVariant,
@@ -49,10 +49,9 @@ export const ClientProfileForm = () => {
   const { t } = useTranslation("realm-settings");
   const history = useHistory();
   const {
-    getValues,
+    handleSubmit,
     setValue,
     register,
-    trigger,
     errors,
     formState: { isDirty },
   } = useForm<ClientProfileForm>({
@@ -91,10 +90,7 @@ export const ClientProfileForm = () => {
     [key]
   );
 
-  const save = async () => {
-    const form = getValues();
-    trigger();
-
+  const save = async (form: ClientProfileForm) => {
     const createdProfile = {
       ...form,
       executors: [],
@@ -174,16 +170,18 @@ export const ClientProfileForm = () => {
   );
   const globalProfileExecutors = globalProfile[0]?.executors || [];
 
-  setValue(
-    "name",
-    globalProfile.length > 0 ? globalProfile[0]?.name : profile[0]?.name
-  );
-  setValue(
-    "description",
-    globalProfile.length > 0
-      ? globalProfile[0]?.description
-      : profile[0]?.description
-  );
+  useEffect(() => {
+    setValue(
+      "name",
+      globalProfile.length > 0 ? globalProfile[0]?.name : profile[0]?.name
+    );
+    setValue(
+      "description",
+      globalProfile.length > 0
+        ? globalProfile[0]?.description
+        : profile[0]?.description
+    );
+  }, [profiles]);
 
   return (
     <>
@@ -249,7 +247,7 @@ export const ClientProfileForm = () => {
             {globalProfile.length === 0 && (
               <Button
                 variant="primary"
-                onClick={save}
+                onClick={() => handleSubmit(save)()}
                 data-testid="saveCreateProfile"
                 isDisabled={!isDirty}
               >

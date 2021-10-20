@@ -18,13 +18,14 @@ import { Controller, FormProvider, useForm } from "react-hook-form";
 import { HelpItem } from "../components/help-enabler/HelpItem";
 import { Link, useHistory, useParams } from "react-router-dom";
 import { useAdminClient, useFetch } from "../context/auth/AdminClient";
-import { StringComponent } from "../../src/client-scopes/add/components/StringComponent";
-import { BooleanComponent } from "../../src/client-scopes/add/components/BooleanComponent";
-import { ListComponent } from "../../src/client-scopes/add/components/ListComponent";
 import type ComponentTypeRepresentation from "@keycloak/keycloak-admin-client/lib/defs/componentTypeRepresentation";
 import type { ConfigPropertyRepresentation } from "@keycloak/keycloak-admin-client/lib/defs/authenticatorConfigInfoRepresentation";
 import type ClientProfileRepresentation from "@keycloak/keycloak-admin-client/lib/defs/clientProfileRepresentation";
 import type { ClientProfileParams } from "./routes/ClientProfile";
+import {
+  COMPONENTS,
+  isValidComponentType,
+} from "../client-scopes/add/components/components";
 
 export const ExecutorForm = () => {
   const { t } = useTranslation("realm-settings");
@@ -33,8 +34,6 @@ export const ExecutorForm = () => {
   const { addAlert, addError } = useAlerts();
   const [selectExecutorTypeOpen, setSelectExecutorTypeOpen] = useState(false);
   //   const [selectAlgorithmTypeOpen, setSelectAlgorithmTypeOpen] = useState(false);
-  const [selectMultiAuthenticatorOpen, setSelectMultiAuthenticatorOpen] =
-    useState(false);
   const serverInfo = useServerInfo();
   const adminClient = useAdminClient();
   const executorTypes =
@@ -130,6 +129,7 @@ export const ExecutorForm = () => {
           >
             <Controller
               name="executor"
+              defaultValue=""
               control={control}
               render={({ onChange, value }) => (
                 <Select
@@ -166,98 +166,25 @@ export const ExecutorForm = () => {
               )}
             />
           </FormGroup>
-          {executorProperties.map((option) => (
-            <>
-              <FormProvider {...form}>
-                {option.type === "boolean" && (
-                  <BooleanComponent
-                    name={fldNameFormatter(option.label!)}
-                    label={option.label}
-                    helpText={option.helpText}
-                    defaultValue={option.defaultValue}
-                    data-testid="executor-optionType-boolean"
+          <FormProvider {...form}>
+            {executorProperties.map((option) => {
+              const componentType = option.type!;
+              if (isValidComponentType(componentType)) {
+                const Component = COMPONENTS[componentType];
+                return (
+                  <Component
+                    key={option.name}
+                    {...option}
+                    label={fldNameFormatter(option.label!)}
                   />
-                )}
-                {option.type === "String" && (
-                  <StringComponent
-                    name={fldNameFormatter(option.label!)}
-                    label={option.label}
-                    helpText={option.helpText}
-                    defaultValue={option.defaultValue}
-                    data-testid="executor-optionType-string"
-                  />
-                )}
-                {option.type === "List" && (
-                  <ListComponent
-                    name={fldNameFormatter(option.label!)}
-                    label={option.label}
-                    helpText={option.helpText}
-                    defaultValue={option.defaultValue}
-                    data-testid="executor-optionType-list"
-                  />
-                )}
-              </FormProvider>
-              {option.type === "MultivaluedList" && (
-                <FormGroup
-                  label={option.label}
-                  fieldId="kc-executorAuthenticatorMultiSelect"
-                  labelIcon={
-                    <HelpItem
-                      helpText={option.helpText}
-                      forLabel={t("executorAuthenticatorMultiSelectHelpText")}
-                      forID={t(`common:helpLabel`, {
-                        label: t("executorAuthenticatorMultiSelectHelpText"),
-                      })}
-                    />
-                  }
-                >
-                  <Controller
-                    name={fldNameFormatter(option.label!)}
-                    control={control}
-                    render={({ onChange, value }) => (
-                      <Select
-                        name="executorClientAuthenticator"
-                        data-testid="executorClientAuthenticator-multiSelect"
-                        chipGroupProps={{
-                          numChips: 1,
-                          expandedText: "Hide",
-                          collapsedText: "Show ${remaining}",
-                        }}
-                        variant={SelectVariant.typeaheadMulti}
-                        typeAheadAriaLabel="Select"
-                        onToggle={(isOpen) =>
-                          setSelectMultiAuthenticatorOpen(isOpen)
-                        }
-                        selections={value}
-                        onSelect={(_, v) => {
-                          const option = v.toString();
-                          if (!value) {
-                            onChange([option]);
-                          } else if (value.includes(option)) {
-                            onChange(
-                              value.filter((item: string) => item !== option)
-                            );
-                          } else {
-                            onChange([...value, option]);
-                          }
-                        }}
-                        onClear={(event) => {
-                          event.stopPropagation();
-                          onChange([]);
-                        }}
-                        isOpen={selectMultiAuthenticatorOpen}
-                        aria-labelledby={"client-authenticator"}
-                      >
-                        {option.options?.map((option) => (
-                          <SelectOption key={option} value={option} />
-                        ))}
-                      </Select>
-                    )}
-                  />
-                </FormGroup>
-              )}
-            </>
-          ))}
+                );
+              } else {
+                console.warn(
+                  `There is no editor registered for ${componentType}`
+                );
+              }
+            })}
+          </FormProvider>
           <ActionGroup>
             <Button
               variant="primary"
