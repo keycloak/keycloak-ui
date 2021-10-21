@@ -44,7 +44,7 @@ export const MultivaluedListComponent = ({
               collapsedText: t("common:showRemaining"),
             }}
             variant={SelectVariant.typeaheadMulti}
-            typeAheadAriaLabel="Select"
+            typeAheadAriaLabel={t("common:select")}
             onToggle={(isOpen) => setOpen(isOpen)}
             selections={value}
             onSelect={(_, v) => {

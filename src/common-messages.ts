@@ -34,6 +34,7 @@ export default {
     disabled: "Disabled",
     disable: "Disable",
     selectOne: "Select an option",
+    select: "Select",
     choose: "Choose...",
     any: "Any",
     none: "None",

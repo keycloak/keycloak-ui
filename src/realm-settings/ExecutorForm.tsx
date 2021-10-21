@@ -28,6 +28,16 @@ import {
   isValidComponentType,
 } from "../client-scopes/add/components/components";
 
+type ExecutorForm = {
+  config?: object;
+  executor?: string;
+};
+
+const defaultValues: ExecutorForm = {
+  config: {},
+  executor: "",
+};
+
 export const ExecutorForm = () => {
   const { t } = useTranslation("realm-settings");
   const history = useHistory();
@@ -48,7 +58,7 @@ export const ExecutorForm = () => {
     ClientProfileRepresentation[]
   >([]);
   const [profiles, setProfiles] = useState<ClientProfileRepresentation[]>([]);
-  const form = useForm();
+  const form = useForm<ExecutorForm>({ defaultValues });
   const { control } = form;
 
   useFetch(
@@ -103,7 +113,7 @@ export const ExecutorForm = () => {
             label={t("executorType")}
             fieldId="kc-executorType"
             labelIcon={
-              executors.length > 0 && executors[0].helpText !== "" ? (
+              executors.length > 0 && executors[0].helpText! !== "" ? (
                 <HelpItem
                   helpText={executors[0].helpText}
                   forLabel={t("executorTypeHelpText")}
@@ -111,9 +121,7 @@ export const ExecutorForm = () => {
                     label: t("executorTypeHelpText"),
                   })}
                 />
-              ) : (
-                <> </>
-              )
+              ) : undefined
             }
           >
             <Controller
