@@ -192,15 +192,10 @@ export const ClientProfileForm = () => {
   const globalProfileExecutors = globalProfile[0]?.executors || [];
 
   useEffect(() => {
-    setValue(
-      "name",
-      globalProfile.length > 0 ? globalProfile[0]?.name : profile[0]?.name
-    );
+    setValue("name", globalProfile[0]?.name ?? profile[0]?.name);
     setValue(
       "description",
-      globalProfile.length > 0
-        ? globalProfile[0]?.description
-        : profile[0]?.description
+      globalProfile[0]?.description ?? profile[0]?.description
     );
   }, [profiles]);
 
@@ -342,20 +337,19 @@ export const ClientProfileForm = () => {
                   {profileExecutors.map((executor, idx) => (
                     <DataListItem
                       aria-labelledby={"executors-list-item"}
-                      key={`list-item-${idx}`}
+                      key={executor.executor}
                       id={executor.executor}
                     >
                       <DataListItemRow data-testid="executors-list-row">
                         <DataListItemCells
                           dataListCells={[
                             <DataListCell
-                              key={`name-${idx}`}
+                              key="executor"
                               data-testid="executor-type"
                             >
                               {Object.keys(executor.configuration!).length !==
                               0 ? (
                                 <Link
-                                  key={executor.executor}
                                   data-testid="executor-type-link"
                                   to={""}
                                   className="kc-executor-link"
@@ -365,41 +359,40 @@ export const ClientProfileForm = () => {
                               ) : (
                                 executor.executor
                               )}
-                              {executorTypes?.map((type) => (
-                                <>
-                                  {""}
-                                  {type.id === executor.executor && (
-                                    <>
-                                      <HelpItem
-                                        key={`executorType-${type.id}`}
-                                        helpText={type.helpText}
-                                        forLabel={t("executorTypeTextHelpText")}
-                                        forID={t(`common:helpLabel`, {
-                                          label: t("executorTypeTextHelpText"),
-                                        })}
-                                      />
-                                      <Button
-                                        variant="link"
-                                        isInline
-                                        icon={
-                                          <TrashIcon
-                                            key={`executorType-trash-icon-${type.id}`}
-                                            className="kc-executor-trash-icon"
-                                            data-testid="deleteExecutor"
-                                            onClick={() => {
-                                              toggleDeleteDialog();
-                                              setExecutorToDelete({
-                                                idx: idx,
-                                                name: type.id,
-                                              });
-                                            }}
-                                          />
-                                        }
-                                      ></Button>
-                                    </>
-                                  )}
-                                </>
-                              ))}
+                              {executorTypes
+                                ?.filter(
+                                  (type) => type.id === executor.executor
+                                )
+                                .map((type) => (
+                                  <>
+                                    <HelpItem
+                                      key={type.id}
+                                      helpText={type.helpText}
+                                      forLabel={t("executorTypeTextHelpText")}
+                                      forID={t(`common:helpLabel`, {
+                                        label: t("executorTypeTextHelpText"),
+                                      })}
+                                    />
+                                    <Button
+                                      variant="link"
+                                      isInline
+                                      icon={
+                                        <TrashIcon
+                                          key={`executorType-trash-icon-${type.id}`}
+                                          className="kc-executor-trash-icon"
+                                          data-testid="deleteExecutor"
+                                        />
+                                      }
+                                      onClick={() => {
+                                        toggleDeleteDialog();
+                                        setExecutorToDelete({
+                                          idx: idx,
+                                          name: type.id,
+                                        });
+                                      }}
+                                    ></Button>
+                                  </>
+                                ))}
                             </DataListCell>,
                           ]}
                         />
@@ -411,23 +404,22 @@ export const ClientProfileForm = () => {
               {globalProfileExecutors.length > 0 && (
                 <>
                   <DataList aria-label={t("executors")} isCompact>
-                    {globalProfileExecutors.map((executor, idx) => (
+                    {globalProfileExecutors.map((executor) => (
                       <DataListItem
                         aria-labelledby={"global-executors-list-item"}
-                        key={`global-list-item-${idx}`}
+                        key={executor.executor}
                         id={executor.executor}
                       >
                         <DataListItemRow data-testid="global-executors-list-row">
                           <DataListItemCells
                             dataListCells={[
                               <DataListCell
-                                key={`global-name-${idx}`}
+                                key="executor"
                                 data-testid="global-executor-type"
                               >
                                 {Object.keys(executor.configuration!).length !==
                                 0 ? (
                                   <Link
-                                    key={executor.executor}
                                     data-testid="global-executor-type-link"
                                     to={""}
                                     className="kc-global-executor-link"
@@ -437,21 +429,20 @@ export const ClientProfileForm = () => {
                                 ) : (
                                   executor.executor
                                 )}
-                                {executorTypes?.map((type) => (
-                                  <>
-                                    {""}
-                                    {type.id === executor.executor && (
-                                      <HelpItem
-                                        key={`global-executorType-${type.id}`}
-                                        helpText={type.helpText}
-                                        forLabel={t("executorTypeTextHelpText")}
-                                        forID={t(`common:helpLabel`, {
-                                          label: t("executorTypeTextHelpText"),
-                                        })}
-                                      />
-                                    )}
-                                  </>
-                                ))}
+                                {executorTypes
+                                  ?.filter(
+                                    (type) => type.id === executor.executor
+                                  )
+                                  .map((type) => (
+                                    <HelpItem
+                                      key={type.id}
+                                      helpText={type.helpText}
+                                      forLabel={t("executorTypeTextHelpText")}
+                                      forID={t(`common:helpLabel`, {
+                                        label: t("executorTypeTextHelpText"),
+                                      })}
+                                    />
+                                  ))}
                               </DataListCell>,
                             ]}
                           />
