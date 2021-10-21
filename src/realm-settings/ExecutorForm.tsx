@@ -10,6 +10,7 @@ import {
   SelectVariant,
 } from "@patternfly/react-core";
 import { useTranslation } from "react-i18next";
+import { omit } from "lodash";
 import { FormAccess } from "../components/form-access/FormAccess";
 import { ViewHeader } from "../components/view-header/ViewHeader";
 import { useAlerts } from "../components/alert/Alerts";
@@ -65,35 +66,25 @@ export const ExecutorForm = () => {
 
   const save = async () => {
     const formValues = form.getValues();
+    const updatedProfiles = profiles.map((profile) => {
+      if (profile.name !== profileName) {
+        return profile;
+      }
 
-    const createdExecutors = {
-      executor: formValues.executor,
-      configuration: { ...formValues },
-    };
+      const executors = (profile.executors ?? []).concat({
+        executor: formValues.executor,
+        configuration: omit(formValues, "executor"),
+      });
 
-    delete createdExecutors.configuration.executor;
-
-    const profileToUpdate = profiles.filter(
-      (profile) => profile.name === profileName
-    );
-
-    if (profileToUpdate[0].executors!.length > 0) {
-      const executors = profileToUpdate[0].executors;
-      profileToUpdate[0].executors = executors?.concat([createdExecutors]);
-    } else {
-      profileToUpdate[0].executors = [createdExecutors];
-    }
-
-    const updatedProfilesList = profiles.map(
-      (profile) =>
-        profileToUpdate.find(
-          (updatedProfile) => updatedProfile.name === profile.name
-        ) || profile
-    );
+      return {
+        ...profile,
+        executors,
+      };
+    });
 
     try {
       await adminClient.clientPolicies.createProfiles({
-        profiles: updatedProfilesList,
+        profiles: updatedProfiles,
         globalProfiles: globalProfiles,
       });
       addAlert(t("realm-settings:addExecutorSuccess"), AlertVariant.success);
