@@ -135,7 +135,11 @@ export const ClientProfileForm = () => {
         `/${realm}/realm-settings/clientPolicies/${createdProfileName}`
       );
     } catch (error) {
-      addError("realm-settings:createClientProfileError", error);
+      if (editMode) {
+        addError("realm-settings:updateClientProfileError", error);
+      } else {
+        addError("realm-settings:createClientProfileError", error);
+      }
     }
   };
 

@@ -241,6 +241,7 @@ export default {
     createClientProfileSuccess: "New client profile created",
     updateClientProfileSuccess: "Client profile updated successfully",
     createClientProfileError: "Could not create client profile: '{{error}}'",
+    updateClientProfileError: "Could not update client profile: '{{error}}'",
     createClientProfileNameHelperText:
       "The name must be unique within the realm",
     allClientPolicies: "Client policies",
