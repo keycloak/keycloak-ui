@@ -2,9 +2,10 @@ export default class AttributesTab {
   private keyInput = '[name="attributes[0].key"]';
   private valueInput = '[name="attributes[0].value"]';
   private saveAttributeBtn = "save-attributes";
+  private attributesTab = "attributes";
 
-  goToAttributesTab(attributesTab: string) {
-    cy.findByTestId(attributesTab).click();
+  goToAttributesTab() {
+    cy.findByTestId(this.attributesTab).click();
 
     return this;
   }

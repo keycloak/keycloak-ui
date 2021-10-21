@@ -124,7 +124,7 @@ describe("Users test", () => {
       listingPage.goToItemDetails(itemId);
 
       attributesTab
-        .goToAttributesTab("user-attributes-tab")
+        .goToAttributesTab()
         .fillAttribute("key", "value")
         .saveAttribute();
 

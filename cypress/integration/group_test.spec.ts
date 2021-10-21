@@ -208,7 +208,7 @@ describe("Group test", () => {
     it("Attributes CRUD test", () => {
       clickGroup(groups[0]);
       attributesTab
-        .goToAttributesTab("attributes")
+        .goToAttributesTab()
         .fillAttribute("key", "value")
         .saveAttribute();
 
