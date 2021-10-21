@@ -385,18 +385,24 @@ export const ClientProfileForm = () => {
                                           label: t("executorTypeTextHelpText"),
                                         })}
                                       />
-                                      <TrashIcon
-                                        key={`executorType-trash-icon-${type.id}`}
-                                        className="kc-executor-trash-icon"
-                                        data-testid="deleteClientProfileDropdown"
-                                        onClick={() => {
-                                          toggleDeleteDialog();
-                                          setExecutorToDelete({
-                                            idx: idx,
-                                            name: type.id,
-                                          });
-                                        }}
-                                      />
+                                      <Button
+                                        variant="link"
+                                        isInline
+                                        icon={
+                                          <TrashIcon
+                                            key={`executorType-trash-icon-${type.id}`}
+                                            className="kc-executor-trash-icon"
+                                            data-testid="deleteExecutor"
+                                            onClick={() => {
+                                              toggleDeleteDialog();
+                                              setExecutorToDelete({
+                                                idx: idx,
+                                                name: type.id,
+                                              });
+                                            }}
+                                          />
+                                        }
+                                      ></Button>
                                     </>
                                   )}
                                 </>
