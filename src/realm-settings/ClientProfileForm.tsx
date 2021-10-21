@@ -91,57 +91,50 @@ export const ClientProfileForm = () => {
   );
 
   const save = async (form: ClientProfileForm) => {
-    let allProfiles: ClientProfileRepresentation[] = [];
-    let createdProfileName: string = "";
-
-    if (editMode) {
-      const profileToUpdate = profiles.filter(
-        (profile) => profile.name === profileName
-      );
-      profileToUpdate[0].name = form.name;
-      profileToUpdate[0].description = form.description;
-
-      createdProfileName = profileToUpdate[0].name;
-      allProfiles = profiles;
-    } else {
-      const createdProfile = {
-        ...form,
-        executors: [],
-      };
-
-      createdProfileName = createdProfile.name;
-      allProfiles = profiles.concat(createdProfile);
-    }
+    const updatedProfiles = editMode ? patchProfiles(form) : addProfile(form);
 
     try {
       await adminClient.clientPolicies.createProfiles({
-        profiles: allProfiles,
+        profiles: updatedProfiles,
         globalProfiles: globalProfiles,
       });
 
-      if (editMode) {
-        addAlert(
-          t("realm-settings:updateClientProfileSuccess"),
-          AlertVariant.success
-        );
-      } else {
-        addAlert(
-          t("realm-settings:createClientProfileSuccess"),
-          AlertVariant.success
-        );
-      }
-
-      history.push(
-        `/${realm}/realm-settings/clientPolicies/${createdProfileName}`
+      addAlert(
+        editMode
+          ? t("realm-settings:updateClientProfileSuccess")
+          : t("realm-settings:createClientProfileSuccess"),
+        AlertVariant.success
       );
+
+      history.push(`/${realm}/realm-settings/clientPolicies/${form.name}`);
     } catch (error) {
-      if (editMode) {
-        addError("realm-settings:updateClientProfileError", error);
-      } else {
-        addError("realm-settings:createClientProfileError", error);
-      }
+      addError(
+        editMode
+          ? "realm-settings:updateClientProfileError"
+          : "realm-settings:createClientProfileError",
+        error
+      );
     }
   };
+
+  const patchProfiles = (data: ClientProfileRepresentation) =>
+    profiles.map((profile) => {
+      if (profile.name !== profileName) {
+        return profile;
+      }
+
+      return {
+        ...profile,
+        name: data.name,
+        description: data.description,
+      };
+    });
+
+  const addProfile = (data: ClientProfileRepresentation) =>
+    profiles.concat({
+      ...data,
+      executors: [],
+    });
 
   const [toggleDeleteDialog, DeleteConfirm] = useConfirmDialog({
     titleKey: executorToDelete?.name!
