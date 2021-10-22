@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useHistory, useParams, useRouteMatch } from "react-router-dom";
 import {
+  AlertVariant,
   Button,
   Dropdown,
   DropdownItem,
@@ -8,6 +9,7 @@ import {
   Label,
   Modal,
   ModalVariant,
+  Spinner,
 } from "@patternfly/react-core";
 import { useTranslation } from "react-i18next";
 import { useFetch, useAdminClient } from "../context/auth/AdminClient";
@@ -17,74 +19,58 @@ import { ListEmptyState } from "../components/list-empty-state/ListEmptyState";
 import { CaretDownIcon, FilterIcon } from "@patternfly/react-icons";
 import _ from "lodash";
 import type { RealmRoleParams } from "./routes/RealmRole";
+import { useRealm } from "../context/realm-context/RealmContext";
+import { useAlerts } from "../components/alert/Alerts";
 
 type Role = RoleRepresentation & {
   clientId?: string;
 };
 
 export type AssociatedRolesModalProps = {
-  open: boolean;
   toggleDialog: () => void;
-  onConfirm: (newReps: RoleRepresentation[]) => void;
-  existingCompositeRoles?: RoleRepresentation[];
-  allRoles?: RoleRepresentation[];
+  onConfirm?: (newReps: RoleRepresentation[]) => void;
   omitComposites?: boolean;
   isRadio?: boolean;
   isMapperId?: boolean;
 };
 
+type FilterType = "roles" | "clients";
+
 export const AssociatedRolesModal = (props: AssociatedRolesModalProps) => {
   const { t } = useTranslation("roles");
   const [name, setName] = useState("");
   const adminClient = useAdminClient();
+  const { addAlert, addError } = useAlerts();
+  const { realm } = useRealm();
   const [selectedRows, setSelectedRows] = useState<RoleRepresentation[]>([]);
+  const [compositeRoles, setCompositeRoles] = useState<RoleRepresentation[]>();
 
   const [isFilterDropdownOpen, setIsFilterDropdownOpen] = useState(false);
-  const [filterType, setFilterType] = useState("roles");
+  const [filterType, setFilterType] = useState<FilterType>("roles");
   const [key, setKey] = useState(0);
   const refresh = () => setKey(new Date().getTime());
 
   const { id } = useParams<RealmRoleParams>();
+  const { url } = useRouteMatch();
+  const history = useHistory();
 
   const alphabetize = (rolesList: RoleRepresentation[]) => {
     return _.sortBy(rolesList, (role) => role.name?.toUpperCase());
   };
 
-  const loader = async () => {
-    const roles = await adminClient.roles.find();
+  const loader = async (first?: number, max?: number, search?: string) => {
+    const params: { [name: string]: string | number } = {
+      first: first!,
+      max: max!,
+    };
 
-    if (!props.omitComposites) {
-      const existingAdditionalRoles = await adminClient.roles.getCompositeRoles(
-        {
-          id,
-        }
-      );
-      const allRoles = [...roles, ...existingAdditionalRoles];
+    const searchParam = search || "";
 
-      const filterDupes: Role[] = allRoles.filter(
-        (thing, index, self) =>
-          index === self.findIndex((t) => t.name === thing.name)
-      );
-
-      const clients = await adminClient.clients.find();
-      filterDupes
-        .filter((role) => role.clientRole)
-        .map(
-          (role) =>
-            (role.clientId = clients.find(
-              (client) => client.id === role.containerId
-            )!.clientId!)
-        );
-
-      return alphabetize(filterDupes).filter((role: RoleRepresentation) => {
-        return (
-          props.existingCompositeRoles?.find(
-            (existing: RoleRepresentation) => existing.name === role.name
-          ) === undefined && role.name !== name
-        );
-      });
+    if (searchParam) {
+      params.search = searchParam;
     }
-    return alphabetize(roles);
+
+    return adminClient.roles.find(params);
   };
 
   const AliasRenderer = ({ id, name, clientId }: Role) => {
@@ -100,45 +86,41 @@ export const AssociatedRolesModal = (props: AssociatedRolesModalProps) => {
     );
   };
 
+  /* this is still pretty expensive querying all client and then all roles */
   const clientRolesLoader = async () => {
     const clients = await adminClient.clients.find();
 
-    const clientIdArray = clients.map((client) => client.id);
-
     let rolesList: Role[] = [];
-    for (const id of clientIdArray) {
+    for (const client of clients) {
       const clientRolesList = await adminClient.clients.listRoles({
-        id: id as string,
+        id: client.id!,
       });
-      rolesList = [...rolesList, ...clientRolesList];
-    }
-
-    rolesList
-      .filter((role) => role.clientRole)
-      .map(
-        (role) =>
-          (role.clientId = clients.find(
-            (client) => client.id === role.containerId
-          )!.clientId!)
+      rolesList = rolesList.concat(
+        ...clientRolesList.map((r: Role) => {
+          r.clientId = client.clientId;
+          return r;
+        })
       );
-
-    if (!props.omitComposites) {
-      const existingAdditionalRoles = await adminClient.roles.getCompositeRoles(
-        {
-          id,
-        }
-      );
-
-      return alphabetize(rolesList).filter((role: RoleRepresentation) => {
-        return (
-          existingAdditionalRoles.find(
-            (existing: RoleRepresentation) => existing.name === role.name
-          ) === undefined && role.name !== name
-        );
-      });
     }
 
     return alphabetize(rolesList);
+  };
+
+  const addComposites = async (
+    composites: RoleRepresentation[]
+  ): Promise<void> => {
+    const compositeArray = composites;
+
+    try {
+      await adminClient.roles.createComposite(
+        { roleId: id, realm },
+        compositeArray
+      );
+      history.push(url.substr(0, url.lastIndexOf("/") + 1) + "AssociatedRoles");
+      addAlert(t("addAssociatedRolesSuccess"), AlertVariant.success);
+    } catch (error) {
+      addError("roles:addAssociatedRolesError", error);
+    }
   };
 
   useEffect(() => {
@@ -146,11 +128,19 @@ export const AssociatedRolesModal = (props: AssociatedRolesModalProps) => {
   }, [filterType]);
 
   useFetch(
-    () =>
-      !props.isMapperId
+    async () => {
+      const role = await (!props.isMapperId
         ? adminClient.roles.findOneById({ id })
-        : Promise.resolve(null),
-    (role) => setName(role ? role.name! : t("createRole")),
+        : Promise.resolve(null));
+      const compositeRoles = await (!props.omitComposites
+        ? adminClient.roles.getCompositeRoles({ id })
+        : Promise.resolve([]));
+      return { role, compositeRoles };
+    },
+    ({ role, compositeRoles }) => {
+      setName(role ? role.name! : t("createRole"));
+      setCompositeRoles(compositeRoles);
+    },
     []
   );
 
@@ -168,11 +158,19 @@ export const AssociatedRolesModal = (props: AssociatedRolesModalProps) => {
     setIsFilterDropdownOpen(!isFilterDropdownOpen);
   };
 
+  if (!compositeRoles) {
+    return (
+      <div className="pf-u-text-align-center">
+        <Spinner />
+      </div>
+    );
+  }
+
   return (
     <Modal
       data-testid="addAssociatedRole"
       title={t("roles:associatedRolesModalTitle", { name })}
-      isOpen={props.open}
+      isOpen={true}
       onClose={props.toggleDialog}
       variant={ModalVariant.large}
       actions={[
@@ -183,7 +181,11 @@ export const AssociatedRolesModal = (props: AssociatedRolesModalProps) => {
           isDisabled={!selectedRows.length}
           onClick={() => {
             props.toggleDialog();
-            props.onConfirm(selectedRows);
+            if (props.onConfirm) {
+              props.onConfirm(selectedRows);
+            } else {
+              addComposites(selectedRows);
+            }
           }}
         >
           {t("common:add")}
@@ -205,6 +207,8 @@ export const AssociatedRolesModal = (props: AssociatedRolesModalProps) => {
         ariaLabelKey="roles:roleList"
         searchPlaceholderKey="roles:searchFor"
         isRadio={props.isRadio}
+        isPaginated={filterType === "roles"}
+        isRowDisabled={(r) => !!compositeRoles.find((o) => o.name === r.name)}
         searchTypeComponent={
           <Dropdown
             onSelect={() => onFilterDropdownSelect(filterType)}
@@ -234,7 +238,12 @@ export const AssociatedRolesModal = (props: AssociatedRolesModalProps) => {
         }
         canSelectAll
         onSelect={(rows) => {
-          setSelectedRows([...rows]);
+          setSelectedRows(
+            rows.map((r) => {
+              delete r.clientId;
+              return r;
+            })
+          );
         }}
         columns={[
           {
