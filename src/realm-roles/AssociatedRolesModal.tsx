@@ -238,12 +238,7 @@ export const AssociatedRolesModal = (props: AssociatedRolesModalProps) => {
         }
         canSelectAll
         onSelect={(rows) => {
-          setSelectedRows(
-            rows.map((r) => {
-              delete r.clientId;
-              return r;
-            })
-          );
+          setSelectedRows(rows.map((r) => omit(r, "clientId")));
         }}
         columns={[
           {
