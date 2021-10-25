@@ -130,9 +130,10 @@ export default function RealmRoleTabs() {
         if (attributes) {
           roleRepresentation.attributes = arrayToAttributes(attributes);
         }
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
-        const { attributes: attrib, ...r } = role!;
-        roleRepresentation = { ...r, ...roleRepresentation };
+        roleRepresentation = {
+          ...omit(role!, "attributes"),
+          ...roleRepresentation,
+        };
         if (!clientId) {
           await adminClient.roles.updateById({ id }, roleRepresentation);
         } else {
