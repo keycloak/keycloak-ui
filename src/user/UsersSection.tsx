@@ -26,7 +26,7 @@ import {
 import type UserRepresentation from "@keycloak/keycloak-admin-client/lib/defs/userRepresentation";
 import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
-import { Link, useHistory, useRouteMatch } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
 import { useAlerts } from "../components/alert/Alerts";
 import { useConfirmDialog } from "../components/confirm-dialog/ConfirmDialog";
 import { ListEmptyState } from "../components/list-empty-state/ListEmptyState";
@@ -38,6 +38,7 @@ import { emptyFormatter } from "../util";
 import { toUser } from "./routes/User";
 import "./user-section.css";
 import type RealmRepresentation from "@keycloak/keycloak-admin-client/lib/defs/realmRepresentation";
+import { toAddUser } from "./routes/AddUser";
 
 type BruteUser = UserRepresentation & {
   brute?: Record<string, object>;
@@ -49,7 +50,6 @@ export const UsersSection = () => {
   const { addAlert, addError } = useAlerts();
   const { realm: realmName } = useRealm();
   const history = useHistory();
-  const { url } = useRouteMatch();
   const [listUsers, setListUsers] = useState(false);
   const [searchUser, setSearchUser] = useState<string>();
   const [realm, setRealm] = useState<RealmRepresentation>();
@@ -193,7 +193,7 @@ export const UsersSection = () => {
     );
   };
 
-  const goToCreate = () => history.push(`${url}/add-user`);
+  const goToCreate = () => history.push(toAddUser({ realm: realmName }));
 
   const toolbar = (
     <>
@@ -202,7 +202,7 @@ export const UsersSection = () => {
           {t("addUser")}
         </Button>
       </ToolbarItem>
-      {!realm?.bruteForceProtected && (
+      {!realm?.bruteForceProtected ? (
         <ToolbarItem>
           <Button
             variant={ButtonVariant.plain}
@@ -212,11 +212,10 @@ export const UsersSection = () => {
             {t("deleteUser")}
           </Button>
         </ToolbarItem>
-      )}
-      {realm?.bruteForceProtected && (
+      ) : (
         <ToolbarItem>
           <Dropdown
-            toggle={<KebabToggle onToggle={() => setKebabOpen(!kebabOpen)} />}
+            toggle={<KebabToggle onToggle={(open) => setKebabOpen(open)} />}
             isOpen={kebabOpen}
             isPlain
             dropdownItems={[
