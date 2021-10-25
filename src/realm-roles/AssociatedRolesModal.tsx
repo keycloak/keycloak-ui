@@ -59,7 +59,7 @@ export const AssociatedRolesModal = (props: AssociatedRolesModalProps) => {
   };
 
   const loader = async (first?: number, max?: number, search?: string) => {
-    const params: { [name: string]: string | number } = {
+    const params: Parameters<typeof adminClient.roles.find>[0] = {
       first: first!,
       max: max!,
     };
