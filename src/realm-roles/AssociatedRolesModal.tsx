@@ -17,7 +17,7 @@ import type RoleRepresentation from "@keycloak/keycloak-admin-client/lib/defs/ro
 import { KeycloakDataTable } from "../components/table-toolbar/KeycloakDataTable";
 import { ListEmptyState } from "../components/list-empty-state/ListEmptyState";
 import { CaretDownIcon, FilterIcon } from "@patternfly/react-icons";
-import _ from "lodash";
+import { omit, sortBy } from "lodash";
 import type { RealmRoleParams } from "./routes/RealmRole";
 import { useRealm } from "../context/realm-context/RealmContext";
 import { useAlerts } from "../components/alert/Alerts";
@@ -36,7 +36,13 @@ export type AssociatedRolesModalProps = {
 
 type FilterType = "roles" | "clients";
 
-export const AssociatedRolesModal = (props: AssociatedRolesModalProps) => {
+export const AssociatedRolesModal = ({
+  toggleDialog,
+  onConfirm,
+  omitComposites,
+  isRadio,
+  isMapperId,
+}: AssociatedRolesModalProps) => {
   const { t } = useTranslation("roles");
   const [name, setName] = useState("");
   const adminClient = useAdminClient();
@@ -55,11 +61,11 @@ export const AssociatedRolesModal = (props: AssociatedRolesModalProps) => {
   const history = useHistory();
 
   const alphabetize = (rolesList: RoleRepresentation[]) => {
-    return _.sortBy(rolesList, (role) => role.name?.toUpperCase());
+    return sortBy(rolesList, (role) => role.name?.toUpperCase());
   };
 
   const loader = async (first?: number, max?: number, search?: string) => {
-    const params: Parameters<typeof adminClient.roles.find>[0] = {
+    const params: { [name: string]: string | number } = {
       first: first!,
       max: max!,
     };
@@ -89,26 +95,21 @@ export const AssociatedRolesModal = (props: AssociatedRolesModalProps) => {
   /* this is still pretty expensive querying all client and then all roles */
   const clientRolesLoader = async () => {
     const clients = await adminClient.clients.find();
+    const clientRoles = await Promise.all(
+      clients.map(async (client) => {
+        const roles = await adminClient.clients.listRoles({ id: client.id! });
 
-    let rolesList: Role[] = [];
-    for (const client of clients) {
-      const clientRolesList = await adminClient.clients.listRoles({
-        id: client.id!,
-      });
-      rolesList = rolesList.concat(
-        ...clientRolesList.map((r: Role) => {
-          r.clientId = client.clientId;
-          return r;
-        })
-      );
-    }
+        return roles.map<Role>((role) => ({
+          ...role,
+          clientId: client.clientId,
+        }));
+      })
+    );
 
-    return alphabetize(rolesList);
+    return alphabetize(clientRoles.flat());
   };
 
-  const addComposites = async (
-    composites: RoleRepresentation[]
-  ): Promise<void> => {
+  const addComposites = async (composites: RoleRepresentation[]) => {
     const compositeArray = composites;
 
     try {
@@ -129,12 +130,11 @@ export const AssociatedRolesModal = (props: AssociatedRolesModalProps) => {
 
   useFetch(
     async () => {
-      const role = await (!props.isMapperId
-        ? adminClient.roles.findOneById({ id })
-        : Promise.resolve(null));
-      const compositeRoles = await (!props.omitComposites
-        ? adminClient.roles.getCompositeRoles({ id })
-        : Promise.resolve([]));
+      const [role, compositeRoles] = await Promise.all([
+        !isMapperId ? adminClient.roles.findOneById({ id }) : undefined,
+        !omitComposites ? adminClient.roles.getCompositeRoles({ id }) : [],
+      ]);
+
       return { role, compositeRoles };
     },
     ({ role, compositeRoles }) => {
@@ -171,7 +171,7 @@ export const AssociatedRolesModal = (props: AssociatedRolesModalProps) => {
       data-testid="addAssociatedRole"
       title={t("roles:associatedRolesModalTitle", { name })}
       isOpen={true}
-      onClose={props.toggleDialog}
+      onClose={toggleDialog}
       variant={ModalVariant.large}
       actions={[
         <Button
@@ -180,9 +180,9 @@ export const AssociatedRolesModal = (props: AssociatedRolesModalProps) => {
           variant="primary"
           isDisabled={!selectedRows.length}
           onClick={() => {
-            props.toggleDialog();
-            if (props.onConfirm) {
-              props.onConfirm(selectedRows);
+            toggleDialog();
+            if (onConfirm) {
+              onConfirm(selectedRows);
             } else {
               addComposites(selectedRows);
             }
@@ -194,7 +194,7 @@ export const AssociatedRolesModal = (props: AssociatedRolesModalProps) => {
           key="cancel"
           variant="link"
           onClick={() => {
-            props.toggleDialog();
+            toggleDialog();
           }}
         >
           {t("common:cancel")}
@@ -206,7 +206,7 @@ export const AssociatedRolesModal = (props: AssociatedRolesModalProps) => {
         loader={filterType === "roles" ? loader : clientRolesLoader}
         ariaLabelKey="roles:roleList"
         searchPlaceholderKey="roles:searchFor"
-        isRadio={props.isRadio}
+        isRadio={isRadio}
         isPaginated={filterType === "roles"}
         isRowDisabled={(r) => !!compositeRoles.find((o) => o.name === r.name)}
         searchTypeComponent={

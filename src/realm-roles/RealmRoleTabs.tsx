@@ -10,6 +10,7 @@ import {
 } from "@patternfly/react-core";
 import { useTranslation } from "react-i18next";
 import { useFieldArray, useForm } from "react-hook-form";
+import { omit } from "lodash";
 
 import { useAlerts } from "../components/alert/Alerts";
 import { useAdminClient, useFetch } from "../context/auth/AdminClient";
