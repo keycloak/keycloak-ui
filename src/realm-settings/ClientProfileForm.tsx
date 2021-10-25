@@ -184,19 +184,16 @@ export const ClientProfileForm = () => {
     },
   });
 
-  const profile = profiles.filter((profile) => profile.name === profileName);
-  const profileExecutors = profile[0]?.executors || [];
-  const globalProfile = globalProfiles.filter(
+  const profile = profiles.find((profile) => profile.name === profileName);
+  const profileExecutors = profile?.executors || [];
+  const globalProfile = globalProfiles.find(
     (globalProfile) => globalProfile.name === profileName
   );
-  const globalProfileExecutors = globalProfile[0]?.executors || [];
+  const globalProfileExecutors = globalProfile?.executors || [];
 
   useEffect(() => {
-    setValue("name", globalProfile[0]?.name ?? profile[0]?.name);
-    setValue(
-      "description",
-      globalProfile[0]?.description ?? profile[0]?.description
-    );
+    setValue("name", globalProfile?.name ?? profile?.name);
+    setValue("description", globalProfile?.description ?? profile?.description);
   }, [profiles]);
 
   return (
@@ -207,12 +204,12 @@ export const ClientProfileForm = () => {
         badges={[
           {
             id: "global-client-profile-badge",
-            text: globalProfile.length > 0 ? t("global") : "",
+            text: globalProfile ? t("global") : "",
           },
         ]}
         divider
         dropdownItems={
-          globalProfile.length === 0
+          !globalProfile
             ? [
                 <DropdownItem
                   key="delete"
@@ -245,7 +242,7 @@ export const ClientProfileForm = () => {
               id="name"
               aria-label={t("name")}
               data-testid="client-profile-name"
-              isReadOnly={globalProfile.length > 0}
+              isReadOnly={!!globalProfile}
             />
           </FormGroup>
           <FormGroup label={t("common:description")} fieldId="kc-description">
@@ -256,11 +253,11 @@ export const ClientProfileForm = () => {
               id="description"
               aria-label={t("description")}
               data-testid="client-profile-description"
-              isReadOnly={globalProfile.length > 0}
+              isReadOnly={!!globalProfile}
             />
           </FormGroup>
           <ActionGroup>
-            {globalProfile.length === 0 && (
+            {!globalProfile && (
               <Button
                 variant="primary"
                 onClick={() => handleSubmit(save)()}
@@ -270,7 +267,7 @@ export const ClientProfileForm = () => {
                 {t("common:save")}
               </Button>
             )}
-            {editMode && globalProfile.length === 0 && (
+            {editMode && !globalProfile && (
               <Button
                 id={"reloadProfile"}
                 variant="link"
@@ -281,7 +278,7 @@ export const ClientProfileForm = () => {
                 {t("realm-settings:reload")}
               </Button>
             )}
-            {!editMode && globalProfile.length === 0 && (
+            {!editMode && !globalProfile && (
               <Button
                 id={"cancelCreateProfile"}
                 component={(props) => (
@@ -309,7 +306,7 @@ export const ClientProfileForm = () => {
                     />
                   </Text>
                 </FlexItem>
-                {Object.keys(profile).length !== 0 && (
+                {profile && (
                   <FlexItem align={{ default: "alignRight" }}>
                     <Button
                       id="addExecutor"
