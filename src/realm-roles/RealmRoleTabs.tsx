@@ -16,10 +16,10 @@ import { useAlerts } from "../components/alert/Alerts";
 import { useAdminClient, useFetch } from "../context/auth/AdminClient";
 import type RoleRepresentation from "@keycloak/keycloak-admin-client/lib/defs/roleRepresentation";
 import {
-  KeyValueType,
   AttributesForm,
   attributesToArray,
   arrayToAttributes,
+  AttributeForm,
 } from "../components/attribute-form/AttributeForm";
 import { ViewHeader } from "../components/view-header/ViewHeader";
 import { useConfirmDialog } from "../components/confirm-dialog/ConfirmDialog";
@@ -31,10 +31,6 @@ import { AssociatedRolesTab } from "./AssociatedRolesTab";
 import { UsersInRoleTab } from "./UsersInRoleTab";
 import type RealmRepresentation from "@keycloak/keycloak-admin-client/lib/defs/realmRepresentation";
 
-export type RoleFormType = Omit<RoleRepresentation, "attributes"> & {
-  attributes?: KeyValueType[];
-};
-
 type myRealmRepresentation = RealmRepresentation & {
   defaultRole?: {
     id: string;
@@ -44,14 +40,14 @@ type myRealmRepresentation = RealmRepresentation & {
 
 export default function RealmRoleTabs() {
   const { t } = useTranslation("roles");
-  const form = useForm<RoleFormType>({
+  const form = useForm<AttributeForm>({
     mode: "onChange",
   });
   const { control, setValue, getValues, trigger, reset } = form;
   const history = useHistory();
 
   const adminClient = useAdminClient();
-  const [role, setRole] = useState<RoleFormType>();
+  const [role, setRole] = useState<AttributeForm>();
 
   const { id, clientId } = useParams<{ id: string; clientId: string }>();
 

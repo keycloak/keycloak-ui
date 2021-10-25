@@ -21,8 +21,8 @@ import { useRealm } from "../../context/realm-context/RealmContext";
 import { HelpItem } from "../../components/help-enabler/HelpItem";
 import { ViewHeader } from "../../components/view-header/ViewHeader";
 import {
+  AttributeForm,
   AttributesForm,
-  KeyValueType,
 } from "../../components/attribute-form/AttributeForm";
 import { FormAccess } from "../../components/form-access/FormAccess";
 import { useAdminClient, useFetch } from "../../context/auth/AdminClient";
@@ -39,9 +39,7 @@ import { useServerInfo } from "../../context/server-info/ServerInfoProvider";
 import { groupBy } from "lodash";
 
 export type IdPMapperRepresentationWithAttributes =
-  IdentityProviderMapperRepresentation & {
-    attributes: KeyValueType[];
-  };
+  IdentityProviderMapperRepresentation & AttributeForm;
 
 type Role = RoleRepresentation & {
   clientId?: string;

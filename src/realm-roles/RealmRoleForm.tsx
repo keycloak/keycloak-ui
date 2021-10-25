@@ -10,11 +10,11 @@ import {
 } from "@patternfly/react-core";
 import { useTranslation } from "react-i18next";
 import type { UseFormMethods } from "react-hook-form";
-import type { RoleFormType } from "./RealmRoleTabs";
 import { FormAccess } from "../components/form-access/FormAccess";
+import type { AttributeForm } from "../components/attribute-form/AttributeForm";
 
 export type RealmRoleFormProps = {
-  form: UseFormMethods<RoleFormType>;
+  form: UseFormMethods<AttributeForm>;
   save: () => void;
   editMode: boolean;
   reset: () => void;

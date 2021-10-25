@@ -12,16 +12,20 @@ import {
 } from "@patternfly/react-table";
 import { MinusCircleIcon, PlusCircleIcon } from "@patternfly/react-icons";
 
-import type { RoleFormType } from "../../realm-roles/RealmRoleTabs";
+import type { RoleRepresentation } from "../../model/role-model";
 import { FormAccess } from "../form-access/FormAccess";
 
 import "./attribute-form.css";
 
 export type KeyValueType = { key: string; value: string };
 
+export type AttributeForm = Omit<RoleRepresentation, "attributes"> & {
+  attributes?: KeyValueType[];
+};
+
 export type AttributesFormProps = {
-  form: UseFormMethods<RoleFormType>;
-  save?: (model: RoleFormType) => void;
+  form: UseFormMethods<AttributeForm>;
+  save?: (model: AttributeForm) => void;
   reset?: () => void;
   array: {
     fields: Partial<ArrayField<Record<string, any>, "id">>[];
