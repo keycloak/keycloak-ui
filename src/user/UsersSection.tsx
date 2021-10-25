@@ -4,17 +4,23 @@ import {
   ButtonVariant,
   Dropdown,
   DropdownItem,
+  EmptyState,
+  InputGroup,
   KebabToggle,
   Label,
   PageSection,
   Text,
   TextContent,
+  TextInput,
+  Toolbar,
+  ToolbarContent,
   ToolbarItem,
   Tooltip,
 } from "@patternfly/react-core";
 import {
   ExclamationCircleIcon,
   InfoCircleIcon,
+  SearchIcon,
   WarningTriangleIcon,
 } from "@patternfly/react-icons";
 import type UserRepresentation from "@keycloak/keycloak-admin-client/lib/defs/userRepresentation";
@@ -45,6 +51,7 @@ export const UsersSection = () => {
   const history = useHistory();
   const { url } = useRouteMatch();
   const [listUsers, setListUsers] = useState(false);
+  const [searchUser, setSearchUser] = useState<string>();
   const [realm, setRealm] = useState<RealmRepresentation>();
   const [kebabOpen, setKebabOpen] = useState(false);
   const [selectedRows, setSelectedRows] = useState<UserRepresentation[]>([]);
@@ -87,7 +94,7 @@ export const UsersSection = () => {
       max: max!,
     };
 
-    const searchParam = search || "";
+    const searchParam = search || searchUser || "";
     if (searchParam) {
       params.search = searchParam;
     }
@@ -188,6 +195,60 @@ export const UsersSection = () => {
 
   const goToCreate = () => history.push(`${url}/add-user`);
 
+  const toolbar = (
+    <>
+      <ToolbarItem>
+        <Button data-testid="add-user" onClick={goToCreate}>
+          {t("addUser")}
+        </Button>
+      </ToolbarItem>
+      {!realm?.bruteForceProtected && (
+        <ToolbarItem>
+          <Button
+            variant={ButtonVariant.plain}
+            onClick={toggleDeleteDialog}
+            isDisabled={selectedRows.length === 0}
+          >
+            {t("deleteUser")}
+          </Button>
+        </ToolbarItem>
+      )}
+      {realm?.bruteForceProtected && (
+        <ToolbarItem>
+          <Dropdown
+            toggle={<KebabToggle onToggle={() => setKebabOpen(!kebabOpen)} />}
+            isOpen={kebabOpen}
+            isPlain
+            dropdownItems={[
+              <DropdownItem
+                key="deleteUser"
+                component="button"
+                isDisabled={selectedRows.length === 0}
+                onClick={() => {
+                  toggleDeleteDialog();
+                  setKebabOpen(false);
+                }}
+              >
+                {t("deleteUser")}
+              </DropdownItem>,
+
+              <DropdownItem
+                key="unlock"
+                component="button"
+                onClick={() => {
+                  toggleUnlockUsersDialog();
+                  setKebabOpen(false);
+                }}
+              >
+                {t("unlockAllUsers")}
+              </DropdownItem>,
+            ]}
+          />
+        </ToolbarItem>
+      )}
+    </>
+  );
+
   return (
     <>
       <DeleteConfirm />
@@ -208,9 +269,43 @@ export const UsersSection = () => {
           onSelect={(rows) => setSelectedRows([...rows])}
           emptyState={
             !listUsers ? (
-              <TextContent className="kc-search-users-text">
-                <Text>{t("searchForUserDescription")}</Text>
-              </TextContent>
+              <>
+                <Toolbar>
+                  <ToolbarContent>
+                    <ToolbarItem>
+                      <InputGroup>
+                        <TextInput
+                          name="search-input"
+                          type="search"
+                          aria-label={t("search")}
+                          placeholder={t("users:searchForUser")}
+                          onChange={(value) => {
+                            setSearchUser(value);
+                          }}
+                          onKeyDown={(e) => {
+                            if (e.key === "Enter") {
+                              refresh();
+                            }
+                          }}
+                        />
+                        <Button
+                          variant={ButtonVariant.control}
+                          aria-label={t("common:search")}
+                          onClick={refresh}
+                        >
+                          <SearchIcon />
+                        </Button>
+                      </InputGroup>
+                    </ToolbarItem>
+                    {toolbar}
+                  </ToolbarContent>
+                </Toolbar>
+                <EmptyState data-testid="empty-state" variant="large">
+                  <TextContent className="kc-search-users-text">
+                    <Text>{t("searchForUserDescription")}</Text>
+                  </TextContent>
+                </EmptyState>
+              </>
             ) : (
               <ListEmptyState
                 message={t("noUsersFound")}
@@ -220,61 +315,7 @@ export const UsersSection = () => {
               />
             )
           }
-          toolbarItem={
-            <>
-              <ToolbarItem>
-                <Button data-testid="add-user" onClick={goToCreate}>
-                  {t("addUser")}
-                </Button>
-              </ToolbarItem>
-              {!realm?.bruteForceProtected && (
-                <ToolbarItem>
-                  <Button
-                    variant={ButtonVariant.plain}
-                    onClick={toggleDeleteDialog}
-                    isDisabled={selectedRows.length === 0}
-                  >
-                    {t("deleteUser")}
-                  </Button>
-                </ToolbarItem>
-              )}
-              {realm?.bruteForceProtected && (
-                <ToolbarItem>
-                  <Dropdown
-                    toggle={
-                      <KebabToggle onToggle={() => setKebabOpen(!kebabOpen)} />
-                    }
-                    isOpen={kebabOpen}
-                    isPlain
-                    dropdownItems={[
-                      <DropdownItem
-                        key="deleteUser"
-                        component="button"
-                        isDisabled={selectedRows.length === 0}
-                        onClick={() => {
-                          toggleDeleteDialog();
-                          setKebabOpen(false);
-                        }}
-                      >
-                        {t("deleteUser")}
-                      </DropdownItem>,
-
-                      <DropdownItem
-                        key="unlock"
-                        component="button"
-                        onClick={() => {
-                          toggleUnlockUsersDialog();
-                          setKebabOpen(false);
-                        }}
-                      >
-                        {t("unlockAllUsers")}
-                      </DropdownItem>,
-                    ]}
-                  />
-                </ToolbarItem>
-              )}
-            </>
-          }
+          toolbarItem={toolbar}
           actions={[
             {
               title: t("common:delete"),
