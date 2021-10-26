@@ -713,7 +713,7 @@ export default class RealmSettingsPage {
     );
     cy.findByTestId("modalConfirm").contains("Delete");
     cy.get(this.deleteDialogCancelBtn).contains("Cancel").click();
-    cy.get("table").should("not.have.text", "Test");
+    cy.get("table").should("be.visible").contains("td", "Test");
   }
 
   shouldDeleteClientPolicyDialog() {

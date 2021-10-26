@@ -21,12 +21,12 @@ import { useAdminClient, useFetch } from "../context/auth/AdminClient";
 import type ComponentTypeRepresentation from "@keycloak/keycloak-admin-client/lib/defs/componentTypeRepresentation";
 import type { ConfigPropertyRepresentation } from "@keycloak/keycloak-admin-client/lib/defs/authenticatorConfigInfoRepresentation";
 import type ClientProfileRepresentation from "@keycloak/keycloak-admin-client/lib/defs/clientProfileRepresentation";
-import type ClientPolicyExecutorRepresentation from "@keycloak/keycloak-admin-client/lib/defs/clientPolicyExecutorRepresentation";
 import type { ClientProfileParams } from "./routes/ClientProfile";
 import {
   COMPONENTS,
   isValidComponentType,
 } from "../client-scopes/add/components/components";
+import type ClientPolicyExecutorRepresentation from "@keycloak/keycloak-admin-client/lib/defs/clientPolicyExecutorRepresentation";
 
 type ExecutorForm = Required<ClientPolicyExecutorRepresentation>;
 
@@ -78,14 +78,16 @@ export const ExecutorForm = () => {
         return profile;
       }
 
-      const executors = (profile.executors ?? []).concat(formValues);
+      const executors = (profile.executors ?? []).concat({
+        executor: formValues.executor,
+        configuration: formValues.configuration,
+      });
 
       return {
         ...profile,
         executors,
       };
     });
-
     try {
       await adminClient.clientPolicies.createProfiles({
         profiles: updatedProfiles,
