@@ -195,15 +195,15 @@ article.pf-c-card.pf-m-flat.kc-login-settings-template
 }
 
 .kc-emptyExecutors {
-  color: #8D9195;
+  color: #8d9195;
 }
 
 .kc-emptyConditions {
-  color: #8D9195;
+  color: #8d9195;
 }
 
 .kc-emptyClientProfiles {
-  color: #8D9195;
+  color: #8d9195;
 }
 
 .kc-action-dropdown {
@@ -225,4 +225,21 @@ article.pf-c-card.pf-m-flat.kc-login-settings-template
 
 .kc-executor-trash-icon:hover {
   filter: brightness(55%);
+} 
+
+.kc-condition-link {
+  margin-right: 0.625rem;
+}
+
+.kc-conditionType-trash-icon {
+  margin-left: .5rem;
+  color: var(--pf-global--Color--400);
+}
+
+.kc-conditionType-trash-icon:hover {
+  filter: brightness(55%);
+}
+
+.kc-backToPolicies {
+  width: 5rem;
 }
