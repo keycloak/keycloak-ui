@@ -21,7 +21,7 @@ export default {
       "Valid URI pattern a browser can redirect to after a successful login or logout. Simple wildcards are allowed such as 'http://example.com/*'. Relative path can be specified too such as /my/relative/path/*. Relative paths are relative to the client root URL, or if none is specified the auth server root URL is used. For SAML, you must set valid URI patterns if you are relying on the consumer service URL embedded with the login request.",
     nameIdFormat: "The name ID format to use for the subject.",
     forceNameIdFormat:
-      "Ignore requested NameID subject format and use admin console configured one.",
+      "Ignore requested NameID subject format and use Admin Console configured one.",
     forcePostBinding: "Always use POST binding for responses.",
     forceArtifactBinding:
       "Should response messages be returned to the client through the SAML ARTIFACT binding system?",

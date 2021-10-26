@@ -15,7 +15,7 @@
      "osVersion":"4.4.0-18362-Microsoft",
      "fileEncoding":"UTF-8",
      "userName":"edewit",
-     "userDir":"/mnt/c/Users/erikj/IdeaProjects/keycloak-admin-ui",
+     "userDir":"/mnt/c/Users/erikj/IdeaProjects/keycloak-admin-console",
      "userTimezone":"Europe/Berlin"
   },
   "memoryInfo":{
@@ -822,7 +822,7 @@
            "default":{
               "order":0,
               "operationalInfo":{
-                 "databaseUrl":"jdbc:h2:/mnt/c/Users/erikj/IdeaProjects/keycloak-admin-ui/server/keycloak-11.0.0/standalone/data/keycloak",
+                 "databaseUrl":"jdbc:h2:/mnt/c/Users/erikj/IdeaProjects/keycloak-admin-console/server/keycloak-11.0.0/standalone/data/keycloak",
                  "databaseUser":"SA",
                  "databaseProduct":"H2 1.4.197 (2018-03-18)",
                  "databaseDriver":"H2 JDBC Driver 1.4.197 (2018-03-18)"

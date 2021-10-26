@@ -13,7 +13,7 @@ jobs:
       contents: read
       packages: write
     steps:
-      - name: Check out Admin UI
+      - name: Check out Admin Console
         uses: actions/checkout@v2
 
       - name: Set up Java
@@ -24,7 +24,7 @@ jobs:
           check-latest: true
           cache: maven
 
-      - name: Build and deploy Admin UI
+      - name: Build and deploy Admin Console
         run: mvn --batch-mode deploy
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

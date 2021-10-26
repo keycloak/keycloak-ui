@@ -6,7 +6,7 @@ export default {
     ldapGeneralOptionsSettingsDescription:
       "This section contains a few basic options common to all user storage providers.",
     consoleDisplayNameHelp:
-      "Display name of provider when linked in admin console",
+      "Display name of provider when linked in Admin Console",
     vendorHelp: "LDAP vendor (provider)",
 
     ldapConnectionAndAuthorizationSettingsDescription:

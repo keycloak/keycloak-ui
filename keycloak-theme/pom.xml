@@ -19,9 +19,9 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>org.keycloak</groupId>
-    <artifactId>keycloak-admin-ui</artifactId>
+    <artifactId>keycloak-admin-console</artifactId>
     <version>16.0.0-SNAPSHOT</version>
-    <name>Keycloak Administration UI</name>
+    <name>Keycloak Administration Console</name>
 
     <licenses>
         <license>
@@ -35,7 +35,7 @@
         <repository>
             <id>github</id>
             <name>GitHub Packages</name>
-            <url>https://maven.pkg.github.com/keycloak/keycloak-admin-ui</url>
+            <url>https://maven.pkg.github.com/keycloak/keycloak-admin-console</url>
         </repository>
     </distributionManagement>
 

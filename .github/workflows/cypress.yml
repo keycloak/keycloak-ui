@@ -8,10 +8,10 @@ jobs:
   cypress-run:
     runs-on: ubuntu-latest
     env:
-      ADMIN_UI_PATH: admin-ui
+      ADMIN_UI_PATH: admin-console
       KEYCLOAK_SERVER_PATH: keycloak-server
     steps:
-      - name: Check out Admin UI
+      - name: Check out Admin Console
         uses: actions/checkout@v2
         with:
           path: ${{ env.ADMIN_UI_PATH }}
@@ -35,7 +35,7 @@ jobs:
         working-directory: ${{ env.KEYCLOAK_SERVER_PATH }}
         run: cp .github/settings.xml ~/.m2
 
-      - name: Build Admin UI
+      - name: Build Admin Console
         working-directory: ${{ env.ADMIN_UI_PATH }}
         run: mvn clean install --batch-mode --file keycloak-theme/pom.xml
 

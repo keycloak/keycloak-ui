@@ -8,7 +8,7 @@ jobs:
   setup:
     runs-on: ubuntu-latest
     steps:
-      - name: Check out Admin UI
+      - name: Check out Admin Console
         uses: actions/checkout@v2
 
       - name: Set up Node

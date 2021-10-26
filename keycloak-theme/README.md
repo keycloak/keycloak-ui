@@ -1,6 +1,6 @@
 # Keycloak Admin Console V2 Maven Build
 
-The Maven build prepares the admin console to be deployed as a theme on the Keycloak server.
+The Maven build prepares the Admin Console to be deployed as a theme on the Keycloak server.
 
 # Build Instructions
 

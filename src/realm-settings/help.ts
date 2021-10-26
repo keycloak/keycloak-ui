@@ -16,9 +16,9 @@ export default {
     loginTheme:
       "Select theme for login, OTP, grant, registration and forgot password pages.",
     accountTheme: "Select theme for user account management pages.",
-    adminConsoleTheme: "Select theme for admin console.",
+    adminConsoleTheme: "Select theme for Admin Console.",
     emailTheme: "Select theme for emails that are sent by the server.",
-    displayName: "Display name of provider when linked in admin console",
+    displayName: "Display name of provider when linked in Admin Console",
     priority: "Priority of the provider",
     enabled: "Set if the keys are enabled",
     active: "Set if the keys can be used for signing",
@@ -27,7 +27,7 @@ export default {
     "save-user-events":
       "If enabled, login events are saved to the database, which makes events available to the admin and account management consoles.",
     "save-admin-events":
-      "If enabled, admin events are saved to the database, which makes events available to the admin console.",
+      "If enabled, admin events are saved to the database, which makes events available to the Admin Console.",
     expiration:
       "Sets the expiration for events. Expired events are periodically deleted from the database.",
     "admin-clearEvents": "Deletes all admin events in the database.",

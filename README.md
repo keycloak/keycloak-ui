@@ -28,12 +28,12 @@ For development on this project you will need a running Keycloak server listenin
     ```
 
 ## Build and run through Docker
-    git checkout git@github.com:keycloak/keycloak-admin-ui.git
-    cd keycloak-admin-ui
+    git checkout git@github.com:keycloak/keycloak-admin-console.git
+    cd keycloak-admin-console
     docker build -t keycloak-v2 .
     docker run --name keycloak-v2 -d -p 127.0.0.1:8080:8080 -e KEYCLOAK_USER=admin -e KEYCLOAK_PASSWORD=admin keycloak-v2 -Dprofile.feature.newadmin=enabled
 
-You can reach the new admin interface at `http://localhost:8080`. Then go to `Realm Settings --> Themes` and set Admin Console Theme to `keycloak.v2`.
+You can reach the new Admin Console at `http://localhost:8080`. Then go to `Realm Settings --> Themes` and set Admin Console Theme to `keycloak.v2`.
 
 If your Keycloak instance is not on `localhost:8180`, create a file `.env` with the following:
 
@@ -53,7 +53,7 @@ npm run lint
 
 ## Theming
 
-It's possible to theme the Admin UI interface, this is useful if you want to apply your own branding so that the product looks familiar to your users. The Admin UI comes with two built-in themes called `keycloak` and `rh-sso`, by default the `keycloak` theme will be used when building the application.
+It's possible to theme the Admin Console, this is useful if you want to apply your own branding so that the product looks familiar to your users. The Admin Console comes with two built-in themes called `keycloak` and `rh-sso`, by default the `keycloak` theme will be used when building the application.
 
 This behavior can be changed by passing in a `THEME_NAME` environment variable, for example if wanted to build the application using the `rh-sso` theme we can do the following:
 

@@ -2,7 +2,7 @@
 
 ## Package managers
 
-The default package manager for the Keycloak UI projects is NPM. There are several reasons why NPM is used over other package managers (such as Yarn and PNPM):
+The default package manager for the project is NPM. There are several reasons why NPM is used over other package managers (such as Yarn and PNPM):
 
 - It comes included with NodeJS by default, meaning it does not have to be installed manually.
 - Most contributors are familiar with the NPM ecosystem and tooling.
@@ -12,7 +12,7 @@ If you submit a pull request that changes the dependencies, make sure that you a
 
 ## Typescript
 
-The Keycloak UI projects uses best practices based off the official [React TypeScript Cheat sheet](https://react-typescript-cheatsheet.netlify.app/), with modifications for this project. The React TypeScript Cheat sheet is maintained and used by developers through out the world, and is a place where developers can bring together lessons learned using TypeScript and React.
+The project uses best practices based off the official [React TypeScript Cheat sheet](https://react-typescript-cheatsheet.netlify.app/), with modifications for this project. The React TypeScript Cheat sheet is maintained and used by developers through out the world, and is a place where developers can bring together lessons learned using TypeScript and React.
 
 ### Non-null assertion operator
 
@@ -118,7 +118,7 @@ We will use one global CSS file to surface customization variables. Styles parti
 
 PatternFly reference https://pf4.patternfly.org/guidelines#variables
 
-For the Keycloak admin console, we modify the PatternFly convention to namespace the classes and variables to the Keycloak packages.
+For the Keycloak Admin Console, we modify the PatternFly convention to namespace the classes and variables to the Keycloak packages.
 
 **Class name**
 ```css
@@ -158,7 +158,7 @@ However, there are other times when modifications must be made to the styling pr
 
 These values can be seen in the [PatternFly design guidelines](https://www.patternfly.org/v4/design-guidelines/styles/colors) and a [full listing of variables](https://www.patternfly.org/v4/documentation/overview/global-css-variables) can be found in the documentation section.
 
-For the Keycloak admin console, we modify the PatternFly convention to namespace the classes and variables to the Keycloak packages.
+For the Keycloak Admin Console, we modify the PatternFly convention to namespace the classes and variables to the Keycloak packages.
 
 **Custom property**
 ```css
@@ -189,7 +189,7 @@ For the Keycloak admin console, we modify the PatternFly convention to namespace
 
 Utility classes can be used to add specific styling to a component, such as margin-bottom or padding. However, their use should be limited to one-off styling needs.  
 
-For example, instead of using the utility class for margin-right multiple times, we should define a new Keycloak admin console class that adds this *margin-right: var(--pf-global--spacer--sm);* and in this example, the new class can set the color appropriately as well.
+For example, instead of using the utility class for margin-right multiple times, we should define a new Keycloak Admin Console class that adds this *margin-right: var(--pf-global--spacer--sm);* and in this example, the new class can set the color appropriately as well.
 
 **Using a utility class **
 ```css

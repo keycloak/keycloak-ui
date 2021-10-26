@@ -15,7 +15,7 @@ const logOutTest = () => {
 };
 
 const goToAcctMgtTest = () => {
-  it("opens manage account and returns to admin console", () => {
+  it("opens manage account and returns to Admin Console", () => {
     masthead.accountManagement();
     cy.contains("Welcome to Keycloak Account Management");
     cy.get("#landingReferrerLink").click({ force: true });
