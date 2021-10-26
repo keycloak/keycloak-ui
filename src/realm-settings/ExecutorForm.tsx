@@ -174,7 +174,6 @@ export const ExecutorForm = () => {
                     {...option}
                     name={fldNameFormatter(option.label!)}
                     label={option.label}
-                    defaultValue={option.defaultValue}
                   />
                 );
               } else {
