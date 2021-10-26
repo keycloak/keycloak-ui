@@ -18,9 +18,14 @@ import { KeycloakDataTable } from "../components/table-toolbar/KeycloakDataTable
 import { ListEmptyState } from "../components/list-empty-state/ListEmptyState";
 import { CaretDownIcon, FilterIcon } from "@patternfly/react-icons";
 import { omit, sortBy } from "lodash";
-import type { RealmRoleParams } from "./routes/RealmRole";
+import { RealmRoleParams, toRealmRole } from "./routes/RealmRole";
 import { useRealm } from "../context/realm-context/RealmContext";
 import { useAlerts } from "../components/alert/Alerts";
+import {
+  ClientRoleParams,
+  ClientRoleRoute,
+  toClientRole,
+} from "./routes/ClientRole";
 
 type Role = RoleRepresentation & {
   clientId?: string;
@@ -57,7 +62,10 @@ export const AssociatedRolesModal = ({
   const refresh = () => setKey(new Date().getTime());
 
   const { id } = useParams<RealmRoleParams>();
-  const { url } = useRouteMatch();
+  const clientRoleRouteMatch = useRouteMatch<ClientRoleParams>(
+    ClientRoleRoute.path
+  );
+
   const history = useHistory();
 
   const alphabetize = (rolesList: RoleRepresentation[]) => {
@@ -112,12 +120,20 @@ export const AssociatedRolesModal = ({
   const addComposites = async (composites: RoleRepresentation[]) => {
     const compositeArray = composites;
 
+    const to = clientRoleRouteMatch
+      ? toClientRole({ ...clientRoleRouteMatch.params, tab: "AssociateRoles" })
+      : toRealmRole({
+          realm,
+          id,
+          tab: "AssociatedRoles",
+        });
+
     try {
       await adminClient.roles.createComposite(
         { roleId: id, realm },
         compositeArray
       );
-      history.push(url.substr(0, url.lastIndexOf("/") + 1) + "AssociatedRoles");
+      history.push(to);
       addAlert(t("addAssociatedRolesSuccess"), AlertVariant.success);
     } catch (error) {
       addError("roles:addAssociatedRolesError", error);
