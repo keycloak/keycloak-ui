@@ -10,7 +10,7 @@ import {
 import { useTranslation } from "react-i18next";
 import { CodeEditor, Language } from "@patternfly/react-code-editor";
 
-type FileUpload = {
+type FileUploadType = {
   value: string;
   filename: string;
   isLoading: boolean;
@@ -47,7 +47,7 @@ export const FileUploadForm = ({
     isLoading: false,
     modal: false,
   };
-  const [fileUpload, setFileUpload] = useState<FileUpload>(defaultUpload);
+  const [fileUpload, setFileUpload] = useState<FileUploadType>(defaultUpload);
   const removeDialog = () => setFileUpload({ ...fileUpload, modal: false });
   const handleChange = (
     value: string | File,
