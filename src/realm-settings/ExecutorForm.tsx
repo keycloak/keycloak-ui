@@ -78,12 +78,7 @@ export const ExecutorForm = () => {
         return profile;
       }
 
-      const executors = (profile.executors ?? []).concat({
-        executor: formValues.executor,
-        configuration: formValues.configuration,
-      });
-
-      console.log(executors);
+      const executors = (profile.executors ?? []).concat(formValues);
 
       return {
         ...profile,
@@ -165,7 +160,6 @@ export const ExecutorForm = () => {
           <FormProvider {...form}>
             {executorProperties.map((option) => {
               const componentType = option.type!;
-              console.log(option.defaultValue);
               if (isValidComponentType(componentType)) {
                 const Component = COMPONENTS[componentType];
                 return (

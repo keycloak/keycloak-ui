@@ -34,7 +34,7 @@ export const BooleanComponent = ({
             id={name!}
             label={t("common:on")}
             labelOff={t("common:off")}
-            isChecked={value === "true"}
+            isChecked={value === "true" || value === true}
             onChange={(value) => onChange("" + value)}
           />
         )}
