@@ -10,7 +10,6 @@ import {
   SelectVariant,
 } from "@patternfly/react-core";
 import { useTranslation } from "react-i18next";
-import { omit } from "lodash";
 import { FormAccess } from "../components/form-access/FormAccess";
 import { ViewHeader } from "../components/view-header/ViewHeader";
 import { useAlerts } from "../components/alert/Alerts";
@@ -22,19 +21,17 @@ import { useAdminClient, useFetch } from "../context/auth/AdminClient";
 import type ComponentTypeRepresentation from "@keycloak/keycloak-admin-client/lib/defs/componentTypeRepresentation";
 import type { ConfigPropertyRepresentation } from "@keycloak/keycloak-admin-client/lib/defs/authenticatorConfigInfoRepresentation";
 import type ClientProfileRepresentation from "@keycloak/keycloak-admin-client/lib/defs/clientProfileRepresentation";
+import type ClientPolicyExecutorRepresentation from "@keycloak/keycloak-admin-client/lib/defs/clientPolicyExecutorRepresentation";
 import type { ClientProfileParams } from "./routes/ClientProfile";
 import {
   COMPONENTS,
   isValidComponentType,
 } from "../client-scopes/add/components/components";
 
-type ExecutorForm = {
-  config?: object;
-  executor?: string;
-};
+type ExecutorForm = Required<ClientPolicyExecutorRepresentation>;
 
 const defaultValues: ExecutorForm = {
-  config: {},
+  configuration: {},
   executor: "",
 };
 
@@ -83,8 +80,10 @@ export const ExecutorForm = () => {
 
       const executors = (profile.executors ?? []).concat({
         executor: formValues.executor,
-        configuration: omit(formValues, "executor"),
+        configuration: formValues.configuration,
       });
+
+      console.log(executors);
 
       return {
         ...profile,

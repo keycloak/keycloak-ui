@@ -344,8 +344,7 @@ export const ClientProfileForm = () => {
                               key="executor"
                               data-testid="executor-type"
                             >
-                              {Object.keys(executor.configuration!).length !==
-                              0 ? (
+                              {Object.keys(executor).length !== 0 ? (
                                 <Link
                                   data-testid="executor-type-link"
                                   to={""}
@@ -414,8 +413,7 @@ export const ClientProfileForm = () => {
                                 key="executor"
                                 data-testid="global-executor-type"
                               >
-                                {Object.keys(executor.configuration!).length !==
-                                0 ? (
+                                {Object.keys(executor).length !== 0 ? (
                                   <Link
                                     data-testid="global-executor-type-link"
                                     to={""}
