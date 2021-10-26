@@ -165,6 +165,7 @@ export const ExecutorForm = () => {
           <FormProvider {...form}>
             {executorProperties.map((option) => {
               const componentType = option.type!;
+              console.log(option.defaultValue);
               if (isValidComponentType(componentType)) {
                 const Component = COMPONENTS[componentType];
                 return (
@@ -173,6 +174,7 @@ export const ExecutorForm = () => {
                     {...option}
                     name={fldNameFormatter(option.label!)}
                     label={option.label}
+                    defaultValue={option.defaultValue}
                   />
                 );
               } else {
