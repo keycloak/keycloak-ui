@@ -41,7 +41,7 @@ export const FileUploadForm = ({
   ...rest
 }: FileUploadFormProps) => {
   const { t } = useTranslation();
-  const defaultUpload = {
+  const defaultUpload: FileUploadType = {
     value: "",
     filename: "",
     isLoading: false,

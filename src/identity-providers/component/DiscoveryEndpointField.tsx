@@ -33,29 +33,35 @@ export const DiscoveryEndpointField = ({
   };
 
   useEffect(() => {
-    if (discovering) {
-      setDiscovering(!!discoveryUrl);
-      if (discoveryUrl)
-        (async () => {
-          let result;
-          try {
-            result = await adminClient.identityProviders.importFromUrl({
-              providerId: id,
-              fromUrl: discoveryUrl,
-            });
-          } catch (error) {
-            setDiscovering(false);
-            setError("discoveryError", {
-              type: "manual",
-              message: (error as Error).message,
-            });
-          }
-
-          setDiscoveryResult(result);
-          setupForm(result);
-          setDiscovering(false);
-        })();
+    if (!discovering) {
+      return;
     }
+
+    setDiscovering(!!discoveryUrl);
+
+    if (!discoveryUrl) {
+      return;
+    }
+
+    (async () => {
+      let result;
+      try {
+        result = await adminClient.identityProviders.importFromUrl({
+          providerId: id,
+          fromUrl: discoveryUrl,
+        });
+      } catch (error) {
+        setDiscovering(false);
+        setError("discoveryError", {
+          type: "manual",
+          message: (error as Error).message,
+        });
+      }
+
+      setDiscoveryResult(result);
+      setupForm(result);
+      setDiscovering(false);
+    })();
   }, [discovering]);
 
   return (
