@@ -103,6 +103,20 @@ export const ExecutorForm = () => {
     }
   };
 
+  const globalProfile = globalProfiles.find(
+    (globalProfile) => globalProfile.name === profileName
+  );
+
+  const globalProfileExecutor = globalProfile?.executors!.find(
+    (executor) => executor
+  );
+
+  const profile = profiles.find((profile) => profile.name === profileName);
+
+  const profileExecutor = profile?.executors!.find((executor) => executor);
+
+  console.log(globalProfileExecutor, profileExecutor);
+
   return (
     <>
       <ViewHeader
@@ -128,7 +142,7 @@ export const ExecutorForm = () => {
           >
             <Controller
               name="executor"
-              defaultValue=""
+              defaultValue={""}
               control={control}
               render={({ onChange, value }) => (
                 <Select
@@ -146,12 +160,13 @@ export const ExecutorForm = () => {
                     );
                     setSelectExecutorTypeOpen(false);
                   }}
-                  selections={value}
+                  selections={editMode ? executorName : value}
                   variant={SelectVariant.single}
                   data-testid="executorType-select"
                   aria-label={t("executorType")}
                   isOpen={selectExecutorTypeOpen}
                   maxHeight={580}
+                  isDisabled={editMode}
                 >
                   {executorTypes?.map((option) => (
                     <SelectOption
@@ -191,7 +206,7 @@ export const ExecutorForm = () => {
               onClick={save}
               data-testid="realm-settings-add-executor-save-button"
             >
-              {t("common:add")}
+              {editMode ? t("common:save") : t("common:add")}
             </Button>
             <Button
               variant="link"
