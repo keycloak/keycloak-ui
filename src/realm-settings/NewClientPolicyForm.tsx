@@ -334,6 +334,8 @@ export const NewClientPolicyForm = () => {
     }
   };
 
+  console.log("NY", policyConditions);
+
   return (
     <>
       <DeleteConfirm />
@@ -576,28 +578,24 @@ export const NewClientPolicyForm = () => {
                 <DataList aria-label={t("profiles")} isCompact>
                   {policyProfiles.map((profile, idx) => (
                     <DataListItem
-                      aria-labelledby={"conditions-list-item"}
+                      aria-labelledby={`${profile}-profile-list-item`}
                       key={profile}
-                      id={profile}
+                      id={`${profile}-profile-list-item`}
+                      data-testid={"profile-list-item"}
                     >
-                      <DataListItemRow data-testid="conditions-list-row">
+                      <DataListItemRow data-testid="profile-list-row">
                         <DataListItemCells
                           dataListCells={[
-                            <DataListCell
-                              key="name"
-                              data-testid="condition-type"
-                            >
-                              {profile!.length !== 0 ? (
+                            <DataListCell key="name" data-testid="profile-name">
+                              {profile && (
                                 <Link
                                   key={profile}
-                                  data-testid="condition-type-link"
+                                  data-testid="profile-name-link"
                                   to={""}
-                                  className="kc-condition-link"
+                                  className="kc-profile-link"
                                 >
                                   {profile}
                                 </Link>
-                              ) : (
-                                profile
                               )}
                               {policyProfiles
                                 .filter((type) => type === profile)
@@ -609,9 +607,9 @@ export const NewClientPolicyForm = () => {
                                           (profile) => type === profile.name
                                         )?.description
                                       }
-                                      forLabel={t("conditionTypeHelpText")}
+                                      forLabel={profile}
                                       forID={t(`common:helpLabel`, {
-                                        label: t("conditionTypeHelpText"),
+                                        label: profile,
                                       })}
                                     />
                                     <Button
