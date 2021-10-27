@@ -200,8 +200,8 @@ export const ExecutorForm = () => {
               }
             })}
           </FormProvider>
-          <ActionGroup>
-            {editMode && globalProfile ? (
+          {editMode && globalProfile ? (
+            <div className="kc-backToProfile">
               <Button
                 id="backToClientProfile"
                 component={(props) => (
@@ -218,30 +218,30 @@ export const ExecutorForm = () => {
               >
                 {t("realm-settings:back")}
               </Button>
-            ) : (
-              <>
-                <Button
-                  variant="primary"
-                  onClick={save}
-                  data-testid="realm-settings-add-executor-save-button"
-                >
-                  {editMode ? t("common:save") : t("common:add")}
-                </Button>
-                <Button
-                  variant="link"
-                  component={(props) => (
-                    <Link
-                      {...props}
-                      to={`/${realm}/realm-settings/clientPolicies/${profileName}`}
-                    />
-                  )}
-                  data-testid="realm-settings-add-executor-cancel-button"
-                >
-                  {t("common:cancel")}
-                </Button>
-              </>
-            )}
-          </ActionGroup>
+            </div>
+          ) : (
+            <ActionGroup>
+              <Button
+                variant="primary"
+                onClick={save}
+                data-testid="realm-settings-add-executor-save-button"
+              >
+                {editMode ? t("common:save") : t("common:add")}
+              </Button>
+              <Button
+                variant="link"
+                component={(props) => (
+                  <Link
+                    {...props}
+                    to={`/${realm}/realm-settings/clientPolicies/${profileName}`}
+                  />
+                )}
+                data-testid="realm-settings-add-executor-cancel-button"
+              >
+                {t("common:cancel")}
+              </Button>
+            </ActionGroup>
+          )}
         </FormAccess>
       </PageSection>
     </>

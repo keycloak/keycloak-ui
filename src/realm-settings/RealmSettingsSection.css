@@ -218,6 +218,10 @@ article.pf-c-card.pf-m-flat.kc-login-settings-template
   width: 5rem;
 }
 
+.kc-backToPolicies {
+  float: left;
+}
+
 .kc-executor-trash-icon {
   margin-left: .5rem;
   color: var(--pf-global--Color--200);
