@@ -1,7 +1,6 @@
 import type { LocationDescriptorObject } from "history";
 import { lazy } from "react";
 import { generatePath } from "react-router-dom";
-import { lazy } from "react";
 
 import type { RouteDef } from "../../route-config";
 
