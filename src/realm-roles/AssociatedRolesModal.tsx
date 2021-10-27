@@ -224,7 +224,7 @@ export const AssociatedRolesModal = ({
         searchPlaceholderKey="roles:searchFor"
         isRadio={isRadio}
         isPaginated={filterType === "roles"}
-        isRowDisabled={(r) => !!compositeRoles.find((o) => o.name === r.name)}
+        isRowDisabled={(r) => compositeRoles.some((o) => o.name === r.name)}
         searchTypeComponent={
           <Dropdown
             onSelect={() => onFilterDropdownSelect(filterType)}
