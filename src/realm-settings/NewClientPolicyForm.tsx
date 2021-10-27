@@ -51,7 +51,7 @@ const defaultValues: NewClientPolicyForm = {
   profiles: [],
 };
 
-export type PolicyDetailAttributes = {
+type PolicyDetailAttributes = {
   idx: number;
   name: string;
 };
@@ -143,8 +143,10 @@ export const NewClientPolicyForm = () => {
       "org.keycloak.services.clientpolicy.condition.ClientPolicyConditionProvider"
     ];
 
+  const formValues = form.getValues();
+
   const save = async () => {
-    const createdForm = form.getValues();
+    const createdForm = formValues;
     const createdPolicy = {
       ...createdForm,
       profiles: [],
@@ -170,9 +172,7 @@ export const NewClientPolicyForm = () => {
         AlertVariant.success
       );
       history.push(
-        `/${realm}/realm-settings/clientPolicies/${
-          form.getValues().name
-        }/edit-policy`
+        `/${realm}/realm-settings/clientPolicies/${formValues.name}/edit-policy`
       );
       setShowAddConditionsAndProfilesForm(true);
       refresh();
@@ -222,9 +222,7 @@ export const NewClientPolicyForm = () => {
             });
             addAlert(t("deleteConditionSuccess"), AlertVariant.success);
             history.push(
-              `/${realm}/realm-settings/clientPolicies/${
-                form.getValues().name
-              }/edit-policy`
+              `/${realm}/realm-settings/clientPolicies/${formValues.name}/edit-policy`
             );
             refresh();
           } catch (error) {
@@ -265,9 +263,7 @@ export const NewClientPolicyForm = () => {
           });
           addAlert(t("deleteClientPolicyProfileSuccess"), AlertVariant.success);
           history.push(
-            `/${realm}/realm-settings/clientPolicies/${
-              form.getValues().name
-            }/edit-policy`
+            `/${realm}/realm-settings/clientPolicies/${formValues.name}/edit-policy`
           );
         } catch (error) {
           addError(t("deleteClientPolicyProfileError"), error);
@@ -326,9 +322,7 @@ export const NewClientPolicyForm = () => {
       });
       setPolicies(newPolicies);
       history.push(
-        `/${realm}/realm-settings/clientPolicies/${
-          form.getValues().name
-        }/edit-policy`
+        `/${realm}/realm-settings/clientPolicies/${formValues.name}/edit-policy`
       );
       addAlert(
         t("realm-settings:addClientProfileSuccess"),
@@ -416,7 +410,7 @@ export const NewClientPolicyForm = () => {
               variant="primary"
               type="submit"
               data-testid="saveCreatePolicy"
-              isDisabled={!form.getValues().name}
+              isDisabled={!formValues.name}
             >
               {t("common:save")}
             </Button>
@@ -456,7 +450,7 @@ export const NewClientPolicyForm = () => {
                         {...props}
                         to={toNewClientPolicyCondition({
                           realm,
-                          policyName: form.getValues().name!,
+                          policyName: formValues.name!,
                         })}
                       ></Link>
                     )}
@@ -473,9 +467,10 @@ export const NewClientPolicyForm = () => {
                 <DataList aria-label={t("conditions")} isCompact>
                   {policyConditions.map((condition, idx) => (
                     <DataListItem
-                      aria-labelledby={"conditions-list-item"}
+                      aria-labelledby="conditions-list-item"
                       key={`list-item-${idx}`}
                       id={condition.condition}
+                      data-testid="conditions-list-item"
                     >
                       <DataListItemRow data-testid="conditions-list-row">
                         <DataListItemCells

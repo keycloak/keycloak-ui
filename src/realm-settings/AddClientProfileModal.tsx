@@ -15,7 +15,7 @@ export type AddClientProfileModalProps = {
   open: boolean;
   toggleDialog: () => void;
   onConfirm: (newReps: RoleRepresentation[]) => void;
-  allProfiles?: string[];
+  allProfiles: string[];
 };
 
 export const AddClientProfileModal = (props: AddClientProfileModalProps) => {
@@ -43,8 +43,7 @@ export const AddClientProfileModal = (props: AddClientProfileModalProps) => {
         global: false,
       }));
 
-      const allClientProfiles = globalProfiles?.concat(profiles ?? []);
-      setTableProfiles(allClientProfiles || []);
+      setTableProfiles([...(globalProfiles ?? []), ...(profiles ?? [])]);
     },
     []
   );
@@ -91,7 +90,7 @@ export const AddClientProfileModal = (props: AddClientProfileModalProps) => {
       <KeycloakDataTable
         loader={loader}
         isRowDisabled={(value) =>
-          props.allProfiles?.includes(value.name!) || false
+          props.allProfiles.includes(value.name!) || false
         }
         ariaLabelKey="realm-settings:profilesList"
         searchPlaceholderKey="realm-settings:searchProfile"
@@ -112,7 +111,7 @@ export const AddClientProfileModal = (props: AddClientProfileModalProps) => {
         ]}
         emptyState={
           <ListEmptyState
-            hasIcon={true}
+            hasIcon
             message={t("noRoles")}
             instructions={t("noRolesInstructions")}
             primaryActionText={t("createRole")}
