@@ -23,11 +23,6 @@ export const RealmRoleRoute: RouteDef = {
   access: ["view-realm", "view-users"],
 };
 
-export const realmRoleRoute = (component: ComponentType): RouteDef => ({
-  ...RealmRoleRoute,
-  component,
-});
-
 export const toRealmRole = (
   params: RealmRoleParams
 ): LocationDescriptorObject => ({
