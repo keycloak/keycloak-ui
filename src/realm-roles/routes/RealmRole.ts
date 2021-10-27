@@ -1,4 +1,4 @@
-import { ComponentType, lazy } from "react";
+import { lazy } from "react";
 import { lazy } from "react";
 import { generatePath } from "react-router";
 import type { LocationDescriptorObject } from "history";
