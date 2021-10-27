@@ -214,7 +214,7 @@ article.pf-c-card.pf-m-flat.kc-login-settings-template
   margin-right: 0.625rem;
 }
 
-.kc-backToPolicies {
+.kc-backToPolicies, .kc-backToPolicies {
   width: 5rem;
 }
 
@@ -238,8 +238,4 @@ article.pf-c-card.pf-m-flat.kc-login-settings-template
 
 .kc-conditionType-trash-icon:hover {
   filter: brightness(55%);
-}
-
-.kc-backToPolicies {
-  width: 5rem;
 }

@@ -21,7 +21,7 @@ import { useAdminClient, useFetch } from "../context/auth/AdminClient";
 import type ComponentTypeRepresentation from "@keycloak/keycloak-admin-client/lib/defs/componentTypeRepresentation";
 import type { ConfigPropertyRepresentation } from "@keycloak/keycloak-admin-client/lib/defs/authenticatorConfigInfoRepresentation";
 import type ClientProfileRepresentation from "@keycloak/keycloak-admin-client/lib/defs/clientProfileRepresentation";
-import type { ClientProfileParams } from "./routes/ClientProfile";
+import { ClientProfileParams, toClientProfile } from "./routes/ClientProfile";
 import {
   COMPONENTS,
   isValidComponentType,
@@ -201,25 +201,46 @@ export const ExecutorForm = () => {
             })}
           </FormProvider>
           <ActionGroup>
-            <Button
-              variant="primary"
-              onClick={save}
-              data-testid="realm-settings-add-executor-save-button"
-            >
-              {editMode ? t("common:save") : t("common:add")}
-            </Button>
-            <Button
-              variant="link"
-              component={(props) => (
-                <Link
-                  {...props}
-                  to={`/${realm}/realm-settings/clientPolicies/${profileName}`}
-                />
-              )}
-              data-testid="realm-settings-add-executor-cancel-button"
-            >
-              {t("common:cancel")}
-            </Button>
+            {editMode && globalProfile ? (
+              <Button
+                id="backToClientProfile"
+                component={(props) => (
+                  <Link
+                    {...props}
+                    to={toClientProfile({
+                      realm,
+                      profileName,
+                    })}
+                  ></Link>
+                )}
+                variant="primary"
+                data-testid="backToClientProfile"
+              >
+                {t("realm-settings:back")}
+              </Button>
+            ) : (
+              <>
+                <Button
+                  variant="primary"
+                  onClick={save}
+                  data-testid="realm-settings-add-executor-save-button"
+                >
+                  {editMode ? t("common:save") : t("common:add")}
+                </Button>
+                <Button
+                  variant="link"
+                  component={(props) => (
+                    <Link
+                      {...props}
+                      to={`/${realm}/realm-settings/clientPolicies/${profileName}`}
+                    />
+                  )}
+                  data-testid="realm-settings-add-executor-cancel-button"
+                >
+                  {t("common:cancel")}
+                </Button>
+              </>
+            )}
           </ActionGroup>
         </FormAccess>
       </PageSection>
