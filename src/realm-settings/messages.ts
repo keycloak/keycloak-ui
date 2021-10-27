@@ -253,6 +253,7 @@ export default {
     newClientProfile: "Create client profile",
     newClientProfileName: "Client profile name",
     clientProfile: "Client profile details",
+    executorDetails: "Executor details",
     back: "Back",
     delete: "delete",
     save: "Save",

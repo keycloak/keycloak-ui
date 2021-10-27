@@ -27,6 +27,7 @@ import {
   isValidComponentType,
 } from "../client-scopes/add/components/components";
 import type ClientPolicyExecutorRepresentation from "@keycloak/keycloak-admin-client/lib/defs/clientPolicyExecutorRepresentation";
+import type { ExecutorParams } from "./routes/Executor";
 
 type ExecutorForm = Required<ClientPolicyExecutorRepresentation>;
 
@@ -39,6 +40,7 @@ export const ExecutorForm = () => {
   const { t } = useTranslation("realm-settings");
   const history = useHistory();
   const { realm, profileName } = useParams<ClientProfileParams>();
+  const { executorName } = useParams<ExecutorParams>();
   const { addAlert, addError } = useAlerts();
   const [selectExecutorTypeOpen, setSelectExecutorTypeOpen] = useState(false);
   const serverInfo = useServerInfo();
@@ -57,6 +59,7 @@ export const ExecutorForm = () => {
   const [profiles, setProfiles] = useState<ClientProfileRepresentation[]>([]);
   const form = useForm<ExecutorForm>({ defaultValues });
   const { control } = form;
+  const editMode = executorName ? true : false;
 
   useFetch(
     () =>
@@ -102,7 +105,10 @@ export const ExecutorForm = () => {
 
   return (
     <>
-      <ViewHeader titleKey={t("addExecutor")} divider />
+      <ViewHeader
+        titleKey={editMode ? executorName : t("addExecutor")}
+        divider
+      />
       <PageSection variant="light">
         <FormAccess isHorizontal role="manage-realm" className="pf-u-mt-lg">
           <FormGroup

@@ -10,6 +10,7 @@ import { ClientPoliciesRoute } from "./routes/ClientPolicies";
 import { AddClientProfileRoute } from "./routes/AddClientProfile";
 import { ClientProfileRoute } from "./routes/ClientProfile";
 import { AddExecutorRoute } from "./routes/AddExecutor";
+import { ExecutorRoute } from "./routes/Executor";
 import { NewClientPolicyRoute } from "./routes/NewClientPolicy";
 import { EditClientPolicyRoute } from "./routes/EditClientPolicy";
 import { NewClientPolicyConditionRoute } from "./routes/AddCondition";
@@ -26,6 +27,7 @@ const routes: RouteDef[] = [
   AddClientProfileRoute,
   AddExecutorRoute,
   ClientProfileRoute,
+  ExecutorRoute,
   NewClientPolicyRoute,
   EditClientPolicyRoute,
   NewClientPolicyConditionRoute,

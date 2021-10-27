@@ -13,7 +13,7 @@ export const ClientProfileRoute: RouteDef = {
   path: "/:realm/realm-settings/clientPolicies/:profileName",
   component: ClientProfileForm,
   breadcrumb: () => EditProfileCrumb,
-  access: ["view-realm", "view-users"],
+  access: ["view-realm"],
 };
 
 export const toClientProfile = (

@@ -36,6 +36,7 @@ import { useConfirmDialog } from "../components/confirm-dialog/ConfirmDialog";
 import { toAddExecutor } from "./routes/AddExecutor";
 import { useServerInfo } from "../context/server-info/ServerInfoProvider";
 import type { ClientProfileParams } from "./routes/ClientProfile";
+import { toExecutor } from "./routes/Executor";
 
 type ClientProfileForm = Required<ClientProfileRepresentation>;
 
@@ -345,13 +346,24 @@ export const ClientProfileForm = () => {
                               data-testid="executor-type"
                             >
                               {Object.keys(executor).length !== 0 ? (
-                                <Link
-                                  data-testid="executor-type-link"
-                                  to={""}
-                                  className="kc-executor-link"
+                                <Button
+                                  id="editExecutor"
+                                  component={(props) => (
+                                    <Link
+                                      {...props}
+                                      to={toExecutor({
+                                        realm,
+                                        profileName,
+                                        executorName: executor.executor!,
+                                      })}
+                                    ></Link>
+                                  )}
+                                  variant="link"
+                                  className="kc-editExecutor"
+                                  data-testid="editExecutor"
                                 >
                                   {executor.executor}
-                                </Link>
+                                </Button>
                               ) : (
                                 executor.executor
                               )}
@@ -414,13 +426,24 @@ export const ClientProfileForm = () => {
                                 data-testid="global-executor-type"
                               >
                                 {Object.keys(executor).length !== 0 ? (
-                                  <Link
-                                    data-testid="global-executor-type-link"
-                                    to={""}
-                                    className="kc-global-executor-link"
+                                  <Button
+                                    id="editExecutor"
+                                    component={(props) => (
+                                      <Link
+                                        {...props}
+                                        to={toExecutor({
+                                          realm,
+                                          profileName,
+                                          executorName: executor.executor!,
+                                        })}
+                                      ></Link>
+                                    )}
+                                    variant="link"
+                                    className="kc-editExecutor"
+                                    data-testid="editExecutor"
                                   >
                                     {executor.executor}
-                                  </Link>
+                                  </Button>
                                 ) : (
                                   executor.executor
                                 )}
