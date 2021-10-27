@@ -3,6 +3,7 @@ import { useTranslation } from "react-i18next";
 import { useFormContext } from "react-hook-form";
 import { FormGroup, TextInput, Switch } from "@patternfly/react-core";
 
+import environment from "../../environment";
 import { HelpItem } from "../../components/help-enabler/HelpItem";
 import { useAdminClient } from "../../context/auth/AdminClient";
 
@@ -21,45 +22,41 @@ export const DiscoveryEndpointField = ({
 
   const adminClient = useAdminClient();
 
-  const { setValue, register, errors, setError } = useFormContext();
+  const { setValue, register, errors, setError, watch, clearErrors } =
+    useFormContext();
+  const discoveryUrl = watch("discoveryEndpoint");
 
   const [discovery, setDiscovery] = useState(true);
-  const [discoveryUrl, setDiscoveryUrl] = useState("");
   const [discovering, setDiscovering] = useState(false);
-  const [discoveryResult, setDiscoveryResult] = useState<any>();
+  const [discoveryResult, setDiscoveryResult] =
+    useState<Record<string, string>>();
 
-  const setupForm = (result: any) => {
+  const setupForm = (result: Record<string, string>) => {
     Object.keys(result).map((k) => setValue(`config.${k}`, result[k]));
   };
 
   useEffect(() => {
-    if (!discovering) {
-      return;
-    }
-
-    setDiscovering(!!discoveryUrl);
-
     if (!discoveryUrl) {
+      setDiscovering(false);
       return;
     }
 
     (async () => {
-      let result;
+      clearErrors("discoveryError");
       try {
-        result = await adminClient.identityProviders.importFromUrl({
+        const result = await adminClient.identityProviders.importFromUrl({
           providerId: id,
           fromUrl: discoveryUrl,
         });
+        setupForm(result);
+        setDiscoveryResult(result);
       } catch (error) {
-        setDiscovering(false);
         setError("discoveryError", {
           type: "manual",
           message: (error as Error).message,
         });
       }
 
-      setDiscoveryResult(result);
-      setupForm(result);
       setDiscovering(false);
     })();
   }, [discovering]);
@@ -120,9 +117,7 @@ export const DiscoveryEndpointField = ({
                 ? "https://hostname/auth/realms/master/.well-known/openid-configuration"
                 : "https://hostname/context/saml/discovery"
             }
-            value={discoveryUrl}
-            onChange={setDiscoveryUrl}
-            onBlur={() => setDiscovering(!discovering)}
+            onBlur={() => setDiscovering(true)}
             validated={
               errors.discoveryError || errors.discoveryEndpoint
                 ? "error"
@@ -132,7 +127,7 @@ export const DiscoveryEndpointField = ({
             }
             customIconUrl={
               discovering
-                ? 'data:image/svg+xml;charset=utf8,%3Csvg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid"%3E%3Ccircle cx="50" cy="50" fill="none" stroke="%230066cc" stroke-width="10" r="35" stroke-dasharray="164.93361431346415 56.97787143782138"%3E%3CanimateTransform attributeName="transform" type="rotate" repeatCount="indefinite" dur="1s" values="0 50 50;360 50 50" keyTimes="0;1"%3E%3C/animateTransform%3E%3C/circle%3E%3C/svg%3E'
+                ? environment.resourceUrl + "./discovery-load-indicator.svg"
                 : ""
             }
             ref={register({ required: true })}
