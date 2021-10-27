@@ -186,7 +186,7 @@ export const AssociatedRolesModal = ({
     <Modal
       data-testid="addAssociatedRole"
       title={t("roles:associatedRolesModalTitle", { name })}
-      isOpen={true}
+      isOpen
       onClose={toggleDialog}
       variant={ModalVariant.large}
       actions={[
