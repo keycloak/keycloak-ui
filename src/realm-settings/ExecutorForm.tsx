@@ -118,7 +118,12 @@ export const ExecutorForm = () => {
         divider
       />
       <PageSection variant="light">
-        <FormAccess isHorizontal role="manage-realm" className="pf-u-mt-lg">
+        <FormAccess
+          isHorizontal
+          role="manage-realm"
+          className="pf-u-mt-lg"
+          //isDisabled={globalProfile !== 0}
+        >
           <FormGroup
             label={t("executorType")}
             fieldId="kc-executorType"
@@ -183,6 +188,7 @@ export const ExecutorForm = () => {
             />
           </FormGroup>
           <FormProvider {...form}>
+            {/* <FormAccess isHorizontal role="manage-realm"> */}
             {executorProperties.map((option) => {
               const componentType = option.type!;
               if (isValidComponentType(componentType)) {
@@ -201,24 +207,30 @@ export const ExecutorForm = () => {
                 );
               }
             })}
+            {/* </FormAccess> */}
+            {/* <FormAccess isHorizontal role="manage-realm" isDisabled> */}
+            {editMode &&
+              profileExecutor?.properties.map((option) => {
+                const componentType = option.type!;
+                if (isValidComponentType(componentType)) {
+                  const Component = COMPONENTS[componentType];
+                  return (
+                    <Component
+                      key={option.name}
+                      {...option}
+                      name={fldNameFormatter(option.label!)}
+                      label={option.label}
+                    />
+                  );
+                } else {
+                  console.warn(
+                    `There is no editor registered for ${componentType}`
+                  );
+                }
+              })}
+            {/* </FormAccess> */}
           </FormProvider>
-          {editMode && globalProfile ? (
-            <div className="kc-backToProfile">
-              <Button
-                id="backToClientProfile"
-                component={(props) => (
-                  <Link
-                    {...props}
-                    to={`/${realm}/realm-settings/clientPolicies/${profileName}`}
-                  ></Link>
-                )}
-                variant="primary"
-                data-testid="backToClientProfile"
-              >
-                {t("realm-settings:back")}
-              </Button>
-            </div>
-          ) : (
+          {!globalProfile ? (
             <ActionGroup>
               <Button
                 variant="primary"
@@ -240,8 +252,25 @@ export const ExecutorForm = () => {
                 {t("common:cancel")}
               </Button>
             </ActionGroup>
-          )}
+          ) : undefined}
         </FormAccess>
+        {editMode && globalProfile && (
+          <div className="kc-backToProfile">
+            <Button
+              id="backToClientProfile"
+              component={(props) => (
+                <Link
+                  {...props}
+                  to={`/${realm}/realm-settings/clientPolicies/${profileName}`}
+                ></Link>
+              )}
+              variant="primary"
+              data-testid="backToClientProfile"
+            >
+              {t("realm-settings:back")}
+            </Button>
+          </div>
+        )}
       </PageSection>
     </>
   );
