@@ -112,7 +112,7 @@ export const AttributesForm = ({
         </Thead>
         <Tbody>
           {fields.map((attribute, rowIndex) => (
-            <Tr key={attribute.id}>
+            <Tr key={attribute.id} data-testid="attribute-row">
               <Td
                 key={`${attribute.id}-key`}
                 id={`text-input-${rowIndex}-key`}
@@ -130,6 +130,7 @@ export const AttributesForm = ({
                   validated={
                     errors.attributes?.[rowIndex] ? "error" : "default"
                   }
+                  data-testid="attribute-key-input"
                 />
               </Td>
               <Td
@@ -146,6 +147,7 @@ export const AttributesForm = ({
                   ref={register()}
                   aria-label="value-input"
                   defaultValue={attribute.value}
+                  data-testid="attribute-value-input"
                 />
               </Td>
               {rowIndex !== fields.length - 1 && fields.length - 1 !== 0 && (
@@ -192,6 +194,7 @@ export const AttributesForm = ({
                 onClick={() => append({ key: "", value: "" })}
                 icon={<PlusCircleIcon />}
                 isDisabled={!watchLast}
+                data-testid="attribute-add-row"
               >
                 {t("roles:addAttributeText")}
               </Button>
