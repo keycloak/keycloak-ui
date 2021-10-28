@@ -26,7 +26,7 @@ import { useAlerts } from "../components/alert/Alerts";
 
 import "./RealmSettingsSection.css";
 import { useRealm } from "../context/realm-context/RealmContext";
-import { toNewClientPolicy } from "./routes/NewClientPolicy";
+import { toAddClientPolicy } from "./routes/AddClientPolicy";
 import { toEditClientPolicy } from "./routes/EditClientPolicy";
 export const PoliciesTab = () => {
   const { t } = useTranslation("realm-settings");
@@ -161,7 +161,7 @@ export const PoliciesTab = () => {
               message={t("realm-settings:noClientPolicies")}
               instructions={t("realm-settings:noClientPoliciesInstructions")}
               primaryActionText={t("realm-settings:createClientPolicy")}
-              onPrimaryAction={() => history.push(toNewClientPolicy({ realm }))}
+              onPrimaryAction={() => history.push(toAddClientPolicy({ realm }))}
             />
           }
           ariaLabelKey="realm-settings:clientPolicies"
