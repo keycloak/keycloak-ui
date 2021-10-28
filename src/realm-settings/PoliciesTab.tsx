@@ -172,7 +172,7 @@ export const PoliciesTab = () => {
               <Button
                 id="createPolicy"
                 component={(props) => (
-                  <Link {...props} to={toNewClientPolicy({ realm })} />
+                  <Link {...props} to={toAddClientPolicy({ realm })} />
                 )}
                 data-testid="createPolicy"
               >
