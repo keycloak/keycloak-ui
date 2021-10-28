@@ -77,7 +77,11 @@ export const AddMapper = () => {
   const [mapperTypes, setMapperTypes] =
     useState<Record<string, IdentityProviderMapperRepresentation>>();
   const [mapperType, setMapperType] = useState(
-    isSocialIdP ? "attributeImporter" : "hardcodedUserSessionAttribute"
+    isSocialIdP
+      ? "attributeImporter"
+      : providerId === "saml"
+      ? "advancedAttributeToRole"
+      : "hardcodedUserSessionAttribute"
   );
 
   const [currentMapper, setCurrentMapper] =
