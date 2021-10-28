@@ -21,7 +21,7 @@ import { useAdminClient, useFetch } from "../context/auth/AdminClient";
 import type ComponentTypeRepresentation from "@keycloak/keycloak-admin-client/lib/defs/componentTypeRepresentation";
 import type { ConfigPropertyRepresentation } from "@keycloak/keycloak-admin-client/lib/defs/authenticatorConfigInfoRepresentation";
 import type ClientProfileRepresentation from "@keycloak/keycloak-admin-client/lib/defs/clientProfileRepresentation";
-import { ClientProfileParams, toClientProfile } from "./routes/ClientProfile";
+import type { ClientProfileParams } from "./routes/ClientProfile";
 import {
   COMPONENTS,
   isValidComponentType,
@@ -107,15 +107,9 @@ export const ExecutorForm = () => {
     (globalProfile) => globalProfile.name === profileName
   );
 
-  const globalProfileExecutor = globalProfile?.executors!.find(
-    (executor) => executor
+  const profileExecutor = executorTypes?.find(
+    (executor) => executor.id === executorName
   );
-
-  const profile = profiles.find((profile) => profile.name === profileName);
-
-  const profileExecutor = profile?.executors!.find((executor) => executor);
-
-  console.log(globalProfileExecutor, profileExecutor);
 
   return (
     <>
@@ -132,6 +126,14 @@ export const ExecutorForm = () => {
               executors.length > 0 && executors[0].helpText! !== "" ? (
                 <HelpItem
                   helpText={executors[0].helpText}
+                  forLabel={t("executorTypeHelpText")}
+                  forID={t(`common:helpLabel`, {
+                    label: t("executorTypeHelpText"),
+                  })}
+                />
+              ) : editMode ? (
+                <HelpItem
+                  helpText={profileExecutor?.helpText}
                   forLabel={t("executorTypeHelpText")}
                   forID={t(`common:helpLabel`, {
                     label: t("executorTypeHelpText"),
@@ -207,10 +209,7 @@ export const ExecutorForm = () => {
                 component={(props) => (
                   <Link
                     {...props}
-                    to={toClientProfile({
-                      realm,
-                      profileName,
-                    })}
+                    to={`/${realm}/realm-settings/clientPolicies/${profileName}`}
                   ></Link>
                 )}
                 variant="primary"
