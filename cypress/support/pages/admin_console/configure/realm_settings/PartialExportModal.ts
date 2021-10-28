@@ -12,11 +12,11 @@ export default class PartialExportModal {
   }
 
   includeGroupsAndRolesSwitch() {
-    return cy.findByTestId("include-groups-and-roles-switch");
+    return cy.get("#include-groups-and-roles-check");
   }
 
   includeClientsSwitch() {
-    return cy.findByTestId("include-clients-switch");
+    return cy.get("#include-clients-check");
   }
 
   warningMessage() {

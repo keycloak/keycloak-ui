@@ -3,11 +3,11 @@ import {
   AlertVariant,
   Button,
   ButtonVariant,
+  Checkbox,
   Modal,
   ModalVariant,
   Stack,
   StackItem,
-  Switch,
   Text,
   TextContent,
 } from "@patternfly/react-core";
@@ -97,16 +97,16 @@ export const PartialExportDialog = ({
           </TextContent>
         </StackItem>
         <StackItem>
-          <Switch
-            data-testid="include-groups-and-roles-switch"
+          <Checkbox
+            id="include-groups-and-roles-check"
             label={t("partial-export:includeGroupsAndRoles")}
             isChecked={exportGroupsAndRoles}
             onChange={setExportGroupsAndRoles}
           />
         </StackItem>
         <StackItem>
-          <Switch
-            data-testid="include-clients-switch"
+          <Checkbox
+            id="include-clients-check"
             label={t("partial-export:includeClients")}
             isChecked={exportClients}
             onChange={setExportClients}
