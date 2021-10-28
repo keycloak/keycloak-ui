@@ -91,7 +91,7 @@ export const AddMapperForm = ({
       >
         <Controller
           name="config.syncMode"
-          defaultValue={syncModes[0].toLocaleUpperCase()}
+          defaultValue={syncModes[0].toUpperCase()}
           control={control}
           render={({ onChange, value }) => (
             <Select
