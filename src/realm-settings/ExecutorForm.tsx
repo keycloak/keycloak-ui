@@ -26,13 +26,18 @@ import {
   COMPONENTS,
   isValidComponentType,
 } from "../client-scopes/add/components/components";
-import type ClientPolicyExecutorRepresentation from "@keycloak/keycloak-admin-client/lib/defs/clientPolicyExecutorRepresentation";
 import type { ExecutorParams } from "./routes/Executor";
 
-type ExecutorForm = Required<ClientPolicyExecutorRepresentation>;
+type NewExecutor = {
+  helpText: string;
+  label: string;
+  name: string;
+  defaultValue: string;
+  type: string;
+};
 
-const defaultValues: ExecutorForm = {
-  configuration: {},
+const defaultValues = {
+  config: {},
   executor: "",
 };
 
@@ -57,7 +62,7 @@ export const ExecutorForm = () => {
     ClientProfileRepresentation[]
   >([]);
   const [profiles, setProfiles] = useState<ClientProfileRepresentation[]>([]);
-  const form = useForm<ExecutorForm>({ defaultValues });
+  const form = useForm({ defaultValues });
   const { control } = form;
   const editMode = executorName ? true : false;
 
@@ -74,6 +79,24 @@ export const ExecutorForm = () => {
   const fldNameFormatter = (name: string) =>
     name.toLowerCase().trim().split(/\s+/).join("-");
 
+  const globalProfile = globalProfiles.find(
+    (globalProfile) => globalProfile.name === profileName
+  );
+
+  const profile = profiles.find((profile) => profile.name === profileName);
+
+  const profileExecutor = profile?.executors?.find(
+    (executor) => executor.executor === executorName
+  );
+
+  const profileExecutorType = executorTypes?.find(
+    (executor) => executor.id === executorName
+  );
+
+  const profileExecutorProps = profileExecutorType?.properties.find(
+    (property) => property.helpText !== ""
+  );
+
   const save = async () => {
     const formValues = form.getValues();
     const updatedProfiles = profiles.map((profile) => {
@@ -83,8 +106,10 @@ export const ExecutorForm = () => {
 
       const executors = (profile.executors ?? []).concat({
         executor: formValues.executor,
-        configuration: formValues.configuration,
+        configuration: formValues.config,
       });
+
+      console.log(executors);
 
       return {
         ...profile,
@@ -101,15 +126,19 @@ export const ExecutorForm = () => {
     } catch (error) {
       addError("realm-settings:addExecutorError", error);
     }
+
+    if (editMode) {
+      console.log("profiles ", profiles);
+    }
   };
 
-  const globalProfile = globalProfiles.find(
-    (globalProfile) => globalProfile.name === profileName
-  );
-
-  const profileExecutor = executorTypes?.find(
-    (executor) => executor.id === executorName
-  );
+  const newProfileExecutor: NewExecutor = {
+    helpText: profileExecutorProps?.helpText ?? "",
+    label: profileExecutorProps?.label ?? "",
+    name: profileExecutor?.executor ?? "",
+    defaultValue: Object.values(profileExecutor?.configuration || [])[0],
+    type: profileExecutorProps?.type ?? "",
+  };
 
   return (
     <>
@@ -138,7 +167,7 @@ export const ExecutorForm = () => {
                 />
               ) : editMode ? (
                 <HelpItem
-                  helpText={profileExecutor?.helpText}
+                  helpText={profileExecutorType?.helpText}
                   forLabel={t("executorTypeHelpText")}
                   forID={t(`common:helpLabel`, {
                     label: t("executorTypeHelpText"),
@@ -210,7 +239,8 @@ export const ExecutorForm = () => {
             {/* </FormAccess> */}
             {/* <FormAccess isHorizontal role="manage-realm" isDisabled> */}
             {editMode &&
-              profileExecutor?.properties.map((option) => {
+              [newProfileExecutor].map((option) => {
+                console.log(option);
                 const componentType = option.type!;
                 if (isValidComponentType(componentType)) {
                   const Component = COMPONENTS[componentType];
