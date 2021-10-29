@@ -12,15 +12,11 @@ export type JsonFileUploadProps = Omit<
 
 export const JsonFileUpload = ({ onChange, ...props }: JsonFileUploadProps) => {
   const handleChange = (value: string) => {
-    if (value) {
-      let obj = {};
-      try {
-        obj = JSON.parse(value as string);
-      } catch (error) {
-        console.warn("Invalid json, ignoring value using {}");
-      }
-
-      onChange(obj);
+    try {
+      onChange(JSON.parse(value));
+    } catch (error) {
+      onChange({});
+      console.warn("Invalid json, ignoring value using {}");
     }
   };
 
