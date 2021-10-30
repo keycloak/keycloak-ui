@@ -2,6 +2,7 @@ import type { LocationDescriptorObject } from "history";
 import { lazy } from "react";
 import { generatePath } from "react-router-dom";
 import type { RouteDef } from "../../route-config";
+import { EditExecutorCrumb } from "../RealmSettingsSection";
 
 export type ExecutorParams = {
   realm: string;
@@ -12,7 +13,7 @@ export type ExecutorParams = {
 export const ExecutorRoute: RouteDef = {
   path: "/:realm/realm-settings/clientPolicies/:profileName/:executorName",
   component: lazy(() => import("../ExecutorForm")),
-  breadcrumb: (t) => t("realm-settings:executorDetails"),
+  breadcrumb: () => EditExecutorCrumb,
   access: ["manage-realm"],
 };
 

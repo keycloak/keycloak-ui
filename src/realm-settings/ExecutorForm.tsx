@@ -122,17 +122,17 @@ export default function ExecutorForm() {
     }
   };
 
+  const configs: any = profileExecutor?.configuration;
+  let configsArray: any = [];
+  if (configs) {
+    configsArray = Object.keys(configs).map((key) => ({
+      name: String(key),
+      value: configs[key],
+    }));
+  }
+
   const newProfileExecutors = profileExecutorType?.properties.map(
     (property) => {
-      const configs: any = profileExecutor?.configuration;
-      let configsArray: any = [];
-      if (configs) {
-        configsArray = Object.keys(configs).map((key) => ({
-          name: String(key),
-          value: configs[key],
-        }));
-      }
-
       const executorConfig = configsArray?.find(
         (config: any) => config.name === property.name
       );

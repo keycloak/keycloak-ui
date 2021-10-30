@@ -74,6 +74,24 @@ export const EditProfileCrumb = () => {
   );
 };
 
+export const EditExecutorCrumb = () => {
+  const { t } = useTranslation("realm-settings");
+  const { realm } = useRealm();
+
+  return (
+    <Breadcrumb>
+      <BreadcrumbItem
+        render={(props) => (
+          <Link {...props} to={toClientPolicies({ realm })}>
+            {t("clientPolicies")}
+          </Link>
+        )}
+      />
+      <BreadcrumbItem isActive>{t("executorDetails")}</BreadcrumbItem>
+    </Breadcrumb>
+  );
+};
+
 export const NewPolicyCrumb = () => {
   const { t } = useTranslation("realm-settings");
   const { realm } = useRealm();
