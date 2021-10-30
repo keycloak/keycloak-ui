@@ -22,6 +22,7 @@ import type ComponentTypeRepresentation from "@keycloak/keycloak-admin-client/li
 import type { ConfigPropertyRepresentation } from "@keycloak/keycloak-admin-client/lib/defs/authenticatorConfigInfoRepresentation";
 import type ClientProfileRepresentation from "@keycloak/keycloak-admin-client/lib/defs/clientProfileRepresentation";
 import type { ClientProfileParams } from "./routes/ClientProfile";
+import { toClientProfile } from "./routes/ClientProfile";
 import {
   COMPONENTS,
   isValidComponentType,
@@ -280,7 +281,7 @@ export default function ExecutorForm() {
                 component={(props) => (
                   <Link
                     {...props}
-                    to={`/${realm}/realm-settings/clientPolicies/${profileName}`}
+                    to={toClientProfile({ realm, profileName })}
                   />
                 )}
                 data-testid="realm-settings-add-executor-cancel-button"
@@ -297,7 +298,7 @@ export default function ExecutorForm() {
               component={(props) => (
                 <Link
                   {...props}
-                  to={`/${realm}/realm-settings/clientPolicies/${profileName}`}
+                  to={toClientProfile({ realm, profileName })}
                 ></Link>
               )}
               variant="primary"

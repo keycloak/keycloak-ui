@@ -10,7 +10,7 @@ export type ClientProfileParams = {
 };
 
 export const ClientProfileRoute: RouteDef = {
-  path: "/:realm/realm-settings/clientPolicies/:profileName/edit-profile",
+  path: "/:realm/realm-settings/clientPolicies/:profileName",
   component: lazy(() => import("../ClientProfileForm")),
   breadcrumb: () => EditProfileCrumb,
   access: ["view-realm", "view-users"],
