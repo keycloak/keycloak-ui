@@ -28,13 +28,13 @@ import {
 } from "../client-scopes/add/components/components";
 import type { ExecutorParams } from "./routes/Executor";
 
-type NewExecutor = {
-  helpText: string;
-  label: string;
-  name: string;
-  defaultValue: string;
-  type: string;
-};
+// type NewExecutor = {
+//   helpText: string;
+//   label: string;
+//   name: string;
+//   defaultValue: string;
+//   type: string;
+// };
 
 const defaultValues = {
   config: {},
@@ -93,10 +93,6 @@ export const ExecutorForm = () => {
     (executor) => executor.id === executorName
   );
 
-  const profileExecutorProps = profileExecutorType?.properties.find(
-    (property) => property.helpText !== ""
-  );
-
   const save = async () => {
     const formValues = form.getValues();
     const updatedProfiles = profiles.map((profile) => {
@@ -108,8 +104,6 @@ export const ExecutorForm = () => {
         executor: formValues.executor,
         configuration: formValues.config,
       });
-
-      console.log(executors);
 
       return {
         ...profile,
@@ -126,19 +120,32 @@ export const ExecutorForm = () => {
     } catch (error) {
       addError("realm-settings:addExecutorError", error);
     }
+  };
 
-    if (editMode) {
-      console.log("profiles ", profiles);
+  const newProfileExecutors = profileExecutorType?.properties.map(
+    (property) => {
+      const configs: any = profileExecutor?.configuration;
+      let configsArray: any = [];
+      if (configs) {
+        configsArray = Object.keys(configs).map((key) => ({
+          name: String(key),
+          value: configs[key],
+        }));
+      }
+
+      const executorConfig = configsArray?.find(
+        (config: any) => config.name === property.name
+      );
+
+      return {
+        helpText: property.helpText ?? "",
+        label: property.label ?? "",
+        name: property.name ?? "",
+        defaultValue: executorConfig?.value ?? "",
+        type: property.type ?? "",
+      };
     }
-  };
-
-  const newProfileExecutor: NewExecutor = {
-    helpText: profileExecutorProps?.helpText ?? "",
-    label: profileExecutorProps?.label ?? "",
-    name: profileExecutor?.executor ?? "",
-    defaultValue: Object.values(profileExecutor?.configuration || [])[0],
-    type: profileExecutorProps?.type ?? "",
-  };
+  );
 
   return (
     <>
@@ -239,8 +246,7 @@ export const ExecutorForm = () => {
             {/* </FormAccess> */}
             {/* <FormAccess isHorizontal role="manage-realm" isDisabled> */}
             {editMode &&
-              [newProfileExecutor].map((option) => {
-                console.log(option);
+              newProfileExecutors?.map((option) => {
                 const componentType = option.type!;
                 if (isValidComponentType(componentType)) {
                   const Component = COMPONENTS[componentType];
