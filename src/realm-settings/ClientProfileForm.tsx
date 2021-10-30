@@ -46,7 +46,7 @@ const defaultValues: ClientProfileForm = {
   executors: [],
 };
 
-export const ClientProfileForm = () => {
+export default function ClientProfileForm() {
   const { t } = useTranslation("realm-settings");
   const history = useHistory();
   const {
@@ -502,4 +502,4 @@ export const ClientProfileForm = () => {
       </PageSection>
     </>
   );
-};
+}

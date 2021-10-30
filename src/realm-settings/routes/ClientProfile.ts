@@ -1,7 +1,7 @@
 import type { LocationDescriptorObject } from "history";
+import { lazy } from "react";
 import { generatePath } from "react-router-dom";
 import type { RouteDef } from "../../route-config";
-import { ClientProfileForm } from "../ClientProfileForm";
 import { EditProfileCrumb } from "../RealmSettingsSection";
 
 export type ClientProfileParams = {
@@ -10,10 +10,10 @@ export type ClientProfileParams = {
 };
 
 export const ClientProfileRoute: RouteDef = {
-  path: "/:realm/realm-settings/clientPolicies/:profileName",
-  component: ClientProfileForm,
+  path: "/:realm/realm-settings/clientPolicies/:profileName/edit-profile",
+  component: lazy(() => import("../ClientProfileForm")),
   breadcrumb: () => EditProfileCrumb,
-  access: ["view-realm"],
+  access: ["view-realm", "view-users"],
 };
 
 export const toClientProfile = (

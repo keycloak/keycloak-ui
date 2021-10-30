@@ -15,12 +15,13 @@ import { useAlerts } from "../../components/alert/Alerts";
 import { ViewHeader } from "../../components/view-header/ViewHeader";
 import { useAdminClient } from "../../context/auth/AdminClient";
 import { useRealm } from "../../context/realm-context/RealmContext";
+import { convertFormValuesToObject } from "../../util";
 import { toClient } from "../routes/Client";
 import { toClients } from "../routes/Clients";
 import { CapabilityConfig } from "./CapabilityConfig";
 import { GeneralSettings } from "./GeneralSettings";
 
-export const NewClientForm = () => {
+export default function NewClientForm() {
   const { t } = useTranslation("clients");
   const { realm } = useRealm();
   const adminClient = useAdminClient();
@@ -43,8 +44,15 @@ export const NewClientForm = () => {
   const methods = useForm<ClientRepresentation>({ defaultValues: client });
 
   const save = async () => {
+    const attributes = client.attributes
+      ? convertFormValuesToObject(client.attributes)
+      : undefined;
+
     try {
-      const newClient = await adminClient.clients.create({ ...client });
+      const newClient = await adminClient.clients.create({
+        ...client,
+        attributes,
+      });
       addAlert(t("createSuccess"), AlertVariant.success);
       history.push(
         toClient({ realm, clientId: newClient.id, tab: "settings" })
@@ -151,4 +159,4 @@ export const NewClientForm = () => {
       </PageSection>
     </>
   );
-};
+}
