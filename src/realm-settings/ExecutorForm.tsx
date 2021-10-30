@@ -29,14 +29,6 @@ import {
 } from "../client-scopes/add/components/components";
 import type { ExecutorParams } from "./routes/Executor";
 
-// type NewExecutor = {
-//   helpText: string;
-//   label: string;
-//   name: string;
-//   defaultValue: string;
-//   type: string;
-// };
-
 const defaultValues = {
   config: {},
   executor: "",
@@ -86,7 +78,7 @@ export default function ExecutorForm() {
 
   const profile = profiles.find((profile) => profile.name === profileName);
 
-  const profileExecutor = profile?.executors?.find(
+  const profileExecutor = profile?.executors!.find(
     (executor) => executor.executor === executorName
   );
 
