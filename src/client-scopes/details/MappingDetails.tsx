@@ -25,7 +25,10 @@ import { useServerInfo } from "../../context/server-info/ServerInfoProvider";
 import { convertFormValuesToObject, convertToFormValues } from "../../util";
 import { FormAccess } from "../../components/form-access/FormAccess";
 import { useRealm } from "../../context/realm-context/RealmContext";
-import { COMPONENTS, isValidComponentType } from "../add/components/components";
+import {
+  COMPONENTS,
+  isValidComponentType,
+} from "../../components/dynamic/components";
 import { MapperParams, MapperRoute } from "../routes/Mapper";
 import { toClientScope } from "../routes/ClientScope";
 

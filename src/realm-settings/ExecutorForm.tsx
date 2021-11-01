@@ -25,7 +25,7 @@ import { ClientProfileParams, toClientProfile } from "./routes/ClientProfile";
 import {
   COMPONENTS,
   isValidComponentType,
-} from "../client-scopes/add/components/components";
+} from "../components/dynamic/components";
 import type ClientPolicyExecutorRepresentation from "@keycloak/keycloak-admin-client/lib/defs/clientPolicyExecutorRepresentation";
 
 type ExecutorForm = Required<ClientPolicyExecutorRepresentation>;

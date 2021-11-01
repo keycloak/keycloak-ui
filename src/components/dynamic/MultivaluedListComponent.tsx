@@ -8,7 +8,7 @@ import {
   SelectVariant,
 } from "@patternfly/react-core";
 
-import { HelpItem } from "../../../components/help-enabler/HelpItem";
+import { HelpItem } from "../help-enabler/HelpItem";
 import type { ComponentProps } from "./components";
 import { camelCase } from "lodash";
 import { convertToHyphens } from "../../../util";

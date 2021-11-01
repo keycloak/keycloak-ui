@@ -3,7 +3,7 @@ import { useTranslation } from "react-i18next";
 import { useFormContext } from "react-hook-form";
 import { FormGroup, TextInput } from "@patternfly/react-core";
 
-import { HelpItem } from "../../../components/help-enabler/HelpItem";
+import { HelpItem } from "../help-enabler/HelpItem";
 import type { ComponentProps } from "./components";
 import { convertToHyphens } from "../../../util";
 

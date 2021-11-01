@@ -4,7 +4,7 @@ import { useTranslation } from "react-i18next";
 import { FormGroup } from "@patternfly/react-core";
 import { CodeEditor, Language } from "@patternfly/react-code-editor";
 
-import { HelpItem } from "../../../components/help-enabler/HelpItem";
+import { HelpItem } from "../help-enabler/HelpItem";
 import type { ComponentProps } from "./components";
 import { convertToHyphens } from "../../../util";
 

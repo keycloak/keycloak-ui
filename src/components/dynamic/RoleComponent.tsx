@@ -14,9 +14,9 @@ import {
 
 import type ClientRepresentation from "@keycloak/keycloak-admin-client/lib/defs/clientRepresentation";
 import type RoleRepresentation from "@keycloak/keycloak-admin-client/lib/defs/roleRepresentation";
-import { useAdminClient, useFetch } from "../../../context/auth/AdminClient";
-import { useRealm } from "../../../context/realm-context/RealmContext";
-import { HelpItem } from "../../../components/help-enabler/HelpItem";
+import { useAdminClient, useFetch } from "../../context/auth/AdminClient";
+import { useRealm } from "../../context/realm-context/RealmContext";
+import { HelpItem } from "../help-enabler/HelpItem";
 import type { ComponentProps } from "./components";
 import { convertToHyphens } from "../../../util";
 
