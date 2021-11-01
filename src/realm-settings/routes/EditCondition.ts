@@ -1,7 +1,7 @@
 import type { LocationDescriptorObject } from "history";
 import { generatePath } from "react-router-dom";
 import type { RouteDef } from "../../route-config";
-import { NewClientPolicyCondition } from "../NewClientPolicyCondition";
+import NewClientPolicyCondition from "../NewClientPolicyCondition";
 
 export type EditClientPolicyConditionParams = {
   realm: string;
