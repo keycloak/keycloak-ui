@@ -64,7 +64,7 @@ export const KeycloakTabs = ({
         }}
         activeKey={tab}
         onSelect={(_, key) => {
-          if (form?.formState.isDirty) {
+          if (form.formState.isDirty) {
             setKey(key as string);
             toggleChangeTabDialog();
           } else {

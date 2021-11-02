@@ -450,7 +450,7 @@ export const KeysProvidersTab = ({
 }: KeysProps) => {
   return (
     <KeysTabInner
-      components={realmComponents?.map((component) => {
+      components={realmComponents.map((component) => {
         const provider = keyProviderComponentTypes.find(
           (componentType: ComponentTypeRepresentation) =>
             component.providerId === componentType.id

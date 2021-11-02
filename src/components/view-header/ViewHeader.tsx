@@ -123,11 +123,7 @@ export const ViewHeader = ({
                       labelOff={t("common:disabled")}
                       className="pf-u-mr-lg"
                       isChecked={isEnabled}
-                      onChange={(value) => {
-                        if (onToggle) {
-                          onToggle(value);
-                        }
-                      }}
+                      onChange={onToggle}
                     />
                     {helpTextKey && (
                       <HelpItem

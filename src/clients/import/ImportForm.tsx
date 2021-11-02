@@ -34,22 +34,15 @@ export default function ImportForm() {
 
   const { addAlert, addError } = useAlerts();
 
-  const handleFileChange = (obj: object) => {
-    const defaultClient = {
-      protocol: "",
-      clientId: "",
-      name: "",
-      description: "",
-    };
-
-    Object.entries(obj || defaultClient).forEach((entries) => {
+  const handleFileChange = (obj: ClientRepresentation) => {
+    Object.entries(obj).forEach((entries) => {
       if (entries[0] === "attributes") {
         convertToFormValues(entries[1], "attributes", form.setValue);
       } else {
         setValue(entries[0], entries[1]);
       }
     });
-    setImported(obj || defaultClient);
+    setImported(obj);
   };
 
   const save = async (client: ClientRepresentation) => {

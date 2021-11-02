@@ -43,9 +43,7 @@ export const LdapMapperRoleGroup = ({
   useFetch(
     async () => {
       const clients = await adminClient.clients.find();
-      if (clients) {
-        setClients(clients);
-      }
+      setClients(clients);
       return clients;
     },
     (clients) => setClients(clients),

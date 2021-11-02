@@ -114,7 +114,7 @@ export const PartialImportDialog = (props: PartialImportProps) => {
       setTargetRealm(value[0] || {});
     } else {
       setIsMultiRealm(false);
-      setTargetRealm((value as ImportedRealm) || {});
+      setTargetRealm(value as ImportedRealm);
     }
   };
 
@@ -191,16 +191,13 @@ export const PartialImportDialog = (props: PartialImportProps) => {
 
   const targetHasResource = (resource: NonRoleResource) => {
     return (
-      targetRealm &&
       targetRealm[resource] instanceof Array &&
       targetRealm[resource]!.length > 0
     );
   };
 
   const targetHasRoles = () => {
-    return (
-      targetRealm && Object.prototype.hasOwnProperty.call(targetRealm, "roles")
-    );
+    return Object.prototype.hasOwnProperty.call(targetRealm, "roles");
   };
 
   const targetHasRealmRoles = () => {

@@ -130,9 +130,7 @@ export default function ClientScopeForm() {
           clientScopes.type
         );
         history.push(
-          `/${realm}/client-scopes/${scope.id}/${
-            clientScopes.type || "none"
-          }/settings`
+          `/${realm}/client-scopes/${scope.id}/${clientScopes.type}/settings`
         );
       }
       addAlert(t((id ? "update" : "create") + "Success"), AlertVariant.success);

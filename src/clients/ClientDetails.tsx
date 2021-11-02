@@ -137,7 +137,7 @@ const ClientDetailHeader = ({
     <>
       <DisableConfirm />
       <ViewHeader
-        titleKey={client ? client.clientId! : ""}
+        titleKey={client.clientId!}
         subKey="clients:clientsExplain"
         badges={badges}
         divider={false}

@@ -33,10 +33,7 @@ export default function NewRealmForm() {
     useForm<RealmRepresentation>({ mode: "onChange" });
 
   const handleFileChange = (obj: object) => {
-    const defaultRealm = { id: "", realm: "", enabled: true };
-    Object.entries(obj || defaultRealm).map((entry) =>
-      setValue(entry[0], entry[1])
-    );
+    Object.entries(obj).map((entry) => setValue(entry[0], entry[1]));
   };
 
   const save = async (realm: RealmRepresentation) => {

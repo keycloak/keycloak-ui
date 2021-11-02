@@ -308,7 +308,7 @@ export const AdvancedTab = ({
                 ariaLabelKey="registeredClusterNodes"
                 loader={() =>
                   Promise.resolve(
-                    Object.entries(nodes || {}).map((entry) => {
+                    Object.entries(nodes).map((entry) => {
                       return { host: entry[0], registration: entry[1] };
                     })
                   )

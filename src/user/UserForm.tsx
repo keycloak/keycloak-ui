@@ -151,7 +151,7 @@ export const UserForm = ({
       {user?.id ? (
         <>
           <FormGroup label={t("common:id")} fieldId="kc-id" isRequired>
-            <TextInput id={user?.id} value={user?.id} type="text" isReadOnly />
+            <TextInput id={user.id} value={user.id} type="text" isReadOnly />
           </FormGroup>
           <FormGroup label={t("createdAt")} fieldId="kc-created-at" isRequired>
             <TextInput
