@@ -51,7 +51,6 @@ export default function ClientsSection() {
     };
     if (search) {
       params.clientId = search;
-      params.search = true;
     }
     return await adminClient.clients.find({ ...params });
   };

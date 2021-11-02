@@ -36,7 +36,6 @@ export const ClientSelectComponent = ({
       };
       if (search) {
         params.clientId = search;
-        params.search = true;
       }
       return adminClient.clients.find(params);
     },

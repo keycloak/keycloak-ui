@@ -67,12 +67,9 @@ export const AssociatedRolesTab = ({
     return [...result];
   };
 
-  const loader = async (first?: number, max?: number, search?: string) => {
+  const loader = async () => {
     const compositeRoles = await adminClient.roles.getCompositeRoles({
       id: parentRole.id!,
-      first: first,
-      max: max!,
-      search: search,
     });
     setCount(compositeRoles.length);
 
