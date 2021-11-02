@@ -292,7 +292,7 @@ export default function RealmRoleTabs() {
     <>
       <DeleteConfirm />
       <DeleteAllAssociatedRolesConfirm />
-      {open && <AssociatedRolesModal toggleDialog={toggleModal} />}
+      {open && <AssociatedRolesModal id={id} toggleDialog={toggleModal} />}
       <ViewHeader
         titleKey={role.name || t("createRole")}
         badges={[

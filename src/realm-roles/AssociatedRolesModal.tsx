@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useHistory, useParams, useRouteMatch } from "react-router-dom";
+import { useHistory, useRouteMatch } from "react-router-dom";
 import {
   AlertVariant,
   Button,
@@ -18,7 +18,7 @@ import { KeycloakDataTable } from "../components/table-toolbar/KeycloakDataTable
 import { ListEmptyState } from "../components/list-empty-state/ListEmptyState";
 import { CaretDownIcon, FilterIcon } from "@patternfly/react-icons";
 import { omit, sortBy } from "lodash";
-import { RealmRoleParams, toRealmRole } from "./routes/RealmRole";
+import { toRealmRole } from "./routes/RealmRole";
 import { useRealm } from "../context/realm-context/RealmContext";
 import { useAlerts } from "../components/alert/Alerts";
 import {
@@ -32,6 +32,7 @@ type Role = RoleRepresentation & {
 };
 
 export type AssociatedRolesModalProps = {
+  id: string;
   toggleDialog: () => void;
   onConfirm?: (newReps: RoleRepresentation[]) => void;
   omitComposites?: boolean;
@@ -42,6 +43,7 @@ export type AssociatedRolesModalProps = {
 type FilterType = "roles" | "clients";
 
 export const AssociatedRolesModal = ({
+  id,
   toggleDialog,
   onConfirm,
   omitComposites,
@@ -61,7 +63,6 @@ export const AssociatedRolesModal = ({
   const [key, setKey] = useState(0);
   const refresh = () => setKey(new Date().getTime());
 
-  const { id } = useParams<RealmRoleParams>();
   const clientRoleRouteMatch = useRouteMatch<ClientRoleParams>(
     ClientRoleRoute.path
   );

@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useHistory, useParams, useRouteMatch } from "react-router-dom";
+import { useHistory, useRouteMatch } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import {
   AlertVariant,
@@ -48,7 +48,6 @@ export const AssociatedRolesTab = ({
   const [open, setOpen] = useState(false);
 
   const adminClient = useAdminClient();
-  const { id } = useParams<{ id: string }>();
 
   const subRoles = async (result: Role[], roles: Role[]): Promise<Role[]> => {
     const promises = roles.map(async (r) => {
@@ -135,7 +134,10 @@ export const AssociatedRolesTab = ({
     continueButtonVariant: ButtonVariant.danger,
     onConfirm: async () => {
       try {
-        await adminClient.roles.delCompositeRoles({ id }, selectedRows);
+        await adminClient.roles.delCompositeRoles(
+          { id: parentRole.id! },
+          selectedRows
+        );
         reload();
         setSelectedRows([]);
 
@@ -156,7 +158,10 @@ export const AssociatedRolesTab = ({
       continueButtonVariant: ButtonVariant.danger,
       onConfirm: async () => {
         try {
-          await adminClient.roles.delCompositeRoles({ id }, selectedRows);
+          await adminClient.roles.delCompositeRoles(
+            { id: parentRole.id! },
+            selectedRows
+          );
           addAlert(t("associatedRolesRemoved"), AlertVariant.success);
           reload();
         } catch (error) {
@@ -170,7 +175,9 @@ export const AssociatedRolesTab = ({
     <PageSection variant="light" padding={{ default: "noPadding" }}>
       <DeleteConfirm />
       <DeleteAssociatedRolesConfirm />
-      {open && <AssociatedRolesModal toggleDialog={toggleModal} />}
+      {open && (
+        <AssociatedRolesModal id={parentRole.id!} toggleDialog={toggleModal} />
+      )}
       <KeycloakDataTable
         key={key}
         loader={loader}
