@@ -128,6 +128,8 @@ export default function AddMapper() {
           },
           alias: alias!,
         });
+
+        addAlert(t("mapperCreateSuccess"), AlertVariant.success);
         history.push(
           toIdentityProviderEditMapper({
             realm,
@@ -136,7 +138,6 @@ export default function AddMapper() {
             id: createdMapper.id,
           })
         );
-        addAlert(t("mapperCreateSuccess"), AlertVariant.success);
       } catch (error) {
         addError(t("mapperCreateError"), error);
       }
