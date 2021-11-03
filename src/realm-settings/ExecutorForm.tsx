@@ -23,7 +23,7 @@ import type { ConfigPropertyRepresentation } from "@keycloak/keycloak-admin-clie
 import type ClientProfileRepresentation from "@keycloak/keycloak-admin-client/lib/defs/clientProfileRepresentation";
 import { ClientProfileParams, toClientProfile } from "./routes/ClientProfile";
 import type ClientPolicyExecutorRepresentation from "@keycloak/keycloak-admin-client/lib/defs/clientPolicyExecutorRepresentation";
-import { DynamicComponents } from "../components/dynamic/Components";
+import { DynamicComponents } from "../components/dynamic/DynamicComponents";
 
 type ExecutorForm = Required<ClientPolicyExecutorRepresentation>;
 

@@ -27,9 +27,9 @@ import { FormAccess } from "../../components/form-access/FormAccess";
 import { useRealm } from "../../context/realm-context/RealmContext";
 import { MapperParams, MapperRoute } from "../routes/Mapper";
 import { toClientScope } from "../routes/ClientScope";
+import { DynamicComponents } from "../../components/dynamic/DynamicComponents";
 
 import "./mapping-details.css";
-import { DynamicComponents } from "../../components/dynamic/Components";
 
 export default function MappingDetails() {
   const { t } = useTranslation("client-scopes");

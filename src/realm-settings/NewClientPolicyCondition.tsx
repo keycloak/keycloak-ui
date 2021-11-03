@@ -26,7 +26,7 @@ import { useRealm } from "../context/realm-context/RealmContext";
 import type { EditClientPolicyParams } from "./routes/EditClientPolicy";
 import type { ConfigPropertyRepresentation } from "@keycloak/keycloak-admin-client/lib/defs/authenticatorConfigInfoRepresentation";
 import type ClientPolicyConditionRepresentation from "@keycloak/keycloak-admin-client/lib/defs/clientPolicyConditionRepresentation";
-import { DynamicComponents } from "../components/dynamic/Components";
+import { DynamicComponents } from "../components/dynamic/DynamicComponents";
 
 export type ItemType = { value: string };
 
