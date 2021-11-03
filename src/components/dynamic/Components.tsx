@@ -5,27 +5,15 @@ import { COMPONENTS, isValidComponentType } from "./components";
 
 type DynamicComponentProps = {
   properties: ConfigPropertyRepresentation[];
-  labelConverter?: (label: string) => string;
 };
 
-export const DynamicComponents = ({
-  properties,
-  labelConverter,
-}: DynamicComponentProps) => (
+export const DynamicComponents = ({ properties }: DynamicComponentProps) => (
   <>
     {properties.map((property) => {
       const componentType = property.type!;
       if (isValidComponentType(componentType)) {
         const Component = COMPONENTS[componentType];
-        return (
-          <Component
-            key={property.name}
-            label={
-              labelConverter ? labelConverter(property.label!) : property.label
-            }
-            {...property}
-          />
-        );
+        return <Component key={property.name} {...property} />;
       } else {
         console.warn(`There is no editor registered for ${componentType}`);
       }

@@ -6,7 +6,7 @@ import { CodeEditor, Language } from "@patternfly/react-code-editor";
 
 import { HelpItem } from "../help-enabler/HelpItem";
 import type { ComponentProps } from "./components";
-import { convertToHyphens } from "../../../util";
+import { convertToHyphens } from "../../util";
 
 export const ScriptComponent = ({
   name,
@@ -14,7 +14,7 @@ export const ScriptComponent = ({
   helpText,
   defaultValue,
 }: ComponentProps) => {
-  const { t } = useTranslation("client-scopes");
+  const { t } = useTranslation("dynamic");
   const { control } = useFormContext();
 
   return (

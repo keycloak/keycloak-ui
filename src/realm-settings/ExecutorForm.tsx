@@ -65,9 +65,6 @@ export default function ExecutorForm() {
     []
   );
 
-  const fldNameFormatter = (name: string) =>
-    name.toLowerCase().trim().split(/\s+/).join("-");
-
   const save = async () => {
     const formValues = form.getValues();
     const updatedProfiles = profiles.map((profile) => {
@@ -157,10 +154,7 @@ export default function ExecutorForm() {
             />
           </FormGroup>
           <FormProvider {...form}>
-            <DynamicComponents
-              properties={executorProperties}
-              labelConverter={fldNameFormatter}
-            />
+            <DynamicComponents properties={executorProperties} />
           </FormProvider>
           <ActionGroup>
             <Button

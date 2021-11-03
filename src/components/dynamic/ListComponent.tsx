@@ -10,7 +10,7 @@ import {
 
 import type { ComponentProps } from "./components";
 import { HelpItem } from "../help-enabler/HelpItem";
-import { convertToHyphens } from "../../../util";
+import { convertToHyphens } from "../../util";
 
 export const ListComponent = ({
   name,
@@ -19,7 +19,7 @@ export const ListComponent = ({
   defaultValue,
   options,
 }: ComponentProps) => {
-  const { t } = useTranslation("client-scopes");
+  const { t } = useTranslation("dynamic");
   const { control } = useFormContext();
   const [open, setOpen] = useState(false);
 

@@ -5,7 +5,7 @@ import { FormGroup, Switch } from "@patternfly/react-core";
 
 import type { ComponentProps } from "./components";
 import { HelpItem } from "../help-enabler/HelpItem";
-import { convertToHyphens } from "../../../util";
+import { convertToHyphens } from "../../util";
 
 export const BooleanComponent = ({
   name,
