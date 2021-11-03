@@ -56,7 +56,7 @@ export default function ExecutorForm() {
   >([]);
   const [profiles, setProfiles] = useState<ClientProfileRepresentation[]>([]);
   const form = useForm({ defaultValues });
-  const { control } = form;
+  const { control, setValue } = form;
   const editMode = executorName ? true : false;
 
   useFetch(
@@ -65,26 +65,28 @@ export default function ExecutorForm() {
     (profiles) => {
       setGlobalProfiles(profiles.globalProfiles ?? []);
       setProfiles(profiles.profiles ?? []);
+
+      const profile = profiles.profiles!.find(
+        (profile) => profile.name === profileName
+      );
+
+      const profileExecutor = profile?.executors!.find(
+        (executor) => executor.executor === executorName
+      );
+
+      if (profileExecutor) {
+        Object.entries(profileExecutor).map(([key, value]) => {
+          if (key === "configuration") {
+            setValue("config", value);
+          }
+        });
+      }
     },
     []
   );
 
   const fldNameFormatter = (name: string) =>
     name.toLowerCase().trim().split(/\s+/).join("-");
-
-  const globalProfile = globalProfiles.find(
-    (globalProfile) => globalProfile.name === profileName
-  );
-
-  const profile = profiles.find((profile) => profile.name === profileName);
-
-  const profileExecutor = profile?.executors!.find(
-    (executor) => executor.executor === executorName
-  );
-
-  const profileExecutorType = executorTypes?.find(
-    (executor) => executor.id === executorName
-  );
 
   const save = async () => {
     const formValues = form.getValues();
@@ -115,26 +117,21 @@ export default function ExecutorForm() {
     }
   };
 
-  const configs: any = profileExecutor?.configuration;
-  let configsArray: any = [];
-  if (configs) {
-    configsArray = Object.keys(configs).map((key) => ({
-      name: String(key),
-      value: configs[key],
-    }));
-  }
+  const globalProfile = globalProfiles.find(
+    (globalProfile) => globalProfile.name === profileName
+  );
+
+  const profileExecutorType = executorTypes?.find(
+    (executor) => executor.id === executorName
+  );
 
   const newProfileExecutors = profileExecutorType?.properties.map(
     (property) => {
-      const executorConfig = configsArray?.find(
-        (config: any) => config.name === property.name
-      );
-
       return {
         helpText: property.helpText ?? "",
         label: property.label ?? "",
         name: property.name ?? "",
-        defaultValue: executorConfig?.value ?? "",
+        defaultValue: "",
         type: property.type ?? "",
       };
     }
@@ -151,7 +148,7 @@ export default function ExecutorForm() {
           isHorizontal
           role="manage-realm"
           className="pf-u-mt-lg"
-          //isDisabled={globalProfile !== 0}
+          //   isDisabled={globalProfile !== 0}
         >
           <FormGroup
             label={t("executorType")}
