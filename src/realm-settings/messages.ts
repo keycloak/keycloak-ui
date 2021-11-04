@@ -287,6 +287,8 @@ export default {
     emptyExecutors: "No executors configured",
     addExecutorSuccess: "Success! Executor created successfully",
     addExecutorError: "Executor not created",
+    updateExecutorSuccess: "Executor updated successfully",
+    updateExecutorError: "Executor not updated",
     deleteExecutorProfileConfirmTitle: "Delete executor?",
     deleteExecutorProfileConfirm:
       "The action will permanently delete {{executorName}}. This cannot be undone.",

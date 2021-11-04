@@ -28,7 +28,12 @@ import {
 } from "../client-scopes/add/components/components";
 import type { ExecutorParams } from "./routes/Executor";
 
-const defaultValues = {
+type ExecutorForm = {
+  config: object;
+  executor: string;
+};
+
+const defaultValues: ExecutorForm = {
   config: {},
   executor: "",
 };
@@ -55,7 +60,7 @@ export default function ExecutorForm() {
   >([]);
   const [profiles, setProfiles] = useState<ClientProfileRepresentation[]>([]);
   const form = useForm({ defaultValues });
-  const { control, setValue } = form;
+  const { control, setValue, handleSubmit } = form;
   const editMode = executorName ? true : false;
 
   useFetch(
@@ -91,25 +96,55 @@ export default function ExecutorForm() {
         return profile;
       }
 
+      const profileExecutor = profile.executors!.find(
+        (executor) => executor.executor === executorName
+      );
+
       const executors = (profile.executors ?? []).concat({
         executor: formValues.executor,
         configuration: formValues.config,
       });
 
-      return {
-        ...profile,
-        executors,
-      };
+      let editedExecutorConfig = {};
+      if (editMode) {
+        editedExecutorConfig = Object.assign(
+          profileExecutor!.configuration,
+          formValues.config
+        );
+        profileExecutor!.configuration = editedExecutorConfig;
+      }
+
+      if (editMode) {
+        return {
+          ...profile,
+        };
+      } else {
+        return {
+          ...profile,
+          executors,
+        };
+      }
     });
     try {
       await adminClient.clientPolicies.createProfiles({
         profiles: updatedProfiles,
         globalProfiles: globalProfiles,
       });
-      addAlert(t("realm-settings:addExecutorSuccess"), AlertVariant.success);
+      addAlert(
+        editMode
+          ? t("realm-settings:updateExecutorSuccess")
+          : t("realm-settings:addExecutorSuccess"),
+        AlertVariant.success
+      );
+
       history.push(toClientProfile({ realm, profileName }));
     } catch (error) {
-      addError("realm-settings:addExecutorError", error);
+      addError(
+        editMode
+          ? "realm-settings:updateExecutorError"
+          : "realm-settings:addExecutorError",
+        error
+      );
     }
   };
 
@@ -280,7 +315,7 @@ export default function ExecutorForm() {
             <ActionGroup>
               <Button
                 variant="primary"
-                onClick={save}
+                onClick={() => handleSubmit(save)()}
                 data-testid="realm-settings-add-executor-save-button"
               >
                 {editMode ? t("common:save") : t("common:add")}
