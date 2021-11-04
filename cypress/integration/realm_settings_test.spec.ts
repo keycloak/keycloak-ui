@@ -528,6 +528,14 @@ describe("Realm settings tests", () => {
       realmSettingsPage.shouldCancelDeletingExecutor();
     });
 
+    it("Should cancel editing executor", () => {
+      realmSettingsPage.shouldCancelEditingExecutor();
+    });
+
+    it("Should edit executor", () => {
+      realmSettingsPage.shouldEditExecutor();
+    });
+
     it("Should delete executor from a client profile", () => {
       realmSettingsPage.shouldDeleteExecutor();
     });
