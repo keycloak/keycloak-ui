@@ -22,7 +22,7 @@ import {
   ValidatedOptions,
 } from "@patternfly/react-core";
 import { useTranslation } from "react-i18next";
-import { useForm } from "react-hook-form";
+import { Controller, useForm } from "react-hook-form";
 import { FormAccess } from "../components/form-access/FormAccess";
 import { ViewHeader } from "../components/view-header/ViewHeader";
 import { Link, useHistory, useParams } from "react-router-dom";
@@ -94,6 +94,72 @@ export default function NewClientPolicyForm() {
   const refresh = () => setKey(new Date().getTime());
 
   const formValues = form.getValues();
+
+  type ClientPoliciesHeaderProps = {
+    onChange: (value: boolean) => void;
+    value: boolean;
+    save: () => void;
+    realmName: string;
+    refresh: () => void;
+  };
+
+  const ClientPoliciesHeader = ({
+    save,
+    onChange,
+    value,
+  }: ClientPoliciesHeaderProps) => {
+    const { t } = useTranslation("realm-settings");
+
+    const [toggleDisableDialog, DisableConfirm] = useConfirmDialog({
+      titleKey: "realm-settings:disablePolicyConfirmTitle",
+      messageKey: "realm-settings:disablePolicyConfirm",
+      continueButtonLabel: "common:disable",
+      onConfirm: () => {
+        onChange(!value);
+        save();
+      },
+    });
+
+    return (
+      <>
+        <DisableConfirm />
+        <DeleteConfirm />
+        <ViewHeader
+          titleKey={
+            showAddConditionsAndProfilesForm || policyName
+              ? formValues.name!
+              : t("createPolicy")
+          }
+          divider
+          dropdownItems={
+            showAddConditionsAndProfilesForm || policyName
+              ? [
+                  <DropdownItem
+                    key="delete"
+                    value="delete"
+                    onClick={() => {
+                      toggleDeleteDialog();
+                    }}
+                    data-testid="deleteClientPolicyDropdown"
+                  >
+                    {t("deleteClientPolicy")}
+                  </DropdownItem>,
+                ]
+              : undefined
+          }
+          isEnabled={value}
+          onToggle={(value) => {
+            if (!value) {
+              toggleDisableDialog();
+            } else {
+              onChange(value);
+              save();
+            }
+          }}
+        />
+      </>
+    );
+  };
 
   useFetch(
     async () => {
@@ -175,7 +241,9 @@ export default function NewClientPolicyForm() {
         policies: getAllPolicies(),
       });
       addAlert(
-        t("realm-settings:createClientPolicySuccess"),
+        policyName
+          ? t("realm-settings:updateClientPolicySuccess")
+          : t("realm-settings:createClientPolicySuccess"),
         AlertVariant.success
       );
       history.push(
@@ -298,6 +366,10 @@ export default function NewClientPolicyForm() {
     form.setValue("description", currentPolicy?.description);
   };
 
+  const refreshHeader = () => {
+    setKey(new Date().getTime());
+  };
+
   const toggleModal = () => {
     setProfilesModalOpen(!profilesModalOpen);
   };
@@ -342,7 +414,6 @@ export default function NewClientPolicyForm() {
 
   return (
     <>
-      <DeleteConfirm />
       <DeleteConditionConfirm />
       <DeleteProfileConfirm />
       <AddClientProfileModal
@@ -353,29 +424,19 @@ export default function NewClientPolicyForm() {
         open={profilesModalOpen}
         toggleDialog={toggleModal}
       />
-      <ViewHeader
-        titleKey={
-          showAddConditionsAndProfilesForm || policyName
-            ? formValues.name!
-            : t("createPolicy")
-        }
-        divider
-        dropdownItems={
-          showAddConditionsAndProfilesForm || policyName
-            ? [
-                <DropdownItem
-                  key="delete"
-                  value="delete"
-                  onClick={() => {
-                    toggleDeleteDialog();
-                  }}
-                  data-testid="deleteClientPolicyDropdown"
-                >
-                  {t("deleteClientPolicy")}
-                </DropdownItem>,
-              ]
-            : undefined
-        }
+      <Controller
+        name="enabled"
+        defaultValue={true}
+        control={form.control}
+        render={({ onChange, value }) => (
+          <ClientPoliciesHeader
+            value={value}
+            onChange={onChange}
+            realmName={realm}
+            refresh={refreshHeader}
+            save={save}
+          />
+        )}
       />
       <PageSection variant="light">
         <FormAccess
