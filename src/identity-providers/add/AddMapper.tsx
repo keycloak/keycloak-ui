@@ -1,5 +1,5 @@
 import React, { useMemo, useState } from "react";
-import { Link, useParams } from "react-router-dom";
+import { Link, useHistory, useParams } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { Controller, useFieldArray, useForm } from "react-hook-form";
 import {
@@ -21,8 +21,8 @@ import { useRealm } from "../../context/realm-context/RealmContext";
 import { HelpItem } from "../../components/help-enabler/HelpItem";
 import { ViewHeader } from "../../components/view-header/ViewHeader";
 import {
+  AttributeForm,
   AttributesForm,
-  KeyValueType,
 } from "../../components/attribute-form/AttributeForm";
 import { FormAccess } from "../../components/form-access/FormAccess";
 import { useAdminClient, useFetch } from "../../context/auth/AdminClient";
@@ -30,7 +30,10 @@ import type { IdentityProviderAddMapperParams } from "../routes/AddMapper";
 import { AssociatedRolesModal } from "../../realm-roles/AssociatedRolesModal";
 import type { RoleRepresentation } from "../../model/role-model";
 import { useAlerts } from "../../components/alert/Alerts";
-import type { IdentityProviderEditMapperParams } from "../routes/EditMapper";
+import {
+  IdentityProviderEditMapperParams,
+  toIdentityProviderEditMapper,
+} from "../routes/EditMapper";
 import { convertFormValuesToObject, convertToFormValues } from "../../util";
 import { toIdentityProvider } from "../routes/IdentityProvider";
 import type IdentityProviderMapperRepresentation from "@keycloak/keycloak-admin-client/lib/defs/identityProviderMapperRepresentation";
@@ -39,9 +42,7 @@ import { useServerInfo } from "../../context/server-info/ServerInfoProvider";
 import { groupBy } from "lodash";
 
 export type IdPMapperRepresentationWithAttributes =
-  IdentityProviderMapperRepresentation & {
-    attributes: KeyValueType[];
-  };
+  IdentityProviderMapperRepresentation & AttributeForm;
 
 type Role = RoleRepresentation & {
   clientId?: string;
@@ -53,6 +54,7 @@ export default function AddMapper() {
   const form = useForm<IdPMapperRepresentationWithAttributes>();
   const { handleSubmit, control, register, errors } = form;
   const { addAlert, addError } = useAlerts();
+  const history = useHistory();
 
   const { realm } = useRealm();
   const adminClient = useAdminClient();
@@ -86,7 +88,6 @@ export default function AddMapper() {
 
   const [currentMapper, setCurrentMapper] =
     useState<IdentityProviderMapperRepresentation>();
-  const [roles, setRoles] = useState<RoleRepresentation[]>([]);
 
   const [rolesModalOpen, setRolesModalOpen] = useState(false);
 
@@ -119,7 +120,7 @@ export default function AddMapper() {
       }
     } else {
       try {
-        await adminClient.identityProviders.createMapper({
+        const createdMapper = await adminClient.identityProviders.createMapper({
           identityProviderMapper: {
             ...idpMapper,
             identityProviderAlias: alias,
@@ -127,7 +128,16 @@ export default function AddMapper() {
           },
           alias: alias!,
         });
+
         addAlert(t("mapperCreateSuccess"), AlertVariant.success);
+        history.push(
+          toIdentityProviderEditMapper({
+            realm,
+            alias,
+            providerId: providerId,
+            id: createdMapper.id,
+          })
+        );
       } catch (error) {
         addError(t("mapperCreateError"), error);
       }
@@ -144,19 +154,14 @@ export default function AddMapper() {
       Promise.all([
         id ? adminClient.identityProviders.findOneMapper({ alias, id }) : null,
         adminClient.identityProviders.findMapperTypes({ alias }),
-        !id ? adminClient.roles.find() : null,
       ]),
-    ([mapper, mapperTypes, roles]) => {
+    ([mapper, mapperTypes]) => {
       if (mapper) {
         setCurrentMapper(mapper);
         setupForm(mapper);
       }
 
       setMapperTypes(mapperTypes);
-
-      if (roles) {
-        setRoles(roles);
-      }
     },
     []
   );
@@ -257,17 +262,15 @@ export default function AddMapper() {
         }
         divider
       />
-      <AssociatedRolesModal
-        onConfirm={(role: Role[]) => {
-          setSelectedRole(role);
-        }}
-        allRoles={roles}
-        open={rolesModalOpen}
-        omitComposites
-        isRadio
-        isMapperId
-        toggleDialog={toggleModal}
-      />
+      {rolesModalOpen && (
+        <AssociatedRolesModal
+          onConfirm={(role) => setSelectedRole(role)}
+          omitComposites
+          isRadio
+          isMapperId
+          toggleDialog={toggleModal}
+        />
+      )}
       <FormAccess
         role="manage-identity-providers"
         isHorizontal

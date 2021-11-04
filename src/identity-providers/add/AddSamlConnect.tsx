@@ -1,5 +1,5 @@
 import React from "react";
-import { useHistory } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { FormProvider, useForm } from "react-hook-form";
 import {
@@ -17,13 +17,19 @@ import { SamlGeneralSettings } from "./SamlGeneralSettings";
 import { SamlConnectSettings } from "./SamlConnectSettings";
 import { useRealm } from "../../context/realm-context/RealmContext";
 import { useAlerts } from "../../components/alert/Alerts";
+import { toIdentityProvider } from "../routes/IdentityProvider";
+import { toIdentityProviders } from "../routes/IdentityProviders";
+
+type DiscoveryIdentityProvider = IdentityProviderRepresentation & {
+  discoveryEndpoint?: string;
+};
 
 export default function AddSamlConnect() {
   const { t } = useTranslation("identity-providers");
   const history = useHistory();
   const id = "saml";
 
-  const form = useForm<IdentityProviderRepresentation>({
+  const form = useForm<DiscoveryIdentityProvider>({
     defaultValues: { alias: id },
   });
   const {
@@ -35,7 +41,8 @@ export default function AddSamlConnect() {
   const { addAlert } = useAlerts();
   const { realm } = useRealm();
 
-  const save = async (provider: IdentityProviderRepresentation) => {
+  const save = async (provider: DiscoveryIdentityProvider) => {
+    delete provider.discoveryEndpoint;
     try {
       await adminClient.identityProviders.create({
         ...provider,
@@ -43,7 +50,12 @@ export default function AddSamlConnect() {
       });
       addAlert(t("createSuccess"), AlertVariant.success);
       history.push(
-        `/${realm}/identity-providers/${id}/${provider.alias}/settings`
+        toIdentityProvider({
+          realm,
+          providerId: id,
+          alias: provider.alias!,
+          tab: "settings",
+        })
       );
     } catch (error: any) {
       addAlert(
@@ -79,7 +91,9 @@ export default function AddSamlConnect() {
               <Button
                 variant="link"
                 data-testid="cancel"
-                onClick={() => history.push(`/${realm}/identity-providers`)}
+                component={(props) => (
+                  <Link {...props} to={toIdentityProviders({ realm })} />
+                )}
               >
                 {t("common:cancel")}
               </Button>
