@@ -128,11 +128,11 @@ export default function ExecutorForm() {
   const newProfileExecutors = profileExecutorType?.properties.map(
     (property) => {
       return {
-        helpText: property.helpText ?? "",
-        label: property.label ?? "",
-        name: property.name ?? "",
+        helpText: property.helpText!,
+        label: property.label!,
+        name: property.name!,
         defaultValue: "",
-        type: property.type ?? "",
+        type: property.type!,
       };
     }
   );
@@ -144,12 +144,7 @@ export default function ExecutorForm() {
         divider
       />
       <PageSection variant="light">
-        <FormAccess
-          isHorizontal
-          role="manage-realm"
-          className="pf-u-mt-lg"
-          //   isDisabled={globalProfile !== 0}
-        >
+        <FormAccess isHorizontal role="manage-realm" className="pf-u-mt-lg">
           <FormGroup
             label={t("executorType")}
             fieldId="kc-executorType"
@@ -214,7 +209,6 @@ export default function ExecutorForm() {
             />
           </FormGroup>
           <FormProvider {...form}>
-            {/* <FormAccess isHorizontal role="manage-realm"> */}
             {executorProperties.map((option) => {
               const componentType = option.type!;
               if (isValidComponentType(componentType)) {
@@ -233,8 +227,6 @@ export default function ExecutorForm() {
                 );
               }
             })}
-            {/* </FormAccess> */}
-            {/* <FormAccess isHorizontal role="manage-realm" isDisabled> */}
             {editMode &&
               newProfileExecutors?.map((option) => {
                 const componentType = option.type!;
@@ -254,7 +246,6 @@ export default function ExecutorForm() {
                   );
                 }
               })}
-            {/* </FormAccess> */}
           </FormProvider>
           {!globalProfile ? (
             <ActionGroup>

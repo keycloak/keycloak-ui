@@ -345,7 +345,7 @@ export default function ClientProfileForm() {
                               key="executor"
                               data-testid="executor-type"
                             >
-                              {Object.keys(executor).length !== 0 ? (
+                              {executor.configuration ? (
                                 <Button
                                   id="editExecutor"
                                   component={(props) => (
@@ -365,7 +365,9 @@ export default function ClientProfileForm() {
                                   {executor.executor}
                                 </Button>
                               ) : (
-                                executor.executor
+                                <span className="kc-unclickable-executor">
+                                  {executor.executor}
+                                </span>
                               )}
                               {executorTypes
                                 ?.filter(
