@@ -123,12 +123,23 @@ export default function ExecutorForm() {
 
   const newProfileExecutors = profileExecutorType?.properties.map(
     (property) => {
-      console.log(property);
       return {
         helpText: property.helpText!,
         label: property.label!,
         name: property.name!,
         defaultValue: "",
+        type: property.type!,
+      };
+    }
+  );
+
+  const globalProfileExecutors = profileExecutorType?.properties.map(
+    (property) => {
+      return {
+        helpText: property.helpText!,
+        label: property.label!,
+        name: property.name!,
+        defaultValue: property.defaultValue,
         type: property.type!,
       };
     }
@@ -225,7 +236,28 @@ export default function ExecutorForm() {
               }
             })}
             {editMode &&
+              !globalProfile &&
               newProfileExecutors?.map((option) => {
+                const componentType = option.type!;
+                if (isValidComponentType(componentType)) {
+                  const Component = COMPONENTS[componentType];
+                  return (
+                    <Component
+                      key={option.name}
+                      {...option}
+                      name={option.name}
+                      label={option.label}
+                    />
+                  );
+                } else {
+                  console.warn(
+                    `There is no editor registered for ${componentType}`
+                  );
+                }
+              })}
+            {editMode &&
+              globalProfile &&
+              globalProfileExecutors?.map((option) => {
                 const componentType = option.type!;
                 if (isValidComponentType(componentType)) {
                   const Component = COMPONENTS[componentType];
