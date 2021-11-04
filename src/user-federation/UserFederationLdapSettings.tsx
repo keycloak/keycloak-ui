@@ -196,8 +196,10 @@ export default function UserFederationLdapSettings() {
   const { id } = useParams<{ id: string }>();
   const { addAlert, addError } = useAlerts();
   const [component, setComponent] = useState<ComponentRepresentation>();
+  const [refreshCount, setRefreshCount] = useState(0);
 
   const editMode = component?.config?.editMode;
+  const refresh = () => setRefreshCount((count) => count + 1);
 
   useFetch(
     async () => {
@@ -214,7 +216,7 @@ export default function UserFederationLdapSettings() {
         throw new Error(t("common:notFound"));
       }
     },
-    []
+    [refreshCount]
   );
 
   const setupForm = (component: ComponentRepresentation) => {
@@ -268,6 +270,7 @@ export default function UserFederationLdapSettings() {
         await adminClient.components.update({ id }, component);
       }
       addAlert(t(id ? "saveSuccess" : "createSuccess"), AlertVariant.success);
+      refresh();
     } catch (error) {
       addError(`user-federation:${id ? "saveError" : "createError"}`, error);
     }
