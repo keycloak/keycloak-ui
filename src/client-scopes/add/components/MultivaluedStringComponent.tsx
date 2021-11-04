@@ -31,7 +31,8 @@ export const MultiValuedStringComponent = ({
       fieldId={name!}
     >
       <MultiLineInput
-        name={`config.${convertToHyphens(name!)}`}
+        name={`config.${convertToString(name!)}`}
+        label={label}
         aria-label={name}
         addButtonLabel={t("addMultivaluedLabel", {
           fieldLabel: t(

@@ -84,9 +84,6 @@ export default function ExecutorForm() {
     []
   );
 
-  const fldNameFormatter = (name: string) =>
-    name.toLowerCase().trim().split(/\s+/).join("-");
-
   const save = async () => {
     const formValues = form.getValues();
     const updatedProfiles = profiles.map((profile) => {
@@ -126,6 +123,7 @@ export default function ExecutorForm() {
 
   const newProfileExecutors = profileExecutorType?.properties.map(
     (property) => {
+      console.log(property);
       return {
         helpText: property.helpText!,
         label: property.label!,
@@ -216,7 +214,7 @@ export default function ExecutorForm() {
                   <Component
                     key={option.name}
                     {...option}
-                    name={fldNameFormatter(option.label!)}
+                    name={option.name}
                     label={option.label}
                   />
                 );
@@ -235,7 +233,7 @@ export default function ExecutorForm() {
                     <Component
                       key={option.name}
                       {...option}
-                      name={fldNameFormatter(option.label!)}
+                      name={option.name}
                       label={option.label}
                     />
                   );

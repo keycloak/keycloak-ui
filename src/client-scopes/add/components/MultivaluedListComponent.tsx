@@ -10,8 +10,6 @@ import {
 
 import { HelpItem } from "../../../components/help-enabler/HelpItem";
 import type { ComponentProps } from "./components";
-import { camelCase } from "lodash";
-import { convertToHyphens } from "../../../util";
 
 export const MultivaluedListComponent = ({
   name,
@@ -25,29 +23,16 @@ export const MultivaluedListComponent = ({
   const [open, setOpen] = useState(false);
   const [selectedItems, setSelectedItems] = useState<string[]>([defaultValue]);
 
-  const convertToString = (s: string) =>
-    camelCase(convertToHyphens(s).replaceAll("-", " "));
-
   return (
     <FormGroup
-      label={t(
-        `realm-settings:${convertToString(label!).replace("Label", "")}`
-      )}
+      label={t(label!)}
       labelIcon={
-        <HelpItem
-          helpText={
-            name === "update-client-source"
-              ? t(helpText!)
-              : t(convertToString(helpText!))
-          }
-          forLabel={t(label!)}
-          forID={name!}
-        />
+        <HelpItem helpText={t(helpText!)} forLabel={t(label!)} forID={name!} />
       }
       fieldId={name!}
     >
       <Controller
-        name={label!}
+        name={name!}
         defaultValue={defaultValue || []}
         control={control}
         render={({ onChange, value }) => (
