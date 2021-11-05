@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useHistory, useRouteMatch } from "react-router-dom";
+import { useHistory, useParams, useRouteMatch } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import {
   AlertVariant,
@@ -10,6 +10,17 @@ import {
   PageSection,
   ToolbarItem,
 } from "@patternfly/react-core";
+
+import {
+  ClientRoleParams,
+  ClientRoleRoute,
+  toClientRole,
+} from "./routes/ClientRole";
+import {
+  RealmSettingsParams,
+  RealmSettingsRoute,
+} from "../realm-settings/routes/RealmSettings";
+import { RealmRoleParams, RealmRoleTab, toRealmRole } from "./routes/RealmRole";
 import type RoleRepresentation from "@keycloak/keycloak-admin-client/lib/defs/roleRepresentation";
 import { ListEmptyState } from "../components/list-empty-state/ListEmptyState";
 import { KeycloakDataTable } from "../components/table-toolbar/KeycloakDataTable";
@@ -36,9 +47,11 @@ export const AssociatedRolesTab = ({
   refresh: refreshParent,
 }: AssociatedRolesTabProps) => {
   const { t } = useTranslation("roles");
+
   const history = useHistory();
   const { addAlert, addError } = useAlerts();
-  const { url } = useRouteMatch();
+  const { id, realm } = useParams<RealmRoleParams>();
+
   const [key, setKey] = useState(0);
   const refresh = () => setKey(new Date().getTime());
 
@@ -48,6 +61,13 @@ export const AssociatedRolesTab = ({
   const [open, setOpen] = useState(false);
 
   const adminClient = useAdminClient();
+  const clientRoleRouteMatch = useRouteMatch<ClientRoleParams>(
+    ClientRoleRoute.path
+  );
+
+  const realmSettingsMatch = useRouteMatch<RealmSettingsParams>(
+    RealmSettingsRoute.path
+  );
 
   const subRoles = async (result: Role[], roles: Role[]): Promise<Role[]> => {
     const promises = roles.map(async (r) => {
@@ -96,6 +116,19 @@ export const AssociatedRolesTab = ({
     return compositeRoles;
   };
 
+  const toRolesTab = (tab: RealmRoleTab | undefined = "AssociatedRoles") => {
+    const to = clientRoleRouteMatch
+      ? toClientRole({ ...clientRoleRouteMatch.params, tab })
+      : !realmSettingsMatch
+      ? toRealmRole({
+          realm,
+          id,
+          tab,
+        })
+      : undefined;
+    if (to) history.push(to);
+  };
+
   const AliasRenderer = ({ id, name, clientRole, containerId }: Role) => {
     return (
       <>
@@ -111,14 +144,12 @@ export const AssociatedRolesTab = ({
 
   const toggleModal = () => {
     setOpen(!open);
-    refresh();
   };
 
   const reload = () => {
     if (selectedRows.length >= count) {
       refreshParent();
-      const loc = url.replace(/\/AssociatedRoles/g, "/details");
-      history.push(loc);
+      toRolesTab("details");
     } else {
       refresh();
     }
@@ -170,13 +201,32 @@ export const AssociatedRolesTab = ({
       },
     });
 
-  const goToCreate = () => history.push(`${url}/add-role`);
+  const addComposites = async (composites: RoleRepresentation[]) => {
+    const compositeArray = composites;
+
+    try {
+      await adminClient.roles.createComposite(
+        { roleId: parentRole.id!, realm },
+        compositeArray
+      );
+      toRolesTab();
+      refresh();
+      addAlert(t("addAssociatedRolesSuccess"), AlertVariant.success);
+    } catch (error) {
+      addError("roles:addAssociatedRolesError", error);
+    }
+  };
+
   return (
     <PageSection variant="light" padding={{ default: "noPadding" }}>
       <DeleteConfirm />
       <DeleteAssociatedRolesConfirm />
       {open && (
-        <AssociatedRolesModal id={parentRole.id!} toggleDialog={toggleModal} />
+        <AssociatedRolesModal
+          id={parentRole.id!}
+          toggleDialog={toggleModal}
+          onConfirm={addComposites}
+        />
       )}
       <KeycloakDataTable
         key={key}
@@ -260,10 +310,10 @@ export const AssociatedRolesTab = ({
         emptyState={
           <ListEmptyState
             hasIcon={true}
-            message={t("noRoles")}
-            instructions={t("noRolesInstructions")}
-            primaryActionText={t("createRole")}
-            onPrimaryAction={goToCreate}
+            message={t("noRolesAssociated")}
+            instructions={t("noRolesAssociatedInstructions")}
+            primaryActionText={t("addRole")}
+            onPrimaryAction={() => setOpen(true)}
           />
         }
       />

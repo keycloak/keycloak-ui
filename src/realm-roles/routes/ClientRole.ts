@@ -7,7 +7,7 @@ export type ClientRoleTab =
   | "details"
   | "attributes"
   | "users-in-role"
-  | "AssociateRoles";
+  | "AssociatedRoles";
 
 export type ClientRoleParams = {
   realm: string;

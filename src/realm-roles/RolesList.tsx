@@ -6,6 +6,7 @@ import { AlertVariant, Button, ButtonVariant } from "@patternfly/react-core";
 import { useAdminClient, useFetch } from "../context/auth/AdminClient";
 import type RoleRepresentation from "@keycloak/keycloak-admin-client/lib/defs/roleRepresentation";
 import { ListEmptyState } from "../components/list-empty-state/ListEmptyState";
+import { KeycloakSpinner } from "../components/keycloak-spinner/KeycloakSpinner";
 import { KeycloakDataTable } from "../components/table-toolbar/KeycloakDataTable";
 import { useAlerts } from "../components/alert/Alerts";
 import { useConfirmDialog } from "../components/confirm-dialog/ConfirmDialog";
@@ -16,6 +17,7 @@ import { HelpItem } from "../components/help-enabler/HelpItem";
 import { ClientParams, ClientRoute } from "../clients/routes/Client";
 import { toClientRole } from "./routes/ClientRole";
 import { toRealmRole } from "./routes/RealmRole";
+import { toRealmSettings } from "../realm-settings/routes/RealmSettings";
 
 import "./RealmRolesSection.css";
 
@@ -72,21 +74,25 @@ export const RolesList = ({
     []
   );
 
-  const RoleDetailLink = (role: RoleRepresentation) => (
-    <>
+  const RoleDetailLink = (role: RoleRepresentation) =>
+    role.name !== realm?.defaultRole?.name ? (
       <RoleLink role={role}>{role.name}</RoleLink>
-      {role.name?.includes("default-role") ? (
+    ) : (
+      <>
+        <Link
+          key={role.id}
+          to={toRealmSettings({ realm: realmName, tab: "userRegistration" })}
+        >
+          {role.name}{" "}
+        </Link>
         <HelpItem
           helpText={t("defaultRole")}
           forLabel={t("defaultRole")}
           forID="kc-defaultRole"
           id="default-role-help-icon"
         />
-      ) : (
-        ""
-      )}
-    </>
-  );
+      </>
+    );
 
   const [toggleDeleteDialog, DeleteConfirm] = useConfirmDialog({
     titleKey: "roles:roleDeleteConfirm",
@@ -115,6 +121,10 @@ export const RolesList = ({
   });
 
   const goToCreate = () => history.push(`${url}/add-role`);
+
+  if (!realm) {
+    return <KeycloakSpinner />;
+  }
 
   return (
     <>

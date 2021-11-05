@@ -31,6 +31,12 @@ import { KeycloakTabs } from "../components/keycloak-tabs/KeycloakTabs";
 import { AssociatedRolesTab } from "./AssociatedRolesTab";
 import { UsersInRoleTab } from "./UsersInRoleTab";
 import type RealmRepresentation from "@keycloak/keycloak-admin-client/lib/defs/realmRepresentation";
+import { toRealmRole } from "./routes/RealmRole";
+import {
+  ClientRoleParams,
+  ClientRoleRoute,
+  toClientRole,
+} from "./routes/ClientRole";
 
 export default function RealmRoleTabs() {
   const { t } = useTranslation("roles");
@@ -278,7 +284,37 @@ export default function RealmRoleTabs() {
 
   const toggleModal = () => {
     setOpen(!open);
-    refresh();
+  };
+
+  const clientRoleRouteMatch = useRouteMatch<ClientRoleParams>(
+    ClientRoleRoute.path
+  );
+
+  const toAssociatedRoles = () => {
+    const to = clientRoleRouteMatch
+      ? toClientRole({ ...clientRoleRouteMatch.params, tab: "AssociatedRoles" })
+      : toRealmRole({
+          realm: realm?.realm!,
+          id,
+          tab: "AssociatedRoles",
+        });
+    history.push(to);
+  };
+
+  const addComposites = async (composites: RoleRepresentation[]) => {
+    const compositeArray = composites;
+
+    try {
+      await adminClient.roles.createComposite(
+        { roleId: role?.id!, realm: realm!.realm },
+        compositeArray
+      );
+      refresh();
+      toAssociatedRoles();
+      addAlert(t("addAssociatedRolesSuccess"), AlertVariant.success);
+    } catch (error) {
+      addError("roles:addAssociatedRolesError", error);
+    }
   };
 
   const isDefaultRole = (name: string) =>
@@ -292,7 +328,13 @@ export default function RealmRoleTabs() {
     <>
       <DeleteConfirm />
       <DeleteAllAssociatedRolesConfirm />
-      {open && <AssociatedRolesModal id={id} toggleDialog={toggleModal} />}
+      {open && (
+        <AssociatedRolesModal
+          id={id}
+          toggleDialog={toggleModal}
+          onConfirm={addComposites}
+        />
+      )}
       <ViewHeader
         titleKey={role.name || t("createRole")}
         badges={[
