@@ -156,7 +156,7 @@ export default function ExecutorForm() {
     (executor) => executor.id === executorName
   );
 
-  const newProfileExecutors = profileExecutorType?.properties.map(
+  const editedProfileExecutors = profileExecutorType?.properties.map(
     (property) => {
       const globalDefaultValues = editMode ? property.defaultValue : "";
 
@@ -261,7 +261,7 @@ export default function ExecutorForm() {
               }
             })}
             {editMode &&
-              newProfileExecutors?.map((option) => {
+              editedProfileExecutors?.map((option) => {
                 const componentType = option.type!;
                 if (isValidComponentType(componentType)) {
                   const Component = COMPONENTS[componentType];
