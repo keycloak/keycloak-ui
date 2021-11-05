@@ -316,7 +316,7 @@ export default function ClientProfileForm() {
                             realm,
                             profileName,
                           })}
-                        ></Link>
+                        />
                       )}
                       variant="link"
                       className="kc-addExecutor"
@@ -345,7 +345,6 @@ export default function ClientProfileForm() {
                             >
                               {executor.configuration ? (
                                 <Button
-                                  id="editExecutor"
                                   component={(props) => (
                                     <Link
                                       {...props}
@@ -354,10 +353,9 @@ export default function ClientProfileForm() {
                                         profileName,
                                         executorName: executor.executor!,
                                       })}
-                                    ></Link>
+                                    />
                                   )}
                                   variant="link"
-                                  className="kc-editExecutor"
                                   data-testid="editExecutor"
                                 >
                                   {executor.executor}
@@ -428,7 +426,6 @@ export default function ClientProfileForm() {
                                 {Object.keys(executor.configuration!).length !==
                                 0 ? (
                                   <Button
-                                    id="editExecutor"
                                     component={(props) => (
                                       <Link
                                         {...props}
@@ -437,10 +434,9 @@ export default function ClientProfileForm() {
                                           profileName,
                                           executorName: executor.executor!,
                                         })}
-                                      ></Link>
+                                      />
                                     )}
                                     variant="link"
-                                    className="kc-editExecutor"
                                     data-testid="editExecutor"
                                   >
                                     {executor.executor}

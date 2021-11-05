@@ -61,7 +61,7 @@ export default function ExecutorForm() {
   const [profiles, setProfiles] = useState<ClientProfileRepresentation[]>([]);
   const form = useForm({ defaultValues });
   const { control, setValue, handleSubmit } = form;
-  const editMode = executorName ? true : false;
+  const editMode = !!executorName;
 
   useFetch(
     () =>
@@ -105,25 +105,20 @@ export default function ExecutorForm() {
         configuration: formValues.config,
       });
 
-      let editedExecutorConfig = {};
       if (editMode) {
-        editedExecutorConfig = Object.assign(
-          profileExecutor!.configuration,
-          formValues.config
-        );
-        profileExecutor!.configuration = editedExecutorConfig;
+        profileExecutor!.configuration = {
+          ...profileExecutor!.configuration,
+          ...formValues.config,
+        };
       }
 
       if (editMode) {
-        return {
-          ...profile,
-        };
-      } else {
-        return {
-          ...profile,
-          executors,
-        };
+        return profile;
       }
+      return {
+        ...profile,
+        executors,
+      };
     });
     try {
       await adminClient.clientPolicies.createProfiles({
@@ -156,19 +151,17 @@ export default function ExecutorForm() {
     (executor) => executor.id === executorName
   );
 
-  const editedProfileExecutors = profileExecutorType?.properties.map(
-    (property) => {
-      const globalDefaultValues = editMode ? property.defaultValue : "";
+  const editedProfileExecutors =
+    profileExecutorType?.properties.map<ConfigPropertyRepresentation>(
+      (property) => {
+        const globalDefaultValues = editMode ? property.defaultValue : "";
 
-      return {
-        helpText: property.helpText!,
-        label: property.label!,
-        name: property.name!,
-        defaultValue: globalDefaultValues,
-        type: property.type!,
-      };
-    }
-  );
+        return {
+          ...property,
+          defaultValue: globalDefaultValues,
+        };
+      }
+    );
 
   return (
     <>
@@ -203,7 +196,7 @@ export default function ExecutorForm() {
           >
             <Controller
               name="executor"
-              defaultValue={""}
+              defaultValue=""
               control={control}
               render={({ onChange, value }) => (
                 <Select
@@ -280,7 +273,7 @@ export default function ExecutorForm() {
                 }
               })}
           </FormProvider>
-          {!globalProfile ? (
+          {!globalProfile && (
             <ActionGroup>
               <Button
                 variant="primary"
@@ -302,12 +295,11 @@ export default function ExecutorForm() {
                 {t("common:cancel")}
               </Button>
             </ActionGroup>
-          ) : undefined}
+          )}
         </FormAccess>
         {editMode && globalProfile && (
           <div className="kc-backToProfile">
             <Button
-              id="backToClientProfile"
               component={(props) => (
                 <Link
                   {...props}
@@ -315,7 +307,6 @@ export default function ExecutorForm() {
                 ></Link>
               )}
               variant="primary"
-              data-testid="backToClientProfile"
             >
               {t("realm-settings:back")}
             </Button>
