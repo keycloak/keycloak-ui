@@ -1,9 +1,11 @@
 export default {
   clients: {
-    protocol: {
+    protocolTypes: {
       openIdConnect: "OpenID Connect",
       saml: "SAML",
+      all: "All",
     },
+    protocol: "Protocol",
     clientType: "Client type",
     clientAuthorization: "Authorization",
     implicitFlow: "Implicit flow",

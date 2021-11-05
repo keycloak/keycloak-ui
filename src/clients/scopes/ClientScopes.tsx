@@ -146,7 +146,7 @@ export const ClientScopes = ({ clientId, protocol }: ClientScopesProps) => {
                       adminClient,
                       clientId,
                       scope.scope,
-                      scope.type
+                      scope.type!
                     )
                 )
               );
