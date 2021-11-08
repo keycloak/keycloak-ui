@@ -1,3 +1,5 @@
+import ListingPage from "../../ListingPage";
+
 const expect = chai.expect;
 export default class RealmSettingsPage {
   generalSaveBtn = "general-tab-save";
@@ -184,6 +186,7 @@ export default class RealmSettingsPage {
   private addExecutorSaveBtn = "addExecutor-saveBtn";
   private availablePeriodExecutorFld = "available-period";
   private editExecutor = "editExecutor";
+  private listingPage = new ListingPage();
 
   selectLoginThemeType(themeType: string) {
     cy.get(this.selectLoginTheme).click();
@@ -550,8 +553,8 @@ export default class RealmSettingsPage {
   }
 
   shouldDeleteClientProfileDialog() {
-    cy.get(this.moreDrpDwn).last().click();
-    cy.get(this.moreDrpDwnItems).click();
+    this.listingPage.searchItem("Test", false);
+    this.listingPage.clickRowDetails("Test").clickDetailMenu("Delete");
     cy.findByTestId("modalConfirm").contains("Delete").click();
     cy.get(this.alertMessage).should("be.visible", "Client profile deleted");
     cy.get("table").should("not.have.text", "Test");
@@ -857,8 +860,8 @@ export default class RealmSettingsPage {
   }
 
   shouldDisplayDeleteClientProfileDialog() {
-    cy.get(this.moreDrpDwn).last().click();
-    cy.get(this.moreDrpDwnItems).click();
+    this.listingPage.searchItem("Test", false);
+    this.listingPage.clickRowDetails("Test").clickDetailMenu("Delete");
     cy.get(this.deleteDialogTitle).contains("Delete profile?");
     cy.get(this.deleteDialogBodyText).contains(
       "This action will permanently delete the profile Test. This cannot be undone."
@@ -869,8 +872,8 @@ export default class RealmSettingsPage {
   }
 
   shouldDeleteClientPolicyDialog() {
-    cy.get(this.moreDrpDwn).last().click();
-    cy.get(this.moreDrpDwnItems).click();
+    this.listingPage.searchItem("Test", false);
+    this.listingPage.clickRowDetails("Test").clickDetailMenu("Delete");
     cy.findByTestId("modalConfirm").contains("Delete").click();
     cy.get(this.alertMessage).should("be.visible", "Client profile deleted");
     cy.get("table").should("not.have.text", "Test");

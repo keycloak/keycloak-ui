@@ -22,10 +22,7 @@ import type ComponentTypeRepresentation from "@keycloak/keycloak-admin-client/li
 import type { ConfigPropertyRepresentation } from "@keycloak/keycloak-admin-client/lib/defs/authenticatorConfigInfoRepresentation";
 import type ClientProfileRepresentation from "@keycloak/keycloak-admin-client/lib/defs/clientProfileRepresentation";
 import { ClientProfileParams, toClientProfile } from "./routes/ClientProfile";
-import {
-  COMPONENTS,
-  isValidComponentType,
-} from "../client-scopes/add/components/components";
+import { DynamicComponents } from "../components/dynamic/DynamicComponents";
 import type { ExecutorParams } from "./routes/Executor";
 
 type ExecutorForm = {
@@ -235,43 +232,10 @@ export default function ExecutorForm() {
             />
           </FormGroup>
           <FormProvider {...form}>
-            {executorProperties.map((option) => {
-              const componentType = option.type!;
-              if (isValidComponentType(componentType)) {
-                const Component = COMPONENTS[componentType];
-                return (
-                  <Component
-                    key={option.name}
-                    {...option}
-                    name={option.name}
-                    label={option.label}
-                  />
-                );
-              } else {
-                console.warn(
-                  `There is no editor registered for ${componentType}`
-                );
-              }
-            })}
-            {editMode &&
-              editedProfileExecutors?.map((option) => {
-                const componentType = option.type!;
-                if (isValidComponentType(componentType)) {
-                  const Component = COMPONENTS[componentType];
-                  return (
-                    <Component
-                      key={option.name}
-                      {...option}
-                      name={option.name}
-                      label={option.label}
-                    />
-                  );
-                } else {
-                  console.warn(
-                    `There is no editor registered for ${componentType}`
-                  );
-                }
-              })}
+            <DynamicComponents properties={executorProperties} />
+            {editMode && (
+              <DynamicComponents properties={editedProfileExecutors!} />
+            )}
           </FormProvider>
           {!globalProfile && (
             <ActionGroup>

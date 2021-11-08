@@ -8,32 +8,31 @@ import {
   SelectVariant,
 } from "@patternfly/react-core";
 
-import { HelpItem } from "../../../components/help-enabler/HelpItem";
+import { HelpItem } from "../help-enabler/HelpItem";
 import type { ComponentProps } from "./components";
 
-export const MultivaluedListComponent = ({
+export const MultiValuedListComponent = ({
   name,
   label,
   helpText,
   defaultValue,
   options,
 }: ComponentProps) => {
-  const { t } = useTranslation("realm-settings-help");
+  const { t } = useTranslation("dynamic");
   const { control } = useFormContext();
   const [open, setOpen] = useState(false);
-  const [selectedItems, setSelectedItems] = useState<string[]>([defaultValue]);
 
   return (
     <FormGroup
       label={t(label!)}
       labelIcon={
-        <HelpItem helpText={t(helpText!)} forLabel={t(label!)} forID={name!} />
+        <HelpItem helpText={t(helpText!)} forLabel={label!} forID={name!} />
       }
       fieldId={name!}
     >
       <Controller
         name={name!}
-        defaultValue={defaultValue || []}
+        defaultValue={defaultValue ? [defaultValue] : []}
         control={control}
         render={({ onChange, value }) => (
           <Select
@@ -47,26 +46,20 @@ export const MultivaluedListComponent = ({
             variant={SelectVariant.typeaheadMulti}
             typeAheadAriaLabel={t("common:select")}
             onToggle={(isOpen) => setOpen(isOpen)}
-            selections={selectedItems}
+            selections={value}
             onSelect={(_, v) => {
-              const option = v as string;
+              const option = v.toString();
               if (!value) {
-                setSelectedItems([option]);
                 onChange([option]);
-              } else if (selectedItems.includes(option)) {
-                setSelectedItems(
-                  selectedItems.filter((item: string) => item !== option)
-                );
-                onChange(selectedItems);
+              } else if (value.includes(option)) {
+                onChange(value.filter((item: string) => item !== option));
               } else {
-                setSelectedItems([...selectedItems, option]);
-                onChange([...selectedItems, option]);
+                onChange([...value, option]);
               }
             }}
             onClear={(event) => {
               event.stopPropagation();
               onChange([]);
-              setSelectedItems([]);
             }}
             isOpen={open}
             aria-label={t(label!)}
