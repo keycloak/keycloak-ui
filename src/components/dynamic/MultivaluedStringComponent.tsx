@@ -26,7 +26,7 @@ export const MultiValuedStringComponent = ({
         name={`config.${convertToHyphens(name!)}`}
         aria-label={name}
         addButtonLabel={t("addMultivaluedLabel", {
-          fieldLabel: t(label!),
+          fieldLabel: t(label!).toLowerCase(),
         })}
       />
     </FormGroup>
