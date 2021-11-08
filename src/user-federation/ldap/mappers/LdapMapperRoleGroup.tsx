@@ -8,6 +8,7 @@ import {
   ValidatedOptions,
 } from "@patternfly/react-core";
 import React, { useState } from "react";
+import { useParams } from "react-router-dom";
 import { HelpItem } from "../../../components/help-enabler/HelpItem";
 import { Controller, UseFormMethods } from "react-hook-form";
 import { useTranslation } from "react-i18next";
@@ -33,12 +34,15 @@ export const LdapMapperRoleGroup = ({
   const [isClientIdDropdownOpen, setIsClientIdDropdownOpen] = useState(false);
   const [clients, setClients] = useState<ClientRepresentation[]>([]);
 
+  let vendor: string | undefined;
   let isRole = true;
   const groupMapper = "group-ldap-mapper";
 
   if (type === groupMapper) {
     isRole = false;
   }
+  const { id } = useParams<{ id: string }>();
+  const { mapperId } = useParams<{ mapperId: string }>();
 
   useFetch(
     async () => {
@@ -49,6 +53,32 @@ export const LdapMapperRoleGroup = ({
       return clients;
     },
     (clients) => setClients(clients),
+    []
+  );
+
+  useFetch(
+    async () => {
+      if (id) {
+        return await adminClient.components.findOne({ id });
+      }
+      return undefined;
+    },
+    (fetchedComponent) => {
+      if (fetchedComponent) {
+        vendor = fetchedComponent.config?.vendor[0];
+        if (mapperId === "new" && vendor === "ad") {
+          form.setValue(
+            isRole
+              ? "config.role-object-classes[0]"
+              : "config.group-object-classes[0]",
+            "group"
+          );
+          form.setValue("config.membership-user-ldap-attribute[0]", "cn");
+        }
+      } else if (id) {
+        throw new Error(t("common:notFound"));
+      }
+    },
     []
   );
 
@@ -143,7 +173,7 @@ export const LdapMapperRoleGroup = ({
           type="text"
           id="kc-object-classes"
           data-testid="object-classes"
-          defaultValue="group"
+          defaultValue="groupOfNames"
           name={
             isRole
               ? "config.role-object-classes[0]"
@@ -290,7 +320,7 @@ export const LdapMapperRoleGroup = ({
           type="text"
           id="kc-membership-user-ldap-attribute"
           data-testid="membership-user-ldap-attribute"
-          defaultValue="cn"
+          defaultValue="uid"
           name="config.membership-user-ldap-attribute[0]"
           ref={form.register}
         />
@@ -487,6 +517,7 @@ export const LdapMapperRoleGroup = ({
           >
             <Controller
               name="config.client-id[0]"
+              defaultValue=""
               control={form.control}
               render={({ onChange, value }) => (
                 <Select
