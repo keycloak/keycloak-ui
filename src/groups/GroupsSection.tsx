@@ -82,9 +82,12 @@ export default function GroupsSection() {
 
   const SearchDropdown = (
     <DropdownItem
-      data-testid="searchGroup"
       key="searchGroup"
-      component={<Link to={toGroupsSearch({ realm })}>{t("searchGroup")}</Link>}
+      component={
+        <Link data-testid="searchGroup" to={toGroupsSearch({ realm })}>
+          {t("searchGroup")}
+        </Link>
+      }
     />
   );
 
