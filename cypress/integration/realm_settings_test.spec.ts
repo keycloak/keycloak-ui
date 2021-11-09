@@ -14,7 +14,7 @@ const modalUtils = new ModalUtils();
 const realmSettingsPage = new RealmSettingsPage();
 
 describe("Realm settings tests", () => {
-  describe.skip("Realm settings tabs tests", () => {
+  describe("Realm settings tabs tests", () => {
     const realmName = "Realm_" + (Math.random() + 1).toString(36).substring(7);
 
     beforeEach(() => {
@@ -439,7 +439,7 @@ describe("Realm settings tests", () => {
     });
   });
 
-  describe.skip("Realm settings client profiles tab tests", () => {
+  describe("Realm settings client profiles tab tests", () => {
     beforeEach(() => {
       keycloakBefore();
       loginPage.logIn();
@@ -546,42 +546,42 @@ describe("Realm settings tests", () => {
       cy.findByTestId("rs-policies-clientPolicies-tab").click();
     });
 
-    // it("Go to client policies tab", () => {
-    //   realmSettingsPage.shouldDisplayPoliciesTab();
-    // });
+    it("Go to client policies tab", () => {
+      realmSettingsPage.shouldDisplayPoliciesTab();
+    });
 
-    // it("Check new client form is displaying", () => {
-    //   realmSettingsPage.shouldDisplayNewClientPolicyForm();
-    // });
+    it("Check new client form is displaying", () => {
+      realmSettingsPage.shouldDisplayNewClientPolicyForm();
+    });
 
-    // it("Complete new client form and cancel", () => {
-    //   realmSettingsPage.shouldCompleteAndCancelCreateNewClientPolicy();
-    // });
+    it("Complete new client form and cancel", () => {
+      realmSettingsPage.shouldCompleteAndCancelCreateNewClientPolicy();
+    });
 
     it("Complete new client form and submit", () => {
       realmSettingsPage.shouldCompleteAndCreateNewClientPolicyFromEmptyState();
     });
 
-    // it("Should perform client profile search by profile name", () => {
-    //   realmSettingsPage.shouldSearchClientPolicy();
-    // });
+    it("Should perform client profile search by profile name", () => {
+      realmSettingsPage.shouldSearchClientPolicy();
+    });
 
-    // it("Check cancelling the client policy deletion", () => {
-    //   realmSettingsPage.shouldDisplayDeleteClientPolicyDialog();
-    // });
+    it("Check cancelling the client policy deletion", () => {
+      realmSettingsPage.shouldDisplayDeleteClientPolicyDialog();
+    });
 
     it("Check deleting the client policy", () => {
       realmSettingsPage.shouldDeleteClientPolicyDialog();
     });
 
-    // it("Check navigating between Form View and JSON editor", () => {
-    //   realmSettingsPage.shouldNavigateBetweenFormAndJSONViewPolicies();
-    // });
+    it("Check navigating between Form View and JSON editor", () => {
+      realmSettingsPage.shouldNavigateBetweenFormAndJSONViewPolicies();
+    });
 
-    /*       it("Check saving changed JSON policies", () => {
-        realmSettingsPage.shouldSaveChangedJSONPolicies();
-        realmSettingsPage.shouldDeleteClientPolicyDialog();
-      }); */
+    it("Check saving changed JSON policies", () => {
+      realmSettingsPage.shouldSaveChangedJSONPolicies();
+      realmSettingsPage.shouldDeleteClientPolicyDialog();
+    });
 
     it("Should not create duplicate client profile", () => {
       realmSettingsPage.shouldCompleteAndCreateNewClientPolicyFromEmptyState();
@@ -602,8 +602,8 @@ describe("Realm settings tests", () => {
       realmSettingsPage.shouldRemoveClientPolicyFromCreateView();
     });
 
-    // it("Check reloading JSON policies", () => {
-    //   realmSettingsPage.shouldReloadJSONPolicies();
-    // });
+    it("Check reloading JSON policies", () => {
+      realmSettingsPage.shouldReloadJSONPolicies();
+    });
   });
 });
