@@ -10,6 +10,7 @@ import {
 
 import { HelpItem } from "../help-enabler/HelpItem";
 import type { ComponentProps } from "./components";
+import { convertToHyphens } from "../../util";
 
 export const MultiValuedListComponent = ({
   name,
@@ -31,9 +32,9 @@ export const MultiValuedListComponent = ({
       fieldId={name!}
     >
       <Controller
-        name={name!}
-        defaultValue={defaultValue ? [defaultValue] : []}
+        name={`config.${convertToHyphens(name!)}`}
         control={control}
+        defaultValue={defaultValue ? [defaultValue] : []}
         render={({ onChange, value }) => (
           <Select
             toggleId={name}
@@ -44,18 +45,16 @@ export const MultiValuedListComponent = ({
               collapsedText: t("common:showRemaining"),
             }}
             variant={SelectVariant.typeaheadMulti}
-            typeAheadAriaLabel={t("common:select")}
+            typeAheadAriaLabel="Select"
             onToggle={(isOpen) => setOpen(isOpen)}
             selections={value}
-            onSelect={(_, v) => {
-              const option = v.toString();
-              if (!value) {
-                onChange([option]);
-              } else if (value.includes(option)) {
-                onChange(value.filter((item: string) => item !== option));
-              } else {
-                onChange([...value, option]);
-              }
+            onSelect={(_, selectedValue) => {
+              const option = selectedValue.toString();
+              const changedValue = value.includes(option)
+                ? value.filter((item: string) => item !== option)
+                : [...value, option];
+              console.log(changedValue);
+              onChange(changedValue);
             }}
             onClear={(event) => {
               event.stopPropagation();
