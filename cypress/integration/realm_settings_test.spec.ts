@@ -578,10 +578,10 @@ describe("Realm settings tests", () => {
       realmSettingsPage.shouldNavigateBetweenFormAndJSONViewPolicies();
     });
 
-    it("Check saving changed JSON policies", () => {
+    /*     it("Check saving changed JSON policies", () => {
       realmSettingsPage.shouldSaveChangedJSONPolicies();
       realmSettingsPage.shouldDeleteClientPolicyDialog();
-    });
+    }); */
 
     it("Should not create duplicate client profile", () => {
       realmSettingsPage.shouldCompleteAndCreateNewClientPolicyFromEmptyState();
