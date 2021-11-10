@@ -43,11 +43,7 @@ const RoleLink: FunctionComponent<RoleLinkProps> = ({ children, role }) => {
     ? toClientRole({ ...clientRouteMatch.params, id: role.id!, tab: "details" })
     : toRealmRole({ realm, id: role.id!, tab: "details" });
 
-  return (
-    <Link key={role.id} to={to}>
-      {children}
-    </Link>
-  );
+  return <Link to={to}>{children}</Link>;
 };
 
 export const RolesList = ({
@@ -80,7 +76,6 @@ export const RolesList = ({
     ) : (
       <>
         <Link
-          key={role.id}
           to={toRealmSettings({ realm: realmName, tab: "userRegistration" })}
         >
           {role.name}{" "}
