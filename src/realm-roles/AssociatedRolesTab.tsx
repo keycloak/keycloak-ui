@@ -234,7 +234,7 @@ export const AssociatedRolesTab = ({
         ariaLabelKey="roles:roleList"
         searchPlaceholderKey="roles:searchFor"
         canSelectAll
-        isPaginated
+        isPaginated={isInheritedHidden}
         onSelect={(rows) => {
           setSelectedRows([
             ...rows.map((r) => {
