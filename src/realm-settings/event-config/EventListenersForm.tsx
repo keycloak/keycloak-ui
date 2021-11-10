@@ -42,7 +42,7 @@ export const EventListenersForm = ({
           <HelpItem
             helpText={t("eventListenersHelpText")}
             forLabel={t("eventListeners")}
-            forID={t(`common:helpLabel`, { label: t("saveEventListeners") })}
+            forID={t(`common:helpLabel`, { label: t("eventListeners") })}
           />
         }
       >

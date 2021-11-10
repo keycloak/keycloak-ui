@@ -118,7 +118,7 @@ describe("Realm settings tests", () => {
       masthead.checkNotificationMessage("Realm successfully updated");
     });
 
-    /* 
+    /*
     it("Go to login tab", () => {
       sidebarPage.goToRealmSettings();
       cy.findByTestId("rs-login-tab").click();
@@ -178,30 +178,24 @@ describe("Realm settings tests", () => {
 
     describe("Events tab", () => {
       const listingPage = new ListingPage();
-
       it("Enable user events", () => {
         cy.intercept("GET", `/auth/admin/realms/${realmName}/keys`).as("load");
         sidebarPage.goToRealmSettings();
         cy.findByTestId("rs-realm-events-tab").click();
+        cy.findByTestId("rs-events-tab").click();
         cy.wait(["@load"]);
-
         realmSettingsPage
           .toggleSwitch(realmSettingsPage.enableEvents)
           .save(realmSettingsPage.eventsUserSave);
         masthead.checkNotificationMessage("Successfully saved configuration");
-
         realmSettingsPage.clearEvents("user");
-
         modalUtils
           .checkModalMessage(
             "If you clear all events of this realm, all records will be permanently cleared in the database"
           )
           .confirmModal();
-
         masthead.checkNotificationMessage("The user events have been cleared");
-
         const events = ["Client info", "Client info error"];
-
         cy.intercept("GET", `/auth/admin/realms/${realmName}/events/config`).as(
           "fetchConfig"
         );
@@ -209,7 +203,6 @@ describe("Realm settings tests", () => {
         masthead.checkNotificationMessage("Successfully saved configuration");
         cy.wait(["@fetchConfig"]);
         sidebarPage.waitForPageLoad();
-
         for (const event of events) {
           listingPage.searchItem(event, false).itemExist(event);
         }
@@ -439,6 +432,37 @@ describe("Realm settings tests", () => {
     });
   });
 
+  describe("Realm settings events tab tests", () => {
+    beforeEach(() => {
+      keycloakBefore();
+      loginPage.logIn();
+      sidebarPage.goToRealmSettings();
+      cy.findByTestId("rs-realm-events-tab").click();
+      cy.findByTestId("rs-event-listeners-tab").click();
+    });
+
+    it("Should display event listeners form", () => {
+      realmSettingsPage.shouldDisplayEventListenersForm();
+    });
+
+    it("Should revert saving event listener", () => {
+      realmSettingsPage.shouldRevertSavingEventListener();
+    });
+
+    it("Should save event listener", () => {
+      realmSettingsPage.shouldSaveEventListener();
+    });
+
+    it("Should remove event from event listener", () => {
+      realmSettingsPage.shouldRemoveEventFromEventListener();
+    });
+
+    it("Should remove all events from event listener", () => {
+      realmSettingsPage.shouldSaveEventListener();
+      realmSettingsPage.shouldRemoveAllEventListeners();
+    });
+  });
+
   describe("Realm settings client profiles tab tests", () => {
     beforeEach(() => {
       keycloakBefore();
@@ -611,9 +635,9 @@ describe("Realm settings tests", () => {
     });
 
     /*     it("Check saving changed JSON policies", () => {
-      realmSettingsPage.shouldSaveChangedJSONPolicies();
-      realmSettingsPage.shouldDeleteClientPolicyDialog();
-    }); */
+        realmSettingsPage.shouldSaveChangedJSONPolicies();
+        realmSettingsPage.shouldDeleteClientPolicyDialog();
+      }); */
 
     it("Should not create duplicate client profile", () => {
       realmSettingsPage.shouldCompleteAndCreateNewClientPolicyFromEmptyState();
