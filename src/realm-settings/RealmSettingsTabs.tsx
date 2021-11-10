@@ -19,6 +19,7 @@ import type ComponentRepresentation from "@keycloak/keycloak-admin-client/lib/de
 import { useConfirmDialog } from "../components/confirm-dialog/ConfirmDialog";
 import { KeycloakTabs } from "../components/keycloak-tabs/KeycloakTabs";
 import { useRealm } from "../context/realm-context/RealmContext";
+import { useRealms } from "../context/RealmsContext";
 import { ViewHeader } from "../components/view-header/ViewHeader";
 import { useAdminClient } from "../context/auth/AdminClient";
 import { useServerInfo } from "../context/server-info/ServerInfoProvider";
@@ -163,7 +164,8 @@ export const RealmSettingsTabs = ({
   const { t } = useTranslation("realm-settings");
   const adminClient = useAdminClient();
   const { addAlert, addError } = useAlerts();
-  const { realm: realmName, refresh: refreshRealm } = useRealm();
+  const { realm: realmName } = useRealm();
+  const { refresh: refreshRealms } = useRealms();
   const history = useHistory();
 
   const kpComponentTypes =
@@ -215,7 +217,7 @@ export const RealmSettingsTabs = ({
       setupForm(realm);
       const isRealmRenamed = realmName !== realm.realm;
       if (isRealmRenamed) {
-        await refreshRealm();
+        await refreshRealms();
         history.push(toRealmSettings({ realm: realm.realm! }));
       }
       addAlert(t("saveSuccess"), AlertVariant.success);
