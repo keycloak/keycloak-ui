@@ -457,9 +457,10 @@ describe("Realm settings tests", () => {
       realmSettingsPage.shouldRemoveEventFromEventListener();
     });
 
-    it("Should remove all events from event listener", () => {
+    it("Should remove all events from event listener and re-save original", () => {
       realmSettingsPage.shouldSaveEventListener();
       realmSettingsPage.shouldRemoveAllEventListeners();
+      realmSettingsPage.shouldReSaveEventListener();
     });
   });
 

@@ -560,6 +560,13 @@ export default class RealmSettingsPage {
     cy.get(this.eventListenersDrpDwn).should("not.have.text", "email");
   }
 
+  shouldReSaveEventListener() {
+    cy.get(this.eventListenersInputFld).click().type("jboss-logging");
+    cy.get(this.eventListenersDrpDwnOption).click();
+    cy.get(this.eventListenersDrwDwnSelect).click();
+    cy.findByTestId(this.eventListenersSaveBtn).click();
+  }
+
   shouldDisplayProfilesTab() {
     cy.findByTestId(this.createProfileBtn).should("exist");
     cy.findByTestId(this.formViewSelect).should("exist");
