@@ -49,6 +49,8 @@ import { toRealmSettings } from "./routes/RealmSettings";
 import { LocalizationTab } from "./LocalizationTab";
 import { HelpItem } from "../components/help-enabler/HelpItem";
 import { DEFAULT_LOCALE } from "../i18n";
+import { toDashboard } from "../dashboard/routes/Dashboard";
+import environment from "../environment";
 
 type RealmSettingsHeaderProps = {
   onChange: (value: boolean) => void;
@@ -67,6 +69,7 @@ const RealmSettingsHeader = ({
 }: RealmSettingsHeaderProps) => {
   const { t } = useTranslation("realm-settings");
   const adminClient = useAdminClient();
+  const { refresh: refreshRealms } = useRealms();
   const { addAlert, addError } = useAlerts();
   const history = useHistory();
   const [partialImportOpen, setPartialImportOpen] = useState(false);
@@ -91,7 +94,8 @@ const RealmSettingsHeader = ({
       try {
         await adminClient.realms.del({ realm: realmName });
         addAlert(t("deletedSuccess"), AlertVariant.success);
-        history.push("/master/");
+        await refreshRealms();
+        history.push(toDashboard({ realm: environment.masterRealm }));
         refresh();
       } catch (error) {
         addError("realm-settings:deleteError", error);
