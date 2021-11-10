@@ -28,8 +28,7 @@ export const EventListenersForm = ({
     formState: { isDirty },
   } = form;
 
-  const [selectOperationTypesOpen, setSelectOperationTypesOpen] =
-    useState(false);
+  const [selectEventListenerOpen, setSelectEventListenerOpen] = useState(false);
   const serverInfo = useServerInfo();
   const eventListeners = serverInfo.providers?.eventsListener.providers;
 
@@ -69,7 +68,7 @@ export const EventListenersForm = ({
               }}
               variant={SelectVariant.typeaheadMulti}
               typeAheadAriaLabel="Select"
-              onToggle={(isOpen) => setSelectOperationTypesOpen(isOpen)}
+              onToggle={(isOpen) => setSelectEventListenerOpen(isOpen)}
               selections={value}
               onSelect={(_, selectedValue) => {
                 const option = selectedValue.toString();
@@ -83,7 +82,7 @@ export const EventListenersForm = ({
                 operation.stopPropagation();
                 onChange([]);
               }}
-              isOpen={selectOperationTypesOpen}
+              isOpen={selectEventListenerOpen}
               aria-labelledby={"eventsListeners"}
             >
               {Object.keys(eventListeners!).map((event) => (
@@ -97,13 +96,16 @@ export const EventListenersForm = ({
         <Button
           variant="primary"
           type="submit"
-          id={`save`}
-          data-testid={`save`}
+          data-testid={"saveEventListenerBtn"}
           isDisabled={!isDirty}
         >
           {t("common:save")}
         </Button>
-        <Button variant="link" onClick={reset}>
+        <Button
+          variant="link"
+          data-testid={"revertEventListenerBtn"}
+          onClick={reset}
+        >
           {t("common:revert")}
         </Button>
       </ActionGroup>
