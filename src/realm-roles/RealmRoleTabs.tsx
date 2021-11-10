@@ -305,12 +305,10 @@ export default function RealmRoleTabs() {
   };
 
   const addComposites = async (composites: RoleRepresentation[]) => {
-    const compositeArray = composites;
-
     try {
       await adminClient.roles.createComposite(
         { roleId: role?.id!, realm: realm!.realm },
-        compositeArray
+        composites
       );
       refresh();
       toAssociatedRoles();
