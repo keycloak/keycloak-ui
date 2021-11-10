@@ -75,7 +75,6 @@ export const EventListenersForm = ({
                 const changedValue = value.includes(option)
                   ? value.filter((item) => item !== option)
                   : [...value, option];
-
                 onChange(changedValue);
               }}
               onClear={(operation) => {

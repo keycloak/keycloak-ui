@@ -37,6 +37,7 @@ export default {
       "Configure what listeners receive events for the realm.",
     saveEventListeners: "Save Event Listeners",
     saveEventListenersSuccess: "Event listener has been updated.",
+    saveEventListenersError: "Event listener has not been updated.",
     userEventsConfig: "User events configuration",
     userEventsSettings: "User events settings",
     adminEventsConfig: "Admin events configuration",

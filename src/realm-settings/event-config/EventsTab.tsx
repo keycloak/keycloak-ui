@@ -86,12 +86,25 @@ export const EventsTab = () => {
   );
 
   const save = async (eventConfig: RealmEventsConfigRepresentation) => {
+    const updatedEventListener =
+      events?.eventsListeners !== eventConfig.eventsListeners;
+
     try {
       await adminClient.realms.updateConfigEvents({ realm }, eventConfig);
       setupForm({ ...events, ...eventConfig });
-      addAlert(t("eventConfigSuccessfully"), AlertVariant.success);
+      addAlert(
+        updatedEventListener
+          ? t("realm-settings:saveEventListenersSuccess")
+          : t("realm-settings:eventConfigSuccessfully"),
+        AlertVariant.success
+      );
     } catch (error) {
-      addError("realm-settings:eventConfigError", error);
+      addError(
+        updatedEventListener
+          ? t("realm-settings:saveEventListenersError")
+          : t("realm-settings:eventConfigError"),
+        error
+      );
     }
   };
 
