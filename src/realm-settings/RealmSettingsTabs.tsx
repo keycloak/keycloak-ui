@@ -452,8 +452,8 @@ export const RealmSettingsTabs = ({
             <Tab
               eventKey="userRegistration"
               title={<TabTitleText>{t("userRegistration")}</TabTitleText>}
-              data-testid="rs-clientPolicies-tab"
-              aria-label={t("clientPoliciesTab")}
+              data-testid="rs-userRegistration-tab"
+              aria-label={t("userRegistrationTab")}
             >
               <UserRegistration />
             </Tab>
