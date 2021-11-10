@@ -205,7 +205,7 @@ export default function RealmRoleTabs() {
   });
 
   const dropdownItems =
-    url.includes("AssociatedRoles") && !realm?.defaultRole
+    url.includes("associated-roles") && !realm?.defaultRole
       ? [
           <DropdownItem
             key="delete-all-associated"
@@ -224,7 +224,7 @@ export default function RealmRoleTabs() {
             {t("deleteRole")}
           </DropdownItem>,
         ]
-      : id && realm?.defaultRole && url.includes("AssociatedRoles")
+      : id && realm?.defaultRole && url.includes("associated-roles")
       ? [
           <DropdownItem
             key="delete-all-associated"
@@ -292,11 +292,14 @@ export default function RealmRoleTabs() {
 
   const toAssociatedRoles = () => {
     const to = clientRoleRouteMatch
-      ? toClientRole({ ...clientRoleRouteMatch.params, tab: "AssociatedRoles" })
+      ? toClientRole({
+          ...clientRoleRouteMatch.params,
+          tab: "associated-roles",
+        })
       : toRealmRole({
           realm: realm?.realm!,
           id,
-          tab: "AssociatedRoles",
+          tab: "associated-roles",
         });
     history.push(to);
   };
@@ -365,7 +368,7 @@ export default function RealmRoleTabs() {
             </Tab>
             {role.composite && (
               <Tab
-                eventKey="AssociatedRoles"
+                eventKey="associated-roles"
                 title={<TabTitleText>{t("associatedRolesText")}</TabTitleText>}
               >
                 <AssociatedRolesTab parentRole={role} refresh={refresh} />

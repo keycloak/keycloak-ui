@@ -116,7 +116,7 @@ export const AssociatedRolesTab = ({
     return compositeRoles;
   };
 
-  const toRolesTab = (tab: RealmRoleTab | undefined = "AssociatedRoles") => {
+  const toRolesTab = (tab: RealmRoleTab | undefined = "associated-roles") => {
     const to = clientRoleRouteMatch
       ? toClientRole({ ...clientRoleRouteMatch.params, tab })
       : !realmSettingsMatch
