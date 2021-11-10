@@ -22,7 +22,7 @@ import {
   ValidatedOptions,
 } from "@patternfly/react-core";
 import { useTranslation } from "react-i18next";
-import { useForm } from "react-hook-form";
+import { Controller, useForm } from "react-hook-form";
 import { FormAccess } from "../components/form-access/FormAccess";
 import { ViewHeader } from "../components/view-header/ViewHeader";
 import { Link, useHistory, useParams } from "react-router-dom";
@@ -37,6 +37,7 @@ import type ClientPolicyRepresentation from "@keycloak/keycloak-admin-client/lib
 import { toClientPolicies } from "./routes/ClientPolicies";
 import { toNewClientPolicyCondition } from "./routes/AddCondition";
 import { useServerInfo } from "../context/server-info/ServerInfoProvider";
+import { toEditClientPolicyCondition } from "./routes/EditCondition";
 import type { EditClientPolicyParams } from "./routes/EditClientPolicy";
 import { AddClientProfileModal } from "./AddClientProfileModal";
 import type ClientProfileRepresentation from "@keycloak/keycloak-admin-client/lib/defs/clientProfileRepresentation";
@@ -94,6 +95,72 @@ export default function NewClientPolicyForm() {
   const refresh = () => setKey(new Date().getTime());
 
   const formValues = form.getValues();
+
+  type ClientPoliciesHeaderProps = {
+    onChange: (value: boolean) => void;
+    value: boolean;
+    save: () => void;
+    realmName: string;
+    refresh: () => void;
+  };
+
+  const ClientPoliciesHeader = ({
+    save,
+    onChange,
+    value,
+  }: ClientPoliciesHeaderProps) => {
+    const { t } = useTranslation("realm-settings");
+
+    const [toggleDisableDialog, DisableConfirm] = useConfirmDialog({
+      titleKey: "realm-settings:disablePolicyConfirmTitle",
+      messageKey: "realm-settings:disablePolicyConfirm",
+      continueButtonLabel: "common:disable",
+      onConfirm: () => {
+        onChange(!value);
+        save();
+      },
+    });
+
+    return (
+      <>
+        <DisableConfirm />
+        <DeleteConfirm />
+        <ViewHeader
+          titleKey={
+            showAddConditionsAndProfilesForm || policyName
+              ? formValues.name!
+              : t("createPolicy")
+          }
+          divider
+          dropdownItems={
+            showAddConditionsAndProfilesForm || policyName
+              ? [
+                  <DropdownItem
+                    key="delete"
+                    value="delete"
+                    onClick={() => {
+                      toggleDeleteDialog();
+                    }}
+                    data-testid="deleteClientPolicyDropdown"
+                  >
+                    {t("deleteClientPolicy")}
+                  </DropdownItem>,
+                ]
+              : undefined
+          }
+          isEnabled={value}
+          onToggle={(value) => {
+            if (!value) {
+              toggleDisableDialog();
+            } else {
+              onChange(value);
+              save();
+            }
+          }}
+        />
+      </>
+    );
+  };
 
   useFetch(
     async () => {
@@ -175,7 +242,9 @@ export default function NewClientPolicyForm() {
         policies: getAllPolicies(),
       });
       addAlert(
-        t("realm-settings:createClientPolicySuccess"),
+        policyName
+          ? t("realm-settings:updateClientPolicySuccess")
+          : t("realm-settings:createClientPolicySuccess"),
         AlertVariant.success
       );
       history.push(
@@ -298,6 +367,10 @@ export default function NewClientPolicyForm() {
     form.setValue("description", currentPolicy?.description);
   };
 
+  const refreshHeader = () => {
+    setKey(new Date().getTime());
+  };
+
   const toggleModal = () => {
     setProfilesModalOpen(!profilesModalOpen);
   };
@@ -342,7 +415,6 @@ export default function NewClientPolicyForm() {
 
   return (
     <>
-      <DeleteConfirm />
       <DeleteConditionConfirm />
       <DeleteProfileConfirm />
       <AddClientProfileModal
@@ -353,29 +425,19 @@ export default function NewClientPolicyForm() {
         open={profilesModalOpen}
         toggleDialog={toggleModal}
       />
-      <ViewHeader
-        titleKey={
-          showAddConditionsAndProfilesForm || policyName
-            ? formValues.name!
-            : t("createPolicy")
-        }
-        divider
-        dropdownItems={
-          showAddConditionsAndProfilesForm || policyName
-            ? [
-                <DropdownItem
-                  key="delete"
-                  value="delete"
-                  onClick={() => {
-                    toggleDeleteDialog();
-                  }}
-                  data-testid="deleteClientPolicyDropdown"
-                >
-                  {t("deleteClientPolicy")}
-                </DropdownItem>,
-              ]
-            : undefined
-        }
+      <Controller
+        name="enabled"
+        defaultValue={true}
+        control={form.control}
+        render={({ onChange, value }) => (
+          <ClientPoliciesHeader
+            value={value}
+            onChange={onChange}
+            realmName={realm}
+            refresh={refreshHeader}
+            save={save}
+          />
+        )}
       />
       <PageSection variant="light">
         <FormAccess
@@ -462,7 +524,7 @@ export default function NewClientPolicyForm() {
                     )}
                     variant="link"
                     className="kc-addCondition"
-                    data-testid="cancelCreateProfile"
+                    data-testid="addCondition"
                     icon={<PlusCircleIcon />}
                   >
                     {t("realm-settings:addCondition")}
@@ -490,7 +552,11 @@ export default function NewClientPolicyForm() {
                                 <Link
                                   key={condition.condition}
                                   data-testid="condition-type-link"
-                                  to={""}
+                                  to={toEditClientPolicyCondition({
+                                    realm,
+                                    conditionName: condition.condition!,
+                                    policyName: policyName,
+                                  })}
                                   className="kc-condition-link"
                                 >
                                   {condition.condition}
@@ -570,7 +636,7 @@ export default function NewClientPolicyForm() {
                     id="addClientProfile"
                     variant="link"
                     className="kc-addClientProfile"
-                    data-testid="cancelCreateProfile"
+                    data-testid="addClientProfile"
                     icon={<PlusCircleIcon />}
                     onClick={toggleModal}
                   >

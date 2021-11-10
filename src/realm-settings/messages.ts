@@ -18,6 +18,9 @@ export default {
     disableConfirmTitle: "Disable realm?",
     disableConfirm:
       "User and clients can't access the realm if it's disabled. Are you sure you want to continue?",
+    disablePolicyConfirmTitle: "Disable policy?",
+    disablePolicyConfirm:
+      "Users and clients can't access the policy if it's disabled. Are you sure you want to continue?",
     editProvider: "Edit provider",
     saveSuccess: "Realm successfully updated",
     saveProviderSuccess: "The provider has been saved successfully.",
@@ -198,8 +201,10 @@ export default {
     createPolicy: "Create policy",
     createClientPolicy: "Create client policy",
     createClientPolicySuccess: "New policy created",
+    updateClientPolicySuccess: "Client policy updated",
     createClientConditionSuccess: "Condition created successfully.",
     createClientConditionError: "Error creating condition: {{error}}",
+    updateClientConditionSuccess: "Condition updated successfully.",
     deleteClientConditionSuccess: "Condition deleted successfully.",
     deleteClientConditionError: "Error creating condition: {{error}}",
     clientPolicySearch: "Search client policy",
@@ -315,6 +320,7 @@ export default {
     clientUpdaterSourceRoles: "Updating entity role",
     conditionsHelpItem: "Conditions help item",
     addCondition: "Add condition",
+    editCondition: "Edit condition",
     emptyConditions: "No conditions configured",
     updateClientPoliciesSuccess:
       "The client policies configuration was updated",
