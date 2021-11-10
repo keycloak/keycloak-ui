@@ -20,6 +20,7 @@ import { EventConfigForm, EventsType } from "./EventConfigForm";
 import { useConfirmDialog } from "../../components/confirm-dialog/ConfirmDialog";
 import { EventsTypeTable, EventType } from "./EventsTypeTable";
 import { AddEventTypesDialog } from "./AddEventTypesDialog";
+import { EventListenersForm } from "./EventListenersForm";
 
 export const EventsTab = () => {
   const { t } = useTranslation("realm-settings");
@@ -31,7 +32,7 @@ export const EventsTab = () => {
   const [tableKey, setTableKey] = useState(0);
   const reload = () => setTableKey(new Date().getTime());
 
-  const [activeTab, setActiveTab] = useState("user");
+  const [activeTab, setActiveTab] = useState("event");
   const [events, setEvents] = useState<RealmEventsConfigRepresentation>();
   const [type, setType] = useState<EventsType>();
   const [addEventType, setAddEventType] = useState(false);
@@ -122,6 +123,21 @@ export const EventsTab = () => {
         activeKey={activeTab}
         onSelect={(_, key) => setActiveTab(key as string)}
       >
+        <Tab
+          eventKey="event"
+          title={<TabTitleText>{t("eventListeners")}</TabTitleText>}
+          data-testid="rs-event-listeners-tab"
+        >
+          <PageSection>
+            <FormAccess
+              role="manage-events"
+              isHorizontal
+              onSubmit={handleSubmit(save)}
+            >
+              <EventListenersForm form={form} reset={() => setupForm(events)} />
+            </FormAccess>
+          </PageSection>
+        </Tab>
         <Tab
           eventKey="user"
           title={<TabTitleText>{t("userEventsSettings")}</TabTitleText>}
