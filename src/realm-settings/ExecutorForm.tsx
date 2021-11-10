@@ -24,6 +24,7 @@ import type ClientProfileRepresentation from "@keycloak/keycloak-admin-client/li
 import { ClientProfileParams, toClientProfile } from "./routes/ClientProfile";
 import { DynamicComponents } from "../components/dynamic/DynamicComponents";
 import type { ExecutorParams } from "./routes/Executor";
+import { convertToFormValues } from "../util";
 
 type ExecutorForm = {
   config: object;
@@ -78,8 +79,9 @@ export default function ExecutorForm() {
       if (profileExecutor) {
         Object.entries(profileExecutor).map(([key, value]) => {
           if (key === "configuration") {
-            setValue("config", value);
+            convertToFormValues(value, "config", setValue);
           }
+          setValue(key, value);
         });
       }
     },
@@ -152,7 +154,6 @@ export default function ExecutorForm() {
     profileExecutorType?.properties.map<ConfigPropertyRepresentation>(
       (property) => {
         const globalDefaultValues = editMode ? property.defaultValue : "";
-
         return {
           ...property,
           defaultValue: globalDefaultValues,

@@ -53,7 +53,6 @@ export const MultiValuedListComponent = ({
               const changedValue = value.includes(option)
                 ? value.filter((item: string) => item !== option)
                 : [...value, option];
-              console.log(changedValue);
               onChange(changedValue);
             }}
             onClear={(event) => {
