@@ -176,10 +176,8 @@ export default class RealmSettingsPage {
   private clientPolicyDrpDwn = "action-dropdown";
   private searchFld = "[id^=realm-settings][id$=profilesinput]";
   private searchFldPolicies = "[id^=realm-settings][id$=clientPoliciesinput]";
-  private clientProfileOne =
-    'a[href*="realm-settings/clientPolicies/Test/edit-profile"]';
-  private clientProfileTwo =
-    'a[href*="realm-settings/clientPolicies/Edit/edit-profile"]';
+  private clientProfileOne = 'a[href*="realm-settings/clientPolicies/Test"]';
+  private clientProfileTwo = 'a[href*="realm-settings/clientPolicies/Edit"]';
   private clientPolicy =
     'a[href*="realm-settings/clientPolicies/Test/edit-policy"]';
   private reloadBtn = "reloadProfile";
