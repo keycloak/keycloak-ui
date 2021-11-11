@@ -118,8 +118,7 @@ describe("Realm settings tests", () => {
       masthead.checkNotificationMessage("Realm successfully updated");
     });
 
-    /*
-    it("Go to login tab", () => {
+    it.skip("Go to login tab", () => {
       sidebarPage.goToRealmSettings();
       cy.findByTestId("rs-login-tab").click();
       realmSettingsPage.toggleSwitch(realmSettingsPage.userRegSwitch);
@@ -127,7 +126,7 @@ describe("Realm settings tests", () => {
       realmSettingsPage.toggleSwitch(realmSettingsPage.rememberMeSwitch);
     });
 
-    it("Check login tab values", () => {
+    it.skip("Check login tab values", () => {
       sidebarPage.goToRealmSettings();
       cy.findByTestId("rs-login-tab").click();
 
@@ -135,7 +134,6 @@ describe("Realm settings tests", () => {
       cy.get("#kc-forgot-pw-switch-off").should("be.visible");
       cy.get("#kc-remember-me-switch-off").should("not.be.visible");
     });
-    */
 
     it("Go to email tab", () => {
       sidebarPage.goToRealmSettings();
