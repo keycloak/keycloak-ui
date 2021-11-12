@@ -71,7 +71,7 @@ export const RolesList = ({
   );
 
   const RoleDetailLink = (role: RoleRepresentation) =>
-    role.name !== (realm?.defaultRole as unknown as RoleRepresentation).name ? (
+    role.name !== realm?.defaultRole?.name ? (
       <RoleLink role={role}>{role.name}</RoleLink>
     ) : (
       <>
@@ -136,10 +136,7 @@ export const RolesList = ({
             title: t("common:delete"),
             onRowClick: (role) => {
               setSelectedRole(role);
-              if (
-                role.name ===
-                (realm!.defaultRole! as unknown as RoleRepresentation).name
-              ) {
+              if (role.name === realm!.defaultRole!.name) {
                 addAlert(t("defaultRoleDeleteError"), AlertVariant.danger);
               } else toggleDeleteDialog();
             },

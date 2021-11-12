@@ -318,8 +318,7 @@ export default function RealmRoleTabs() {
     }
   };
 
-  const isDefaultRole = (name: string) =>
-    (realm?.defaultRole! as unknown as RoleRepresentation).name === name;
+  const isDefaultRole = (name: string) => realm?.defaultRole!.name === name;
 
   if (!realm || !role) {
     return <Spinner />;
