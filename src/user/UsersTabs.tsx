@@ -27,6 +27,7 @@ import { toUser } from "./routes/User";
 import { toUsers } from "./routes/Users";
 import { UserRoleMapping } from "./UserRoleMapping";
 import { UserAttributes } from "./UserAttributes";
+import { UserCredentials } from "./UserCredentials";
 
 const UsersTabs = () => {
   const { t } = useTranslation("users");
@@ -182,6 +183,13 @@ const UsersTabs = () => {
                 title={<TabTitleText>{t("common:attributes")}</TabTitleText>}
               >
                 <UserAttributes user={user} />
+              </Tab>
+              <Tab
+                eventKey="credentials"
+                data-testid="credentials"
+                title={<TabTitleText>{t("common:credentials")}</TabTitleText>}
+              >
+                <UserCredentials user={user} />
               </Tab>
               <Tab
                 eventKey="groups"

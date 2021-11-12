@@ -116,5 +116,18 @@ export default {
     unlock: "Unlock",
     unlockUsersSuccess: "Any temporarily locked users are now unlocked",
     unlockUsersError: "Could not unlock all users {{error}}",
+    noCredentials: "No credentials",
+    noCredentialsText:
+      "This user does not have any credentials. You can set password for this user.",
+    setPassword: "Set password",
+    setPasswordFor: "Set password for ",
+    save: "Save",
+    cancel: "Cancel",
+    savePasswordSuccess: "The password has been set successfully.",
+    savePasswordError: "Error saving password: {{error}}",
+    credentialType: "Type",
+    credentialUserLabel: "User Label",
+    credentialData: "Data",
+    credentialsList: "Credentials List",
   },
 };

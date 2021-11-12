@@ -118,6 +118,7 @@ export default {
     },
 
     attributes: "Attributes",
+    credentials: "Credentials",
     clientId: "Client ID",
     id: "ID",
 
