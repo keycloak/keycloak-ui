@@ -5,7 +5,6 @@ import {
   ButtonVariant,
   DropdownItem,
   PageSection,
-  Spinner,
   Tab,
   TabTitleText,
 } from "@patternfly/react-core";
@@ -22,6 +21,7 @@ import {
   arrayToAttributes,
   AttributeForm,
 } from "../components/attribute-form/AttributeForm";
+import { KeycloakSpinner } from "../components/keycloak-spinner/KeycloakSpinner";
 import { ViewHeader } from "../components/view-header/ViewHeader";
 import { useConfirmDialog } from "../components/confirm-dialog/ConfirmDialog";
 import { RealmRoleForm } from "./RealmRoleForm";
@@ -320,8 +320,18 @@ export default function RealmRoleTabs() {
 
   const isDefaultRole = (name: string) => realm?.defaultRole!.name === name;
 
-  if (!realm || !role) {
-    return <Spinner />;
+  if (!realm) {
+    return <KeycloakSpinner />;
+  }
+  if (!role) {
+    return (
+      <RealmRoleForm
+        reset={() => reset(role)}
+        form={form}
+        save={save}
+        editMode={false}
+      />
+    );
   }
 
   return (
@@ -394,14 +404,6 @@ export default function RealmRoleTabs() {
               </Tab>
             )}
           </KeycloakTabs>
-        )}
-        {!id && (
-          <RealmRoleForm
-            reset={() => reset(role)}
-            form={form}
-            save={save}
-            editMode={false}
-          />
         )}
       </PageSection>
     </>
