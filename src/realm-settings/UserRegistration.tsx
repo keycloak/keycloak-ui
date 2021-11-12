@@ -8,13 +8,6 @@ import { useRealm } from "../context/realm-context/RealmContext";
 import { AssociatedRolesTab } from "../realm-roles/AssociatedRolesTab";
 import { KeycloakSpinner } from "../components/keycloak-spinner/KeycloakSpinner";
 
-type Realm = RealmRepresentation & {
-  defaultRole: {
-    id: string;
-    name: string;
-  };
-};
-
 export const UserRegistration = () => {
   const { t } = useTranslation("realm-settings");
   const [realm, setRealm] = useState<RealmRepresentation>();
@@ -46,7 +39,7 @@ export const UserRegistration = () => {
         title={<TabTitleText>{t("defaultRoles")}</TabTitleText>}
       >
         <AssociatedRolesTab
-          parentRole={(realm as Realm).defaultRole}
+          parentRole={{ ...realm.defaultRole, attributes: [] }}
           refresh={() => setKey(key + 1)}
         />
       </Tab>

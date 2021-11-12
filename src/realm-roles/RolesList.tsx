@@ -71,7 +71,7 @@ export const RolesList = ({
   );
 
   const RoleDetailLink = (role: RoleRepresentation) =>
-    role.name !== realm?.defaultRole?.name ? (
+    role.name !== (realm?.defaultRole as unknown as RoleRepresentation).name ? (
       <RoleLink role={role}>{role.name}</RoleLink>
     ) : (
       <>
