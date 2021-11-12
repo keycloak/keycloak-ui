@@ -153,5 +153,11 @@ export default {
     onDragFinish: "Dragging finished {{list}}",
 
     notFound: "Could not find the resource that you are looking for",
+
+    password: "Password",
+    passwordConfirmation: "Password confirmation",
+    temporaryPassword: "Temporary",
+    temporaryPasswordHelpText:
+      "If enabled, the user must change the password on next login",
   },
 };
