@@ -5,10 +5,9 @@ import path from "node:path";
 import { spawn } from "node:child_process";
 
 import decompress from "decompress";
-import decompressTargz from "decompress-targz";
 
 const args = process.argv.slice(2);
-const version = args[0] || "15.0.2";
+const version = args[0] && !args[0].startsWith("-") ? args[0] : "15.0.2";
 
 const folder = "server";
 const fileName = path.join(folder, `keycloak-${version}.tar.gz`);
@@ -21,9 +20,7 @@ if (!fs.existsSync(folder)) {
 
 async function decompressKeycloak() {
   try {
-    await decompress(fileName, folder, {
-      plugins: [decompressTargz()],
-    });
+    await decompress(fileName, folder);
 
     console.log("Files decompressed");
   } catch (error) {
@@ -41,6 +38,7 @@ const run = () => {
     const proc = spawn(path.join(serverPath, "bin", `standalone${extension}`), [
       "-Djboss.socket.binding.port-offset=100",
       "-Dprofile.feature.newadmin=enabled",
+      ...args,
     ]);
     proc.stdout.on("data", (data) => {
       console.log(data.toString());
@@ -50,8 +48,10 @@ const run = () => {
 
 const request = (url, file) => {
   http.get(url, (response) => {
-    if (response.statusCode == 302) {
+    if (response.statusCode === 302) {
       request(response.headers.location, file);
+    } else if (response.statusCode === 404) {
+      throw new Error(`version not found '${version}'`);
     } else {
       response.pipe(file);
       response.on("end", () => {
