@@ -83,7 +83,9 @@ export const RolesList = ({
         <HelpItem
           helpText={t("defaultRole")}
           forLabel={t("defaultRole")}
-          forID="kc-defaultRole"
+          forID={t("common:helpLabel", {
+            label: t("defaultRole"),
+          })}
           id="default-role-help-icon"
         />
       </>
