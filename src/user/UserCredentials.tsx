@@ -68,8 +68,6 @@ export const UserCredentials = ({ user }: UserCredentialsProps) => {
         key={key}
         loader={loader}
         ariaLabelKey="users:credentialsList"
-        searchPlaceholderKey="groups:searchGroup"
-        canSelectAll
         columns={[
           {
             name: "type",

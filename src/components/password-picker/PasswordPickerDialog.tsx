@@ -28,7 +28,7 @@ export const PasswordPickerDialog = ({
           data-testid={`${text.ok}-button`}
           key="confirm"
           variant="primary"
-          form="group-form"
+          form="userCredentials-form"
           onClick={() => {
             onConfirm();
           }}
@@ -39,7 +39,7 @@ export const PasswordPickerDialog = ({
           data-testid={`${text.cancel}-button`}
           key="cancel"
           variant="link"
-          form="group-form"
+          form="userCredentials-form"
           onClick={() => {
             onCancel();
           }}
