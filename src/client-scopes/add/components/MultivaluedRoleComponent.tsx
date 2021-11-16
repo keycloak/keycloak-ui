@@ -19,7 +19,6 @@ export const MultivaluedRoleComponent = ({
   name,
   label,
   helpText,
-  parentCallback,
 }: ComponentProps) => {
   const { t } = useTranslation("client-scopes");
 
@@ -92,16 +91,13 @@ export const MultivaluedRoleComponent = ({
               onSelect={(_, v) => {
                 const role = v.toString();
                 if (!value) {
-                  parentCallback!([role]);
                   onChange([role]);
                 } else if (value.includes(role)) {
                   const updatedVal = value.filter(
                     (item: string) => item !== role
                   );
-                  parentCallback!(updatedVal);
                   onChange(updatedVal);
                 } else {
-                  parentCallback!([...value, role]);
                   onChange([...value, role]);
                 }
               }}
