@@ -247,7 +247,7 @@ const Fields = ({ readOnly }: DescriptorSettingsProps) => {
         ></Controller>
       </FormGroup>
 
-      {principalType!.includes("ATTRIBUTE") && (
+      {principalType?.includes("ATTRIBUTE") && (
         <FormGroup
           label={t("principalAttribute")}
           labelIcon={
