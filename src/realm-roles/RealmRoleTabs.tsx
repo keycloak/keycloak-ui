@@ -21,7 +21,6 @@ import {
   arrayToAttributes,
   AttributeForm,
 } from "../components/attribute-form/AttributeForm";
-import { KeycloakSpinner } from "../components/keycloak-spinner/KeycloakSpinner";
 import { ViewHeader } from "../components/view-header/ViewHeader";
 import { useConfirmDialog } from "../components/confirm-dialog/ConfirmDialog";
 import { RealmRoleForm } from "./RealmRoleForm";
@@ -318,22 +317,6 @@ export default function RealmRoleTabs() {
     }
   };
 
-  const isDefaultRole = (name: string) => realm?.defaultRole!.name === name;
-
-  if (!realm) {
-    return <KeycloakSpinner />;
-  }
-  if (!role) {
-    return (
-      <RealmRoleForm
-        reset={() => reset(role)}
-        form={form}
-        save={save}
-        editMode={false}
-      />
-    );
-  }
-
   return (
     <>
       <DeleteConfirm />
@@ -346,11 +329,11 @@ export default function RealmRoleTabs() {
         />
       )}
       <ViewHeader
-        titleKey={role.name || t("createRole")}
+        titleKey={role?.name || t("createRole")}
         badges={[
           {
             id: "composite-role-badge",
-            text: role.composite ? t("composite") : "",
+            text: role?.composite ? t("composite") : "",
             readonly: true,
           },
         ]}
@@ -373,7 +356,7 @@ export default function RealmRoleTabs() {
                 editMode={true}
               />
             </Tab>
-            {role.composite && (
+            {role?.composite && (
               <Tab
                 eventKey="associated-roles"
                 title={<TabTitleText>{t("associatedRolesText")}</TabTitleText>}
@@ -381,7 +364,7 @@ export default function RealmRoleTabs() {
                 <AssociatedRolesTab parentRole={role} refresh={refresh} />
               </Tab>
             )}
-            {!isDefaultRole(role.name!) && (
+            {role?.name !== realm?.defaultRole?.name && (
               <Tab
                 eventKey="attributes"
                 className="kc-attributes-tab"
@@ -395,7 +378,7 @@ export default function RealmRoleTabs() {
                 />
               </Tab>
             )}
-            {!isDefaultRole(role.name!) && (
+            {role?.name !== realm?.defaultRole?.name && (
               <Tab
                 eventKey="users-in-role"
                 title={<TabTitleText>{t("usersInRole")}</TabTitleText>}
