@@ -113,3 +113,16 @@ article.pf-c-card.pf-m-flat.kc-available-idps > div > div > h1 {
 .kc-no-providers-text {
   text-align: center;
 }
+
+.kc-temporaryPassword {
+  margin: 6px 0 10px 35px;
+}
+
+.kc-password, .kc-passwordConfirmation {
+  width: 350px;
+  float: right;
+}
+
+.pf-c-form__group-label {
+  width: max-content;
+}

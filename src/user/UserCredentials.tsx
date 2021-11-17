@@ -1,17 +1,41 @@
 import React, { useState } from "react";
-import { AlertVariant } from "@patternfly/react-core";
+import {
+  AlertVariant,
+  Button,
+  Form,
+  FormGroup,
+  Modal,
+  ModalVariant,
+  Switch,
+  ValidatedOptions,
+} from "@patternfly/react-core";
 import { cellWidth } from "@patternfly/react-table";
 import type UserRepresentation from "@keycloak/keycloak-admin-client/lib/defs/userRepresentation";
 import { useTranslation } from "react-i18next";
 import { useAlerts } from "../components/alert/Alerts";
-import { PasswordPickerDialog } from "../components/password-picker/PasswordPickerDialog";
 import { ListEmptyState } from "../components/list-empty-state/ListEmptyState";
 import { KeycloakDataTable } from "../components/table-toolbar/KeycloakDataTable";
 import { useAdminClient } from "../context/auth/AdminClient";
 import { emptyFormatter } from "../util";
+import { Controller, useForm } from "react-hook-form";
+import { PasswordInput } from "../components/password-input/PasswordInput";
+import { HelpItem } from "../components/help-enabler/HelpItem";
+import "./user-section.css";
 
 type UserCredentialsProps = {
   user: UserRepresentation;
+};
+
+type CredentialsForm = {
+  password: string;
+  passwordConfirm: string;
+  temporaryPassword: boolean;
+};
+
+const defaultValues: CredentialsForm = {
+  password: "",
+  passwordConfirm: "",
+  temporaryPassword: true,
 };
 
 export const UserCredentials = ({ user }: UserCredentialsProps) => {
@@ -22,18 +46,23 @@ export const UserCredentials = ({ user }: UserCredentialsProps) => {
   const [open, setOpen] = useState(false);
   const adminClient = useAdminClient();
 
+  const form = useForm<CredentialsForm>({ defaultValues });
+  const { control, errors, handleSubmit, register } = form;
+
   const toggleModal = () => {
     setOpen(!open);
   };
 
-  const saveUserPassword = async (id: string) => {
+  const saveUserPassword = async () => {
+    const formValues = form.getValues();
+
     try {
       await adminClient.users.resetPassword({
-        id,
+        id: user.id!,
         credential: {
-          temporary: true,
-          type: "",
-          value: "",
+          temporary: formValues.temporaryPassword,
+          type: "password",
+          value: formValues.password,
         },
       });
       refresh();
@@ -49,20 +78,105 @@ export const UserCredentials = ({ user }: UserCredentialsProps) => {
   return (
     <>
       {open && (
-        <PasswordPickerDialog
-          text={{
-            title: `${t("setPasswordFor")} ${user.username}`,
-            ok: "users:save",
-            cancel: "users:cancel",
-          }}
+        <Modal
+          variant={ModalVariant.small}
+          width={600}
+          title={`${t("setPasswordFor")} ${user.username}`}
+          isOpen
           onClose={() => setOpen(false)}
-          onConfirm={() => {
-            saveUserPassword(user.id!);
-            setOpen(false);
-            refresh();
-          }}
-          onCancel={() => setOpen(false)}
-        />
+          actions={[
+            <Button
+              data-testid="ok-button"
+              key="confirm"
+              variant="primary"
+              form="userCredentials-form"
+              onClick={() => handleSubmit(saveUserPassword)()}
+            >
+              {t("save")}
+            </Button>,
+            <Button
+              data-testid="cancel-button"
+              key="cancel"
+              variant="link"
+              form="userCredentials-form"
+              onClick={() => {
+                setOpen(false);
+              }}
+            >
+              {t("cancel")}
+            </Button>,
+          ]}
+        >
+          <Form id="userCredentials-form" isHorizontal>
+            <FormGroup
+              name="password"
+              label={t("common:password")}
+              fieldId="password"
+              helperTextInvalid={t("common:required")}
+              validated={
+                errors.password
+                  ? ValidatedOptions.error
+                  : ValidatedOptions.default
+              }
+              isRequired
+            >
+              <div className="kc-password">
+                <PasswordInput
+                  name="password"
+                  aria-label="password"
+                  ref={register}
+                />
+              </div>
+            </FormGroup>
+            <FormGroup
+              name="passwordConfirmation"
+              label={t("common:passwordConfirmation")}
+              fieldId="passwordConfirmation"
+              helperTextInvalid={t("common:required")}
+              validated={
+                errors.passwordConfirmation
+                  ? ValidatedOptions.error
+                  : ValidatedOptions.default
+              }
+              isRequired
+            >
+              <div className="kc-passwordConfirmation">
+                <PasswordInput
+                  name="passwordConfirmation"
+                  aria-label="passwordConfirm"
+                  ref={register}
+                />
+              </div>
+            </FormGroup>
+            <FormGroup
+              label={t("common:temporaryPassword")}
+              labelIcon={
+                <HelpItem
+                  helpText={t("common:temporaryPasswordHelpText")}
+                  forLabel={t("common:temporaryPassword")}
+                  forID="kc-temporaryPasswordSwitch"
+                />
+              }
+              fieldId="kc-temporaryPassword"
+            >
+              {" "}
+              <Controller
+                name="temporaryPassword"
+                defaultValue={true}
+                control={control}
+                render={({ onChange, value }) => (
+                  <Switch
+                    className={"kc-temporaryPassword"}
+                    onChange={(value) => onChange(value)}
+                    isChecked={value}
+                    label={t("common:on")}
+                    labelOff={t("common:off")}
+                  />
+                )}
+              ></Controller>
+            </FormGroup>
+          </Form>
+        </Modal>
       )}
       <KeycloakDataTable
         key={key}
