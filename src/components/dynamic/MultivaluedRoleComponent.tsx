@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Controller, useFormContext } from "react-hook-form";
 import { useTranslation } from "react-i18next";
-import { sortBy, sortedUniq } from "lodash";
+import { orderBy, sortedUniq } from "lodash";
 import {
   FormGroup,
   Select,
@@ -31,7 +31,7 @@ export const MultivaluedRoleComponent = ({
   const [open, setOpen] = useState(false);
 
   const alphabetize = (rolesList: RoleRepresentation[]) => {
-    return sortBy(rolesList, (role) => role.name?.toUpperCase());
+    return orderBy(rolesList, [(role) => role.name?.toLowerCase()], ["asc"]);
   };
 
   useFetch(
