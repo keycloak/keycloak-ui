@@ -9,6 +9,7 @@ import {
 } from "@patternfly/react-core";
 import React, { useState } from "react";
 import { useParams } from "react-router-dom";
+import type { UserFederationLdapMapperParams } from "../../routes/UserFederationLdapMapper";
 import { HelpItem } from "../../../components/help-enabler/HelpItem";
 import { Controller, UseFormMethods } from "react-hook-form";
 import { useTranslation } from "react-i18next";
@@ -33,16 +34,14 @@ export const LdapMapperRoleGroup = ({
     useState(false);
   const [isClientIdDropdownOpen, setIsClientIdDropdownOpen] = useState(false);
   const [clients, setClients] = useState<ClientRepresentation[]>([]);
+  const { id, mapperId } = useParams<UserFederationLdapMapperParams>();
 
-  let vendor: string | undefined;
   let isRole = true;
   const groupMapper = "group-ldap-mapper";
 
   if (type === groupMapper) {
     isRole = false;
   }
-  const { id } = useParams<{ id: string }>();
-  const { mapperId } = useParams<{ mapperId: string }>();
 
   useFetch(
     async () => {
@@ -58,14 +57,11 @@ export const LdapMapperRoleGroup = ({
 
   useFetch(
     async () => {
-      if (id) {
-        return await adminClient.components.findOne({ id });
-      }
-      return undefined;
+      return await adminClient.components.findOne({ id });
     },
     (fetchedComponent) => {
       if (fetchedComponent) {
-        vendor = fetchedComponent.config?.vendor[0];
+        const vendor = fetchedComponent.config?.vendor[0];
         if (mapperId === "new" && vendor === "ad") {
           form.setValue(
             isRole
