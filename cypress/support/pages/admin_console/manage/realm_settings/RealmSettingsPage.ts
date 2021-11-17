@@ -983,7 +983,7 @@ export default class RealmSettingsPage {
 
     cy.findByTestId("multivalued-role-select").contains("view-users").click();
 
-    cy.get(".kc-role-select").click();
+    cy.findByTestId("multivalued-role-select").click();
 
     cy.findByTestId(this.addConditionSaveBtn).click();
     cy.get(this.alertMessage).should(
@@ -998,12 +998,12 @@ export default class RealmSettingsPage {
 
     cy.findByTestId(this.conditionTypeLink).contains("client-roles").click();
 
-    cy.get(".kc-role-select").click();
+    cy.findByTestId("multivalued-role-select").click();
     cy.findByTestId("multivalued-role-select")
       .contains("create-client")
       .click();
 
-    cy.get(".kc-role-select").click();
+    cy.findByTestId("multivalued-role-select").click();
 
     cy.findByTestId(this.addConditionSaveBtn).click();
     cy.get(this.alertMessage).should(

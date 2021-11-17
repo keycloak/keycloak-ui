@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Controller, useFormContext } from "react-hook-form";
 import {
@@ -18,21 +18,10 @@ export const MultiValuedListComponent = ({
   helpText,
   defaultValue,
   options,
-  parentCallback,
-  selectedValues,
 }: ComponentProps) => {
   const { t } = useTranslation("dynamic");
   const { control } = useFormContext();
   const [open, setOpen] = useState(false);
-
-  const [selectedItems, setSelectedItems] = useState<string[]>([defaultValue]);
-
-  useEffect(() => {
-    if (selectedValues) {
-      parentCallback!(selectedValues);
-      setSelectedItems(selectedValues!);
-    }
-  }, []);
 
   return (
     <FormGroup
@@ -61,29 +50,9 @@ export const MultiValuedListComponent = ({
             selections={value}
             onSelect={(_, v) => {
               const option = v.toString();
-              if (!value) {
-                onChange([option]);
-
-                if (selectedValues) {
-                  parentCallback!([option]);
-                  setSelectedItems([option]);
-                }
-              } else if (value.includes(option)) {
-                if (selectedValues) {
-                  const updatedItems = selectedItems.filter(
-                    (item: string) => item !== option
-                  );
-                  setSelectedItems(updatedItems);
-                  parentCallback!(updatedItems);
-                  onChange(updatedItems);
-                } else {
-                  onChange(value.filter((item: string) => item !== option));
-                }
+              if (value.includes(option)) {
+                onChange(value.filter((item: string) => item !== option));
               } else {
-                if (selectedValues) {
-                  parentCallback!([...value, option]);
-                  setSelectedItems([...selectedItems, option]);
-                }
                 onChange([...value, option]);
               }
             }}
