@@ -17,7 +17,7 @@ import { ListEmptyState } from "../components/list-empty-state/ListEmptyState";
 import { KeycloakDataTable } from "../components/table-toolbar/KeycloakDataTable";
 import { useAdminClient } from "../context/auth/AdminClient";
 import { emptyFormatter } from "../util";
-import { Controller, useForm } from "react-hook-form";
+import { Controller, useForm, useWatch } from "react-hook-form";
 import { PasswordInput } from "../components/password-input/PasswordInput";
 import { HelpItem } from "../components/help-enabler/HelpItem";
 import "./user-section.css";
@@ -45,9 +45,20 @@ export const UserCredentials = ({ user }: UserCredentialsProps) => {
   const refresh = () => setKey(new Date().getTime());
   const [open, setOpen] = useState(false);
   const adminClient = useAdminClient();
-
   const form = useForm<CredentialsForm>({ defaultValues });
   const { control, errors, handleSubmit, register } = form;
+
+  const passwordWatcher = useWatch({
+    control,
+    name: "password",
+  });
+
+  const passwordConfirmWatcher = useWatch({
+    control,
+    name: "passwordConfirmation",
+  });
+
+  const isDisabled = passwordWatcher !== "" && passwordConfirmWatcher !== "";
 
   const toggleModal = () => {
     setOpen(!open);
@@ -95,6 +106,7 @@ export const UserCredentials = ({ user }: UserCredentialsProps) => {
               variant="primary"
               form="userCredentials-form"
               onClick={() => handleSubmit(saveUserPassword)()}
+              isDisabled={!isDisabled}
             >
               {t("save")}
             </Button>,
@@ -127,8 +139,8 @@ export const UserCredentials = ({ user }: UserCredentialsProps) => {
               <div className="kc-password">
                 <PasswordInput
                   name="password"
-                  ref={register({ required: true })}
                   aria-label="password"
+                  ref={register({ required: true })}
                 />
               </div>
             </FormGroup>
