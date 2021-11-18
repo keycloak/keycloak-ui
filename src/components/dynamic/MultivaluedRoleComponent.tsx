@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Controller, useFormContext } from "react-hook-form";
 import { useTranslation } from "react-i18next";
-import { orderBy, sortedUniq } from "lodash";
+import { sortedUniq } from "lodash";
 import {
   FormGroup,
   Select,
@@ -15,6 +15,7 @@ import type { MultiLine } from "../multi-line-input/MultiLineInput";
 import { useAdminClient, useFetch } from "../../context/auth/AdminClient";
 import { HelpItem } from "../help-enabler/HelpItem";
 import { convertToHyphens } from "../../util";
+import { useWhoAmI } from "../../context/whoami/WhoAmI";
 
 export const MultivaluedRoleComponent = ({
   name,
@@ -22,6 +23,7 @@ export const MultivaluedRoleComponent = ({
   helpText,
 }: ComponentProps) => {
   const { t } = useTranslation("dynamic");
+  const { whoAmI } = useWhoAmI();
   const fieldName = `config.${convertToHyphens(name!)}`;
 
   const adminClient = useAdminClient();
@@ -29,10 +31,6 @@ export const MultivaluedRoleComponent = ({
 
   const [clientRoles, setClientRoles] = useState<RoleRepresentation[]>([]);
   const [open, setOpen] = useState(false);
-
-  const alphabetize = (rolesList: RoleRepresentation[]) => {
-    return orderBy(rolesList, [(role) => role.name?.toLowerCase()], ["asc"]);
-  };
 
   useFetch(
     async () => {
@@ -47,7 +45,7 @@ export const MultivaluedRoleComponent = ({
         })
       );
 
-      return alphabetize(clientRoles.flat());
+      return clientRoles.flat();
     },
     (clientRoles) => {
       setClientRoles(clientRoles);
@@ -55,7 +53,11 @@ export const MultivaluedRoleComponent = ({
     []
   );
 
-  const clientRoleNames = sortedUniq(clientRoles.map((item) => item.name));
+  const alphabetizedClientRoles = sortedUniq(
+    clientRoles.map((item) => item.name)
+  ).sort((a, b) =>
+    a!.localeCompare(b!, whoAmI.getLocale(), { ignorePunctuation: true })
+  );
 
   return (
     <FormGroup
@@ -98,7 +100,7 @@ export const MultivaluedRoleComponent = ({
             maxHeight={200}
             onClear={() => onChange([])}
           >
-            {clientRoleNames.map((option) => (
+            {alphabetizedClientRoles.map((option) => (
               <SelectOption key={option} value={option} />
             ))}
           </Select>
