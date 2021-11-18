@@ -8,7 +8,11 @@ export const AdminClient = createContext<KeycloakAdminClient | undefined>(
   undefined
 );
 
-export const useAdminClient = () => useRequiredContext(AdminClient);
+export const useAdminClient = () => {
+  const adminClient = useRequiredContext(AdminClient);
+  adminClient.setConfig({ requestConfig: { cancelToken: undefined } });
+  return adminClient;
+};
 
 /**
  * Util function to only set the state when the component is still mounted.
