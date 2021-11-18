@@ -28,13 +28,13 @@ type UserCredentialsProps = {
 
 type CredentialsForm = {
   password: string;
-  passwordConfirm: string;
+  passwordConfirmation: string;
   temporaryPassword: boolean;
 };
 
 const defaultValues: CredentialsForm = {
   password: "",
-  passwordConfirm: "",
+  passwordConfirmation: "",
   temporaryPassword: true,
 };
 
@@ -55,20 +55,24 @@ export const UserCredentials = ({ user }: UserCredentialsProps) => {
 
   const saveUserPassword = async () => {
     const formValues = form.getValues();
+    const passwordMatch =
+      formValues.password === formValues.passwordConfirmation;
 
-    try {
-      await adminClient.users.resetPassword({
-        id: user.id!,
-        credential: {
-          temporary: formValues.temporaryPassword,
-          type: "password",
-          value: formValues.password,
-        },
-      });
-      refresh();
-      addAlert(t("savePasswordSuccess"), AlertVariant.success);
-    } catch (error) {
-      addError("users:savePasswordError", error);
+    if (passwordMatch) {
+      try {
+        await adminClient.users.resetPassword({
+          id: user.id!,
+          credential: {
+            temporary: formValues.temporaryPassword,
+            type: "password",
+            value: formValues.password,
+          },
+        });
+        refresh();
+        addAlert(t("savePasswordSuccess"), AlertVariant.success);
+      } catch (error) {
+        addError("users:savePasswordError", error);
+      }
     }
   };
 
@@ -123,8 +127,8 @@ export const UserCredentials = ({ user }: UserCredentialsProps) => {
               <div className="kc-password">
                 <PasswordInput
                   name="password"
+                  ref={register({ required: true })}
                   aria-label="password"
-                  ref={register}
                 />
               </div>
             </FormGroup>
@@ -144,7 +148,7 @@ export const UserCredentials = ({ user }: UserCredentialsProps) => {
                 <PasswordInput
                   name="passwordConfirmation"
                   aria-label="passwordConfirm"
-                  ref={register}
+                  ref={register({ required: true })}
                 />
               </div>
             </FormGroup>
