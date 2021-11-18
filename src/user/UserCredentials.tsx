@@ -55,10 +55,10 @@ export const UserCredentials = ({ user }: UserCredentialsProps) => {
 
   const saveUserPassword = async () => {
     const formValues = form.getValues();
-    const passwordMatch =
+    const passwordsMatch =
       formValues.password === formValues.passwordConfirmation;
 
-    if (passwordMatch) {
+    if (passwordsMatch) {
       try {
         await adminClient.users.resetPassword({
           id: user.id!,
