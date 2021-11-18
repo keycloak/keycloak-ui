@@ -7,6 +7,8 @@ import {
   Modal,
   ModalVariant,
   Switch,
+  Text,
+  TextVariants,
   ValidatedOptions,
 } from "@patternfly/react-core";
 import { cellWidth } from "@patternfly/react-table";
@@ -44,9 +46,11 @@ export const UserCredentials = ({ user }: UserCredentialsProps) => {
   const [key, setKey] = useState(0);
   const refresh = () => setKey(new Date().getTime());
   const [open, setOpen] = useState(false);
+  const [openSaveConfirm, setOpenSaveConfirm] = useState(false);
   const adminClient = useAdminClient();
   const form = useForm<CredentialsForm>({ defaultValues });
   const { control, errors, handleSubmit, register } = form;
+  const [credentials, setCredentials] = useState<CredentialsForm>();
 
   const passwordWatcher = useWatch({
     control,
@@ -58,30 +62,36 @@ export const UserCredentials = ({ user }: UserCredentialsProps) => {
     name: "passwordConfirmation",
   });
 
-  const isDisabled =
+  const isNotDisabled =
     passwordWatcher !== "" && passwordConfirmationWatcher !== "";
+
+  //   const passwordsMatchWatcher =
+  //     passwordWatcher === passwordConfirmationWatcher && isNotDisabled;
 
   const toggleModal = () => {
     setOpen(!open);
   };
 
+  const toggleConfirmSaveModal = () => {
+    setOpenSaveConfirm(!openSaveConfirm);
+  };
+
   const saveUserPassword = async () => {
-    const formValues = form.getValues();
     const passwordsMatch =
-      formValues.password === formValues.passwordConfirmation;
+      credentials?.password === credentials?.passwordConfirmation;
 
     try {
       await adminClient.users.resetPassword({
         id: user.id!,
         credential: {
-          temporary: formValues.temporaryPassword,
+          temporary: credentials?.temporaryPassword,
           type: "password",
-          value: passwordsMatch ? formValues.password : "",
+          value: passwordsMatch ? credentials?.password : "",
         },
       });
       refresh();
       addAlert(t("savePasswordSuccess"), AlertVariant.success);
-      setOpen(false);
+      setOpenSaveConfirm(false);
     } catch (error) {
       addError(
         !passwordsMatch
@@ -110,8 +120,12 @@ export const UserCredentials = ({ user }: UserCredentialsProps) => {
               key="confirm"
               variant="primary"
               form="userCredentials-form"
-              onClick={() => handleSubmit(saveUserPassword)()}
-              isDisabled={!isDisabled}
+              onClick={() => {
+                setOpen(false);
+                setCredentials(form.getValues());
+                toggleConfirmSaveModal();
+              }}
+              isDisabled={!isNotDisabled}
             >
               {t("save")}
             </Button>,
@@ -197,6 +211,45 @@ export const UserCredentials = ({ user }: UserCredentialsProps) => {
               ></Controller>
             </FormGroup>
           </Form>
+        </Modal>
+      )}
+      {openSaveConfirm && (
+        <Modal
+          variant={ModalVariant.small}
+          width={600}
+          title={t("setPasswordConfirm")}
+          isOpen
+          onClose={() => setOpenSaveConfirm(false)}
+          actions={[
+            <Button
+              data-testid="setPassword-button"
+              key="confirmSave"
+              variant="danger"
+              form="userCredentials-form"
+              onClick={() => {
+                handleSubmit(saveUserPassword)();
+              }}
+            >
+              {t("savePassword")}
+            </Button>,
+            <Button
+              data-testid="cancelSetPassword-button"
+              key="cancelConfirm"
+              variant="link"
+              form="userCredentials-form"
+              onClick={() => {
+                setOpenSaveConfirm(false);
+              }}
+            >
+              {t("cancel")}
+            </Button>,
+          ]}
+        >
+          <Text component={TextVariants.h3}>
+            {`${t("setPasswordConfirmText")} ${user.username} ${t(
+              "questionMark"
+            )}`}
+          </Text>
         </Modal>
       )}
       <KeycloakDataTable

@@ -131,5 +131,10 @@ export default {
     credentialUserLabel: "User Label",
     credentialData: "Data",
     credentialsList: "Credentials List",
+    setPasswordConfirm: "Set password?",
+    setPasswordConfirmText:
+      "Are you sure you want to set the password for the user",
+    questionMark: "?",
+    savePassword: "Save password",
   },
 };
