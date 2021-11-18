@@ -34,7 +34,6 @@ export function useFetch<T>(
   const onError = useErrorHandler();
 
   useEffect(() => {
-    const originalToken = adminClient.getRequestConfig()?.cancelToken;
     const source = axios.CancelToken.source();
 
     adminClient.setConfig({
@@ -54,7 +53,7 @@ export function useFetch<T>(
       });
 
     adminClient.setConfig({
-      requestConfig: { cancelToken: originalToken },
+      requestConfig: { cancelToken: undefined },
     });
 
     return () => {
