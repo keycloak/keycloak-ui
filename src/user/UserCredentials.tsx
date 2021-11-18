@@ -53,12 +53,13 @@ export const UserCredentials = ({ user }: UserCredentialsProps) => {
     name: "password",
   });
 
-  const passwordConfirmWatcher = useWatch({
+  const passwordConfirmationWatcher = useWatch({
     control,
     name: "passwordConfirmation",
   });
 
-  const isDisabled = passwordWatcher !== "" && passwordConfirmWatcher !== "";
+  const isDisabled =
+    passwordWatcher !== "" && passwordConfirmationWatcher !== "";
 
   const toggleModal = () => {
     setOpen(!open);
@@ -69,21 +70,25 @@ export const UserCredentials = ({ user }: UserCredentialsProps) => {
     const passwordsMatch =
       formValues.password === formValues.passwordConfirmation;
 
-    if (passwordsMatch) {
-      try {
-        await adminClient.users.resetPassword({
-          id: user.id!,
-          credential: {
-            temporary: formValues.temporaryPassword,
-            type: "password",
-            value: formValues.password,
-          },
-        });
-        refresh();
-        addAlert(t("savePasswordSuccess"), AlertVariant.success);
-      } catch (error) {
-        addError("users:savePasswordError", error);
-      }
+    try {
+      await adminClient.users.resetPassword({
+        id: user.id!,
+        credential: {
+          temporary: formValues.temporaryPassword,
+          type: "password",
+          value: passwordsMatch ? formValues.password : "",
+        },
+      });
+      refresh();
+      addAlert(t("savePasswordSuccess"), AlertVariant.success);
+      setOpen(false);
+    } catch (error) {
+      addError(
+        !passwordsMatch
+          ? t("users:savePasswordNotMatchError")
+          : t("users:savePasswordError"),
+        error
+      );
     }
   };
 

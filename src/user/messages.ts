@@ -125,6 +125,8 @@ export default {
     cancel: "Cancel",
     savePasswordSuccess: "The password has been set successfully.",
     savePasswordError: "Error saving password: {{error}}",
+    savePasswordNotMatchError:
+      "Error saving password: Password and confirmation does not match.",
     credentialType: "Type",
     credentialUserLabel: "User Label",
     credentialData: "Data",
