@@ -8,6 +8,7 @@ import {
   FlexItem,
   PageSection,
   Radio,
+  Switch,
   Title,
   ToolbarItem,
 } from "@patternfly/react-core";
@@ -16,7 +17,7 @@ import { ListEmptyState } from "../components/list-empty-state/ListEmptyState";
 import { KeycloakDataTable } from "../components/table-toolbar/KeycloakDataTable";
 import { useTranslation } from "react-i18next";
 import { useAdminClient, useFetch } from "../context/auth/AdminClient";
-import { prettyPrintJSON, upperCaseFormatter } from "../util";
+import { prettyPrintJSON } from "../util";
 import { CodeEditor, Language } from "@patternfly/react-code-editor";
 import { Link, useHistory } from "react-router-dom";
 import type ClientPolicyRepresentation from "@keycloak/keycloak-admin-client/lib/defs/clientPolicyRepresentation";
@@ -28,7 +29,7 @@ import { useRealm } from "../context/realm-context/RealmContext";
 import { toAddClientPolicy } from "./routes/AddClientPolicy";
 import { toEditClientPolicy } from "./routes/EditClientPolicy";
 import { KeycloakSpinner } from "../components/keycloak-spinner/KeycloakSpinner";
-
+import { Controller, useForm } from "react-hook-form";
 export const PoliciesTab = () => {
   const { t } = useTranslation("realm-settings");
   const adminClient = useAdminClient();
@@ -43,7 +44,7 @@ export const PoliciesTab = () => {
   const [code, setCode] = useState<string>();
   const [tablePolicies, setTablePolicies] =
     useState<ClientPolicyRepresentation[]>();
-
+  const form = useForm({ mode: "onChange" });
   const refresh = () => setKey(key + 1);
 
   useFetch(
@@ -58,9 +59,61 @@ export const PoliciesTab = () => {
 
   const loader = async () => policies ?? [];
 
+  const saveStatus = async (updatedPolicy: ClientPolicyRepresentation) => {
+    const switchValues = form.getValues();
+
+    const updatedPolicies = policies?.map((policy) => {
+      if (policy.name !== updatedPolicy.name) {
+        return policy;
+      }
+
+      const enabled = switchValues[updatedPolicy.name!];
+
+      return {
+        ...policy,
+        enabled: enabled,
+      };
+    }) as ClientPolicyRepresentation[];
+
+    try {
+      await adminClient.clientPolicies.updatePolicy({
+        policies: updatedPolicies,
+      });
+      history.push(`/${realm}/realm-settings/clientPolicies`);
+      addAlert(
+        t("realm-settings:updateClientPolicySuccess"),
+        AlertVariant.success
+      );
+    } catch (error) {
+      addError("realm-settings:updateClientPolicyError", error);
+    }
+  };
+
   const ClientPolicyDetailLink = ({ name }: ClientPolicyRepresentation) => (
     <Link to={toEditClientPolicy({ realm, policyName: name! })}>{name}</Link>
   );
+
+  const SwitchRenderer = (clientPolicy: ClientPolicyRepresentation) => {
+    return (
+      <Controller
+        name={clientPolicy.name!}
+        data-testid={`${clientPolicy.name!}-switch`}
+        defaultValue={clientPolicy.enabled}
+        control={form.control}
+        render={({ onChange, value }) => (
+          <Switch
+            label={t("common:on")}
+            labelOff={t("common:off")}
+            isChecked={value}
+            onChange={(value) => {
+              onChange(value);
+              saveStatus(clientPolicy);
+            }}
+          />
+        )}
+      />
+    );
+  };
 
   const save = async () => {
     if (!code) {
@@ -193,7 +246,8 @@ export const PoliciesTab = () => {
             },
             {
               name: "enabled",
-              cellFormatters: [upperCaseFormatter()],
+              displayKey: "realm-settings:status",
+              cellRenderer: SwitchRenderer,
             },
             {
               name: "description",
