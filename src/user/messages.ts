@@ -136,5 +136,10 @@ export default {
       "Are you sure you want to set the password for the user",
     questionMark: "?",
     savePassword: "Save password",
+    deleteCredentialsConfirmTitle: "Delete credentials?",
+    deleteCredentialsConfirm:
+      "Are you sure you want to delete these users credentials?",
+    deleteCredentialsSuccess: "The credentials has been deleted successfully.",
+    deleteCredentialsError: "Error deleting users credentials: {{error}}",
   },
 };

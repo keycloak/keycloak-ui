@@ -1,7 +1,8 @@
-import React, { useState } from "react";
+import React, { useState, useState } from "react";
 import {
   AlertVariant,
   Button,
+  ButtonVariant,
   Form,
   FormGroup,
   Modal,
@@ -23,6 +24,8 @@ import { Controller, useForm, useWatch } from "react-hook-form";
 import { PasswordInput } from "../components/password-input/PasswordInput";
 import { HelpItem } from "../components/help-enabler/HelpItem";
 import "./user-section.css";
+import { useConfirmDialog } from "../components/confirm-dialog/ConfirmDialog";
+import type CredentialRepresentation from "@keycloak/keycloak-admin-client/lib/defs/credentialRepresentation";
 
 type UserCredentialsProps = {
   user: UserRepresentation;
@@ -51,6 +54,11 @@ export const UserCredentials = ({ user }: UserCredentialsProps) => {
   const form = useForm<CredentialsForm>({ defaultValues });
   const { control, errors, handleSubmit, register } = form;
   const [credentials, setCredentials] = useState<CredentialsForm>();
+  const [selectedCredential, setSelectedCredential] =
+    useState<CredentialRepresentation>({});
+
+  const loader = async () =>
+    await adminClient.users.getCredentials({ id: user.id! });
 
   const passwordWatcher = useWatch({
     control,
@@ -102,8 +110,24 @@ export const UserCredentials = ({ user }: UserCredentialsProps) => {
     }
   };
 
-  const loader = async () =>
-    await adminClient.users.getCredentials({ id: user.id! });
+  const [toggleDeleteDialog, DeleteConfirm] = useConfirmDialog({
+    titleKey: t("deleteCredentialsConfirmTitle"),
+    messageKey: t("deleteCredentialsConfirm"),
+    continueButtonLabel: t("common:delete"),
+    continueButtonVariant: ButtonVariant.danger,
+    onConfirm: async () => {
+      try {
+        await adminClient.users.deleteCredential({
+          id: user.id!,
+          credentialId: selectedCredential.id!,
+        });
+        addAlert(t("deleteCredentialsSuccess"), AlertVariant.success);
+        setKey(key + 1);
+      } catch (error) {
+        addError(t("deleteCredentialsError"), error);
+      }
+    },
+  });
 
   return (
     <>
@@ -252,10 +276,20 @@ export const UserCredentials = ({ user }: UserCredentialsProps) => {
           </Text>
         </Modal>
       )}
+      <DeleteConfirm />
       <KeycloakDataTable
         key={key}
         loader={loader}
         ariaLabelKey="users:credentialsList"
+        actions={[
+          {
+            title: t("common:delete"),
+            onRowClick: (credential) => {
+              setSelectedCredential(credential);
+              toggleDeleteDialog();
+            },
+          },
+        ]}
         columns={[
           {
             name: "type",
