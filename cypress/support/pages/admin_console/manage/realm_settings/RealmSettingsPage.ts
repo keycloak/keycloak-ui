@@ -197,7 +197,6 @@ export default class RealmSettingsPage {
   private addConditionCancelBtn = "addCondition-cancelBtn";
   private addConditionSaveBtn = "addCondition-saveBtn";
   private conditionTypeLink = "condition-type-link";
-  private addValue = "addValue";
   private eventListenersFormLabel = ".pf-c-form__label-text";
   private eventListenersDrpDwn = ".pf-c-select.kc_eventListeners_select";
   private eventListenersSaveBtn = "saveEventListenerBtn";
@@ -974,16 +973,13 @@ export default class RealmSettingsPage {
     cy.findByTestId(this.addConditionDrpDwnOption)
       .contains("client-roles")
       .click();
+    cy.get(this.roleSelect).click().contains("impersonation").click();
+
+    cy.get(this.roleSelect).contains("manage-realm").click();
+
+    cy.get(this.roleSelect).contains("view-users").click();
+
     cy.get(this.roleSelect).click();
-    cy.findByTestId("multivalued-role-select")
-      .contains("impersonation")
-      .click();
-
-    cy.findByTestId("multivalued-role-select").contains("manage-realm").click();
-
-    cy.findByTestId("multivalued-role-select").contains("view-users").click();
-
-    cy.findByTestId("multivalued-role-select").click();
 
     cy.findByTestId(this.addConditionSaveBtn).click();
     cy.get(this.alertMessage).should(
@@ -998,12 +994,10 @@ export default class RealmSettingsPage {
 
     cy.findByTestId(this.conditionTypeLink).contains("client-roles").click();
 
-    cy.findByTestId("multivalued-role-select").click();
-    cy.findByTestId("multivalued-role-select")
-      .contains("create-client")
-      .click();
+    cy.get(this.roleSelect).click();
+    cy.get(this.roleSelect).contains("create-client").click();
 
-    cy.findByTestId("multivalued-role-select").click();
+    cy.get(this.roleSelect).click();
 
     cy.findByTestId(this.addConditionSaveBtn).click();
     cy.get(this.alertMessage).should(

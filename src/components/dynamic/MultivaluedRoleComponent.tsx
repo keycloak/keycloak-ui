@@ -76,6 +76,7 @@ export const MultivaluedRoleComponent = ({
           <Select
             onToggle={(isExpanded) => setOpen(isExpanded)}
             isOpen={open}
+            className="kc-role-select"
             data-testid="multivalued-role-select"
             variant={SelectVariant.typeaheadMulti}
             placeholderText={t("selectARole")}

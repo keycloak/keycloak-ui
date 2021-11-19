@@ -233,6 +233,7 @@ export default function NewClientPolicyCondition() {
               render={({ onChange, value }) => (
                 <Select
                   placeholderText={t("selectACondition")}
+                  className="kc-conditionType-select"
                   data-testid="conditionType-select"
                   toggleId="provider"
                   isDisabled={!!conditionName}
