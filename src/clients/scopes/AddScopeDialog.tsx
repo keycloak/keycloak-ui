@@ -40,14 +40,14 @@ export type AddScopeDialogProps = {
 };
 
 enum FilterType {
-  Name = "name",
-  Protocol = "protocol",
+  Name = "Name",
+  Protocol = "Protocol",
 }
 
 enum ProtocolType {
-  All = "all",
-  SAML = "saml",
-  OpenIDConnect = "openid-connect",
+  All = "All",
+  SAML = "SAML",
+  OpenIDConnect = "OpenID Connect",
 }
 
 export const AddScopeDialog = ({
@@ -60,8 +60,10 @@ export const AddScopeDialog = ({
   const { t } = useTranslation("clients");
   const [addToggle, setAddToggle] = useState(false);
   const [rows, setRows] = useState<ClientScopeRepresentation[]>([]);
-  const [filterType, setFilterType] = useState<FilterType>("Name");
-  const [protocolType, setProtocolType] = useState<ProtocolType>("All");
+  const [filterType, setFilterType] = useState<FilterType>(FilterType.Name);
+  const [protocolType, setProtocolType] = useState<ProtocolType>(
+    ProtocolType.All
+  );
   const [key, setKey] = useState(0);
   const refresh = () => setKey(key + 1);
 
@@ -106,23 +108,23 @@ export const AddScopeDialog = ({
 
   const onFilterTypeDropdownSelect = (filterType: string) => {
     if (filterType === "Name") {
-      setFilterType("Protocol");
+      setFilterType(FilterType.Protocol);
     }
     if (filterType === "Protocol") {
-      setFilterType("Name");
+      setFilterType(FilterType.Name);
     }
     setIsFilterTypeDropdownOpen(!isFilterTypeDropdownOpen);
   };
 
   const onProtocolTypeDropdownSelect = (protocolType: string) => {
     if (protocolType === "SAML") {
-      setProtocolType("SAML");
+      setProtocolType(ProtocolType.SAML);
     }
     if (protocolType === "OpenID Connect") {
-      setProtocolType("OpenID Connect");
+      setProtocolType(ProtocolType.OpenIDConnect);
     }
     if (protocolType === "All") {
-      setProtocolType("All");
+      setProtocolType(ProtocolType.All);
     }
     setIsProtocolTypeDropdownOpen(!isProtocolTypeDropdownOpen);
   };
