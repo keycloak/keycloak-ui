@@ -131,3 +131,12 @@ article.pf-c-card.pf-m-flat.kc-available-idps > div > div > h1 {
   display: inline-block;
   margin-left: var(--pf-global--spacer--xl);
 }
+
+.kc-edit-icon {
+  color: var(--pf-global--Color--200);
+  margin-left: 5px;
+}
+
+.kc-showData-btn {
+  padding-left: 0;
+}

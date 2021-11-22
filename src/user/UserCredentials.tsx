@@ -1,10 +1,14 @@
-import React, { useState, useState } from "react";
+import React, { useState } from "react";
 import {
   AlertVariant,
   Button,
   ButtonVariant,
+  Dropdown,
+  DropdownItem,
+  DropdownPosition,
   Form,
   FormGroup,
+  KebabToggle,
   Modal,
   ModalVariant,
   Switch,
@@ -12,19 +16,25 @@ import {
   TextVariants,
   ValidatedOptions,
 } from "@patternfly/react-core";
-import { cellWidth } from "@patternfly/react-table";
+import {
+  TableComposable,
+  Tbody,
+  Td,
+  Th,
+  Thead,
+  Tr,
+} from "@patternfly/react-table";
 import type UserRepresentation from "@keycloak/keycloak-admin-client/lib/defs/userRepresentation";
 import { useTranslation } from "react-i18next";
 import { useAlerts } from "../components/alert/Alerts";
 import { ListEmptyState } from "../components/list-empty-state/ListEmptyState";
-import { KeycloakDataTable } from "../components/table-toolbar/KeycloakDataTable";
-import { useAdminClient } from "../context/auth/AdminClient";
-import { emptyFormatter } from "../util";
+import { useAdminClient, useFetch } from "../context/auth/AdminClient";
 import { Controller, useForm, useWatch } from "react-hook-form";
 import { PasswordInput } from "../components/password-input/PasswordInput";
 import { HelpItem } from "../components/help-enabler/HelpItem";
 import "./user-section.css";
 import { useConfirmDialog } from "../components/confirm-dialog/ConfirmDialog";
+import { OutlinedQuestionCircleIcon } from "@patternfly/react-icons";
 import type CredentialRepresentation from "@keycloak/keycloak-admin-client/lib/defs/credentialRepresentation";
 
 type UserCredentialsProps = {
@@ -50,15 +60,24 @@ export const UserCredentials = ({ user }: UserCredentialsProps) => {
   const refresh = () => setKey(new Date().getTime());
   const [open, setOpen] = useState(false);
   const [openSaveConfirm, setOpenSaveConfirm] = useState(false);
+  const [kebabOpen, setKebabOpen] = useState(false);
   const adminClient = useAdminClient();
   const form = useForm<CredentialsForm>({ defaultValues });
   const { control, errors, handleSubmit, register } = form;
   const [credentials, setCredentials] = useState<CredentialsForm>();
+  const [userCredentials, setUserCredentials] = useState<
+    CredentialRepresentation[]
+  >([]);
   const [selectedCredential, setSelectedCredential] =
     useState<CredentialRepresentation>({});
 
-  const loader = async () =>
-    await adminClient.users.getCredentials({ id: user.id! });
+  useFetch(
+    () => adminClient.users.getCredentials({ id: user.id! }),
+    (credentials) => {
+      setUserCredentials(credentials);
+    },
+    [key]
+  );
 
   const passwordWatcher = useWatch({
     control,
@@ -72,9 +91,6 @@ export const UserCredentials = ({ user }: UserCredentialsProps) => {
 
   const isNotDisabled =
     passwordWatcher !== "" && passwordConfirmationWatcher !== "";
-
-  //   const passwordsMatchWatcher =
-  //     passwordWatcher === passwordConfirmationWatcher && isNotDisabled;
 
   const toggleModal = () => {
     setOpen(!open);
@@ -277,49 +293,81 @@ export const UserCredentials = ({ user }: UserCredentialsProps) => {
         </Modal>
       )}
       <DeleteConfirm />
-      <KeycloakDataTable
-        key={key}
-        loader={loader}
-        ariaLabelKey="users:credentialsList"
-        actions={[
-          {
-            title: t("common:delete"),
-            onRowClick: (credential) => {
-              setSelectedCredential(credential);
-              toggleDeleteDialog();
-            },
-          },
-        ]}
-        columns={[
-          {
-            name: "type",
-            displayKey: "users:credentialType",
-            cellFormatters: [emptyFormatter()],
-            transforms: [cellWidth(40)],
-          },
-          {
-            name: "user label",
-            displayKey: "users:credentialUserLabel",
-            transforms: [cellWidth(45)],
-          },
-
-          {
-            name: "data",
-            displayKey: "users:credentialData",
-            cellFormatters: [emptyFormatter()],
-            transforms: [cellWidth(20)],
-          },
-        ]}
-        emptyState={
-          <ListEmptyState
-            hasIcon={true}
-            message={t("noCredentials")}
-            instructions={t("noCredentialsText")}
-            primaryActionText={t("setPassword")}
-            onPrimaryAction={toggleModal}
-          />
-        }
-      />
+      {userCredentials.length !== 0 ? (
+        <TableComposable aria-label="Simple table" variant={"compact"}>
+          <Thead>
+            <Tr>
+              <Th>
+                <OutlinedQuestionCircleIcon
+                  key={`question-icon-`}
+                  data-testid="question-icon"
+                />
+              </Th>
+              <Th>Type</Th>
+              <Th>User label</Th>
+              <Th>Data</Th>
+              <Th />
+              <Th />
+            </Tr>
+          </Thead>
+          <Tbody>
+            <Tr key={"key"}>
+              {userCredentials.map((credential) => (
+                <>
+                  <Td
+                    draggableRow={{
+                      id: `draggable-row-${credential.id}`,
+                    }}
+                  />
+                  <Td key={`${credential}`} dataLabel={`columns-${credential}`}>
+                    {credential.type}
+                  </Td>
+                  <Td>My Password</Td>
+                  <Td>
+                    <Button className="kc-showData-btn" variant="link">
+                      Show data
+                    </Button>
+                  </Td>
+                  <Td>
+                    <Button variant="secondary">Reset password</Button>
+                  </Td>
+                  <Td>
+                    <Dropdown
+                      isPlain
+                      position={DropdownPosition.right}
+                      toggle={
+                        <KebabToggle onToggle={(open) => setKebabOpen(open)} />
+                      }
+                      isOpen={kebabOpen}
+                      onSelect={() => setSelectedCredential(credential)}
+                      dropdownItems={[
+                        <DropdownItem
+                          key="action"
+                          component="button"
+                          onClick={() => {
+                            toggleDeleteDialog();
+                            setKebabOpen(false);
+                          }}
+                        >
+                          Delete
+                        </DropdownItem>,
+                      ]}
+                    />
+                  </Td>
+                </>
+              ))}
+            </Tr>
+          </Tbody>
+        </TableComposable>
+      ) : (
+        <ListEmptyState
+          hasIcon={true}
+          message={t("noCredentials")}
+          instructions={t("noCredentialsText")}
+          primaryActionText={t("setPassword")}
+          onPrimaryAction={toggleModal}
+        />
+      )}
     </>
   );
 };
