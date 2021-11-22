@@ -127,7 +127,7 @@ export default function ResourceDetails() {
 
     try {
       if (resourceId) {
-        adminClient.clients.updateResource({ id, resourceId }, resource);
+        await adminClient.clients.updateResource({ id, resourceId }, resource);
       } else {
         const result = await adminClient.clients.createResource(
           { id },
