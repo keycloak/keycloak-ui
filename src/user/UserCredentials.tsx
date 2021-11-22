@@ -38,7 +38,6 @@ import { PasswordInput } from "../components/password-input/PasswordInput";
 import { HelpItem } from "../components/help-enabler/HelpItem";
 import "./user-section.css";
 import { useConfirmDialog } from "../components/confirm-dialog/ConfirmDialog";
-import { OutlinedQuestionCircleIcon } from "@patternfly/react-icons";
 import type CredentialRepresentation from "@keycloak/keycloak-admin-client/lib/defs/credentialRepresentation";
 
 type UserCredentialsProps = {
@@ -188,6 +187,15 @@ export const UserCredentials = ({ user }: UserCredentialsProps) => {
       }
     },
   });
+
+  //   const passwordData = JSON.parse(selectedCredential.credentialData!);
+
+  //   const rows = [
+  //     [t("realm"), authEvent?.authDetails?.realmId],
+  //     [t("client"), authEvent?.authDetails?.clientId],
+  //     [t("user"), authEvent?.authDetails?.userId],
+  //     [t("ipAddress"), authEvent?.authDetails?.ipAddress],
+  //   ];
 
   return (
     <>
@@ -359,7 +367,7 @@ export const UserCredentials = ({ user }: UserCredentialsProps) => {
       <DeleteConfirm />
       {showData && Object.keys(selectedCredential).length !== 0 && (
         <DisplayDialog
-          titleKey="auth"
+          titleKey="Password data"
           onClose={() => {
             setShowData(false);
             setSelectedCredential({});
@@ -382,9 +390,12 @@ export const UserCredentials = ({ user }: UserCredentialsProps) => {
           <Thead>
             <Tr>
               <Th>
-                <OutlinedQuestionCircleIcon
-                  key={`question-icon-`}
-                  data-testid="question-icon"
+                <HelpItem
+                  helpText={t("userCredentialsHelpText")}
+                  forLabel={t("userCredentialsHelpTextLabel")}
+                  forID={t(`common:helpLabel`, {
+                    label: t("userCredentialsHelpTextLabel"),
+                  })}
                 />
               </Th>
               <Th>Type</Th>

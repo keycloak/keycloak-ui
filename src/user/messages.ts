@@ -156,5 +156,8 @@ export default {
     resetPasswordError: "Error resetting password: {{error}}",
     showPasswordDataName: "Name",
     showPasswordDataValue: "Value",
+    userCredentialsHelpText:
+      "The top level handlers allow you to shift the priority of the credential for the user, the topmost credential having the highest priority. The handlers within one expandable panel allow you to change the visual order of the credentials, the topmost credential will show at the most left.",
+    userCredentialsHelpTextLabel: "User Credentials Help Text",
   },
 };
