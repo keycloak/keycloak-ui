@@ -188,14 +188,21 @@ export const UserCredentials = ({ user }: UserCredentialsProps) => {
     },
   });
 
-  //   const passwordData = JSON.parse(selectedCredential.credentialData!);
+  let rows: string[][] = [];
+  if (Object.keys(selectedCredential).length !== 0) {
+    const passwordData = JSON.parse(selectedCredential.credentialData!);
+    rows = Object.keys(passwordData).reduce((acc, key) => {
+      let val;
+      if (typeof passwordData[key] === "object") {
+        val = JSON.stringify(passwordData[key]);
+      } else {
+        val = passwordData[key] || "{}";
+      }
 
-  //   const rows = [
-  //     [t("realm"), authEvent?.authDetails?.realmId],
-  //     [t("client"), authEvent?.authDetails?.clientId],
-  //     [t("user"), authEvent?.authDetails?.userId],
-  //     [t("ipAddress"), authEvent?.authDetails?.ipAddress],
-  //   ];
+      acc.push([key, val]);
+      return acc;
+    }, [] as string[][]);
+  }
 
   return (
     <>
@@ -378,7 +385,7 @@ export const UserCredentials = ({ user }: UserCredentialsProps) => {
             data-testid="password-data-dialog"
             variant={TableVariant.compact}
             cells={[t("showPasswordDataName"), t("showPasswordDataValue")]}
-            // rows={rows}
+            rows={rows}
           >
             <TableHeader />
             <TableBody />
@@ -415,7 +422,8 @@ export const UserCredentials = ({ user }: UserCredentialsProps) => {
                     }}
                   />
                   <Td key={`${credential}`} dataLabel={`columns-${credential}`}>
-                    {credential.type}
+                    {credential.type?.charAt(0).toUpperCase()! +
+                      credential.type?.slice(1)}
                   </Td>
                   <Td>My Password</Td>
                   <Td>
