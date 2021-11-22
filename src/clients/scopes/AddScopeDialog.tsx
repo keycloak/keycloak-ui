@@ -31,6 +31,7 @@ import "./client-scopes.css";
 
 export type AddScopeDialogProps = {
   clientScopes: ClientScopeRepresentation[];
+  clientName?: string;
   open: boolean;
   toggleDialog: () => void;
   onAdd: (
@@ -52,6 +53,7 @@ enum ProtocolType {
 
 export const AddScopeDialog = ({
   clientScopes,
+  clientName,
   open,
   toggleDialog,
   onAdd,
@@ -147,7 +149,7 @@ export const AddScopeDialog = ({
       title={
         isClientScopesConditionType
           ? t("addClientScope")
-          : t("addClientScopesTo", { clientId: "test" })
+          : t("addClientScopesTo", { clientName: clientName })
       }
       isOpen={open}
       onClose={toggleDialog}
@@ -298,7 +300,7 @@ export const AddScopeDialog = ({
           {
             name: "name",
           },
-          { name: "protocol", displayKey: "Protocol" },
+          { name: "protocol", displayKey: "clients:protocol" },
           {
             name: "description",
           },
