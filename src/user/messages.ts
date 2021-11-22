@@ -144,6 +144,7 @@ export default {
       "Are you sure you want to delete these users credentials?",
     deleteCredentialsSuccess: "The credentials has been deleted successfully.",
     deleteCredentialsError: "Error deleting users credentials: {{error}}",
+    deleteBtn: "Delete",
     resetPasswordFor: "Reset password for ",
     resetPasswordConfirm: "Reset password?",
     resetPasswordConfirmText:
@@ -154,10 +155,15 @@ export default {
     resetPasswordNotMatchError:
       "Error resetting password: Password and confirmation does not match.",
     resetPasswordError: "Error resetting password: {{error}}",
+    resetPasswordBtn: "Reset password",
     showPasswordDataName: "Name",
     showPasswordDataValue: "Value",
+    showDataBtn: "Show data",
     userCredentialsHelpText:
       "The top level handlers allow you to shift the priority of the credential for the user, the topmost credential having the highest priority. The handlers within one expandable panel allow you to change the visual order of the credentials, the topmost credential will show at the most left.",
     userCredentialsHelpTextLabel: "User Credentials Help Text",
+    type: "Type",
+    userLabel: "User label",
+    data: "Data",
   },
 };

@@ -405,9 +405,9 @@ export const UserCredentials = ({ user }: UserCredentialsProps) => {
                   })}
                 />
               </Th>
-              <Th>Type</Th>
-              <Th>User label</Th>
-              <Th>Data</Th>
+              <Th>{t("type")}</Th>
+              <Th>{t("userLabel")}</Th>
+              <Th>{t("data")}</Th>
               <Th />
               <Th />
             </Tr>
@@ -435,12 +435,12 @@ export const UserCredentials = ({ user }: UserCredentialsProps) => {
                         setSelectedCredential(credential);
                       }}
                     >
-                      Show data
+                      {t("showDataBtn")}
                     </Button>
                   </Td>
                   <Td>
                     <Button variant="secondary" onClick={resetPassword}>
-                      Reset password
+                      {t("resetPasswordBtn")}
                     </Button>
                   </Td>
                   <Td>
@@ -461,7 +461,7 @@ export const UserCredentials = ({ user }: UserCredentialsProps) => {
                             setKebabOpen(false);
                           }}
                         >
-                          Delete
+                          {t("deleteBtn")}
                         </DropdownItem>,
                       ]}
                     />
