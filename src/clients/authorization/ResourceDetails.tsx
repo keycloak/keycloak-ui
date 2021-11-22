@@ -88,22 +88,17 @@ export default function ResourceDetails() {
 
   useFetch(
     async (): Promise<FetchResource> => {
-      const client = await adminClient.clients.findOne({ id });
-      if (resourceId) {
-        const [resource, permissions] = await Promise.all([
-          adminClient.clients.getResource({
-            id,
-            resourceId,
-          }),
-          adminClient.clients.listPermissionsByResource({
-            id,
-            resourceId,
-          }),
-        ]);
+      const [client, resource, permissions] = await Promise.all([
+        adminClient.clients.findOne({ id }),
+        resourceId
+          ? adminClient.clients.getResource({ id, resourceId })
+          : Promise.resolve(undefined),
+        resourceId
+          ? adminClient.clients.listPermissionsByResource({ id, resourceId })
+          : Promise.resolve(undefined),
+      ]);
 
-        return { client, resource, permissions };
-      }
-      return { client };
+      return { client, resource, permissions };
     },
     ({ client, resource, permissions }) => {
       if (!client) {
