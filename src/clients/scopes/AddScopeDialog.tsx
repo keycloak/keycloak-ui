@@ -39,8 +39,16 @@ export type AddScopeDialogProps = {
   isClientScopesConditionType?: boolean;
 };
 
-type FilterType = "Name" | "Protocol";
-type ProtocolType = "All" | "SAML" | "OpenID Connect";
+enum FilterType {
+  Name = "name",
+  Protocol = "protocol",
+}
+
+enum ProtocolType {
+  All = "all",
+  SAML = "saml",
+  OpenIDConnect = "openid-connect",
+}
 
 export const AddScopeDialog = ({
   clientScopes,
@@ -55,7 +63,7 @@ export const AddScopeDialog = ({
   const [filterType, setFilterType] = useState<FilterType>("Name");
   const [protocolType, setProtocolType] = useState<ProtocolType>("All");
   const [key, setKey] = useState(0);
-  const refresh = () => setKey(new Date().getTime());
+  const refresh = () => setKey(key + 1);
 
   const [isFilterTypeDropdownOpen, setIsFilterTypeDropdownOpen] =
     useState(false);
@@ -120,9 +128,15 @@ export const AddScopeDialog = ({
   };
 
   const protocolTypeOptions = [
-    <SelectOption key={1} value={t("protocolTypes.saml")} />,
-    <SelectOption key={2} value={t("protocolTypes.openIdConnect")} />,
-    <SelectOption key={3} value={t("protocolTypes.all")} isPlaceholder />,
+    <SelectOption key={1} value={ProtocolType.SAML}>
+      {t("protocolTypes.saml")}
+    </SelectOption>,
+    <SelectOption key={2} value={ProtocolType.OpenIDConnect}>
+      {t("protocolTypes.openIdConnect")}
+    </SelectOption>,
+    <SelectOption key={3} value={ProtocolType.All} isPlaceholder>
+      {t("protocolTypes.all")}
+    </SelectOption>,
   ];
 
   return (
@@ -144,9 +158,7 @@ export const AddScopeDialog = ({
                 key="add"
                 variant={ButtonVariant.primary}
                 onClick={() => {
-                  const scopes = rows.map((row) => {
-                    return { scope: row };
-                  });
+                  const scopes = rows.map((scope) => ({ scope }));
                   onAdd(scopes);
                   toggleDialog();
                 }}
