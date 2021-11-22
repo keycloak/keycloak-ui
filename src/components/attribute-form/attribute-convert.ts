@@ -10,20 +10,12 @@ export const arrayToAttributes = (attributeArray?: KeyValueType[]) => {
   }, initValue);
 };
 
-export const attributesToArray = (attributes?: {
-  [key: string]: string[];
-}): KeyValueType[] => {
-  const initValue: KeyValueType[] = [];
-  const result = Object.entries(attributes || []).reduce(
-    (acc, [key, value]) =>
-      acc.concat(
-        value.map((v) => ({
-          key: key,
-          value: v,
-        }))
-      ),
-    initValue
+export const attributesToArray = (
+  attributes: Record<string, string[]> = {}
+): KeyValueType[] => {
+  const result = Object.entries(attributes).flatMap(([key, value]) =>
+    value.map<KeyValueType>((value) => ({ key, value }))
   );
-  result.push({ key: "", value: "" });
-  return result;
+
+  return result.concat({ key: "", value: "" });
 };
