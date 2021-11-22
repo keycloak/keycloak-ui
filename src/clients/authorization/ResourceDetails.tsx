@@ -1,11 +1,6 @@
 import React, { useState } from "react";
 import { Link, useHistory, useParams } from "react-router-dom";
-import {
-  Controller,
-  FormProvider,
-  useFieldArray,
-  useForm,
-} from "react-hook-form";
+import { Controller, FormProvider, useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import {
   ActionGroup,
@@ -42,10 +37,10 @@ import { toClient } from "../routes/Client";
 import { ScopePicker } from "./ScopePicker";
 import {
   arrayToAttributes,
-  AttributesForm,
   attributesToArray,
   KeyValueType,
-} from "../../components/attribute-form/AttributeForm";
+} from "../../components/attribute-form/attribute-convert";
+import { AttributeInput } from "../../components/attribute-input/AttributeInput";
 
 import "./resource-details.css";
 
@@ -75,10 +70,6 @@ export default function ResourceDetails() {
     mode: "onChange",
   });
   const { register, errors, control, setValue, handleSubmit } = form;
-  const { append, remove, fields } = useFieldArray({
-    control,
-    name: "attributes",
-  });
 
   const { id, resourceId, realm } = useParams<ResourceDetailsParams>();
   const history = useHistory();
@@ -88,9 +79,7 @@ export default function ResourceDetails() {
       if (key === "uris") {
         setValue("uris", convertToMultiline(value));
       } else if (key === "attributes") {
-        const attributes = attributesToArray(value);
-        attributes.push({ key: "", value: "" });
-        setValue("attributes", attributes);
+        setValue("attributes", attributesToArray(value));
       } else {
         setValue(key, value);
       }
@@ -366,7 +355,7 @@ export default function ResourceDetails() {
               }
               fieldId="resourceAttribute"
             >
-              <AttributesForm form={form} array={{ fields, append, remove }} />
+              <AttributeInput name="attributes" />
             </FormGroup>
             <ActionGroup>
               <div className="pf-u-mt-md">
