@@ -115,14 +115,23 @@ export const UserCredentials = ({ user }: UserCredentialsProps) => {
         },
       });
       refresh();
-      addAlert(t("savePasswordSuccess"), AlertVariant.success);
+      addAlert(
+        isResetPassword
+          ? t("resetCredentialsSuccess")
+          : t("savePasswordSuccess"),
+        AlertVariant.success
+      );
       setIsResetPassword(false);
       setOpenSaveConfirm(false);
     } catch (error) {
       addError(
         !passwordsMatch
-          ? t("users:savePasswordNotMatchError")
-          : t("users:savePasswordError"),
+          ? isResetPassword
+            ? t("resetPasswordNotMatchError")
+            : t("savePasswordNotMatchError")
+          : isResetPassword
+          ? t("resetPasswordError")
+          : t("savePasswordError"),
         error
       );
     }

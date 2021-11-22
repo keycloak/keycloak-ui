@@ -149,5 +149,10 @@ export default {
     resetPasswordConfirmText:
       "Are you sure you want to reset the password for the user",
     resetPassword: "Reset password",
+    resetCredentialsSuccess: "The password has been reset successfully.",
+    resetCredentialsError: "Error resetting users credentials: {{error}}",
+    resetPasswordNotMatchError:
+      "Error resetting password: Password and confirmation does not match.",
+    resetPasswordError: "Error resetting password: {{error}}",
   },
 };
