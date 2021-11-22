@@ -102,8 +102,8 @@ export const PoliciesTab = () => {
         control={form.control}
         render={({ onChange, value }) => (
           <Switch
-            label={t("common:on")}
-            labelOff={t("common:off")}
+            label={t("common:enabled")}
+            labelOff={t("common:disabled")}
             isChecked={value}
             onChange={(value) => {
               onChange(value);
