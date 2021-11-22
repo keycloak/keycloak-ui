@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { FunctionComponent, useState } from "react";
 import {
   AlertVariant,
   Button,
@@ -17,7 +17,11 @@ import {
   ValidatedOptions,
 } from "@patternfly/react-core";
 import {
+  Table,
+  TableBody,
   TableComposable,
+  TableHeader,
+  TableVariant,
   Tbody,
   Td,
   Th,
@@ -53,6 +57,29 @@ const defaultValues: CredentialsForm = {
   temporaryPassword: true,
 };
 
+type DisplayDialogProps = {
+  titleKey: string;
+  onClose: () => void;
+};
+
+const DisplayDialog: FunctionComponent<DisplayDialogProps> = ({
+  titleKey,
+  onClose,
+  children,
+}) => {
+  const { t } = useTranslation("users");
+  return (
+    <Modal
+      variant={ModalVariant.medium}
+      title={t(titleKey)}
+      isOpen={true}
+      onClose={onClose}
+    >
+      {children}
+    </Modal>
+  );
+};
+
 export const UserCredentials = ({ user }: UserCredentialsProps) => {
   const { t } = useTranslation("users");
   const { addAlert, addError } = useAlerts();
@@ -71,6 +98,7 @@ export const UserCredentials = ({ user }: UserCredentialsProps) => {
   const [selectedCredential, setSelectedCredential] =
     useState<CredentialRepresentation>({});
   const [isResetPassword, setIsResetPassword] = useState(false);
+  const [showData, setShowData] = useState(false);
 
   useFetch(
     () => adminClient.users.getCredentials({ id: user.id! }),
@@ -329,6 +357,26 @@ export const UserCredentials = ({ user }: UserCredentialsProps) => {
         </Modal>
       )}
       <DeleteConfirm />
+      {showData && Object.keys(selectedCredential).length !== 0 && (
+        <DisplayDialog
+          titleKey="auth"
+          onClose={() => {
+            setShowData(false);
+            setSelectedCredential({});
+          }}
+        >
+          <Table
+            aria-label="password-data"
+            data-testid="password-data-dialog"
+            variant={TableVariant.compact}
+            cells={[t("showPasswordDataName"), t("showPasswordDataValue")]}
+            // rows={rows}
+          >
+            <TableHeader />
+            <TableBody />
+          </Table>
+        </DisplayDialog>
+      )}
       {userCredentials.length !== 0 ? (
         <TableComposable aria-label="Simple table" variant={"compact"}>
           <Thead>
@@ -360,7 +408,14 @@ export const UserCredentials = ({ user }: UserCredentialsProps) => {
                   </Td>
                   <Td>My Password</Td>
                   <Td>
-                    <Button className="kc-showData-btn" variant="link">
+                    <Button
+                      className="kc-showData-btn"
+                      variant="link"
+                      onClick={() => {
+                        setShowData(true);
+                        setSelectedCredential(credential);
+                      }}
+                    >
                       Show data
                     </Button>
                   </Td>

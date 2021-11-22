@@ -154,5 +154,7 @@ export default {
     resetPasswordNotMatchError:
       "Error resetting password: Password and confirmation does not match.",
     resetPasswordError: "Error resetting password: {{error}}",
+    showPasswordDataName: "Name",
+    showPasswordDataValue: "Value",
   },
 };
