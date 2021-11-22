@@ -147,7 +147,7 @@ export const FileUploadForm = ({
               language={language}
               height="128px"
               onChange={(value, event) =>
-                handleChange(value!, fileUpload.filename, event as any)
+                handleChange(value, fileUpload.filename, event as any)
               }
             />
           </FileUpload>
