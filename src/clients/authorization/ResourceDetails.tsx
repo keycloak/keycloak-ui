@@ -74,8 +74,8 @@ export default function ResourceDetails() {
   const { id, resourceId, realm } = useParams<ResourceDetailsParams>();
   const history = useHistory();
 
-  const setupForm = (resource?: ResourceRepresentation) => {
-    Object.entries(resource || {}).map(([key, value]) => {
+  const setupForm = (resource: ResourceRepresentation = {}) => {
+    Object.entries(resource).forEach(([key, value]) => {
       if (key === "uris") {
         setValue("uris", convertToMultiline(value));
       } else if (key === "attributes") {
