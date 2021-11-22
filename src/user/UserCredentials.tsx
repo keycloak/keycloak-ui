@@ -70,6 +70,7 @@ export const UserCredentials = ({ user }: UserCredentialsProps) => {
   >([]);
   const [selectedCredential, setSelectedCredential] =
     useState<CredentialRepresentation>({});
+  const [isResetPassword, setIsResetPassword] = useState(false);
 
   useFetch(
     () => adminClient.users.getCredentials({ id: user.id! }),
@@ -115,6 +116,7 @@ export const UserCredentials = ({ user }: UserCredentialsProps) => {
       });
       refresh();
       addAlert(t("savePasswordSuccess"), AlertVariant.success);
+      setIsResetPassword(false);
       setOpenSaveConfirm(false);
     } catch (error) {
       addError(
@@ -124,6 +126,11 @@ export const UserCredentials = ({ user }: UserCredentialsProps) => {
         error
       );
     }
+  };
+
+  const resetPassword = () => {
+    setIsResetPassword(true);
+    setOpen(true);
   };
 
   const [toggleDeleteDialog, DeleteConfirm] = useConfirmDialog({
@@ -151,9 +158,16 @@ export const UserCredentials = ({ user }: UserCredentialsProps) => {
         <Modal
           variant={ModalVariant.small}
           width={600}
-          title={`${t("setPasswordFor")} ${user.username}`}
+          title={
+            isResetPassword
+              ? `${t("resetPasswordFor")} ${user.username}`
+              : `${t("setPasswordFor")} ${user.username}`
+          }
           isOpen
-          onClose={() => setOpen(false)}
+          onClose={() => {
+            setIsResetPassword(false);
+            setOpen(false);
+          }}
           actions={[
             <Button
               data-testid="ok-button"
@@ -175,6 +189,7 @@ export const UserCredentials = ({ user }: UserCredentialsProps) => {
               variant="link"
               form="userCredentials-form"
               onClick={() => {
+                setIsResetPassword(false);
                 setOpen(false);
               }}
             >
@@ -185,7 +200,7 @@ export const UserCredentials = ({ user }: UserCredentialsProps) => {
           <Form id="userCredentials-form" isHorizontal>
             <FormGroup
               name="password"
-              label={t("common:password")}
+              label={t("password")}
               fieldId="password"
               helperTextInvalid={t("common:required")}
               validated={
@@ -205,7 +220,11 @@ export const UserCredentials = ({ user }: UserCredentialsProps) => {
             </FormGroup>
             <FormGroup
               name="passwordConfirmation"
-              label={t("common:passwordConfirmation")}
+              label={
+                isResetPassword
+                  ? t("resetPasswordConfirmation")
+                  : t("passwordConfirmation")
+              }
               fieldId="passwordConfirmation"
               helperTextInvalid={t("common:required")}
               validated={
@@ -257,7 +276,11 @@ export const UserCredentials = ({ user }: UserCredentialsProps) => {
         <Modal
           variant={ModalVariant.small}
           width={600}
-          title={t("setPasswordConfirm")}
+          title={
+            isResetPassword
+              ? t("resetPasswordConfirm")
+              : t("setPasswordConfirm")
+          }
           isOpen
           onClose={() => setOpenSaveConfirm(false)}
           actions={[
@@ -270,7 +293,7 @@ export const UserCredentials = ({ user }: UserCredentialsProps) => {
                 handleSubmit(saveUserPassword)();
               }}
             >
-              {t("savePassword")}
+              {isResetPassword ? t("resetPassword") : t("savePassword")}
             </Button>,
             <Button
               data-testid="cancelSetPassword-button"
@@ -286,9 +309,13 @@ export const UserCredentials = ({ user }: UserCredentialsProps) => {
           ]}
         >
           <Text component={TextVariants.h3}>
-            {`${t("setPasswordConfirmText")} ${user.username} ${t(
-              "questionMark"
-            )}`}
+            {isResetPassword
+              ? `${t("resetPasswordConfirmText")} ${user.username} ${t(
+                  "questionMark"
+                )}`
+              : `${t("setPasswordConfirmText")} ${user.username} ${t(
+                  "questionMark"
+                )}`}
           </Text>
         </Modal>
       )}
@@ -329,7 +356,9 @@ export const UserCredentials = ({ user }: UserCredentialsProps) => {
                     </Button>
                   </Td>
                   <Td>
-                    <Button variant="secondary">Reset password</Button>
+                    <Button variant="secondary" onClick={resetPassword}>
+                      Reset password
+                    </Button>
                   </Td>
                   <Td>
                     <Dropdown

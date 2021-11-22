@@ -134,6 +134,9 @@ export default {
     setPasswordConfirm: "Set password?",
     setPasswordConfirmText:
       "Are you sure you want to set the password for the user",
+    password: "Password",
+    passwordConfirmation: "Password confirmation",
+    resetPasswordConfirmation: "New password confirmation",
     questionMark: "?",
     savePassword: "Save password",
     deleteCredentialsConfirmTitle: "Delete credentials?",
@@ -141,5 +144,10 @@ export default {
       "Are you sure you want to delete these users credentials?",
     deleteCredentialsSuccess: "The credentials has been deleted successfully.",
     deleteCredentialsError: "Error deleting users credentials: {{error}}",
+    resetPasswordFor: "Reset password for ",
+    resetPasswordConfirm: "Reset password?",
+    resetPasswordConfirmText:
+      "Are you sure you want to reset the password for the user",
+    resetPassword: "Reset password",
   },
 };
