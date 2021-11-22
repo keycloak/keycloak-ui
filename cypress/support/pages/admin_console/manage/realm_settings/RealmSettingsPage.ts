@@ -1013,12 +1013,6 @@ export default class RealmSettingsPage {
 
     this.addClientScopes();
 
-<<<<<<< HEAD
-    cy.get(this.roleSelect).click();
-    cy.get(this.roleSelect).contains("create-client").click();
-
-    cy.get(this.roleSelect).click();
-=======
     cy.findByTestId(this.addConditionSaveBtn).click();
     cy.get(this.alertMessage).should(
       "be.visible",
@@ -1052,7 +1046,6 @@ export default class RealmSettingsPage {
     cy.wait(200);
 
     this.addClientScopes();
->>>>>>> wip client roles select field
 
     cy.findByTestId(this.addConditionSaveBtn).click();
     cy.get(this.alertMessage).should(
