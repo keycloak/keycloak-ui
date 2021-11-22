@@ -69,7 +69,6 @@ export const AttributeInput = ({ name }: AttributeInputProps) => {
             <Td key="minus-button" id={`kc-minus-button-${rowIndex}`}>
               <Button
                 id={`minus-button-${rowIndex}`}
-                aria-label={`remove ${attribute.key} with value ${attribute.value} `}
                 variant="link"
                 className="kc-attributes__minus-icon"
                 onClick={() => remove(rowIndex)}

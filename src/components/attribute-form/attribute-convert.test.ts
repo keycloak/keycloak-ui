@@ -6,7 +6,7 @@ import {
 
 jest.mock("react");
 
-describe("useRequiredContext", () => {
+describe("Tests the convert functions for attribute input", () => {
   it("converts empty array into form value", () => {
     const given: KeyValueType[] = [];
 
@@ -18,7 +18,7 @@ describe("useRequiredContext", () => {
   });
 
   it("converts array into form value", () => {
-    const given: KeyValueType[] = [{ key: "theKey", value: "theValue" }];
+    const given = [{ key: "theKey", value: "theValue" }];
 
     //when
     const result = arrayToAttributes(given);
@@ -28,7 +28,7 @@ describe("useRequiredContext", () => {
   });
 
   it("convert only values", () => {
-    const given: KeyValueType[] = [
+    const given = [
       { key: "theKey", value: "theValue" },
       { key: "", value: "" },
     ];
@@ -53,9 +53,7 @@ describe("useRequiredContext", () => {
   });
 
   it("convert object to attributes", () => {
-    const given: {
-      [key: string]: string[];
-    } = { one: ["1"], two: ["2"] };
+    const given = { one: ["1"], two: ["2"] };
 
     //when
     const result = attributesToArray(given);
