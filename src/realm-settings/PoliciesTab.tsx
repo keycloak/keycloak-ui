@@ -45,8 +45,13 @@ export const PoliciesTab = () => {
   const [code, setCode] = useState<string>();
   const [tablePolicies, setTablePolicies] =
     useState<ClientPolicyRepresentation[]>();
-  const form = useForm({ mode: "onChange" });
   const refresh = () => setKey(key + 1);
+
+  type EnabledConfigPolicyForm = {
+    [index: string]: boolean;
+  };
+
+  const form = useForm<EnabledConfigPolicyForm>({ mode: "onChange" });
 
   useFetch(
     () => adminClient.clientPolicies.listPolicies(),
@@ -60,20 +65,16 @@ export const PoliciesTab = () => {
 
   const loader = async () => policies ?? [];
 
-  const saveStatus = async (updatedPolicy: ClientPolicyRepresentation) => {
+  const saveStatus = async () => {
     const switchValues = form.getValues();
 
     const updatedPolicies = policies?.map<ClientPolicyRepresentation>(
       (policy) => {
-        if (policy.name !== updatedPolicy.name) {
-          return policy;
-        }
-
-        const enabled = switchValues[updatedPolicy.name!];
+        const enabled = switchValues[policy.name!];
 
         return {
           ...policy,
-          enabled: enabled,
+          enabled,
         };
       }
     );
@@ -110,7 +111,7 @@ export const PoliciesTab = () => {
             isChecked={value}
             onChange={(value) => {
               onChange(value);
-              saveStatus(clientPolicy);
+              saveStatus();
             }}
           />
         )}
@@ -208,7 +209,7 @@ export const PoliciesTab = () => {
       <Divider />
       {!show ? (
         <KeycloakDataTable
-          key={policies.length}
+          key={key && policies.length}
           emptyState={
             <ListEmptyState
               message={t("realm-settings:noClientPolicies")}
