@@ -165,5 +165,6 @@ export default {
     type: "Type",
     userLabel: "User label",
     data: "Data",
+    passwordDataTitle: "Password data",
   },
 };

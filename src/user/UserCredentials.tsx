@@ -224,8 +224,8 @@ export const UserCredentials = ({ user }: UserCredentialsProps) => {
           }}
           actions={[
             <Button
-              data-testid="ok-button"
-              key="confirm"
+              data-testid="okBtn"
+              key={`confirmBtn-${user.id}`}
               variant="primary"
               form="userCredentials-form"
               onClick={() => {
@@ -238,8 +238,8 @@ export const UserCredentials = ({ user }: UserCredentialsProps) => {
               {t("save")}
             </Button>,
             <Button
-              data-testid="cancel-button"
-              key="cancel"
+              data-testid="cancelBtn"
+              key={`cancelBtn-${user.id}`}
               variant="link"
               form="userCredentials-form"
               onClick={() => {
@@ -339,8 +339,8 @@ export const UserCredentials = ({ user }: UserCredentialsProps) => {
           onClose={() => setOpenSaveConfirm(false)}
           actions={[
             <Button
-              data-testid="setPassword-button"
-              key="confirmSave"
+              data-testid="setPasswordBtn"
+              key={`confirmSaveBtn-${user.id}`}
               variant="danger"
               form="userCredentials-form"
               onClick={() => {
@@ -350,8 +350,8 @@ export const UserCredentials = ({ user }: UserCredentialsProps) => {
               {isResetPassword ? t("resetPassword") : t("savePassword")}
             </Button>,
             <Button
-              data-testid="cancelSetPassword-button"
-              key="cancelConfirm"
+              data-testid="cancelSetPasswordBtn"
+              key={`cancelConfirmBtn-${user.id}`}
               variant="link"
               form="userCredentials-form"
               onClick={() => {
@@ -376,7 +376,7 @@ export const UserCredentials = ({ user }: UserCredentialsProps) => {
       <DeleteConfirm />
       {showData && Object.keys(selectedCredential).length !== 0 && (
         <DisplayDialog
-          titleKey="Password data"
+          titleKey={t("passwordDataTitle")}
           onClose={() => {
             setShowData(false);
             setSelectedCredential({});
@@ -395,7 +395,7 @@ export const UserCredentials = ({ user }: UserCredentialsProps) => {
         </DisplayDialog>
       )}
       {userCredentials.length !== 0 ? (
-        <TableComposable aria-label="Simple table" variant={"compact"}>
+        <TableComposable aria-label="password-data-table" variant={"compact"}>
           <Thead>
             <Tr>
               <Th>
@@ -432,6 +432,7 @@ export const UserCredentials = ({ user }: UserCredentialsProps) => {
                     <Button
                       className="kc-showData-btn"
                       variant="link"
+                      data-testid="showDataBtn"
                       onClick={() => {
                         setShowData(true);
                         setSelectedCredential(credential);
@@ -441,7 +442,11 @@ export const UserCredentials = ({ user }: UserCredentialsProps) => {
                     </Button>
                   </Td>
                   <Td>
-                    <Button variant="secondary" onClick={resetPassword}>
+                    <Button
+                      variant="secondary"
+                      data-testid="resetPasswordBtn"
+                      onClick={resetPassword}
+                    >
                       {t("resetPasswordBtn")}
                     </Button>
                   </Td>
@@ -456,7 +461,8 @@ export const UserCredentials = ({ user }: UserCredentialsProps) => {
                       onSelect={() => setSelectedCredential(credential)}
                       dropdownItems={[
                         <DropdownItem
-                          key="action"
+                          key={`delete-dropdown-item-${credential.id}`}
+                          data-testid="deleteDropdownItem"
                           component="button"
                           onClick={() => {
                             toggleDeleteDialog();
