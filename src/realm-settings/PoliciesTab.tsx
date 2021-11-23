@@ -30,6 +30,7 @@ import { toAddClientPolicy } from "./routes/AddClientPolicy";
 import { toEditClientPolicy } from "./routes/EditClientPolicy";
 import { KeycloakSpinner } from "../components/keycloak-spinner/KeycloakSpinner";
 import { Controller, useForm } from "react-hook-form";
+import { toClientPolicies } from "./routes/ClientPolicies";
 export const PoliciesTab = () => {
   const { t } = useTranslation("realm-settings");
   const adminClient = useAdminClient();
@@ -81,7 +82,7 @@ export const PoliciesTab = () => {
       await adminClient.clientPolicies.updatePolicy({
         policies: updatedPolicies,
       });
-      history.push(`/${realm}/realm-settings/clientPolicies`);
+      history.push(toClientPolicies({ realm }));
       addAlert(
         t("realm-settings:updateClientPolicySuccess"),
         AlertVariant.success
