@@ -62,18 +62,20 @@ export const PoliciesTab = () => {
   const saveStatus = async (updatedPolicy: ClientPolicyRepresentation) => {
     const switchValues = form.getValues();
 
-    const updatedPolicies = policies?.map((policy) => {
-      if (policy.name !== updatedPolicy.name) {
-        return policy;
+    const updatedPolicies = policies?.map<ClientPolicyRepresentation>(
+      (policy) => {
+        if (policy.name !== updatedPolicy.name) {
+          return policy;
+        }
+
+        const enabled = switchValues[updatedPolicy.name!];
+
+        return {
+          ...policy,
+          enabled: enabled,
+        };
       }
-
-      const enabled = switchValues[updatedPolicy.name!];
-
-      return {
-        ...policy,
-        enabled: enabled,
-      };
-    }) as ClientPolicyRepresentation[];
+    );
 
     try {
       await adminClient.clientPolicies.updatePolicy({
