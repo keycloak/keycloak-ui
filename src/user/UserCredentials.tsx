@@ -191,17 +191,19 @@ export const UserCredentials = ({ user }: UserCredentialsProps) => {
   let rows: string[][] = [];
   if (Object.keys(selectedCredential).length !== 0) {
     const passwordData = JSON.parse(selectedCredential.credentialData!);
-    rows = Object.keys(passwordData).reduce((acc, key) => {
-      let val;
-      if (typeof passwordData[key] === "object") {
-        val = JSON.stringify(passwordData[key]);
-      } else {
-        val = passwordData[key] || "{}";
-      }
+    rows = Object.keys(passwordData)
+      .sort()
+      .reduce((acc, key) => {
+        let val;
+        if (typeof passwordData[key] === "object") {
+          val = JSON.stringify(passwordData[key]);
+        } else {
+          val = passwordData[key] || "{}";
+        }
 
-      acc.push([key, val]);
-      return acc;
-    }, [] as string[][]);
+        acc.push([key, val]);
+        return acc;
+      }, [] as string[][]);
   }
 
   return (
