@@ -62,10 +62,8 @@ export const AddScopeDialog = ({
   const { t } = useTranslation("clients");
   const [addToggle, setAddToggle] = useState(false);
   const [rows, setRows] = useState<ClientScopeRepresentation[]>([]);
-  const [filterType, setFilterType] = useState<FilterType>(FilterType.Name);
-  const [protocolType, setProtocolType] = useState<ProtocolType>(
-    ProtocolType.All
-  );
+  const [filterType, setFilterType] = useState(FilterType.Name);
+  const [protocolType, setProtocolType] = useState(ProtocolType.All);
   const [key, setKey] = useState(0);
   const refresh = () => setKey(key + 1);
 
@@ -79,16 +77,14 @@ export const AddScopeDialog = ({
     refresh();
   }, [filterType, protocolType]);
 
-  const loader = () => {
-    if (protocolType === "OpenID Connect") {
-      return Promise.resolve(
-        clientScopes.filter((item) => item.protocol === "openid-connect")
-      );
-    } else if (protocolType === "SAML") {
-      return Promise.resolve(
-        clientScopes.filter((item) => item.protocol === "saml")
-      );
-    } else return Promise.resolve(clientScopes);
+  const loader = async () => {
+    if (protocolType === ProtocolType.OpenIDConnect) {
+      return clientScopes.filter((item) => item.protocol === "openid-connect");
+    } else if (protocolType === ProtocolType.SAML) {
+      return clientScopes.filter((item) => item.protocol === "saml");
+    }
+
+    return clientScopes;
   };
 
   const action = (scope: ClientScopeType) => {
@@ -109,25 +105,24 @@ export const AddScopeDialog = ({
   };
 
   const onFilterTypeDropdownSelect = (filterType: string) => {
-    if (filterType === "Name") {
+    if (filterType === FilterType.Name) {
       setFilterType(FilterType.Protocol);
-    }
-    if (filterType === "Protocol") {
+    } else if (filterType === FilterType.Protocol) {
       setFilterType(FilterType.Name);
     }
+
     setIsFilterTypeDropdownOpen(!isFilterTypeDropdownOpen);
   };
 
   const onProtocolTypeDropdownSelect = (protocolType: string) => {
-    if (protocolType === "SAML") {
+    if (protocolType === ProtocolType.SAML) {
       setProtocolType(ProtocolType.SAML);
-    }
-    if (protocolType === "OpenID Connect") {
+    } else if (protocolType === ProtocolType.OpenIDConnect) {
       setProtocolType(ProtocolType.OpenIDConnect);
-    }
-    if (protocolType === "All") {
+    } else if (protocolType === ProtocolType.All) {
       setProtocolType(ProtocolType.All);
     }
+
     setIsProtocolTypeDropdownOpen(!isProtocolTypeDropdownOpen);
   };
 
@@ -149,7 +144,7 @@ export const AddScopeDialog = ({
       title={
         isClientScopesConditionType
           ? t("addClientScope")
-          : t("addClientScopesTo", { clientName: clientName })
+          : t("addClientScopesTo", { clientName })
       }
       isOpen={open}
       onClose={toggleDialog}
@@ -219,7 +214,7 @@ export const AddScopeDialog = ({
         loader={loader}
         ariaLabelKey="client-scopes:chooseAMapperType"
         searchPlaceholderKey={
-          filterType === "Name" ? "client-scopes:searchFor" : undefined
+          filterType === FilterType.Name ? "client-scopes:searchFor" : undefined
         }
         searchTypeComponent={
           <Dropdown
@@ -243,7 +238,9 @@ export const AddScopeDialog = ({
                 data-testid="filter-type-dropdown-item"
                 key="filter-type"
               >
-                {filterType === "Name" ? t("protocol") : t("common:name")}
+                {filterType === FilterType.Name
+                  ? t("protocol")
+                  : t("common:name")}
               </DropdownItem>,
             ]}
           />
