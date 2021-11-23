@@ -33,7 +33,7 @@ export const LdapMapperRoleGroup = ({
   const [isRetrieveStratDropdownOpen, setIsRetrieveStratDropdownOpen] =
     useState(false);
   const [isClientIdDropdownOpen, setIsClientIdDropdownOpen] = useState(false);
-  const [vendor, setVendor] = useState<string | undefined>();
+  const [vendorType, setVendorType] = useState<string | undefined>();
   const [clients, setClients] = useState<ClientRepresentation[]>([]);
   const { id, mapperId } = useParams<UserFederationLdapMapperParams>();
 
@@ -62,7 +62,8 @@ export const LdapMapperRoleGroup = ({
     },
     (fetchedComponent) => {
       if (fetchedComponent) {
-        setVendor(fetchedComponent.config?.vendor[0]);
+        const vendor = fetchedComponent.config?.vendor[0];
+        setVendorType(vendor);
         if (mapperId === "new" && vendor === "ad") {
           form.setValue(
             isRole
@@ -425,7 +426,7 @@ export const LdapMapperRoleGroup = ({
                   GET_ROLES_FROM_USER_MEMBEROF_ATTRIBUTE
                 </SelectOption>
                 <SelectOption
-                  hidden={vendor !== "ad"}
+                  hidden={vendorType !== "ad"}
                   key={2}
                   value="LOAD_ROLES_BY_MEMBER_ATTRIBUTE_RECURSIVELY"
                 >
@@ -475,7 +476,7 @@ export const LdapMapperRoleGroup = ({
                   GET_GROUPS_FROM_USER_MEMBEROF_ATTRIBUTE
                 </SelectOption>
                 <SelectOption
-                  hidden={vendor !== "ad"}
+                  hidden={vendorType !== "ad"}
                   key={2}
                   value="LOAD_GROUPS_BY_MEMBER_ATTRIBUTE_RECURSIVELY"
                 >
