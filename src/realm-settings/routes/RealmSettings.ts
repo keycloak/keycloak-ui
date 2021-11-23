@@ -13,7 +13,9 @@ export type RealmSettingsTab =
   | "securityDefences"
   | "sessions"
   | "tokens"
-  | "clientPolicies";
+  | "clientPolicies"
+  | "userProfile"
+  | "userRegistration";
 
 export type RealmSettingsParams = {
   realm: string;

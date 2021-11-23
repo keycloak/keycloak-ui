@@ -5,7 +5,6 @@ import {
   ButtonVariant,
   DropdownItem,
   PageSection,
-  Spinner,
   Tab,
   TabTitleText,
 } from "@patternfly/react-core";
@@ -22,6 +21,7 @@ import {
   arrayToAttributes,
   AttributeForm,
 } from "../components/attribute-form/AttributeForm";
+import { KeycloakSpinner } from "../components/keycloak-spinner/KeycloakSpinner";
 import { ViewHeader } from "../components/view-header/ViewHeader";
 import { useConfirmDialog } from "../components/confirm-dialog/ConfirmDialog";
 import { RealmRoleForm } from "./RealmRoleForm";
@@ -31,6 +31,12 @@ import { KeycloakTabs } from "../components/keycloak-tabs/KeycloakTabs";
 import { AssociatedRolesTab } from "./AssociatedRolesTab";
 import { UsersInRoleTab } from "./UsersInRoleTab";
 import type RealmRepresentation from "@keycloak/keycloak-admin-client/lib/defs/realmRepresentation";
+import { toRealmRole } from "./routes/RealmRole";
+import {
+  ClientRoleParams,
+  ClientRoleRoute,
+  toClientRole,
+} from "./routes/ClientRole";
 
 export default function RealmRoleTabs() {
   const { t } = useTranslation("roles");
@@ -198,53 +204,42 @@ export default function RealmRoleTabs() {
     },
   });
 
-  const dropdownItems =
-    url.includes("AssociatedRoles") && !realm?.defaultRole
-      ? [
-          <DropdownItem
-            key="delete-all-associated"
-            component="button"
-            onClick={() => toggleDeleteAllAssociatedRolesDialog()}
-          >
-            {t("roles:removeAllAssociatedRoles")}
-          </DropdownItem>,
-          <DropdownItem
-            key="delete-role"
-            component="button"
-            onClick={() => {
-              toggleDeleteDialog();
-            }}
-          >
-            {t("deleteRole")}
-          </DropdownItem>,
-        ]
-      : id && realm?.defaultRole && url.includes("AssociatedRoles")
-      ? [
-          <DropdownItem
-            key="delete-all-associated"
-            component="button"
-            onClick={() => toggleDeleteAllAssociatedRolesDialog()}
-          >
-            {t("roles:removeAllAssociatedRoles")}
-          </DropdownItem>,
-        ]
-      : [
-          <DropdownItem
-            key="toggle-modal"
-            data-testid="add-roles"
-            component="button"
-            onClick={() => toggleModal()}
-          >
-            {t("addAssociatedRolesText")}
-          </DropdownItem>,
-          <DropdownItem
-            key="delete-role"
-            component="button"
-            onClick={() => toggleDeleteDialog()}
-          >
-            {t("deleteRole")}
-          </DropdownItem>,
-        ];
+  const dropdownItems = url.includes("associated-roles")
+    ? [
+        <DropdownItem
+          key="delete-all-associated"
+          component="button"
+          onClick={() => toggleDeleteAllAssociatedRolesDialog()}
+        >
+          {t("roles:removeAllAssociatedRoles")}
+        </DropdownItem>,
+        <DropdownItem
+          key="delete-role"
+          component="button"
+          onClick={() => {
+            toggleDeleteDialog();
+          }}
+        >
+          {t("deleteRole")}
+        </DropdownItem>,
+      ]
+    : [
+        <DropdownItem
+          key="toggle-modal"
+          data-testid="add-roles"
+          component="button"
+          onClick={() => toggleModal()}
+        >
+          {t("addAssociatedRolesText")}
+        </DropdownItem>,
+        <DropdownItem
+          key="delete-role"
+          component="button"
+          onClick={() => toggleDeleteDialog()}
+        >
+          {t("deleteRole")}
+        </DropdownItem>,
+      ];
 
   const [
     toggleDeleteAllAssociatedRolesDialog,
@@ -278,21 +273,67 @@ export default function RealmRoleTabs() {
 
   const toggleModal = () => {
     setOpen(!open);
-    refresh();
   };
 
-  const isDefaultRole = (name: string) =>
-    (realm?.defaultRole! as unknown as RoleRepresentation).name === name;
+  const clientRoleRouteMatch = useRouteMatch<ClientRoleParams>(
+    ClientRoleRoute.path
+  );
 
-  if (!realm || !role) {
-    return <Spinner />;
+  const toAssociatedRoles = () => {
+    const to = clientRoleRouteMatch
+      ? toClientRole({
+          ...clientRoleRouteMatch.params,
+          tab: "associated-roles",
+        })
+      : toRealmRole({
+          realm: realm?.realm!,
+          id,
+          tab: "associated-roles",
+        });
+    history.push(to);
+  };
+
+  const addComposites = async (composites: RoleRepresentation[]) => {
+    try {
+      await adminClient.roles.createComposite(
+        { roleId: role?.id!, realm: realm!.realm },
+        composites
+      );
+      refresh();
+      toAssociatedRoles();
+      addAlert(t("addAssociatedRolesSuccess"), AlertVariant.success);
+    } catch (error) {
+      addError("roles:addAssociatedRolesError", error);
+    }
+  };
+
+  const isDefaultRole = (name: string) => realm?.defaultRole!.name === name;
+
+  if (!realm) {
+    return <KeycloakSpinner />;
+  }
+  if (!role) {
+    return (
+      <RealmRoleForm
+        reset={() => reset(role)}
+        form={form}
+        save={save}
+        editMode={false}
+      />
+    );
   }
 
   return (
     <>
       <DeleteConfirm />
       <DeleteAllAssociatedRolesConfirm />
-      {open && <AssociatedRolesModal toggleDialog={toggleModal} />}
+      {open && (
+        <AssociatedRolesModal
+          id={id}
+          toggleDialog={toggleModal}
+          onConfirm={addComposites}
+        />
+      )}
       <ViewHeader
         titleKey={role.name || t("createRole")}
         badges={[
@@ -323,7 +364,7 @@ export default function RealmRoleTabs() {
             </Tab>
             {role.composite && (
               <Tab
-                eventKey="AssociatedRoles"
+                eventKey="associated-roles"
                 title={<TabTitleText>{t("associatedRolesText")}</TabTitleText>}
               >
                 <AssociatedRolesTab parentRole={role} refresh={refresh} />
@@ -352,14 +393,6 @@ export default function RealmRoleTabs() {
               </Tab>
             )}
           </KeycloakTabs>
-        )}
-        {!id && (
-          <RealmRoleForm
-            reset={() => reset(role)}
-            form={form}
-            save={save}
-            editMode={false}
-          />
         )}
       </PageSection>
     </>

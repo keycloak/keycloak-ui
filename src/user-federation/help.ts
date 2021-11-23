@@ -155,11 +155,11 @@ export default {
       "Activate this if the certificate is DER formatted in LDAP and not PEM formatted.",
 
     ldapFullNameAttributeHelp:
-      "Name of LDAP attribute, which contains fullName of user. Usually it will be 'cn',",
-    fullNameLdapMapperReadOnlyHelp:
-      "For Read-only, data is imported from LDAP to Keycloak DB, but it's not saved back to LDAP when user is updated in Keycloak.",
-    fullNameLdapMapperWriteOnlyHelp:
-      "For Write-only, is data propagated to LDAP when user is created or updated in Keycloak. But this mapper is not used to propagate data from LDAP back into Keycloak. This setting is useful if you configured separate firstName and lastName attribute mappers and you want to use those to read attribute from LDAP into Keycloak",
+      "Name of the LDAP attribute, which contains the fullName of the user. Usually it will be 'cn'.",
+    fullNameLdapReadOnlyHelp:
+      "For Read-only, data is imported from LDAP to Keycloak DB, but it's not saved back to LDAP when the user is updated in Keycloak.",
+    fullNameLdapWriteOnlyHelp:
+      "For Write-only, data is propagated to LDAP when a user is created or updated in Keycloak. But this mapper is not used to propagate data from LDAP back into Keycloak. This setting is useful if you configured separate firstName and lastName attribute mappers and you want to use those to read the attribute from LDAP into Keycloak.",
 
     ldapGroupsDnHelp:
       "LDAP DN where groups of this tree are saved. For example 'ou=groups,dc=example,dc=org'",
@@ -211,10 +211,10 @@ export default {
       "Value of the model attribute to be added when importing user from LDAP",
 
     roleHelp:
-      "Role to grant to user.  Click 'Select Role' button to browse roles, or just type it in the textbox.  To reference an application role the syntax is appname.approle, i.e. myapp.myrole.",
+      "Role to grant to user. Click 'Select Role' button to browse roles, or just type it in the textbox. To reference an application role the syntax is appname.approle, i.e. myapp.myrole.",
 
     groupHelp:
-      "Users imported from LDAP will be automatically added into this configured group.",
+      "Group to add the user in. Fill the full path of the group including path. For example: '/root-group/child-group'.",
 
     ldapAttributeNameHelp:
       "Name of the LDAP attribute, which will be added to the new user during registration",

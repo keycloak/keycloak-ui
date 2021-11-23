@@ -44,7 +44,7 @@ import { groupBy } from "lodash";
 export type IdPMapperRepresentationWithAttributes =
   IdentityProviderMapperRepresentation & AttributeForm;
 
-type Role = RoleRepresentation & {
+export type Role = RoleRepresentation & {
   clientId?: string;
 };
 
@@ -264,6 +264,7 @@ export default function AddMapper() {
       />
       {rolesModalOpen && (
         <AssociatedRolesModal
+          id={id}
           onConfirm={(role) => setSelectedRole(role)}
           omitComposites
           isRadio

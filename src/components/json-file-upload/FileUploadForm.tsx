@@ -49,14 +49,11 @@ export const FileUploadForm = ({
   };
   const [fileUpload, setFileUpload] = useState<FileUploadType>(defaultUpload);
   const removeDialog = () => setFileUpload({ ...fileUpload, modal: false });
-  const handleChange = (
-    value: string | File,
-    filename: string,
-    event:
-      | React.DragEvent<HTMLElement>
-      | React.ChangeEvent<HTMLTextAreaElement>
-      | React.MouseEvent<HTMLButtonElement, MouseEvent>
-  ): void => {
+  const handleChange: FileUploadProps["onChange"] = (
+    value,
+    filename,
+    event
+  ) => {
     if (
       event.nativeEvent instanceof MouseEvent &&
       !(event.nativeEvent instanceof DragEvent)
@@ -69,7 +66,9 @@ export const FileUploadForm = ({
         filename,
       });
 
-      onChange(value.toString());
+      if (value) {
+        onChange(value.toString());
+      }
     }
   };
 
@@ -148,7 +147,7 @@ export const FileUploadForm = ({
               language={language}
               height="128px"
               onChange={(value, event) =>
-                handleChange(value ?? "", fileUpload.filename, event)
+                handleChange(value, fileUpload.filename, event as any)
               }
             />
           </FileUpload>

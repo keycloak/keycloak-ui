@@ -48,9 +48,11 @@ import { PartialExportDialog } from "./PartialExport";
 import { toRealmSettings } from "./routes/RealmSettings";
 import { LocalizationTab } from "./LocalizationTab";
 import { HelpItem } from "../components/help-enabler/HelpItem";
+import { UserRegistration } from "./UserRegistration";
 import { DEFAULT_LOCALE } from "../i18n";
 import { toDashboard } from "../dashboard/routes/Dashboard";
 import environment from "../environment";
+import { UserProfileTab } from "./UserProfileTab";
 
 type RealmSettingsHeaderProps = {
   onChange: (value: boolean) => void;
@@ -437,6 +439,23 @@ export const RealmSettingsTabs = ({
                   <PoliciesTab />
                 </Tab>
               </Tabs>
+            </Tab>
+            <Tab
+              eventKey="userProfile"
+              data-testid="rs-user-profile-tab"
+              title={
+                <TabTitleText>{t("realm-settings:userProfile")}</TabTitleText>
+              }
+            >
+              <UserProfileTab />
+            </Tab>
+            <Tab
+              eventKey="userRegistration"
+              title={<TabTitleText>{t("userRegistration")}</TabTitleText>}
+              data-testid="rs-userRegistration-tab"
+              aria-label={t("userRegistrationTab")}
+            >
+              <UserRegistration />
             </Tab>
           </KeycloakTabs>
         </FormProvider>
