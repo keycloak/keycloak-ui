@@ -1,4 +1,4 @@
-import React, { FunctionComponent, useState } from "react";
+import React, { FunctionComponent, useMemo, useState } from "react";
 import {
   AlertVariant,
   Button,
@@ -33,6 +33,7 @@ import { useTranslation } from "react-i18next";
 import { useAlerts } from "../components/alert/Alerts";
 import { ListEmptyState } from "../components/list-empty-state/ListEmptyState";
 import { useAdminClient, useFetch } from "../context/auth/AdminClient";
+import { useWhoAmI } from "../context/whoami/WhoAmI";
 import { Controller, useForm, useWatch } from "react-hook-form";
 import { PasswordInput } from "../components/password-input/PasswordInput";
 import { HelpItem } from "../components/help-enabler/HelpItem";
@@ -81,6 +82,7 @@ const DisplayDialog: FunctionComponent<DisplayDialogProps> = ({
 
 export const UserCredentials = ({ user }: UserCredentialsProps) => {
   const { t } = useTranslation("users");
+  const { whoAmI } = useWhoAmI();
   const { addAlert, addError } = useAlerts();
   const [key, setKey] = useState(0);
   const refresh = () => setKey(new Date().getTime());
@@ -188,23 +190,24 @@ export const UserCredentials = ({ user }: UserCredentialsProps) => {
     },
   });
 
-  let rows: string[][] = [];
-  if (Object.keys(selectedCredential).length !== 0) {
-    const passwordData = JSON.parse(selectedCredential.credentialData!);
-    rows = Object.keys(passwordData)
-      .sort()
-      .reduce((acc, key) => {
-        let val;
-        if (typeof passwordData[key] === "object") {
-          val = JSON.stringify(passwordData[key]);
-        } else {
-          val = passwordData[key] || "{}";
+  const rows = useMemo(() => {
+    if (!selectedCredential.credentialData) {
+      return [];
+    }
+
+    const credentialData = JSON.parse(selectedCredential.credentialData);
+    const locale = whoAmI.getLocale();
+
+    return Object.entries(credentialData)
+      .sort(([a], [b]) => a.localeCompare(b, locale))
+      .map<[string, string]>(([key, value]) => {
+        if (typeof value === "string") {
+          return [key, value];
         }
 
-        acc.push([key, val]);
-        return acc;
-      }, [] as string[][]);
-  }
+        return [key, JSON.stringify(value)];
+      });
+  }, [selectedCredential.credentialData]);
 
   return (
     <>
