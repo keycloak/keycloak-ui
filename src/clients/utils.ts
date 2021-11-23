@@ -11,10 +11,10 @@ export const isRealmClient = (client: ClientRepresentation) => !client.protocol;
  */
 export const getProtocolName = (t: TFunction<"clients">, protocol: string) => {
   switch (protocol) {
-    case "protocol.openIdConnect":
-      return t("clients:protocol:openIdConnect");
-    case "protocol.saml":
-      return t("clients:protocol:saml");
+    case "openid-connect":
+      return t("clients:protocolTypes:openIdConnect");
+    case "saml":
+      return t("clients:protocolTypes:saml");
   }
 
   return protocol;

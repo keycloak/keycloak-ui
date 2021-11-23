@@ -28,6 +28,7 @@ import {
 import { KeycloakDataTable } from "../../components/table-toolbar/KeycloakDataTable";
 
 import "./client-scopes.css";
+import { getProtocolName } from "../utils";
 
 export type AddScopeDialogProps = {
   clientScopes: ClientScopeRepresentation[];
@@ -247,7 +248,7 @@ export const AddScopeDialog = ({
         }
         key={key}
         toolbarItem={
-          filterType === "Protocol" && (
+          filterType === FilterType.Protocol && (
             <>
               <Dropdown
                 onSelect={() => {
@@ -297,7 +298,12 @@ export const AddScopeDialog = ({
           {
             name: "name",
           },
-          { name: "protocol", displayKey: "clients:protocol" },
+          {
+            name: "protocol",
+            displayKey: "clients:protocol",
+            cellRenderer: (client) =>
+              getProtocolName(t, client.protocol ?? "openid-connect"),
+          },
           {
             name: "description",
           },
