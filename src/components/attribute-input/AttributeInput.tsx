@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { useFieldArray, useFormContext } from "react-hook-form";
 import { Button, TextInput } from "@patternfly/react-core";
@@ -25,6 +25,12 @@ export const AttributeInput = ({ name }: AttributeInputProps) => {
     control: control,
     name,
   });
+
+  useEffect(() => {
+    if (!fields.length) {
+      append({ key: "", value: "" });
+    }
+  }, []);
 
   const watchLast = watch(`${name}[${fields.length - 1}].key`, "");
 

@@ -170,10 +170,6 @@ export default function AddMapper() {
           );
         }
 
-        if (mapper.config?.attribute) {
-          form.setValue("config.attributes", value.attribute);
-        }
-
         if (mapper.config?.attributes) {
           form.setValue("config.attributes", JSON.parse(value.attributes));
         }
