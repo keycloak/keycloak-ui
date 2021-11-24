@@ -209,7 +209,7 @@ export const PoliciesTab = () => {
       <Divider />
       {!show ? (
         <KeycloakDataTable
-          key={key && policies.length}
+          key={policies.length}
           emptyState={
             <ListEmptyState
               message={t("realm-settings:noClientPolicies")}
