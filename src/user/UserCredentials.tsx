@@ -85,7 +85,7 @@ export const UserCredentials = ({ user }: UserCredentialsProps) => {
   const { whoAmI } = useWhoAmI();
   const { addAlert, addError } = useAlerts();
   const [key, setKey] = useState(0);
-  const refresh = () => setKey(new Date().getTime());
+  const refresh = () => setKey(key + 1);
   const [open, setOpen] = useState(false);
   const [openSaveConfirm, setOpenSaveConfirm] = useState(false);
   const [kebabOpen, setKebabOpen] = useState(false);
@@ -109,12 +109,14 @@ export const UserCredentials = ({ user }: UserCredentialsProps) => {
     [key]
   );
 
-  const passwordWatcher = useWatch({
+  const passwordWatcher = useWatch<CredentialsForm["password"]>({
     control,
     name: "password",
   });
 
-  const passwordConfirmationWatcher = useWatch({
+  const passwordConfirmationWatcher = useWatch<
+    CredentialsForm["passwordConfirmation"]
+  >({
     control,
     name: "passwordConfirmation",
   });
@@ -131,38 +133,45 @@ export const UserCredentials = ({ user }: UserCredentialsProps) => {
   };
 
   const saveUserPassword = async () => {
-    const passwordsMatch =
-      credentials?.password === credentials?.passwordConfirmation;
+    if (!credentials) {
+      return;
+    }
 
-    try {
-      await adminClient.users.resetPassword({
-        id: user.id!,
-        credential: {
-          temporary: credentials?.temporaryPassword,
-          type: "password",
-          value: passwordsMatch ? credentials?.password : "",
-        },
-      });
-      refresh();
+    const passwordsMatch =
+      credentials.password === credentials.passwordConfirmation;
+
+    if (!passwordsMatch) {
       addAlert(
         isResetPassword
-          ? t("resetCredentialsSuccess")
-          : t("savePasswordSuccess"),
-        AlertVariant.success
+          ? t("resetPasswordNotMatchError")
+          : t("savePasswordNotMatchError"),
+        AlertVariant.danger
       );
-      setIsResetPassword(false);
-      setOpenSaveConfirm(false);
-    } catch (error) {
-      addError(
-        !passwordsMatch
-          ? isResetPassword
-            ? t("resetPasswordNotMatchError")
-            : t("savePasswordNotMatchError")
-          : isResetPassword
-          ? t("resetPasswordError")
-          : t("savePasswordError"),
-        error
-      );
+    } else {
+      try {
+        await adminClient.users.resetPassword({
+          id: user.id!,
+          credential: {
+            temporary: credentials.temporaryPassword,
+            type: "password",
+            value: credentials.password,
+          },
+        });
+        refresh();
+        addAlert(
+          isResetPassword
+            ? t("resetCredentialsSuccess")
+            : t("savePasswordSuccess"),
+          AlertVariant.success
+        );
+        setIsResetPassword(false);
+        setOpenSaveConfirm(false);
+      } catch (error) {
+        addError(
+          isResetPassword ? t("resetPasswordError") : t("savePasswordError"),
+          error
+        );
+      }
     }
   };
 
@@ -183,7 +192,7 @@ export const UserCredentials = ({ user }: UserCredentialsProps) => {
           credentialId: selectedCredential.id!,
         });
         addAlert(t("deleteCredentialsSuccess"), AlertVariant.success);
-        setKey(key + 1);
+        setKey((key) => key + 1);
       } catch (error) {
         addError(t("deleteCredentialsError"), error);
       }
