@@ -47,11 +47,7 @@ export const PoliciesTab = () => {
     useState<ClientPolicyRepresentation[]>();
   const refresh = () => setKey(key + 1);
 
-  type EnabledConfigPolicyForm = {
-    [index: string]: boolean;
-  };
-
-  const form = useForm<EnabledConfigPolicyForm>({ mode: "onChange" });
+  const form = useForm<Record<string, boolean>>({ mode: "onChange" });
 
   useFetch(
     () => adminClient.clientPolicies.listPolicies(),
