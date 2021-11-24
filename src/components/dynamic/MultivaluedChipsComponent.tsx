@@ -112,7 +112,6 @@ export const MultivaluedChipsComponent = ({
                   }}
                   onClose={() => {
                     setOpen(false);
-                    console.log(value);
                   }}
                   filterGroups={value}
                 />
