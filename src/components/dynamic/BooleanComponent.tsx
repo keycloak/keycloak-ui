@@ -27,7 +27,7 @@ export const BooleanComponent = ({
       <Controller
         name={`config.${name}`}
         data-testid={name}
-        defaultValue={defaultValue}
+        defaultValue={defaultValue || false}
         control={control}
         render={({ onChange, value }) => (
           <Switch

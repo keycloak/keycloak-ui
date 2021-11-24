@@ -11,14 +11,13 @@ import {
 } from "@patternfly/react-core";
 
 import { HelpItem } from "../../components/help-enabler/HelpItem";
-import _ from "lodash";
 import type IdentityProviderMapperRepresentation from "@keycloak/keycloak-admin-client/lib/defs/identityProviderMapperRepresentation";
 import type { IdentityProviderAddMapperParams } from "../routes/AddMapper";
 import { useParams } from "react-router-dom";
 import type { IdPMapperRepresentationWithAttributes } from "./AddMapper";
 
 type AddMapperFormProps = {
-  mapperTypes?: Record<string, IdentityProviderMapperRepresentation>;
+  mapperTypes: Record<string, IdentityProviderMapperRepresentation>;
   mapperType: string;
   id: string;
   updateMapperType: (mapperType: string) => void;
@@ -154,23 +153,13 @@ export const AddMapperForm = ({
               data-testid="idp-mapper-select"
               isDisabled={!!id}
               required
-              direction="down"
               onToggle={() => setMapperTypeOpen(!mapperTypeOpen)}
-              onSelect={(e, value) => {
-                const theMapper =
-                  mapperTypes &&
-                  Object.values(mapperTypes).find(
-                    (item) =>
-                      item.name?.toLowerCase() ===
-                      value.toString().toLowerCase()
-                  );
-
-                updateMapperType(_.camelCase(value.toString()));
-                onChange(theMapper?.id);
+              onSelect={(_, value) => {
+                updateMapperType(value.toString());
+                onChange(value.toString());
                 setMapperTypeOpen(false);
               }}
               selections={
-                mapperTypes &&
                 Object.values(mapperTypes).find(
                   (item) => item.id?.toLowerCase() === value
                 )?.name
@@ -179,17 +168,16 @@ export const AddMapperForm = ({
               aria-label={t("syncMode")}
               isOpen={mapperTypeOpen}
             >
-              {mapperTypes &&
-                Object.values(mapperTypes).map((option) => (
-                  <SelectOption
-                    selected={option === value}
-                    datatest-id={option.id}
-                    key={option.name}
-                    value={option.name?.toUpperCase()}
-                  >
-                    {t(`mapperTypes.${_.camelCase(option.name)}`)}
-                  </SelectOption>
-                ))}
+              {Object.values(mapperTypes).map((option) => (
+                <SelectOption
+                  selected={option === value}
+                  datatest-id={option.id}
+                  key={option.name}
+                  value={option.id}
+                >
+                  {option.name}
+                </SelectOption>
+              ))}
             </Select>
           )}
         />
