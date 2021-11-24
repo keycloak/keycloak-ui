@@ -169,7 +169,7 @@ export default {
     type: "The type of this resource. It can be used to group different resource instances with the same type.",
     uris: "Set of URIs which are protected by resource.",
     scopes: "The scopes associated with this resource.",
-    iconUri: "An URI pointing to an icon.",
+    iconUri: "A URI pointing to an icon.",
     ownerManagedAccess:
       "If enabled, the access to this resource can be managed by the resource owner.",
     resourceAttribute: "The attributes associated wth the resource.",

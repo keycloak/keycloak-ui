@@ -11,6 +11,11 @@ import {
 import { useAdminClient, useFetch } from "../../context/auth/AdminClient";
 import { HelpItem } from "../../components/help-enabler/HelpItem";
 
+type Scope = {
+  id: string;
+  name: string;
+};
+
 export const ScopePicker = ({ clientId }: { clientId: string }) => {
   const { t } = useTranslation("clients");
   const { control } = useFormContext();
@@ -35,7 +40,9 @@ export const ScopePicker = ({ clientId }: { clientId: string }) => {
     (scopes) =>
       setScopes(
         scopes.map((option) => (
-          <SelectOption key={option.id} value={option.name} />
+          <SelectOption key={option.id} value={option}>
+            {option.name}
+          </SelectOption>
         ))
       ),
     [search]
@@ -68,16 +75,19 @@ export const ScopePicker = ({ clientId }: { clientId: string }) => {
             }}
             onToggle={(open) => setOpen(open)}
             isOpen={open}
-            selections={value}
+            selections={value.map((o: Scope) => o.name)}
             onFilter={(_, value) => {
               setSearch(value);
               return scopes;
             }}
             onSelect={(_, selectedValue) => {
-              const option = selectedValue.toString();
-              const changedValue = value.includes(option)
-                ? value.filter((item: string) => item !== option)
-                : [...value, option];
+              const option =
+                typeof selectedValue === "string"
+                  ? selectedValue
+                  : (selectedValue as Scope).name;
+              const changedValue = value.find((o: Scope) => o.name === option)
+                ? value.filter((item: Scope) => item.name !== option)
+                : [...value, selectedValue];
               onChange(changedValue);
             }}
             onClear={(event) => {

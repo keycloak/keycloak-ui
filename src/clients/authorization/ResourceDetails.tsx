@@ -311,7 +311,7 @@ export default function ResourceDetails() {
               label={t("ownerManagedAccess")}
               labelIcon={
                 <HelpItem
-                  helpText="client-help:ownerManagedAccess"
+                  helpText="clients-help:ownerManagedAccess"
                   forLabel={t("ownerManagedAccess")}
                   forID={t(`common:helpLabel`, {
                     label: t("ownerManagedAccess"),
@@ -341,7 +341,7 @@ export default function ResourceDetails() {
               label={t("resourceAttribute")}
               labelIcon={
                 <HelpItem
-                  helpText="client-help:resourceAttribute"
+                  helpText="clients-help:resourceAttribute"
                   forLabel={t("resourceAttribute")}
                   forID={t(`common:helpLabel`, {
                     label: t("resourceAttribute"),
