@@ -145,7 +145,7 @@ export const UserForm = ({
             setOpen(false);
           }}
           onClose={() => setOpen(false)}
-          filterGroups={selectedGroups.map((group) => group.name) as string[]}
+          filterGroups={selectedGroups.map((group) => group.name!)}
         />
       )}
       {user?.id ? (

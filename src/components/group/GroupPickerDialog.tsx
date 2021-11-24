@@ -100,10 +100,10 @@ export const GroupPickerDialog = ({
   );
 
   const isRowDisabled = (row?: GroupRepresentation) => {
-    return !![
+    return [
       ...joinedGroups.map((item) => item.name),
       ...(filterGroups || []),
-    ].find((group) => group === row?.name);
+    ].some((group) => group === row?.name);
   };
 
   const hasSubgroups = (group: GroupRepresentation) => {
