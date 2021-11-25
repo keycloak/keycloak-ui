@@ -1,14 +1,13 @@
 export type KeyValueType = { key: string; value: string };
 
-export const arrayToAttributes = (attributeArray?: KeyValueType[]) => {
-  const initValue: { [index: string]: string[] } = {};
-  return (attributeArray || []).reduce((acc, attribute) => {
-    if (attribute.key !== "") {
-      acc[attribute.key] = [attribute.value];
-    }
-    return acc;
-  }, initValue);
-};
+export const arrayToAttributes = (
+  attributeArray: KeyValueType[] = []
+): Record<string, string[]> =>
+  Object.fromEntries(
+    attributeArray
+      .filter(({ key }) => key !== "")
+      .map(({ key, value }) => [key, [value]])
+  );
 
 export const attributesToArray = (
   attributes: Record<string, string[]> = {}
