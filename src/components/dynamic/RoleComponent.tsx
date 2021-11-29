@@ -133,9 +133,10 @@ export const RoleComponent = ({ name, label, helpText }: ComponentProps) => {
         name={fieldName}
         defaultValue=""
         control={control}
-        rules={{ required: true }}
         render={({ onChange, value }) => {
-          const [client, role] = value?.split(".") || ["", ""];
+          const [client, role] = value?.includes(".")
+            ? value.split(".")
+            : ["", value || ""];
           return (
             <Split hasGutter>
               <SplitItem>
@@ -163,7 +164,7 @@ export const RoleComponent = ({ name, label, helpText }: ComponentProps) => {
                         );
                       }
                     }}
-                    selections={selectedClient || client}
+                    selections={selectedClient || client || role ? realm : ""}
                     onClear={() => onClear(onChange)}
                     onSelect={(_, value) => {
                       setSelectedClient(value as ClientRepresentation);
@@ -190,7 +191,11 @@ export const RoleComponent = ({ name, label, helpText }: ComponentProps) => {
                   onSelect={(_, value) => {
                     const role = value as RoleRepresentation;
                     setSelectedRole(role);
-                    onChange(`${selectedClient?.clientId}.${role.name}`);
+                    onChange(
+                      selectedClient?.clientId
+                        ? `${selectedClient.clientId}.${role.name}`
+                        : role.name
+                    );
                     setRoleOpen(false);
                   }}
                   maxHeight={200}
