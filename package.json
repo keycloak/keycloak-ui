@@ -65,7 +65,7 @@
     "@typescript-eslint/eslint-plugin": "^5.4.0",
     "@typescript-eslint/parser": "^5.4.0",
     "cli-progress": "^3.9.1",
-    "cypress": "^8.5.0",
+    "cypress": "^9.1.0",
     "decompress": "^4.2.1",
     "eslint": "^8.3.0",
     "eslint-config-prettier": "^8.3.0",
