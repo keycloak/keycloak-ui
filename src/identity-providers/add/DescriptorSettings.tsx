@@ -23,7 +23,6 @@ type DescriptorSettingsProps = {
   readOnly: boolean;
   isValidated?: boolean;
   refresh?: () => void;
-  key?: number;
   isMetadataModalOpen?: boolean;
   handleModalToggle?: () => void;
 };
@@ -82,7 +81,7 @@ const Fields = ({ readOnly }: DescriptorSettingsProps) => {
           <TextInput
             type="text"
             data-testid="sso-service-url"
-            id={readOnly ? "kc-modal-sso-service-url" : "kc-sso-service-url"}
+            id="kc-sso-service-url"
             name="config.singleSignOnServiceUrl"
             ref={register({ required: true })}
             validated={
@@ -114,18 +113,14 @@ const Fields = ({ readOnly }: DescriptorSettingsProps) => {
       >
         <TextInput
           type="text"
-          id={
-            readOnly
-              ? "modal-single-logout-service-url"
-              : "single-logout-service-url"
-          }
+          id="single-logout-service-url"
           name="config.singleLogoutServiceUrl"
           ref={register}
           isReadOnly={readOnly}
         />
       </FormGroup>
       <SwitchField
-        id={readOnly ? "modal-backchannel-logout" : "backchannel-logout"}
+        id="backchannel-logout"
         field="config.backchannelSupported"
         label="backchannelLogout"
         isReadOnly={readOnly}
@@ -288,14 +283,14 @@ const Fields = ({ readOnly }: DescriptorSettingsProps) => {
       )}
       <SwitchField
         field="config.allowCreate"
-        id={readOnly ? "modal-allow-create" : "allow-create"}
+        id="allow-create"
         label="allowCreate"
         isReadOnly={readOnly}
       />
 
       <SwitchField
         field="config.postBindingResponse"
-        id={readOnly ? "modal-post-binding-response" : "post-binding-response"}
+        id="post-binding-response"
         label="httpPostBindingResponse"
         isReadOnly={readOnly}
       />
