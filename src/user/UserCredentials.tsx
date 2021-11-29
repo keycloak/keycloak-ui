@@ -13,6 +13,7 @@ import {
   ModalVariant,
   Switch,
   Text,
+  TextInput,
   TextVariants,
   ValidatedOptions,
 } from "@patternfly/react-core";
@@ -28,6 +29,7 @@ import {
   Thead,
   Tr,
 } from "@patternfly/react-table";
+import { PencilAltIcon } from "@patternfly/react-icons";
 import type UserRepresentation from "@keycloak/keycloak-admin-client/lib/defs/userRepresentation";
 import { useTranslation } from "react-i18next";
 import { useAlerts } from "../components/alert/Alerts";
@@ -40,6 +42,7 @@ import { HelpItem } from "../components/help-enabler/HelpItem";
 import "./user-section.css";
 import { useConfirmDialog } from "../components/confirm-dialog/ConfirmDialog";
 import type CredentialRepresentation from "@keycloak/keycloak-admin-client/lib/defs/credentialRepresentation";
+import { FormAccess } from "../components/form-access/FormAccess";
 
 type UserCredentialsProps = {
   user: UserRepresentation;
@@ -439,7 +442,32 @@ export const UserCredentials = ({ user }: UserCredentialsProps) => {
                     {credential.type?.charAt(0).toUpperCase()! +
                       credential.type?.slice(1)}
                   </Td>
-                  <Td>My Password</Td>
+                  <Td>
+                    <FormAccess isHorizontal role="view-users">
+                      <FormGroup
+                        fieldId="kc-userLabel"
+                        className="userLabel-row"
+                      >
+                        <div className="form-group-userLabel">
+                          <TextInput
+                            name="userLabel"
+                            type="text"
+                            id="userLabel"
+                            aria-label={t("userLabel")}
+                            data-testid="user-label-fld"
+                          />
+                          <Button
+                            key={"key"}
+                            variant="link"
+                            className="editUserLabel-btn"
+                            onClick={() => console.log("editUserLabel btn")}
+                            data-testid="editUserLabelBtn"
+                            icon={<PencilAltIcon />}
+                          />
+                        </div>
+                      </FormGroup>
+                    </FormAccess>
+                  </Td>
                   <Td>
                     <Button
                       className="kc-showData-btn"

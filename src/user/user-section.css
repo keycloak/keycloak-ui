@@ -145,3 +145,20 @@ article.pf-c-card.pf-m-flat.kc-available-idps > div > div > h1 {
 .kc-showData-btn {
   padding-left: 0;
 }
+
+.userLabel-row {
+  display: inline-block !important;
+  width: 50%;
+}
+
+.form-group-userLabel {
+  display: flex;
+}
+
+.editUserLabel-btn {
+  color: var(--pf-global--Color--200) !important;
+}
+
+.editUserLabel-btn:hover {
+  filter: brightness(55%);
+} 
