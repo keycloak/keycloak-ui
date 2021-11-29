@@ -65,7 +65,7 @@ export const DiscoveryEndpointField = ({
 
       setDiscovering(false);
     })();
-  }, [discovering, key]);
+  }, [discovering, key, discoveryUrl]);
 
   return (
     <>

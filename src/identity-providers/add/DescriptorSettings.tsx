@@ -528,7 +528,7 @@ export const DescriptorSettings = ({
         onClose={handleModalToggle}
         variant={ModalVariant.medium}
       >
-        <Fields refresh={refresh} isValidated readOnly={readOnly} />
+        <Fields refresh={refresh} readOnly={readOnly} />
       </Modal>
     </>
   ) : (
