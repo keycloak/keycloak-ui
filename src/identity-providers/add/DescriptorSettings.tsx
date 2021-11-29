@@ -287,18 +287,12 @@ const Fields = ({ readOnly }: DescriptorSettingsProps) => {
 
       <SwitchField
         field="config.postBindingResponse"
-        id="post-binding-response"
         label="httpPostBindingResponse"
         isReadOnly={readOnly}
       />
 
       <SwitchField
         field="config.postBindingAuthnRequest"
-        id={
-          readOnly
-            ? "modal-post-binding-authn-request"
-            : "post-binding-authn-request"
-        }
         label="httpPostBindingAuthnRequest"
         isReadOnly={readOnly}
       />
@@ -311,11 +305,6 @@ const Fields = ({ readOnly }: DescriptorSettingsProps) => {
 
       <SwitchField
         field="config.wantAuthnRequestsSigned"
-        id={
-          readOnly
-            ? "modal-want-authn-requests-signed"
-            : "want-authn-requests-signed"
-        }
         label="wantAuthnRequestsSigned"
         isReadOnly={readOnly}
       />
