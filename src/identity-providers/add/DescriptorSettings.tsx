@@ -32,7 +32,7 @@ const Fields = ({ readOnly }: DescriptorSettingsProps) => {
   const { t } = useTranslation("identity-providers");
   const { t: th } = useTranslation("identity-providers-help");
 
-  const { register, control, errors, getValues } = useFormContext();
+  const { register, control, errors } = useFormContext();
   const [namedPolicyDropdownOpen, setNamedPolicyDropdownOpen] = useState(false);
   const [principalTypeDropdownOpen, setPrincipalTypeDropdownOpen] =
     useState(false);
@@ -348,6 +348,7 @@ const Fields = ({ readOnly }: DescriptorSettingsProps) => {
               render={({ onChange, value }) => (
                 <Select
                   toggleId="kc-signatureAlgorithm"
+                  isDisabled={readOnly}
                   onToggle={(isExpanded) =>
                     setSignatureAlgorithmDropdownOpen(isExpanded)
                   }
@@ -383,10 +384,12 @@ const Fields = ({ readOnly }: DescriptorSettingsProps) => {
             <Controller
               name="config.xmlSigKeyInfoKeyNameTransformer"
               defaultValue={t("keyID")}
+              isReadOnly={readOnly}
               control={control}
               render={({ onChange, value }) => (
                 <Select
                   toggleId="kc-samlSignatureKeyName"
+                  isDisabled={readOnly}
                   onToggle={(isExpanded) =>
                     setSamlSignatureKeyNameDropdownOpen(isExpanded)
                   }
@@ -461,13 +464,12 @@ const Fields = ({ readOnly }: DescriptorSettingsProps) => {
         helperTextInvalid={t("common:required")}
       >
         <TextInput
-          // type={"string" | "number"}
+          type="number"
           min="0"
           max="2147483"
           id="allowedClockSkew"
           name="config.allowedClockSkew"
           ref={register}
-          value={getValues().config.allowedClockSkew === "" ? "-" : undefined}
           isReadOnly={readOnly}
         />
       </FormGroup>
@@ -485,16 +487,12 @@ const Fields = ({ readOnly }: DescriptorSettingsProps) => {
         helperTextInvalid={t("common:required")}
       >
         <TextInput
+          type="number"
           min="0"
           max="65535"
           id="attributeConsumingServiceIndex"
           name="config.attributeConsumingServiceIndex"
           ref={register}
-          value={
-            getValues().config.attributeConsumingServiceIndex === ""
-              ? "-"
-              : undefined
-          }
           isReadOnly={readOnly}
         />
       </FormGroup>
@@ -516,11 +514,6 @@ const Fields = ({ readOnly }: DescriptorSettingsProps) => {
           id="attributeConsumingServiceName"
           name="config.attributeConsumingServiceName"
           ref={register}
-          value={
-            getValues().config.attributeConsumingServiceName === ""
-              ? "-"
-              : undefined
-          }
           isReadOnly={readOnly}
         />
       </FormGroup>
@@ -547,7 +540,9 @@ export const DescriptorSettings = ({
         )}
       </FormGroup>
       <Modal
-        title={t("identity-providers:entityDescriptorMetadata")}
+        title={t("entityDescriptorMetadata")}
+        className="kc-metadata-modal"
+        description={t("entityDescriptorMetadataDescription")}
         isOpen={isMetadataModalOpen}
         onClose={handleModalToggle}
         variant={ModalVariant.medium}

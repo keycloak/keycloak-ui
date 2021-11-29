@@ -36,8 +36,6 @@ export const DiscoveryEndpointField = ({
     useState<Record<string, string>>();
 
   const setupForm = (result: Record<string, string>) => {
-    console.log("does this get called", result);
-
     Object.keys(result).map((k) => setValue(`config.${k}`, result[k]));
   };
 

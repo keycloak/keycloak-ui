@@ -35,8 +35,6 @@ export const SamlConnectSettings = () => {
     refresh();
   };
 
-  console.log("lalalalala", isMetadataModalOpen);
-
   const fileUpload = async (xml: string) => {
     const formData = new FormData();
     formData.append("providerId", id);
@@ -64,8 +62,6 @@ export const SamlConnectSettings = () => {
       });
     }
   };
-
-  console.log("???", getValues());
 
   return (
     <>
@@ -97,7 +93,6 @@ export const SamlConnectSettings = () => {
         id="saml"
         isModalOpen={isMetadataModalOpen}
         key={key}
-        // refresh={refresh}
         fileUpload={
           <FormGroup
             label={t("importConfig")}
@@ -126,7 +121,6 @@ export const SamlConnectSettings = () => {
         {(readonly) => (
           <DescriptorSettings
             isValidated={getValues().discoveryEndpoint}
-            // refresh={refresh}
             handleModalToggle={handleModalToggle}
             isMetadataModalOpen={isMetadataModalOpen}
             readOnly={readonly}

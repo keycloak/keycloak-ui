@@ -289,13 +289,7 @@ export default function DetailSettings() {
                     <ExtendedNonDiscoverySettings />
                   </>
                 )}
-                {isSAML && (
-                  <DescriptorSettings
-                    // refresh={refresh}
-                    isValidated
-                    readOnly={false}
-                  />
-                )}
+                {isSAML && <DescriptorSettings readOnly={false} />}
                 {isSAML && (
                   <FormAccess
                     role="manage-identity-providers"
