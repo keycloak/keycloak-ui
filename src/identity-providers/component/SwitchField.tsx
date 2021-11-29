@@ -9,6 +9,7 @@ type FieldType = "boolean" | "string";
 
 type SwitchFieldProps = FieldProps & {
   fieldType?: FieldType;
+  id?: string;
 };
 
 export const SwitchField = ({
@@ -28,6 +29,7 @@ export const SwitchField = ({
         render={({ onChange, value }) => (
           <Switch
             id={label}
+            className={`kc-${label}`}
             label={t("common:on")}
             labelOff={t("common:off")}
             isChecked={

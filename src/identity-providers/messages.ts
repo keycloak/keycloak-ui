@@ -31,6 +31,9 @@ export default {
       "Are you sure you want to disable the provider '{{provider}}'",
     disableSuccess: "Provider successfully disabled",
     disableError: "Could not disable the provider {{error}}",
+    entityDescriptorMetadata: "Metadata of entity descriptor",
+    entityDescriptorMetadataDescription:
+      "These are the metadata fetched from the remote IDP SAML entity descriptor. They are automatically updated when the remote data has any changes.",
     updateSuccess: "Provider successfully updated",
     updateError: "Could not update the provider {{error}}",
     getStarted: "To get started, select a provider from the list below.",

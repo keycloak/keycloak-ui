@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { useFormContext } from "react-hook-form";
 import { FormGroup, TextInput, Title } from "@patternfly/react-core";
 
@@ -19,13 +19,23 @@ export const SamlConnectSettings = () => {
 
   const adminClient = useAdminClient();
   const { realm } = useRealm();
-  const { setValue, register, errors, setError } = useFormContext();
+  const { setValue, register, errors, setError, getValues } = useFormContext();
+  const [key, setKey] = useState(0);
+  const [isMetadataModalOpen, setIsMetadataModalOpen] = useState(false);
+  const refresh = () => setKey(key + 1);
 
   const setupForm = (result: IdentityProviderRepresentation) => {
     Object.entries(result).map(([key, value]) =>
       setValue(`config.${key}`, value)
     );
   };
+
+  const handleModalToggle = () => {
+    setIsMetadataModalOpen(!isMetadataModalOpen);
+    refresh();
+  };
+
+  console.log("lalalalala", isMetadataModalOpen);
 
   const fileUpload = async (xml: string) => {
     const formData = new FormData();
@@ -55,6 +65,8 @@ export const SamlConnectSettings = () => {
     }
   };
 
+  console.log("???", getValues());
+
   return (
     <>
       <Title headingLevel="h4" size="xl" className="kc-form-panel__title">
@@ -83,6 +95,9 @@ export const SamlConnectSettings = () => {
 
       <DiscoveryEndpointField
         id="saml"
+        isModalOpen={isMetadataModalOpen}
+        key={key}
+        // refresh={refresh}
         fileUpload={
           <FormGroup
             label={t("importConfig")}
@@ -108,7 +123,16 @@ export const SamlConnectSettings = () => {
           </FormGroup>
         }
       >
-        {(readonly) => <DescriptorSettings readOnly={readonly} />}
+        {(readonly) => (
+          <DescriptorSettings
+            isValidated={getValues().discoveryEndpoint}
+            // refresh={refresh}
+            handleModalToggle={handleModalToggle}
+            isMetadataModalOpen={isMetadataModalOpen}
+            readOnly={readonly}
+            key={key}
+          />
+        )}
       </DiscoveryEndpointField>
     </>
   );

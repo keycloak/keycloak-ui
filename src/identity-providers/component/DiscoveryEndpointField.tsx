@@ -11,12 +11,16 @@ type DiscoveryEndpointFieldProps = {
   id: string;
   fileUpload: ReactNode;
   children: (readOnly: boolean) => ReactNode;
+  key?: number;
+  isModalOpen?: boolean;
 };
 
 export const DiscoveryEndpointField = ({
   id,
   fileUpload,
   children,
+  key,
+  isModalOpen,
 }: DiscoveryEndpointFieldProps) => {
   const { t } = useTranslation("identity-providers");
 
@@ -32,6 +36,8 @@ export const DiscoveryEndpointField = ({
     useState<Record<string, string>>();
 
   const setupForm = (result: Record<string, string>) => {
+    console.log("does this get called", result);
+
     Object.keys(result).map((k) => setValue(`config.${k}`, result[k]));
   };
 
@@ -48,7 +54,9 @@ export const DiscoveryEndpointField = ({
           providerId: id,
           fromUrl: discoveryUrl,
         });
-        setupForm(result);
+        if (isModalOpen) {
+          setupForm(result);
+        }
         setDiscoveryResult(result);
       } catch (error) {
         setError("discoveryError", {
@@ -59,7 +67,7 @@ export const DiscoveryEndpointField = ({
 
       setDiscovering(false);
     })();
-  }, [discovering]);
+  }, [discovering, key]);
 
   return (
     <>

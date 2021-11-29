@@ -2,8 +2,11 @@ import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Controller, useFormContext, useWatch } from "react-hook-form";
 import {
-  ExpandableSection,
+  Button,
+  DescriptionListDescription,
   FormGroup,
+  Modal,
+  ModalVariant,
   Select,
   SelectOption,
   SelectVariant,
@@ -18,13 +21,18 @@ import "./discovery-settings.css";
 
 type DescriptorSettingsProps = {
   readOnly: boolean;
+  isValidated?: boolean;
+  refresh?: () => void;
+  key?: number;
+  isMetadataModalOpen?: boolean;
+  handleModalToggle?: () => void;
 };
 
 const Fields = ({ readOnly }: DescriptorSettingsProps) => {
   const { t } = useTranslation("identity-providers");
   const { t: th } = useTranslation("identity-providers-help");
 
-  const { register, control, errors } = useFormContext();
+  const { register, control, errors, getValues } = useFormContext();
   const [namedPolicyDropdownOpen, setNamedPolicyDropdownOpen] = useState(false);
   const [principalTypeDropdownOpen, setPrincipalTypeDropdownOpen] =
     useState(false);
@@ -70,20 +78,23 @@ const Fields = ({ readOnly }: DescriptorSettingsProps) => {
         }
         helperTextInvalid={t("common:required")}
       >
-        <TextInput
-          type="text"
-          data-testid="sso-service-url"
-          id="kc-sso-service-url"
-          name="config.singleSignOnServiceUrl"
-          ref={register({ required: true })}
-          validated={
-            errors.config?.singleSignOnServiceUrl
-              ? ValidatedOptions.error
-              : ValidatedOptions.default
-          }
-          isReadOnly={readOnly}
-        />
+        <DescriptionListDescription>
+          <TextInput
+            type="text"
+            data-testid="sso-service-url"
+            id={readOnly ? "kc-modal-sso-service-url" : "kc-sso-service-url"}
+            name="config.singleSignOnServiceUrl"
+            ref={register({ required: true })}
+            validated={
+              errors.config?.singleSignOnServiceUrl
+                ? ValidatedOptions.error
+                : ValidatedOptions.default
+            }
+            isReadOnly={readOnly}
+          />
+        </DescriptionListDescription>
       </FormGroup>
+
       <FormGroup
         label={t("singleLogoutServiceUrl")}
         labelIcon={
@@ -103,13 +114,18 @@ const Fields = ({ readOnly }: DescriptorSettingsProps) => {
       >
         <TextInput
           type="text"
-          id="single-logout-service-url"
+          id={
+            readOnly
+              ? "modal-single-logout-service-url"
+              : "single-logout-service-url"
+          }
           name="config.singleLogoutServiceUrl"
           ref={register}
           isReadOnly={readOnly}
         />
       </FormGroup>
       <SwitchField
+        id={readOnly ? "modal-backchannel-logout" : "backchannel-logout"}
         field="config.backchannelSupported"
         label="backchannelLogout"
         isReadOnly={readOnly}
@@ -132,6 +148,7 @@ const Fields = ({ readOnly }: DescriptorSettingsProps) => {
           control={control}
           render={({ onChange, value }) => (
             <Select
+              isDisabled={readOnly}
               toggleId="kc-nameIdPolicyFormat"
               onToggle={(isExpanded) => setNamedPolicyDropdownOpen(isExpanded)}
               isOpen={namedPolicyDropdownOpen}
@@ -211,6 +228,7 @@ const Fields = ({ readOnly }: DescriptorSettingsProps) => {
           control={control}
           render={({ onChange, value }) => (
             <Select
+              isDisabled={readOnly}
               toggleId="kc-principalType"
               onToggle={(isExpanded) =>
                 setPrincipalTypeDropdownOpen(isExpanded)
@@ -270,18 +288,25 @@ const Fields = ({ readOnly }: DescriptorSettingsProps) => {
       )}
       <SwitchField
         field="config.allowCreate"
+        id={readOnly ? "modal-allow-create" : "allow-create"}
         label="allowCreate"
         isReadOnly={readOnly}
       />
 
       <SwitchField
         field="config.postBindingResponse"
+        id={readOnly ? "modal-post-binding-response" : "post-binding-response"}
         label="httpPostBindingResponse"
         isReadOnly={readOnly}
       />
 
       <SwitchField
         field="config.postBindingAuthnRequest"
+        id={
+          readOnly
+            ? "modal-post-binding-authn-request"
+            : "post-binding-authn-request"
+        }
         label="httpPostBindingAuthnRequest"
         isReadOnly={readOnly}
       />
@@ -294,6 +319,11 @@ const Fields = ({ readOnly }: DescriptorSettingsProps) => {
 
       <SwitchField
         field="config.wantAuthnRequestsSigned"
+        id={
+          readOnly
+            ? "modal-want-authn-requests-signed"
+            : "want-authn-requests-signed"
+        }
         label="wantAuthnRequestsSigned"
         isReadOnly={readOnly}
       />
@@ -431,12 +461,13 @@ const Fields = ({ readOnly }: DescriptorSettingsProps) => {
         helperTextInvalid={t("common:required")}
       >
         <TextInput
-          type="number"
+          // type={"string" | "number"}
           min="0"
           max="2147483"
           id="allowedClockSkew"
           name="config.allowedClockSkew"
           ref={register}
+          value={getValues().config.allowedClockSkew === "" ? "-" : undefined}
           isReadOnly={readOnly}
         />
       </FormGroup>
@@ -454,12 +485,16 @@ const Fields = ({ readOnly }: DescriptorSettingsProps) => {
         helperTextInvalid={t("common:required")}
       >
         <TextInput
-          type="number"
           min="0"
           max="65535"
           id="attributeConsumingServiceIndex"
           name="config.attributeConsumingServiceIndex"
           ref={register}
+          value={
+            getValues().config.attributeConsumingServiceIndex === ""
+              ? "-"
+              : undefined
+          }
           isReadOnly={readOnly}
         />
       </FormGroup>
@@ -481,6 +516,11 @@ const Fields = ({ readOnly }: DescriptorSettingsProps) => {
           id="attributeConsumingServiceName"
           name="config.attributeConsumingServiceName"
           ref={register}
+          value={
+            getValues().config.attributeConsumingServiceName === ""
+              ? "-"
+              : undefined
+          }
           isReadOnly={readOnly}
         />
       </FormGroup>
@@ -488,20 +528,34 @@ const Fields = ({ readOnly }: DescriptorSettingsProps) => {
   );
 };
 
-export const DescriptorSettings = ({ readOnly }: DescriptorSettingsProps) => {
+export const DescriptorSettings = ({
+  readOnly,
+  isValidated,
+  refresh,
+  isMetadataModalOpen,
+  handleModalToggle,
+}: DescriptorSettingsProps) => {
   const { t } = useTranslation("identity-providers");
-  const [isExpanded, setIsExpanded] = useState(false);
 
   return readOnly ? (
-    <ExpandableSection
-      className="keycloak__discovery-settings__metadata"
-      toggleText={isExpanded ? t("hideMetaData") : t("showMetaData")}
-      onToggle={(isOpen) => setIsExpanded(isOpen)}
-      isExpanded={isExpanded}
-    >
-      <Fields readOnly={readOnly} />
-    </ExpandableSection>
+    <>
+      <FormGroup className="kc-meta-data-toggle" fieldId="metaDataToggle">
+        {isValidated && (
+          <Button variant="link" onClick={handleModalToggle}>
+            {isMetadataModalOpen ? t("hideMetaData") : t("showMetaData")}
+          </Button>
+        )}
+      </FormGroup>
+      <Modal
+        title={t("identity-providers:entityDescriptorMetadata")}
+        isOpen={isMetadataModalOpen}
+        onClose={handleModalToggle}
+        variant={ModalVariant.medium}
+      >
+        <Fields refresh={refresh} isValidated readOnly={readOnly} />
+      </Modal>
+    </>
   ) : (
-    <Fields readOnly={readOnly} />
+    <Fields isValidated readOnly={readOnly} />
   );
 };
