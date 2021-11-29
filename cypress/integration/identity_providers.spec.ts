@@ -49,7 +49,7 @@ describe("Identity provider test", () => {
         .clickAdd()
         .checkClientIdRequiredMessage(true);
       createProviderPage.fill(identityProviderName, "123").clickAdd();
-      masthead.checkNotificationMessage(createSuccessMsg);
+      masthead.checkNotificationMessage(createSuccessMsg, true);
 
       sidebarPage.goToIdentityProviders();
       listingPage.itemExist(identityProviderName);
@@ -61,7 +61,7 @@ describe("Identity provider test", () => {
         .clickItem("facebook")
         .fill("facebook", "123")
         .clickAdd();
-      masthead.checkNotificationMessage(createSuccessMsg);
+      masthead.checkNotificationMessage(createSuccessMsg, true);
     });
 
     it("should change order of providers", () => {
@@ -91,7 +91,7 @@ describe("Identity provider test", () => {
       orderDialog.checkOrder(["bitbucket", identityProviderName, "facebook"]);
 
       orderDialog.clickSave();
-      masthead.checkNotificationMessage(changeSuccessMsg);
+      masthead.checkNotificationMessage(changeSuccessMsg, true);
     });
 
     it("should create a oidc provider using discovery url", () => {
@@ -103,7 +103,7 @@ describe("Identity provider test", () => {
         .shouldBeSuccessful()
         .fill("oidc", "123")
         .clickAdd();
-      masthead.checkNotificationMessage(createSuccessMsg);
+      masthead.checkNotificationMessage(createSuccessMsg, true);
       createProviderPage.shouldHaveAuthorizationUrl(authorizationUrl);
     });
 
@@ -115,7 +115,7 @@ describe("Identity provider test", () => {
         .fillDiscoveryUrl(samlDiscoveryUrl)
         .shouldBeSuccessful()
         .clickAdd();
-      masthead.checkNotificationMessage(createSuccessMsg);
+      masthead.checkNotificationMessage(createSuccessMsg, true);
     });
 
     it("should delete provider", () => {
@@ -123,7 +123,7 @@ describe("Identity provider test", () => {
       listingPage.deleteItem(identityProviderName);
       modalUtils.checkModalTitle(deletePrompt).confirmModal();
 
-      masthead.checkNotificationMessage(deleteSuccessMsg);
+      masthead.checkNotificationMessage(deleteSuccessMsg, true);
     });
 
     it("should add facebook social mapper", () => {
@@ -139,7 +139,7 @@ describe("Identity provider test", () => {
 
       addMapperPage.saveNewMapper();
 
-      masthead.checkNotificationMessage(createMapperSuccessMsg);
+      masthead.checkNotificationMessage(createMapperSuccessMsg, true);
     });
 
     it("should add SAML mapper of type Advanced Attribute to Role", () => {
@@ -153,7 +153,7 @@ describe("Identity provider test", () => {
 
       addMapperPage.addAdvancedAttrToRoleMapper("SAML mapper");
 
-      masthead.checkNotificationMessage(createMapperSuccessMsg);
+      masthead.checkNotificationMessage(createMapperSuccessMsg, true);
     });
 
     it("should add SAML mapper of type Username Template Importer", () => {
@@ -169,7 +169,7 @@ describe("Identity provider test", () => {
         "SAML Username Template Importer Mapper"
       );
 
-      masthead.checkNotificationMessage(createMapperSuccessMsg);
+      masthead.checkNotificationMessage(createMapperSuccessMsg, true);
     });
 
     it("should add SAML mapper of type Hardcoded User Session Attribute", () => {
@@ -185,7 +185,7 @@ describe("Identity provider test", () => {
         "Hardcoded User Session Attribute"
       );
 
-      masthead.checkNotificationMessage(createMapperSuccessMsg);
+      masthead.checkNotificationMessage(createMapperSuccessMsg, true);
     });
 
     it("should add SAML mapper of type Attribute Importer", () => {
@@ -199,7 +199,7 @@ describe("Identity provider test", () => {
 
       addMapperPage.addSAMLAttrImporterMapper("Attribute Importer");
 
-      masthead.checkNotificationMessage(createMapperSuccessMsg);
+      masthead.checkNotificationMessage(createMapperSuccessMsg, true);
     });
 
     it("should add SAML mapper of type Hardcoded Role", () => {
@@ -213,7 +213,7 @@ describe("Identity provider test", () => {
 
       addMapperPage.addHardcodedRoleMapper("Hardcoded Role");
 
-      masthead.checkNotificationMessage(createMapperSuccessMsg);
+      masthead.checkNotificationMessage(createMapperSuccessMsg, true);
     });
 
     it("should add SAML mapper of type Hardcoded Attribute", () => {
@@ -227,7 +227,7 @@ describe("Identity provider test", () => {
 
       addMapperPage.addHardcodedAttrMapper("Hardcoded Attribute");
 
-      masthead.checkNotificationMessage(createMapperSuccessMsg);
+      masthead.checkNotificationMessage(createMapperSuccessMsg, true);
     });
 
     it("should add SAML mapper of type SAML Attribute To Role", () => {
@@ -241,7 +241,7 @@ describe("Identity provider test", () => {
 
       addMapperPage.addSAMLAttributeToRoleMapper("SAML Attribute To Role");
 
-      masthead.checkNotificationMessage(createMapperSuccessMsg);
+      masthead.checkNotificationMessage(createMapperSuccessMsg, true);
     });
 
     it("should add OIDC mapper of type Attribute Importer", () => {
@@ -255,7 +255,7 @@ describe("Identity provider test", () => {
 
       addMapperPage.addOIDCAttrImporterMapper("OIDC Attribute Importer");
 
-      masthead.checkNotificationMessage(createMapperSuccessMsg);
+      masthead.checkNotificationMessage(createMapperSuccessMsg, true);
     });
 
     it("should add OIDC mapper of type Claim To Role", () => {
@@ -269,7 +269,7 @@ describe("Identity provider test", () => {
 
       addMapperPage.addOIDCClaimToRoleMapper("OIDC Claim to Role");
 
-      masthead.checkNotificationMessage(createMapperSuccessMsg);
+      masthead.checkNotificationMessage(createMapperSuccessMsg, true);
     });
 
     it("should add Social mapper of type Attribute Importer", () => {
@@ -283,7 +283,7 @@ describe("Identity provider test", () => {
 
       addMapperPage.fillSocialMapper("facebook attribute importer");
 
-      masthead.checkNotificationMessage(createMapperSuccessMsg);
+      masthead.checkNotificationMessage(createMapperSuccessMsg, true);
     });
 
     it("should edit Username Template Importer mapper", () => {
@@ -297,7 +297,7 @@ describe("Identity provider test", () => {
 
       addMapperPage.editUsernameTemplateImporterMapper();
 
-      masthead.checkNotificationMessage(saveMapperSuccessMsg);
+      masthead.checkNotificationMessage(saveMapperSuccessMsg, true);
     });
 
     it("should edit facebook mapper", () => {
@@ -335,7 +335,7 @@ describe("Identity provider test", () => {
 
       addMapperPage.editSAMLorOIDCMapper();
 
-      masthead.checkNotificationMessage(saveMapperSuccessMsg);
+      masthead.checkNotificationMessage(saveMapperSuccessMsg, true);
     });
 
     it("clean up providers", () => {
@@ -344,22 +344,22 @@ describe("Identity provider test", () => {
       sidebarPage.goToIdentityProviders();
       listingPage.itemExist("bitbucket").deleteItem("bitbucket");
       modalUtils.checkModalTitle(deletePrompt).confirmModal();
-      masthead.checkNotificationMessage(deleteSuccessMsg);
+      masthead.checkNotificationMessage(deleteSuccessMsg, true);
 
       sidebarPage.goToIdentityProviders();
       listingPage.itemExist("facebook").deleteItem("facebook");
       modalUtils.checkModalTitle(deletePrompt).confirmModal();
-      masthead.checkNotificationMessage(deleteSuccessMsg);
+      masthead.checkNotificationMessage(deleteSuccessMsg, true);
 
       sidebarPage.goToIdentityProviders();
       listingPage.itemExist("oidc").deleteItem("oidc");
       modalUtils.checkModalTitle(deletePrompt).confirmModal();
-      masthead.checkNotificationMessage(deleteSuccessMsg);
+      masthead.checkNotificationMessage(deleteSuccessMsg, true);
 
       sidebarPage.goToIdentityProviders();
       listingPage.itemExist("saml").deleteItem("saml");
       modalUtils.checkModalTitle(deletePrompt).confirmModal();
-      masthead.checkNotificationMessage(deleteSuccessMsg);
+      masthead.checkNotificationMessage(deleteSuccessMsg, true);
     });
   });
 });
