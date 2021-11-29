@@ -29,7 +29,7 @@ import {
   Thead,
   Tr,
 } from "@patternfly/react-table";
-import { PencilAltIcon } from "@patternfly/react-icons";
+import { PencilAltIcon, CheckIcon, TimesIcon } from "@patternfly/react-icons";
 import type UserRepresentation from "@keycloak/keycloak-admin-client/lib/defs/userRepresentation";
 import { useTranslation } from "react-i18next";
 import { useAlerts } from "../components/alert/Alerts";
@@ -103,6 +103,7 @@ export const UserCredentials = ({ user }: UserCredentialsProps) => {
     useState<CredentialRepresentation>({});
   const [isResetPassword, setIsResetPassword] = useState(false);
   const [showData, setShowData] = useState(false);
+  const [isUserLabelEdit, setIsUserLabelEdit] = useState(false);
 
   useFetch(
     () => adminClient.users.getCredentials({ id: user.id! }),
@@ -220,6 +221,10 @@ export const UserCredentials = ({ user }: UserCredentialsProps) => {
         return [key, JSON.stringify(value)];
       });
   }, [selectedCredential.credentialData]);
+
+  const saveUserLabel = async () => {
+    console.log("saveUserLabel");
+  };
 
   return (
     <>
@@ -446,24 +451,49 @@ export const UserCredentials = ({ user }: UserCredentialsProps) => {
                     <FormAccess isHorizontal role="view-users">
                       <FormGroup
                         fieldId="kc-userLabel"
-                        className="userLabel-row"
+                        className="kc-userLabel-row"
                       >
-                        <div className="form-group-userLabel">
+                        <div className="kc-form-group-userLabel">
                           <TextInput
                             name="userLabel"
                             type="text"
-                            id="userLabel"
+                            className="kc-userLabel"
                             aria-label={t("userLabel")}
                             data-testid="user-label-fld"
+                            isReadOnly={isUserLabelEdit === false}
                           />
-                          <Button
-                            key={"key"}
-                            variant="link"
-                            className="editUserLabel-btn"
-                            onClick={() => console.log("editUserLabel btn")}
-                            data-testid="editUserLabelBtn"
-                            icon={<PencilAltIcon />}
-                          />
+                          {isUserLabelEdit ? (
+                            <div className="kc-userLabel-actionBtns">
+                              <Button
+                                key={"key-acceptBtn"}
+                                variant="link"
+                                className="kc-editUserLabel-acceptBtn"
+                                onClick={() => {
+                                  saveUserLabel();
+                                  setIsUserLabelEdit(false);
+                                }}
+                                data-testid="editUserLabel-acceptBtn"
+                                icon={<CheckIcon />}
+                              />
+                              <Button
+                                key={"key-cancelBtn"}
+                                variant="link"
+                                className="kc-editUserLabel-cancelBtn"
+                                onClick={() => setIsUserLabelEdit(false)}
+                                data-testid="editUserLabel-cancelBtn"
+                                icon={<TimesIcon />}
+                              />
+                            </div>
+                          ) : (
+                            <Button
+                              key={"key"}
+                              variant="link"
+                              className="kc-editUserLabel-btn"
+                              onClick={() => setIsUserLabelEdit(true)}
+                              data-testid="editUserLabelBtn"
+                              icon={<PencilAltIcon />}
+                            />
+                          )}
                         </div>
                       </FormGroup>
                     </FormAccess>

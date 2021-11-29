@@ -146,19 +146,27 @@ article.pf-c-card.pf-m-flat.kc-available-idps > div > div > h1 {
   padding-left: 0;
 }
 
-.userLabel-row {
+.kc-userLabel-row {
   display: inline-block !important;
-  width: 50%;
+  width: 80%;
 }
 
-.form-group-userLabel {
+.kc-form-group-userLabel, .kc-userLabel-actionBtns {
   display: flex;
 }
 
-.editUserLabel-btn {
+.kc-editUserLabel-btn, .kc-editUserLabel-cancelBtn {
   color: var(--pf-global--Color--200) !important;
 }
 
-.editUserLabel-btn:hover {
+.kc-editUserLabel-btn:hover {
   filter: brightness(55%);
-} 
+}
+
+.kc-editUserLabel-acceptBtn {
+  padding-right: 8px;
+}
+
+.kc-editUserLabel-cancelBtn {
+  padding-left: 8px !important;
+}
