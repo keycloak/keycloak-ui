@@ -3,7 +3,6 @@ import { useTranslation } from "react-i18next";
 import { Controller, useFormContext, useWatch } from "react-hook-form";
 import {
   Button,
-  DescriptionListDescription,
   FormGroup,
   Modal,
   ModalVariant,
@@ -77,21 +76,19 @@ const Fields = ({ readOnly }: DescriptorSettingsProps) => {
         }
         helperTextInvalid={t("common:required")}
       >
-        <DescriptionListDescription>
-          <TextInput
-            type="text"
-            data-testid="sso-service-url"
-            id="kc-sso-service-url"
-            name="config.singleSignOnServiceUrl"
-            ref={register({ required: true })}
-            validated={
-              errors.config?.singleSignOnServiceUrl
-                ? ValidatedOptions.error
-                : ValidatedOptions.default
-            }
-            isReadOnly={readOnly}
-          />
-        </DescriptionListDescription>
+        <TextInput
+          type="text"
+          data-testid="sso-service-url"
+          id="kc-sso-service-url"
+          name="config.singleSignOnServiceUrl"
+          ref={register({ required: true })}
+          validated={
+            errors.config?.singleSignOnServiceUrl
+              ? ValidatedOptions.error
+              : ValidatedOptions.default
+          }
+          isReadOnly={readOnly}
+        />
       </FormGroup>
 
       <FormGroup
