@@ -108,7 +108,11 @@ export const UserCredentials = ({ user }: UserCredentialsProps) => {
     defaultValues: userLabelDefaultValues,
   });
   const { control, errors, handleSubmit, register } = form;
-  const { handleSubmit: handleSubmit1, register: register1 } = userLabelForm;
+  const {
+    getValues: getValues1,
+    handleSubmit: handleSubmit1,
+    register: register1,
+  } = userLabelForm;
   const [credentials, setCredentials] = useState<CredentialsForm>();
   const [userCredentials, setUserCredentials] = useState<
     CredentialRepresentation[]
@@ -239,14 +243,16 @@ export const UserCredentials = ({ user }: UserCredentialsProps) => {
   }, [selectedCredential.credentialData]);
 
   const saveUserLabel = async () => {
+    const userLabelFormValue = getValues1();
     try {
       await adminClient.users.updateCredentialLabel(
         {
           id: user.id!,
           credentialId: editedUserCredential.id!,
         },
-        "test"
+        userLabelFormValue.userLabel || ""
       );
+      refresh();
       addAlert(t("updateCredentialUserLabelSuccess"), AlertVariant.success);
       setIsUserLabelEdit(false);
     } catch (error) {
