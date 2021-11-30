@@ -524,7 +524,7 @@ export const UserCredentials = ({ user }: UserCredentialsProps) => {
                             </>
                           ) : (
                             <>
-                              <Text>My Password</Text>
+                              {credential.userLabel ?? ""}
                               <Button
                                 key={"key"}
                                 variant="link"
