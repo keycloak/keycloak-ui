@@ -118,6 +118,8 @@ export const UserCredentials = ({ user }: UserCredentialsProps) => {
   const [isResetPassword, setIsResetPassword] = useState(false);
   const [showData, setShowData] = useState(false);
   const [isUserLabelEdit, setIsUserLabelEdit] = useState(false);
+  const [editedUserCredential, setEditedUserCredential] =
+    useState<CredentialRepresentation>({});
 
   useFetch(
     () => adminClient.users.getCredentials({ id: user.id! }),
@@ -237,7 +239,20 @@ export const UserCredentials = ({ user }: UserCredentialsProps) => {
   }, [selectedCredential.credentialData]);
 
   const saveUserLabel = async () => {
-    console.log(">>>>");
+    try {
+      await adminClient.users.updateCredentialLabel(
+        {
+          id: user.id!,
+          credentialId: editedUserCredential.id!,
+        },
+        "test"
+      );
+      addAlert(t("updateCredentialUserLabelSuccess"), AlertVariant.success);
+      setIsUserLabelEdit(false);
+    } catch (error) {
+      addError(t("updateCredentialUserLabelError"), error);
+      setIsUserLabelEdit(false);
+    }
   };
 
   return (
@@ -484,6 +499,7 @@ export const UserCredentials = ({ user }: UserCredentialsProps) => {
                                   variant="link"
                                   className="kc-editUserLabel-acceptBtn"
                                   onClick={() => {
+                                    setEditedUserCredential(credential);
                                     handleSubmit1(saveUserLabel)();
                                     setIsUserLabelEdit(false);
                                   }}
