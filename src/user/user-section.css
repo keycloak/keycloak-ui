@@ -148,7 +148,7 @@ article.pf-c-card.pf-m-flat.kc-available-idps > div > div > h1 {
 
 .kc-userLabel-row {
   display: inline-block !important;
-  width: 80%;
+  width: 50%;
 }
 
 .kc-form-group-userLabel, .kc-userLabel-actionBtns {
@@ -157,6 +157,10 @@ article.pf-c-card.pf-m-flat.kc-available-idps > div > div > h1 {
 
 .kc-editUserLabel-btn, .kc-editUserLabel-cancelBtn {
   color: var(--pf-global--Color--200) !important;
+}
+
+.kc-editUserLabel-btn {
+  padding-top: 0px;
 }
 
 .kc-editUserLabel-btn:hover {

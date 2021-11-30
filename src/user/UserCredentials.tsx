@@ -54,7 +54,7 @@ type CredentialsForm = {
   temporaryPassword: boolean;
 };
 
-const defaultValues: CredentialsForm = {
+const credFormDefaultValues: CredentialsForm = {
   password: "",
   passwordConfirmation: "",
   temporaryPassword: true,
@@ -63,6 +63,14 @@ const defaultValues: CredentialsForm = {
 type DisplayDialogProps = {
   titleKey: string;
   onClose: () => void;
+};
+
+type UserLabelForm = {
+  userLabel: string;
+};
+
+const userLabelDefaultValues: UserLabelForm = {
+  userLabel: "",
 };
 
 const DisplayDialog: FunctionComponent<DisplayDialogProps> = ({
@@ -93,8 +101,14 @@ export const UserCredentials = ({ user }: UserCredentialsProps) => {
   const [openSaveConfirm, setOpenSaveConfirm] = useState(false);
   const [kebabOpen, setKebabOpen] = useState(false);
   const adminClient = useAdminClient();
-  const form = useForm<CredentialsForm>({ defaultValues });
+  const form = useForm<CredentialsForm>({
+    defaultValues: credFormDefaultValues,
+  });
+  const userLabelForm = useForm<UserLabelForm>({
+    defaultValues: userLabelDefaultValues,
+  });
   const { control, errors, handleSubmit, register } = form;
+  const { handleSubmit: handleSubmit1, register: register1 } = userLabelForm;
   const [credentials, setCredentials] = useState<CredentialsForm>();
   const [userCredentials, setUserCredentials] = useState<
     CredentialRepresentation[]
@@ -223,7 +237,7 @@ export const UserCredentials = ({ user }: UserCredentialsProps) => {
   }, [selectedCredential.credentialData]);
 
   const saveUserLabel = async () => {
-    console.log("saveUserLabel");
+    console.log(">>>>");
   };
 
   return (
@@ -454,45 +468,50 @@ export const UserCredentials = ({ user }: UserCredentialsProps) => {
                         className="kc-userLabel-row"
                       >
                         <div className="kc-form-group-userLabel">
-                          <TextInput
-                            name="userLabel"
-                            type="text"
-                            className="kc-userLabel"
-                            aria-label={t("userLabel")}
-                            data-testid="user-label-fld"
-                            isReadOnly={isUserLabelEdit === false}
-                          />
                           {isUserLabelEdit ? (
-                            <div className="kc-userLabel-actionBtns">
-                              <Button
-                                key={"key-acceptBtn"}
-                                variant="link"
-                                className="kc-editUserLabel-acceptBtn"
-                                onClick={() => {
-                                  saveUserLabel();
-                                  setIsUserLabelEdit(false);
-                                }}
-                                data-testid="editUserLabel-acceptBtn"
-                                icon={<CheckIcon />}
+                            <>
+                              <TextInput
+                                name="userLabel"
+                                ref={register1()}
+                                type="text"
+                                className="kc-userLabel"
+                                aria-label={t("userLabel")}
+                                data-testid="user-label-fld"
                               />
-                              <Button
-                                key={"key-cancelBtn"}
-                                variant="link"
-                                className="kc-editUserLabel-cancelBtn"
-                                onClick={() => setIsUserLabelEdit(false)}
-                                data-testid="editUserLabel-cancelBtn"
-                                icon={<TimesIcon />}
-                              />
-                            </div>
+                              <div className="kc-userLabel-actionBtns">
+                                <Button
+                                  key={"key-acceptBtn"}
+                                  variant="link"
+                                  className="kc-editUserLabel-acceptBtn"
+                                  onClick={() => {
+                                    handleSubmit1(saveUserLabel)();
+                                    setIsUserLabelEdit(false);
+                                  }}
+                                  data-testid="editUserLabel-acceptBtn"
+                                  icon={<CheckIcon />}
+                                />
+                                <Button
+                                  key={"key-cancelBtn"}
+                                  variant="link"
+                                  className="kc-editUserLabel-cancelBtn"
+                                  onClick={() => setIsUserLabelEdit(false)}
+                                  data-testid="editUserLabel-cancelBtn"
+                                  icon={<TimesIcon />}
+                                />
+                              </div>
+                            </>
                           ) : (
-                            <Button
-                              key={"key"}
-                              variant="link"
-                              className="kc-editUserLabel-btn"
-                              onClick={() => setIsUserLabelEdit(true)}
-                              data-testid="editUserLabelBtn"
-                              icon={<PencilAltIcon />}
-                            />
+                            <>
+                              <Text>My Password</Text>
+                              <Button
+                                key={"key"}
+                                variant="link"
+                                className="kc-editUserLabel-btn"
+                                onClick={() => setIsUserLabelEdit(true)}
+                                data-testid="editUserLabelBtn"
+                                icon={<PencilAltIcon />}
+                              />
+                            </>
                           )}
                         </div>
                       </FormGroup>
