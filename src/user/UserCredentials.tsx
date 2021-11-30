@@ -244,6 +244,11 @@ export const UserCredentials = ({ user }: UserCredentialsProps) => {
 
   const saveUserLabel = async () => {
     const userLabelFormValue = getValues1();
+
+    if (Object.keys(editedUserCredential).length === 0) {
+      return;
+    }
+
     try {
       await adminClient.users.updateCredentialLabel(
         {
