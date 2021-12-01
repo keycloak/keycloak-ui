@@ -224,11 +224,14 @@ export const UserCredentials = ({ user }: UserCredentialsProps) => {
   });
 
   const rows = useMemo(() => {
-    if (!selectedCredential.credentialData) {
+    if (userCredentials.length === 0) {
       return [];
     }
 
-    const credentialData = JSON.parse(selectedCredential.credentialData);
+    const credentialData = userCredentials.map((userCredential) => ({
+      credentialData: userCredential.credentialData,
+    }));
+
     const locale = whoAmI.getLocale();
 
     return Object.entries(credentialData)
@@ -243,26 +246,31 @@ export const UserCredentials = ({ user }: UserCredentialsProps) => {
   }, [selectedCredential.credentialData]);
 
   const saveUserLabel = async () => {
+    const credentialToEdit = userCredentials.find(
+      (credential) => credential.id === editedUserCredential.id
+    );
+
     const userLabelFormValue = getValues1();
 
-    if (Object.keys(editedUserCredential).length === 0) {
+    if (!credentialToEdit) {
       return;
-    }
-
-    try {
-      await adminClient.users.updateCredentialLabel(
-        {
-          id: user.id!,
-          credentialId: editedUserCredential.id!,
-        },
-        userLabelFormValue.userLabel || ""
-      );
-      refresh();
-      addAlert(t("updateCredentialUserLabelSuccess"), AlertVariant.success);
-      setIsUserLabelEdit(false);
-    } catch (error) {
-      addError(t("updateCredentialUserLabelError"), error);
-      setIsUserLabelEdit(false);
+    } else {
+      try {
+        await adminClient.users.updateCredentialLabel(
+          {
+            id: user.id!,
+            credentialId: credentialToEdit.id!,
+          },
+          userLabelFormValue.userLabel || ""
+        );
+        refresh();
+        addAlert(t("updateCredentialUserLabelSuccess"), AlertVariant.success);
+        setIsUserLabelEdit(false);
+        setEditedUserCredential({});
+      } catch (error) {
+        addError(t("updateCredentialUserLabelError"), error);
+        setIsUserLabelEdit(false);
+      }
     }
   };
 
@@ -506,11 +514,10 @@ export const UserCredentials = ({ user }: UserCredentialsProps) => {
                               />
                               <div className="kc-userLabel-actionBtns">
                                 <Button
-                                  key={"key-acceptBtn"}
+                                  key="key-acceptBtn"
                                   variant="link"
                                   className="kc-editUserLabel-acceptBtn"
                                   onClick={() => {
-                                    setEditedUserCredential(credential);
                                     handleSubmit1(saveUserLabel)();
                                     setIsUserLabelEdit(false);
                                   }}
@@ -518,7 +525,7 @@ export const UserCredentials = ({ user }: UserCredentialsProps) => {
                                   icon={<CheckIcon />}
                                 />
                                 <Button
-                                  key={"key-cancelBtn"}
+                                  key="key-cancelBtn"
                                   variant="link"
                                   className="kc-editUserLabel-cancelBtn"
                                   onClick={() => setIsUserLabelEdit(false)}
@@ -531,10 +538,13 @@ export const UserCredentials = ({ user }: UserCredentialsProps) => {
                             <>
                               {credential.userLabel ?? ""}
                               <Button
-                                key={"key"}
+                                key="key-editUserLabel"
                                 variant="link"
                                 className="kc-editUserLabel-btn"
-                                onClick={() => setIsUserLabelEdit(true)}
+                                onClick={() => {
+                                  setEditedUserCredential(credential);
+                                  setIsUserLabelEdit(true);
+                                }}
                                 data-testid="editUserLabelBtn"
                                 icon={<PencilAltIcon />}
                               />
