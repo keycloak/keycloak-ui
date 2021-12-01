@@ -116,6 +116,12 @@ export function convertFormValuesToObject<T>(
     } else {
       result[key] = value;
     }
+      result[key] = toValue(value);
+    } else if (key === "config" || key === "attributes") {
+      result[key] = flatten(value as Record<string, any>);
+    } else {
+      result[key] = value;
+    }
   });
   return result;
 }
