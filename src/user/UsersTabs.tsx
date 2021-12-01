@@ -81,6 +81,8 @@ const UsersTabs = () => {
   };
 
   const save = async (user: UserRepresentation) => {
+    user.username = user.username?.trim();
+
     try {
       if (id) {
         await adminClient.users.update({ id }, user);
