@@ -224,14 +224,11 @@ export const UserCredentials = ({ user }: UserCredentialsProps) => {
   });
 
   const rows = useMemo(() => {
-    if (userCredentials.length === 0) {
+    if (!selectedCredential.credentialData) {
       return [];
     }
 
-    const credentialData = userCredentials.map((userCredential) => ({
-      credentialData: userCredential.credentialData,
-    }));
-
+    const credentialData = JSON.parse(selectedCredential.credentialData);
     const locale = whoAmI.getLocale();
 
     return Object.entries(credentialData)
