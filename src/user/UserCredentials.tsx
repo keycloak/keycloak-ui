@@ -251,24 +251,24 @@ export const UserCredentials = ({ user }: UserCredentialsProps) => {
 
     if (!credentialToEdit) {
       return;
-    } else {
-      try {
-        await adminClient.users.updateCredentialLabel(
-          {
-            id: user.id!,
-            credentialId: credentialToEdit.id!,
-          },
-          userLabelFormValue.userLabel || ""
-        );
-        refresh();
-        addAlert(t("updateCredentialUserLabelSuccess"), AlertVariant.success);
-        setIsUserLabelEdit(false);
-        setEditedUserCredential({});
-      } catch (error) {
-        addError(t("updateCredentialUserLabelError"), error);
-        setIsUserLabelEdit(false);
-      }
     }
+
+    try {
+      await adminClient.users.updateCredentialLabel(
+        {
+          id: user.id!,
+          credentialId: credentialToEdit.id!,
+        },
+        userLabelFormValue.userLabel || ""
+      );
+      refresh();
+      addAlert(t("updateCredentialUserLabelSuccess"), AlertVariant.success);
+      setEditedUserCredential({});
+    } catch (error) {
+      addError(t("updateCredentialUserLabelError"), error);
+    }
+
+    setIsUserLabelEdit(false);
   };
 
   return (
@@ -480,7 +480,7 @@ export const UserCredentials = ({ user }: UserCredentialsProps) => {
             </Tr>
           </Thead>
           <Tbody>
-            <Tr key={"key"}>
+            <Tr>
               {userCredentials.map((credential) => (
                 <>
                   <Td
@@ -511,7 +511,6 @@ export const UserCredentials = ({ user }: UserCredentialsProps) => {
                               />
                               <div className="kc-userLabel-actionBtns">
                                 <Button
-                                  key="key-acceptBtn"
                                   variant="link"
                                   className="kc-editUserLabel-acceptBtn"
                                   onClick={() => {
@@ -522,7 +521,6 @@ export const UserCredentials = ({ user }: UserCredentialsProps) => {
                                   icon={<CheckIcon />}
                                 />
                                 <Button
-                                  key="key-cancelBtn"
                                   variant="link"
                                   className="kc-editUserLabel-cancelBtn"
                                   onClick={() => setIsUserLabelEdit(false)}
@@ -535,7 +533,6 @@ export const UserCredentials = ({ user }: UserCredentialsProps) => {
                             <>
                               {credential.userLabel ?? ""}
                               <Button
-                                key="key-editUserLabel"
                                 variant="link"
                                 className="kc-editUserLabel-btn"
                                 onClick={() => {
