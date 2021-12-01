@@ -480,15 +480,18 @@ export const UserCredentials = ({ user }: UserCredentialsProps) => {
             </Tr>
           </Thead>
           <Tbody>
-            <Tr>
-              {userCredentials.map((credential) => (
+            {userCredentials.map((credential) => (
+              <Tr key={`table-${credential.id}`}>
                 <>
                   <Td
                     draggableRow={{
                       id: `draggable-row-${credential.id}`,
                     }}
                   />
-                  <Td key={`${credential}`} dataLabel={`columns-${credential}`}>
+                  <Td
+                    key={`table-item-${credential.id}`}
+                    dataLabel={`columns-${credential.id}`}
+                  >
                     {credential.type?.charAt(0).toUpperCase()! +
                       credential.type?.slice(1)}
                   </Td>
@@ -511,6 +514,7 @@ export const UserCredentials = ({ user }: UserCredentialsProps) => {
                               />
                               <div className="kc-userLabel-actionBtns">
                                 <Button
+                                  key={`editUserLabel-accept-${credential.id}`}
                                   variant="link"
                                   className="kc-editUserLabel-acceptBtn"
                                   onClick={() => {
@@ -521,6 +525,7 @@ export const UserCredentials = ({ user }: UserCredentialsProps) => {
                                   icon={<CheckIcon />}
                                 />
                                 <Button
+                                  key={`editUserLabel-cancel-${credential.id}`}
                                   variant="link"
                                   className="kc-editUserLabel-cancelBtn"
                                   onClick={() => setIsUserLabelEdit(false)}
@@ -533,6 +538,7 @@ export const UserCredentials = ({ user }: UserCredentialsProps) => {
                             <>
                               {credential.userLabel ?? ""}
                               <Button
+                                key={`editUserLabel-${credential.id}`}
                                 variant="link"
                                 className="kc-editUserLabel-btn"
                                 onClick={() => {
@@ -561,15 +567,19 @@ export const UserCredentials = ({ user }: UserCredentialsProps) => {
                       {t("showDataBtn")}
                     </Button>
                   </Td>
-                  <Td>
-                    <Button
-                      variant="secondary"
-                      data-testid="resetPasswordBtn"
-                      onClick={resetPassword}
-                    >
-                      {t("resetPasswordBtn")}
-                    </Button>
-                  </Td>
+                  {credential.type === "password" ? (
+                    <Td>
+                      <Button
+                        variant="secondary"
+                        data-testid="resetPasswordBtn"
+                        onClick={resetPassword}
+                      >
+                        {t("resetPasswordBtn")}
+                      </Button>
+                    </Td>
+                  ) : (
+                    <Td />
+                  )}
                   <Td>
                     <Dropdown
                       isPlain
@@ -595,8 +605,8 @@ export const UserCredentials = ({ user }: UserCredentialsProps) => {
                     />
                   </Td>
                 </>
-              ))}
-            </Tr>
+              </Tr>
+            ))}
           </Tbody>
         </TableComposable>
       ) : (
