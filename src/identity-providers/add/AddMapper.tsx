@@ -161,28 +161,8 @@ export default function AddMapper() {
 
   const setupForm = (mapper: IdentityProviderMapperRepresentation) => {
     form.reset();
-    Object.entries(mapper).map(([key, value]) => {
-      if (key === "config") {
-        if (mapper.config?.["are.attribute.values.regex"]) {
-          form.setValue(
-            "config.are-attribute-values-regex",
-            mapper.config["are.attribute.values.regex"]
-          );
-        }
-
-        if (mapper.config?.attributes) {
-          form.setValue("config.attributes", JSON.parse(value.attributes));
-        }
-
-        if (mapper.config?.role) {
-          form.setValue("config.role", value.role[0]);
-        }
-
-        convertToFormValues(value, "config", form.setValue);
-      }
-
-      form.setValue(key, value);
-    });
+    convertToFormValues(mapper, form.setValue);
+    form.setValue("config.attributes", JSON.parse(mapper.config.attributes));
   };
 
   const targetOptions = ["local", "brokerId", "brokerUsername"];
@@ -229,7 +209,6 @@ export default function AddMapper() {
     () => formValues.identityProviderMapper?.includes("user-attribute-mapper"),
     [formValues.identityProviderMapper]
   );
-
   const toggleModal = () => {
     setRolesModalOpen(!rolesModalOpen);
   };
@@ -357,8 +336,8 @@ export default function AddMapper() {
                 <Controller
                   name={
                     isOIDCAdvancedClaimToRole
-                      ? "config.are-claim-values-regex"
-                      : "config.are-attribute-values-regex"
+                      ? "config.are.claim.values.regex"
+                      : "config.are.attribute.values.regex"
                   }
                   control={control}
                   defaultValue="false"
@@ -548,14 +527,14 @@ export default function AddMapper() {
                 <TextInput
                   ref={register()}
                   type="text"
-                  defaultValue={currentMapper?.config["attribute-value"]}
+                  defaultValue={currentMapper?.config["attribute.value"]}
                   data-testid={
                     isHardcodedUserSessionAttribute
-                      ? "user-session-attribute-value"
+                      ? "user.session.attribute.value"
                       : "user-attribute-value"
                   }
                   id="kc-user-session-attribute-value"
-                  name="config.attribute-value"
+                  name="config.attribute.value"
                   validated={
                     errors.name
                       ? ValidatedOptions.error
@@ -594,10 +573,10 @@ export default function AddMapper() {
                     <TextInput
                       ref={register()}
                       type="text"
-                      defaultValue={currentMapper?.config["attribute-name"]}
+                      defaultValue={currentMapper?.config["attribute.name"]}
                       id="kc-attribute-name"
                       data-testid="attribute-name"
-                      name="config.attribute-name"
+                      name="config.attribute.name"
                       validated={
                         errors.name
                           ? ValidatedOptions.error
@@ -629,11 +608,11 @@ export default function AddMapper() {
                       ref={register()}
                       type="text"
                       defaultValue={
-                        currentMapper?.config["attribute-friendly-name"]
+                        currentMapper?.config["attribute.friendly.name"]
                       }
                       data-testid="attribute-friendly-name"
                       id="kc-attribute-friendly-name"
-                      name="config.attribute-friendly-name"
+                      name="config.attribute.friendly.name"
                       validated={
                         errors.name
                           ? ValidatedOptions.error
@@ -715,11 +694,11 @@ export default function AddMapper() {
                   type="text"
                   defaultValue={
                     isOIDCclaimToRole
-                      ? currentMapper?.config["claim-value"]
-                      : currentMapper?.config["attribute-value"]
+                      ? currentMapper?.config["claim.value"]
+                      : currentMapper?.config["attribute.value"]
                   }
                   data-testid={
-                    isOIDCclaimToRole ? "claim-value" : "user-attribute-name"
+                    isOIDCclaimToRole ? "claim.value" : "user.attribute.name"
                   }
                   id={
                     isOIDCclaimToRole
@@ -727,7 +706,7 @@ export default function AddMapper() {
                       : "kc-user-attribute-name"
                   }
                   name={
-                    isOIDCclaimToRole ? "config.claim" : "config.user-attribute"
+                    isOIDCclaimToRole ? "config.claim" : "config.user.attribute"
                   }
                   validated={
                     errors.name
