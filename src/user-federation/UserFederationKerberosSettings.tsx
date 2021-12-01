@@ -107,16 +107,7 @@ export default function UserFederationKerberosSettings() {
   );
 
   const setupForm = (component: ComponentRepresentation) => {
-    Object.entries(component).map((entry) => {
-      form.setValue(
-        "config.allowPasswordAuthentication",
-        component.config?.allowPasswordAuthentication
-      );
-      if (entry[0] === "config") {
-        convertToFormValues(entry[1], "config", form.setValue);
-      }
-      form.setValue(entry[0], entry[1]);
-    });
+    convertToFormValues(component, form.setValue);
   };
 
   const save = async (component: ComponentRepresentation) => {

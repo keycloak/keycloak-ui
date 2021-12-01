@@ -220,6 +220,7 @@ export default function UserFederationLdapSettings() {
   );
 
   const setupForm = (component: ComponentRepresentation) => {
+    convertToFormValues(component, form.setValue);
     Object.entries(component).map((entry) => {
       if (entry[0] === "config") {
         form.setValue(
@@ -231,10 +232,7 @@ export default function UserFederationLdapSettings() {
           "config.periodicFullSync",
           entry[1].fullSyncPeriod[0] !== "-1"
         );
-
-        convertToFormValues(entry[1], "config", form.setValue);
       }
-      form.setValue(entry[0], entry[1]);
     });
   };
 
