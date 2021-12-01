@@ -32,6 +32,7 @@ type AddRoleMappingModalProps = {
   isRadio?: boolean;
   onAssign: (rows: Row[]) => void;
   onClose: () => void;
+  isLDAPmapper?: boolean;
 };
 
 type ClientRole = ClientRepresentation & {
@@ -47,6 +48,7 @@ export const AddRoleMappingModal = ({
   name,
   type,
   isRadio = false,
+  isLDAPmapper,
   onAssign,
   onClose,
 }: AddRoleMappingModalProps) => {
@@ -224,7 +226,9 @@ export const AddRoleMappingModal = ({
   return (
     <Modal
       variant={ModalVariant.large}
-      title={t("assignRolesTo", { client: name })}
+      title={
+        isLDAPmapper ? t("assignRole") : t("assignRolesTo", { client: name })
+      }
       isOpen={true}
       onClose={onClose}
       actions={[
