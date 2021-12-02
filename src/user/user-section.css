@@ -178,3 +178,7 @@ article.pf-c-card.pf-m-flat.kc-available-idps > div > div > h1 {
 .pf-c-table.pf-m-compact tr:not(.pf-c-table__expandable-row)>:last-child {
   overflow-wrap: anywhere;
 }
+
+.setPasswordBtn-table {
+  margin: 25px 0 25px 25px;
+}

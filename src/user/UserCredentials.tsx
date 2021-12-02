@@ -3,6 +3,7 @@ import {
   AlertVariant,
   Button,
   ButtonVariant,
+  Divider,
   Dropdown,
   DropdownItem,
   DropdownPosition,
@@ -137,6 +138,10 @@ export const UserCredentials = ({ user }: UserCredentialsProps) => {
       setUserCredentials(credentials);
     },
     [key]
+  );
+
+  const passwordTypeFinder = userCredentials.find(
+    (credential) => credential.type === "password"
   );
 
   const passwordWatcher = useWatch<CredentialsForm["password"]>({
@@ -469,6 +474,23 @@ export const UserCredentials = ({ user }: UserCredentialsProps) => {
             <TableBody />
           </Table>
         </DisplayDialog>
+      )}
+      {userCredentials.length !== 0 && passwordTypeFinder === undefined && (
+        <>
+          <Button
+            key={`confirmSaveBtn-table-${user.id}`}
+            className="setPasswordBtn-table"
+            data-testid="setPasswordBtn-table"
+            variant="primary"
+            form="userCredentials-form"
+            onClick={() => {
+              setOpen(true);
+            }}
+          >
+            {t("savePassword")}
+          </Button>
+          <Divider />
+        </>
       )}
       {userCredentials.length !== 0 ? (
         <TableComposable aria-label="password-data-table" variant={"compact"}>
