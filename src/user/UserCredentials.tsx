@@ -126,10 +126,10 @@ export const UserCredentials = ({ user }: UserCredentialsProps) => {
   const [showData, setShowData] = useState(false);
   const [editedUserCredential, setEditedUserCredential] =
     useState<CredentialRepresentation>({});
-  const [isUserLabelEdit, setIsUserLabelEdit] = useState({
-    status: false,
-    rowKey: "",
-  });
+  const [isUserLabelEdit, setIsUserLabelEdit] = useState<{
+    status: boolean;
+    rowKey: string;
+  }>();
 
   useFetch(
     () => adminClient.users.getCredentials({ id: user.id! }),
@@ -198,7 +198,9 @@ export const UserCredentials = ({ user }: UserCredentialsProps) => {
         setOpenSaveConfirm(false);
       } catch (error) {
         addError(
-          isResetPassword ? t("resetPasswordError") : t("savePasswordError"),
+          isResetPassword
+            ? "users:resetPasswordError"
+            : "users:savePasswordError",
           error
         );
       }
@@ -224,7 +226,7 @@ export const UserCredentials = ({ user }: UserCredentialsProps) => {
         addAlert(t("deleteCredentialsSuccess"), AlertVariant.success);
         setKey((key) => key + 1);
       } catch (error) {
-        addError(t("deleteCredentialsError"), error);
+        addError("users:deleteCredentialsError", error);
       }
     },
   });
@@ -271,7 +273,7 @@ export const UserCredentials = ({ user }: UserCredentialsProps) => {
       addAlert(t("updateCredentialUserLabelSuccess"), AlertVariant.success);
       setEditedUserCredential({});
     } catch (error) {
-      addError(t("updateCredentialUserLabelError"), error);
+      addError("users:updateCredentialUserLabelError", error);
     }
 
     setIsUserLabelEdit({
@@ -511,7 +513,7 @@ export const UserCredentials = ({ user }: UserCredentialsProps) => {
                         className="kc-userLabel-row"
                       >
                         <div className="kc-form-group-userLabel">
-                          {isUserLabelEdit.status &&
+                          {isUserLabelEdit?.status &&
                           isUserLabelEdit.rowKey === credential.id ? (
                             <>
                               <TextInput
