@@ -36,6 +36,7 @@ export const BooleanComponent = ({
             labelOff={t("common:off")}
             isChecked={value === "true" || value === true}
             onChange={(value) => onChange("" + value)}
+            data-testid={name}
           />
         )}
       />

@@ -142,8 +142,7 @@ export const RoleComponent = ({ name, label, helpText }: ComponentProps) => {
               <SplitItem>
                 {clients && (
                   <Select
-                    toggleId={name!}
-                    data-testid={name}
+                    toggleId={`group-${name}`}
                     onToggle={() => setClientsOpen(!clientsOpen)}
                     isOpen={clientsOpen}
                     variant={SelectVariant.typeahead}
@@ -177,6 +176,7 @@ export const RoleComponent = ({ name, label, helpText }: ComponentProps) => {
               </SplitItem>
               <SplitItem>
                 <Select
+                  toggleId={`role-${name}`}
                   onToggle={(isExpanded) => setRoleOpen(isExpanded)}
                   isOpen={roleOpen}
                   variant={SelectVariant.typeahead}
