@@ -101,7 +101,7 @@ const UsersTabs = () => {
         history.push(toUser({ id: createdUser.id, realm, tab: "settings" }));
       }
     } catch (error) {
-      addError("userCreateError", error);
+      addError("users:userCreateError", error);
     }
   };
 
