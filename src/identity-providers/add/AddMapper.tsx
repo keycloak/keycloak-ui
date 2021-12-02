@@ -229,7 +229,7 @@ export default function AddMapper() {
           isSocialIdP={isSocialIdP}
         />
         <FormProvider {...form}>
-          {mapperTypes[mapperType].properties && (
+          {mapperTypes[mapperType]?.properties && (
             <DynamicComponents
               properties={mapperTypes[mapperType].properties!}
             />
