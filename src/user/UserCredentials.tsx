@@ -121,9 +121,12 @@ export const UserCredentials = ({ user }: UserCredentialsProps) => {
     useState<CredentialRepresentation>({});
   const [isResetPassword, setIsResetPassword] = useState(false);
   const [showData, setShowData] = useState(false);
-  const [isUserLabelEdit, setIsUserLabelEdit] = useState(false);
   const [editedUserCredential, setEditedUserCredential] =
     useState<CredentialRepresentation>({});
+  const [isUserLabelEdit, setIsUserLabelEdit] = useState({
+    status: false,
+    rowKey: "",
+  });
 
   useFetch(
     () => adminClient.users.getCredentials({ id: user.id! }),
@@ -268,7 +271,10 @@ export const UserCredentials = ({ user }: UserCredentialsProps) => {
       addError(t("updateCredentialUserLabelError"), error);
     }
 
-    setIsUserLabelEdit(false);
+    setIsUserLabelEdit({
+      status: false,
+      rowKey: credentialToEdit.id!,
+    });
   };
 
   return (
@@ -502,7 +508,8 @@ export const UserCredentials = ({ user }: UserCredentialsProps) => {
                         className="kc-userLabel-row"
                       >
                         <div className="kc-form-group-userLabel">
-                          {isUserLabelEdit ? (
+                          {isUserLabelEdit.status &&
+                          isUserLabelEdit.rowKey === credential.id ? (
                             <>
                               <TextInput
                                 name="userLabel"
@@ -519,7 +526,10 @@ export const UserCredentials = ({ user }: UserCredentialsProps) => {
                                   className="kc-editUserLabel-acceptBtn"
                                   onClick={() => {
                                     handleSubmit1(saveUserLabel)();
-                                    setIsUserLabelEdit(false);
+                                    setIsUserLabelEdit({
+                                      status: false,
+                                      rowKey: credential.id!,
+                                    });
                                   }}
                                   data-testid="editUserLabel-acceptBtn"
                                   icon={<CheckIcon />}
@@ -528,7 +538,12 @@ export const UserCredentials = ({ user }: UserCredentialsProps) => {
                                   key={`editUserLabel-cancel-${credential.id}`}
                                   variant="link"
                                   className="kc-editUserLabel-cancelBtn"
-                                  onClick={() => setIsUserLabelEdit(false)}
+                                  onClick={() =>
+                                    setIsUserLabelEdit({
+                                      status: false,
+                                      rowKey: credential.id!,
+                                    })
+                                  }
                                   data-testid="editUserLabel-cancelBtn"
                                   icon={<TimesIcon />}
                                 />
@@ -543,7 +558,10 @@ export const UserCredentials = ({ user }: UserCredentialsProps) => {
                                 className="kc-editUserLabel-btn"
                                 onClick={() => {
                                   setEditedUserCredential(credential);
-                                  setIsUserLabelEdit(true);
+                                  setIsUserLabelEdit({
+                                    status: true,
+                                    rowKey: credential.id!,
+                                  });
                                 }}
                                 data-testid="editUserLabelBtn"
                                 icon={<PencilAltIcon />}
