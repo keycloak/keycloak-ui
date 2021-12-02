@@ -1,7 +1,8 @@
-import { cloneDeep, set } from "lodash";
+import { cloneDeep } from "lodash";
 import { useTranslation } from "react-i18next";
 import FileSaver from "file-saver";
 import type { IFormatter, IFormatterValueType } from "@patternfly/react-table";
+import { unflatten, flatten } from "flat";
 
 import type ClientRepresentation from "@keycloak/keycloak-admin-client/lib/defs/clientRepresentation";
 import type { ProviderRepresentation } from "@keycloak/keycloak-admin-client/lib/defs/serverInfoRepesentation";
@@ -88,37 +89,16 @@ export const convertToFormValues = (
   multiline?: string[]
 ) => {
   Object.entries(obj).map(([key, value]) => {
-    if (isAttributesObject(value)) {
+    if (key === "attributes" && isAttributesObject(value)) {
       setValue(key, attributesToArray(value as Record<string, string[]>));
     } else if (key === "config" || key === "attributes") {
-      setValue(key, !isEmpty(value) ? inflate(value) : undefined);
+      setValue(key, !isEmpty(value) ? unflatten(value) : undefined);
     } else if (multiline?.includes(key)) {
       setValue(key, convertToMultiline(value as string[]));
     } else {
       setValue(key, value);
     }
   });
-};
-
-const inflate = (data: any) => {
-  const result: any = {};
-  for (const i in data) {
-    set(result, i, data[i]);
-  }
-  return result;
-};
-
-const flatten = (obj: Record<string, any> | undefined, path = ""): {} => {
-  if (!(obj instanceof Object)) return { [path.replace(/\.$/g, "")]: obj };
-
-  return Object.keys(obj).reduce((output, key) => {
-    return obj instanceof Array
-      ? {
-          ...output,
-          ...flatten(obj[key as unknown as number], path + "[" + key + "]."),
-        }
-      : { ...output, ...flatten(obj[key], path + key + ".") };
-  }, {});
 };
 
 export function convertFormValuesToObject<T>(
@@ -132,7 +112,7 @@ export function convertFormValuesToObject<T>(
     } else if (multiline.includes(key)) {
       result[key] = toValue(value);
     } else if (key === "config" || key === "attributes") {
-      result[key] = flatten(value as Record<string, any>);
+      result[key] = flatten(value as Record<string, any>, { safe: true });
     } else {
       result[key] = value;
     }
