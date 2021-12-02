@@ -48,7 +48,7 @@ export default function GroupsSection() {
       await adminClient.groups.del({
         id: group.id!,
       });
-      addAlert(t("groupDelete"), AlertVariant.success);
+      addAlert(t("groupDeleted", { count: 1 }), AlertVariant.success);
     } catch (error) {
       addError("groups:groupDeleteError", error);
     }
