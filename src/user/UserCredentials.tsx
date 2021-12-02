@@ -607,9 +607,9 @@ export const UserCredentials = ({ user }: UserCredentialsProps) => {
                       position={DropdownPosition.right}
                       toggle={
                         <KebabToggle
-                          onToggle={() =>
+                          onToggle={(status) =>
                             setKebabOpen({
-                              status: true,
+                              status,
                               rowKey: credential.id!,
                             })
                           }
@@ -618,7 +618,9 @@ export const UserCredentials = ({ user }: UserCredentialsProps) => {
                       isOpen={
                         kebabOpen.status && kebabOpen.rowKey === credential.id
                       }
-                      onSelect={() => setSelectedCredential(credential)}
+                      onSelect={() => {
+                        setSelectedCredential(credential);
+                      }}
                       dropdownItems={[
                         <DropdownItem
                           key={`delete-dropdown-item-${credential.id}`}
