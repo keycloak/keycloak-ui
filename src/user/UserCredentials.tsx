@@ -99,7 +99,10 @@ export const UserCredentials = ({ user }: UserCredentialsProps) => {
   const refresh = () => setKey(key + 1);
   const [open, setOpen] = useState(false);
   const [openSaveConfirm, setOpenSaveConfirm] = useState(false);
-  const [kebabOpen, setKebabOpen] = useState(false);
+  const [kebabOpen, setKebabOpen] = useState({
+    status: false,
+    rowKey: "",
+  });
   const adminClient = useAdminClient();
   const form = useForm<CredentialsForm>({
     defaultValues: credFormDefaultValues,
@@ -603,9 +606,18 @@ export const UserCredentials = ({ user }: UserCredentialsProps) => {
                       isPlain
                       position={DropdownPosition.right}
                       toggle={
-                        <KebabToggle onToggle={(open) => setKebabOpen(open)} />
+                        <KebabToggle
+                          onToggle={() =>
+                            setKebabOpen({
+                              status: true,
+                              rowKey: credential.id!,
+                            })
+                          }
+                        />
                       }
-                      isOpen={kebabOpen}
+                      isOpen={
+                        kebabOpen.status && kebabOpen.rowKey === credential.id
+                      }
                       onSelect={() => setSelectedCredential(credential)}
                       dropdownItems={[
                         <DropdownItem
@@ -614,7 +626,10 @@ export const UserCredentials = ({ user }: UserCredentialsProps) => {
                           component="button"
                           onClick={() => {
                             toggleDeleteDialog();
-                            setKebabOpen(false);
+                            setKebabOpen({
+                              status: false,
+                              rowKey: credential.id!,
+                            });
                           }}
                         >
                           {t("deleteBtn")}
