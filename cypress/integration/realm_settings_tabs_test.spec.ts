@@ -49,9 +49,15 @@ describe("Realm settings tabs tests", () => {
     sidebarPage.goToRealmSettings();
     cy.findByTestId("rs-login-tab").click();
 
-    cy.get("#kc-user-reg-switch-off").should("be.visible");
-    cy.get("#kc-forgot-pw-switch-off").should("be.visible");
-    cy.get("#kc-remember-me-switch-off").should("not.be.visible");
+    cy.findByTestId(realmSettingsPage.userRegSwitch).should("have.value", "on");
+    cy.findByTestId(realmSettingsPage.forgotPwdSwitch).should(
+      "have.value",
+      "on"
+    );
+    cy.findByTestId(realmSettingsPage.rememberMeSwitch).should(
+      "have.value",
+      "on"
+    );
   });
 
   it("Go to email tab", () => {
@@ -64,12 +70,7 @@ describe("Realm settings tabs tests", () => {
     realmSettingsPage.fillHostField("localhost");
     cy.findByTestId(realmSettingsPage.testConnectionButton).click();
 
-    realmSettingsPage.fillEmailField(
-      "example" + (Math.random() + 1).toString(36).substring(7) + "@example.com"
-    );
-    cy.findByTestId(realmSettingsPage.modalTestConnectionButton).click();
-
-    masthead.checkNotificationMessage("Error! Failed to send email.");
+    masthead.checkNotificationMessage("Error! Failed to send email.", true);
   });
 
   it("Go to themes tab", () => {
