@@ -2,15 +2,17 @@ import React, { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import _ from "lodash";
 import {
+  Alert,
   Button,
   ButtonVariant,
+  Checkbox,
   DataList,
   DataListCell,
   DataListItem,
   DataListItemCells,
   DataListItemRow,
-  DataListCheck,
   Divider,
+  Label,
   Modal,
   ModalVariant,
   Select,
@@ -22,7 +24,19 @@ import {
   TextContent,
 } from "@patternfly/react-core";
 
+import { useAlerts } from "../components/alert/Alerts";
 import { JsonFileUpload } from "../components/json-file-upload/JsonFileUpload";
+import { KeycloakDataTable } from "../components/table-toolbar/KeycloakDataTable";
+
+import { useAdminClient } from "../context/auth/AdminClient";
+import { useRealm } from "../context/realm-context/RealmContext";
+
+import type RealmRepresentation from "@keycloak/keycloak-admin-client/lib/defs/realmRepresentation";
+import type {
+  PartialImportRealmRepresentation,
+  PartialImportResponse,
+} from "@keycloak/keycloak-admin-client/lib/defs/realmRepresentation";
+import type RoleRepresentation from "@keycloak/keycloak-admin-client/lib/defs/roleRepresentation";
 
 export type PartialImportProps = {
   open: boolean;
@@ -31,22 +45,7 @@ export type PartialImportProps = {
 
 // An imported JSON file can either be an array of realm objects
 // or a single realm object.
-type ImportedMultiRealm = [ImportedRealm?] | ImportedRealm;
-
-// Realms in imported json can have a lot more properties,
-// but these are the ones we care about.
-type ImportedRealm = {
-  id?: string;
-  realm?: string;
-  users?: [];
-  clients?: [];
-  groups?: [];
-  identityProviders?: [];
-  roles?: {
-    realm?: [];
-    client?: { [index: string]: [] };
-  };
-};
+type ImportedMultiRealm = [RealmRepresentation?] | RealmRepresentation;
 
 type NonRoleResource = "users" | "clients" | "groups" | "identityProviders";
 type RoleResource = "realmRoles" | "clientRoles";
@@ -59,15 +58,20 @@ type ResourceChecked = { [k in Resource]: boolean };
 export const PartialImportDialog = (props: PartialImportProps) => {
   const tRealm = useTranslation("realm-settings").t;
   const { t } = useTranslation("partial-import");
+  const adminClient = useAdminClient();
+  const { realm } = useRealm();
 
   const [isFileSelected, setIsFileSelected] = useState(false);
   const [isMultiRealm, setIsMultiRealm] = useState(false);
   const [importedFile, setImportedFile] = useState<ImportedMultiRealm>([]);
   const [isRealmSelectOpen, setIsRealmSelectOpen] = useState(false);
   const [isCollisionSelectOpen, setIsCollisionSelectOpen] = useState(false);
+  const [importInProgress, setImportInProgress] = useState(false);
   const [collisionOption, setCollisionOption] =
     useState<CollisionOption>("FAIL");
-  const [targetRealm, setTargetRealm] = useState<ImportedRealm>({});
+  const [targetRealm, setTargetRealm] = useState<RealmRepresentation>({});
+  const [importResponse, setImportResponse] = useState<PartialImportResponse>();
+  const { addError } = useAlerts();
 
   const allResourcesUnChecked: Readonly<ResourceChecked> = {
     users: false,
@@ -100,6 +104,8 @@ export const PartialImportDialog = (props: PartialImportProps) => {
   // when dialog opens or closes, clear state
   useEffect(() => {
     setIsFileSelected(false);
+    setImportInProgress(false);
+    setImportResponse(undefined);
     resetInputState();
   }, [props.open]);
 
@@ -114,7 +120,7 @@ export const PartialImportDialog = (props: PartialImportProps) => {
       setTargetRealm(value[0] || {});
     } else {
       setIsMultiRealm(false);
-      setTargetRealm((value as ImportedRealm) || {});
+      setTargetRealm((value as RealmRepresentation) || {});
     }
   };
 
@@ -122,7 +128,7 @@ export const PartialImportDialog = (props: PartialImportProps) => {
     event: React.ChangeEvent<Element> | React.MouseEvent<Element, MouseEvent>,
     realm: string | SelectOptionObject
   ) => {
-    setTargetRealm(realm as ImportedRealm);
+    setTargetRealm(realm as RealmRepresentation);
     setIsRealmSelectOpen(false);
     resetResourcesToImport();
   };
@@ -141,7 +147,7 @@ export const PartialImportDialog = (props: PartialImportProps) => {
   const realmSelectOptions = () => {
     if (!isMultiRealm) return [];
 
-    const mapper = (realm: ImportedRealm) => {
+    const mapper = (realm: RealmRepresentation) => {
       return (
         <SelectOption
           key={realm.id}
@@ -153,7 +159,7 @@ export const PartialImportDialog = (props: PartialImportProps) => {
       );
     };
 
-    return (importedFile as [ImportedRealm]).map(mapper);
+    return (importedFile as [RealmRepresentation]).map(mapper);
   };
 
   const handleCollisionSelect = (
@@ -233,7 +239,9 @@ export const PartialImportDialog = (props: PartialImportProps) => {
     return targetRealm[resource as NonRoleResource]!.length;
   };
 
-  const clientRolesCount = (clientRoles: { [index: string]: [] }) => {
+  const clientRolesCount = (clientRoles: {
+    [index: string]: RoleRepresentation[];
+  }) => {
     let total = 0;
     for (const clientName in clientRoles) {
       total += clientRoles[clientName].length;
@@ -257,19 +265,18 @@ export const PartialImportDialog = (props: PartialImportProps) => {
     return (
       <DataListItem aria-labelledby={`${resource}-list-item`}>
         <DataListItemRow>
-          <DataListCheck
-            aria-labelledby={`${resource}-checkbox`}
-            name={resource}
-            isChecked={resourcesToImport[resource]}
-            onChange={handleResourceCheckBox}
-            data-testid={resource + "-checkbox"}
-          />
           <DataListItemCells
             dataListCells={[
               <DataListCell key={resource}>
-                <span data-testid={resource + "-count"}>
-                  {itemCount(resource)} {resourceDisplayName}
-                </span>
+                <Checkbox
+                  id={`${resource}-checkbox`}
+                  label={`${itemCount(resource)} ${resourceDisplayName}`}
+                  aria-labelledby={`${resource}-checkbox`}
+                  name={resource}
+                  isChecked={resourcesToImport[resource]}
+                  onChange={handleResourceCheckBox}
+                  data-testid={resource + "-checkbox"}
+                />
               </DataListCell>,
             ]}
           />
@@ -278,107 +285,258 @@ export const PartialImportDialog = (props: PartialImportProps) => {
     );
   };
 
-  return (
-    <Modal
-      variant={ModalVariant.medium}
-      title={tRealm("partialImport")}
-      isOpen={props.open}
-      onClose={props.toggleDialog}
-      actions={[
-        <Button
-          id="modal-import"
-          data-testid="import-button"
-          key="import"
-          isDisabled={!isAnyResourceChecked}
-          onClick={() => {
-            props.toggleDialog();
-          }}
-        >
-          {t("import")}
-        </Button>,
-        <Button
-          id="modal-cancel"
-          data-testid="cancel-button"
-          key="cancel"
-          variant={ButtonVariant.link}
-          onClick={() => {
-            props.toggleDialog();
-          }}
-        >
-          {t("common:cancel")}
-        </Button>,
-      ]}
-    >
-      <Stack hasGutter>
-        <StackItem>
-          <TextContent>
-            <Text>{t("partialImportHeaderText")}</Text>
-          </TextContent>
-        </StackItem>
-        <StackItem>
-          <JsonFileUpload
-            id="partial-import-file"
-            allowEditingUploadedText
-            onChange={handleFileChange}
-          />
-        </StackItem>
+  const jsonForImport = () => {
+    const jsonToImport: PartialImportRealmRepresentation = {
+      ifResourceExists: collisionOption,
+    };
 
-        {isFileSelected && targetHasResources() && (
-          <>
-            <StackItem>
-              <Divider />
-            </StackItem>
-            {isMultiRealm && (
+    jsonToImport.id = targetRealm.id;
+    jsonToImport.realm = targetRealm.realm;
+    if (resourcesToImport["users"]) jsonToImport.users = targetRealm.users;
+    if (resourcesToImport["groups"]) jsonToImport.groups = targetRealm.groups;
+    if (resourcesToImport["identityProviders"])
+      jsonToImport.identityProviders = targetRealm.identityProviders;
+    if (resourcesToImport["clients"])
+      jsonToImport.clients = targetRealm.clients;
+    if (resourcesToImport["realmRoles"] || resourcesToImport["clientRoles"]) {
+      jsonToImport.roles = targetRealm.roles;
+      if (!resourcesToImport["realmRoles"]) delete jsonToImport.roles?.realm;
+      if (!resourcesToImport["clientRoles"]) delete jsonToImport.roles?.client;
+    }
+    return jsonToImport;
+  };
+
+  async function doImport() {
+    if (importInProgress) return;
+    try {
+      const jsonToImport: PartialImportRealmRepresentation = jsonForImport();
+      setImportInProgress(true);
+      const importResults: PartialImportResponse =
+        await adminClient.realms.partialImport({
+          realm: realm,
+          rep: jsonToImport,
+        });
+      setImportResponse(importResults);
+    } catch (error) {
+      setImportInProgress(false);
+      addError("partial-import:importFail", error);
+    }
+  }
+
+  const importModal = () => {
+    return (
+      <Modal
+        variant={ModalVariant.medium}
+        title={tRealm("partialImport")}
+        isOpen={props.open}
+        onClose={props.toggleDialog}
+        actions={[
+          <Button
+            id="modal-import"
+            data-testid="import-button"
+            key="import"
+            isDisabled={!isAnyResourceChecked}
+            onClick={() => {
+              doImport();
+            }}
+          >
+            {t("import")}
+          </Button>,
+          <Button
+            id="modal-cancel"
+            data-testid="cancel-button"
+            key="cancel"
+            variant={ButtonVariant.link}
+            onClick={() => {
+              props.toggleDialog();
+            }}
+          >
+            {t("common:cancel")}
+          </Button>,
+        ]}
+      >
+        <Stack hasGutter>
+          <StackItem>
+            <TextContent>
+              <Text>{t("partialImportHeaderText")}</Text>
+            </TextContent>
+          </StackItem>
+          <StackItem>
+            <JsonFileUpload
+              id="partial-import-file"
+              allowEditingUploadedText
+              onChange={handleFileChange}
+            />
+          </StackItem>
+
+          {isFileSelected && targetHasResources() && (
+            <>
               <StackItem>
-                <Text>{t("selectRealm")}:</Text>
+                <Divider />
+              </StackItem>
+              {isMultiRealm && (
+                <StackItem>
+                  <Text>{t("selectRealm")}:</Text>
+                  <Select
+                    toggleId="realm-selector"
+                    isOpen={isRealmSelectOpen}
+                    onToggle={() => setIsRealmSelectOpen(!isRealmSelectOpen)}
+                    onSelect={handleRealmSelect}
+                    placeholderText={targetRealm.realm || targetRealm.id}
+                  >
+                    {realmSelectOptions()}
+                  </Select>
+                </StackItem>
+              )}
+              <StackItem>
+                <Text>{t("chooseResources")}:</Text>
+                <DataList aria-label="Resources to import" isCompact>
+                  {targetHasResource("users") &&
+                    resourceDataListItem("users", t("common:users"))}
+                  {targetHasResource("groups") &&
+                    resourceDataListItem("groups", t("common:groups"))}
+                  {targetHasResource("clients") &&
+                    resourceDataListItem("clients", t("common:clients"))}
+                  {targetHasResource("identityProviders") &&
+                    resourceDataListItem(
+                      "identityProviders",
+                      t("common:identityProviders")
+                    )}
+                  {targetHasRealmRoles() &&
+                    resourceDataListItem("realmRoles", t("common:realmRoles"))}
+                  {targetHasClientRoles() &&
+                    resourceDataListItem(
+                      "clientRoles",
+                      t("common:clientRoles")
+                    )}
+                </DataList>
+              </StackItem>
+              <StackItem>
+                <Text>{t("selectIfResourceExists")}:</Text>
                 <Select
-                  toggleId="realm-selector"
-                  isOpen={isRealmSelectOpen}
-                  onToggle={() => setIsRealmSelectOpen(!isRealmSelectOpen)}
-                  onSelect={handleRealmSelect}
-                  placeholderText={targetRealm.realm || targetRealm.id}
+                  isOpen={isCollisionSelectOpen}
+                  direction="up"
+                  onToggle={() => {
+                    setIsCollisionSelectOpen(!isCollisionSelectOpen);
+                  }}
+                  onSelect={handleCollisionSelect}
+                  placeholderText={t(collisionOption)}
                 >
-                  {realmSelectOptions()}
+                  {collisionOptions()}
                 </Select>
               </StackItem>
-            )}
-            <StackItem>
-              <Text>{t("chooseResources")}:</Text>
-              <DataList aria-label="Resources to import" isCompact>
-                {targetHasResource("users") &&
-                  resourceDataListItem("users", "users")}
-                {targetHasResource("groups") &&
-                  resourceDataListItem("groups", "groups")}
-                {targetHasResource("clients") &&
-                  resourceDataListItem("clients", "clients")}
-                {targetHasResource("identityProviders") &&
-                  resourceDataListItem(
-                    "identityProviders",
-                    "identity providers"
-                  )}
-                {targetHasRealmRoles() &&
-                  resourceDataListItem("realmRoles", "realm roles")}
-                {targetHasClientRoles() &&
-                  resourceDataListItem("clientRoles", "client roles")}
-              </DataList>
-            </StackItem>
-            <StackItem>
-              <Text>{t("selectIfResourceExists")}:</Text>
-              <Select
-                isOpen={isCollisionSelectOpen}
-                direction="up"
-                onToggle={() => {
-                  setIsCollisionSelectOpen(!isCollisionSelectOpen);
-                }}
-                onSelect={handleCollisionSelect}
-                placeholderText={t(collisionOption)}
-              >
-                {collisionOptions()}
-              </Select>
-            </StackItem>
-          </>
-        )}
-      </Stack>
-    </Modal>
+            </>
+          )}
+        </Stack>
+      </Modal>
+    );
+  };
+
+  const importCompleteMessage = () => {
+    return t("importSuccess", {
+      added: importResponse?.added,
+      overwritten: importResponse?.overwritten,
+      skipped: importResponse?.skipped,
+    });
+  };
+
+  const loader = async (first?: number, max?: number) => {
+    let last = first! + max!;
+    const length = importResponse?.results.length;
+    if (last > length!) last = length!;
+
+    if (importResponse?.results)
+      return importResponse.results.slice(first, last);
+
+    // Empty state can't happen as you will get back a result record
+    // for each record you submit. This is here to make Typescript happy.
+    return [];
+  };
+
+  const ActionLabel = (importRecord: { action: string }) => {
+    let text = t("added");
+    let color: "green" | "orange" | "purple" = "green";
+
+    if (importRecord.action === "SKIPPED") {
+      text = t("skipped");
+      color = "orange";
+    }
+
+    if (importRecord.action === "OVERWRITTEN") {
+      text = t("overwritten");
+      color = "purple";
+    }
+
+    return <Label color={color}>{text}</Label>;
+  };
+
+  const TypeRenderer = (importRecord: { resourceType: string }) => {
+    const typeMap = new Map<string, string>([
+      ["CLIENT", t("common:clients")],
+      ["REALM_ROLE", t("common:realmRoles")],
+      ["USER", t("common:users")],
+      ["CLIENT_ROLE", t("common:clientRoles")],
+      ["IDP", t("common:identityProviders")],
+    ]);
+
+    return <span>{typeMap.get(importRecord.resourceType)}</span>;
+  };
+
+  const importCompletedModal = () => {
+    return (
+      <Modal
+        variant={ModalVariant.medium}
+        title={tRealm("partialImport")}
+        isOpen={props.open}
+        onClose={props.toggleDialog}
+        actions={[
+          <Button
+            id="modal-close"
+            data-testid="close-button"
+            key="close"
+            variant={ButtonVariant.primary}
+            onClick={() => {
+              props.toggleDialog();
+            }}
+          >
+            {t("common:close")}
+          </Button>,
+        ]}
+      >
+        <Alert variant="success" isInline title={importCompleteMessage()} />
+        <KeycloakDataTable
+          loader={loader}
+          isPaginated
+          ariaLabelKey="realm-settings:partialImport"
+          columns={[
+            {
+              name: "action",
+              displayKey: "common:action",
+              cellRenderer: ActionLabel,
+            },
+            {
+              name: "resourceType",
+              displayKey: "common:type",
+              cellRenderer: TypeRenderer,
+            },
+            {
+              name: "resourceName",
+              displayKey: "common:name",
+            },
+            {
+              name: "id",
+              displayKey: "common:id",
+            },
+          ]}
+        />
+      </Modal>
+    );
+  };
+
+  return (
+    <>
+      {!importResponse && importModal()}
+      {importResponse && importCompletedModal()}
+    </>
   );
 };

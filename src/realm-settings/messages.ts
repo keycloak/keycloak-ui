@@ -743,9 +743,15 @@ export default {
     selectIfResourceExists:
       "If a resource already exists, specify what should be done",
     import: "Import",
+    importFail: "Import failed: {{error}}",
     FAIL: "Fail import",
     SKIP: "Skip",
     OVERWRITE: "Overwrite",
+    importSuccess:
+      "{{added}} records added. {{skipped}} records skipped. {{overwritten}} records overwritten.",
+    added: "Added",
+    skipped: "Skipped",
+    overwritten: "Overwritten",
   },
   "partial-export": {
     partialExportHeaderText:
