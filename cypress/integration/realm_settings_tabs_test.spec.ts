@@ -61,16 +61,20 @@ describe("Realm settings tabs tests", () => {
   });
 
   it("Go to email tab", () => {
+    const msg: string = "Error! Failed to send email.";
     sidebarPage.goToRealmSettings();
     cy.findByTestId("rs-email-tab").click();
     realmSettingsPage.addSenderEmail("example@example.com");
     realmSettingsPage.toggleCheck(realmSettingsPage.enableSslCheck);
     realmSettingsPage.toggleCheck(realmSettingsPage.enableStartTlsCheck);
-    realmSettingsPage.save(realmSettingsPage.emailSaveBtn);
     realmSettingsPage.fillHostField("localhost");
     cy.findByTestId(realmSettingsPage.testConnectionButton).click();
-
-    masthead.checkNotificationMessage("Error! Failed to send email.", true);
+    cy.contains(msg)
+      .should("be.visible")
+      .then(() => {
+        masthead.checkNotificationMessage(msg, true);
+      });
+    realmSettingsPage.save(realmSettingsPage.emailSaveBtn);
   });
 
   it("Go to themes tab", () => {
