@@ -19,17 +19,11 @@ describe("Identity provider test", () => {
 
   const createSuccessMsg = "Identity provider successfully created";
   const createMapperSuccessMsg = "Mapper created successfully.";
-  const saveMapperSuccessMsg = "Mapper saved successfully.";
 
   const changeSuccessMsg =
     "Successfully changed display order of identity providers";
   const deletePrompt = "Delete provider?";
   const deleteSuccessMsg = "Provider successfully deleted";
-
-  const keycloakServer = Cypress.env("KEYCLOAK_SERVER");
-  const discoveryUrl = `${keycloakServer}/auth/realms/master/.well-known/openid-configuration`;
-  const samlDiscoveryUrl = `${keycloakServer}/auth/realms/master/protocol/saml/descriptor`;
-  const authorizationUrl = `${keycloakServer}/auth/realms/master/protocol/openid-connect/auth`;
 
   describe("Identity provider creation", () => {
     const identityProviderName = "github";
@@ -79,6 +73,7 @@ describe("Identity provider test", () => {
         .clickItem("bitbucket")
         .fill("bitbucket", "123")
         .clickAdd();
+      masthead.checkNotificationMessage(createSuccessMsg, true);
 
       cy.wait(2000);
 
@@ -94,248 +89,46 @@ describe("Identity provider test", () => {
       masthead.checkNotificationMessage(changeSuccessMsg, true);
     });
 
-    it("should create a oidc provider using discovery url", () => {
-      const oidcProviderName = "oidc";
-      createProviderPage
-        .clickCreateDropdown()
-        .clickItem(oidcProviderName)
-        .fillDiscoveryUrl(discoveryUrl)
-        .shouldBeSuccessful()
-        .fill("oidc", "123")
-        .clickAdd();
-      masthead.checkNotificationMessage(createSuccessMsg, true);
-      createProviderPage.shouldHaveAuthorizationUrl(authorizationUrl);
-    });
-
-    it("should create a SAML provider using SSO service url", () => {
-      const samlProviderName = "saml";
-      createProviderPage
-        .clickCreateDropdown()
-        .clickItem(samlProviderName)
-        .fillDiscoveryUrl(samlDiscoveryUrl)
-        .shouldBeSuccessful()
-        .clickAdd();
-      masthead.checkNotificationMessage(createSuccessMsg, true);
-    });
-
     it("should delete provider", () => {
       const modalUtils = new ModalUtils();
       listingPage.deleteItem(identityProviderName);
       modalUtils.checkModalTitle(deletePrompt).confirmModal();
-
       masthead.checkNotificationMessage(deleteSuccessMsg, true);
     });
 
     it("should add facebook social mapper", () => {
       sidebarPage.goToIdentityProviders();
-
       listingPage.goToItemDetails("facebook");
-
       addMapperPage.goToMappersTab();
-
       addMapperPage.emptyStateAddMapper();
-
       addMapperPage.fillSocialMapper("facebook mapper");
-
-      addMapperPage.saveNewMapper();
-
-      masthead.checkNotificationMessage(createMapperSuccessMsg, true);
-    });
-
-    it("should add SAML mapper of type Advanced Attribute to Role", () => {
-      sidebarPage.goToIdentityProviders();
-
-      listingPage.goToItemDetails("saml");
-
-      addMapperPage.goToMappersTab();
-
-      addMapperPage.emptyStateAddMapper();
-
-      addMapperPage.addAdvancedAttrToRoleMapper("SAML mapper");
-
-      masthead.checkNotificationMessage(createMapperSuccessMsg, true);
-    });
-
-    it("should add SAML mapper of type Username Template Importer", () => {
-      sidebarPage.goToIdentityProviders();
-
-      listingPage.goToItemDetails("saml");
-
-      addMapperPage.goToMappersTab();
-
-      addMapperPage.addMapper();
-
-      addMapperPage.addUsernameTemplateImporterMapper(
-        "SAML Username Template Importer Mapper"
-      );
-
-      masthead.checkNotificationMessage(createMapperSuccessMsg, true);
-    });
-
-    it("should add SAML mapper of type Hardcoded User Session Attribute", () => {
-      sidebarPage.goToIdentityProviders();
-
-      listingPage.goToItemDetails("saml");
-
-      addMapperPage.goToMappersTab();
-
-      addMapperPage.addMapper();
-
-      addMapperPage.addHardcodedUserSessionAttrMapper(
-        "Hardcoded User Session Attribute"
-      );
-
-      masthead.checkNotificationMessage(createMapperSuccessMsg, true);
-    });
-
-    it("should add SAML mapper of type Attribute Importer", () => {
-      sidebarPage.goToIdentityProviders();
-
-      listingPage.goToItemDetails("saml");
-
-      addMapperPage.goToMappersTab();
-
-      addMapperPage.addMapper();
-
-      addMapperPage.addSAMLAttrImporterMapper("Attribute Importer");
-
-      masthead.checkNotificationMessage(createMapperSuccessMsg, true);
-    });
-
-    it("should add SAML mapper of type Hardcoded Role", () => {
-      sidebarPage.goToIdentityProviders();
-
-      listingPage.goToItemDetails("saml");
-
-      addMapperPage.goToMappersTab();
-
-      addMapperPage.addMapper();
-
-      addMapperPage.addHardcodedRoleMapper("Hardcoded Role");
-
-      masthead.checkNotificationMessage(createMapperSuccessMsg, true);
-    });
-
-    it("should add SAML mapper of type Hardcoded Attribute", () => {
-      sidebarPage.goToIdentityProviders();
-
-      listingPage.goToItemDetails("saml");
-
-      addMapperPage.goToMappersTab();
-
-      addMapperPage.addMapper();
-
-      addMapperPage.addHardcodedAttrMapper("Hardcoded Attribute");
-
-      masthead.checkNotificationMessage(createMapperSuccessMsg, true);
-    });
-
-    it("should add SAML mapper of type SAML Attribute To Role", () => {
-      sidebarPage.goToIdentityProviders();
-
-      listingPage.goToItemDetails("saml");
-
-      addMapperPage.goToMappersTab();
-
-      addMapperPage.addMapper();
-
-      addMapperPage.addSAMLAttributeToRoleMapper("SAML Attribute To Role");
-
-      masthead.checkNotificationMessage(createMapperSuccessMsg, true);
-    });
-
-    it("should add OIDC mapper of type Attribute Importer", () => {
-      sidebarPage.goToIdentityProviders();
-
-      listingPage.goToItemDetails("oidc");
-
-      addMapperPage.goToMappersTab();
-
-      addMapperPage.emptyStateAddMapper();
-
-      addMapperPage.addOIDCAttrImporterMapper("OIDC Attribute Importer");
-
-      masthead.checkNotificationMessage(createMapperSuccessMsg, true);
-    });
-
-    it("should add OIDC mapper of type Claim To Role", () => {
-      sidebarPage.goToIdentityProviders();
-
-      listingPage.goToItemDetails("oidc");
-
-      addMapperPage.goToMappersTab();
-
-      addMapperPage.addMapper();
-
-      addMapperPage.addOIDCClaimToRoleMapper("OIDC Claim to Role");
-
+      // addMapperPage.saveNewMapper();
       masthead.checkNotificationMessage(createMapperSuccessMsg, true);
     });
 
     it("should add Social mapper of type Attribute Importer", () => {
       sidebarPage.goToIdentityProviders();
-
       listingPage.goToItemDetails("facebook");
-
       addMapperPage.goToMappersTab();
-
       addMapperPage.addMapper();
-
       addMapperPage.fillSocialMapper("facebook attribute importer");
-
       masthead.checkNotificationMessage(createMapperSuccessMsg, true);
-    });
-
-    it("should edit Username Template Importer mapper", () => {
-      sidebarPage.goToIdentityProviders();
-
-      listingPage.goToItemDetails("saml");
-
-      addMapperPage.goToMappersTab();
-
-      listingPage.goToItemDetails("SAML Username Template Importer Mapper");
-
-      addMapperPage.editUsernameTemplateImporterMapper();
-
-      masthead.checkNotificationMessage(saveMapperSuccessMsg, true);
     });
 
     it("should edit facebook mapper", () => {
       sidebarPage.goToIdentityProviders();
-
       listingPage.goToItemDetails("facebook");
-
       addMapperPage.goToMappersTab();
-
       listingPage.goToItemDetails("facebook attribute importer");
-
       addMapperPage.editSocialMapper();
     });
 
     it("should delete facebook mapper", () => {
       sidebarPage.goToIdentityProviders();
-
       listingPage.goToItemDetails("facebook");
-
       addMapperPage.goToMappersTab();
-
       listingPage.deleteItem("facebook attribute importer");
-
       cy.findByTestId("modalConfirm").click();
-    });
-
-    it("should edit SAML mapper", () => {
-      sidebarPage.goToIdentityProviders();
-
-      listingPage.goToItemDetails("saml");
-
-      addMapperPage.goToMappersTab();
-
-      listingPage.goToItemDetails("SAML mapper");
-
-      addMapperPage.editSAMLorOIDCMapper();
-
-      masthead.checkNotificationMessage(saveMapperSuccessMsg, true);
     });
 
     it("clean up providers", () => {
@@ -348,16 +141,6 @@ describe("Identity provider test", () => {
 
       sidebarPage.goToIdentityProviders();
       listingPage.itemExist("facebook").deleteItem("facebook");
-      modalUtils.checkModalTitle(deletePrompt).confirmModal();
-      masthead.checkNotificationMessage(deleteSuccessMsg, true);
-
-      sidebarPage.goToIdentityProviders();
-      listingPage.itemExist("oidc").deleteItem("oidc");
-      modalUtils.checkModalTitle(deletePrompt).confirmModal();
-      masthead.checkNotificationMessage(deleteSuccessMsg, true);
-
-      sidebarPage.goToIdentityProviders();
-      listingPage.itemExist("saml").deleteItem("saml");
       modalUtils.checkModalTitle(deletePrompt).confirmModal();
       masthead.checkNotificationMessage(deleteSuccessMsg, true);
     });
