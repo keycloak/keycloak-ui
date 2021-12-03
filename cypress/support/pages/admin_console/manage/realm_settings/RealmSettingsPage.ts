@@ -240,7 +240,7 @@ export default class RealmSettingsPage {
   }
 
   fillEmailField(email: string) {
-    cy.get(this.emailAddressInput).type(email);
+    cy.findByTestId(this.emailAddressInput).type(email);
     return this;
   }
 

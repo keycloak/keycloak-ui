@@ -86,7 +86,7 @@ describe("Identity provider test", () => {
       orderDialog.checkOrder(["bitbucket", identityProviderName, "facebook"]);
 
       orderDialog.clickSave();
-      masthead.checkNotificationMessage(changeSuccessMsg, true);
+      masthead.checkNotificationMessage(changeSuccessMsg);
     });
 
     it("should delete provider", () => {
