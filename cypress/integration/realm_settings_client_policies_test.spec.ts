@@ -2,18 +2,29 @@ import SidebarPage from "../support/pages/admin_console/SidebarPage";
 import LoginPage from "../support/pages/LoginPage";
 import RealmSettingsPage from "../support/pages/admin_console/manage/realm_settings/RealmSettingsPage";
 import { keycloakBefore } from "../support/util/keycloak_before";
+import AdminClient from "../support/util/AdminClient";
 
 const loginPage = new LoginPage();
 const sidebarPage = new SidebarPage();
 const realmSettingsPage = new RealmSettingsPage();
 
 describe("Realm settings client policies tab tests", () => {
+  const realmName = "Realm_" + (Math.random() + 1).toString(36).substring(7);
+
   beforeEach(() => {
     keycloakBefore();
     loginPage.logIn();
     sidebarPage.goToRealmSettings();
     cy.findByTestId("rs-clientPolicies-tab").click();
     cy.findByTestId("rs-policies-clientPolicies-tab").click();
+  });
+
+  before(async () => {
+    await new AdminClient().createRealm(realmName);
+  });
+
+  after(async () => {
+    await new AdminClient().deleteRealm(realmName);
   });
 
   it("Go to client policies tab", () => {
@@ -84,11 +95,6 @@ describe("Realm settings client policies tab tests", () => {
     realmSettingsPage.shouldNavigateBetweenFormAndJSONViewPolicies();
   });
 
-  /*     it("Check saving changed JSON policies", () => {
-        realmSettingsPage.shouldSaveChangedJSONPolicies();
-        realmSettingsPage.shouldDeleteClientPolicyDialog();
-      }); */
-
   it("Should not create duplicate client profile", () => {
     realmSettingsPage.shouldCompleteAndCreateNewClientPolicyFromEmptyState();
 
@@ -97,7 +103,7 @@ describe("Realm settings client policies tab tests", () => {
     cy.findByTestId("rs-policies-clientPolicies-tab").click();
     realmSettingsPage.shouldCompleteAndCreateNewClientPolicy();
     realmSettingsPage.shouldNotCreateDuplicateClientPolicy();
-    cy.wait(200);
+    cy.wait(2000);
     sidebarPage.goToRealmSettings();
     cy.findByTestId("rs-clientPolicies-tab").click();
     cy.findByTestId("rs-policies-clientPolicies-tab").click();

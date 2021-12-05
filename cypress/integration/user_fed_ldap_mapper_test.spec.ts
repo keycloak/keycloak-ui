@@ -134,7 +134,7 @@ describe("User Fed LDAP mapper tests", () => {
       .itemExist(MsadAccountControlsMapper)
       .deleteItem(MsadAccountControlsMapper);
     modalUtils.checkModalTitle(mapperDeleteTitle).confirmModal();
-    masthead.checkNotificationMessage(mapperDeletedSuccess);
+    masthead.checkNotificationMessage(mapperDeletedSuccess, true);
   });
 
   // mapper CRUD tests

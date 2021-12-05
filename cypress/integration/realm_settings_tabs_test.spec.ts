@@ -69,12 +69,12 @@ describe("Realm settings tabs tests", () => {
     realmSettingsPage.toggleCheck(realmSettingsPage.enableStartTlsCheck);
     realmSettingsPage.fillHostField("localhost");
     cy.findByTestId(realmSettingsPage.testConnectionButton).click();
-    cy.contains(msg)
-      .should("be.visible")
-      .then(() => {
-        masthead.checkNotificationMessage(msg, true);
-      });
-    realmSettingsPage.save(realmSettingsPage.emailSaveBtn);
+
+    realmSettingsPage.fillEmailField(
+      "example" + (Math.random() + 1).toString(36).substring(7) + "@example.com"
+    );
+    cy.findByTestId(realmSettingsPage.modalTestConnectionButton).click();
+    masthead.checkNotificationMessage(msg, true);
   });
 
   it("Go to themes tab", () => {

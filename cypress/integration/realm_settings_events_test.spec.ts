@@ -13,7 +13,7 @@ const masthead = new Masthead();
 const modalUtils = new ModalUtils();
 const realmSettingsPage = new RealmSettingsPage();
 
-describe("Events tab", () => {
+describe("Realm settings events tab tests", () => {
   const realmName = "Realm_" + (Math.random() + 1).toString(36).substring(7);
   const listingPage = new ListingPage();
 
@@ -356,7 +356,7 @@ describe("Realm settings events tab tests", () => {
     realmSettingsPage.shouldRemoveEventFromEventListener();
   });
 
-  it.skip("Should remove all events from event listener and re-save original", () => {
+  it("Should remove all events from event listener and re-save original", () => {
     realmSettingsPage.shouldSaveEventListener();
     realmSettingsPage.shouldRemoveAllEventListeners();
     realmSettingsPage.shouldReSaveEventListener();
