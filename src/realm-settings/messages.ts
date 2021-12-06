@@ -358,7 +358,7 @@ export default {
     selectLocales: "Select locales",
     searchForMessageBundle: "Search for message bundle",
     addMessageBundle: "Add message bundle",
-    addMessageBundleSuccess: "Success! The new message bundle has been added.",
+    addMessageBundleSuccess: "Success! The message bundle has been added.",
     updateMessageBundleSuccess: "Success! Message bundle updated.",
     updateMessageBundleError: "Error updating message bundle.",
     addMessageBundleError: "Error creating message bundle.",
