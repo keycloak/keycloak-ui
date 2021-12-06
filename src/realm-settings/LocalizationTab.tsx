@@ -1,6 +1,6 @@
 import React, { useState } from "react";
-import * as _ from "lodash";
 import { useTranslation } from "react-i18next";
+import { cloneDeep } from "lodash";
 import { Controller, useForm, useFormContext, useWatch } from "react-hook-form";
 import {
   ActionGroup,
@@ -167,7 +167,7 @@ export const LocalizationTab = ({
     cellIndex: number
   ) => {
     setTableRows((prev) => {
-      const newRows = _.cloneDeep(prev);
+      const newRows = cloneDeep(prev);
       newRows[rowIndex].cells[cellIndex].props.editableValue = newValue;
       return newRows;
     });
@@ -183,7 +183,7 @@ export const LocalizationTab = ({
     if (rowIndex === undefined) {
       return;
     }
-    const newRows = _.cloneDeep(tableRows);
+    const newRows = cloneDeep(tableRows);
     let newRow;
     const invalid = validationErrors && Object.keys(validationErrors).length;
     if (invalid) {
