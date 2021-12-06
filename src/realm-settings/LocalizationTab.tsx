@@ -50,6 +50,12 @@ type LocalizationTabProps = {
 
 export type KeyValueType = { key: string; value: string };
 
+export enum RowEditAction {
+  save = "save",
+  cancel = "cancel",
+  edit = "edit",
+}
+
 export type BundleForm = {
   messageBundle: KeyValueType;
 };
@@ -101,11 +107,9 @@ export const LocalizationTab = ({
   React.useEffect(() => {
     const updatedRows = messageBundles.map(
       (messageBundle: [string, string]) => ({
-        rowEditBtnAriaLabel: (idx: number) => `Edit ${messageBundle[idx]}`,
-        rowSaveBtnAriaLabel: (idx: number) =>
-          `Save edits for ${messageBundle[idx]}`,
-        rowCancelBtnAriaLabel: (idx: number) =>
-          `Cancel edits for ${messageBundle[idx]}`,
+        rowEditBtnAriaLabel: () => `Edit ${messageBundle[1]}`,
+        rowSaveBtnAriaLabel: () => `Save edits for ${messageBundle[1]}`,
+        rowCancelBtnAriaLabel: () => `Cancel edits for ${messageBundle[1]}`,
         cells: [
           {
             title: (
@@ -205,7 +209,7 @@ export const LocalizationTab = ({
     const invalid = validationErrors && Object.keys(validationErrors).length;
     if (invalid) {
       newRow = validateCellEdits(newRows[rowIndex], type, validationErrors);
-    } else if (type === "cancel") {
+    } else if (type === RowEditAction.cancel) {
       newRow = cancelCellEdits(newRows[rowIndex]);
     } else {
       newRow = applyCellEdits(newRows[rowIndex], type);
@@ -213,7 +217,7 @@ export const LocalizationTab = ({
     newRows[rowIndex] = newRow;
 
     // Update the copy of the retrieved data set so we can save it when the user saves changes
-    if (!invalid && type === "save") {
+    if (!invalid && type === RowEditAction.save) {
       const key = (newRow.cells?.[0] as IRowCell).props.value;
       const value = (newRow.cells?.[1] as IRowCell).props.value;
 
