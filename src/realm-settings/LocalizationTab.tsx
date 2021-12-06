@@ -23,7 +23,7 @@ import { FormAccess } from "../components/form-access/FormAccess";
 import { useServerInfo } from "../context/server-info/ServerInfoProvider";
 import { FormPanel } from "../components/scroll-form/FormPanel";
 import { KeycloakDataTable } from "../components/table-toolbar/KeycloakDataTable";
-import { useAdminClient, useFetch } from "../context/auth/AdminClient";
+import { useAdminClient } from "../context/auth/AdminClient";
 import { ListEmptyState } from "../components/list-empty-state/ListEmptyState";
 import { AddMessageBundleModal } from "./AddMessageBundleModal";
 import { useAlerts } from "../components/alert/Alerts";
@@ -149,22 +149,6 @@ export const LocalizationTab = ({
     );
     setTableRows(updatedRows);
   }, [messageBundles]);
-
-  useFetch(
-    async () => {
-      const result = await adminClient.realms.getRealmLocalizationTexts({
-        realm: realm.realm!,
-        selectedLocale:
-          selectMenuLocale || getValues("defaultLocale") || DEFAULT_LOCALE,
-      });
-      return { result };
-    },
-    ({ result }) => {
-      setMessageBundles(Object.entries(result));
-      return Object.entries(result);
-    },
-    [tableKey]
-  );
 
   const loader = async () => {
     const result = await adminClient.realms.getRealmLocalizationTexts({
