@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import * as _ from "lodash";
 import { useTranslation } from "react-i18next";
 import { Controller, useForm, useFormContext, useWatch } from "react-hook-form";
 import {
@@ -22,13 +23,23 @@ import { FormAccess } from "../components/form-access/FormAccess";
 import { useServerInfo } from "../context/server-info/ServerInfoProvider";
 import { FormPanel } from "../components/scroll-form/FormPanel";
 import { KeycloakDataTable } from "../components/table-toolbar/KeycloakDataTable";
-import { useAdminClient } from "../context/auth/AdminClient";
+import { useAdminClient, useFetch } from "../context/auth/AdminClient";
 import { ListEmptyState } from "../components/list-empty-state/ListEmptyState";
 import { AddMessageBundleModal } from "./AddMessageBundleModal";
 import { useAlerts } from "../components/alert/Alerts";
 import { HelpItem } from "../components/help-enabler/HelpItem";
 import { useRealm } from "../context/realm-context/RealmContext";
 import { DEFAULT_LOCALE } from "../i18n";
+import {
+  EditableTextCell,
+  validateCellEdits,
+  cancelCellEdits,
+  applyCellEdits,
+  RowErrors,
+  RowEditType,
+  IRowCell,
+} from "@patternfly/react-table";
+import type { EditableTextCellProps } from "@patternfly/react-table/dist/esm/components/Table/base";
 
 type LocalizationTabProps = {
   save: (realm: RealmRepresentation) => void;
@@ -60,6 +71,11 @@ export const LocalizationTab = ({
 
   const { getValues, control, handleSubmit, formState } = useFormContext();
   const [selectMenuValueSelected, setSelectMenuValueSelected] = useState(false);
+  const [messageBundles, setMessageBundles] = useState<[string, string][]>([]);
+  // const [updatedMessageBundles, setUpdatedMessageBundles] = useState<
+  //   [string, string][]
+  // >([]);
+  const [tableRows, setTableRows] = useState<any[]>([]);
 
   const themeTypes = useServerInfo().themes!;
   const bundleForm = useForm<BundleForm>({ mode: "onChange" });
@@ -76,31 +92,151 @@ export const LocalizationTab = ({
     defaultValue: false,
   });
 
-  const loader = async () => {
-    try {
+  const [tableKey, setTableKey] = useState(0);
+
+  const refreshTable = () => {
+    setTableKey(new Date().getTime());
+  };
+
+  React.useEffect(() => {
+    const updatedRows = messageBundles.map(
+      (messageBundle: [string, string]) => ({
+        rowEditBtnAriaLabel: (idx: number) => `Edit ${messageBundle[idx]}`,
+        rowSaveBtnAriaLabel: (idx: number) =>
+          `Save edits for ${messageBundle[idx]}`,
+        rowCancelBtnAriaLabel: (idx: number) =>
+          `Cancel edits for ${messageBundle[idx]}`,
+        cells: [
+          {
+            title: (
+              value: string,
+              rowIndex: number,
+              cellIndex: number,
+              props: EditableTextCellProps
+            ) => (
+              <EditableTextCell
+                value={value}
+                rowIndex={rowIndex}
+                cellIndex={cellIndex}
+                props={props}
+                isDisabled
+                handleTextInputChange={handleTextInputChange}
+                inputAriaLabel={messageBundle[0]}
+              />
+            ),
+            props: {
+              value: messageBundle[0],
+            },
+          },
+          {
+            title: (value, rowIndex, cellIndex, props) => (
+              <EditableTextCell
+                value={value}
+                rowIndex={rowIndex}
+                cellIndex={cellIndex}
+                props={props}
+                handleTextInputChange={handleTextInputChange}
+                inputAriaLabel={messageBundle[1]}
+              />
+            ),
+            props: {
+              value: messageBundle[1],
+            },
+          },
+        ],
+      })
+    );
+    setTableRows(updatedRows);
+  }, [messageBundles]);
+
+  useFetch(
+    async () => {
       const result = await adminClient.realms.getRealmLocalizationTexts({
         realm: realm.realm!,
         selectedLocale:
           selectMenuLocale || getValues("defaultLocale") || DEFAULT_LOCALE,
       });
-
+      return { result };
+    },
+    ({ result }) => {
+      setMessageBundles(Object.entries(result));
+      // setUpdatedMessageBundles(Object.entries(result));
       return Object.entries(result);
-    } catch (error) {
-      return [];
-    }
+    },
+    [tableKey]
+  );
+
+  const loader = async () => {
+    const result = await adminClient.realms.getRealmLocalizationTexts({
+      realm: realm.realm!,
+      selectedLocale:
+        selectMenuLocale || getValues("defaultLocale") || DEFAULT_LOCALE,
+    });
+    setMessageBundles(Object.entries(result));
+    // setUpdatedMessageBundles(Object.entries(result));
+    return Object.entries(result);
   };
 
-  const tableLoader = async () => {
-    try {
-      const result = await adminClient.realms.getRealmLocalizationTexts({
-        realm: currentRealm,
-        selectedLocale: selectMenuLocale,
-      });
+  const handleTextInputChange = (
+    newValue: string,
+    evt: any,
+    rowIndex: number,
+    cellIndex: number
+  ) => {
+    setTableRows((prev) => {
+      const newRows = _.cloneDeep(prev);
+      newRows[rowIndex].cells[cellIndex].props.editableValue = newValue;
+      return newRows;
+    });
+  };
 
-      return Object.entries(result);
-    } catch (error) {
-      return [];
+  const updateEditableRows = (
+    evt: any,
+    type: RowEditType,
+    isEditable?: boolean | undefined,
+    rowIndex?: number,
+    validationErrors?: RowErrors
+  ) => {
+    if (rowIndex === undefined) {
+      return;
     }
+    const newRows = _.cloneDeep(tableRows);
+    let newRow;
+    const invalid = validationErrors && Object.keys(validationErrors).length;
+    if (invalid) {
+      newRow = validateCellEdits(newRows[rowIndex], type, validationErrors);
+    } else if (type === "cancel") {
+      newRow = cancelCellEdits(newRows[rowIndex]);
+    } else {
+      newRow = applyCellEdits(newRows[rowIndex], type);
+    }
+    newRows[rowIndex] = newRow;
+
+    // Update the copy of the retrieved data set so we can save it when the user saves changes
+    if (!invalid && type === "save") {
+      const key = (newRow.cells?.[0] as IRowCell).props.value;
+      const value = (newRow.cells?.[1] as IRowCell).props.value;
+
+      // We only have one editable value, otherwise we'd need to save each
+      try {
+        adminClient.setConfig({
+          requestConfig: { headers: { "Content-Type": "text/plain" } },
+        });
+        adminClient.realms.addLocalization(
+          {
+            realm: realm.realm!,
+            selectedLocale:
+              selectMenuLocale || getValues("defaultLocale") || DEFAULT_LOCALE,
+            key,
+          },
+          value
+        );
+        addAlert(t("updateMessageBundleSuccess"), AlertVariant.success);
+      } catch (error) {
+        addAlert(t("updateMessageBundleError"), AlertVariant.danger);
+      }
+    }
+    setTableRows(newRows);
   };
 
   const handleModalToggle = () => {
@@ -129,12 +265,6 @@ export const LocalizationTab = ({
     </SelectGroup>,
   ];
 
-  const [tableKey, setTableKey] = useState(0);
-
-  const refreshTable = () => {
-    setTableKey(new Date().getTime());
-  };
-
   const addKeyValue = async (pair: KeyValueType): Promise<void> => {
     try {
       adminClient.setConfig({
@@ -154,9 +284,9 @@ export const LocalizationTab = ({
         realmName: currentRealm!,
       });
       refreshTable();
-      addAlert(t("pairCreatedSuccess"), AlertVariant.success);
+      addAlert(t("addMessageBundleSuccess"), AlertVariant.success);
     } catch (error) {
-      addError("realm-settings:pairCreatedError", error);
+      addError("addMessageBundleError", error);
     }
   };
 
@@ -332,8 +462,11 @@ export const LocalizationTab = ({
           </TextContent>
           <div className="tableBorder">
             <KeycloakDataTable
+              isEditable
+              onRowEdit={updateEditableRows}
               key={tableKey}
-              loader={selectMenuValueSelected ? tableLoader : loader}
+              editableRows={tableRows}
+              loader={loader}
               ariaLabelKey="realm-settings:localization"
               searchTypeComponent={
                 <ToolbarItem>
@@ -379,18 +512,15 @@ export const LocalizationTab = ({
                   message={t("noMessageBundles")}
                   instructions={t("noMessageBundlesInstructions")}
                   onPrimaryAction={handleModalToggle}
-                  primaryActionText={t("addMessageBundle")}
                 />
               }
               canSelectAll
               columns={[
                 {
                   name: "Key",
-                  cellRenderer: (row) => row[0],
                 },
                 {
                   name: "Value",
-                  cellRenderer: (row) => row[1],
                 },
               ]}
             />

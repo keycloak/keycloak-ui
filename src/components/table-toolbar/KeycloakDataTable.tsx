@@ -12,6 +12,7 @@ import {
   IActionsResolver,
   IFormatter,
   ITransform,
+  OnRowEdit,
   Table,
   TableBody,
   TableHeader,
@@ -53,9 +54,11 @@ type DataTableProps<T> = {
   actionResolver?: IActionsResolver;
   onSelect?: (isSelected: boolean, rowIndex: number) => void;
   onCollapse?: (isOpen: boolean, rowIndex: number) => void;
+  onRowEdit?: OnRowEdit;
   canSelectAll: boolean;
   isNotCompact?: boolean;
   isRadio?: boolean;
+  isEditable?: boolean;
 };
 
 function DataTable<T>({
@@ -69,10 +72,24 @@ function DataTable<T>({
   canSelectAll,
   isNotCompact,
   isRadio,
+  isEditable,
+  onRowEdit,
   ...props
 }: DataTableProps<T>) {
   const { t } = useTranslation();
-  return (
+  return isEditable ? (
+    <Table
+      aria-label="editable-rows-table"
+      data-testid="editable-rows-table"
+      variant={TableVariant.compact}
+      cells={[t("realm-settings:key"), t("realm-settings:value")]}
+      rows={rows}
+      onRowEdit={onRowEdit}
+    >
+      <TableHeader />
+      <TableBody />
+    </Table>
+  ) : (
     <Table
       {...props}
       variant={isNotCompact ? undefined : TableVariant.compact}
@@ -143,6 +160,8 @@ export type DataListProps<T> = Omit<
   isNotCompact?: boolean;
   isRadio?: boolean;
   isSearching?: boolean;
+  isEditable?: boolean;
+  editableRows?: (Row<T> | SubRow<T>)[];
 };
 
 /**
@@ -176,9 +195,12 @@ export function KeycloakDataTable<T>({
   canSelectAll = false,
   isNotCompact,
   isRadio,
+  isEditable,
+  onRowEdit,
   detailColumns,
   isRowDisabled,
   loader,
+  editableRows,
   columns,
   actions,
   actionResolver,
@@ -372,7 +394,7 @@ export function KeycloakDataTable<T>({
 
   return (
     <>
-      {(loading || !noData || searching) && (
+      {(loading || !noData || searching || isEditable) && (
         <PaginatingTableToolbar
           count={rowLength}
           first={first}
@@ -400,11 +422,13 @@ export function KeycloakDataTable<T>({
               onCollapse={detailColumns ? onCollapse : undefined}
               actions={convertAction()}
               actionResolver={actionResolver}
-              rows={data.slice(0, maxRows)}
+              rows={isEditable ? editableRows! : data.slice(0, maxRows)}
               columns={columns}
               isNotCompact={isNotCompact}
               isRadio={isRadio}
+              isEditable={isEditable}
               ariaLabelKey={ariaLabelKey}
+              onRowEdit={isEditable ? onRowEdit : undefined}
             />
           )}
           {!loading && noData && searching && (
