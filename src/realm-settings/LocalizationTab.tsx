@@ -78,9 +78,6 @@ export const LocalizationTab = ({
   const { getValues, control, handleSubmit, formState } = useFormContext();
   const [selectMenuValueSelected, setSelectMenuValueSelected] = useState(false);
   const [messageBundles, setMessageBundles] = useState<[string, string][]>([]);
-  // const [updatedMessageBundles, setUpdatedMessageBundles] = useState<
-  //   [string, string][]
-  // >([]);
   const [tableRows, setTableRows] = useState<any[]>([]);
 
   const themeTypes = useServerInfo().themes!;
@@ -164,7 +161,6 @@ export const LocalizationTab = ({
     },
     ({ result }) => {
       setMessageBundles(Object.entries(result));
-      // setUpdatedMessageBundles(Object.entries(result));
       return Object.entries(result);
     },
     [tableKey]
@@ -177,7 +173,6 @@ export const LocalizationTab = ({
         selectMenuLocale || getValues("defaultLocale") || DEFAULT_LOCALE,
     });
     setMessageBundles(Object.entries(result));
-    // setUpdatedMessageBundles(Object.entries(result));
     return Object.entries(result);
   };
 
