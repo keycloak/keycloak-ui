@@ -121,8 +121,8 @@ export default function GroupsSection() {
                 <DropdownItem
                   data-testid="deleteGroup"
                   key="deleteGroup"
-                  onClick={() => {
-                    deleteGroup({ id });
+                  onClick={async () => {
+                    await deleteGroup({ id });
                     history.push(toGroups({ realm }));
                   }}
                 >
