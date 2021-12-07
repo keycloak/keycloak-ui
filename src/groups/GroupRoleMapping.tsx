@@ -29,7 +29,7 @@ export const GroupRoleMapping = ({ id, name }: GroupRoleMappingProps) => {
         .listRealmRoleMappings({ id })
         .then((roles) => roles.map((role) => ({ role }))),
       adminClient.groups
-        .listAvailableRealmRoleMappings({ id })
+        .listCompositeRealmRoleMappings({ id })
         .then((roles) => roles.map((role) => ({ role }))),
     ]);
 
@@ -46,7 +46,7 @@ export const GroupRoleMapping = ({ id, name }: GroupRoleMappingProps) => {
                 })
                 .then((roles) => roles.map((role) => ({ role, client }))),
               adminClient.groups
-                .listAvailableClientRoleMappings({
+                .listCompositeClientRoleMappings({
                   id,
                   clientUniqueId: client.id!,
                 })
