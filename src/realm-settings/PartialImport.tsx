@@ -308,19 +308,20 @@ export const PartialImportDialog = (props: PartialImportProps) => {
 
   async function doImport() {
     if (importInProgress) return;
+
+    setImportInProgress(true);
+
     try {
-      const jsonToImport: PartialImportRealmRepresentation = jsonForImport();
-      setImportInProgress(true);
-      const importResults: PartialImportResponse =
-        await adminClient.realms.partialImport({
-          realm: realm,
-          rep: jsonToImport,
-        });
+      const importResults = await adminClient.realms.partialImport({
+        realm,
+        rep: jsonForImport(),
+      });
       setImportResponse(importResults);
     } catch (error) {
-      setImportInProgress(false);
       addError("partial-import:importFail", error);
     }
+
+    setImportInProgress(false);
   }
 
   const importModal = () => {
