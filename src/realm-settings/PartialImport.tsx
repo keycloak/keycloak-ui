@@ -159,7 +159,7 @@ export const PartialImportDialog = (props: PartialImportProps) => {
       );
     };
 
-    return (importedFile as [RealmRepresentation]).map(mapper);
+    return (importedFile as RealmRepresentation[]).map(mapper);
   };
 
   const handleCollisionSelect = (
