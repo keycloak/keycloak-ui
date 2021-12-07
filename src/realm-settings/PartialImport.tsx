@@ -45,7 +45,7 @@ export type PartialImportProps = {
 
 // An imported JSON file can either be an array of realm objects
 // or a single realm object.
-type ImportedMultiRealm = [RealmRepresentation?] | RealmRepresentation;
+type ImportedMultiRealm = RealmRepresentation | RealmRepresentation[];
 
 type NonRoleResource = "users" | "clients" | "groups" | "identityProviders";
 type RoleResource = "realmRoles" | "clientRoles";
