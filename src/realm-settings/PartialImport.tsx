@@ -471,7 +471,7 @@ export const PartialImportDialog = (props: PartialImportProps) => {
   };
 
   const TypeRenderer = (importRecord: { resourceType: string }) => {
-    const typeMap = new Map<string, string>([
+    const typeMap = new Map([
       ["CLIENT", t("common:clients")],
       ["REALM_ROLE", t("common:realmRoles")],
       ["USER", t("common:users")],
