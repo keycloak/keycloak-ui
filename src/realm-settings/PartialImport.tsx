@@ -239,9 +239,9 @@ export const PartialImportDialog = (props: PartialImportProps) => {
     return targetRealm[resource as NonRoleResource]!.length;
   };
 
-  const clientRolesCount = (clientRoles: {
-    [index: string]: RoleRepresentation[];
-  }) => {
+  const clientRolesCount = (
+    clientRoles: Record<string, RoleRepresentation[]>
+  ) => {
     let total = 0;
     for (const clientName in clientRoles) {
       total += clientRoles[clientName].length;
