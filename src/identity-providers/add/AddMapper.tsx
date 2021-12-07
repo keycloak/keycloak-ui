@@ -91,18 +91,17 @@ export default function AddMapper() {
 
   const save = async (idpMapper: IdentityProviderMapperRepresentation) => {
     const attributes = JSON.stringify(idpMapper.config?.attributes ?? []);
-    const config = convertFormValuesToObject({
-      ...idpMapper.config,
-      attributes,
-    });
+    const mapper = convertFormValuesToObject(idpMapper);
 
     if (id) {
       const updatedMapper = {
-        ...idpMapper,
+        ...mapper,
+        config: {
+          attributes,
+        },
         identityProviderAlias: alias!,
         id: id,
         name: currentMapper?.name!,
-        config,
       };
       try {
         await adminClient.identityProviders.updateMapper(
@@ -120,9 +119,11 @@ export default function AddMapper() {
       try {
         const createdMapper = await adminClient.identityProviders.createMapper({
           identityProviderMapper: {
-            ...idpMapper,
+            ...mapper,
             identityProviderAlias: alias,
-            config,
+            config: {
+              attributes,
+            },
           },
           alias: alias!,
         });
@@ -530,7 +531,7 @@ export default function AddMapper() {
                   defaultValue={currentMapper?.config["attribute.value"]}
                   data-testid={
                     isHardcodedUserSessionAttribute
-                      ? "user.session.attribute.value"
+                      ? "user-session-attribute-value"
                       : "user-attribute-value"
                   }
                   id="kc-user-session-attribute-value"
@@ -698,7 +699,7 @@ export default function AddMapper() {
                       : currentMapper?.config["attribute.value"]
                   }
                   data-testid={
-                    isOIDCclaimToRole ? "claim.value" : "user.attribute.name"
+                    isOIDCclaimToRole ? "claim.value" : "user-attribute-name"
                   }
                   id={
                     isOIDCclaimToRole
