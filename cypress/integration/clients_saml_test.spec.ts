@@ -142,6 +142,9 @@ describe("Clients SAML tests", () => {
     it("Should update the resource server settings", () => {
       listingPage.searchItem(clientName).goToItemDetails(clientName);
       authenticationTab.goToTab();
+      authenticationTab.setPolicy("DISABLED").saveSettings();
+
+      masthead.checkNotificationMessage("Resource successfully updated");
     });
 
     it("Should create a resource", () => {

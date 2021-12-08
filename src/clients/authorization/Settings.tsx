@@ -196,7 +196,7 @@ export const AuthorizationSettings = ({ clientId }: { clientId: string }) => {
           />
         </FormGroup>
         <SaveReset
-          name="settings"
+          name="authenticationSettings"
           save={() => handleSubmit(save)()}
           reset={() => reset(resource)}
         />
