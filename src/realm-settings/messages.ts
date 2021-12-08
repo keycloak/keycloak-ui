@@ -743,6 +743,7 @@ export default {
     selectIfResourceExists:
       "If a resource already exists, specify what should be done",
     import: "Import",
+    resourcesToImport: "Resources to import",
     importFail: "Import failed: {{error}}",
     FAIL: "Fail import",
     SKIP: "Skip",

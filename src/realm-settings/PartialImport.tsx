@@ -391,7 +391,7 @@ export const PartialImportDialog = (props: PartialImportProps) => {
               )}
               <StackItem>
                 <Text>{t("chooseResources")}:</Text>
-                <DataList aria-label="Resources to import" isCompact>
+                <DataList aria-label={t("resourcesToImport")} isCompact>
                   {targetHasResource("users") &&
                     resourceDataListItem("users", t("common:users"))}
                   {targetHasResource("groups") &&
