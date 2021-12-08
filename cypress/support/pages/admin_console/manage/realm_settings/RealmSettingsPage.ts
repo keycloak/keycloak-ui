@@ -75,7 +75,7 @@ export default class RealmSettingsPage {
   testConnectionButton = "test-connection-button";
   modalTestConnectionButton = "modal-test-connection-button";
   emailAddressInput = "email-address-input";
-  addBundleButton = "no-message-bundles-empty-action";
+  addBundleButton = "add-bundle-button";
   confirmAddBundle = "add-bundle-confirm-button";
   keyInput = "key-input";
   valueInput = "value-input";

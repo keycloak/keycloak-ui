@@ -46,6 +46,7 @@ type LocalizationTabProps = {
   reset: () => void;
   refresh: () => void;
   realm: RealmRepresentation;
+  isActive: boolean;
 };
 
 export type KeyValueType = { key: string; value: string };
@@ -64,6 +65,7 @@ export const LocalizationTab = ({
   save,
   reset,
   realm,
+  isActive,
 }: LocalizationTabProps) => {
   const { t } = useTranslation("realm-settings");
   const adminClient = useAdminClient();
@@ -151,6 +153,9 @@ export const LocalizationTab = ({
   }, [messageBundles]);
 
   const loader = async () => {
+    adminClient.setConfig({
+      realmName: currentRealm!,
+    });
     try {
       const result = await adminClient.realms.getRealmLocalizationTexts({
         realm: realm.realm!,
@@ -159,6 +164,14 @@ export const LocalizationTab = ({
       });
       setMessageBundles(Object.entries(result));
       return Object.entries(result);
+    } catch (error) {
+      return [];
+    }
+  };
+
+  const theOtherLoader = async () => {
+    try {
+      return [];
     } catch (error) {
       return [];
     }
@@ -447,71 +460,77 @@ export const LocalizationTab = ({
           <TextContent className="messageBundleDescription">
             {t("messageBundleDescription")}
           </TextContent>
-          <div className="tableBorder">
-            <KeycloakDataTable
-              isEditable
-              onRowEdit={updateEditableRows}
-              key={tableKey}
-              editableRows={tableRows}
-              loader={loader}
-              ariaLabelKey="realm-settings:localization"
-              searchTypeComponent={
-                <ToolbarItem>
-                  <Select
-                    width={180}
-                    data-testid="filter-by-locale-select"
-                    isOpen={filterDropdownOpen}
-                    className="kc-filter-by-locale-select"
-                    variant={SelectVariant.single}
+          {isActive && (
+            <div className="tableBorder">
+              <KeycloakDataTable
+                isEditable
+                onRowEdit={updateEditableRows}
+                key={tableKey}
+                editableRows={tableRows}
+                loader={
+                  realm.internationalizationEnabled ? loader : theOtherLoader
+                }
+                ariaLabelKey="realm-settings:localization"
+                searchTypeComponent={
+                  <ToolbarItem>
+                    <Select
+                      width={180}
+                      data-testid="filter-by-locale-select"
+                      isOpen={filterDropdownOpen}
+                      className="kc-filter-by-locale-select"
+                      variant={SelectVariant.single}
+                      isDisabled={!formState.isSubmitSuccessful}
+                      onToggle={(isExpanded) =>
+                        setFilterDropdownOpen(isExpanded)
+                      }
+                      onSelect={(_, value) => {
+                        setSelectMenuLocale(value.toString());
+                        setSelectMenuValueSelected(true);
+                        refreshTable();
+                        setFilterDropdownOpen(false);
+                      }}
+                      selections={
+                        selectMenuValueSelected
+                          ? t(`allSupportedLocales.${selectMenuLocale}`)
+                          : realm.defaultLocale !== ""
+                          ? t(`allSupportedLocales.${DEFAULT_LOCALE}`)
+                          : t("placeholderText")
+                      }
+                    >
+                      {options}
+                    </Select>
+                  </ToolbarItem>
+                }
+                toolbarItem={
+                  <Button
+                    data-testid="add-bundle-button"
                     isDisabled={!formState.isSubmitSuccessful}
-                    onToggle={(isExpanded) => setFilterDropdownOpen(isExpanded)}
-                    onSelect={(_, value) => {
-                      setSelectMenuLocale(value.toString());
-                      setSelectMenuValueSelected(true);
-                      refreshTable();
-                      setFilterDropdownOpen(false);
-                    }}
-                    selections={
-                      selectMenuValueSelected
-                        ? t(`allSupportedLocales.${selectMenuLocale}`)
-                        : realm.defaultLocale !== ""
-                        ? t(`allSupportedLocales.${DEFAULT_LOCALE}`)
-                        : t("placeholderText")
-                    }
+                    onClick={() => setAddMessageBundleModalOpen(true)}
                   >
-                    {options}
-                  </Select>
-                </ToolbarItem>
-              }
-              toolbarItem={
-                <Button
-                  data-testid="add-bundle-button"
-                  isDisabled={!formState.isSubmitSuccessful}
-                  onClick={() => setAddMessageBundleModalOpen(true)}
-                >
-                  {t("addMessageBundle")}
-                </Button>
-              }
-              searchPlaceholderKey=" "
-              emptyState={
-                <ListEmptyState
-                  hasIcon={true}
-                  message={t("noMessageBundles")}
-                  instructions={t("noMessageBundlesInstructions")}
-                  onPrimaryAction={handleModalToggle}
-                />
-              }
-              canSelectAll
-              columns={[
-                {
-                  name: "Key",
-                },
-                {
-                  name: "Value",
-                },
-              ]}
-            />
-          </div>
+                    {t("addMessageBundle")}
+                  </Button>
+                }
+                searchPlaceholderKey=" "
+                emptyState={
+                  <ListEmptyState
+                    hasIcon={true}
+                    message={t("noMessageBundles")}
+                    instructions={t("noMessageBundlesInstructions")}
+                    onPrimaryAction={handleModalToggle}
+                  />
+                }
+                canSelectAll
+                columns={[
+                  {
+                    name: "Key",
+                  },
+                  {
+                    name: "Value",
+                  },
+                ]}
+              />
+            </div>
+          )}
         </FormPanel>
       </PageSection>
     </>
