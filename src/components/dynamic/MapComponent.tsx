@@ -2,9 +2,8 @@ import React from "react";
 import { useTranslation } from "react-i18next";
 import { FormGroup } from "@patternfly/react-core";
 
-import { HelpItem } from "../help-enabler/HelpItem";
 import type { ComponentProps } from "./components";
-import { convertToHyphens } from "../../util";
+import { HelpItem } from "../help-enabler/HelpItem";
 import { AttributeInput } from "../attribute-input/AttributeInput";
 
 export const MapComponent = ({ name, label, helpText }: ComponentProps) => {
@@ -18,7 +17,7 @@ export const MapComponent = ({ name, label, helpText }: ComponentProps) => {
       }
       fieldId={name!}
     >
-      <AttributeInput name={`config.${convertToHyphens(name!)}`} />
+      <AttributeInput name={`config.${name}`} />
     </FormGroup>
   );
 };

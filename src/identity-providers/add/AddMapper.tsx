@@ -80,15 +80,17 @@ export default function AddMapper() {
     useState<IdentityProviderMapperRepresentation>();
 
   const save = async (idpMapper: IdentityProviderMapperRepresentation) => {
-    const attributes = JSON.stringify(idpMapper.config?.attributes ?? []);
+    const mapper = convertFormValuesToObject(
+      idpMapper
+    ) as IdentityProviderMapperRepresentation;
     const claims = JSON.stringify(idpMapper.config.claims ?? []);
-      claims,
 
     if (id) {
       const updatedMapper = {
         ...mapper,
         config: {
-          attributes,
+          ...mapper.config,
+          claims,
         },
         identityProviderAlias: alias!,
         id: id,
@@ -113,7 +115,8 @@ export default function AddMapper() {
             ...mapper,
             identityProviderAlias: alias,
             config: {
-              attributes,
+              ...mapper.config,
+              claims,
             },
           },
           alias: alias!,
@@ -155,12 +158,8 @@ export default function AddMapper() {
   );
 
   const setupForm = (mapper: IdentityProviderMapperRepresentation) => {
-    form.reset();
     convertToFormValues(mapper, form.setValue);
-    form.setValue("config.attributes", JSON.parse(mapper.config.attributes));
-        if (mapper.config?.claims) {
-          form.setValue("config.claims", JSON.parse(value.claims));
-      }
+    form.setValue("config.claims", JSON.parse(mapper.config.claims));
   };
 
   if (!mapperTypes) {
@@ -225,8 +224,7 @@ export default function AddMapper() {
           isSocialIdP={isSocialIdP}
         />
         <FormProvider {...form}>
-          {/* eslint-disable-next-line @typescript-eslint/no-unnecessary-condition */}
-          {mapperType && mapperTypes[mapperType]?.properties && (
+          {mapperType && mapperTypes[mapperType].properties && (
             <DynamicComponents
               properties={mapperTypes[mapperType].properties!}
             />
