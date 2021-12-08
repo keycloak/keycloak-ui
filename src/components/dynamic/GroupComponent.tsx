@@ -23,7 +23,7 @@ export const GroupComponent = ({ name, label, helpText }: ComponentProps) => {
     <Controller
       name={`config.${convertToHyphens(name!)}`}
       defaultValue=""
-      typeAheadAriaLabel="Select an action"
+      typeAheadAriaLabel={t("selectGroup")}
       control={control}
       render={({ onChange, value }) => (
         <>
@@ -35,7 +35,7 @@ export const GroupComponent = ({ name, label, helpText }: ComponentProps) => {
                 ok: "common:select",
               }}
               onConfirm={(groups) => {
-                onChange(groups.map((g) => g.path)[0]);
+                onChange(groups[0].path);
                 setOpen(false);
               }}
               onClose={() => setOpen(false)}
@@ -55,7 +55,7 @@ export const GroupComponent = ({ name, label, helpText }: ComponentProps) => {
             fieldId={name!}
           >
             <InputGroup>
-              <ChipGroup categoryName={""}>
+              <ChipGroup>
                 {value && (
                   <Chip onClick={() => onChange(undefined)}>{value}</Chip>
                 )}

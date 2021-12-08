@@ -74,13 +74,7 @@ export default function AddMapper() {
 
   const [mapperTypes, setMapperTypes] =
     useState<Record<string, IdentityProviderMapperTypeRepresentation>>();
-  const [mapperType, setMapperType] = useState(
-    isSocialIdP
-      ? "attributeImporter"
-      : providerId === "saml"
-      ? "advancedAttributeToRole"
-      : "hardcodedUserSessionAttribute"
-  );
+  const [mapperType, setMapperType] = useState<string>();
 
   const [currentMapper, setCurrentMapper] =
     useState<IdentityProviderMapperRepresentation>();
@@ -151,6 +145,8 @@ export default function AddMapper() {
         setCurrentMapper(mapper);
         setupForm(mapper);
         setMapperType(mapper.identityProviderMapper!);
+      } else {
+        setMapperType(Object.keys(mapperTypes)[0]);
       }
 
       setMapperTypes(mapperTypes);
@@ -225,11 +221,12 @@ export default function AddMapper() {
           mapperTypes={mapperTypes}
           updateMapperType={setMapperType}
           formValues={formValues}
-          mapperType={mapperType}
+          mapperType={mapperType!}
           isSocialIdP={isSocialIdP}
         />
         <FormProvider {...form}>
-          {mapperTypes[mapperType]?.properties && (
+          {/* eslint-disable-next-line @typescript-eslint/no-unnecessary-condition */}
+          {mapperType && mapperTypes[mapperType]?.properties && (
             <DynamicComponents
               properties={mapperTypes[mapperType].properties!}
             />
