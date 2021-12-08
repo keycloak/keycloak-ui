@@ -163,7 +163,9 @@ export const RoleComponent = ({ name, label, helpText }: ComponentProps) => {
                         );
                       }
                     }}
-                    selections={selectedClient || client || role ? realm : ""}
+                    selections={
+                      selectedClient ? selectedClient.clientId || realm : ""
+                    }```
                     onClear={() => onClear(onChange)}
                     onSelect={(_, value) => {
                       setSelectedClient(value as ClientRepresentation);
