@@ -441,17 +441,14 @@ export const PartialImportDialog = (props: PartialImportProps) => {
     });
   };
 
-  const loader = async (first?: number, max?: number) => {
-    let last = first! + max!;
-    const length = importResponse?.results.length;
-    if (last > length!) last = length!;
+  const loader = async (first = 0, max = 15) => {
+    if (!importResponse) {
+      return [];
+    }
 
-    if (importResponse?.results)
-      return importResponse.results.slice(first, last);
+    const last = Math.min(first + max, importResponse.results.length);
 
-    // Empty state can't happen as you will get back a result record
-    // for each record you submit. This is here to make Typescript happy.
-    return [];
+    return importResponse.results.slice(first, last);
   };
 
   const ActionLabel = (importRecord: { action: string; id: string }) => {
