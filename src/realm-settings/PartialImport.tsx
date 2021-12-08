@@ -454,21 +454,29 @@ export const PartialImportDialog = (props: PartialImportProps) => {
     return [];
   };
 
-  const ActionLabel = (importRecord: { action: string }) => {
-    let text = t("added");
-    let color: "green" | "orange" | "purple" = "green";
+  const ActionLabel = (importRecord: { action: string; id: string }) => {
+    const actionLabels = new Map([
+      [
+        "ADDED",
+        <Label key={importRecord.id} color="green">
+          {t("added")}
+        </Label>,
+      ],
+      [
+        "SKIPPED",
+        <Label key={importRecord.id} color="orange">
+          {t("skipped")}
+        </Label>,
+      ],
+      [
+        "OVERWRITTEN",
+        <Label key={importRecord.id} color="purple">
+          {t("overwritten")}
+        </Label>,
+      ],
+    ]);
 
-    if (importRecord.action === "SKIPPED") {
-      text = t("skipped");
-      color = "orange";
-    }
-
-    if (importRecord.action === "OVERWRITTEN") {
-      text = t("overwritten");
-      color = "purple";
-    }
-
-    return <Label color={color}>{text}</Label>;
+    return actionLabels.get(importRecord.action);
   };
 
   const TypeRenderer = (importRecord: { resourceType: string }) => {
