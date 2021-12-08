@@ -179,7 +179,7 @@ describe("Realm settings events tab tests", () => {
 
     cy.findByTestId("internationalization-disabled").click();
 
-    cy.findByTestId("add-bundle-button").click();
+    cy.findByTestId("add-bundle-button").click({ force: true });
 
     addBundle();
 

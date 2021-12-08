@@ -151,13 +151,17 @@ export const LocalizationTab = ({
   }, [messageBundles]);
 
   const loader = async () => {
-    const result = await adminClient.realms.getRealmLocalizationTexts({
-      realm: realm.realm!,
-      selectedLocale:
-        selectMenuLocale || getValues("defaultLocale") || DEFAULT_LOCALE,
-    });
-    setMessageBundles(Object.entries(result));
-    return Object.entries(result);
+    try {
+      const result = await adminClient.realms.getRealmLocalizationTexts({
+        realm: realm.realm!,
+        selectedLocale:
+          selectMenuLocale || getValues("defaultLocale") || DEFAULT_LOCALE,
+      });
+      setMessageBundles(Object.entries(result));
+      return Object.entries(result);
+    } catch (error) {
+      return [];
+    }
   };
 
   const handleTextInputChange = (
