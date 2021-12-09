@@ -75,7 +75,9 @@ const userLabelDefaultValues: UserLabelForm = {
   userLabel: "",
 };
 
-type ExpandableCredentialRepresentation = CredentialRepresentation & {
+type ExpandableCredentialRepresentation = {
+  key: string;
+  value: [];
   isExpanded: boolean;
 };
 
@@ -124,6 +126,9 @@ export const UserCredentials = ({ user }: UserCredentialsProps) => {
   } = userLabelForm;
   const [credentials, setCredentials] = useState<CredentialsForm>();
   const [userCredentials, setUserCredentials] = useState<
+    CredentialRepresentation[]
+  >([]);
+  const [groupedUserCredentials, setGroupedUserCredentials] = useState<
     ExpandableCredentialRepresentation[]
   >([]);
   const [selectedCredential, setSelectedCredential] =
@@ -140,12 +145,29 @@ export const UserCredentials = ({ user }: UserCredentialsProps) => {
   useFetch(
     () => adminClient.users.getCredentials({ id: user.id! }),
     (credentials) => {
-      setUserCredentials(
-        credentials.map((credential) => ({ ...credential, isExpanded: false }))
+      setUserCredentials(credentials);
+
+      const groupedCredentials = credentials.reduce((r, a) => {
+        r[a.type!] = r[a.type!] || [];
+        r[a.type!].push(a);
+        return r;
+      }, Object.create(null));
+
+      const groupedCredentialsArray = Object.keys(groupedCredentials).map(
+        (key) => ({ key, value: groupedCredentials[key] })
+      );
+
+      setGroupedUserCredentials(
+        groupedCredentialsArray.map((groupedCredential) => ({
+          ...groupedCredential,
+          isExpanded: false,
+        }))
       );
     },
     [key]
   );
+
+  console.log(">>> groupedUSerCred ", groupedUserCredentials);
 
   const passwordTypeFinder = userCredentials.find(
     (credential) => credential.type === "password"
@@ -499,7 +521,7 @@ export const UserCredentials = ({ user }: UserCredentialsProps) => {
           <Divider />
         </>
       )}
-      {userCredentials.length !== 0 ? (
+      {groupedUserCredentials.length !== 0 ? (
         <TableComposable aria-label="password-data-table" variant={"compact"}>
           <Thead>
             <Tr>
@@ -519,185 +541,238 @@ export const UserCredentials = ({ user }: UserCredentialsProps) => {
               <Th />
             </Tr>
           </Thead>
-          {userCredentials.map((credential, rowIndex) => (
+          {groupedUserCredentials.map((groupedCredential, rowIndex) => (
             <Tbody
-              key={`table-${credential.id}`}
-              isExpanded={credential.isExpanded}
+              key={`table-${groupedCredential.key}`}
+              isExpanded={groupedCredential.isExpanded}
             >
               <Tr>
-                <>
-                  <Td
-                    expand={{
-                      rowIndex,
-                      isExpanded: credential.isExpanded,
-                      onToggle: (_, rowIndex) => {
-                        const rows = userCredentials.map((credential, index) =>
+                <Td
+                  expand={{
+                    rowIndex,
+                    isExpanded: groupedCredential.isExpanded,
+                    onToggle: (_, rowIndex) => {
+                      const rows = groupedUserCredentials.map(
+                        (credential, index) =>
                           index === rowIndex
                             ? {
                                 ...credential,
                                 isExpanded: !credential.isExpanded,
                               }
                             : credential
-                        );
-                        setUserCredentials(rows);
-                      },
-                    }}
-                  />
-                  <Td
-                    key={`table-item-${credential.id}`}
-                    dataLabel={`columns-${credential.id}`}
-                  >
-                    {credential.type?.charAt(0).toUpperCase()! +
-                      credential.type?.slice(1)}
-                  </Td>
-                  <Td>
-                    <FormAccess isHorizontal role="view-users">
-                      <FormGroup
-                        fieldId="kc-userLabel"
-                        className="kc-userLabel-row"
-                      >
-                        <div className="kc-form-group-userLabel">
-                          {isUserLabelEdit?.status &&
-                          isUserLabelEdit.rowKey === credential.id ? (
-                            <>
-                              <TextInput
-                                name="userLabel"
-                                ref={register1()}
-                                type="text"
-                                className="kc-userLabel"
-                                aria-label={t("userLabel")}
-                                data-testid="user-label-fld"
-                              />
-                              <div className="kc-userLabel-actionBtns">
-                                <Button
-                                  key={`editUserLabel-accept-${credential.id}`}
-                                  variant="link"
-                                  className="kc-editUserLabel-acceptBtn"
-                                  onClick={() => {
-                                    handleSubmit1(saveUserLabel)();
-                                    setIsUserLabelEdit({
-                                      status: false,
-                                      rowKey: credential.id!,
-                                    });
-                                  }}
-                                  data-testid="editUserLabel-acceptBtn"
-                                  icon={<CheckIcon />}
-                                />
-                                <Button
-                                  key={`editUserLabel-cancel-${credential.id}`}
-                                  variant="link"
-                                  className="kc-editUserLabel-cancelBtn"
-                                  onClick={() =>
-                                    setIsUserLabelEdit({
-                                      status: false,
-                                      rowKey: credential.id!,
-                                    })
-                                  }
-                                  data-testid="editUserLabel-cancelBtn"
-                                  icon={<TimesIcon />}
-                                />
-                              </div>
-                            </>
-                          ) : (
-                            <>
-                              {credential.userLabel ?? ""}
-                              <Button
-                                key={`editUserLabel-${credential.id}`}
-                                variant="link"
-                                className="kc-editUserLabel-btn"
-                                onClick={() => {
-                                  setEditedUserCredential(credential);
-                                  setIsUserLabelEdit({
-                                    status: true,
-                                    rowKey: credential.id!,
-                                  });
-                                }}
-                                data-testid="editUserLabelBtn"
-                                icon={<PencilAltIcon />}
-                              />
-                            </>
-                          )}
-                        </div>
-                      </FormGroup>
-                    </FormAccess>
-                  </Td>
-                  <Td>
-                    <Button
-                      className="kc-showData-btn"
-                      variant="link"
-                      data-testid="showDataBtn"
-                      onClick={() => {
-                        setShowData(true);
-                        setSelectedCredential(credential);
-                      }}
-                    >
-                      {t("showDataBtn")}
-                    </Button>
-                  </Td>
-                  {credential.type === "password" ? (
-                    <Td>
-                      <Button
-                        variant="secondary"
-                        data-testid="resetPasswordBtn"
-                        onClick={resetPassword}
-                      >
-                        {t("resetPasswordBtn")}
-                      </Button>
-                    </Td>
-                  ) : (
-                    <Td />
-                  )}
-                  <Td>
-                    <Dropdown
-                      isPlain
-                      position={DropdownPosition.right}
-                      toggle={
-                        <KebabToggle
-                          onToggle={(status) =>
-                            setKebabOpen({
-                              status,
-                              rowKey: credential.id!,
-                            })
-                          }
-                        />
-                      }
-                      isOpen={
-                        kebabOpen.status && kebabOpen.rowKey === credential.id
-                      }
-                      onSelect={() => {
-                        setSelectedCredential(credential);
-                      }}
-                      dropdownItems={[
-                        <DropdownItem
-                          key={`delete-dropdown-item-${credential.id}`}
-                          data-testid="deleteDropdownItem"
-                          component="button"
-                          onClick={() => {
-                            toggleDeleteDialog();
-                            setKebabOpen({
-                              status: false,
-                              rowKey: credential.id!,
-                            });
-                          }}
-                        >
-                          {t("deleteBtn")}
-                        </DropdownItem>,
-                      ]}
-                    />
-                  </Td>
-                </>
+                      );
+                      setGroupedUserCredentials(rows);
+                    },
+                  }}
+                />
+                <Td
+                  key={`table-item-${groupedCredential.key}`}
+                  dataLabel={`columns-${groupedCredential.key}`}
+                >
+                  {groupedCredential.key.charAt(0).toUpperCase()! +
+                    groupedCredential.key.slice(1)}
+                </Td>
               </Tr>
               <Tr
-                key={`child-${credential.id}`}
-                isExpanded={credential.isExpanded}
+                key={`child-${groupedCredential.key}`}
+                isExpanded={groupedCredential.isExpanded}
               >
                 <Td colSpan={5}>
                   <ExpandableRowContent>
-                    {credential.isExpanded && <Td>Test</Td>}
+                    {groupedCredential.isExpanded &&
+                      groupedCredential.value.map(
+                        (credential: CredentialRepresentation) => (
+                          <Td
+                            key={`table-child-item-${credential.id}`}
+                            dataLabel={`child-columns-${credential.id}`}
+                          >
+                            {credential.type!.charAt(0).toUpperCase()! +
+                              credential.type!.slice(1)}
+                          </Td>
+                        )
+                      )}
                   </ExpandableRowContent>
                 </Td>
               </Tr>
             </Tbody>
+            // <Tbody
+            //   key={`table-${credential.id}`}
+            //   isExpanded={credential.isExpanded}
+            // >
+            //   <Tr>
+            //     <>
+            //       <Td
+            //         expand={{
+            //           rowIndex,
+            //           isExpanded: credential.isExpanded,
+            //           onToggle: (_, rowIndex) => {
+            //             const rows = userCredentials.map((credential, index) =>
+            //               index === rowIndex
+            //                 ? {
+            //                     ...credential,
+            //                     isExpanded: !credential.isExpanded,
+            //                   }
+            //                 : credential
+            //             );
+            //             setUserCredentials(rows);
+            //           },
+            //         }}
+            //       />
+            //       <Td
+            //         key={`table-item-${credential.id}`}
+            //         dataLabel={`columns-${credential.id}`}
+            //       >
+            //         {credential.type?.charAt(0).toUpperCase()! +
+            //           credential.type?.slice(1)}
+            //       </Td>
+            //       <Td>
+            //         <FormAccess isHorizontal role="view-users">
+            //           <FormGroup
+            //             fieldId="kc-userLabel"
+            //             className="kc-userLabel-row"
+            //           >
+            //             <div className="kc-form-group-userLabel">
+            //               {isUserLabelEdit?.status &&
+            //               isUserLabelEdit.rowKey === credential.id ? (
+            //                 <>
+            //                   <TextInput
+            //                     name="userLabel"
+            //                     ref={register1()}
+            //                     type="text"
+            //                     className="kc-userLabel"
+            //                     aria-label={t("userLabel")}
+            //                     data-testid="user-label-fld"
+            //                   />
+            //                   <div className="kc-userLabel-actionBtns">
+            //                     <Button
+            //                       key={`editUserLabel-accept-${credential.id}`}
+            //                       variant="link"
+            //                       className="kc-editUserLabel-acceptBtn"
+            //                       onClick={() => {
+            //                         handleSubmit1(saveUserLabel)();
+            //                         setIsUserLabelEdit({
+            //                           status: false,
+            //                           rowKey: credential.id!,
+            //                         });
+            //                       }}
+            //                       data-testid="editUserLabel-acceptBtn"
+            //                       icon={<CheckIcon />}
+            //                     />
+            //                     <Button
+            //                       key={`editUserLabel-cancel-${credential.id}`}
+            //                       variant="link"
+            //                       className="kc-editUserLabel-cancelBtn"
+            //                       onClick={() =>
+            //                         setIsUserLabelEdit({
+            //                           status: false,
+            //                           rowKey: credential.id!,
+            //                         })
+            //                       }
+            //                       data-testid="editUserLabel-cancelBtn"
+            //                       icon={<TimesIcon />}
+            //                     />
+            //                   </div>
+            //                 </>
+            //               ) : (
+            //                 <>
+            //                   {credential.userLabel ?? ""}
+            //                   <Button
+            //                     key={`editUserLabel-${credential.id}`}
+            //                     variant="link"
+            //                     className="kc-editUserLabel-btn"
+            //                     onClick={() => {
+            //                       setEditedUserCredential(credential);
+            //                       setIsUserLabelEdit({
+            //                         status: true,
+            //                         rowKey: credential.id!,
+            //                       });
+            //                     }}
+            //                     data-testid="editUserLabelBtn"
+            //                     icon={<PencilAltIcon />}
+            //                   />
+            //                 </>
+            //               )}
+            //             </div>
+            //           </FormGroup>
+            //         </FormAccess>
+            //       </Td>
+            //       <Td>
+            //         <Button
+            //           className="kc-showData-btn"
+            //           variant="link"
+            //           data-testid="showDataBtn"
+            //           onClick={() => {
+            //             setShowData(true);
+            //             setSelectedCredential(credential);
+            //           }}
+            //         >
+            //           {t("showDataBtn")}
+            //         </Button>
+            //       </Td>
+            //       {credential.type === "password" ? (
+            //         <Td>
+            //           <Button
+            //             variant="secondary"
+            //             data-testid="resetPasswordBtn"
+            //             onClick={resetPassword}
+            //           >
+            //             {t("resetPasswordBtn")}
+            //           </Button>
+            //         </Td>
+            //       ) : (
+            //         <Td />
+            //       )}
+            //       <Td>
+            //         <Dropdown
+            //           isPlain
+            //           position={DropdownPosition.right}
+            //           toggle={
+            //             <KebabToggle
+            //               onToggle={(status) =>
+            //                 setKebabOpen({
+            //                   status,
+            //                   rowKey: credential.id!,
+            //                 })
+            //               }
+            //             />
+            //           }
+            //           isOpen={
+            //             kebabOpen.status && kebabOpen.rowKey === credential.id
+            //           }
+            //           onSelect={() => {
+            //             setSelectedCredential(credential);
+            //           }}
+            //           dropdownItems={[
+            //             <DropdownItem
+            //               key={`delete-dropdown-item-${credential.id}`}
+            //               data-testid="deleteDropdownItem"
+            //               component="button"
+            //               onClick={() => {
+            //                 toggleDeleteDialog();
+            //                 setKebabOpen({
+            //                   status: false,
+            //                   rowKey: credential.id!,
+            //                 });
+            //               }}
+            //             >
+            //               {t("deleteBtn")}
+            //             </DropdownItem>,
+            //           ]}
+            //         />
+            //       </Td>
+            //     </>
+            //   </Tr>
+            //   <Tr
+            //     key={`child-${credential.id}`}
+            //     isExpanded={credential.isExpanded}
+            //   >
+            //     <Td colSpan={5}>
+            //       <ExpandableRowContent>
+            //         {credential.isExpanded && <Td>Test</Td>}
+            //       </ExpandableRowContent>
+            //     </Td>
+            //   </Tr>
+            // </Tbody>
           ))}
         </TableComposable>
       ) : (
