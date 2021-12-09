@@ -62,8 +62,8 @@ export const PartialImportDialog = (props: PartialImportProps) => {
   const { realm } = useRealm();
 
   const [isFileSelected, setIsFileSelected] = useState(false);
-  const [isMultiRealm, setIsMultiRealm] = useState(false);
   const [importedFile, setImportedFile] = useState<ImportedMultiRealm>([]);
+  const isMultiRealm = Array.isArray(importedFile) && importedFile.length > 1;
   const [isRealmSelectOpen, setIsRealmSelectOpen] = useState(false);
   const [isCollisionSelectOpen, setIsCollisionSelectOpen] = useState(false);
   const [importInProgress, setImportInProgress] = useState(false);
@@ -94,7 +94,6 @@ export const PartialImportDialog = (props: PartialImportProps) => {
   };
 
   const resetInputState = () => {
-    setIsMultiRealm(false);
     setImportedFile([]);
     setTargetRealm({});
     setCollisionOption("FAIL");
@@ -116,10 +115,8 @@ export const PartialImportDialog = (props: PartialImportProps) => {
     setImportedFile(value);
 
     if (value instanceof Array && value.length > 0) {
-      setIsMultiRealm(value.length > 1);
       setTargetRealm(value[0] || {});
     } else {
-      setIsMultiRealm(false);
       setTargetRealm(value as RealmRepresentation);
     }
   };
