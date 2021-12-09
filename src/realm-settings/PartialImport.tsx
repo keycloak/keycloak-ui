@@ -72,7 +72,6 @@ export const PartialImportDialog = (props: PartialImportProps) => {
 
   const [importedFile, setImportedFile] = useState<ImportedMultiRealm>();
   const isFileSelected = !!importedFile;
-  const isMultiRealm = Array.isArray(importedFile) && importedFile.length > 1;
   const [isRealmSelectOpen, setIsRealmSelectOpen] = useState(false);
   const [isCollisionSelectOpen, setIsCollisionSelectOpen] = useState(false);
   const [importInProgress, setImportInProgress] = useState(false);
@@ -135,23 +134,16 @@ export const PartialImportDialog = (props: PartialImportProps) => {
     setResourcesToImport(copyOfResourcesToImport);
   };
 
-  const realmSelectOptions = () => {
-    if (!isMultiRealm) return [];
-
-    const mapper = (realm: RealmRepresentation) => {
-      return (
-        <SelectOption
-          key={realm.id}
-          value={realm}
-          data-testid={realm.id + "-select-option"}
-        >
-          {realm.realm || realm.id}
-        </SelectOption>
-      );
-    };
-
-    return (importedFile as RealmRepresentation[]).map(mapper);
-  };
+  const realmSelectOptions = (realms: RealmRepresentation[]) =>
+    realms.map((realm) => (
+      <SelectOption
+        key={realm.id}
+        value={realm}
+        data-testid={realm.id + "-select-option"}
+      >
+        {realm.realm || realm.id}
+      </SelectOption>
+    ));
 
   const handleCollisionSelect = (
     event: React.ChangeEvent<Element> | React.MouseEvent<Element, MouseEvent>,
@@ -339,7 +331,7 @@ export const PartialImportDialog = (props: PartialImportProps) => {
               <StackItem>
                 <Divider />
               </StackItem>
-              {isMultiRealm && (
+              {Array.isArray(importedFile) && importedFile.length > 0 && (
                 <StackItem>
                   <Text>{t("selectRealm")}:</Text>
                   <Select
@@ -349,7 +341,7 @@ export const PartialImportDialog = (props: PartialImportProps) => {
                     onSelect={(_, value) => handleRealmSelect(value)}
                     placeholderText={targetRealm.realm || targetRealm.id}
                   >
-                    {realmSelectOptions()}
+                    {realmSelectOptions(importedFile)}
                   </Select>
                 </StackItem>
               )}
