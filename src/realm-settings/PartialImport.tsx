@@ -270,10 +270,10 @@ export const PartialImportDialog = (props: PartialImportProps) => {
   const jsonForImport = () => {
     const jsonToImport: PartialImportRealmRepresentation = {
       ifResourceExists: collisionOption,
+      id: targetRealm.id,
+      realm: targetRealm.realm,
     };
 
-    jsonToImport.id = targetRealm.id;
-    jsonToImport.realm = targetRealm.realm;
     if (resourcesToImport["users"]) jsonToImport.users = targetRealm.users;
     if (resourcesToImport["groups"]) jsonToImport.groups = targetRealm.groups;
     if (resourcesToImport["identityProviders"])
