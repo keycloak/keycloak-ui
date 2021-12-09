@@ -19,6 +19,7 @@ import {
   ValidatedOptions,
 } from "@patternfly/react-core";
 import {
+  ExpandableRowContent,
   Table,
   TableBody,
   TableComposable,
@@ -541,9 +542,6 @@ export const UserCredentials = ({ user }: UserCredentialsProps) => {
                         setUserCredentials(rows);
                       },
                     }}
-                    // draggableRow={{
-                    //   id: `draggable-row-${credential.id}`,
-                    // }}
                   />
                   <Td
                     key={`table-item-${credential.id}`}
@@ -688,6 +686,16 @@ export const UserCredentials = ({ user }: UserCredentialsProps) => {
                     />
                   </Td>
                 </>
+              </Tr>
+              <Tr
+                key={`child-${credential.id}`}
+                isExpanded={credential.isExpanded}
+              >
+                <Td colSpan={5}>
+                  <ExpandableRowContent>
+                    {credential.isExpanded && <Td>Test</Td>}
+                  </ExpandableRowContent>
+                </Td>
               </Tr>
             </Tbody>
           ))}
