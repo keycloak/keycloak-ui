@@ -74,6 +74,10 @@ const userLabelDefaultValues: UserLabelForm = {
   userLabel: "",
 };
 
+type ExpandableCredentialRepresentation = CredentialRepresentation & {
+  isExpanded: boolean;
+};
+
 const DisplayDialog: FunctionComponent<DisplayDialogProps> = ({
   titleKey,
   onClose,
@@ -119,7 +123,7 @@ export const UserCredentials = ({ user }: UserCredentialsProps) => {
   } = userLabelForm;
   const [credentials, setCredentials] = useState<CredentialsForm>();
   const [userCredentials, setUserCredentials] = useState<
-    CredentialRepresentation[]
+    ExpandableCredentialRepresentation[]
   >([]);
   const [selectedCredential, setSelectedCredential] =
     useState<CredentialRepresentation>({});
@@ -135,7 +139,9 @@ export const UserCredentials = ({ user }: UserCredentialsProps) => {
   useFetch(
     () => adminClient.users.getCredentials({ id: user.id! }),
     (credentials) => {
-      setUserCredentials(credentials);
+      setUserCredentials(
+        credentials.map((credential) => ({ ...credential, isExpanded: false }))
+      );
     },
     [key]
   );
@@ -512,14 +518,32 @@ export const UserCredentials = ({ user }: UserCredentialsProps) => {
               <Th />
             </Tr>
           </Thead>
-          <Tbody>
-            {userCredentials.map((credential) => (
-              <Tr key={`table-${credential.id}`}>
+          {userCredentials.map((credential, rowIndex) => (
+            <Tbody
+              key={`table-${credential.id}`}
+              isExpanded={credential.isExpanded}
+            >
+              <Tr>
                 <>
                   <Td
-                    draggableRow={{
-                      id: `draggable-row-${credential.id}`,
+                    expand={{
+                      rowIndex,
+                      isExpanded: credential.isExpanded,
+                      onToggle: (_, rowIndex) => {
+                        const rows = userCredentials.map((credential, index) =>
+                          index === rowIndex
+                            ? {
+                                ...credential,
+                                isExpanded: !credential.isExpanded,
+                              }
+                            : credential
+                        );
+                        setUserCredentials(rows);
+                      },
                     }}
+                    // draggableRow={{
+                    //   id: `draggable-row-${credential.id}`,
+                    // }}
                   />
                   <Td
                     key={`table-item-${credential.id}`}
@@ -665,8 +689,8 @@ export const UserCredentials = ({ user }: UserCredentialsProps) => {
                   </Td>
                 </>
               </Tr>
-            ))}
-          </Tbody>
+            </Tbody>
+          ))}
         </TableComposable>
       ) : (
         <ListEmptyState
