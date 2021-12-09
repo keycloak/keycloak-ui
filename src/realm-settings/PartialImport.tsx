@@ -434,11 +434,13 @@ export const PartialImportDialog = (props: PartialImportProps) => {
   };
 
   const importCompleteMessage = () => {
-    return t("importSuccess", {
-      added: importResponse?.added,
-      overwritten: importResponse?.overwritten,
-      skipped: importResponse?.skipped,
-    });
+    return `${t("importAdded", {
+      count: importResponse?.added,
+    })}  ${t("importSkipped", {
+      count: importResponse?.skipped,
+    })} ${t("importOverwritten", {
+      count: importResponse?.overwritten,
+    })}`;
   };
 
   const loader = async (first = 0, max = 15) => {

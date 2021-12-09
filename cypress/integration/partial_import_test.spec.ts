@@ -100,7 +100,7 @@ describe("Partial import test", () => {
     modal.clientsCheckbox().click();
     modal.importButton().click();
 
-    cy.contains("1 records added");
+    cy.contains("One record added");
     cy.contains("customer-portal");
   });
 
