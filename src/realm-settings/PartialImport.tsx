@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
-import _ from "lodash";
 import {
   Alert,
   Button,
@@ -55,6 +54,15 @@ type CollisionOption = "FAIL" | "SKIP" | "OVERWRITE";
 
 type ResourceChecked = { [k in Resource]: boolean };
 
+const INITIAL_RESOURCES: Readonly<ResourceChecked> = {
+  users: false,
+  clients: false,
+  groups: false,
+  identityProviders: false,
+  realmRoles: false,
+  clientRoles: false,
+};
+
 export const PartialImportDialog = (props: PartialImportProps) => {
   const tRealm = useTranslation("realm-settings").t;
   const { t } = useTranslation("partial-import");
@@ -73,23 +81,11 @@ export const PartialImportDialog = (props: PartialImportProps) => {
   const [importResponse, setImportResponse] = useState<PartialImportResponse>();
   const { addError } = useAlerts();
 
-  const allResourcesUnChecked: Readonly<ResourceChecked> = {
-    users: false,
-    clients: false,
-    groups: false,
-    identityProviders: false,
-    realmRoles: false,
-    clientRoles: false,
-  };
-
-  const [resourcesToImport, setResourcesToImport] = useState<ResourceChecked>(
-    _.cloneDeep(allResourcesUnChecked)
-  );
-
+  const [resourcesToImport, setResourcesToImport] = useState(INITIAL_RESOURCES);
   const [isAnyResourceChecked, setIsAnyResourceChecked] = useState(false);
 
   const resetResourcesToImport = () => {
-    setResourcesToImport(_.cloneDeep(allResourcesUnChecked));
+    setResourcesToImport(INITIAL_RESOURCES);
     setIsAnyResourceChecked(false);
   };
 
@@ -129,9 +125,11 @@ export const PartialImportDialog = (props: PartialImportProps) => {
     checked: boolean,
     event: React.FormEvent<HTMLInputElement>
   ) => {
-    const resource: Resource = event.currentTarget.name as Resource;
-    const copyOfResourcesToImport = _.cloneDeep(resourcesToImport);
-    copyOfResourcesToImport[resource] = checked;
+    const resource = event.currentTarget.name as Resource;
+    const copyOfResourcesToImport = {
+      ...resourcesToImport,
+      [resource]: checked,
+    };
     setResourcesToImport(copyOfResourcesToImport);
     setIsAnyResourceChecked(resourcesChecked(copyOfResourcesToImport));
   };
