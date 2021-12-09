@@ -124,10 +124,7 @@ export const PartialImportDialog = (props: PartialImportProps) => {
     }
   };
 
-  const handleRealmSelect = (
-    event: React.ChangeEvent<Element> | React.MouseEvent<Element, MouseEvent>,
-    realm: string | SelectOptionObject
-  ) => {
+  const handleRealmSelect = (realm: string | SelectOptionObject) => {
     setTargetRealm(realm as RealmRepresentation);
     setIsRealmSelectOpen(false);
     resetResourcesToImport();
@@ -382,7 +379,7 @@ export const PartialImportDialog = (props: PartialImportProps) => {
                     toggleId="realm-selector"
                     isOpen={isRealmSelectOpen}
                     onToggle={() => setIsRealmSelectOpen(!isRealmSelectOpen)}
-                    onSelect={handleRealmSelect}
+                    onSelect={(_, value) => handleRealmSelect(value)}
                     placeholderText={targetRealm.realm || targetRealm.id}
                   >
                     {realmSelectOptions()}
