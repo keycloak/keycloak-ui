@@ -4,6 +4,7 @@ import {
   Button,
   ButtonVariant,
   Divider,
+  Divider,
   Dropdown,
   DropdownItem,
   DropdownPosition,
@@ -166,8 +167,6 @@ export const UserCredentials = ({ user }: UserCredentialsProps) => {
     },
     [key]
   );
-
-  console.log(">>> groupedUSerCred ", groupedUserCredentials);
 
   const passwordTypeFinder = userCredentials.find(
     (credential) => credential.type === "password"
@@ -582,13 +581,23 @@ export const UserCredentials = ({ user }: UserCredentialsProps) => {
                     {groupedCredential.isExpanded &&
                       groupedCredential.value.map(
                         (credential: CredentialRepresentation) => (
-                          <Td
-                            key={`table-child-item-${credential.id}`}
-                            dataLabel={`child-columns-${credential.id}`}
+                          <TableComposable
+                            key="compact-table-expandable-row"
+                            aria-label="compact-table-expandable-row"
+                            variant={"compact"}
                           >
-                            {credential.type!.charAt(0).toUpperCase()! +
-                              credential.type!.slice(1)}
-                          </Td>
+                            <Tbody>
+                              <Tr>
+                                <Td
+                                  key={`table-child-item-${credential.id}`}
+                                  dataLabel={`child-columns-${credential.id}`}
+                                >
+                                  {credential.type!.charAt(0).toUpperCase()! +
+                                    credential.type!.slice(1)}
+                                </Td>
+                              </Tr>
+                            </Tbody>
+                          </TableComposable>
                         )
                       )}
                   </ExpandableRowContent>
