@@ -20,7 +20,7 @@ describe("Realm settings events tab tests", () => {
   beforeEach(() => {
     keycloakBefore();
     loginPage.logIn();
-    // sidebarPage.goToRealm(realmName);
+    sidebarPage.goToRealm(realmName);
   });
 
   before(async () => {
