@@ -522,10 +522,9 @@ export const PartialImportDialog = (props: PartialImportProps) => {
     );
   };
 
-  return (
-    <>
-      {!importResponse && importModal()}
-      {importResponse && importCompletedModal()}
-    </>
-  );
+  if (!importResponse) {
+    return importModal();
+  }
+
+  return importCompletedModal();
 };
