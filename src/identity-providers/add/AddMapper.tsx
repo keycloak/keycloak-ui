@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from "react";
+import React, { useState } from "react";
 import { Link, useHistory, useParams } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { FormProvider, useForm } from "react-hook-form";
@@ -29,8 +29,6 @@ import { toIdentityProvider } from "../routes/IdentityProvider";
 import type IdentityProviderMapperRepresentation from "@keycloak/keycloak-admin-client/lib/defs/identityProviderMapperRepresentation";
 import type { IdentityProviderMapperTypeRepresentation } from "@keycloak/keycloak-admin-client/lib/defs/identityProviderMapperTypeRepresentation";
 import { AddMapperForm } from "./AddMapperForm";
-import { useServerInfo } from "../../context/server-info/ServerInfoProvider";
-import { groupBy } from "lodash";
 import { DynamicComponents } from "../../components/dynamic/DynamicComponents";
 import { KeycloakSpinner } from "../../components/keycloak-spinner/KeycloakSpinner";
 import type { AttributeForm } from "../../components/attribute-form/AttributeForm";
@@ -58,20 +56,6 @@ export default function AddMapper() {
   const { providerId, alias } = useParams<IdentityProviderAddMapperParams>();
   const { id } = useParams<IdentityProviderEditMapperParams>();
 
-  const serverInfo = useServerInfo();
-  const identityProviders = useMemo(
-    () => groupBy(serverInfo.identityProviders, "groupName"),
-    [serverInfo]
-  );
-
-  const isSocialIdP = useMemo(
-    () =>
-      identityProviders["Social"]
-        .map((item) => item.id)
-        .includes(providerId.toLowerCase()),
-    [identityProviders, providerId]
-  );
-
   const [mapperTypes, setMapperTypes] =
     useState<Record<string, IdentityProviderMapperTypeRepresentation>>();
   const [mapperType, setMapperType] = useState<string>();
@@ -85,24 +69,23 @@ export default function AddMapper() {
     ) as IdentityProviderMapperRepresentation;
     const claims = JSON.stringify(idpMapper.config.claims ?? []);
 
+    const identityProviderMapper = {
+      ...mapper,
+      config: {
+        ...mapper.config,
+        claims,
+      },
+      identityProviderAlias: alias!,
+    };
+
     if (id) {
-      const updatedMapper = {
-        ...mapper,
-        config: {
-          ...mapper.config,
-          claims,
-        },
-        identityProviderAlias: alias!,
-        id: id,
-        name: currentMapper?.name!,
-      };
       try {
         await adminClient.identityProviders.updateMapper(
           {
             id: id!,
             alias: alias!,
           },
-          updatedMapper
+          { ...identityProviderMapper, name: currentMapper?.name! }
         );
         addAlert(t("mapperSaveSuccess"), AlertVariant.success);
       } catch (error) {
@@ -111,14 +94,7 @@ export default function AddMapper() {
     } else {
       try {
         const createdMapper = await adminClient.identityProviders.createMapper({
-          identityProviderMapper: {
-            ...mapper,
-            identityProviderAlias: alias,
-            config: {
-              ...mapper.config,
-              claims,
-            },
-          },
+          identityProviderMapper,
           alias: alias!,
         });
 
@@ -165,8 +141,6 @@ export default function AddMapper() {
   if (!mapperTypes) {
     return <KeycloakSpinner />;
   }
-
-  const formValues = form.getValues();
 
   return (
     <PageSection variant="light">
@@ -219,9 +193,7 @@ export default function AddMapper() {
           id={id}
           mapperTypes={mapperTypes}
           updateMapperType={setMapperType}
-          formValues={formValues}
           mapperType={mapperType!}
-          isSocialIdP={isSocialIdP}
         />
         <FormProvider {...form}>
           {mapperType && mapperTypes[mapperType].properties && (
