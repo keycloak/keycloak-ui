@@ -34,6 +34,7 @@ import type RealmRepresentation from "@keycloak/keycloak-admin-client/lib/defs/r
 import type {
   PartialImportRealmRepresentation,
   PartialImportResponse,
+  PartialImportResult,
 } from "@keycloak/keycloak-admin-client/lib/defs/realmRepresentation";
 import type RoleRepresentation from "@keycloak/keycloak-admin-client/lib/defs/roleRepresentation";
 
@@ -434,7 +435,7 @@ export const PartialImportDialog = (props: PartialImportProps) => {
     return importResponse.results.slice(first, last);
   };
 
-  const ActionLabel = (importRecord: { action: string; id: string }) => {
+  const ActionLabel = (importRecord: PartialImportResult) => {
     const actionLabels = new Map([
       [
         "ADDED",
@@ -459,7 +460,7 @@ export const PartialImportDialog = (props: PartialImportProps) => {
     return actionLabels.get(importRecord.action);
   };
 
-  const TypeRenderer = (importRecord: { resourceType: string }) => {
+  const TypeRenderer = (importRecord: PartialImportResult) => {
     const typeMap = new Map([
       ["CLIENT", t("common:clients")],
       ["REALM_ROLE", t("common:realmRoles")],
