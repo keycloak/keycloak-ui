@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
-import { cloneDeep } from "lodash";
+import { cloneDeep, isEqual, uniqWith } from "lodash";
 import { Controller, useForm, useFormContext, useWatch } from "react-hook-form";
 import {
   ActionGroup,
@@ -22,8 +22,7 @@ import type RealmRepresentation from "@keycloak/keycloak-admin-client/lib/defs/r
 import { FormAccess } from "../components/form-access/FormAccess";
 import { useServerInfo } from "../context/server-info/ServerInfoProvider";
 import { FormPanel } from "../components/scroll-form/FormPanel";
-import { KeycloakDataTable } from "../components/table-toolbar/KeycloakDataTable";
-import { useAdminClient } from "../context/auth/AdminClient";
+import { useAdminClient, useFetch } from "../context/auth/AdminClient";
 import { ListEmptyState } from "../components/list-empty-state/ListEmptyState";
 import { AddMessageBundleModal } from "./AddMessageBundleModal";
 import { useAlerts } from "../components/alert/Alerts";
@@ -38,8 +37,14 @@ import {
   RowErrors,
   RowEditType,
   IRowCell,
+  TableBody,
+  TableHeader,
+  Table,
+  TableVariant,
 } from "@patternfly/react-table";
 import type { EditableTextCellProps } from "@patternfly/react-table/dist/esm/components/Table/base";
+import { PaginatingTableToolbar } from "../components/table-toolbar/PaginatingTableToolbar";
+import { SearchIcon } from "@patternfly/react-icons";
 
 type LocalizationTabProps = {
   save: (realm: RealmRepresentation) => void;
@@ -96,6 +101,9 @@ export const LocalizationTab = ({
   });
 
   const [tableKey, setTableKey] = useState(0);
+  const [max, setMax] = useState(10);
+  const [first, setFirst] = useState(0);
+  const [filter, setFilter] = useState("");
 
   const refreshTable = () => {
     setTableKey(new Date().getTime());
@@ -150,27 +158,40 @@ export const LocalizationTab = ({
     setTableRows(updatedRows);
   }, [messageBundles]);
 
-  const loader = async () => {
-    try {
-      const result = await adminClient.realms.getRealmLocalizationTexts({
-        realm: currentRealm,
+  useFetch(
+    async () => {
+      const params = {
+        first,
+        max,
+      };
+      let result = await adminClient.realms.getRealmLocalizationTexts({
+        ...params,
+        realm: realm.realm!,
         selectedLocale:
           selectMenuLocale || getValues("defaultLocale") || DEFAULT_LOCALE,
       });
-      setMessageBundles(Object.entries(result));
-      return Object.entries(result);
-    } catch (error) {
-      return [];
-    }
-  };
 
-  const theOtherLoader = async () => {
-    try {
-      return [];
-    } catch (error) {
-      return [];
-    }
-  };
+      const searchInBundles = (idx: number) => {
+        return Object.entries(result).filter((i) => i[idx].includes(filter));
+      };
+
+      if (filter) {
+        const filtered = uniqWith(
+          searchInBundles(0).concat(searchInBundles(1)),
+          isEqual
+        );
+
+        result = Object.fromEntries(filtered);
+      }
+
+      return { result };
+    },
+    ({ result }) => {
+      setMessageBundles(Object.entries(result).slice(first, first + max + 1));
+      return Object.entries(result).slice(first, first + max + 1);
+    },
+    [tableKey, filter, first, max]
+  );
 
   const handleTextInputChange = (
     newValue: string,
@@ -456,15 +477,32 @@ export const LocalizationTab = ({
             {t("messageBundleDescription")}
           </TextContent>
           <div className="tableBorder">
-            <KeycloakDataTable
-              isEditable
-              onRowEdit={updateEditableRows}
-              key={tableKey}
-              editableRows={tableRows}
-              loader={
-                realm.internationalizationEnabled ? loader : theOtherLoader
+            <PaginatingTableToolbar
+              count={messageBundles.length}
+              first={first}
+              max={max}
+              onNextClick={setFirst}
+              onPreviousClick={setFirst}
+              onPerPageSelect={(first, max) => {
+                setFirst(first);
+                setMax(max);
+              }}
+              inputGroupName={"common:search"}
+              inputGroupOnEnter={(search) => {
+                setFilter(search);
+                setFirst(0);
+                setMax(10);
+              }}
+              inputGroupPlaceholder={t("searchForGroups")}
+              toolbarItem={
+                <Button
+                  data-testid="add-bundle-button"
+                  isDisabled={!formState.isSubmitSuccessful}
+                  onClick={() => setAddMessageBundleModalOpen(true)}
+                >
+                  {t("addMessageBundle")}
+                </Button>
               }
-              ariaLabelKey="realm-settings:localization"
               searchTypeComponent={
                 <ToolbarItem>
                   <Select
@@ -493,34 +531,38 @@ export const LocalizationTab = ({
                   </Select>
                 </ToolbarItem>
               }
-              toolbarItem={
-                <Button
-                  data-testid="add-bundle-button"
-                  isDisabled={!formState.isSubmitSuccessful}
-                  onClick={() => setAddMessageBundleModalOpen(true)}
-                >
-                  {t("addMessageBundle")}
-                </Button>
-              }
-              searchPlaceholderKey=" "
-              emptyState={
+            >
+              {messageBundles.length === 0 && !filter && (
                 <ListEmptyState
                   hasIcon={true}
                   message={t("noMessageBundles")}
                   instructions={t("noMessageBundlesInstructions")}
                   onPrimaryAction={handleModalToggle}
                 />
-              }
-              canSelectAll
-              columns={[
-                {
-                  name: "Key",
-                },
-                {
-                  name: "Value",
-                },
-              ]}
-            />
+              )}
+              {messageBundles.length === 0 && filter && (
+                <ListEmptyState
+                  hasIcon={true}
+                  icon={SearchIcon}
+                  isSearchVariant={true}
+                  message={t("common:noSearchResults")}
+                  instructions={t("common:noSearchResultsInstructions")}
+                />
+              )}
+              {messageBundles.length !== 0 && (
+                <Table
+                  aria-label="editable-rows-table"
+                  data-testid="editable-rows-table"
+                  variant={TableVariant.compact}
+                  cells={[t("common:key"), t("common:value")]}
+                  rows={tableRows}
+                  onRowEdit={updateEditableRows}
+                >
+                  <TableHeader />
+                  <TableBody />
+                </Table>
+              )}
+            </PaginatingTableToolbar>
           </div>
         </FormPanel>
       </PageSection>
