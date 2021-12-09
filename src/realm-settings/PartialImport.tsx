@@ -104,15 +104,14 @@ export const PartialImportDialog = (props: PartialImportProps) => {
     resetInputState();
   }, [props.open]);
 
-  const handleFileChange = (value: object) => {
+  const handleFileChange = (value: ImportedMultiRealm) => {
     resetInputState();
-
     setImportedFile(value);
 
-    if (value instanceof Array && value.length > 0) {
-      setTargetRealm(value[0] || {});
-    } else {
-      setTargetRealm(value as RealmRepresentation);
+    if (!Array.isArray(value)) {
+      setTargetRealm(value);
+    } else if (value.length > 0) {
+      setTargetRealm(value[0]);
     }
   };
 
