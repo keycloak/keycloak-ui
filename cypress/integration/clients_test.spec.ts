@@ -23,22 +23,35 @@ const modalUtils = new ModalUtils();
 describe("Clients test", () => {
   describe("Client details - Client scopes subtab", () => {
     const clientScopesTab = new ClientScopesTab();
-    const clientScopeName = "test";
-    const clientId = "client-test-scopes-subtab";
     const client = new AdminClient();
+    const clientId = "client-scopes-subtab-test";
+    const clientScopeName = "client-scope-test";
+    const clientScope = {
+      name: clientScopeName,
+      description: "",
+      protocol: "openid-connect",
+      attributes: {
+        "include.in.token.scope": "true",
+        "display.on.consent.screen": "true",
+        "gui.order": "1",
+        "consent.screen.text": "",
+      },
+    };
 
-    before(() => {
+    before(async () => {
       client.createClient({
         clientId,
         protocol: "openid-connect",
         publicClient: false,
       });
-      async () => {
-        for (let i = 0; i < 5; i++) {
-          await client.createClientScope({ name: clientScopeName + i });
-          await client.addClientScopeToClient(clientId, clientScopeName + i);
-        }
-      };
+      for (let i = 0; i < 5; i++) {
+        clientScope.name = clientScopeName + i;
+        await client.createClientScope(clientScope);
+        await client.addDefaultClientScopeInClient(
+          clientScopeName + i,
+          clientId
+        );
+      }
     });
 
     beforeEach(() => {
@@ -51,22 +64,15 @@ describe("Clients test", () => {
       clientScopesTab.goToTab();
     });
 
-    after(() => {
-      async () => {
-        for (let i = 0; i < 5; i++) {
-          await client.removeClientScopeFromClient(
-            clientId,
-            clientScopeName + i
-          );
-          await client.deleteClientScope(clientScopeName + i);
-        }
-      };
+    after(async () => {
       client.deleteClient(clientId);
+      for (let i = 0; i < 5; i++) {
+        await client.deleteClientScope(clientScopeName + i);
+      }
     });
 
     it("should show items on next page are more than 11", () => {
       listingPage.showNextPageTableItems();
-
       cy.get(listingPage.tableRowItem).its("length").should("be.gt", 1);
     });
   });

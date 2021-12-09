@@ -87,9 +87,9 @@ export default class AdminClient {
     await this.client.users.del({ id: user[0].id! });
   }
 
-  async createClientScope(clientScope: ClientScopeRepresentation) {
+  async createClientScope(scope: ClientScopeRepresentation) {
     await this.login();
-    return await this.client.clientScopes.create(clientScope);
+    return await this.client.clientScopes.create(scope);
   }
 
   async deleteClientScope(clientScopeName: string) {
@@ -100,47 +100,33 @@ export default class AdminClient {
     return await this.client.clientScopes.del({ id: clientScope?.id! });
   }
 
-  async addClientScopeToClient(
-    clientId: string,
+  async addDefaultClientScopeInClient(
     clientScopeName: string,
-    defaultElseOptional?: boolean
+    clientId: string
   ) {
     await this.login();
-    const clientScope = await this.client.clientScopes.findOneByName({
+    const scope = await this.client.clientScopes.findOneByName({
       name: clientScopeName,
     });
-    if (defaultElseOptional) {
-      await this.client.clients.addDefaultClientScope({
-        id: clientId,
-        clientScopeId: clientScope?.id!,
-      });
-    } else {
-      await this.client.clients.addOptionalClientScope({
-        id: clientId,
-        clientScopeId: clientScope?.id!,
-      });
-    }
+    const client = await this.client.clients.find({ clientId: clientId });
+    return await this.client.clients.addDefaultClientScope({
+      id: client[0]?.id!,
+      clientScopeId: scope?.id!,
+    });
   }
 
-  async removeClientScopeFromClient(
-    clientId: string,
+  async removeDefaultClientScopeInClient(
     clientScopeName: string,
-    defaultElseOptional?: boolean
+    clientId: string
   ) {
     await this.login();
-    const clientScope = await this.client.clientScopes.findOneByName({
+    const scope = await this.client.clientScopes.findOneByName({
       name: clientScopeName,
     });
-    if (defaultElseOptional) {
-      await this.client.clients.delDefaultClientScope({
-        id: clientId,
-        clientScopeId: clientScope?.id!,
-      });
-    } else {
-      await this.client.clients.delOptionalClientScope({
-        id: clientId,
-        clientScopeId: clientScope?.id!,
-      });
-    }
+    const client = await this.client.clients.find({ clientId: clientId });
+    return await this.client.clients.delDefaultClientScope({
+      id: client[0]?.id!,
+      clientScopeId: scope?.id!,
+    });
   }
 }

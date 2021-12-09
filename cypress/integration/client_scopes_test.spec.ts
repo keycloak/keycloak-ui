@@ -18,12 +18,24 @@ const modalUtils = new ModalUtils();
 
 describe("Client Scopes test", () => {
   describe("Client Scope list items ", () => {
-    const clientScopeName = "test";
+    const clientScopeName = "client-scope-test";
+    const clientScope = {
+      name: clientScopeName,
+      description: "",
+      protocol: "openid-connect",
+      attributes: {
+        "include.in.token.scope": "true",
+        "display.on.consent.screen": "true",
+        "gui.order": "1",
+        "consent.screen.text": "",
+      },
+    };
 
     before(async () => {
       const client = new AdminClient();
       for (let i = 0; i < 5; i++) {
-        await client.createClientScope({ name: clientScopeName + i });
+        clientScope.name = clientScopeName + i;
+        await client.createClientScope(clientScope);
       }
     });
 
