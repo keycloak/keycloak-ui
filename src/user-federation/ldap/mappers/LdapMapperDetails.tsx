@@ -72,25 +72,26 @@ export default function LdapMapperDetails() {
   };
 
   const save = async (mapper: ComponentRepresentation) => {
-    const map = convertFormValuesToObject(mapper);
-      config = Object.entries(convertFormValuesToObject(map.config)).reduce(
-        (result: any, [key, value]) => {
-          result[key] = Array.isArray(value) ? value : [value];
-          return result;
-        },
-        {}
-      );
+    const component: ComponentRepresentation =
+      convertFormValuesToObject(mapper);
+    const map = {
+      ...component,
+      config: Object.entries(
+        convertFormValuesToObject(component.config)
+      ).reduce((result: any, [key, value]) => {
+        result[key] = Array.isArray(value) ? value : [value];
+        return result;
+      }, {}),
+    };
 
     try {
-      if (mapperId) {
-        if (mapperId === "new") {
-          await adminClient.components.create(map);
-          history.push(
-            `/${realm}/user-federation/ldap/${mapper!.parentId}/mappers`
-          );
-        } else {
-          await adminClient.components.update({ id: mapperId }, map);
-        }
+      if (mapperId === "new") {
+        await adminClient.components.create(map);
+        history.push(
+          `/${realm}/user-federation/ldap/${mapper!.parentId}/mappers`
+        );
+      } else {
+        await adminClient.components.update({ id: mapperId }, map);
       }
       setupForm(map as ComponentRepresentation);
       addAlert(
