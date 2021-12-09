@@ -232,13 +232,8 @@ export const PartialImportDialog = (props: PartialImportProps) => {
 
   const clientRolesCount = (
     clientRoles: Record<string, RoleRepresentation[]>
-  ) => {
-    let total = 0;
-    for (const clientName in clientRoles) {
-      total += clientRoles[clientName].length;
-    }
-    return total;
-  };
+  ) =>
+    Object.values(clientRoles).reduce((total, role) => total + role.length, 0);
 
   const resourceDataListItem = (
     resource: Resource,
