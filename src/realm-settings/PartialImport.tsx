@@ -204,15 +204,17 @@ export const PartialImportDialog = (props: PartialImportProps) => {
   const itemCount = (resource: Resource) => {
     if (!isFileSelected) return 0;
 
-    if (targetHasRealmRoles() && resource === "realmRoles")
-      return targetRealm.roles!.realm!.length;
+    if (resource === "realmRoles") {
+      return targetRealm.roles?.realm?.length ?? 0;
+    }
 
-    if (targetHasClientRoles() && resource == "clientRoles")
-      return clientRolesCount(targetRealm.roles!.client!);
+    if (resource === "clientRoles") {
+      return targetHasClientRoles()
+        ? clientRolesCount(targetRealm.roles!.client!)
+        : 0;
+    }
 
-    if (!targetRealm[resource as NonRoleResource]) return 0;
-
-    return targetRealm[resource as NonRoleResource]!.length;
+    return targetRealm[resource]?.length ?? 0;
   };
 
   const clientRolesCount = (
