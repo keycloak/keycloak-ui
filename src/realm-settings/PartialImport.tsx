@@ -330,7 +330,7 @@ export const PartialImportDialog = (props: PartialImportProps) => {
               <StackItem>
                 <Divider />
               </StackItem>
-              {Array.isArray(importedFile) && importedFile.length > 0 && (
+              {Array.isArray(importedFile) && importedFile.length > 1 && (
                 <StackItem>
                   <Text>{t("selectRealm")}:</Text>
                   <Select
