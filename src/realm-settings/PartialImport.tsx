@@ -82,11 +82,12 @@ export const PartialImportDialog = (props: PartialImportProps) => {
   const { addError } = useAlerts();
 
   const [resourcesToImport, setResourcesToImport] = useState(INITIAL_RESOURCES);
-  const [isAnyResourceChecked, setIsAnyResourceChecked] = useState(false);
+  const isAnyResourceChecked = Object.values(resourcesToImport).some(
+    (checked) => checked
+  );
 
   const resetResourcesToImport = () => {
     setResourcesToImport(INITIAL_RESOURCES);
-    setIsAnyResourceChecked(false);
   };
 
   const resetInputState = () => {
@@ -131,7 +132,6 @@ export const PartialImportDialog = (props: PartialImportProps) => {
       [resource]: checked,
     };
     setResourcesToImport(copyOfResourcesToImport);
-    setIsAnyResourceChecked(resourcesChecked(copyOfResourcesToImport));
   };
 
   const realmSelectOptions = () => {
@@ -237,15 +237,6 @@ export const PartialImportDialog = (props: PartialImportProps) => {
       total += clientRoles[clientName].length;
     }
     return total;
-  };
-
-  const resourcesChecked = (resources: ResourceChecked) => {
-    let resource: Resource;
-    for (resource in resources) {
-      if (resources[resource]) return true;
-    }
-
-    return false;
   };
 
   const resourceDataListItem = (
