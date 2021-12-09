@@ -61,8 +61,8 @@ export const PartialImportDialog = (props: PartialImportProps) => {
   const adminClient = useAdminClient();
   const { realm } = useRealm();
 
-  const [isFileSelected, setIsFileSelected] = useState(false);
-  const [importedFile, setImportedFile] = useState<ImportedMultiRealm>([]);
+  const [importedFile, setImportedFile] = useState<ImportedMultiRealm>();
+  const isFileSelected = !!importedFile;
   const isMultiRealm = Array.isArray(importedFile) && importedFile.length > 1;
   const [isRealmSelectOpen, setIsRealmSelectOpen] = useState(false);
   const [isCollisionSelectOpen, setIsCollisionSelectOpen] = useState(false);
@@ -94,7 +94,7 @@ export const PartialImportDialog = (props: PartialImportProps) => {
   };
 
   const resetInputState = () => {
-    setImportedFile([]);
+    setImportedFile(undefined);
     setTargetRealm({});
     setCollisionOption("FAIL");
     resetResourcesToImport();
@@ -102,14 +102,12 @@ export const PartialImportDialog = (props: PartialImportProps) => {
 
   // when dialog opens or closes, clear state
   useEffect(() => {
-    setIsFileSelected(false);
     setImportInProgress(false);
     setImportResponse(undefined);
     resetInputState();
   }, [props.open]);
 
   const handleFileChange = (value: object) => {
-    setIsFileSelected(!!value);
     resetInputState();
 
     setImportedFile(value);
