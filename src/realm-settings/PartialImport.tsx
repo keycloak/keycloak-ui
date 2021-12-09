@@ -187,33 +187,18 @@ export const PartialImportDialog = (props: PartialImportProps) => {
   };
 
   const targetHasResource = (resource: NonRoleResource) => {
-    return (
-      targetRealm &&
-      targetRealm[resource] instanceof Array &&
-      targetRealm[resource]!.length > 0
-    );
-  };
-
-  const targetHasRoles = () => {
-    return (
-      targetRealm && Object.prototype.hasOwnProperty.call(targetRealm, "roles")
-    );
+    const value = targetRealm[resource];
+    return value !== undefined && value.length > 0;
   };
 
   const targetHasRealmRoles = () => {
-    return (
-      targetHasRoles() &&
-      targetRealm.roles!.realm instanceof Array &&
-      targetRealm.roles!.realm.length > 0
-    );
+    const value = targetRealm.roles?.realm;
+    return value !== undefined && value.length > 0;
   };
 
   const targetHasClientRoles = () => {
-    return (
-      targetHasRoles() &&
-      Object.prototype.hasOwnProperty.call(targetRealm.roles, "client") &&
-      Object.keys(targetRealm.roles!.client!).length > 0
-    );
+    const value = targetRealm.roles?.client;
+    return value !== undefined && Object.keys(value).length > 0;
   };
 
   const itemCount = (resource: Resource) => {
