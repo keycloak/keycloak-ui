@@ -120,7 +120,7 @@ export const PartialImportDialog = (props: PartialImportProps) => {
       setTargetRealm(value[0] || {});
     } else {
       setIsMultiRealm(false);
-      setTargetRealm((value as RealmRepresentation) || {});
+      setTargetRealm(value as RealmRepresentation);
     }
   };
 
