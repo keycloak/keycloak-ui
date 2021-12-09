@@ -45,11 +45,7 @@ describe("Clients SAML tests", () => {
     });
 
     it("should save force name id format", () => {
-      const load = "auth/admin/realms/master/client-scopes";
-      cy.intercept(load).as("load");
-
       cy.get(".pf-c-jump-links__list").contains("SAML capabilities").click();
-      cy.wait("@load");
 
       cy.findByTestId("forceNameIdFormat").click({
         force: true,
