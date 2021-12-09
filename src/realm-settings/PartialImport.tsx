@@ -127,11 +127,11 @@ export const PartialImportDialog = (props: PartialImportProps) => {
     event: React.FormEvent<HTMLInputElement>
   ) => {
     const resource = event.currentTarget.name as Resource;
-    const copyOfResourcesToImport = {
+
+    setResourcesToImport({
       ...resourcesToImport,
       [resource]: checked,
-    };
-    setResourcesToImport(copyOfResourcesToImport);
+    });
   };
 
   const realmSelectOptions = (realms: RealmRepresentation[]) =>
