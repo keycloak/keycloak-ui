@@ -179,11 +179,16 @@ article.pf-c-card.pf-m-flat.kc-available-idps > div > div > h1 {
   overflow-wrap: anywhere;
 }
 
-.setPasswordBtn-table {
+.kc-setPasswordBtn-tbl {
   margin: 25px 0 25px 25px;
 }
 
-.form-userLabel {
+.kc-form-userLabel {
   max-height: 0px;
   margin-bottom: 0px;
+}
+
+.kc-expandableRow {
+  padding-top: 15px !important;
+  padding-bottom: 15px !important;
 }

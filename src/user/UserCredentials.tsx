@@ -507,7 +507,7 @@ export const UserCredentials = ({ user }: UserCredentialsProps) => {
         <>
           <Button
             key={`confirmSaveBtn-table-${user.id}`}
-            className="setPasswordBtn-table"
+            className="kc-setPasswordBtn-tbl"
             data-testid="setPasswordBtn-table"
             variant="primary"
             form="userCredentials-form"
@@ -548,6 +548,7 @@ export const UserCredentials = ({ user }: UserCredentialsProps) => {
               <Tr>
                 {groupedCredential.value.length > 1 ? (
                   <Td
+                    className="kc-expandableRow"
                     expand={{
                       rowIndex,
                       isExpanded: groupedCredential.isExpanded,
@@ -583,7 +584,7 @@ export const UserCredentials = ({ user }: UserCredentialsProps) => {
                           <FormAccess
                             isHorizontal
                             role="view-users"
-                            className="form-userLabel"
+                            className="kc-form-userLabel"
                           >
                             <FormGroup
                               fieldId="kc-userLabel"
@@ -727,7 +728,7 @@ export const UserCredentials = ({ user }: UserCredentialsProps) => {
                 key={`child-${groupedCredential.key}`}
                 isExpanded={groupedCredential.isExpanded}
               >
-                <Td colSpan={5}>
+                <Td colSpan={6}>
                   <ExpandableRowContent>
                     {groupedCredential.isExpanded &&
                       groupedCredential.value.map(
@@ -751,7 +752,7 @@ export const UserCredentials = ({ user }: UserCredentialsProps) => {
                                   <FormAccess
                                     isHorizontal
                                     role="view-users"
-                                    className="form-userLabel"
+                                    className="kc-form-userLabel"
                                   >
                                     <FormGroup
                                       fieldId="kc-userLabel"
