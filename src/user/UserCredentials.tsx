@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unnecessary-condition */
 import React, { FunctionComponent, useMemo, useState } from "react";
 import {
   AlertVariant,
@@ -545,24 +546,28 @@ export const UserCredentials = ({ user }: UserCredentialsProps) => {
               isExpanded={groupedCredential.isExpanded}
             >
               <Tr>
-                <Td
-                  expand={{
-                    rowIndex,
-                    isExpanded: groupedCredential.isExpanded,
-                    onToggle: (_, rowIndex) => {
-                      const rows = groupedUserCredentials.map(
-                        (credential, index) =>
-                          index === rowIndex
-                            ? {
-                                ...credential,
-                                isExpanded: !credential.isExpanded,
-                              }
-                            : credential
-                      );
-                      setGroupedUserCredentials(rows);
-                    },
-                  }}
-                />
+                {groupedCredential.value.length > 1 ? (
+                  <Td
+                    expand={{
+                      rowIndex,
+                      isExpanded: groupedCredential.isExpanded,
+                      onToggle: (_, rowIndex) => {
+                        const rows = groupedUserCredentials.map(
+                          (credential, index) =>
+                            index === rowIndex
+                              ? {
+                                  ...credential,
+                                  isExpanded: !credential.isExpanded,
+                                }
+                              : credential
+                        );
+                        setGroupedUserCredentials(rows);
+                      },
+                    }}
+                  />
+                ) : (
+                  <Td />
+                )}
                 <Td
                   key={`table-item-${groupedCredential.key}`}
                   dataLabel={`columns-${groupedCredential.key}`}
