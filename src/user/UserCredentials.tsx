@@ -575,6 +575,149 @@ export const UserCredentials = ({ user }: UserCredentialsProps) => {
                   {groupedCredential.key.charAt(0).toUpperCase()! +
                     groupedCredential.key.slice(1)}
                 </Td>
+                {groupedCredential.value.length <= 1 &&
+                  groupedCredential.value.map(
+                    (credential: CredentialRepresentation) => (
+                      <>
+                        <Td>
+                          <FormAccess isHorizontal role="view-users">
+                            <FormGroup
+                              fieldId="kc-userLabel"
+                              className="kc-userLabel-row"
+                            >
+                              <div className="kc-form-group-userLabel">
+                                {isUserLabelEdit?.status &&
+                                isUserLabelEdit.rowKey === credential.id ? (
+                                  <>
+                                    <TextInput
+                                      name="userLabel"
+                                      ref={register1()}
+                                      type="text"
+                                      className="kc-userLabel"
+                                      aria-label={t("userLabel")}
+                                      data-testid="user-label-fld"
+                                    />
+                                    <div className="kc-userLabel-actionBtns">
+                                      <Button
+                                        key={`editUserLabel-accept-${credential.id}`}
+                                        variant="link"
+                                        className="kc-editUserLabel-acceptBtn"
+                                        onClick={() => {
+                                          handleSubmit1(saveUserLabel)();
+                                          setIsUserLabelEdit({
+                                            status: false,
+                                            rowKey: credential.id!,
+                                          });
+                                        }}
+                                        data-testid="editUserLabel-acceptBtn"
+                                        icon={<CheckIcon />}
+                                      />
+                                      <Button
+                                        key={`editUserLabel-cancel-${credential.id}`}
+                                        variant="link"
+                                        className="kc-editUserLabel-cancelBtn"
+                                        onClick={() =>
+                                          setIsUserLabelEdit({
+                                            status: false,
+                                            rowKey: credential.id!,
+                                          })
+                                        }
+                                        data-testid="editUserLabel-cancelBtn"
+                                        icon={<TimesIcon />}
+                                      />
+                                    </div>
+                                  </>
+                                ) : (
+                                  <>
+                                    {credential.userLabel ?? ""}
+                                    <Button
+                                      key={`editUserLabel-${credential.id}`}
+                                      variant="link"
+                                      className="kc-editUserLabel-btn"
+                                      onClick={() => {
+                                        setEditedUserCredential(credential);
+                                        setIsUserLabelEdit({
+                                          status: true,
+                                          rowKey: credential.id!,
+                                        });
+                                      }}
+                                      data-testid="editUserLabelBtn"
+                                      icon={<PencilAltIcon />}
+                                    />
+                                  </>
+                                )}
+                              </div>
+                            </FormGroup>
+                          </FormAccess>
+                        </Td>
+                        <Td>
+                          <Button
+                            className="kc-showData-btn"
+                            variant="link"
+                            data-testid="showDataBtn"
+                            onClick={() => {
+                              setShowData(true);
+                              setSelectedCredential(credential);
+                            }}
+                          >
+                            {t("showDataBtn")}
+                          </Button>
+                        </Td>
+                        {credential.type === "password" ? (
+                          <Td>
+                            <Button
+                              variant="secondary"
+                              data-testid="resetPasswordBtn"
+                              onClick={resetPassword}
+                            >
+                              {t("resetPasswordBtn")}
+                            </Button>
+                          </Td>
+                        ) : (
+                          <Td />
+                        )}
+                        <Td>
+                          <Dropdown
+                            isPlain
+                            position={DropdownPosition.right}
+                            toggle={
+                              <KebabToggle
+                                onToggle={(status) =>
+                                  setKebabOpen({
+                                    status,
+                                    rowKey: credential.id!,
+                                  })
+                                }
+                              />
+                            }
+                            isOpen={
+                              kebabOpen.status &&
+                              kebabOpen.rowKey === credential.id
+                            }
+                            onSelect={() => {
+                              setSelectedCredential(credential);
+                            }}
+                            dropdownItems={[
+                              <DropdownItem
+                                key={`delete-dropdown-item-${credential.id}`}
+                                data-testid="deleteDropdownItem"
+                                component="button"
+                                onClick={() => {
+                                  toggleDeleteDialog();
+                                  setKebabOpen({
+                                    status: false,
+                                    rowKey: credential.id!,
+                                  });
+                                }}
+                              >
+                                {t("deleteBtn")}
+                              </DropdownItem>,
+                            ]}
+                          />
+                        </Td>
+                      </>
+                    )
+                  )}
               </Tr>
               <Tr
                 key={`child-${groupedCredential.key}`}
@@ -689,19 +832,6 @@ export const UserCredentials = ({ user }: UserCredentialsProps) => {
                                     {t("showDataBtn")}
                                   </Button>
                                 </Td>
-                                {credential.type === "password" ? (
-                                  <Td>
-                                    <Button
-                                      variant="secondary"
-                                      data-testid="resetPasswordBtn"
-                                      onClick={resetPassword}
-                                    >
-                                      {t("resetPasswordBtn")}
-                                    </Button>
-                                  </Td>
-                                ) : (
-                                  <Td />
-                                )}
                                 <Td>
                                   <Dropdown
                                     isPlain
