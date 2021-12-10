@@ -47,6 +47,7 @@ import {
 import type { EditableTextCellProps } from "@patternfly/react-table/dist/esm/components/Table/base";
 import { PaginatingTableToolbar } from "../components/table-toolbar/PaginatingTableToolbar";
 import { SearchIcon } from "@patternfly/react-icons";
+import { useWhoAmI } from "../context/whoami/WhoAmI";
 
 type LocalizationTabProps = {
   save: (realm: RealmRepresentation) => void;
@@ -91,6 +92,7 @@ export const LocalizationTab = ({
   const bundleForm = useForm<BundleForm>({ mode: "onChange" });
   const { addAlert, addError } = useAlerts();
   const { realm: currentRealm } = useRealm();
+  const { whoAmI } = useWhoAmI();
 
   const watchSupportedLocales = useWatch<string[]>({
     control,
@@ -113,27 +115,25 @@ export const LocalizationTab = ({
 
   useEffect(() => {
     const updatedRows = messageBundles.map<IRow>((messageBundle) => ({
-      rowEditBtnAriaLabel: t("rowEditBtnAriaLabel", {
-        messageBundle: messageBundle[1],
-      }),
-      rowSaveBtnAriaLabel: t("rowSaveBtnAriaLabel", {
-        messageBundle: messageBundle[1],
-      }),
-      rowCancelBtnAriaLabel: t("rowCancelBtnAriaLabel", {
-        messageBundle: messageBundle[1],
-      }),
+      rowEditBtnAriaLabel: () =>
+        t("rowEditBtnAriaLabel", {
+          messageBundle: messageBundle[1],
+        }),
+      rowSaveBtnAriaLabel: () =>
+        t("rowSaveBtnAriaLabel", {
+          messageBundle: messageBundle[1],
+        }),
+      rowCancelBtnAriaLabel: () =>
+        t("rowCancelBtnAriaLabel", {
+          messageBundle: messageBundle[1],
+        }),
       cells: [
         {
-          title: (
-            value: string,
-            rowIndex: number,
-            cellIndex: number,
-            props
-          ) => (
+          title: (value, rowIndex, cellIndex, props) => (
             <EditableTextCell
-              value={value}
-              rowIndex={rowIndex}
-              cellIndex={cellIndex}
+              value={value!}
+              rowIndex={rowIndex!}
+              cellIndex={cellIndex!}
               props={props}
               isDisabled
               handleTextInputChange={handleTextInputChange}
@@ -179,7 +179,7 @@ export const LocalizationTab = ({
         ...params,
         realm: realm.realm!,
         selectedLocale:
-          selectMenuLocale || getValues("defaultLocale") || DEFAULT_LOCALE,
+          selectMenuLocale || getValues("defaultLocale") || whoAmI.getLocale,
       });
 
       const searchInBundles = (idx: number) => {
@@ -200,6 +200,63 @@ export const LocalizationTab = ({
     ({ result }) => {
       const bundles = Object.entries(result).slice(first, first + max + 1);
       setMessageBundles(bundles);
+
+      const updatedRows = messageBundles.map<IRow>((messageBundle) => ({
+        rowEditBtnAriaLabel: t("rowEditBtnAriaLabel", {
+          messageBundle: messageBundle[1],
+        }),
+        rowSaveBtnAriaLabel: t("rowSaveBtnAriaLabel", {
+          messageBundle: messageBundle[1],
+        }),
+        rowCancelBtnAriaLabel: t("rowCancelBtnAriaLabel", {
+          messageBundle: messageBundle[1],
+        }),
+        cells: [
+          {
+            title: (
+              value: string,
+              rowIndex: number,
+              cellIndex: number,
+              props
+            ) => (
+              <EditableTextCell
+                value={value}
+                rowIndex={rowIndex}
+                cellIndex={cellIndex}
+                props={props}
+                isDisabled
+                handleTextInputChange={handleTextInputChange}
+                inputAriaLabel={messageBundle[0]}
+              />
+            ),
+            props: {
+              value: messageBundle[0],
+            },
+          },
+          {
+            title: (
+              value: string,
+              rowIndex: number,
+              cellIndex: number,
+              props: EditableTextCellProps
+            ) => (
+              <EditableTextCell
+                value={value}
+                rowIndex={rowIndex}
+                cellIndex={cellIndex}
+                props={props}
+                handleTextInputChange={handleTextInputChange}
+                inputAriaLabel={messageBundle[1]}
+              />
+            ),
+            props: {
+              value: messageBundle[1],
+            },
+          },
+        ],
+      }));
+      setTableRows(updatedRows);
+
       return bundles;
     },
     [tableKey, filter, first, max]
