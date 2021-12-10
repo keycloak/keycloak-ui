@@ -203,3 +203,17 @@ article.pf-c-card.pf-m-flat.kc-available-idps > div > div > h1 {
   padding-right: 0px !important;
   min-width: 230px !important;
 }
+
+.kc-expandedRow-emptyCol {
+  width: 560px !important;
+  min-width: 560px !important;
+}
+
+.kc-showDataCol {
+  width: 235px !important;
+  padding-left: 50px !important;
+}
+
+.kc-dropdDownRowCol {
+  padding-right: 25px !important;
+}

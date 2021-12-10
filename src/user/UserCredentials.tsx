@@ -825,7 +825,7 @@ export const UserCredentials = ({ user }: UserCredentialsProps) => {
                                   </FormGroup>
                                 </FormAccess>
                               </Td>
-                              <Td>
+                              <Td className="kc-showDataCol">
                                 <Button
                                   className="kc-showData-btn"
                                   variant="link"
@@ -838,7 +838,8 @@ export const UserCredentials = ({ user }: UserCredentialsProps) => {
                                   {t("showDataBtn")}
                                 </Button>
                               </Td>
-                              <Td>
+                              <Td className="kc-expandedRow-emptyCol" />
+                              <Td className="kc-dropdDownRowCol">
                                 <Dropdown
                                   isPlain
                                   position={DropdownPosition.right}
