@@ -106,12 +106,12 @@ export const LocalizationTab = ({
   const [filter, setFilter] = useState("");
 
   const refreshTable = () => {
-    setTableKey(new Date().getTime());
+    setTableKey(tableKey + 1);
   };
 
-  React.useEffect(() => {
-    const updatedRows = messageBundles.map(
-      (messageBundle: [string, string]) => ({
+  useEffect(() => {
+    const updatedRows = messageBundles.map<IRow>(
+      (messageBundle) => ({
         rowEditBtnAriaLabel: () => `Edit ${messageBundle[1]}`,
         rowSaveBtnAriaLabel: () => `Save edits for ${messageBundle[1]}`,
         rowCancelBtnAriaLabel: () => `Cancel edits for ${messageBundle[1]}`,
@@ -160,12 +160,9 @@ export const LocalizationTab = ({
 
   useFetch(
     async () => {
-      const params = {
+      let result = await adminClient.realms.getRealmLocalizationTexts({
         first,
         max,
-      };
-      let result = await adminClient.realms.getRealmLocalizationTexts({
-        ...params,
         realm: realm.realm!,
         selectedLocale:
           selectMenuLocale || getValues("defaultLocale") || DEFAULT_LOCALE,
@@ -187,8 +184,9 @@ export const LocalizationTab = ({
       return { result };
     },
     ({ result }) => {
-      setMessageBundles(Object.entries(result).slice(first, first + max + 1));
-      return Object.entries(result).slice(first, first + max + 1);
+      const bundles = Object.entries(result).slice(first, first + max + 1);
+      setMessageBundles(bundles);
+      return bundles;
     },
     [tableKey, filter, first, max]
   );
@@ -217,8 +215,8 @@ export const LocalizationTab = ({
       return;
     }
     const newRows = cloneDeep(tableRows);
-    let newRow;
-    const invalid = validationErrors && Object.keys(validationErrors).length;
+    let newRow: IRow;
+    const invalid = !!validationErrors && Object.keys(validationErrors).length > 0
     if (invalid) {
       newRow = validateCellEdits(newRows[rowIndex], type, validationErrors);
     } else if (type === RowEditAction.cancel) {
@@ -238,7 +236,7 @@ export const LocalizationTab = ({
         adminClient.setConfig({
           requestConfig: { headers: { "Content-Type": "text/plain" } },
         });
-        adminClient.realms.addLocalization(
+        await adminClient.realms.addLocalization(
           {
             realm: realm.realm!,
             selectedLocale:
