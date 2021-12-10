@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { cloneDeep, isEqual, uniqWith } from "lodash";
 import { Controller, useForm, useFormContext, useWatch } from "react-hook-form";
@@ -113,62 +113,6 @@ export const LocalizationTab = ({
     setTableKey(tableKey + 1);
   };
 
-  useEffect(() => {
-    const updatedRows = messageBundles.map<IRow>((messageBundle) => ({
-      rowEditBtnAriaLabel: () =>
-        t("rowEditBtnAriaLabel", {
-          messageBundle: messageBundle[1],
-        }),
-      rowSaveBtnAriaLabel: () =>
-        t("rowSaveBtnAriaLabel", {
-          messageBundle: messageBundle[1],
-        }),
-      rowCancelBtnAriaLabel: () =>
-        t("rowCancelBtnAriaLabel", {
-          messageBundle: messageBundle[1],
-        }),
-      cells: [
-        {
-          title: (value, rowIndex, cellIndex, props) => (
-            <EditableTextCell
-              value={value!}
-              rowIndex={rowIndex!}
-              cellIndex={cellIndex!}
-              props={props}
-              isDisabled
-              handleTextInputChange={handleTextInputChange}
-              inputAriaLabel={messageBundle[0]}
-            />
-          ),
-          props: {
-            value: messageBundle[0],
-          },
-        },
-        {
-          title: (
-            value: string,
-            rowIndex: number,
-            cellIndex: number,
-            props: EditableTextCellProps
-          ) => (
-            <EditableTextCell
-              value={value}
-              rowIndex={rowIndex}
-              cellIndex={cellIndex}
-              props={props}
-              handleTextInputChange={handleTextInputChange}
-              inputAriaLabel={messageBundle[1]}
-            />
-          ),
-          props: {
-            value: messageBundle[1],
-          },
-        },
-      ],
-    }));
-    setTableRows(updatedRows);
-  }, [messageBundles]);
-
   useFetch(
     async () => {
       const params = {
@@ -201,16 +145,19 @@ export const LocalizationTab = ({
       const bundles = Object.entries(result).slice(first, first + max + 1);
       setMessageBundles(bundles);
 
-      const updatedRows = messageBundles.map<IRow>((messageBundle) => ({
-        rowEditBtnAriaLabel: t("rowEditBtnAriaLabel", {
-          messageBundle: messageBundle[1],
-        }),
-        rowSaveBtnAriaLabel: t("rowSaveBtnAriaLabel", {
-          messageBundle: messageBundle[1],
-        }),
-        rowCancelBtnAriaLabel: t("rowCancelBtnAriaLabel", {
-          messageBundle: messageBundle[1],
-        }),
+      const updatedRows = bundles.map<IRow>((messageBundle) => ({
+        rowEditBtnAriaLabel: () =>
+          t("rowEditBtnAriaLabel", {
+            messageBundle: messageBundle[1],
+          }),
+        rowSaveBtnAriaLabel: () =>
+          t("rowSaveBtnAriaLabel", {
+            messageBundle: messageBundle[1],
+          }),
+        rowCancelBtnAriaLabel: () =>
+          t("rowCancelBtnAriaLabel", {
+            messageBundle: messageBundle[1],
+          }),
         cells: [
           {
             title: (
