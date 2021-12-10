@@ -727,7 +727,7 @@ export const UserCredentials = ({ user }: UserCredentialsProps) => {
                 key={`child-${groupedCredential.key}`}
                 isExpanded={groupedCredential.isExpanded}
               >
-                <Td colSpan={6}>
+                <Td colSpan={6} className="kc-expandedRows">
                   {groupedCredential.isExpanded &&
                     groupedCredential.value.map(
                       (credential: CredentialRepresentation) => (
@@ -741,6 +741,7 @@ export const UserCredentials = ({ user }: UserCredentialsProps) => {
                               <Td
                                 key={`table-child-item-${credential.id}`}
                                 dataLabel={`child-columns-${credential.id}`}
+                                className="kc-expandedRow-credentialType"
                               >
                                 {credential.type!.charAt(0).toUpperCase()! +
                                   credential.type!.slice(1)}

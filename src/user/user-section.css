@@ -192,3 +192,14 @@ article.pf-c-card.pf-m-flat.kc-available-idps > div > div > h1 {
   padding-top: 15px !important;
   padding-bottom: 15px !important;
 }
+
+.kc-expandedRows {
+  padding-left: 0px !important;
+  padding-right: 0px !important;
+}
+
+.kc-expandedRow-credentialType {
+  padding-left: 80px !important;
+  padding-right: 0px !important;
+  min-width: 230px !important;
+}
