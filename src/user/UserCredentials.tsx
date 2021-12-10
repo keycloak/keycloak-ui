@@ -580,7 +580,11 @@ export const UserCredentials = ({ user }: UserCredentialsProps) => {
                     (credential: CredentialRepresentation) => (
                       <>
                         <Td>
-                          <FormAccess isHorizontal role="view-users">
+                          <FormAccess
+                            isHorizontal
+                            role="view-users"
+                            className="form-userLabel"
+                          >
                             <FormGroup
                               fieldId="kc-userLabel"
                               className="kc-userLabel-row"
@@ -744,7 +748,11 @@ export const UserCredentials = ({ user }: UserCredentialsProps) => {
                                 </Td>
 
                                 <Td>
-                                  <FormAccess isHorizontal role="view-users">
+                                  <FormAccess
+                                    isHorizontal
+                                    role="view-users"
+                                    className="form-userLabel"
+                                  >
                                     <FormGroup
                                       fieldId="kc-userLabel"
                                       className="kc-userLabel-row"

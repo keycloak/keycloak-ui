@@ -182,3 +182,8 @@ article.pf-c-card.pf-m-flat.kc-available-idps > div > div > h1 {
 .setPasswordBtn-table {
   margin: 25px 0 25px 25px;
 }
+
+.form-userLabel {
+  max-height: 0px;
+  margin-bottom: 0px;
+}
