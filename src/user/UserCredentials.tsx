@@ -571,6 +571,7 @@ export const UserCredentials = ({ user }: UserCredentialsProps) => {
                 <Td
                   key={`table-item-${groupedCredential.key}`}
                   dataLabel={`columns-${groupedCredential.key}`}
+                  className="kc-notExpandedRow-credentialType"
                 >
                   {groupedCredential.key.charAt(0).toUpperCase()! +
                     groupedCredential.key.slice(1)}
@@ -654,7 +655,7 @@ export const UserCredentials = ({ user }: UserCredentialsProps) => {
                             </FormGroup>
                           </FormAccess>
                         </Td>
-                        <Td>
+                        <Td className="kc-showDataCol">
                           <Button
                             className="kc-showData-btn"
                             variant="link"
@@ -747,7 +748,7 @@ export const UserCredentials = ({ user }: UserCredentialsProps) => {
                                   credential.type!.slice(1)}
                               </Td>
 
-                              <Td>
+                              <Td className="kc-userLabelCol">
                                 <FormAccess
                                   isHorizontal
                                   role="view-users"
