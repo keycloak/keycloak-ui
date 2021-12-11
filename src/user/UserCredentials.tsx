@@ -580,7 +580,7 @@ export const UserCredentials = ({ user }: UserCredentialsProps) => {
                   groupedCredential.value.map(
                     (credential: CredentialRepresentation) => (
                       <>
-                        <Td>
+                        <Td className="kc-editUserLabelCol">
                           <FormAccess
                             isHorizontal
                             role="view-users"
@@ -655,7 +655,7 @@ export const UserCredentials = ({ user }: UserCredentialsProps) => {
                             </FormGroup>
                           </FormAccess>
                         </Td>
-                        <Td className="kc-showDataCol">
+                        <Td>
                           <Button
                             className="kc-showData-btn"
                             variant="link"
@@ -681,7 +681,7 @@ export const UserCredentials = ({ user }: UserCredentialsProps) => {
                         ) : (
                           <Td />
                         )}
-                        <Td>
+                        <Td className="kc-notExpandedRow-dropdDownCol">
                           <Dropdown
                             isPlain
                             position={DropdownPosition.right}
@@ -826,7 +826,7 @@ export const UserCredentials = ({ user }: UserCredentialsProps) => {
                                   </FormGroup>
                                 </FormAccess>
                               </Td>
-                              <Td className="kc-showDataCol">
+                              <Td>
                                 <Button
                                   className="kc-showData-btn"
                                   variant="link"
@@ -840,7 +840,7 @@ export const UserCredentials = ({ user }: UserCredentialsProps) => {
                                 </Button>
                               </Td>
                               <Td className="kc-expandedRow-emptyCol" />
-                              <Td className="kc-dropdDownRowCol">
+                              <Td className="kc-expandedRow-dropdDownCol">
                                 <Dropdown
                                   isPlain
                                   position={DropdownPosition.right}
