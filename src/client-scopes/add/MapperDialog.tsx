@@ -179,7 +179,6 @@ export const AddMapperDialog = (props: AddMapperDialogProps) => {
           variant={TableVariant.compact}
           cells={header}
           onSelect={(_, isSelected, rowIndex) => {
-            console.log("rowIndex", rowIndex);
             if (rowIndex === -1) {
               setRows(
                 rows.map((oneRow) => {
