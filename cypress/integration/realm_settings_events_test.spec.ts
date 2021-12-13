@@ -172,7 +172,7 @@ describe("Realm settings events tab tests", () => {
 
     cy.findByTestId("rs-localization-tab").click();
 
-    cy.findByTestId("internationalization-disabled").click();
+    cy.findByTestId("internationalization-disabled").click({ force: true });
 
     cy.get(realmSettingsPage.supportedLocalesTypeahead)
       .click()
