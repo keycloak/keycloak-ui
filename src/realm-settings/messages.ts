@@ -355,6 +355,7 @@ export default {
     supportedLocales: "Supported locales",
     defaultLocale: "Default locale",
     selectLocales: "Select locales",
+    searchForMessageBundle: "Search for message bundle",
     addMessageBundle: "Add message bundle",
     addMessageBundleSuccess: "Success! The message bundle has been added.",
     rowEditBtnAriaLabel: "Edit {{messageBundle}}",

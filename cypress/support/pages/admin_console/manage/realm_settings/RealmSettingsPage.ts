@@ -48,6 +48,9 @@ export default class RealmSettingsPage {
 
   selectDefaultLocale = "select-default-locale";
   defaultLocaleList = "select-default-locale > div > ul";
+  supportedLocalesTypeahead =
+    "#kc-l-supported-locales-select-multi-typeahead-typeahead";
+  supportedLocalesToggle = "#kc-l-supported-locales";
   emailSaveBtn = "email-tab-save";
   managedAccessSwitch = "user-managed-access-switch";
   userRegSwitch = "user-reg-switch";

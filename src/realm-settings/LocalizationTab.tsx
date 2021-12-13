@@ -380,6 +380,7 @@ export const LocalizationTab = ({
             <>
               <FormGroup
                 label={t("supportedLocales")}
+                data-testid="INFORMATION"
                 fieldId="kc-l-supported-locales"
               >
                 <Controller
@@ -389,6 +390,7 @@ export const LocalizationTab = ({
                   render={({ onChange, value }) => (
                     <Select
                       toggleId="kc-l-supported-locales"
+                      data-testid="WHOAOAOAA"
                       onToggle={(open) => {
                         setSupportedLocalesOpen(open);
                       }}
@@ -514,7 +516,7 @@ export const LocalizationTab = ({
                 setFirst(0);
                 setMax(10);
               }}
-              inputGroupPlaceholder={t("searchForGroups")}
+              inputGroupPlaceholder={t("searchForMessageBundle")}
               toolbarItem={
                 <Button
                   data-testid="add-bundle-button"

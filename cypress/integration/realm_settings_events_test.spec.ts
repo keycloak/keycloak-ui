@@ -20,7 +20,7 @@ describe("Realm settings events tab tests", () => {
   beforeEach(() => {
     keycloakBefore();
     loginPage.logIn();
-    sidebarPage.goToRealm(realmName);
+    // sidebarPage.goToRealm(realmName);
   });
 
   before(async () => {
@@ -87,7 +87,7 @@ describe("Realm settings events tab tests", () => {
     return this;
   };
 
-  it("Enable user events", () => {
+  it.skip("Enable user events", () => {
     cy.intercept("GET", `/auth/admin/realms/${realmName}/keys`).as("load");
     sidebarPage.goToRealmSettings();
     cy.findByTestId("rs-realm-events-tab").click();
@@ -117,13 +117,13 @@ describe("Realm settings events tab tests", () => {
     }
   });
 
-  it("Go to keys tab", () => {
+  it.skip("Go to keys tab", () => {
     sidebarPage.goToRealmSettings();
 
     cy.findByTestId("rs-keys-tab").click();
   });
 
-  it("add Providers", () => {
+  it.skip("add Providers", () => {
     sidebarPage.goToRealmSettings();
 
     cy.findByTestId("rs-keys-tab").click();
@@ -155,7 +155,7 @@ describe("Realm settings events tab tests", () => {
     realmSettingsPage.addProvider();
   });
 
-  it("go to details", () => {
+  it.skip("go to details", () => {
     sidebarPage.goToRealmSettings();
     goToDetails();
   });
@@ -172,18 +172,22 @@ describe("Realm settings events tab tests", () => {
 
     cy.findByTestId("rs-localization-tab").click();
 
-    cy.findByTestId("internationalization-enabled").click({ force: true });
+    cy.get(realmSettingsPage.supportedLocalesTypeahead)
+      .click()
+      .get(".pf-c-select__menu-item")
+      .contains("Dansk")
+      .click();
 
-    cy.findByTestId("internationalization-disabled").click({ force: true });
-
-    cy.findByTestId("add-bundle-button").click({ force: true });
+    cy.get("#kc-l-supported-locales").click();
 
     cy.findByTestId("localization-tab-save").click();
+
+    cy.findByTestId("add-bundle-button").click({ force: true });
 
     addBundle();
 
     masthead.checkNotificationMessage(
-      "Success! The localization text has been created."
+      "Success! The message bundle has been added."
     );
   });
 
