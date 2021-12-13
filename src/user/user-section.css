@@ -195,13 +195,29 @@ article.pf-c-card.pf-m-flat.kc-available-idps > div > div > h1 {
   padding-bottom: 15px !important;
 }
 
+.kc-expandedRow-credentialType {
+  width: 440px !important;
+  padding-left: 85px !important;
+}
+
 .kc-expandedRows {
   padding: 0px !important;
+}
+
+.kc-userLabelCol {
+  width: 350px !important;
+  float: left;
+  padding-left: 60px !important;
 }
 
 .kc-expandedRow-emptyCol {
   width: 370px !important;
   min-width: 370px !important;
+}
+
+.kc-expandedRows {
+  padding-left: 0px !important;
+  padding-right: 0px !important;
 }
 
 .kc-expandedRow-dropdDownCol {
@@ -214,8 +230,4 @@ article.pf-c-card.pf-m-flat.kc-available-idps > div > div > h1 {
 
 .kc-editUserLabelCol {
   padding-left: 0px !important;
-}
-
-.kc-expandedRow-credentialType {
-  padding-left: 15px !important;
 }
