@@ -47,8 +47,9 @@ export default {
     guiOrder: "Display Order",
     shouldBeANumber: "Should be a number",
     chooseAMapperType: "Choose a mapper type",
+    addPredefinedMappers: "Add predefined mappers",
     predefinedMappingDescription:
-      "Choose one of the predefined mappings from this table",
+      "Choose any of the predefined mappings from this table",
     mappingTable: "Table with predefined mapping",
     roleGroup: "Use a realm role from:",
     clientGroup: "Use a client role from:",
