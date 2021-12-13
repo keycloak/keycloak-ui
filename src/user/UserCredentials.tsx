@@ -128,7 +128,7 @@ const DisplayDialog: FunctionComponent<DisplayDialogProps> = ({
 const CredentialsResetActionMultiSelect = (props: {
   form: UseFormMethods<CredentialsResetForm>;
 }) => {
-  const { t } = useTranslation("user");
+  const { t } = useTranslation("users");
   const [open, setOpen] = useState(false);
   const { form } = props;
   const { control } = form;
@@ -139,7 +139,7 @@ const CredentialsResetActionMultiSelect = (props: {
       labelIcon={
         <HelpItem
           helpText="clients-help:resetActions"
-          forLabel={t("actions")}
+          forLabel={t("resetActions")}
           forID={t(`common:helpLabel`, { label: t("resetActions") })}
         />
       }
@@ -425,7 +425,7 @@ export const UserCredentials = ({ user }: UserCredentialsProps) => {
       addAlert(t("resetCredentialEmailSuccess"), AlertVariant.success);
       setOpenCredentialsResetConfirm(false);
     } catch (error) {
-      addError("resetCredentialEmailError", error);
+      addError(t("resetCredentialEmailError"), error);
     }
   };
 
@@ -672,7 +672,7 @@ export const UserCredentials = ({ user }: UserCredentialsProps) => {
       {openCredentialsReset && (
         <Modal
           variant={ModalVariant.small}
-          width={800}
+          width={900}
           style={{ height: "20rem" }}
           title={t("credentialsReset")}
           isOpen
@@ -723,12 +723,12 @@ export const UserCredentials = ({ user }: UserCredentialsProps) => {
           actions={[
             <Button
               data-testid="credentialsResetBtn"
-              key={`confirmResetCredentialsBtn-${user.id}`}
+              key={`confirmCredentialsResetBtn-${user.id}`}
               variant="danger"
               form="userCredentialsReset-form"
               onClick={resetHandleSubmit(sendCredentialsResetEmail)}
             >
-              {t("resetCredentials")}
+              {t("credentialsResetConfirm")}
             </Button>,
             <Button
               data-testid="cancelCredentialsResetBtn"
@@ -923,7 +923,7 @@ export const UserCredentials = ({ user }: UserCredentialsProps) => {
                         data-testid="credentialsResetBtn"
                         onClick={() => setOpenCredentialsReset(true)}
                       >
-                        {t("resetCredentialsBtn")}
+                        {t("credentialsResetBtn")}
                       </Button>
                     </Td>
                   ) : (
