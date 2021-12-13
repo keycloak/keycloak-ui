@@ -249,6 +249,7 @@ export const LocalizationTab = ({
     newRows[rowIndex] = newRow;
 
     // Update the copy of the retrieved data set so we can save it when the user saves changes
+
     if (!invalid && type === RowEditAction.save) {
       const key = (newRow.cells?.[0] as IRowCell).props.value;
       const value = (newRow.cells?.[1] as IRowCell).props.value;
