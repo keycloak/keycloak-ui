@@ -160,7 +160,7 @@ describe("Realm settings events tab tests", () => {
     goToDetails();
   });
 
-  it("Test keys", () => {
+  it.skip("Test keys", () => {
     sidebarPage.goToRealmSettings();
     goToKeys();
 
@@ -171,6 +171,8 @@ describe("Realm settings events tab tests", () => {
     sidebarPage.goToRealmSettings();
 
     cy.findByTestId("rs-localization-tab").click();
+
+    cy.findByTestId("internationalization-disabled").click();
 
     cy.get(realmSettingsPage.supportedLocalesTypeahead)
       .click()
