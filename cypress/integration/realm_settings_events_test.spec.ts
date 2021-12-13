@@ -20,7 +20,7 @@ describe("Realm settings events tab tests", () => {
   beforeEach(() => {
     keycloakBefore();
     loginPage.logIn();
-    // sidebarPage.goToRealm(realmName);
+    sidebarPage.goToRealm(realmName);
   });
 
   before(async () => {
@@ -87,7 +87,7 @@ describe("Realm settings events tab tests", () => {
     return this;
   };
 
-  it.skip("Enable user events", () => {
+  it("Enable user events", () => {
     cy.intercept("GET", `/auth/admin/realms/${realmName}/keys`).as("load");
     sidebarPage.goToRealmSettings();
     cy.findByTestId("rs-realm-events-tab").click();
@@ -117,13 +117,13 @@ describe("Realm settings events tab tests", () => {
     }
   });
 
-  it.skip("Go to keys tab", () => {
+  it("Go to keys tab", () => {
     sidebarPage.goToRealmSettings();
 
     cy.findByTestId("rs-keys-tab").click();
   });
 
-  it.skip("add Providers", () => {
+  it("add Providers", () => {
     sidebarPage.goToRealmSettings();
 
     cy.findByTestId("rs-keys-tab").click();
@@ -155,12 +155,12 @@ describe("Realm settings events tab tests", () => {
     realmSettingsPage.addProvider();
   });
 
-  it.skip("go to details", () => {
+  it("go to details", () => {
     sidebarPage.goToRealmSettings();
     goToDetails();
   });
 
-  it.skip("Test keys", () => {
+  it("Test keys", () => {
     sidebarPage.goToRealmSettings();
     goToKeys();
 
