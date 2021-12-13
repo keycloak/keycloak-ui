@@ -12,6 +12,10 @@ import {
   KebabToggle,
   Modal,
   ModalVariant,
+  NumberInput,
+  Select,
+  SelectOption,
+  SelectVariant,
   Switch,
   Text,
   TextInput,
@@ -33,17 +37,22 @@ import {
 import { PencilAltIcon, CheckIcon, TimesIcon } from "@patternfly/react-icons";
 import type UserRepresentation from "@keycloak/keycloak-admin-client/lib/defs/userRepresentation";
 import { useTranslation } from "react-i18next";
+import { isEmpty } from "lodash/fp";
 import { useAlerts } from "../components/alert/Alerts";
 import { ListEmptyState } from "../components/list-empty-state/ListEmptyState";
 import { useAdminClient, useFetch } from "../context/auth/AdminClient";
 import { useWhoAmI } from "../context/whoami/WhoAmI";
-import { Controller, useForm, useWatch } from "react-hook-form";
+import { Controller, useForm, UseFormMethods, useWatch } from "react-hook-form";
 import { PasswordInput } from "../components/password-input/PasswordInput";
 import { HelpItem } from "../components/help-enabler/HelpItem";
 import "./user-section.css";
 import { useConfirmDialog } from "../components/confirm-dialog/ConfirmDialog";
 import type CredentialRepresentation from "@keycloak/keycloak-admin-client/lib/defs/credentialRepresentation";
 import { FormAccess } from "../components/form-access/FormAccess";
+import { RequiredActionAlias } from "@keycloak/keycloak-admin-client/lib/defs/requiredActionProviderRepresentation";
+
+const lifespanEnumValues = ["hours", "minutes", "seconds"] as const;
+type LifespanEnum = typeof lifespanEnumValues[number];
 
 type UserCredentialsProps = {
   user: UserRepresentation;
@@ -55,10 +64,23 @@ type CredentialsForm = {
   temporaryPassword: boolean;
 };
 
+type CredentialsResetForm = {
+  actions: RequiredActionAlias[];
+  lifespanComposite: {
+    lifespan: number;
+    lifespanEnum: LifespanEnum;
+  };
+};
+
 const credFormDefaultValues: CredentialsForm = {
   password: "",
   passwordConfirmation: "",
   temporaryPassword: true,
+};
+
+const credResetFormDefaultValues: CredentialsResetForm = {
+  actions: [],
+  lifespanComposite: { lifespan: 12, lifespanEnum: "hours" },
 };
 
 type DisplayDialogProps = {
@@ -72,6 +94,17 @@ type UserLabelForm = {
 
 const userLabelDefaultValues: UserLabelForm = {
   userLabel: "",
+};
+
+const lifespanEnumToSeconds = (v: number, e: LifespanEnum) => {
+  switch (e) {
+    case "hours":
+      return v * 60 * 60;
+    case "minutes":
+      return v * 60;
+    case "seconds":
+      return v;
+  }
 };
 
 const DisplayDialog: FunctionComponent<DisplayDialogProps> = ({
@@ -92,6 +125,148 @@ const DisplayDialog: FunctionComponent<DisplayDialogProps> = ({
   );
 };
 
+const CredentialsResetActionMultiSelect = (props: {
+  form: UseFormMethods<CredentialsResetForm>;
+}) => {
+  const { t } = useTranslation("user");
+  const [open, setOpen] = useState(false);
+  const { form } = props;
+  const { control } = form;
+
+  return (
+    <FormGroup
+      label={t("resetActions")}
+      labelIcon={
+        <HelpItem
+          helpText="clients-help:resetActions"
+          forLabel={t("actions")}
+          forID={t(`common:helpLabel`, { label: t("resetActions") })}
+        />
+      }
+      fieldId="actions"
+    >
+      <Controller
+        name="actions"
+        defaultValue={[]}
+        control={control}
+        render={({ onChange, value }) => (
+          <Select
+            toggleId="actions"
+            variant={SelectVariant.typeaheadMulti}
+            chipGroupProps={{
+              numChips: 3,
+            }}
+            onToggle={(open) => setOpen(open)}
+            isOpen={open}
+            selections={value.map((o: string) => o)}
+            onSelect={(_, selectedValue) =>
+              onChange(
+                value.find((o: string) => o === selectedValue)
+                  ? value.filter((item: string) => item !== selectedValue)
+                  : [...value, selectedValue]
+              )
+            }
+            onClear={(event) => {
+              event.stopPropagation();
+              onChange([]);
+            }}
+            aria-label={t("resetActions")}
+          >
+            {Object.values(RequiredActionAlias).map((action, index) => (
+              <SelectOption key={index} value={action}>
+                {t(action)}
+              </SelectOption>
+            ))}
+          </Select>
+        )}
+      />
+    </FormGroup>
+  );
+};
+
+const LifespanComposite = (props: {
+  form: UseFormMethods<CredentialsResetForm>;
+}) => {
+  const { t } = useTranslation("users");
+
+  const { form } = props;
+  const { control } = form;
+  const [isOpen, setIsOpen] = useState(false);
+
+  return (
+    <FormGroup
+      fieldId="lifespanComposite"
+      label={t("lifespan")}
+      isStack
+      labelIcon={
+        <HelpItem
+          helpText="clients-help:lifespan"
+          forLabel={t("lifespan")}
+          forID={t(`common:helpLabel`, { label: t("lifespan") })}
+        />
+      }
+    >
+      <Controller
+        name="lifespanComposite"
+        defaultValue={credResetFormDefaultValues.lifespanComposite}
+        control={control}
+        render={({ onChange, value }) => {
+          const MIN_VALUE = 1;
+          const setValue = (newValue: {
+            lifespan: number;
+            lifespanEnum: string;
+          }) =>
+            onChange({
+              ...value,
+              lifespan: Math.max(newValue.lifespan, MIN_VALUE),
+            });
+
+          return (
+            <>
+              <NumberInput
+                id="lifespan"
+                value={value.lifespan}
+                min={MIN_VALUE}
+                onPlus={() =>
+                  setValue({ ...value, lifespan: value.lifespan + 1 })
+                }
+                onMinus={() =>
+                  setValue({ ...value, lifespan: value.lifespan - 1 })
+                }
+                onChange={(event) => {
+                  const newValue = Number(event.currentTarget.value);
+                  setValue({
+                    ...value,
+                    lifespan: !isNaN(newValue) ? newValue : 0,
+                  });
+                }}
+              />
+              <Select
+                id="lifespanEnum"
+                toggleId="lifespanEnum"
+                variant={SelectVariant.single}
+                isOpen={isOpen}
+                onToggle={setIsOpen}
+                selections={[value.lifespanEnum]}
+                onSelect={(_, v) => {
+                  onChange({ ...value, lifespanEnum: v as string });
+                  setIsOpen(false);
+                }}
+              >
+                {lifespanEnumValues.map((item, index) => (
+                  <SelectOption key={index} value={item}>
+                    {t(item)}
+                  </SelectOption>
+                ))}
+              </Select>
+            </>
+          );
+        }}
+      />
+    </FormGroup>
+  );
+};
+
 export const UserCredentials = ({ user }: UserCredentialsProps) => {
   const { t } = useTranslation("users");
   const { whoAmI } = useWhoAmI();
@@ -100,6 +275,9 @@ export const UserCredentials = ({ user }: UserCredentialsProps) => {
   const refresh = () => setKey(key + 1);
   const [open, setOpen] = useState(false);
   const [openSaveConfirm, setOpenSaveConfirm] = useState(false);
+  const [openCredentialsReset, setOpenCredentialsReset] = useState(false);
+  const [openCredentialsResetConfirm, setOpenCredentialsResetConfirm] =
+    useState(false);
   const [kebabOpen, setKebabOpen] = useState({
     status: false,
     rowKey: "",
@@ -108,16 +286,22 @@ export const UserCredentials = ({ user }: UserCredentialsProps) => {
   const form = useForm<CredentialsForm>({
     defaultValues: credFormDefaultValues,
   });
+  const resetForm = useForm<CredentialsResetForm>({
+    defaultValues: credResetFormDefaultValues,
+  });
   const userLabelForm = useForm<UserLabelForm>({
     defaultValues: userLabelDefaultValues,
   });
   const { control, errors, handleSubmit, register } = form;
+  const { control: resetControl, handleSubmit: resetHandleSubmit } = resetForm;
   const {
     getValues: getValues1,
     handleSubmit: handleSubmit1,
     register: register1,
   } = userLabelForm;
   const [credentials, setCredentials] = useState<CredentialsForm>();
+  const [credentialsReset, setCredentialsReset] =
+    useState<CredentialsResetForm>({} as CredentialsResetForm);
   const [userCredentials, setUserCredentials] = useState<
     CredentialRepresentation[]
   >([]);
@@ -149,6 +333,11 @@ export const UserCredentials = ({ user }: UserCredentialsProps) => {
     name: "password",
   });
 
+  const resetActionWatcher = useWatch<CredentialsResetForm["actions"]>({
+    control: resetControl,
+    name: "actions",
+  });
+
   const passwordConfirmationWatcher = useWatch<
     CredentialsForm["passwordConfirmation"]
   >({
@@ -159,12 +348,18 @@ export const UserCredentials = ({ user }: UserCredentialsProps) => {
   const isNotDisabled =
     passwordWatcher !== "" && passwordConfirmationWatcher !== "";
 
+  const resetIsNotDisabled = !isEmpty(resetActionWatcher);
+
   const toggleModal = () => {
     setOpen(!open);
   };
 
   const toggleConfirmSaveModal = () => {
     setOpenSaveConfirm(!openSaveConfirm);
+  };
+
+  const toggleConfirmCredentialsResetModal = () => {
+    setOpenCredentialsResetConfirm(!openCredentialsResetConfirm);
   };
 
   const saveUserPassword = async () => {
@@ -209,6 +404,28 @@ export const UserCredentials = ({ user }: UserCredentialsProps) => {
           error
         );
       }
+    }
+  };
+
+  const sendCredentialsResetEmail = async () => {
+    if (isEmpty(credentialsReset.actions)) {
+      return;
+    }
+
+    try {
+      await adminClient.users.executeActionsEmail({
+        id: user.id!,
+        actions: credentialsReset.actions,
+        lifespan: lifespanEnumToSeconds(
+          credentialsReset.lifespanComposite.lifespan,
+          credentialsReset.lifespanComposite.lifespanEnum
+        ),
+      });
+      refresh();
+      addAlert(t("resetCredentialEmailSuccess"), AlertVariant.success);
+      setOpenCredentialsResetConfirm(false);
+    } catch (error) {
+      addError("resetCredentialEmailError", error);
     }
   };
 
@@ -387,7 +604,6 @@ export const UserCredentials = ({ user }: UserCredentialsProps) => {
               }
               fieldId="kc-temporaryPassword"
             >
-              {" "}
               <Controller
                 name="temporaryPassword"
                 defaultValue={true}
@@ -450,6 +666,85 @@ export const UserCredentials = ({ user }: UserCredentialsProps) => {
               : `${t("setPasswordConfirmText")} ${user.username} ${t(
                   "questionMark"
                 )}`}
+          </Text>
+        </Modal>
+      )}
+      {openCredentialsReset && (
+        <Modal
+          variant={ModalVariant.small}
+          width={800}
+          style={{ height: "20rem" }}
+          title={t("credentialsReset")}
+          isOpen
+          onClose={() => {
+            setOpenCredentialsReset(false);
+          }}
+          actions={[
+            <Button
+              data-testid="okBtn"
+              key={`confirmBtn-${user.id}`}
+              variant="primary"
+              form="userCredentialsReset-form"
+              onClick={() => {
+                setCredentialsReset(resetForm.getValues());
+                setOpenCredentialsReset(false);
+                toggleConfirmCredentialsResetModal();
+              }}
+              isDisabled={!resetIsNotDisabled}
+            >
+              {t("save")}
+            </Button>,
+            <Button
+              data-testid="cancelBtn"
+              key={`cancelBtn-${user.id}`}
+              variant="link"
+              form="userCredentialsReset-form"
+              onClick={() => {
+                setOpenCredentialsReset(false);
+              }}
+            >
+              {t("cancel")}
+            </Button>,
+          ]}
+        >
+          <Form id="userCredentialsReset-form" isHorizontal>
+            <CredentialsResetActionMultiSelect form={resetForm} />
+            <LifespanComposite form={resetForm} />
+          </Form>
+        </Modal>
+      )}
+      {openCredentialsResetConfirm && (
+        <Modal
+          variant={ModalVariant.small}
+          width={600}
+          title={t("credentialsResetConfirm")}
+          isOpen
+          onClose={() => setOpenCredentialsResetConfirm(false)}
+          actions={[
+            <Button
+              data-testid="credentialsResetBtn"
+              key={`confirmResetCredentialsBtn-${user.id}`}
+              variant="danger"
+              form="userCredentialsReset-form"
+              onClick={resetHandleSubmit(sendCredentialsResetEmail)}
+            >
+              {t("resetCredentials")}
+            </Button>,
+            <Button
+              data-testid="cancelCredentialsResetBtn"
+              key={`cancelConfirmBtn-${user.id}`}
+              variant="link"
+              form="userCredentialsReset-form"
+              onClick={() => {
+                setOpenCredentialsResetConfirm(false);
+              }}
+            >
+              {t("cancel")}
+            </Button>,
+          ]}
+        >
+          <Text component={TextVariants.h3}>
+            {`${t("credentialsResetConfirmText")}${t("questionMark")}`}
           </Text>
         </Modal>
       )}
@@ -616,6 +911,19 @@ export const UserCredentials = ({ user }: UserCredentialsProps) => {
                         onClick={resetPassword}
                       >
                         {t("resetPasswordBtn")}
+                      </Button>
+                    </Td>
+                  ) : (
+                    <Td />
+                  )}
+                  {user.email ? (
+                    <Td>
+                      <Button
+                        variant="secondary"
+                        data-testid="credentialsResetBtn"
+                        onClick={() => setOpenCredentialsReset(true)}
+                      >
+                        {t("resetCredentialsBtn")}
                       </Button>
                     </Td>
                   ) : (
