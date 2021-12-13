@@ -172,6 +172,8 @@ describe("Realm settings events tab tests", () => {
 
     cy.findByTestId("rs-localization-tab").click();
 
+    cy.findByTestId("internationalization-enabled").click({ force: true });
+
     cy.findByTestId("internationalization-disabled").click({ force: true });
 
     cy.findByTestId("add-bundle-button").click({ force: true });
