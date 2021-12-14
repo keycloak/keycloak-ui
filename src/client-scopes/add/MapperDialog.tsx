@@ -181,10 +181,10 @@ export const AddMapperDialog = (props: AddMapperDialogProps) => {
           onSelect={(_, isSelected, rowIndex) => {
             if (rowIndex === -1) {
               setRows(
-                rows.map((oneRow) => {
-                  oneRow.selected = isSelected;
-                  return oneRow;
-                })
+                rows.map((row) => ({
+                  ...row,
+                  selected: isSelected,
+                }))
               );
             } else {
               rows[rowIndex].selected = isSelected;
