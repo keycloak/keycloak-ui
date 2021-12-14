@@ -311,8 +311,6 @@ export default class AddMapperPage {
 
     cy.findByTestId(this.template).type("_edited");
 
-    cy.get(this.target).click();
-
     cy.get(this.target).click().parent().contains("BROKER_USERNAME").click();
 
     this.saveNewMapper();

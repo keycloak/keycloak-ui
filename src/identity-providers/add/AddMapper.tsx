@@ -67,12 +67,14 @@ export default function AddMapper() {
     const mapper = convertFormValuesToObject(
       idpMapper
     ) as IdentityProviderMapperRepresentation;
+    const attributes = JSON.stringify(idpMapper.config.attributes ?? []);
     const claims = JSON.stringify(idpMapper.config.claims ?? []);
 
     const identityProviderMapper = {
       ...mapper,
       config: {
         ...mapper.config,
+        attributes,
         claims,
       },
       identityProviderAlias: alias!,
@@ -135,6 +137,7 @@ export default function AddMapper() {
 
   const setupForm = (mapper: IdentityProviderMapperRepresentation) => {
     convertToFormValues(mapper, form.setValue);
+    form.setValue("config.attributes", JSON.parse(mapper.config.attributes));
     form.setValue("config.claims", JSON.parse(mapper.config.claims));
   };
 
