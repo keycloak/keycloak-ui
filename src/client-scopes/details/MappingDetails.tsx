@@ -83,9 +83,6 @@ export default function MappingDetails() {
           (type) => type.id === data!.protocolMapper
         );
 
-        // console.log(mapperTypes);
-        console.log("lallaaa", mapping?.properties);
-
         return {
           config: {
             protocol: data.protocol,
