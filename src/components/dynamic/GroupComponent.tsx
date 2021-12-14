@@ -47,8 +47,7 @@ export const GroupComponent = ({ name, label, helpText }: ComponentProps) => {
             labelIcon={
               <HelpItem
                 helpText={t(helpText!)}
-                forLabel={label!}
-                forID={name!}
+                fieldLabelId={`dynamic:${label}`}
               />
             }
             fieldId={name!}
