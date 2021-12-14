@@ -155,7 +155,11 @@ const CredentialsResetActionMultiSelect = (props: {
             aria-label={t("resetActions")}
           >
             {Object.values(RequiredActionAlias).map((action, index) => (
-              <SelectOption key={index} value={action}>
+              <SelectOption
+                key={index}
+                value={action}
+                data-testid={`${action}-option`}
+              >
                 {t(action)}
               </SelectOption>
             ))}
@@ -607,6 +611,7 @@ export const UserCredentials = ({ user }: UserCredentialsProps) => {
           onClose={() => {
             setOpenCredentialReset(false);
           }}
+          data-testid="credential-reset-modal"
           actions={[
             <Button
               data-testid="okBtn"
