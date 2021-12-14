@@ -248,8 +248,8 @@ export default function MappingDetails() {
                   <Grid>
                     <GridItem lg={3} sm={3}>
                       <Controller
-                        name={"config.id.token.claim"}
-                        // defaultValue={true}
+                        name="config.id.token.claim"
+                        defaultValue={false}
                         control={form.control}
                         render={({ onChange, value }) => (
                           <InputGroup>
@@ -259,8 +259,8 @@ export default function MappingDetails() {
                                 `dynamic:${mapping.properties[0].label}`
                               )}
                               id="kc-ID-token-check"
-                              name={"config.id.token.claim"}
-                              isChecked={value}
+                              name="config.id.token.claim"
+                              isChecked={eval(value)}
                               onChange={onChange}
                             />
                             <HelpItem
@@ -282,8 +282,8 @@ export default function MappingDetails() {
                     </GridItem>
                     <GridItem lg={4} sm={3}>
                       <Controller
-                        name={"config.access.token.claim"}
-                        // defaultValue={true}
+                        name="config.access.token.claim"
+                        defaultValue={false}
                         control={form.control}
                         render={({ onChange, value }) => (
                           <InputGroup>
@@ -294,7 +294,7 @@ export default function MappingDetails() {
                               )}
                               id="kc-access-token-check"
                               name={mapping.properties[1].name}
-                              isChecked={value}
+                              isChecked={eval(value)}
                               onChange={onChange}
                             />
                             <HelpItem
@@ -314,10 +314,10 @@ export default function MappingDetails() {
                         )}
                       />
                     </GridItem>
-                    <GridItem lg={4} sm={3}>
+                    <GridItem lg={3} sm={3}>
                       <Controller
-                        name={"config.userinfo.token.claim"}
-                        // defaultValue={false}
+                        name="config.userinfo.token.claim"
+                        defaultValue={false}
                         control={form.control}
                         render={({ onChange, value }) => (
                           <InputGroup>
@@ -328,7 +328,7 @@ export default function MappingDetails() {
                               )}
                               id="kc-access-token-check"
                               name={mapping.properties[2].name}
-                              isChecked={value}
+                              isChecked={eval(value)}
                               onChange={onChange}
                             />
                             <HelpItem
