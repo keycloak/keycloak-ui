@@ -1,14 +1,18 @@
 import React, { useState } from "react";
 import { Link, useHistory, useParams, useRouteMatch } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import { FormProvider, useForm } from "react-hook-form";
+import { Controller, FormProvider, useForm } from "react-hook-form";
 import {
   ActionGroup,
   AlertVariant,
   Button,
   ButtonVariant,
+  Checkbox,
   DropdownItem,
   FormGroup,
+  Grid,
+  GridItem,
+  InputGroup,
   PageSection,
   TextInput,
   ValidatedOptions,
@@ -78,6 +82,9 @@ export default function MappingDetails() {
         const mapping = mapperTypes.find(
           (type) => type.id === data!.protocolMapper
         );
+
+        // console.log(mapperTypes);
+        console.log("lallaaa", mapping?.properties);
 
         return {
           config: {
@@ -235,7 +242,124 @@ export default function MappingDetails() {
             />
           </FormGroup>
           <FormProvider {...form}>
-            <DynamicComponents properties={mapping?.properties || []} />
+            {mapping?.id === "oidc-address-mapper" ? (
+              <>
+                <FormGroup hasNoPaddingTop label={t("addTo")} fieldId="kc-flow">
+                  <Grid>
+                    <GridItem lg={3} sm={3}>
+                      <Controller
+                        name={"config.id.token.claim"}
+                        // defaultValue={true}
+                        control={form.control}
+                        render={({ onChange, value }) => (
+                          <InputGroup>
+                            <Checkbox
+                              data-testid={`dynamic:${mapping.properties[0].label}`}
+                              label={t(
+                                `dynamic:${mapping.properties[0].label}`
+                              )}
+                              id="kc-ID-token-check"
+                              name={"config.id.token.claim"}
+                              isChecked={value}
+                              onChange={onChange}
+                            />
+                            <HelpItem
+                              helpText={t(
+                                `dynamic:${mapping.properties[0].helpText}`
+                              )}
+                              forLabel={t(
+                                `dynamic:${mapping.properties[0].label}`
+                              )}
+                              forID={t(`common:helpLabel`, {
+                                label: t(
+                                  `dynamic:${mapping.properties[0].label}`
+                                ),
+                              })}
+                            />
+                          </InputGroup>
+                        )}
+                      />
+                    </GridItem>
+                    <GridItem lg={4} sm={3}>
+                      <Controller
+                        name={"config.access.token.claim"}
+                        // defaultValue={true}
+                        control={form.control}
+                        render={({ onChange, value }) => (
+                          <InputGroup>
+                            <Checkbox
+                              data-testid={`dynamic:${mapping.properties[1].label}`}
+                              label={t(
+                                `dynamic:${mapping.properties[1].label}`
+                              )}
+                              id="kc-access-token-check"
+                              name={mapping.properties[1].name}
+                              isChecked={value}
+                              onChange={onChange}
+                            />
+                            <HelpItem
+                              helpText={t(
+                                `dynamic:${mapping.properties[1].helpText}`
+                              )}
+                              forLabel={t(
+                                `dynamic:${mapping.properties[1].label}`
+                              )}
+                              forID={t(`common:helpLabel`, {
+                                label: t(
+                                  `dynamic:${mapping.properties[1].label}`
+                                ),
+                              })}
+                            />
+                          </InputGroup>
+                        )}
+                      />
+                    </GridItem>
+                    <GridItem lg={4} sm={3}>
+                      <Controller
+                        name={"config.userinfo.token.claim"}
+                        // defaultValue={false}
+                        control={form.control}
+                        render={({ onChange, value }) => (
+                          <InputGroup>
+                            <Checkbox
+                              data-testid={`dynamic:${mapping.properties[2].label}`}
+                              label={t(
+                                `dynamic:${mapping.properties[2].label}`
+                              )}
+                              id="kc-access-token-check"
+                              name={mapping.properties[2].name}
+                              isChecked={value}
+                              onChange={onChange}
+                            />
+                            <HelpItem
+                              helpText={t(
+                                `dynamic:${mapping.properties[2].helpText}`
+                              )}
+                              forLabel={t(
+                                `dynamic:${mapping.properties[2].label}`
+                              )}
+                              forID={t(`common:helpLabel`, {
+                                label: t(
+                                  `dynamic:${mapping.properties[2].label}`
+                                ),
+                              })}
+                            />
+                          </InputGroup>
+                        )}
+                      />
+                    </GridItem>
+                  </Grid>
+                </FormGroup>
+                <DynamicComponents
+                  properties={mapping.properties.slice(
+                    3,
+                    mapping.properties.length - 1
+                  )}
+                />
+              </>
+            ) : (
+              <DynamicComponents properties={mapping?.properties || []} />
+            )}
           </FormProvider>
           <ActionGroup>
             <Button variant="primary" type="submit">

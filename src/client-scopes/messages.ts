@@ -1,5 +1,6 @@
 export default {
   "client-scopes": {
+    addTo: "Add to",
     createClientScope: "Create client scope",
     clientScopeList: "Client scopes",
     grantedClientScopes: "Granted client scopes",

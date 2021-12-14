@@ -13,7 +13,14 @@ export const DynamicComponents = ({ properties }: DynamicComponentProps) => (
   <>
     {properties.map((property) => {
       const componentType = property.type!;
-      if (isValidComponentType(componentType) && property.name !== "scopes") {
+      if (
+        isValidComponentType(componentType) &&
+        property.name !== "scopes"
+        // &&
+        // property.name !== "id.token.claim" &&
+        // property.name !== "access.token.claim" &&
+        // property.name !== "userinfo.token.claim"
+      ) {
         const Component = COMPONENTS[componentType];
         return <Component key={property.name} {...property} />;
       } else {

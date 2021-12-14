@@ -70,15 +70,15 @@ export default {
         "JSON type that should be used to populate the json claim in the token. long, int, boolean, String and JSON are valid values.",
     },
     includeInIdToken: {
-      label: "Add to ID token",
+      label: "ID token",
       tooltip: "Should the claim be added to the ID token?",
     },
     includeInAccessToken: {
-      label: "Add to access token",
+      label: "Access token",
       tooltip: "Should the claim be added to the access token?",
     },
     includeInUserInfo: {
-      label: "Add to userinfo",
+      label: "userinfo",
       tooltip: "Should the claim be added to the userinfo?",
     },
     sectorIdentifierUri: {
