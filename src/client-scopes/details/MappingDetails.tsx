@@ -270,14 +270,9 @@ export default function MappingDetails() {
                               helpText={t(
                                 `dynamic:${mapping.properties[0].helpText}`
                               )}
-                              forLabel={t(
+                              fieldLabelId={t(
                                 `dynamic:${mapping.properties[0].label}`
                               )}
-                              forID={t(`common:helpLabel`, {
-                                label: t(
-                                  `dynamic:${mapping.properties[0].label}`
-                                ),
-                              })}
                             />
                           </InputGroup>
                         )}
@@ -304,14 +299,9 @@ export default function MappingDetails() {
                               helpText={t(
                                 `dynamic:${mapping.properties[1].helpText}`
                               )}
-                              forLabel={t(
+                              fieldLabelId={t(
                                 `dynamic:${mapping.properties[1].label}`
                               )}
-                              forID={t(`common:helpLabel`, {
-                                label: t(
-                                  `dynamic:${mapping.properties[1].label}`
-                                ),
-                              })}
                             />
                           </InputGroup>
                         )}
@@ -338,14 +328,9 @@ export default function MappingDetails() {
                               helpText={t(
                                 `dynamic:${mapping.properties[2].helpText}`
                               )}
-                              forLabel={t(
+                              fieldLabelId={t(
                                 `dynamic:${mapping.properties[2].label}`
                               )}
-                              forID={t(`common:helpLabel`, {
-                                label: t(
-                                  `dynamic:${mapping.properties[2].label}`
-                                ),
-                              })}
                             />
                           </InputGroup>
                         )}
