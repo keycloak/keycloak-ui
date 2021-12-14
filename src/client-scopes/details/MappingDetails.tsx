@@ -241,6 +241,12 @@ export default function MappingDetails() {
           <FormProvider {...form}>
             {mapping?.id === "oidc-address-mapper" ? (
               <>
+                <DynamicComponents
+                  properties={mapping.properties.slice(
+                    3,
+                    mapping.properties.length - 1
+                  )}
+                />
                 <FormGroup hasNoPaddingTop label={t("addTo")} fieldId="kc-flow">
                   <Grid>
                     <GridItem lg={3} sm={3}>
@@ -347,12 +353,6 @@ export default function MappingDetails() {
                     </GridItem>
                   </Grid>
                 </FormGroup>
-                <DynamicComponents
-                  properties={mapping.properties.slice(
-                    3,
-                    mapping.properties.length - 1
-                  )}
-                />
               </>
             ) : (
               <DynamicComponents properties={mapping?.properties || []} />
