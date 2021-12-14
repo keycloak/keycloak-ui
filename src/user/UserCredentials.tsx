@@ -12,7 +12,6 @@ import {
   KebabToggle,
   Modal,
   ModalVariant,
-  NumberInput,
   Select,
   SelectOption,
   SelectVariant,
@@ -50,9 +49,7 @@ import { useConfirmDialog } from "../components/confirm-dialog/ConfirmDialog";
 import type CredentialRepresentation from "@keycloak/keycloak-admin-client/lib/defs/credentialRepresentation";
 import { FormAccess } from "../components/form-access/FormAccess";
 import { RequiredActionAlias } from "@keycloak/keycloak-admin-client/lib/defs/requiredActionProviderRepresentation";
-
-const lifespanEnumValues = ["hours", "minutes", "seconds"] as const;
-type LifespanEnum = typeof lifespanEnumValues[number];
+import { TimeSelector } from "../components/time-selector/TimeSelector";
 
 type UserCredentialsProps = {
   user: UserRepresentation;
@@ -64,12 +61,9 @@ type CredentialsForm = {
   temporaryPassword: boolean;
 };
 
-type CredentialsResetForm = {
+type CredentialResetForm = {
   actions: RequiredActionAlias[];
-  lifespanComposite: {
-    lifespan: number;
-    lifespanEnum: LifespanEnum;
-  };
+  lifespan: number;
 };
 
 const credFormDefaultValues: CredentialsForm = {
@@ -78,9 +72,9 @@ const credFormDefaultValues: CredentialsForm = {
   temporaryPassword: true,
 };
 
-const credResetFormDefaultValues: CredentialsResetForm = {
+const credResetFormDefaultValues: CredentialResetForm = {
   actions: [],
-  lifespanComposite: { lifespan: 12, lifespanEnum: "hours" },
+  lifespan: 43200, // 12 hours
 };
 
 type DisplayDialogProps = {
@@ -94,17 +88,6 @@ type UserLabelForm = {
 
 const userLabelDefaultValues: UserLabelForm = {
   userLabel: "",
-};
-
-const lifespanEnumToSeconds = (v: number, e: LifespanEnum) => {
-  switch (e) {
-    case "hours":
-      return v * 60 * 60;
-    case "minutes":
-      return v * 60;
-    case "seconds":
-      return v;
-  }
 };
 
 const DisplayDialog: FunctionComponent<DisplayDialogProps> = ({
@@ -126,7 +109,7 @@ const DisplayDialog: FunctionComponent<DisplayDialogProps> = ({
 };
 
 const CredentialsResetActionMultiSelect = (props: {
-  form: UseFormMethods<CredentialsResetForm>;
+  form: UseFormMethods<CredentialResetForm>;
 }) => {
   const { t } = useTranslation("users");
   const [open, setOpen] = useState(false);
@@ -139,8 +122,7 @@ const CredentialsResetActionMultiSelect = (props: {
       labelIcon={
         <HelpItem
           helpText="clients-help:resetActions"
-          forLabel={t("resetActions")}
-          forID={t(`common:helpLabel`, { label: t("resetActions") })}
+          fieldLabelId="resetActions"
         />
       }
       fieldId="actions"
@@ -184,84 +166,34 @@ const CredentialsResetActionMultiSelect = (props: {
   );
 };
 
-const LifespanComposite = (props: {
-  form: UseFormMethods<CredentialsResetForm>;
+const LifespanField = (props: {
+  form: UseFormMethods<CredentialResetForm>;
 }) => {
   const { t } = useTranslation("users");
 
   const { form } = props;
   const { control } = form;
-  const [isOpen, setIsOpen] = useState(false);
 
   return (
     <FormGroup
-      fieldId="lifespanComposite"
+      fieldId="lifespan"
       label={t("lifespan")}
       isStack
       labelIcon={
-        <HelpItem
-          helpText="clients-help:lifespan"
-          forLabel={t("lifespan")}
-          forID={t(`common:helpLabel`, { label: t("lifespan") })}
-        />
+        <HelpItem helpText="clients-help:lifespan" fieldLabelId="lifespan" />
       }
     >
       <Controller
-        name="lifespanComposite"
-        defaultValue={credResetFormDefaultValues.lifespanComposite}
+        name="lifespan"
+        defaultValue={credResetFormDefaultValues.lifespan}
         control={control}
-        render={({ onChange, value }) => {
-          const MIN_VALUE = 1;
-          const setValue = (newValue: {
-            lifespan: number;
-            lifespanEnum: string;
-          }) =>
-            onChange({
-              ...value,
-              lifespan: Math.max(newValue.lifespan, MIN_VALUE),
-            });
-
-          return (
-            <>
-              <NumberInput
-                id="lifespan"
-                value={value.lifespan}
-                min={MIN_VALUE}
-                onPlus={() =>
-                  setValue({ ...value, lifespan: value.lifespan + 1 })
-                }
-                onMinus={() =>
-                  setValue({ ...value, lifespan: value.lifespan - 1 })
-                }
-                onChange={(event) => {
-                  const newValue = Number(event.currentTarget.value);
-                  setValue({
-                    ...value,
-                    lifespan: !isNaN(newValue) ? newValue : 0,
-                  });
-                }}
-              />
-              <Select
-                id="lifespanEnum"
-                toggleId="lifespanEnum"
-                variant={SelectVariant.single}
-                isOpen={isOpen}
-                onToggle={setIsOpen}
-                selections={[value.lifespanEnum]}
-                onSelect={(_, v) => {
-                  onChange({ ...value, lifespanEnum: v as string });
-                  setIsOpen(false);
-                }}
-              >
-                {lifespanEnumValues.map((item, index) => (
-                  <SelectOption key={index} value={item}>
-                    {t(item)}
-                  </SelectOption>
-                ))}
-              </Select>
-            </>
-          );
-        }}
+        render={({ onChange, value }) => (
+          <TimeSelector
+            value={value}
+            units={["minutes", "hours", "days"]}
+            onChange={onChange}
+          />
+        )}
       />
     </FormGroup>
   );
@@ -275,9 +207,7 @@ export const UserCredentials = ({ user }: UserCredentialsProps) => {
   const refresh = () => setKey(key + 1);
   const [open, setOpen] = useState(false);
   const [openSaveConfirm, setOpenSaveConfirm] = useState(false);
-  const [openCredentialsReset, setOpenCredentialsReset] = useState(false);
-  const [openCredentialsResetConfirm, setOpenCredentialsResetConfirm] =
-    useState(false);
+  const [openCredentialReset, setOpenCredentialReset] = useState(false);
   const [kebabOpen, setKebabOpen] = useState({
     status: false,
     rowKey: "",
@@ -286,7 +216,7 @@ export const UserCredentials = ({ user }: UserCredentialsProps) => {
   const form = useForm<CredentialsForm>({
     defaultValues: credFormDefaultValues,
   });
-  const resetForm = useForm<CredentialsResetForm>({
+  const resetForm = useForm<CredentialResetForm>({
     defaultValues: credResetFormDefaultValues,
   });
   const userLabelForm = useForm<UserLabelForm>({
@@ -300,8 +230,9 @@ export const UserCredentials = ({ user }: UserCredentialsProps) => {
     register: register1,
   } = userLabelForm;
   const [credentials, setCredentials] = useState<CredentialsForm>();
-  const [credentialsReset, setCredentialsReset] =
-    useState<CredentialsResetForm>({} as CredentialsResetForm);
+  const [credentialsReset, setCredentialReset] = useState<CredentialResetForm>(
+    {} as CredentialResetForm
+  );
   const [userCredentials, setUserCredentials] = useState<
     CredentialRepresentation[]
   >([]);
@@ -333,7 +264,7 @@ export const UserCredentials = ({ user }: UserCredentialsProps) => {
     name: "password",
   });
 
-  const resetActionWatcher = useWatch<CredentialsResetForm["actions"]>({
+  const resetActionWatcher = useWatch<CredentialResetForm["actions"]>({
     control: resetControl,
     name: "actions",
   });
@@ -354,12 +285,12 @@ export const UserCredentials = ({ user }: UserCredentialsProps) => {
     setOpen(!open);
   };
 
-  const toggleConfirmSaveModal = () => {
-    setOpenSaveConfirm(!openSaveConfirm);
+  const toggleCredentialsResetModal = () => {
+    setOpenCredentialReset(!openCredentialReset);
   };
 
-  const toggleConfirmCredentialsResetModal = () => {
-    setOpenCredentialsResetConfirm(!openCredentialsResetConfirm);
+  const toggleConfirmSaveModal = () => {
+    setOpenSaveConfirm(!openSaveConfirm);
   };
 
   const saveUserPassword = async () => {
@@ -416,16 +347,13 @@ export const UserCredentials = ({ user }: UserCredentialsProps) => {
       await adminClient.users.executeActionsEmail({
         id: user.id!,
         actions: credentialsReset.actions,
-        lifespan: lifespanEnumToSeconds(
-          credentialsReset.lifespanComposite.lifespan,
-          credentialsReset.lifespanComposite.lifespanEnum
-        ),
+        lifespan: credentialsReset.lifespan,
       });
       refresh();
-      addAlert(t("resetCredentialEmailSuccess"), AlertVariant.success);
-      setOpenCredentialsResetConfirm(false);
+      addAlert(t("credentialResetEmailSuccess"), AlertVariant.success);
+      setOpenCredentialReset(false);
     } catch (error) {
-      addError(t("resetCredentialEmailError"), error);
+      addError(t("credentialResetEmailError"), error);
     }
   };
 
@@ -669,15 +597,15 @@ export const UserCredentials = ({ user }: UserCredentialsProps) => {
           </Text>
         </Modal>
       )}
-      {openCredentialsReset && (
+      {openCredentialReset && (
         <Modal
           variant={ModalVariant.small}
           width={900}
           style={{ height: "20rem" }}
-          title={t("credentialsReset")}
+          title={t("credentialReset")}
           isOpen
           onClose={() => {
-            setOpenCredentialsReset(false);
+            setOpenCredentialReset(false);
           }}
           actions={[
             <Button
@@ -686,13 +614,12 @@ export const UserCredentials = ({ user }: UserCredentialsProps) => {
               variant="primary"
               form="userCredentialsReset-form"
               onClick={() => {
-                setCredentialsReset(resetForm.getValues());
-                setOpenCredentialsReset(false);
-                toggleConfirmCredentialsResetModal();
+                setCredentialReset(resetForm.getValues());
+                resetHandleSubmit(sendCredentialsResetEmail)();
               }}
               isDisabled={!resetIsNotDisabled}
             >
-              {t("save")}
+              {t("credentialResetConfirm")}
             </Button>,
             <Button
               data-testid="cancelBtn"
@@ -700,7 +627,7 @@ export const UserCredentials = ({ user }: UserCredentialsProps) => {
               variant="link"
               form="userCredentialsReset-form"
               onClick={() => {
-                setOpenCredentialsReset(false);
+                setOpenCredentialReset(false);
               }}
             >
               {t("cancel")}
@@ -709,43 +636,8 @@ export const UserCredentials = ({ user }: UserCredentialsProps) => {
         >
           <Form id="userCredentialsReset-form" isHorizontal>
             <CredentialsResetActionMultiSelect form={resetForm} />
-            <LifespanComposite form={resetForm} />
+            <LifespanField form={resetForm} />
           </Form>
-        </Modal>
-      )}
-      {openCredentialsResetConfirm && (
-        <Modal
-          variant={ModalVariant.small}
-          width={600}
-          title={t("credentialsResetConfirm")}
-          isOpen
-          onClose={() => setOpenCredentialsResetConfirm(false)}
-          actions={[
-            <Button
-              data-testid="credentialsResetBtn"
-              key={`confirmCredentialsResetBtn-${user.id}`}
-              variant="danger"
-              form="userCredentialsReset-form"
-              onClick={resetHandleSubmit(sendCredentialsResetEmail)}
-            >
-              {t("credentialsResetConfirm")}
-            </Button>,
-            <Button
-              data-testid="cancelCredentialsResetBtn"
-              key={`cancelConfirmBtn-${user.id}`}
-              variant="link"
-              form="userCredentialsReset-form"
-              onClick={() => {
-                setOpenCredentialsResetConfirm(false);
-              }}
-            >
-              {t("cancel")}
-            </Button>,
-          ]}
-        >
-          <Text component={TextVariants.h3}>
-            {`${t("credentialsResetConfirmText")}${t("questionMark")}`}
-          </Text>
         </Modal>
       )}
       <DeleteConfirm />
@@ -787,191 +679,190 @@ export const UserCredentials = ({ user }: UserCredentialsProps) => {
         </>
       )}
       {userCredentials.length !== 0 ? (
-        <TableComposable aria-label="password-data-table" variant={"compact"}>
-          <Thead>
-            <Tr>
-              <Th>
-                <HelpItem
-                  helpText="users:userCredentialsHelpText"
-                  fieldLabelId="users:userCredentialsHelpTextLabel"
-                />
-              </Th>
-              <Th>{t("type")}</Th>
-              <Th>{t("userLabel")}</Th>
-              <Th>{t("data")}</Th>
-              <Th />
-              <Th />
-            </Tr>
-          </Thead>
-          <Tbody>
-            {userCredentials.map((credential) => (
-              <Tr key={`table-${credential.id}`}>
-                <>
-                  <Td
-                    draggableRow={{
-                      id: `draggable-row-${credential.id}`,
-                    }}
+        <>
+          {user.email && (
+            <Button
+              className="resetCredentialBtn-header"
+              variant="primary"
+              data-testid="credentialResetBtn"
+              onClick={() => setOpenCredentialReset(true)}
+            >
+              {t("credentialResetBtn")}
+            </Button>
+          )}
+          <TableComposable aria-label="password-data-table" variant={"compact"}>
+            <Thead>
+              <Tr>
+                <Th>
+                  <HelpItem
+                    helpText="users:userCredentialsHelpText"
+                    fieldLabelId="users:userCredentialsHelpTextLabel"
                   />
-                  <Td
-                    key={`table-item-${credential.id}`}
-                    dataLabel={`columns-${credential.id}`}
-                  >
-                    {credential.type?.charAt(0).toUpperCase()! +
-                      credential.type?.slice(1)}
-                  </Td>
-                  <Td>
-                    <FormAccess isHorizontal role="view-users">
-                      <FormGroup
-                        fieldId="kc-userLabel"
-                        className="kc-userLabel-row"
-                      >
-                        <div className="kc-form-group-userLabel">
-                          {isUserLabelEdit?.status &&
-                          isUserLabelEdit.rowKey === credential.id ? (
-                            <>
-                              <TextInput
-                                name="userLabel"
-                                ref={register1()}
-                                type="text"
-                                className="kc-userLabel"
-                                aria-label={t("userLabel")}
-                                data-testid="user-label-fld"
-                              />
-                              <div className="kc-userLabel-actionBtns">
+                </Th>
+                <Th>{t("type")}</Th>
+                <Th>{t("userLabel")}</Th>
+                <Th>{t("data")}</Th>
+                <Th />
+                <Th />
+              </Tr>
+            </Thead>
+            <Tbody>
+              {userCredentials.map((credential) => (
+                <Tr key={`table-${credential.id}`}>
+                  <>
+                    <Td
+                      draggableRow={{
+                        id: `draggable-row-${credential.id}`,
+                      }}
+                    />
+                    <Td
+                      key={`table-item-${credential.id}`}
+                      dataLabel={`columns-${credential.id}`}
+                    >
+                      {credential.type?.charAt(0).toUpperCase()! +
+                        credential.type?.slice(1)}
+                    </Td>
+                    <Td>
+                      <FormAccess isHorizontal role="view-users">
+                        <FormGroup
+                          fieldId="kc-userLabel"
+                          className="kc-userLabel-row"
+                        >
+                          <div className="kc-form-group-userLabel">
+                            {isUserLabelEdit?.status &&
+                            isUserLabelEdit.rowKey === credential.id ? (
+                              <>
+                                <TextInput
+                                  name="userLabel"
+                                  ref={register1()}
+                                  type="text"
+                                  className="kc-userLabel"
+                                  aria-label={t("userLabel")}
+                                  data-testid="user-label-fld"
+                                />
+                                <div className="kc-userLabel-actionBtns">
+                                  <Button
+                                    key={`editUserLabel-accept-${credential.id}`}
+                                    variant="link"
+                                    className="kc-editUserLabel-acceptBtn"
+                                    onClick={() => {
+                                      handleSubmit1(saveUserLabel)();
+                                      setIsUserLabelEdit({
+                                        status: false,
+                                        rowKey: credential.id!,
+                                      });
+                                    }}
+                                    data-testid="editUserLabel-acceptBtn"
+                                    icon={<CheckIcon />}
+                                  />
+                                  <Button
+                                    key={`editUserLabel-cancel-${credential.id}`}
+                                    variant="link"
+                                    className="kc-editUserLabel-cancelBtn"
+                                    onClick={() =>
+                                      setIsUserLabelEdit({
+                                        status: false,
+                                        rowKey: credential.id!,
+                                      })
+                                    }
+                                    data-testid="editUserLabel-cancelBtn"
+                                    icon={<TimesIcon />}
+                                  />
+                                </div>
+                              </>
+                            ) : (
+                              <>
+                                {credential.userLabel ?? ""}
                                 <Button
-                                  key={`editUserLabel-accept-${credential.id}`}
+                                  key={`editUserLabel-${credential.id}`}
                                   variant="link"
-                                  className="kc-editUserLabel-acceptBtn"
+                                  className="kc-editUserLabel-btn"
                                   onClick={() => {
-                                    handleSubmit1(saveUserLabel)();
+                                    setEditedUserCredential(credential);
                                     setIsUserLabelEdit({
-                                      status: false,
+                                      status: true,
                                       rowKey: credential.id!,
                                     });
                                   }}
-                                  data-testid="editUserLabel-acceptBtn"
-                                  icon={<CheckIcon />}
+                                  data-testid="editUserLabelBtn"
+                                  icon={<PencilAltIcon />}
                                 />
-                                <Button
-                                  key={`editUserLabel-cancel-${credential.id}`}
-                                  variant="link"
-                                  className="kc-editUserLabel-cancelBtn"
-                                  onClick={() =>
-                                    setIsUserLabelEdit({
-                                      status: false,
-                                      rowKey: credential.id!,
-                                    })
-                                  }
-                                  data-testid="editUserLabel-cancelBtn"
-                                  icon={<TimesIcon />}
-                                />
-                              </div>
-                            </>
-                          ) : (
-                            <>
-                              {credential.userLabel ?? ""}
-                              <Button
-                                key={`editUserLabel-${credential.id}`}
-                                variant="link"
-                                className="kc-editUserLabel-btn"
-                                onClick={() => {
-                                  setEditedUserCredential(credential);
-                                  setIsUserLabelEdit({
-                                    status: true,
-                                    rowKey: credential.id!,
-                                  });
-                                }}
-                                data-testid="editUserLabelBtn"
-                                icon={<PencilAltIcon />}
-                              />
-                            </>
-                          )}
-                        </div>
-                      </FormGroup>
-                    </FormAccess>
-                  </Td>
-                  <Td>
-                    <Button
-                      className="kc-showData-btn"
-                      variant="link"
-                      data-testid="showDataBtn"
-                      onClick={() => {
-                        setShowData(true);
-                        setSelectedCredential(credential);
-                      }}
-                    >
-                      {t("showDataBtn")}
-                    </Button>
-                  </Td>
-                  {credential.type === "password" ? (
+                              </>
+                            )}
+                          </div>
+                        </FormGroup>
+                      </FormAccess>
+                    </Td>
                     <Td>
                       <Button
-                        variant="secondary"
-                        data-testid="resetPasswordBtn"
-                        onClick={resetPassword}
+                        className="kc-showData-btn"
+                        variant="link"
+                        data-testid="showDataBtn"
+                        onClick={() => {
+                          setShowData(true);
+                          setSelectedCredential(credential);
+                        }}
                       >
-                        {t("resetPasswordBtn")}
+                        {t("showDataBtn")}
                       </Button>
                     </Td>
-                  ) : (
-                    <Td />
-                  )}
-                  {user.email ? (
-                    <Td>
-                      <Button
-                        variant="secondary"
-                        data-testid="credentialsResetBtn"
-                        onClick={() => setOpenCredentialsReset(true)}
-                      >
-                        {t("credentialsResetBtn")}
-                      </Button>
-                    </Td>
-                  ) : (
-                    <Td />
-                  )}
-                  <Td>
-                    <Dropdown
-                      isPlain
-                      position={DropdownPosition.right}
-                      toggle={
-                        <KebabToggle
-                          onToggle={(status) =>
-                            setKebabOpen({
-                              status,
-                              rowKey: credential.id!,
-                            })
-                          }
-                        />
-                      }
-                      isOpen={
-                        kebabOpen.status && kebabOpen.rowKey === credential.id
-                      }
-                      onSelect={() => {
-                        setSelectedCredential(credential);
-                      }}
-                      dropdownItems={[
-                        <DropdownItem
-                          key={`delete-dropdown-item-${credential.id}`}
-                          data-testid="deleteDropdownItem"
-                          component="button"
-                          onClick={() => {
-                            toggleDeleteDialog();
-                            setKebabOpen({
-                              status: false,
-                              rowKey: credential.id!,
-                            });
-                          }}
+                    {credential.type === "password" ? (
+                      <Td>
+                        <Button
+                          variant="secondary"
+                          data-testid="resetPasswordBtn"
+                          onClick={resetPassword}
                         >
-                          {t("deleteBtn")}
-                        </DropdownItem>,
-                      ]}
-                    />
-                  </Td>
-                </>
-              </Tr>
-            ))}
-          </Tbody>
-        </TableComposable>
+                          {t("resetPasswordBtn")}
+                        </Button>
+                      </Td>
+                    ) : (
+                      <Td />
+                    )}
+                    <Td>
+                      <Dropdown
+                        isPlain
+                        position={DropdownPosition.right}
+                        toggle={
+                          <KebabToggle
+                            onToggle={(status) =>
+                              setKebabOpen({
+                                status,
+                                rowKey: credential.id!,
+                              })
+                            }
+                          />
+                        }
+                        isOpen={
+                          kebabOpen.status && kebabOpen.rowKey === credential.id
+                        }
+                        onSelect={() => {
+                          setSelectedCredential(credential);
+                        }}
+                        dropdownItems={[
+                          <DropdownItem
+                            key={`delete-dropdown-item-${credential.id}`}
+                            data-testid="deleteDropdownItem"
+                            component="button"
+                            onClick={() => {
+                              toggleDeleteDialog();
+                              setKebabOpen({
+                                status: false,
+                                rowKey: credential.id!,
+                              });
+                            }}
+                          >
+                            {t("deleteBtn")}
+                          </DropdownItem>,
+                        ]}
+                      />
+                    </Td>
+                  </>
+                </Tr>
+              ))}
+            </Tbody>
+          </TableComposable>
+        </>
       ) : (
         <ListEmptyState
           hasIcon={true}
@@ -979,6 +870,17 @@ export const UserCredentials = ({ user }: UserCredentialsProps) => {
           instructions={t("noCredentialsText")}
           primaryActionText={t("setPassword")}
           onPrimaryAction={toggleModal}
+          secondaryActions={
+            user.email
+              ? [
+                  {
+                    text: t("credentialResetBtn"),
+                    onClick: toggleCredentialsResetModal,
+                    type: ButtonVariant.link,
+                  },
+                ]
+              : undefined
+          }
         />
       )}
     </>
