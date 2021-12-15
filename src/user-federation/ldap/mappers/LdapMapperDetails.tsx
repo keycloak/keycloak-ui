@@ -27,6 +27,7 @@ import type ComponentTypeRepresentation from "@keycloak/keycloak-admin-client/li
 import { DynamicComponents } from "../../../components/dynamic/DynamicComponents";
 import { useRealm } from "../../../context/realm-context/RealmContext";
 import { KeycloakSpinner } from "../../../components/keycloak-spinner/KeycloakSpinner";
+import { toUserFederationLdap } from "../../routes/UserFederationLdap";
 
 export default function LdapMapperDetails() {
   const form = useForm<ComponentRepresentation>();
@@ -76,19 +77,20 @@ export default function LdapMapperDetails() {
       convertFormValuesToObject(mapper);
     const map = {
       ...component,
-      config: Object.entries(
-        convertFormValuesToObject(component.config)
-      ).reduce((result: any, [key, value]) => {
-        result[key] = Array.isArray(value) ? value : [value];
-        return result;
-      }, {}),
+      config: Object.entries(component.config || {}).reduce(
+        (result, [key, value]) => {
+          result[key] = Array.isArray(value) ? value : [value];
+          return result;
+        },
+        {} as Record<string, string | string[]>
+      ),
     };
 
     try {
       if (mapperId === "new") {
         await adminClient.components.create(map);
         history.push(
-          `/${realm}/user-federation/ldap/${mapper!.parentId}/mappers`
+          toUserFederationLdap({ realm, id: mapper.parentId!, tab: "mappers" })
         );
       } else {
         await adminClient.components.update({ id: mapperId }, map);
