@@ -5,6 +5,7 @@ export default class RealmSettingsPage {
   generalSaveBtn = "general-tab-save";
   themesSaveBtn = "themes-tab-save";
   loginTab = "rs-login-tab";
+  userProfileTab = "rs-user-profile-tab";
   selectLoginTheme = "#kc-login-theme";
   loginThemeList = "#kc-login-theme + ul";
   selectAccountTheme = "#kc-account-theme";
@@ -53,6 +54,7 @@ export default class RealmSettingsPage {
   supportedLocalesToggle = "#kc-l-supported-locales";
   emailSaveBtn = "email-tab-save";
   managedAccessSwitch = "user-managed-access-switch";
+  profileEnabledSwitch = "user-profile-enabled-switch";
   userRegSwitch = "user-reg-switch";
   forgotPwdSwitch = "forgot-pw-switch";
   rememberMeSwitch = "remember-me-switch";
