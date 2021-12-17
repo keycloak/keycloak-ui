@@ -22,6 +22,7 @@ export default {
     disablePolicyConfirm:
       "Users and clients can't access the policy if it's disabled. Are you sure you want to continue?",
     editProvider: "Edit provider",
+    editableRowsTable: "Editable rows table",
     saveSuccess: "Realm successfully updated",
     saveProviderSuccess: "The provider has been saved successfully.",
     saveProviderListSuccess:
@@ -363,7 +364,7 @@ export default {
     rowCancelBtnAriaLabel: "Cancel edits for {{messageBundle}}",
     updateMessageBundleSuccess: "Success! Message bundle updated.",
     updateMessageBundleError: "Error updating message bundle.",
-    addMessageBundleError: "Error creating message bundle.",
+    addMessageBundleError: "Error creating message bundle, {{error}}",
     eventType: "Event saved type",
     searchEventType: "Search saved event type",
     addSavedTypes: "Add saved types",

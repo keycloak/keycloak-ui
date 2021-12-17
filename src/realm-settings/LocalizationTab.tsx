@@ -59,9 +59,9 @@ type LocalizationTabProps = {
 export type KeyValueType = { key: string; value: string };
 
 export enum RowEditAction {
-  save = "save",
-  cancel = "cancel",
-  edit = "edit",
+  Save = "save",
+  Cancel = "cancel",
+  Edit = "edit",
 }
 
 export type BundleForm = {
@@ -115,15 +115,12 @@ export const LocalizationTab = ({
 
   useFetch(
     async () => {
-      const params = {
+      let result = await adminClient.realms.getRealmLocalizationTexts({
         first,
         max,
-      };
-      let result = await adminClient.realms.getRealmLocalizationTexts({
-        ...params,
         realm: realm.realm!,
         selectedLocale:
-          selectMenuLocale || getValues("defaultLocale") || whoAmI.getLocale,
+          selectMenuLocale || getValues("defaultLocale") || whoAmI.getLocale(),
       });
 
       const searchInBundles = (idx: number) => {
@@ -241,7 +238,7 @@ export const LocalizationTab = ({
 
     if (invalid) {
       newRow = validateCellEdits(newRows[rowIndex], type, validationErrors);
-    } else if (type === RowEditAction.cancel) {
+    } else if (type === RowEditAction.Cancel) {
       newRow = cancelCellEdits(newRows[rowIndex]);
     } else {
       newRow = applyCellEdits(newRows[rowIndex], type);
@@ -250,15 +247,12 @@ export const LocalizationTab = ({
 
     // Update the copy of the retrieved data set so we can save it when the user saves changes
 
-    if (!invalid && type === RowEditAction.save) {
+    if (!invalid && type === RowEditAction.Save) {
       const key = (newRow.cells?.[0] as IRowCell).props.value;
       const value = (newRow.cells?.[1] as IRowCell).props.value;
 
       // We only have one editable value, otherwise we'd need to save each
       try {
-        adminClient.setConfig({
-          requestConfig: { headers: { "Content-Type": "text/plain" } },
-        });
         await adminClient.realms.addLocalization(
           {
             realm: realm.realm!,
@@ -304,9 +298,6 @@ export const LocalizationTab = ({
 
   const addKeyValue = async (pair: KeyValueType): Promise<void> => {
     try {
-      adminClient.setConfig({
-        requestConfig: { headers: { "Content-Type": "text/plain" } },
-      });
       await adminClient.realms.addLocalization(
         {
           realm: currentRealm!,
@@ -323,7 +314,7 @@ export const LocalizationTab = ({
       refreshTable();
       addAlert(t("addMessageBundleSuccess"), AlertVariant.success);
     } catch (error) {
-      addError("addMessageBundleError", error);
+      addError(t("addMessageBundleError"), error);
     }
   };
 
@@ -380,7 +371,6 @@ export const LocalizationTab = ({
             <>
               <FormGroup
                 label={t("supportedLocales")}
-                data-testid="INFORMATION"
                 fieldId="kc-l-supported-locales"
               >
                 <Controller
@@ -390,7 +380,6 @@ export const LocalizationTab = ({
                   render={({ onChange, value }) => (
                     <Select
                       toggleId="kc-l-supported-locales"
-                      data-testid="WHOAOAOAA"
                       onToggle={(open) => {
                         setSupportedLocalesOpen(open);
                       }}
@@ -557,7 +546,7 @@ export const LocalizationTab = ({
             >
               {messageBundles.length === 0 && !filter && (
                 <ListEmptyState
-                  hasIcon={true}
+                  hasIcon
                   message={t("noMessageBundles")}
                   instructions={t("noMessageBundlesInstructions")}
                   onPrimaryAction={handleModalToggle}
@@ -567,14 +556,14 @@ export const LocalizationTab = ({
                 <ListEmptyState
                   hasIcon={true}
                   icon={SearchIcon}
-                  isSearchVariant={true}
+                  isSearchVariant
                   message={t("common:noSearchResults")}
                   instructions={t("common:noSearchResultsInstructions")}
                 />
               )}
               {messageBundles.length !== 0 && (
                 <Table
-                  aria-label="editable-rows-table"
+                  aria-label={t("editableRowsTable")}
                   data-testid="editable-rows-table"
                   variant={TableVariant.compact}
                   cells={[t("common:key"), t("common:value")]}
