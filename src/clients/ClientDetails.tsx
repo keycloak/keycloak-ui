@@ -58,6 +58,9 @@ import { toMapper } from "./routes/Mapper";
 import { AuthorizationSettings } from "./authorization/Settings";
 import { AuthorizationResources } from "./authorization/Resources";
 import { AuthorizationScopes } from "./authorization/Scopes";
+import { AuthorizationEvaluate } from "./authorization/AuthorizationEvaluate";
+import type UserRepresentation from "@keycloak/keycloak-admin-client/lib/defs/userRepresentation";
+import type RoleRepresentation from "@keycloak/keycloak-admin-client/lib/defs/roleRepresentation";
 
 type ClientDetailHeaderProps = {
   onChange: (value: boolean) => void;
@@ -193,9 +196,32 @@ export default function ClientDetails() {
   });
 
   const [client, setClient] = useState<ClientRepresentation>();
+  const [clients, setClients] = useState<ClientRepresentation[]>([]);
+  const [clientRoles, setClientRoles] = useState<RoleRepresentation[]>([]);
+  const [users, setUsers] = useState<UserRepresentation[]>([]);
+
+  useFetch(
+    async () => {
+      const clients = await adminClient.clients.find();
+
+      const roles = await adminClient.roles.find();
+
+      const users = await adminClient.users.find({ realm });
+
+      return { clients, roles, users };
+    },
+    ({ clients, roles, users }) => {
+      setClients(clients);
+      setClientRoles(roles);
+      setUsers(users);
+    },
+    []
+  );
 
   const loader = async () => {
     const roles = await adminClient.clients.listRoles({ id: clientId });
+    const allClients = await adminClient.clients.find();
+    setClients(allClients);
     return _.sortBy(roles, (role) => role.name?.toUpperCase());
   };
 
@@ -491,6 +517,20 @@ export default function ClientDetails() {
                     title={<TabTitleText>{t("scopes")}</TabTitleText>}
                   >
                     <AuthorizationScopes clientId={clientId} />
+                  </Tab>
+                  <Tab
+                    id="Evaluate"
+                    eventKey={43}
+                    title={<TabTitleText>{t("evaluate")}</TabTitleText>}
+                  >
+                    <AuthorizationEvaluate
+                      clients={clients}
+                      clientId={client.clientId}
+                      clientRoles={clientRoles}
+                      users={users}
+                      save={save}
+                      reset={() => setupForm(client)}
+                    />
                   </Tab>
                 </Tabs>
               </Tab>
