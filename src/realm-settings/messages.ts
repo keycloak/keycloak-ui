@@ -364,7 +364,7 @@ export default {
     rowCancelBtnAriaLabel: "Cancel edits for {{messageBundle}}",
     updateMessageBundleSuccess: "Success! Message bundle updated.",
     updateMessageBundleError: "Error updating message bundle.",
-    addMessageBundleError: "Error creating message bundle.",
+    addMessageBundleError: "Error creating message bundle, {{error}}",
     updateMessageBundleSuccess: "Success! Message bundle updated.",
     updateMessageBundleError: "Error updating message bundle.",
     addMessageBundleError: "Error creating message bundle, {{error}}",
