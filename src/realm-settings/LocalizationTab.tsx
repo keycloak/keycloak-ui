@@ -554,7 +554,7 @@ export const LocalizationTab = ({
               )}
               {messageBundles.length === 0 && filter && (
                 <ListEmptyState
-                  hasIcon={true}
+                  hasIcon
                   icon={SearchIcon}
                   isSearchVariant
                   message={t("common:noSearchResults")}
