@@ -5,7 +5,6 @@ import {
   Alert,
   AlertVariant,
   Button,
-  Label,
   PageSection,
   ToolbarItem,
 } from "@patternfly/react-core";
@@ -26,29 +25,27 @@ import { useConfirmDialog } from "../../components/confirm-dialog/ConfirmDialog"
 import { PaginatingTableToolbar } from "../../components/table-toolbar/PaginatingTableToolbar";
 import { useAdminClient, useFetch } from "../../context/auth/AdminClient";
 import { useAlerts } from "../../components/alert/Alerts";
-import { DetailCell } from "./DetailCell";
 import { toCreateResource } from "../routes/NewResource";
 import { useRealm } from "../../context/realm-context/RealmContext";
 import { toResourceDetails } from "../routes/Resource";
+import type ScopeRepresentation from "@keycloak/keycloak-admin-client/lib/defs/scopeRepresentation";
 
-type ResourcesProps = {
+type ScopesProps = {
   clientId: string;
 };
 
-type ExpandableResourceRepresentation = ResourceRepresentation & {
+type ExpandableScopeRepresentation = ScopeRepresentation & {
   isExpanded: boolean;
 };
 
-export const AuthorizationResources = ({ clientId }: ResourcesProps) => {
+export const AuthorizationScopes = ({ clientId }: ScopesProps) => {
   const { t } = useTranslation("clients");
   const adminClient = useAdminClient();
   const { addAlert, addError } = useAlerts();
   const { realm } = useRealm();
 
-  const [resources, setResources] =
-    useState<ExpandableResourceRepresentation[]>();
-  const [selectedResource, setSelectedResource] =
-    useState<ResourceRepresentation>();
+  const [scopes, setScopes] = useState<ExpandableScopeRepresentation[]>();
+  const [selectedScope, setSelectedScope] = useState<ResourceRepresentation>();
   const [permissions, setPermission] =
     useState<ResourceServerRepresentation[]>();
 
@@ -65,30 +62,17 @@ export const AuthorizationResources = ({ clientId }: ResourcesProps) => {
         max,
         deep: false,
       };
-      return adminClient.clients.listResources({
+      return adminClient.clients.listAllScopes({
         ...params,
         id: clientId,
       });
     },
-    (resources) =>
-      setResources(
-        resources.map((resource) => ({ ...resource, isExpanded: false }))
-      ),
+    (scopes) =>
+      setScopes(scopes.map((scope) => ({ ...scope, isExpanded: false }))),
     [key]
   );
 
-  const UriRenderer = ({ row }: { row: ResourceRepresentation }) => (
-    <>
-      {row.uris?.[0]}{" "}
-      {(row.uris?.length || 0) > 1 && (
-        <Label color="blue">
-          {t("common:more", { count: (row.uris?.length || 1) - 1 })}
-        </Label>
-      )}
-    </>
-  );
-
-  const fetchPermissions = async (id: string) => {
+  const fetchResources = async (id: string) => {
     return adminClient.clients.listPermissionsByResource({
       id: clientId,
       resourceId: id,
@@ -124,7 +108,7 @@ export const AuthorizationResources = ({ clientId }: ResourcesProps) => {
       try {
         await adminClient.clients.delResource({
           id: clientId,
-          resourceId: selectedResource?._id!,
+          resourceId: selectedScope?._id!,
         });
         addAlert(t("resourceDeletedSuccess"), AlertVariant.success);
         refresh();
@@ -134,7 +118,7 @@ export const AuthorizationResources = ({ clientId }: ResourcesProps) => {
     },
   });
 
-  if (!resources) {
+  if (!scopes) {
     return <KeycloakSpinner />;
   }
 
@@ -142,7 +126,7 @@ export const AuthorizationResources = ({ clientId }: ResourcesProps) => {
     <PageSection variant="light" className="pf-u-p-0">
       <DeleteConfirm />
       <PaginatingTableToolbar
-        count={resources.length}
+        count={scopes.length}
         first={first}
         max={max}
         onNextClick={setFirst}
@@ -172,44 +156,36 @@ export const AuthorizationResources = ({ clientId }: ResourcesProps) => {
             <Tr>
               <Th />
               <Th>{t("common:name")}</Th>
-              <Th>{t("common:type")}</Th>
-              <Th>{t("owner")}</Th>
-              <Th>{t("uris")}</Th>
               <Th />
             </Tr>
           </Thead>
-          {resources.map((resource, rowIndex) => (
-            <Tbody key={resource._id} isExpanded={resource.isExpanded}>
+          {scopes.map((scope, rowIndex) => (
+            <Tbody key={scope.id} isExpanded={scope.isExpanded}>
               <Tr>
                 <Td
                   expand={{
                     rowIndex,
-                    isExpanded: resource.isExpanded,
+                    isExpanded: scope.isExpanded,
                     onToggle: (_, rowIndex) => {
-                      const rows = resources.map((resource, index) =>
+                      const rows = scopes.map((resource, index) =>
                         index === rowIndex
                           ? { ...resource, isExpanded: !resource.isExpanded }
                           : resource
                       );
-                      setResources(rows);
+                      setScopes(rows);
                     },
                   }}
                 />
-                <Td data-testid={`name-column-${resource.name}`}>
+                <Td data-testid={`name-column-${scope.name}`}>
                   <Link
                     to={toResourceDetails({
                       realm,
                       id: clientId,
-                      resourceId: resource._id!,
+                      resourceId: scope.id!,
                     })}
                   >
-                    {resource.name}
+                    {scope.name}
                   </Link>
-                </Td>
-                <Td>{resource.type}</Td>
-                <Td>{resource.owner?.name}</Td>
-                <Td>
-                  <UriRenderer row={resource} />
                 </Td>
                 <Td
                   actions={{
@@ -217,8 +193,8 @@ export const AuthorizationResources = ({ clientId }: ResourcesProps) => {
                       {
                         title: t("common:delete"),
                         onClick: async () => {
-                          setSelectedResource(resource);
-                          setPermission(await fetchPermissions(resource._id!));
+                          setSelectedScope(scope);
+                          setPermission(await fetchResources(scope.id!));
                           toggleDeleteDialog();
                         },
                       },
@@ -231,19 +207,16 @@ export const AuthorizationResources = ({ clientId }: ResourcesProps) => {
                   }}
                 />
               </Tr>
-              <Tr
-                key={`child-${resource._id}`}
-                isExpanded={resource.isExpanded}
-              >
+              <Tr key={`child-${scope.id}`} isExpanded={scope.isExpanded}>
                 <Td colSpan={5}>
                   <ExpandableRowContent>
-                    {resource.isExpanded && (
+                    {/* {scope.isExpanded && (
                       <DetailCell
                         clientId={clientId}
-                        id={resource._id!}
-                        uris={resource.uris}
+                        id={scope.id!}
+                        uris={scope.uris}
                       />
-                    )}
+                    )} */}
                   </ExpandableRowContent>
                 </Td>
               </Tr>
