@@ -138,6 +138,7 @@ const CredentialsResetActionMultiSelect = (props: {
             chipGroupProps={{
               numChips: 3,
             }}
+            menuAppendTo="parent"
             onToggle={(open) => setOpen(open)}
             isOpen={open}
             selections={value.map((o: string) => o)}
@@ -170,13 +171,12 @@ const CredentialsResetActionMultiSelect = (props: {
   );
 };
 
-const LifespanField = (props: {
+const LifespanField = ({
+  form: { control },
+}: {
   form: UseFormMethods<CredentialResetForm>;
 }) => {
   const { t } = useTranslation("users");
-
-  const { form } = props;
-  const { control } = form;
 
   return (
     <FormGroup
@@ -196,6 +196,7 @@ const LifespanField = (props: {
             value={value}
             units={["minutes", "hours", "days"]}
             onChange={onChange}
+            menuAppendTo="parent"
           />
         )}
       />
@@ -603,9 +604,7 @@ export const UserCredentials = ({ user }: UserCredentialsProps) => {
       )}
       {openCredentialReset && (
         <Modal
-          variant={ModalVariant.small}
-          width={900}
-          style={{ height: "20rem" }}
+          variant={ModalVariant.medium}
           title={t("credentialReset")}
           isOpen
           onClose={() => {

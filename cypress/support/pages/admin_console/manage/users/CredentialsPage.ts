@@ -1,39 +1,24 @@
 export default class CredentialsPage {
-  credentialsTab: string;
-
-  emptyStatePasswordBtn: string;
-  emptyStateResetBtn: string;
-  resetBtn: string;
-  setPasswordBtn: string;
-  credentialResetModal: string;
-  resetModalActionsToggleBtn: string;
-  passwordField: string;
-  passwordConfirmationField: string;
-  resetActions: string[];
-  confirmationButton: string;
-
-  constructor() {
-    this.credentialsTab = "credentials";
-    this.emptyStatePasswordBtn = "no-credentials-empty-action";
-    this.emptyStateResetBtn = "credential-reset-empty-action";
-    this.resetBtn = "credentialResetBtn";
-    this.setPasswordBtn = "setPasswordBtn";
-    this.credentialResetModal = "credential-reset-modal";
-    this.resetModalActionsToggleBtn =
-      "[data-testid=credential-reset-modal] #actions";
-    this.passwordField =
-      ".kc-password > .pf-c-input-group > .pf-c-form-control";
-    this.passwordConfirmationField =
-      ".kc-passwordConfirmation > .pf-c-input-group > .pf-c-form-control";
-    this.resetActions = [
-      "VERIFY_EMAIL-option",
-      "UPDATE_PROFILE-option",
-      "CONFIGURE_TOTP-option",
-      "UPDATE_PASSWORD-option",
-      "terms_and_conditions-option",
-    ];
-    this.confirmationButton = "okBtn";
-  }
+  private readonly credentialsTab = "credentials";
+  private readonly emptyStatePasswordBtn = "no-credentials-empty-action";
+  private readonly emptyStateResetBtn = "credential-reset-empty-action";
+  private readonly resetBtn = "credentialResetBtn";
+  private readonly setPasswordBtn = "setPasswordBtn";
+  private readonly credentialResetModal = "credential-reset-modal";
+  private readonly resetModalActionsToggleBtn =
+    "[data-testid=credential-reset-modal] #actions";
+  private readonly passwordField =
+    ".kc-password > .pf-c-input-group > .pf-c-form-control";
+  private readonly passwordConfirmationField =
+    ".kc-passwordConfirmation > .pf-c-input-group > .pf-c-form-control";
+  private readonly resetActions = [
+    "VERIFY_EMAIL-option",
+    "UPDATE_PROFILE-option",
+    "CONFIGURE_TOTP-option",
+    "UPDATE_PASSWORD-option",
+    "terms_and_conditions-option",
+  ];
+  private readonly confirmationButton = "okBtn";
 
   goToCredentialsTab() {
     cy.findByTestId(this.credentialsTab).click();
