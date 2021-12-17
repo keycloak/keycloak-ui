@@ -37,6 +37,7 @@ type AttributeInputProps = {
   selectableValues?: AttributeType[];
   isKeySelectable?: boolean;
   resources?: ResourceRepresentation[];
+  reset?: () => void;
 };
 
 export const AttributeInput = ({
@@ -44,6 +45,7 @@ export const AttributeInput = ({
   isKeySelectable,
   selectableValues,
   resources,
+  reset,
 }: AttributeInputProps) => {
   const { t } = useTranslation("common");
   const { control, register, watch, getValues } = useFormContext();
