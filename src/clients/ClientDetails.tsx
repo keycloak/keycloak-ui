@@ -59,6 +59,9 @@ import { AuthorizationSettings } from "./authorization/Settings";
 import { AuthorizationResources } from "./authorization/Resources";
 import { AuthorizationScopes } from "./authorization/Scopes";
 import { AuthorizationPermissions } from "./authorization/Permissions";
+import { AuthorizationEvaluate } from "./authorization/AuthorizationEvaluate";
+import type UserRepresentation from "@keycloak/keycloak-admin-client/lib/defs/userRepresentation";
+import type RoleRepresentation from "@keycloak/keycloak-admin-client/lib/defs/roleRepresentation";
 
 type ClientDetailHeaderProps = {
   onChange: (value: boolean) => void;
@@ -194,6 +197,24 @@ export default function ClientDetails() {
   });
 
   const [client, setClient] = useState<ClientRepresentation>();
+  const [clients, setClients] = useState<ClientRepresentation[]>([]);
+  const [clientRoles, setClientRoles] = useState<RoleRepresentation[]>([]);
+  const [users, setUsers] = useState<UserRepresentation[]>([]);
+
+  useFetch(
+    () =>
+      Promise.all([
+        adminClient.clients.find(),
+        adminClient.roles.find(),
+        adminClient.users.find(),
+      ]),
+    ([clients, roles, users]) => {
+      setClients(clients);
+      setClientRoles(roles);
+      setUsers(users);
+    },
+    []
+  );
 
   const loader = async () => {
     const roles = await adminClient.clients.listRoles({ id: clientId });
@@ -499,6 +520,20 @@ export default function ClientDetails() {
                     title={<TabTitleText>{t("permissions")}</TabTitleText>}
                   >
                     <AuthorizationPermissions clientId={clientId} />
+                  </Tab>
+                  <Tab
+                    id="Evaluate"
+                    eventKey={44}
+                    title={<TabTitleText>{t("evaluate")}</TabTitleText>}
+                  >
+                    <AuthorizationEvaluate
+                      clients={clients}
+                      clientName={client.clientId}
+                      clientRoles={clientRoles}
+                      users={users}
+                      save={save}
+                      reset={() => setupForm(client)}
+                    />
                   </Tab>
                 </Tabs>
               </Tab>

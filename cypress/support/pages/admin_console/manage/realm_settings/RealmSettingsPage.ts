@@ -1112,14 +1112,24 @@ export default class RealmSettingsPage {
   }
 
   shouldRemoveClientPolicyFromCreateView() {
+    cy.intercept("/auth/admin/realms/master/realm-settings/clientPolicies").as(
+      "policies"
+    );
     cy.findByTestId(this.createPolicyEmptyStateBtn).click();
+    cy.wait(["@policies"]);
     cy.findByTestId(this.newClientPolicyNameInput).type("Test again");
     cy.findByTestId(this.newClientPolicyDescriptionInput).type(
       "Test Again Description"
     );
+    cy.intercept(
+      "PUT",
+      `/auth/admin/realms/master/client-policies/policies`
+    ).as("save");
+
     cy.findByTestId(this.saveNewClientPolicyBtn).click();
     cy.get(this.alertMessage).should("be.visible", "New client policy created");
-    cy.wait(500);
+    cy.wait("@save");
+    cy.get(".pf-c-alert").should("not.exist");
     cy.findByTestId(this.clientPolicyDrpDwn).contains("Action").click();
     cy.findByTestId("deleteClientPolicyDropdown").click();
     cy.findByTestId("modalConfirm").contains("Delete").click();
