@@ -1,4 +1,5 @@
 import type ClientProfilesRepresentation from "@keycloak/keycloak-admin-client/lib/defs/clientProfilesRepresentation";
+import type UserProfileConfig from "@keycloak/keycloak-admin-client/lib/defs/userProfileConfig";
 import { CodeEditor, Language } from "@patternfly/react-code-editor";
 import { ActionGroup, Button, Form, PageSection } from "@patternfly/react-core";
 import type { editor } from "monaco-editor";
@@ -8,13 +9,13 @@ import { useAlerts } from "../../components/alert/Alerts";
 import { prettyPrintJSON } from "../../util";
 
 type JsonEditorTabProps = {
-  profiles?: ClientProfilesRepresentation;
+  config?: UserProfileConfig;
   onSave: (profiles: ClientProfilesRepresentation) => void;
   isSaving: boolean;
 };
 
 export const JsonEditorTab = ({
-  profiles,
+  config,
   onSave,
   isSaving,
 }: JsonEditorTabProps) => {
@@ -22,10 +23,10 @@ export const JsonEditorTab = ({
   const { addError } = useAlerts();
   const [editor, setEditor] = useState<editor.IStandaloneCodeEditor>();
 
-  useEffect(() => resetCode(), [profiles, editor]);
+  useEffect(() => resetCode(), [config, editor]);
 
   function resetCode() {
-    editor?.setValue(profiles ? prettyPrintJSON(profiles) : "");
+    editor?.setValue(config ? prettyPrintJSON(config) : "");
   }
 
   function save() {

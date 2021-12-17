@@ -1,4 +1,5 @@
 import type ClientProfilesRepresentation from "@keycloak/keycloak-admin-client/lib/defs/clientProfilesRepresentation";
+import type UserProfileConfig from "@keycloak/keycloak-admin-client/lib/defs/userProfileConfig";
 import { AlertVariant, Tab, Tabs, TabTitleText } from "@patternfly/react-core";
 import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
@@ -13,17 +14,13 @@ export const UserProfileTab = () => {
   const { t } = useTranslation("realm-settings");
   const { addAlert, addError } = useAlerts();
   const [activeTab, setActiveTab] = useState("attributes");
-  const [profiles, setProfiles] = useState<ClientProfilesRepresentation>();
+  const [config, setConfig] = useState<UserProfileConfig>();
   const [isSaving, setIsSaving] = useState(false);
   const [refreshCount, setRefreshCount] = useState(0);
 
   useFetch(
-    () =>
-      adminClient.clientPolicies.listProfiles({
-        includeGlobalProfiles: true,
-        realm,
-      }),
-    (profiles) => setProfiles(profiles),
+    () => adminClient.users.getProfile({ realm }),
+    (config) => setConfig(config),
     [refreshCount]
   );
 
@@ -63,11 +60,7 @@ export const UserProfileTab = () => {
         eventKey="jsonEditor"
         title={<TabTitleText>{t("jsonEditor")}</TabTitleText>}
       >
-        <JsonEditorTab
-          profiles={profiles}
-          onSave={onSave}
-          isSaving={isSaving}
-        />
+        <JsonEditorTab config={config} onSave={onSave} isSaving={isSaving} />
       </Tab>
     </Tabs>
   );
