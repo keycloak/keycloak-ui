@@ -69,10 +69,10 @@ export default function UserFederationSection() {
     </DropdownItem>,
   ];
 
-  const learnMoreLinkProps = {
-    title: t("common:learnMore"),
-    href: "https://www.keycloak.org/docs/latest/server_admin/index.html#_user-storage-federation",
-  };
+  // const learnMoreLinkProps = {
+  //   title: t("common:learnMore"),
+  //   href: "https://www.keycloak.org/docs/latest/server_admin/index.html#_user-storage-federation",
+  // };
 
   let cards;
 
@@ -143,7 +143,8 @@ export default function UserFederationSection() {
       <ViewHeader
         titleKey="userFederation"
         subKey="user-federation:userFederationExplanation"
-        subKeyLinkProps={learnMoreLinkProps}
+        helpUrl="https://www.keycloak.org/docs/latest/server_admin/index.html#_user-storage-federation"
+        // helpUrl="helpUrls:userFederation"
         {...(userFederations && userFederations.length > 0
           ? {
               lowerDropdownItems: ufAddProviderDropdownItems,
