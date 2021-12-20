@@ -25,6 +25,7 @@ import { ViewHeader } from "../components/view-header/ViewHeader";
 import { useAdminClient, useFetch } from "../context/auth/AdminClient";
 import { useRealm } from "../context/realm-context/RealmContext";
 import "./user-federation.css";
+import helpUrls from "../help-urls";
 
 export default function UserFederationSection() {
   const [userFederations, setUserFederations] =
@@ -142,9 +143,8 @@ export default function UserFederationSection() {
     <>
       <ViewHeader
         titleKey="userFederation"
-        subKey="user-federation:userFederationExplanation"
-        helpUrl="https://www.keycloak.org/docs/latest/server_admin/index.html#_user-storage-federation"
-        // helpUrl="helpUrls:userFederation"
+        subKey="user-federation:userFederationExplain"
+        helpUrl={helpUrls.userFederationUrl}
         {...(userFederations && userFederations.length > 0
           ? {
               lowerDropdownItems: ufAddProviderDropdownItems,
