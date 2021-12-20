@@ -28,7 +28,7 @@
     "@patternfly/react-code-editor": "^4.16.4",
     "@patternfly/react-core": "^4.175.4",
     "@patternfly/react-icons": "^4.26.4",
-    "@patternfly/react-table": "^4.44.4",
+    "@patternfly/react-table": "^4.50.1",
     "dagre": "^0.8.5",
     "file-saver": "^2.0.5",
     "flat": "^5.0.2",
