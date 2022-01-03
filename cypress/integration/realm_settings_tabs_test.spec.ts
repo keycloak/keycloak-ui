@@ -88,10 +88,7 @@ describe("Realm settings tabs tests", () => {
 
   it("Go to themes tab", () => {
     sidebarPage.goToRealmSettings();
-    cy.intercept(`/auth/admin/realms/${realmName}/keys`).as("load");
-
     cy.findByTestId("rs-themes-tab").click();
-    cy.wait(["@load"]);
 
     realmSettingsPage.selectLoginThemeType("keycloak");
     realmSettingsPage.selectAccountThemeType("keycloak");
