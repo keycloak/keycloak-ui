@@ -771,7 +771,12 @@ export default class RealmSettingsPage {
 
   shouldCancelEditingExecutor() {
     cy.get(this.clientProfileTwo).click();
+
+    cy.intercept("/auth/admin/realms/master/client-policies/profiles*").as(
+      "profilesFetch"
+    );
     cy.findByTestId(this.editExecutor).first().click();
+    cy.wait("@profilesFetch");
 
     cy.findByTestId(this.addExecutorCancelBtn).click();
     cy.get('ul[class*="pf-c-data-list"]').should(
