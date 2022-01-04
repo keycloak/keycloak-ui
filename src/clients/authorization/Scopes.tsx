@@ -40,7 +40,7 @@ type ScopesProps = {
 };
 
 export type ExpandableScopeRepresentation = ScopeRepresentation & {
-  permissions: PolicyRepresentation[] | undefined;
+  permissions?: PolicyRepresentation[];
   isExpanded: boolean;
 };
 
