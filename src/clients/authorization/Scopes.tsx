@@ -20,7 +20,6 @@ import {
   Tr,
 } from "@patternfly/react-table";
 
-import type ResourceRepresentation from "@keycloak/keycloak-admin-client/lib/defs/resourceRepresentation";
 import type ScopeRepresentation from "@keycloak/keycloak-admin-client/lib/defs/scopeRepresentation";
 import type PolicyRepresentation from "@keycloak/keycloak-admin-client/lib/defs/policyRepresentation";
 
@@ -30,7 +29,7 @@ import { useAdminClient, useFetch } from "../../context/auth/AdminClient";
 import { useRealm } from "../../context/realm-context/RealmContext";
 import { MoreLabel } from "./MoreLabel";
 import { toScopeDetails } from "../routes/Scope";
-import { toCreateScope } from "../routes/NewScope";
+import { toNewScope } from "../routes/NewScope";
 import { ListEmptyState } from "../../components/list-empty-state/ListEmptyState";
 import useToggle from "../../utils/useToggle";
 import { DeleteScopeDialog } from "./DeleteScopeDialog";
@@ -74,7 +73,7 @@ export const AuthorizationScopes = ({ clientId }: ScopesProps) => {
       });
 
       return await Promise.all(
-        scopes.map<Promise<ExpandableScopeRepresentation>>(async (scope) => {
+        scopes.map(async (scope) => {
           const options = { id: clientId, scopeId: scope.id! };
           const [resources, permissions] = await Promise.all([
             adminClient.clients.listAllResourcesByScope(options),
@@ -90,7 +89,7 @@ export const AuthorizationScopes = ({ clientId }: ScopesProps) => {
         })
       );
     },
-    (scopes) => setScopes(scopes),
+    setScopes,
     [key]
   );
 
@@ -147,10 +146,7 @@ export const AuthorizationScopes = ({ clientId }: ScopesProps) => {
               <Button
                 data-testid="createAuthorizationScope"
                 component={(props) => (
-                  <Link
-                    {...props}
-                    to={toCreateScope({ realm, id: clientId })}
-                  />
+                  <Link {...props} to={toNewScope({ realm, id: clientId })} />
                 )}
               >
                 {t("createAuthorizationScope")}
@@ -277,7 +273,7 @@ export const AuthorizationScopes = ({ clientId }: ScopesProps) => {
           message={t("emptyAuthorizationScopes")}
           instructions={t("emptyAuthorizationInstructions")}
           onPrimaryAction={() =>
-            history.push(toCreateScope({ id: clientId, realm }))
+            history.push(toNewScope({ id: clientId, realm }))
           }
           primaryActionText={t("createAuthorizationScope")}
         />
