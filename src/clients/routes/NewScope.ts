@@ -12,7 +12,7 @@ export const NewScopeRoute: RouteDef = {
   access: "manage-clients",
 };
 
-export const toCreateScope = (
+export const toNewScope = (
   params: NewScopeParams
 ): LocationDescriptorObject => ({
   pathname: generatePath(NewScopeRoute.path, params),
