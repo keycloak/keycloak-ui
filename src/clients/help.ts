@@ -51,6 +51,8 @@ export default {
     selectUser:
       "Select a user whose identity is going to be used to query permissions from the server.",
     roles: "Select the roles you want to associate with the selected user.",
+    contextualAttributes:
+      "Any attribute provided by a running environment or execution context.",
     applyToResourceType:
       "Specifies if this permission should be applied to all resources with a given type. In this case, this permission will be evaluated for all instances of a given resource type.",
     resources:
