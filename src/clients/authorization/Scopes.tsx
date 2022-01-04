@@ -69,26 +69,29 @@ export const AuthorizationScopes = ({ clientId }: ScopesProps) => {
         max,
         deep: false,
       };
-      const scopes = (await adminClient.clients.listAllScopes({
+      const scopes = await adminClient.clients.listAllScopes({
         ...params,
         id: clientId,
-      })) as ExpandableScopeRepresentation[];
-      await Promise.all(
-        scopes.map(async (s) => {
-          s.resources = await adminClient.clients.listAllResourcesByScope({
-            id: clientId,
-            scopeId: s.id!,
-          });
-          s.permissions = await adminClient.clients.listAllPermissionsByScope({
-            id: clientId,
-            scopeId: s.id!,
-          });
+      });
+
+      return await Promise.all(
+        scopes.map<Promise<ExpandableScopeRepresentation>>(async (scope) => {
+          const options = { id: clientId, scopeId: scope.id! };
+          const [resources, permissions] = await Promise.all([
+            adminClient.clients.listAllResourcesByScope(options),
+            adminClient.clients.listAllPermissionsByScope(options),
+          ]);
+
+          return {
+            ...scope,
+            resources,
+            permissions,
+            isExpanded: false,
+          };
         })
       );
-      return scopes;
     },
-    (scopes) =>
-      setScopes(scopes.map((scope) => ({ ...scope, isExpanded: false }))),
+    (scopes) => setScopes(scopes),
     [key]
   );
 
@@ -205,7 +208,7 @@ export const AuthorizationScopes = ({ clientId }: ScopesProps) => {
                       items: [
                         {
                           title: t("common:delete"),
-                          onClick: async () => {
+                          onClick: () => {
                             setSelectedScope(scope);
                             toggleDeleteDialog();
                           },

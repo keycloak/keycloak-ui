@@ -49,28 +49,27 @@ export const DeleteScopeDialog = ({
         }
       }}
     >
-      <>
-        {t("deleteScopeConfirm")}
-        {selectedScope &&
-          "permissions" in selectedScope &&
-          selectedScope.permissions?.length && (
-            <Alert
-              variant="warning"
-              isInline
-              isPlain
-              title={t("deleteScopeWarning")}
-              className="pf-u-pt-lg"
-            >
-              <p className="pf-u-pt-xs">
-                {selectedScope.permissions.map((permission) => (
-                  <strong key={permission.id} className="pf-u-pr-md">
-                    {permission.name}
-                  </strong>
-                ))}
-              </p>
-            </Alert>
-          )}
-      </>
+      {t("deleteScopeConfirm")}
+      {selectedScope &&
+        "permissions" in selectedScope &&
+        selectedScope.permissions &&
+        selectedScope.permissions.length > 0 && (
+          <Alert
+            variant="warning"
+            isInline
+            isPlain
+            title={t("deleteScopeWarning")}
+            className="pf-u-pt-lg"
+          >
+            <p className="pf-u-pt-xs">
+              {selectedScope.permissions.map((permission) => (
+                <strong key={permission.id} className="pf-u-pr-md">
+                  {permission.name}
+                </strong>
+              ))}
+            </p>
+          </Alert>
+        )}
     </ConfirmDialogModal>
   );
 };

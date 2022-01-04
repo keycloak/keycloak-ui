@@ -67,6 +67,7 @@ export default function ScopeDetails() {
           { id, scopeId },
           scope
         );
+        setScope(scope);
       } else {
         await adminClient.clients.createAuthorizationScope(
           { id },
@@ -163,7 +164,7 @@ export default function ScopeDetails() {
               />
             }
           >
-            <TextInput id="iconUri" name="icon_uri" ref={register} />
+            <TextInput id="iconUri" name="iconUri" ref={register} />
           </FormGroup>
           <ActionGroup>
             <div className="pf-u-mt-md">
