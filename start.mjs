@@ -11,7 +11,7 @@ import cliProgress from "cli-progress";
 import colors from "colors";
 
 const args = process.argv.slice(2);
-const version = args[0] && !args[0].startsWith("-") ? args[0] : "15.0.2";
+const version = args[0] && !args[0].startsWith("-") ? args[0] : "16.1.0";
 
 const folder = "server";
 const fileName = path.join(folder, `keycloak-${version}.tar.gz`);
@@ -66,7 +66,8 @@ const run = () => {
   addProc.on("exit", () => {
     const proc = spawn(path.join(serverPath, "bin", `standalone${extension}`), [
       "-Djboss.socket.binding.port-offset=100",
-      "-Dprofile.feature.newadmin=enabled",
+      "-Dkeycloak.profile.feature.admin2=enabled",
+      "-Dkeycloak.profile.feature.declarative_user_profile=enabled",
       ...args,
     ]);
     proc.stdout.on("data", (data) => {

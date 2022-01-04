@@ -22,12 +22,10 @@ import React, {
   Fragment,
 } from "react";
 import { useTranslation } from "react-i18next";
-import {
-  FormattedLink,
-  FormattedLinkProps,
-} from "../external-link/FormattedLink";
+import { FormattedLink } from "../external-link/FormattedLink";
 import { useHelp } from "../help-enabler/HelpHeader";
 import { HelpItem } from "../help-enabler/HelpItem";
+import "../../help-urls";
 
 export type ViewHeaderProps = {
   titleKey: string;
@@ -36,7 +34,7 @@ export type ViewHeaderProps = {
   isDropdownDisabled?: boolean;
   subKey?: string | ReactNode;
   actionsDropdownId?: string;
-  subKeyLinkProps?: FormattedLinkProps;
+  helpUrl?: string | undefined;
   dropdownItems?: ReactElement[];
   lowerDropdownItems?: any;
   lowerDropdownMenuTitle?: any;
@@ -59,7 +57,7 @@ export const ViewHeader = ({
   badges,
   isDropdownDisabled,
   subKey,
-  subKeyLinkProps,
+  helpUrl,
   dropdownItems,
   lowerDropdownMenuTitle,
   lowerDropdownItems,
@@ -124,16 +122,13 @@ export const ViewHeader = ({
                       className="pf-u-mr-lg"
                       isChecked={isEnabled}
                       onChange={(value) => {
-                        if (onToggle) {
-                          onToggle(value);
-                        }
+                        onToggle(value);
                       }}
                     />
                     {helpTextKey && (
                       <HelpItem
                         helpText={t(helpTextKey)}
-                        forLabel={t("common:enabled")}
-                        forID={`${titleKey}-switch`}
+                        fieldLabelId={`${titleKey}-switch`}
                       />
                     )}
                   </ToolbarItem>
@@ -169,9 +164,10 @@ export const ViewHeader = ({
                 : subKey
                 ? t(subKey as string)
                 : ""}
-              {subKeyLinkProps && (
+              {helpUrl && (
                 <FormattedLink
-                  {...subKeyLinkProps}
+                  title={t("common:learnMore")}
+                  href={helpUrl}
                   isInline
                   className="pf-u-ml-md"
                 />

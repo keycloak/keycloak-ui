@@ -21,13 +21,13 @@ export const BooleanComponent = ({
       label={t(label!)}
       fieldId={name!}
       labelIcon={
-        <HelpItem helpText={t(helpText!)} forLabel={t(label!)} forID={name!} />
+        <HelpItem helpText={t(helpText!)} fieldLabelId={`dynamic:${label}`} />
       }
     >
       <Controller
         name={`config.${name}`}
         data-testid={name}
-        defaultValue={defaultValue}
+        defaultValue={defaultValue || false}
         control={control}
         render={({ onChange, value }) => (
           <Switch
@@ -36,6 +36,7 @@ export const BooleanComponent = ({
             labelOff={t("common:off")}
             isChecked={value === "true" || value === true}
             onChange={(value) => onChange("" + value)}
+            data-testid={name}
           />
         )}
       />

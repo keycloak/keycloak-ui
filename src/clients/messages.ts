@@ -64,6 +64,8 @@ export default {
     importResources: "The following settings and data will be imported:",
     importWarning:
       "The data and settings imported above may overwrite the data and settings that already exist.",
+    importResourceSuccess: "The resource was successfully imported",
+    importResourceError: "Could not import the resource due to {{error}}",
     createResource: "Create resource",
     createResourceBasedPermission: "Create resource-based permission",
     displayName: "Display name",
@@ -91,6 +93,22 @@ export default {
       "The permissions below will be removed when they are no longer used by other resources:",
     resourceDeletedSuccess: "The resource successfully deleted",
     resourceDeletedError: "Could not remove the resource {{error}}",
+    deleteScope: "Permanently delete authorization scope?",
+    deleteScopeConfirm:
+      "If you delete this authorization scope, some permissions will be affected.",
+    deleteScopeWarning:
+      "The permissions below will be removed when they are no longer used by other authorization scopes:",
+    resourceScopeSuccess: "The authorization scope successfully deleted",
+    resourceScopeError:
+      "Could not remove the authorization scope due to {{error}}",
+    createAuthorizationScope: "Create authorization scope",
+    permissions: "Permissions",
+    emptyAuthorizationScopes: "No authorization scopes",
+    emptyAuthorizationInstructions:
+      "If you want to create authorization scopes, please click the button below to create the authorization scope",
+    createScopeSuccess: "Authorization scope created successfully",
+    updateScopeSuccess: "Authorization scope successfully updated",
+    scopeSaveError: "Could not persist authorization scope due to {{error}}",
     assignedClientScope: "Assigned client scope",
     assignedType: "Assigned type",
     hideInheritedRoles: "Hide inherited roles",
@@ -120,7 +138,7 @@ export default {
     generalSettings: "General Settings",
     capabilityConfig: "Capability config",
     clientsExplain:
-      "Clients are applications and services that can request authentication of a user",
+      "Clients are applications and services that can request authentication of a user.",
     explainBearerOnly:
       "This is a special OIDC type. This client only allows bearer token requests and cannot participate in browser logins.",
     createSuccess: "Client created successfully",

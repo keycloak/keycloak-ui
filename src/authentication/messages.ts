@@ -1,6 +1,7 @@
 export default {
   authentication: {
     title: "Authentication",
+    authenticationExplain: "Placeholder for authentication explanation.",
     flows: "Flows",
     requiredActions: "Required actions",
     policies: "Policies",
@@ -14,6 +15,7 @@ export default {
     updatePasswordPolicySuccess: "Password policies successfully updated",
     updatePasswordPolicyError:
       "Could not update the password policies: '{{error}}'",
+    webAuthnPolicyRpEntityName: "Relying party entity name",
     addPolicy: "Add policy",
     otpType: "OTP type",
     policyType: {

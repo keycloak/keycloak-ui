@@ -5,7 +5,7 @@ export default {
     grantedClientScopes: "Granted client scopes",
     clientScopeDetails: "Client scope details",
     clientScopeExplain:
-      "Client scopes allow you to define a common set of protocol mappers and roles, which are shared between multiple clients",
+      "Client scopes allow you to define a common set of protocol mappers and roles, which are shared between multiple clients.",
     searchFor: "Search for client scope",
     protocol: "Protocol",
     assignedType: "Assigned type",
@@ -30,8 +30,6 @@ export default {
     addMapperExplain:
       "If you want more fine-grain control, you can create protocol mapper on this client",
     realmRoles: "Realm roles",
-    clientRoles: "Client roles",
-    selectASourceOfRoles: "Select a source of roles",
     newRoleName: "New role name",
     searchClientByName: "Search client by name",
     clients: "Clients",
@@ -47,11 +45,10 @@ export default {
     guiOrder: "Display Order",
     shouldBeANumber: "Should be a number",
     chooseAMapperType: "Choose a mapper type",
+    addPredefinedMappers: "Add predefined mappers",
     predefinedMappingDescription:
-      "Choose one of the predefined mappings from this table",
+      "Choose any of the predefined mappings from this table",
     mappingTable: "Table with predefined mapping",
-    roleGroup: "Use a realm role from:",
-    clientGroup: "Use a client role from:",
     scope: "Scope",
     roleMappingUpdatedSuccess: "Role mapping updated",
     roleMappingUpdatedError: "Could not update role mapping {{error}}",

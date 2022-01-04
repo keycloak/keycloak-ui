@@ -133,6 +133,10 @@ article.pf-c-card.pf-m-flat.kc-available-idps > div > div > h1 {
   margin-left: var(--pf-global--spacer--xl);
 }
 
+.keycloak__user-credentials__reset-form {
+  --pf-c-form--m-horizontal__group-label--md--GridColumnWidth: 13rem;
+}
+
 .kc-edit-icon {
   color: var(--pf-global--Color--200);
   margin-left: 5px;
@@ -226,4 +230,8 @@ article.pf-c-card.pf-m-flat.kc-available-idps > div > div > h1 {
 
 .kc-editUserLabelCol {
   padding-left: 0px !important;
+}
+.resetCredentialBtn-header {
+  margin: 10px 25px 10px 0;
+  float: right;
 }

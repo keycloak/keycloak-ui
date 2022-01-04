@@ -1,6 +1,7 @@
 export default {
   users: {
     title: "Users",
+    usersExplain: "Placeholder for users explanation.",
     searchForUser: "Search user",
     startBySearchingAUser: "Start by searching for users",
     searchForUserDescription:
@@ -120,7 +121,7 @@ export default {
     noCredentialsText:
       "This user does not have any credentials. You can set password for this user.",
     setPassword: "Set password",
-    setPasswordFor: "Set password for ",
+    setPasswordFor: "Set password for {{username}}",
     save: "Save",
     cancel: "Cancel",
     savePasswordSuccess: "The password has been set successfully.",
@@ -145,7 +146,7 @@ export default {
     deleteCredentialsSuccess: "The credentials has been deleted successfully.",
     deleteCredentialsError: "Error deleting users credentials: {{error}}",
     deleteBtn: "Delete",
-    resetPasswordFor: "Reset password for ",
+    resetPasswordFor: "Reset password for {{username}}",
     resetPasswordConfirm: "Reset password?",
     resetPasswordConfirmText:
       "Are you sure you want to reset the password for the user",
@@ -169,5 +170,21 @@ export default {
     updateCredentialUserLabelSuccess:
       "The user label has been changed successfully.",
     updateCredentialUserLabelError: "Error changing user label: {{error}}",
+    credentialReset: "Credentials Reset",
+    credentialResetBtn: "Credential Reset",
+    resetActions: "Reset Actions",
+    lifespan: "Expires In",
+    VERIFY_EMAIL: "Verify Email (VERIFY_EMAIL)",
+    UPDATE_PASSWORD: "Update password (UPDATE_PASSWORD)",
+    UPDATE_PROFILE: "Update Profile (UPDATE_PROFILE)",
+    CONFIGURE_TOTP: "Configure OTP (CONFIGURE_TOTP)",
+    terms_and_conditions: "Terms and Conditions (terms_and_conditions)",
+    hours: "Hours",
+    minutes: "Minutes",
+    seconds: "Seconds",
+    credentialResetConfirm: "Send Email",
+    credentialResetConfirmText: "Are you sure you want to send email to user",
+    credentialResetEmailSuccess: "Email sent to user.",
+    credentialResetEmailError: "Failed to send email to user.",
   },
 };

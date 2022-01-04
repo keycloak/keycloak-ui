@@ -1,5 +1,6 @@
 export default {
   "realm-settings": {
+    realmSettingsExplain: "Placeholder for realm settings explanation.",
     partialImport: "Partial import",
     partialExport: "Partial export",
     deleteRealm: "Delete realm",
@@ -22,6 +23,7 @@ export default {
     disablePolicyConfirm:
       "Users and clients can't access the policy if it's disabled. Are you sure you want to continue?",
     editProvider: "Edit provider",
+    editableRowsTable: "Editable rows table",
     saveSuccess: "Realm successfully updated",
     saveProviderSuccess: "The provider has been saved successfully.",
     saveProviderListSuccess:
@@ -160,6 +162,7 @@ export default {
     },
     placeholderText: "Select one",
     userManagedAccess: "User-managed access",
+    userProfileEnabled: "User Profile Enabled",
     endpoints: "Endpoints",
     openIDEndpointConfiguration: "OpenID Endpoint Configuration",
     samlIdentityProviderMetadata: "SAML 2.0 Identity Provider Metadata",
@@ -352,12 +355,18 @@ export default {
     convertedToHoursValue: "{{convertedToHours}}",
     convertedToMinutesValue: "{{convertedToMinutes}}",
     convertedToSecondsValue: "{{convertedToSeconds}}",
-    pairCreatedSuccess: "Success! The localization text has been created.",
-    pairCreatedError: "Error creating localization text.",
     supportedLocales: "Supported locales",
     defaultLocale: "Default locale",
     selectLocales: "Select locales",
+    searchForMessageBundle: "Search for message bundle",
     addMessageBundle: "Add message bundle",
+    addMessageBundleSuccess: "Success! The message bundle has been added.",
+    rowEditBtnAriaLabel: "Edit {{messageBundle}}",
+    rowSaveBtnAriaLabel: "Save edits for {{messageBundle}}",
+    rowCancelBtnAriaLabel: "Cancel edits for {{messageBundle}}",
+    updateMessageBundleSuccess: "Success! Message bundle updated.",
+    updateMessageBundleError: "Error updating message bundle.",
+    addMessageBundleError: "Error creating message bundle, {{error}}",
     eventType: "Event saved type",
     searchEventType: "Search saved event type",
     addSavedTypes: "Add saved types",

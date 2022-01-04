@@ -37,12 +37,6 @@ import { AttributeInput } from "../../components/attribute-input/AttributeInput"
 
 import "./resource-details.css";
 
-type FetchResource = {
-  client?: ClientRepresentation;
-  resource?: ResourceRepresentation;
-  permissions?: ResourceServerRepresentation[];
-};
-
 type SubmittedResource = Omit<ResourceRepresentation, "attributes" | "uris"> & {
   attributes: KeyValueType[];
   uris: MultiLine[];
@@ -72,8 +66,8 @@ export default function ResourceDetails() {
   };
 
   useFetch(
-    async (): Promise<FetchResource> => {
-      const [client, resource, permissions] = await Promise.all([
+    () =>
+      Promise.all([
         adminClient.clients.findOne({ id }),
         resourceId
           ? adminClient.clients.getResource({ id, resourceId })
@@ -81,11 +75,8 @@ export default function ResourceDetails() {
         resourceId
           ? adminClient.clients.listPermissionsByResource({ id, resourceId })
           : Promise.resolve(undefined),
-      ]);
-
-      return { client, resource, permissions };
-    },
-    ({ client, resource, permissions }) => {
+      ]),
+    ([client, resource, permissions]) => {
       if (!client) {
         throw new Error(t("common:notFound"));
       }
@@ -115,7 +106,7 @@ export default function ResourceDetails() {
         AlertVariant.success
       );
     } catch (error) {
-      addError("client:resourceSaveError", error);
+      addError("clients:resourceSaveError", error);
     }
   };
 
@@ -195,8 +186,7 @@ export default function ResourceDetails() {
               labelIcon={
                 <HelpItem
                   helpText="clients-help:owner"
-                  forLabel={t("owner")}
-                  forID={t(`common:helpLabel`, { label: t("owner") })}
+                  fieldLabelId="clients:owner"
                 />
               }
             >
@@ -208,8 +198,7 @@ export default function ResourceDetails() {
               labelIcon={
                 <HelpItem
                   helpText="clients-help:resourceName"
-                  forLabel={t("name")}
-                  forID={t(`common:helpLabel`, { label: t("name") })}
+                  fieldLabelId="name"
                 />
               }
               helperTextInvalid={t("common:required")}
@@ -235,8 +224,7 @@ export default function ResourceDetails() {
               labelIcon={
                 <HelpItem
                   helpText="clients-help:displayName"
-                  forLabel={t("name")}
-                  forID={t(`common:helpLabel`, { label: t("name") })}
+                  fieldLabelId="name"
                 />
               }
             >
@@ -246,11 +234,7 @@ export default function ResourceDetails() {
               label={t("type")}
               fieldId="type"
               labelIcon={
-                <HelpItem
-                  helpText="clients-help:type"
-                  forLabel={t("type")}
-                  forID={t(`common:helpLabel`, { label: t("type") })}
-                />
+                <HelpItem helpText="clients-help:type" fieldLabelId="type" />
               }
             >
               <TextInput id="type" name="type" ref={register} />
@@ -261,8 +245,7 @@ export default function ResourceDetails() {
               labelIcon={
                 <HelpItem
                   helpText="clients-help:uris"
-                  forLabel={t("uris")}
-                  forID={t(`common:helpLabel`, { label: t("uris") })}
+                  fieldLabelId="clients:uris"
                 />
               }
             >
@@ -279,8 +262,7 @@ export default function ResourceDetails() {
               labelIcon={
                 <HelpItem
                   helpText="clients-help:iconUri"
-                  forLabel={t("iconUri")}
-                  forID={t(`common:helpLabel`, { label: t("iconUri") })}
+                  fieldLabelId="clients:iconUri"
                 />
               }
             >
@@ -292,10 +274,7 @@ export default function ResourceDetails() {
               labelIcon={
                 <HelpItem
                   helpText="clients-help:ownerManagedAccess"
-                  forLabel={t("ownerManagedAccess")}
-                  forID={t(`common:helpLabel`, {
-                    label: t("ownerManagedAccess"),
-                  })}
+                  fieldLabelId="clients:ownerManagedAccess"
                 />
               }
               fieldId="ownerManagedAccess"
@@ -322,10 +301,7 @@ export default function ResourceDetails() {
               labelIcon={
                 <HelpItem
                   helpText="clients-help:resourceAttribute"
-                  forLabel={t("resourceAttribute")}
-                  forID={t(`common:helpLabel`, {
-                    label: t("resourceAttribute"),
-                  })}
+                  fieldLabelId="clients:resourceAttribute"
                 />
               }
               fieldId="resourceAttribute"

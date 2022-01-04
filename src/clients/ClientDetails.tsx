@@ -57,6 +57,7 @@ import type ProtocolMapperRepresentation from "@keycloak/keycloak-admin-client/l
 import { toMapper } from "./routes/Mapper";
 import { AuthorizationSettings } from "./authorization/Settings";
 import { AuthorizationResources } from "./authorization/Resources";
+import { AuthorizationScopes } from "./authorization/Scopes";
 
 type ClientDetailHeaderProps = {
   onChange: (value: boolean) => void;
@@ -361,7 +362,7 @@ export default function ClientDetails() {
       />
       <PageSection variant="light" className="pf-u-p-0">
         <FormProvider {...form}>
-          <KeycloakTabs data-testid="client-tabs" isBox>
+          <KeycloakTabs data-testid="client-tabs" isBox mountOnEnter>
             <Tab
               id="settings"
               eventKey="settings"
@@ -467,6 +468,8 @@ export default function ClientDetails() {
                 <Tabs
                   activeKey={authorizationSubTab}
                   onSelect={(_, key) => setAuthorizationSubTab(key as number)}
+                  mountOnEnter
+                  unmountOnExit
                 >
                   <Tab
                     id="settings"
@@ -481,6 +484,13 @@ export default function ClientDetails() {
                     title={<TabTitleText>{t("resources")}</TabTitleText>}
                   >
                     <AuthorizationResources clientId={clientId} />
+                  </Tab>
+                  <Tab
+                    id="scopes"
+                    eventKey={42}
+                    title={<TabTitleText>{t("scopes")}</TabTitleText>}
+                  >
+                    <AuthorizationScopes clientId={clientId} />
                   </Tab>
                 </Tabs>
               </Tab>

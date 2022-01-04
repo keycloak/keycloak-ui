@@ -5,6 +5,7 @@ export default class RealmSettingsPage {
   generalSaveBtn = "general-tab-save";
   themesSaveBtn = "themes-tab-save";
   loginTab = "rs-login-tab";
+  userProfileTab = "rs-user-profile-tab";
   selectLoginTheme = "#kc-login-theme";
   loginThemeList = "#kc-login-theme + ul";
   selectAccountTheme = "#kc-account-theme";
@@ -48,8 +49,12 @@ export default class RealmSettingsPage {
 
   selectDefaultLocale = "select-default-locale";
   defaultLocaleList = "select-default-locale > div > ul";
+  supportedLocalesTypeahead =
+    "#kc-l-supported-locales-select-multi-typeahead-typeahead";
+  supportedLocalesToggle = "#kc-l-supported-locales";
   emailSaveBtn = "email-tab-save";
   managedAccessSwitch = "user-managed-access-switch";
+  profileEnabledSwitch = "user-profile-enabled-switch";
   userRegSwitch = "user-reg-switch";
   forgotPwdSwitch = "forgot-pw-switch";
   rememberMeSwitch = "remember-me-switch";
@@ -75,7 +80,7 @@ export default class RealmSettingsPage {
   testConnectionButton = "test-connection-button";
   modalTestConnectionButton = "modal-test-connection-button";
   emailAddressInput = "email-address-input";
-  addBundleButton = "no-message-bundles-empty-action";
+  addBundleButton = "add-bundle-button";
   confirmAddBundle = "add-bundle-confirm-button";
   keyInput = "key-input";
   valueInput = "value-input";
@@ -766,7 +771,12 @@ export default class RealmSettingsPage {
 
   shouldCancelEditingExecutor() {
     cy.get(this.clientProfileTwo).click();
+
+    cy.intercept("/auth/admin/realms/master/client-policies/profiles*").as(
+      "profilesFetch"
+    );
     cy.findByTestId(this.editExecutor).first().click();
+    cy.wait("@profilesFetch");
 
     cy.findByTestId(this.addExecutorCancelBtn).click();
     cy.get('ul[class*="pf-c-data-list"]').should(
