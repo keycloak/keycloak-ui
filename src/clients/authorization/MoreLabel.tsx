@@ -3,7 +3,7 @@ import { useTranslation } from "react-i18next";
 import { Label } from "@patternfly/react-core";
 
 type MoreLabelProps = {
-  array: any | undefined;
+  array?: unknown[];
 };
 
 export const MoreLabel = ({ array }: MoreLabelProps) => {
