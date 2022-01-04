@@ -780,7 +780,7 @@ export const UserCredentials = ({ user }: UserCredentialsProps) => {
                     groupedCredential.value.map(
                       (credential: CredentialRepresentation) => (
                         <>
-                          <Td className="kc-editUserLabelCol">
+                          <Td>
                             <FormAccess
                               isHorizontal
                               role="view-users"
@@ -881,7 +881,7 @@ export const UserCredentials = ({ user }: UserCredentialsProps) => {
                           ) : (
                             <Td />
                           )}
-                          <Td className="kc-notExpandedRow-dropdDownCol">
+                          <Td>
                             <Dropdown
                               isPlain
                               position={DropdownPosition.right}
@@ -948,7 +948,7 @@ export const UserCredentials = ({ user }: UserCredentialsProps) => {
                                     credential.type!.slice(1)}
                                 </Td>
 
-                                <Td className="kc-userLabelCol">
+                                <Td>
                                   <FormAccess
                                     isHorizontal
                                     role="view-users"

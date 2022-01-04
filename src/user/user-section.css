@@ -190,9 +190,7 @@ article.pf-c-card.pf-m-flat.kc-available-idps > div > div > h1 {
 }
 
 .kc-notExpandedRow-credentialType {
-  padding-left: 15px !important;
-  padding-top: 15px !important;
-  padding-bottom: 15px !important;
+  padding: 15px 0px 15px 15px !important;
 }
 
 .kc-expandedRow-credentialType {
@@ -204,33 +202,19 @@ article.pf-c-card.pf-m-flat.kc-available-idps > div > div > h1 {
   padding: 0px !important;
 }
 
-.kc-userLabelCol {
-  width: 350px !important;
-  float: left;
-  padding-left: 60px !important;
-}
-
 .kc-expandedRow-emptyCol {
   width: 370px !important;
   min-width: 370px !important;
 }
 
 .kc-expandedRows {
-  padding-left: 0px !important;
-  padding-right: 0px !important;
+  padding: 0px !important;
 }
 
 .kc-expandedRow-dropdDownCol {
   padding-right: 20px !important;
 }
 
-.kc-notExpandedRow-dropdDownCol {
-  padding-right: 17px !important;
-}
-
-.kc-editUserLabelCol {
-  padding-left: 0px !important;
-}
 .resetCredentialBtn-header {
   margin: 10px 25px 10px 0;
   float: right;
