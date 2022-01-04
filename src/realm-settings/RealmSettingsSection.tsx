@@ -36,10 +36,20 @@ export const ToClientPolicies = () => {
   const { t } = useTranslation("realm-settings");
   const { realm } = useRealm();
 
+  const goToPoliciesSubtab = () => {
+    setTimeout(() => {
+      document.getElementById("pf-tab-1-policies")?.click();
+    }, 100);
+  };
+
   return (
     <BreadcrumbItem
       render={(props) => (
-        <Link {...props} to={toClientPolicies({ realm })}>
+        <Link
+          {...props}
+          onClick={() => goToPoliciesSubtab()}
+          to={toClientPolicies({ realm })}
+        >
           {t("clientPolicies")}
         </Link>
       )}

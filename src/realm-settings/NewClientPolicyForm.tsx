@@ -413,6 +413,14 @@ export default function NewClientPolicyForm() {
     }
   };
 
+  const goToPoliciesSubtab = () => {
+    history.push(toClientPolicies({ realm }));
+
+    setTimeout(() => {
+      document.getElementById("pf-tab-1-policies")?.click();
+    }, 100);
+  };
+
   return (
     <>
       <DeleteConditionConfirm />
@@ -488,7 +496,7 @@ export default function NewClientPolicyForm() {
               onClick={() =>
                 showAddConditionsAndProfilesForm || policyName
                   ? reset()
-                  : history.push(toClientPolicies({ realm }))
+                  : goToPoliciesSubtab()
               }
               data-testid="cancelCreatePolicy"
             >
