@@ -1,4 +1,4 @@
-import React, { FunctionComponent, useMemo, useState } from "react";
+import React, { Fragment, FunctionComponent, useMemo, useState } from "react";
 import {
   AlertVariant,
   Button,
@@ -27,7 +27,6 @@ import {
   TableComposable,
   TableHeader,
   TableVariant,
-  Tbody,
   Td,
   Th,
   Thead,
@@ -739,10 +738,7 @@ export const UserCredentials = ({ user }: UserCredentialsProps) => {
               </Tr>
             </Thead>
             {groupedUserCredentials.map((groupedCredential, rowIndex) => (
-              <Tbody
-                key={`table-${groupedCredential.key}`}
-                isExpanded={groupedCredential.isExpanded}
-              >
+              <Fragment key={`table-${groupedCredential.key}`}>
                 <Tr>
                   {groupedCredential.value.length > 1 ? (
                     <Td
@@ -923,6 +919,7 @@ export const UserCredentials = ({ user }: UserCredentialsProps) => {
                 {groupedCredential.isExpanded &&
                   groupedCredential.value.map((credential) => (
                     <Tr key={`child-key-${credential.id}`}>
+                      <Td />
                       <Td
                         key={`child-item-${credential.id}`}
                         dataLabel={`child-columns-${credential.id}`}
@@ -1061,7 +1058,7 @@ export const UserCredentials = ({ user }: UserCredentialsProps) => {
                       </Td>
                     </Tr>
                   ))}
-              </Tbody>
+              </Fragment>
             ))}
           </TableComposable>
         </>
