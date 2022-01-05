@@ -742,6 +742,7 @@ export const UserCredentials = ({ user }: UserCredentialsProps) => {
                 <Tr>
                   {groupedCredential.value.length > 1 ? (
                     <Td
+                      className="kc-expandRow-btn"
                       expand={{
                         rowIndex,
                         isExpanded: groupedCredential.isExpanded,
@@ -765,7 +766,7 @@ export const UserCredentials = ({ user }: UserCredentialsProps) => {
                   <Td
                     key={`table-item-${groupedCredential.key}`}
                     dataLabel={`columns-${groupedCredential.key}`}
-                    className="kc-notExpandedRow-credentialType"
+                    className="kc-notExpandableRow-credentialType"
                   >
                     {groupedCredential.key.charAt(0).toUpperCase()! +
                       groupedCredential.key.slice(1)}
@@ -923,7 +924,7 @@ export const UserCredentials = ({ user }: UserCredentialsProps) => {
                       <Td
                         key={`child-item-${credential.id}`}
                         dataLabel={`child-columns-${credential.id}`}
-                        className="kc-expandedRow-credentialType"
+                        className="kc-expandableRow-credentialType"
                       >
                         {credential.type!.charAt(0).toUpperCase()! +
                           credential.type!.slice(1)}
