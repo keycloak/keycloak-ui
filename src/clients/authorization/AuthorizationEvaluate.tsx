@@ -11,10 +11,10 @@ import {
   Button,
   Switch,
   ExpandableSection,
-  SplitItem,
-  Split,
-  SelectGroup,
-  Divider,
+  // SplitItem,
+  // Split,
+  // SelectGroup,
+  // Divider,
 } from "@patternfly/react-core";
 import { Controller, useForm, useFormContext } from "react-hook-form";
 
@@ -28,8 +28,11 @@ import { useAdminClient } from "../../context/auth/AdminClient";
 import type ResourceEvaluation from "@keycloak/keycloak-admin-client/lib/defs/resourceEvaluation";
 import { useRealm } from "../../context/realm-context/RealmContext";
 // import type { MultiLine } from "../../components/multi-line-input/multi-line-convert";
+// import { MultiLineInput } from "../../components/multi-line-input/MultiLineInput";
+import { AttributeInput } from "../../components/attribute-input/AttributeInput";
+// import { defaultContextAttributes } from "../utils";
 
-type AttributeType = {
+export type AttributeType = {
   key: string;
   name: string;
   custom?: boolean;
@@ -65,55 +68,12 @@ export const AuthorizationEvaluate = ({
   const [userDropdownOpen, setUserDropdownOpen] = useState(false);
   const [roleDropdownOpen, setRoleDropdownOpen] = useState(false);
   const [isExpanded, setIsExpanded] = useState(false);
-  const [keyOpen, setKeyOpen] = useState(false);
-  const [valueOpen, setValueOpen] = useState(false);
-  const [selectedAttribute, setSelectedAttribute] = useState<AttributeType>();
-
-  const defaultContextAttributes = [
-    {
-      key: "custom",
-      name: "Custom Attribute...",
-      custom: true,
-    },
-    {
-      key: "kc.identity.authc.method",
-      name: "Authentication Method",
-      values: [
-        {
-          key: "pwd",
-          name: "Password",
-        },
-        {
-          key: "otp",
-          name: "One-Time Password",
-        },
-        {
-          key: "kbr",
-          name: "Kerberos",
-        },
-      ],
-    },
-    {
-      key: "kc.realm.name",
-      name: "Realm",
-    },
-    {
-      key: "kc.time.date_time",
-      name: "Date/Time (MM/dd/yyyy hh:mm:ss)",
-    },
-    {
-      key: "kc.client.network.ip_address",
-      name: "Client IPv4 Address",
-    },
-    {
-      key: "kc.client.network.host",
-      name: "Client Host",
-    },
-    {
-      key: "kc.client.user_agent",
-      name: "Client/User Agent",
-    },
-  ];
+  // const [keyOpen, setKeyOpen] = useState(false);
+  // const [valueOpen, setValueOpen] = useState(false);
+  // const [selectedAttribute, setSelectedAttribute] = useState<AttributeType[]>(
+  //   []
+  // );
+  // const [authenticationMethod, setAuthenticationMethod] = useState("");
 
   const evaluate = () => {
     const formValues = form.getValues();
@@ -130,46 +90,49 @@ export const AuthorizationEvaluate = ({
     );
   };
 
-  const attributeSelectOptions = () => {
-    const createItem = (attributeType: {
-      key: string;
-      name: string;
-      custom?: boolean;
-      values?: {
-        key: string;
-        name: string;
-      }[];
-    }) => (
-      <SelectOption key={attributeType.name} value={attributeType}>
-        {attributeType.name}
-      </SelectOption>
-    );
-    return defaultContextAttributes.map((attribute) => createItem(attribute));
-  };
+  // const onClear = (onChange: (value: string) => void) => {
+  //   setSelectedAttribute([]);
+  //   onChange("");
+  // };
 
-  const createAuthenticationMethodMenu = () => {
-    return [
-      <SelectGroup key="role" label={t("roleGroup")}>
-        <SelectOption key="realmRoles" value={"test"}>
-          {attributeSelectOptions()}
-        </SelectOption>
-      </SelectGroup>,
-      <Divider key="divider" />,
-      <SelectGroup key="group" label={t("clientGroup")}>
-        {defaultContextAttributes[1].values!.map((attribute) => (
-          <SelectOption key={attribute.name} value={attribute}>
-            {attribute.name}
-          </SelectOption>
-        ))}
-      </SelectGroup>,
-    ];
-  };
+  // const attributeSelectOptions = () => {
+  //   const createItem = (attributeType: {
+  //     key: string;
+  //     name: string;
+  //     custom?: boolean;
+  //     values?: {
+  //       key: string;
+  //       name: string;
+  //     }[];
+  //   }) => (
+  //     <SelectOption key={attributeType.name} value={attributeType}>
+  //       {attributeType.name}
+  //     </SelectOption>
+  //   );
+  //   return defaultContextAttributes.map((attribute) => createItem(attribute));
+  // };
 
-  const onClear = (onChange: (value: string) => void) => {
-    setSelectedAttribute(undefined);
-    // setSelectedRole(undefined);
-    onChange("");
-  };
+  // const a = () => {
+  //   return [
+  //     <SelectGroup key="role">
+  //       <SelectOption key="realmRoles" value={selectedAttribute}>
+  //         {attributeSelectOptions()}
+  //       </SelectOption>
+  //     </SelectGroup>,
+  //   ];
+  // };
+
+  // const b = () => {
+  //   return [
+  //     <SelectGroup key="group">
+  //       {defaultContextAttributes[1].values!.map((attribute) => (
+  //         <SelectOption key={attribute.name} value={attribute}>
+  //           {attribute.name}
+  //         </SelectOption>
+  //       ))}
+  //     </SelectGroup>,
+  //   ];
+  // };
 
   return (
     <PageSection>
@@ -180,6 +143,7 @@ export const AuthorizationEvaluate = ({
         <FormAccess isHorizontal role="manage-clients">
           <FormGroup
             label={t("client")}
+            isRequired
             labelIcon={
               <HelpItem
                 helpText="clients-help:client"
@@ -218,6 +182,7 @@ export const AuthorizationEvaluate = ({
           </FormGroup>
           <FormGroup
             label={t("user")}
+            isRequired
             labelIcon={
               <HelpItem
                 helpText="clients-help:userSelect"
@@ -256,7 +221,7 @@ export const AuthorizationEvaluate = ({
             />
           </FormGroup>
           <FormGroup
-            label={t("realmRole")}
+            label={t("roles")}
             labelIcon={
               <HelpItem
                 helpText="clients-help:roles"
@@ -350,40 +315,47 @@ export const AuthorizationEvaluate = ({
               helperTextInvalid={t("common:required")}
               fieldId={name!}
             >
-              <Controller
-                name={"test"}
+              {/* <Controller
+                name={"context.attributes"}
                 defaultValue=""
                 control={control}
                 render={({ onChange }) => (
                   <Split hasGutter>
                     <SplitItem>
-                      {/* {selectedAttribute?.name === "Authentication Method" && ( */}
                       <Select
                         toggleId={`group-${name}`}
                         onToggle={() => setKeyOpen(!keyOpen)}
                         isOpen={keyOpen}
                         variant={SelectVariant.typeahead}
-                        typeAheadAriaLabel={t("selectASourceOfRoles")}
-                        placeholderText={t("selectASourceOfRoles")}
+                        typeAheadAriaLabel={t("selectOrTypeAKey")}
+                        placeholderText={t("selectOrTypeAKey")}
                         isGrouped
                         onFilter={() => {
                           return attributeSelectOptions();
                         }}
-                        selections={selectedAttribute?.name}
+                        selections={selectedAttribute}
                         onClear={() => onClear(onChange)}
                         onSelect={(_, value) => {
-                          onClear(onChange);
-                          console.log(value);
-                          setSelectedAttribute(value as AttributeType);
+                          // onClear(onChange);
+                          setSelectedAttribute([value as AttributeType]);
+                          console.log(selectedAttribute);
                           setKeyOpen(false);
                         }}
                       >
-                        {attributeSelectOptions()}
+                        {defaultContextAttributes.map((attribute) => (
+                          <SelectOption
+                            selected={
+                              attribute.name === selectedAttribute[0]?.name
+                            }
+                            key={attribute.name}
+                            value={attribute.name}
+                          />
+                        ))}
                       </Select>
-                      {/* )} */}
                     </SplitItem>
                     <SplitItem>
-                      {selectedAttribute?.name === "Authentication Method" && (
+                      {selectedAttribute[0]?.toString() ===
+                      "Authentication Method" ? (
                         <Select
                           toggleId={`role-${name}`}
                           onToggle={(isExpanded) => setValueOpen(isExpanded)}
@@ -396,27 +368,29 @@ export const AuthorizationEvaluate = ({
                           // }
                           // isDisabled={!selectedClient}
                           typeAheadAriaLabel={t("selectARole")}
-                          selections={selectedAttribute.name}
+                          selections={authenticationMethod || ""}
                           onSelect={(_, value) => {
-                            const attribute = value as AttributeType;
-                            setSelectedAttribute(attribute);
-                            // onChange(
-                            //   selectedAttribute?.key === "realmRoles"
-                            //     ? role.name
-                            //     : `${selectedClient?.clientId}.${role.name}`
-                            // );
+                            const authMethod = value as AttributeType;
+                            setAuthenticationMethod(authMethod.name.toString());
                             setValueOpen(false);
                           }}
                           maxHeight={200}
                           // onClear={() => onClear(onChange)}
                         >
-                          {createAuthenticationMethodMenu()}
+                          {b()}
                         </Select>
+                      ) : (
+                        <MultiLineInput
+                          name="redirectUris"
+                          aria-label={t("validRedirectUri")}
+                          addButtonLabel="clients:addRedirectUri"
+                        />
                       )}
                     </SplitItem>
                   </Split>
                 )}
-              />
+              /> */}
+              <AttributeInput isKeySelectable name="aaaaa" />
             </FormGroup>
           </ExpandableSection>
         </FormAccess>

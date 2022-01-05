@@ -60,6 +60,7 @@ export default {
     selectARole: "Select a role",
     lastEvaluation: "Last evaluation",
     contextualInfo: "Contextual Information",
+    selectOrTypeAKey: "Select or type a key",
     contextualAttributes: "Contextual Attributes",
     resourcesAndAuthScopes: "Resources and authorization scopes",
     addNewResourcesAndScopes: "Add new resources and scopes",

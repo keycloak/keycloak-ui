@@ -1,7 +1,13 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useFieldArray, useFormContext } from "react-hook-form";
-import { Button, TextInput } from "@patternfly/react-core";
+import {
+  Button,
+  Select,
+  SelectOption,
+  SelectVariant,
+  TextInput,
+} from "@patternfly/react-core";
 import {
   TableComposable,
   Tbody,
@@ -13,12 +19,20 @@ import {
 import { MinusCircleIcon, PlusCircleIcon } from "@patternfly/react-icons";
 
 import "../attribute-form/attribute-form.css";
+import type { AttributeType } from "../../clients/authorization/AuthorizationEvaluate";
+import { defaultContextAttributes } from "../../clients/utils";
 
 type AttributeInputProps = {
   name: string;
+  isKeySelectable?: boolean;
+  isValueSelectable?: boolean;
 };
 
-export const AttributeInput = ({ name }: AttributeInputProps) => {
+export const AttributeInput = ({
+  name,
+  isKeySelectable,
+}: // isValueSelectable,
+AttributeInputProps) => {
   const { t } = useTranslation("common");
   const { control, register, watch } = useFormContext();
   const { fields, append, remove } = useFieldArray({
@@ -32,7 +46,22 @@ export const AttributeInput = ({ name }: AttributeInputProps) => {
     }
   }, []);
 
-  const watchLast = watch(`${name}[${fields.length - 1}].key`, "");
+  const onClear = () => {
+    setSelectedAttributes([]);
+  };
+
+  // const watchLast = watch(`${name}[${fields.length - 1}].key`, "");
+  const watchLast2 = watch(`${name}[${fields.length - 1}].value`, "");
+
+  console.log("hey", watchLast2);
+
+  // const [isExpanded, setIsExpanded] = useState(false);
+  const [keyOpen, setKeyOpen] = useState(false);
+  // const [valueOpen, setValueOpen] = useState(false);
+  const [selectedAttributes, setSelectedAttributes] = useState<AttributeType[]>(
+    []
+  );
+  // const [authenticationMethod, setAuthenticationMethod] = useState("");
 
   return (
     <TableComposable
@@ -55,13 +84,43 @@ export const AttributeInput = ({ name }: AttributeInputProps) => {
         {fields.map((attribute, rowIndex) => (
           <Tr key={attribute.id} data-testid="attribute-row">
             <Td>
-              <TextInput
-                id={`${attribute.id}-key`}
-                name={`${name}[${rowIndex}].key`}
-                ref={register()}
-                defaultValue={attribute.key}
-                data-testid="attribute-key-input"
-              />
+              {isKeySelectable ? (
+                <Select
+                  id={`${attribute.id}-key`}
+                  name={`${name}[${rowIndex}].key`}
+                  toggleId={`group-${name}`}
+                  onToggle={() => setKeyOpen(!keyOpen)}
+                  isOpen={keyOpen}
+                  variant={SelectVariant.typeahead}
+                  typeAheadAriaLabel={t("selectOrTypeAKey")}
+                  placeholderText={t("selectOrTypeAKey")}
+                  isGrouped
+                  selections={selectedAttributes}
+                  onClear={() => onClear()}
+                  onSelect={(_, value) => {
+                    // onClear(onChange);
+                    setSelectedAttributes([value as AttributeType]);
+                    console.log(selectedAttributes);
+                    setKeyOpen(false);
+                  }}
+                >
+                  {defaultContextAttributes.map((attribute) => (
+                    <SelectOption
+                      selected={attribute.name === selectedAttributes[0]?.name}
+                      key={attribute.name}
+                      value={attribute.name}
+                    />
+                  ))}
+                </Select>
+              ) : (
+                <TextInput
+                  id={`${attribute.id}-key`}
+                  name={`${name}[${rowIndex}].key`}
+                  ref={register()}
+                  defaultValue={attribute.key}
+                  data-testid="attribute-key-input"
+                />
+              )}
             </Td>
             <Td>
               <TextInput
@@ -93,7 +152,7 @@ export const AttributeInput = ({ name }: AttributeInputProps) => {
               className="kc-attributes__plus-icon"
               onClick={() => append({ key: "", value: "" })}
               icon={<PlusCircleIcon />}
-              isDisabled={!watchLast}
+              isDisabled={!watchLast2}
               data-testid="attribute-add-row"
             >
               {t("roles:addAttributeText")}
