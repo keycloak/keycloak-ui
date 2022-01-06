@@ -25,14 +25,12 @@ import { defaultContextAttributes } from "../../clients/utils";
 type AttributeInputProps = {
   name: string;
   isKeySelectable?: boolean;
-  isValueSelectable?: boolean;
 };
 
 export const AttributeInput = ({
   name,
   isKeySelectable,
-}: // isValueSelectable,
-AttributeInputProps) => {
+}: AttributeInputProps) => {
   const { t } = useTranslation("common");
   const { control, register, watch } = useFormContext();
   const { fields, append, remove } = useFieldArray({
@@ -46,23 +44,93 @@ AttributeInputProps) => {
     }
   }, []);
 
-  const onClear = () => {
-    setSelectedAttributes([]);
-  };
+  // console.log("adasda", fields.length);
 
-  // const watchLast = watch(`${name}[${fields.length - 1}].key`, "");
-  const watchLast2 = watch(`${name}[${fields.length - 1}].value`, "");
+  const [isOpenArray, setIsOpenArray] = useState<boolean[]>([false]);
+  const watchLastKey = watch(`${name}[${fields.length - 1}].key`, "");
+  const watchLastValue = watch(`${name}[${fields.length - 1}].value`, "");
 
-  console.log("hey", watchLast2);
+  // console.log("hey", watchLast2);
 
   // const [isExpanded, setIsExpanded] = useState(false);
-  const [keyOpen, setKeyOpen] = useState(false);
-  // const [valueOpen, setValueOpen] = useState(false);
+  // const [keyOpen, setKeyOpen] = useState(false);
+  const [valueOpen, setValueOpen] = useState(false);
   const [selectedAttributes, setSelectedAttributes] = useState<AttributeType[]>(
     []
   );
-  // const [authenticationMethod, setAuthenticationMethod] = useState("");
+  const [authenticationMethod, setAuthenticationMethod] = useState("");
 
+  const onClear = (rowIndex: number) => {
+    const arr = [...selectedAttributes];
+    arr[rowIndex] = { key: "", name: "" };
+    setSelectedAttributes(arr);
+    return "";
+    // console.log("test", selectedAttributes[rowIndex])
+    // return selectedAttributes;
+    // setSelectedAttributes(
+    //   selectedAttributes.splice(rowIndex, 1, { key: "", name: "" })
+    // );
+  };
+
+  console.log("attribute vals", selectedAttributes.values);
+  const toggleSelect = (rowIndex: number, open: boolean) => {
+    const arr = [...isOpenArray];
+    arr[rowIndex] = open;
+    setIsOpenArray(arr);
+  };
+
+  console.log(`Attributes`, fields);
+
+  const renderValueInput = (rowIndex: number, attribute: any) => {
+    console.log(`Selectd:`, selectedAttributes);
+    console.log(`defaultContextAttributes`, defaultContextAttributes);
+    const attributeValues = defaultContextAttributes.find(
+      (attr) => attr.name === selectedAttributes[rowIndex]?.name
+    )?.values;
+
+    return (
+      <Td>
+        {attributeValues?.length ? (
+          <Select
+            id={`${attribute.id}-value`}
+            className="kc-attribute-value-selectable"
+            name={`${name}[${rowIndex}].value`}
+            toggleId={`group-${name}`}
+            onToggle={(open) => setValueOpen(open)}
+            isOpen={valueOpen}
+            variant={SelectVariant.typeahead}
+            typeAheadAriaLabel={t("clients:selectOrTypeAKey")}
+            placeholderText={t("clients:selectOrTypeAKey")}
+            isGrouped
+            selections={authenticationMethod}
+            onClear={() => onClear(rowIndex)}
+            onSelect={(_, value) => {
+              // onClear(onChange);
+              setAuthenticationMethod(value as string);
+              fields[rowIndex].value = value as string;
+              setValueOpen(false);
+            }}
+          >
+            {attributeValues.map((attribute) => (
+              <SelectOption
+                selected={attribute.name === selectedAttributes[rowIndex]?.name}
+                key={attribute.name}
+                value={attribute.name}
+              />
+            ))}
+          </Select>
+        ) : (
+          <TextInput
+            id={`${attribute.id}-value`}
+            name={`${name}[${rowIndex}].value`}
+            ref={register()}
+            defaultValue={attribute.value}
+            data-testid="attribute-value-input"
+          />
+        )}
+      </Td>
+    );
+  };
   return (
     <TableComposable
       className="kc-attributes__table"
@@ -87,26 +155,47 @@ AttributeInputProps) => {
               {isKeySelectable ? (
                 <Select
                   id={`${attribute.id}-key`}
+                  className="kc-attribute-key-selectable"
                   name={`${name}[${rowIndex}].key`}
                   toggleId={`group-${name}`}
-                  onToggle={() => setKeyOpen(!keyOpen)}
-                  isOpen={keyOpen}
+                  onToggle={(open) => toggleSelect(rowIndex, open)}
+                  isOpen={isOpenArray[rowIndex]}
                   variant={SelectVariant.typeahead}
-                  typeAheadAriaLabel={t("selectOrTypeAKey")}
-                  placeholderText={t("selectOrTypeAKey")}
+                  typeAheadAriaLabel={t("clients:selectOrTypeAKey")}
+                  placeholderText={t("clients:selectOrTypeAKey")}
                   isGrouped
-                  selections={selectedAttributes}
-                  onClear={() => onClear()}
+                  selections={
+                    selectedAttributes[rowIndex]?.name === ""
+                      ? ""
+                      : selectedAttributes[rowIndex]?.name
+                  }
+                  onClear={() => onClear(rowIndex)}
                   onSelect={(_, value) => {
                     // onClear(onChange);
-                    setSelectedAttributes([value as AttributeType]);
+                    const arr = [...selectedAttributes];
+
+                    arr[rowIndex] = {
+                      ...selectedAttributes[rowIndex],
+                      name: value as string,
+                    };
+                    // value as AttributeType;
+                    setSelectedAttributes(arr);
+
+                    fields[rowIndex].key = value as string;
+
+                    // setSelectedAttributes([
+                    //   ...selectedAttributes,
+                    //   value as AttributeType,
+                    // ]);
                     console.log(selectedAttributes);
-                    setKeyOpen(false);
+                    toggleSelect(rowIndex, false);
                   }}
                 >
                   {defaultContextAttributes.map((attribute) => (
                     <SelectOption
-                      selected={attribute.name === selectedAttributes[0]?.name}
+                      selected={
+                        attribute.name === selectedAttributes[rowIndex]?.name
+                      }
                       key={attribute.name}
                       value={attribute.name}
                     />
@@ -122,15 +211,7 @@ AttributeInputProps) => {
                 />
               )}
             </Td>
-            <Td>
-              <TextInput
-                id={`${attribute.id}-value`}
-                name={`${name}[${rowIndex}].value`}
-                ref={register()}
-                defaultValue={attribute.value}
-                data-testid="attribute-value-input"
-              />
-            </Td>
+            {renderValueInput(rowIndex, attribute)}
             <Td key="minus-button" id={`kc-minus-button-${rowIndex}`}>
               <Button
                 id={`minus-button-${rowIndex}`}
@@ -150,9 +231,14 @@ AttributeInputProps) => {
               id="plus-icon"
               variant="link"
               className="kc-attributes__plus-icon"
-              onClick={() => append({ key: "", value: "" })}
+              onClick={() => {
+                append({ key: "", value: "" });
+                if (isKeySelectable) {
+                  setIsOpenArray([...isOpenArray, false]);
+                }
+              }}
               icon={<PlusCircleIcon />}
-              isDisabled={!watchLast2}
+              isDisabled={isKeySelectable ? !watchLastValue : !watchLastKey}
               data-testid="attribute-add-row"
             >
               {t("roles:addAttributeText")}

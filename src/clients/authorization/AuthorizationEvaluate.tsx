@@ -73,7 +73,10 @@ export const AuthorizationEvaluate = ({
   // const [selectedAttribute, setSelectedAttribute] = useState<AttributeType[]>(
   //   []
   // );
-  // const [authenticationMethod, setAuthenticationMethod] = useState("");
+  // const [isValueSelectable, setIsValueSelectable] = useState(false);
+
+  console.log("u", users);
+  console.log("c", clients);
 
   const evaluate = () => {
     const formValues = form.getValues();
@@ -83,6 +86,9 @@ export const AuthorizationEvaluate = ({
       userId: users.find((user) => user.username === formValues.userId)?.id!,
       entitlements: false,
       context: formValues.context,
+      // clientId: clients.find(
+      //   (client) => client.clientId === formValues.clientId
+      // )?.id!,
     };
     return adminClient.clients.evaluateResource(
       { id: clientId!, realm: realm.realm },
@@ -390,7 +396,7 @@ export const AuthorizationEvaluate = ({
                   </Split>
                 )}
               /> */}
-              <AttributeInput isKeySelectable name="aaaaa" />
+              <AttributeInput isKeySelectable name="context" />
             </FormGroup>
           </ExpandableSection>
         </FormAccess>
