@@ -88,7 +88,7 @@ export const AttributeInput = ({
           <Th id="key" width={40}>
             {t("key")}
           </Th>
-          <Th id="" width={40}>
+          <Th id="value" width={40}>
             {t("value")}
           </Th>
         </Tr>
