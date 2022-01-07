@@ -1,4 +1,4 @@
-import { keycloakBefore } from "../support/util/keycloak_hook";
+import { keycloakBefore } from "../support/util/keycloak_hooks";
 import Masthead from "../support/pages/admin_console/Masthead";
 import LoginPage from "../support/pages/LoginPage";
 import SidebarPage from "../support/pages/admin_console/SidebarPage";
