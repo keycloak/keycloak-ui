@@ -36,8 +36,8 @@ export const AttributesForm = ({ form, reset, save }: AttributesFormProps) => {
     >
       <FormProvider {...form}>
         <AttributeInput
-          // selectableValues={["a", "v", "s"]}
-          // isKeySelectable
+          selectableValues={["a", "v", "s"]}
+          isKeySelectable
           name="attributes"
         />
       </FormProvider>

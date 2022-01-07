@@ -140,6 +140,8 @@ export const AttributeInput = ({
   //   );
   // };
 
+  console.log("sel", selectedAttributes);
+
   return (
     <TableComposable
       className="kc-attributes__table"
@@ -184,9 +186,10 @@ export const AttributeInput = ({
                         placeholderText={t("clients:selectOrTypeAKey")}
                         isGrouped
                         selections={
-                          selectedAttributes[rowIndex]?.name === ""
-                            ? ""
-                            : selectedAttributes[rowIndex]?.name
+                          // selectedAttributes[rowIndex]?.name === ""
+                          //   ? ""
+                          //   : selectedAttributes[rowIndex]?.name
+                          attribute.key
                         }
                         onClear={() => onClear(rowIndex)}
                         onSelect={(_, value) => {
@@ -201,7 +204,7 @@ export const AttributeInput = ({
                           remove(rowIndex);
                           insert(rowIndex, {
                             key: value as string,
-                            value: "",
+                            value: attribute.value,
                           });
 
                           toggleSelect(rowIndex, false);

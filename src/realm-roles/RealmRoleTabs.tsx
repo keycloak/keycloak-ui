@@ -93,14 +93,20 @@ export default function RealmRoleTabs() {
       if (role) {
         const convertedRole = convert(role);
         setRole(convertedRole);
-        Object.entries(convertedRole).map((entry) => {
-          setValue(entry[0], entry[1]);
-        });
+        setTimeout(() => {
+          Object.entries(convertedRole).map((entry) => {
+            setValue(entry[0], entry[1]);
+          });
+        }, 5);
+
+        if (url.includes("/attributes")) {
+          setValue("attributes", convertedRole.attributes);
+        }
       }
 
       setRealm(realm);
     },
-    [key]
+    [key, url]
   );
 
   const save = async () => {
