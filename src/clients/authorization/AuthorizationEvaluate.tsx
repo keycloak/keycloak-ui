@@ -30,6 +30,7 @@ import { useRealm } from "../../context/realm-context/RealmContext";
 // import type { MultiLine } from "../../components/multi-line-input/multi-line-convert";
 // import { MultiLineInput } from "../../components/multi-line-input/MultiLineInput";
 import { AttributeInput } from "../../components/attribute-input/AttributeInput";
+import { defaultContextAttributes } from "../utils";
 // import { defaultContextAttributes } from "../utils";
 
 export type AttributeType = {
@@ -396,7 +397,13 @@ export const AuthorizationEvaluate = ({
                   </Split>
                 )}
               /> */}
-              <AttributeInput isKeySelectable name="context" />
+              <AttributeInput
+                selectableValues={defaultContextAttributes.map(
+                  (item) => item.name
+                )}
+                isKeySelectable
+                name="context"
+              />
             </FormGroup>
           </ExpandableSection>
         </FormAccess>

@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { useFieldArray, useFormContext } from "react-hook-form";
+import { Controller, useFieldArray, useFormContext } from "react-hook-form";
 import {
   Button,
+  FormGroup,
   Select,
   SelectOption,
   SelectVariant,
@@ -24,16 +25,18 @@ import { defaultContextAttributes } from "../../clients/utils";
 
 type AttributeInputProps = {
   name: string;
+  selectableValues?: string[];
   isKeySelectable?: boolean;
 };
 
 export const AttributeInput = ({
   name,
   isKeySelectable,
+  selectableValues,
 }: AttributeInputProps) => {
   const { t } = useTranslation("common");
   const { control, register, watch } = useFormContext();
-  const { fields, append, remove } = useFieldArray({
+  const { fields, append, remove, insert } = useFieldArray({
     control: control,
     name,
   });
@@ -79,58 +82,64 @@ export const AttributeInput = ({
     setIsOpenArray(arr);
   };
 
-  console.log(`Attributes`, fields);
+  // console.log(`Attributes`, fields);
 
-  const renderValueInput = (rowIndex: number, attribute: any) => {
-    console.log(`Selectd:`, selectedAttributes);
-    console.log(`defaultContextAttributes`, defaultContextAttributes);
-    const attributeValues = defaultContextAttributes.find(
+  const getAttributeValues = (rowIndex: number) =>
+    defaultContextAttributes.find(
       (attr) => attr.name === selectedAttributes[rowIndex]?.name
     )?.values;
 
-    return (
-      <Td>
-        {attributeValues?.length ? (
-          <Select
-            id={`${attribute.id}-value`}
-            className="kc-attribute-value-selectable"
-            name={`${name}[${rowIndex}].value`}
-            toggleId={`group-${name}`}
-            onToggle={(open) => setValueOpen(open)}
-            isOpen={valueOpen}
-            variant={SelectVariant.typeahead}
-            typeAheadAriaLabel={t("clients:selectOrTypeAKey")}
-            placeholderText={t("clients:selectOrTypeAKey")}
-            isGrouped
-            selections={authenticationMethod}
-            onClear={() => onClear(rowIndex)}
-            onSelect={(_, value) => {
-              // onClear(onChange);
-              setAuthenticationMethod(value as string);
-              fields[rowIndex].value = value as string;
-              setValueOpen(false);
-            }}
-          >
-            {attributeValues.map((attribute) => (
-              <SelectOption
-                selected={attribute.name === selectedAttributes[rowIndex]?.name}
-                key={attribute.name}
-                value={attribute.name}
-              />
-            ))}
-          </Select>
-        ) : (
-          <TextInput
-            id={`${attribute.id}-value`}
-            name={`${name}[${rowIndex}].value`}
-            ref={register()}
-            defaultValue={attribute.value}
-            data-testid="attribute-value-input"
-          />
-        )}
-      </Td>
-    );
-  };
+  // const renderValueInput = (rowIndex: number, attribute: any) => {
+  //   console.log(`Selectd:`, selectedAttributes);
+  //   console.log(`defaultContextAttributes`, defaultContextAttributes);
+  //   const attributeValues = defaultContextAttributes.find(
+  //     (attr) => attr.name === selectedAttributes[rowIndex]?.name
+  //   )?.values;
+
+  //   return (
+  //     <Td>
+  //       {attributeValues?.length ? (
+  //         <Select
+  //           id={`${attribute.id}-value`}
+  //           className="kc-attribute-value-selectable"
+  //           name={`${name}[${rowIndex}].value`}
+  //           toggleId={`group-${name}`}
+  //           onToggle={(open) => setValueOpen(open)}
+  //           isOpen={valueOpen}
+  //           variant={SelectVariant.typeahead}
+  //           typeAheadAriaLabel={t("clients:selectOrTypeAKey")}
+  //           placeholderText={t("clients:selectOrTypeAKey")}
+  //           isGrouped
+  //           selections={authenticationMethod}
+  //           onClear={() => onClear(rowIndex)}
+  //           onSelect={(_, value) => {
+  //             setAuthenticationMethod(value as string);
+  //             fields[rowIndex].value = value as string;
+  //             console.log("strawberry", fields);
+  //             setValueOpen(false);
+  //           }}
+  //         >
+  //           {attributeValues.map((attribute) => (
+  //             <SelectOption
+  //               selected={attribute.name === selectedAttributes[rowIndex]?.name}
+  //               key={attribute.name}
+  //               value={attribute.name}
+  //             />
+  //           ))}
+  //         </Select>
+  //       ) : (
+  //         <TextInput
+  //           id={`${attribute.id}-value`}
+  //           name={`${name}[${rowIndex}].value`}
+  //           ref={register()}
+  //           defaultValue={attribute.value}
+  //           data-testid="attribute-value-input"
+  //         />
+  //       )}
+  //     </Td>
+  //   );
+  // };
+
   return (
     <TableComposable
       className="kc-attributes__table"
@@ -143,7 +152,7 @@ export const AttributeInput = ({
           <Th id="key" width={40}>
             {t("key")}
           </Th>
-          <Th id="value" width={40}>
+          <Th id="" width={40}>
             {t("value")}
           </Th>
         </Tr>
@@ -153,45 +162,103 @@ export const AttributeInput = ({
           <Tr key={attribute.id} data-testid="attribute-row">
             <Td>
               {isKeySelectable ? (
-                <Select
+                <FormGroup fieldId="test">
+                  <Controller
+                    name={`${name}[${rowIndex}].key`}
+                    defaultValue={
+                      selectedAttributes[rowIndex]?.name === ""
+                        ? ""
+                        : selectedAttributes[rowIndex]?.name
+                    }
+                    control={control}
+                    render={() => (
+                      <Select
+                        id={`${attribute.id}-key`}
+                        className="kc-attribute-key-selectable"
+                        name={`${name}[${rowIndex}].key`}
+                        toggleId={`group-${name}`}
+                        onToggle={(open) => toggleSelect(rowIndex, open)}
+                        isOpen={isOpenArray[rowIndex]}
+                        variant={SelectVariant.typeahead}
+                        typeAheadAriaLabel={t("clients:selectOrTypeAKey")}
+                        placeholderText={t("clients:selectOrTypeAKey")}
+                        isGrouped
+                        selections={
+                          selectedAttributes[rowIndex]?.name === ""
+                            ? ""
+                            : selectedAttributes[rowIndex]?.name
+                        }
+                        onClear={() => onClear(rowIndex)}
+                        onSelect={(_, value) => {
+                          const arr = [...selectedAttributes];
+
+                          arr[rowIndex] = {
+                            ...selectedAttributes[rowIndex],
+                            name: value as string,
+                          };
+                          setSelectedAttributes(arr);
+
+                          remove(rowIndex);
+                          insert(rowIndex, {
+                            key: value as string,
+                            value: "",
+                          });
+
+                          toggleSelect(rowIndex, false);
+                        }}
+                      >
+                        {selectableValues?.map((attribute) => (
+                          <SelectOption
+                            selected={
+                              attribute === selectedAttributes[rowIndex]?.name
+                            }
+                            key={attribute}
+                            value={attribute}
+                          />
+                        ))}
+                      </Select>
+                    )}
+                  />
+                </FormGroup>
+              ) : (
+                <TextInput
                   id={`${attribute.id}-key`}
-                  className="kc-attribute-key-selectable"
                   name={`${name}[${rowIndex}].key`}
+                  ref={register()}
+                  defaultValue={attribute.key}
+                  data-testid="attribute-key-input"
+                />
+              )}
+            </Td>
+            {/* {renderValueInput(rowIndex, attribute)} */}
+            <Td>
+              {getAttributeValues(rowIndex)?.length ? (
+                <Select
+                  id={`${attribute.id}-value`}
+                  className="kc-attribute-value-selectable"
+                  name={`${name}[${rowIndex}].value`}
                   toggleId={`group-${name}`}
-                  onToggle={(open) => toggleSelect(rowIndex, open)}
-                  isOpen={isOpenArray[rowIndex]}
+                  onToggle={(open) => setValueOpen(open)}
+                  isOpen={valueOpen}
                   variant={SelectVariant.typeahead}
                   typeAheadAriaLabel={t("clients:selectOrTypeAKey")}
                   placeholderText={t("clients:selectOrTypeAKey")}
                   isGrouped
-                  selections={
-                    selectedAttributes[rowIndex]?.name === ""
-                      ? ""
-                      : selectedAttributes[rowIndex]?.name
-                  }
+                  selections={authenticationMethod}
                   onClear={() => onClear(rowIndex)}
                   onSelect={(_, value) => {
-                    // onClear(onChange);
-                    const arr = [...selectedAttributes];
+                    setAuthenticationMethod(value as string);
+                    // fields[rowIndex].value = value as string;
 
-                    arr[rowIndex] = {
-                      ...selectedAttributes[rowIndex],
-                      name: value as string,
-                    };
-                    // value as AttributeType;
-                    setSelectedAttributes(arr);
-
-                    fields[rowIndex].key = value as string;
-
-                    // setSelectedAttributes([
-                    //   ...selectedAttributes,
-                    //   value as AttributeType,
-                    // ]);
-                    console.log(selectedAttributes);
-                    toggleSelect(rowIndex, false);
+                    remove(rowIndex);
+                    insert(rowIndex, {
+                      key: selectedAttributes[rowIndex]?.name,
+                      value: value,
+                    });
+                    setValueOpen(false);
                   }}
                 >
-                  {defaultContextAttributes.map((attribute) => (
+                  {getAttributeValues(rowIndex)?.map((attribute) => (
                     <SelectOption
                       selected={
                         attribute.name === selectedAttributes[rowIndex]?.name
@@ -203,15 +270,25 @@ export const AttributeInput = ({
                 </Select>
               ) : (
                 <TextInput
-                  id={`${attribute.id}-key`}
-                  name={`${name}[${rowIndex}].key`}
+                  id={`${attribute.id}-value`}
+                  name={`${name}[${rowIndex}].value`}
                   ref={register()}
-                  defaultValue={attribute.key}
-                  data-testid="attribute-key-input"
+                  onChange={
+                    !isKeySelectable
+                      ? undefined
+                      : (value) => {
+                          remove(rowIndex);
+                          insert(rowIndex, {
+                            key: selectedAttributes[rowIndex]?.name,
+                            value: value,
+                          });
+                        }
+                  }
+                  defaultValue={attribute.value}
+                  data-testid="attribute-value-input"
                 />
               )}
             </Td>
-            {renderValueInput(rowIndex, attribute)}
             <Td key="minus-button" id={`kc-minus-button-${rowIndex}`}>
               <Button
                 id={`minus-button-${rowIndex}`}

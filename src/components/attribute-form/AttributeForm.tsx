@@ -26,13 +26,20 @@ export const AttributesForm = ({ form, reset, save }: AttributesFormProps) => {
     handleSubmit,
   } = form;
 
+  console.log("HI THESE ARE FORM VALUES", form.getValues());
+  // form.setValue("name", "err");
+
   return (
     <FormAccess
       role="manage-realm"
       onSubmit={save ? handleSubmit(save) : undefined}
     >
       <FormProvider {...form}>
-        <AttributeInput name="attributes" />
+        <AttributeInput
+          // selectableValues={["a", "v", "s"]}
+          // isKeySelectable
+          name="attributes"
+        />
       </FormProvider>
       {!noSaveCancelButtons && (
         <ActionGroup className="kc-attributes__action-group">
