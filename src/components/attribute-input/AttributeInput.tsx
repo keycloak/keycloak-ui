@@ -20,8 +20,16 @@ import {
 import { MinusCircleIcon, PlusCircleIcon } from "@patternfly/react-icons";
 
 import "../attribute-form/attribute-form.css";
-import type { AttributeType } from "../../clients/authorization/AuthorizationEvaluate";
 import { defaultContextAttributes } from "../../clients/utils";
+
+export type AttributeType = {
+  key: string;
+  name: string;
+  custom?: boolean;
+  values?: {
+    [key: string]: string;
+  }[];
+};
 
 type AttributeInputProps = {
   name: string;
