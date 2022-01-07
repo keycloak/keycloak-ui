@@ -26,9 +26,6 @@ export const AttributesForm = ({ form, reset, save }: AttributesFormProps) => {
     handleSubmit,
   } = form;
 
-  console.log("HI THESE ARE FORM VALUES", form.getValues());
-  // form.setValue("name", "err");
-
   return (
     <FormAccess
       role="manage-realm"
