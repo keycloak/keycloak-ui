@@ -32,7 +32,7 @@ export const AttributesForm = ({ form, reset, save }: AttributesFormProps) => {
       onSubmit={save ? handleSubmit(save) : undefined}
     >
       <FormProvider {...form}>
-        <AttributeInput isKeySelectable name="attributes" />
+        <AttributeInput name="attributes" />
       </FormProvider>
       {!noSaveCancelButtons && (
         <ActionGroup className="kc-attributes__action-group">
