@@ -91,22 +91,17 @@ export default function RealmRoleTabs() {
         throw new Error(t("common:notFound"));
       }
 
+      setRealm(realm);
+
       if (role) {
         const convertedRole = convert(role);
         setRole(convertedRole);
-        // setTimeout(() => {
         Object.entries(convertedRole).map((entry) => {
           setValue(entry[0], entry[1]);
         });
-        // }, 5);
-
-        if (url.includes("/attributes")) {
-          setValue("attributes", convertedRole.attributes);
-        }
       }
-
-      setRealm(realm);
     },
+
     [key, url]
   );
 
