@@ -39,6 +39,7 @@ import {
   ClientRoleRoute,
   toClientRole,
 } from "./routes/ClientRole";
+import { defaultContextAttributes } from "../clients/utils";
 
 export default function RealmRoleTabs() {
   const { t } = useTranslation("roles");
@@ -93,11 +94,11 @@ export default function RealmRoleTabs() {
       if (role) {
         const convertedRole = convert(role);
         setRole(convertedRole);
-        setTimeout(() => {
-          Object.entries(convertedRole).map((entry) => {
-            setValue(entry[0], entry[1]);
-          });
-        }, 5);
+        // setTimeout(() => {
+        Object.entries(convertedRole).map((entry) => {
+          setValue(entry[0], entry[1]);
+        });
+        // }, 5);
 
         if (url.includes("/attributes")) {
           setValue("attributes", convertedRole.attributes);
@@ -383,6 +384,10 @@ export default function RealmRoleTabs() {
                 title={<TabTitleText>{t("common:attributes")}</TabTitleText>}
               >
                 <AttributesForm
+                  isKeySelectable
+                  selectableValues={defaultContextAttributes.map(
+                    (item) => item.name
+                  )}
                   form={form}
                   save={save}
                   reset={() => reset(role)}

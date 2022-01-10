@@ -21,6 +21,8 @@ import { MinusCircleIcon, PlusCircleIcon } from "@patternfly/react-icons";
 
 import "../attribute-form/attribute-form.css";
 import { defaultContextAttributes } from "../../clients/utils";
+import { alphaRegexPattern } from "../../util";
+import { camelCase } from "lodash";
 
 export type AttributeType = {
   key: string;
@@ -71,10 +73,72 @@ export const AttributeInput = ({
     setIsOpenArray(arr);
   };
 
-  const getAttributeValues = (rowIndex: number) =>
-    defaultContextAttributes.find(
+  const renderValueInput = (rowIndex: number, attribute: any) => {
+    const attributeValues = defaultContextAttributes.find(
       (attr) => attr.name === selectedAttributes[rowIndex]?.name
     )?.values;
+
+    const getMessageBundleKey = (attributeName: string) => {
+      camelCase(attributeName).replace(alphaRegexPattern, "");
+    };
+
+    console.log(
+      t(
+        `clients:${camelCase("One-Time Password").replace(
+          alphaRegexPattern,
+          ""
+        )}`
+      )
+    );
+    return (
+      <Td>
+        {attributeValues?.length ? (
+          <Select
+            id={`${attribute.id}-value`}
+            className="kc-attribute-value-selectable"
+            name={`${name}[${rowIndex}].value`}
+            toggleId={`group-${name}`}
+            onToggle={(open) => setValueOpen(open)}
+            isOpen={valueOpen}
+            variant={SelectVariant.typeahead}
+            typeAheadAriaLabel={t("clients:selectOrTypeAKey")}
+            placeholderText={t("clients:selectOrTypeAKey")}
+            isGrouped
+            selections={authenticationMethod}
+            onSelect={(_, value) => {
+              setAuthenticationMethod(value as string);
+
+              remove(rowIndex);
+              insert(rowIndex, {
+                key: selectedAttributes[rowIndex]?.name,
+                value: value,
+              });
+              setValueOpen(false);
+            }}
+          >
+            {attributeValues.map((attribute) => (
+              <SelectOption
+                selected={
+                  t(`clients:${getMessageBundleKey(attribute.name)}`) ===
+                  selectedAttributes[rowIndex]?.name
+                }
+                key={attribute.key}
+                value={t(`clients:${getMessageBundleKey(attribute.name)}`)}
+              />
+            ))}
+          </Select>
+        ) : (
+          <TextInput
+            id={`${attribute.id}-value`}
+            name={`${name}[${rowIndex}].value`}
+            ref={register()}
+            defaultValue={attribute.value}
+            data-testid="attribute-value-input"
+          />
+        )}
+      </Td>
+    );
+  };
 
   return (
     <TableComposable
@@ -157,51 +221,7 @@ export const AttributeInput = ({
                 />
               )}
             </Td>
-            <Td>
-              {getAttributeValues(rowIndex)?.length ? (
-                <Select
-                  id={`${attribute.id}-value`}
-                  className="kc-attribute-value-selectable"
-                  name={`${name}[${rowIndex}].value`}
-                  toggleId={`group-${name}`}
-                  onToggle={(open) => setValueOpen(open)}
-                  isOpen={valueOpen}
-                  variant={SelectVariant.typeahead}
-                  typeAheadAriaLabel={t("clients:selectOrTypeAKey")}
-                  placeholderText={t("clients:selectOrTypeAKey")}
-                  isGrouped
-                  selections={authenticationMethod}
-                  onSelect={(_, value) => {
-                    setAuthenticationMethod(value as string);
-
-                    remove(rowIndex);
-                    insert(rowIndex, {
-                      key: selectedAttributes[rowIndex]?.name,
-                      value: value,
-                    });
-                    setValueOpen(false);
-                  }}
-                >
-                  {getAttributeValues(rowIndex)?.map((attribute) => (
-                    <SelectOption
-                      selected={
-                        attribute.name === selectedAttributes[rowIndex]?.name
-                      }
-                      key={attribute.name}
-                      value={attribute.name}
-                    />
-                  ))}
-                </Select>
-              ) : (
-                <TextInput
-                  id={`${attribute.id}-value`}
-                  name={`${name}[${rowIndex}].value`}
-                  ref={register()}
-                  defaultValue={attribute.value}
-                  data-testid="attribute-value-input"
-                />
-              )}
-            </Td>
+            {renderValueInput(rowIndex, attribute)}
             <Td key="minus-button" id={`kc-minus-button-${rowIndex}`}>
               <Button
                 id={`minus-button-${rowIndex}`}
