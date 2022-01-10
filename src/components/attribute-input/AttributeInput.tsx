@@ -65,8 +65,6 @@ export const AttributeInput = ({
   const [selectedAttributes, setSelectedAttributes] = useState<AttributeType[]>(
     []
   );
-  const [authenticationMethod, setAuthenticationMethod] = useState("");
-
   const toggleSelect = (rowIndex: number, open: boolean) => {
     const arr = [...isOpenArray];
     arr[rowIndex] = open;
@@ -75,7 +73,7 @@ export const AttributeInput = ({
 
   const renderValueInput = (rowIndex: number, attribute: any) => {
     const attributeValues = defaultContextAttributes.find(
-      (attr) => attr.name === selectedAttributes[rowIndex]?.name
+      (attr) => attr.name === attribute.key
     )?.values;
 
     const getMessageBundleKey = (attributeName: string) =>
@@ -84,46 +82,51 @@ export const AttributeInput = ({
     return (
       <Td>
         {attributeValues?.length ? (
-          <Select
-            id={`${attribute.id}-value`}
-            className="kc-attribute-value-selectable"
+          <Controller
             name={`${name}[${rowIndex}].value`}
-            toggleId={`group-${name}`}
-            onToggle={(open) => setValueOpen(open)}
-            isOpen={valueOpen}
-            variant={SelectVariant.typeahead}
-            typeAheadAriaLabel={t("clients:selectOrTypeAKey")}
-            placeholderText={t("clients:selectOrTypeAKey")}
-            isGrouped
-            selections={authenticationMethod}
-            onSelect={(_, value) => {
-              setAuthenticationMethod(value as string);
-
-              remove(rowIndex);
-              insert(rowIndex, {
-                key: selectedAttributes[rowIndex]?.name,
-                value: "",
-              });
-              setValueOpen(false);
-            }}
-          >
-            {attributeValues.map((attribute) => (
-              <SelectOption
-                selected={
-                  t(`clients:${getMessageBundleKey(attribute.name)}`) ===
-                  selectedAttributes[rowIndex]?.name
-                }
-                key={attribute.key}
-                value={t(`clients:${getMessageBundleKey(attribute.name)}`)}
-              />
-            ))}
-          </Select>
+            defaultValue={attribute.value}
+            control={control}
+            render={() => (
+              <Select
+                id={`${attribute.id}-value`}
+                className="kc-attribute-value-selectable"
+                name={`${name}[${rowIndex}].value`}
+                toggleId={`group-${name}`}
+                onToggle={(open) => setValueOpen(open)}
+                isOpen={valueOpen}
+                variant={SelectVariant.typeahead}
+                typeAheadAriaLabel={t("clients:selectOrTypeAKey")}
+                placeholderText={t("clients:selectOrTypeAKey")}
+                isGrouped
+                selections={attribute.value}
+                onSelect={(_, value) => {
+                  remove(rowIndex);
+                  insert(rowIndex, {
+                    key: attribute.key,
+                    value: value,
+                  });
+                  setValueOpen(false);
+                }}
+              >
+                {attributeValues.map((attribute) => (
+                  <SelectOption
+                    selected={
+                      t(`clients:${getMessageBundleKey(attribute.name)}`) ===
+                      selectedAttributes[rowIndex]?.name
+                    }
+                    key={attribute.key}
+                    value={t(`clients:${getMessageBundleKey(attribute.name)}`)}
+                  />
+                ))}
+              </Select>
+            )}
+          />
         ) : (
           <TextInput
             id={`${attribute.id}-value`}
             name={`${name}[${rowIndex}].value`}
             ref={register()}
-            defaultValue={attributeValues?.length ? "" : attribute.value}
+            defaultValue={attribute.value}
             data-testid="attribute-value-input"
           />
         )}
