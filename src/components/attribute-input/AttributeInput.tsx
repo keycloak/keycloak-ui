@@ -82,14 +82,6 @@ export const AttributeInput = ({
       camelCase(attributeName).replace(alphaRegexPattern, "");
     };
 
-    console.log(
-      t(
-        `clients:${camelCase("One-Time Password").replace(
-          alphaRegexPattern,
-          ""
-        )}`
-      )
-    );
     return (
       <Td>
         {attributeValues?.length ? (
