@@ -37,6 +37,7 @@ export default {
     searchByName: "Search by name",
     setup: "Setup",
     evaluate: "Evaluate",
+    selectOrTypeAKey: "Select or type a key",
     password: "Password",
     oneTimePassword: "One-Time Password",
     kerberos: "Kerberos",

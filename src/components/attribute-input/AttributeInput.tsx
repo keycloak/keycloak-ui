@@ -78,9 +78,8 @@ export const AttributeInput = ({
       (attr) => attr.name === selectedAttributes[rowIndex]?.name
     )?.values;
 
-    const getMessageBundleKey = (attributeName: string) => {
+    const getMessageBundleKey = (attributeName: string) =>
       camelCase(attributeName).replace(alphaRegexPattern, "");
-    };
 
     return (
       <Td>
@@ -103,7 +102,7 @@ export const AttributeInput = ({
               remove(rowIndex);
               insert(rowIndex, {
                 key: selectedAttributes[rowIndex]?.name,
-                value: value,
+                value: "",
               });
               setValueOpen(false);
             }}
@@ -124,7 +123,7 @@ export const AttributeInput = ({
             id={`${attribute.id}-value`}
             name={`${name}[${rowIndex}].value`}
             ref={register()}
-            defaultValue={attribute.value}
+            defaultValue={attributeValues?.length ? "" : attribute.value}
             data-testid="attribute-value-input"
           />
         )}
