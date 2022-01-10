@@ -3,7 +3,7 @@ import Masthead from "../support/pages/admin_console/Masthead";
 import ListingPage from "../support/pages/admin_console/ListingPage";
 import SidebarPage from "../support/pages/admin_console/SidebarPage";
 import CreateClientScopePage from "../support/pages/admin_console/manage/client_scopes/CreateClientScopePage";
-import { keycloakBefore } from "../support/util/keycloak_before";
+import { keycloakBefore } from "../support/util/keycloak_hooks";
 import RoleMappingTab from "../support/pages/admin_console/manage/RoleMappingTab";
 import ModalUtils from "../support/util/ModalUtils";
 import AdminClient from "../support/util/AdminClient";
@@ -124,10 +124,10 @@ describe("Client Scopes test", () => {
     it("Assign role", () => {
       const role = "offline_access";
       listingPage.searchItem(scopeName, false).goToItemDetails(scopeName);
-      scopeTab.goToScopeTab().clickAssignRole().selectRow(role).clickAssign();
+      scopeTab.goToScopeTab().assignRole().selectRow(role).assign();
       masthead.checkNotificationMessage("Role mapping updated");
       scopeTab.checkRoles([role]);
-      scopeTab.hideInheritedRoles().selectRow(role).clickUnAssign();
+      scopeTab.hideInheritedRoles().selectRow(role).unAssign();
       modalUtils.checkModalTitle("Remove mapping?").confirmModal();
       scopeTab.checkRoles([]);
     });
