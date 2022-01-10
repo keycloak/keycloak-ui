@@ -98,10 +98,6 @@ export default function RealmRoleTabs() {
         Object.entries(convertedRole).map((entry) => {
           setValue(entry[0], entry[1]);
         });
-
-        if (url.includes("/attributes")) {
-          setValue("attributes", convertedRole.attributes);
-        }
       }
     },
     [key, url]
