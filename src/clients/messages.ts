@@ -131,6 +131,36 @@ export default {
     createScopeSuccess: "Authorization scope created successfully",
     updateScopeSuccess: "Authorization scope successfully updated",
     scopeSaveError: "Could not persist authorization scope due to {{error}}",
+    createPolicy: "Create policy",
+    dependentPermission: "Dependent permission",
+    deletePolicy: "Permanently delete policy?",
+    deletePolicyConfirm:
+      "If you delete this policy, some permissions or aggregated policies will be affected.",
+    deletePolicyWarning:
+      "The aggregated polices below will be removed automatically:",
+    policyDeletedSuccess: "The Policy successfully deleted",
+    policyDeletedError: "Could not remove the resource {{error}}",
+    emptyPolicies: "No policies",
+    emptyPoliciesInstructions:
+      "If you want to create a policy, please click the button below to create the policy.",
+    chooseAPolicyType: "Choose a policy type",
+    chooseAPolicyTypeInstructions:
+      "Choose one policy type from the list below and then you can configure a new policy for authorization. There are some types and description.",
+    policyProvider: {
+      regex: "Define regex conditions for your permissions.",
+      role: "Define conditions for your permissions where a set of one or more roles is permitted to access an object.",
+      js: "Define conditions for your permissions using JavaScript. It is one of the rule-based policy types supported by Keycloak, and provides flexibility to write any policy based on the Evaluation API.",
+      client:
+        "Define conditions for your permissions where a set of one or more clients is permitted to access an object.",
+      time: "Define time conditions for your permissions.",
+      user: "Define conditions for your permissions where a set of one or more users is permitted to access an object.",
+      "client-scope":
+        "Define conditions for your permissions where a set of one or more client scopes is permitted to access an object.",
+      aggregate:
+        "Reuse existing policies to build more complex ones and keep your permissions even more decoupled from the policies that are evaluated during the processing of authorization requests.",
+      group:
+        "Define conditions for your permissions where a set of one or more groups (and their hierarchies) is permitted to access an object.",
+    },
     assignedClientScope: "Assigned client scope",
     assignedType: "Assigned type",
     hideInheritedRoles: "Hide inherited roles",
