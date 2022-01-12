@@ -180,6 +180,12 @@ export default {
       "A unique name for this scope. The name can be used to uniquely identify a scope, useful when querying for a specific scope.",
     scopeDisplayName:
       "A unique name for this scope. The name can be used to uniquely identify a scope, useful when querying for a specific scope.",
+    "policy-name": "The name of this policy.",
+    "policy-description": "A description for this policy.",
+    policyDecisionStagey:
+      "The decision strategy dictates how the policies associated with a given permission are evaluated and how a final decision is obtained. 'Affirmative' means that at least one policy must evaluate to a positive decision in order for the final decision to be also positive. 'Unanimous' means that all policies must evaluate to a positive decision in order for the final decision to be also positive. 'Consensus' means that the number of positive decisions must be greater than the number of negative decisions. If the number of positive and negative is the same, the final decision will be negative.",
+    logic:
+      "The logic dictates how the policy decision should be made. If 'Positive', the resulting effect (permit or deny) obtained during the evaluation of this policy will be used to perform a decision. If 'Negative', the resulting effect will be negated, in other words, a permit becomes a deny and vice-versa.",
 
     permissionName: "The name of this permission.",
     permissionDescription: "A description for this permission.",

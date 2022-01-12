@@ -1,5 +1,20 @@
 import React from "react";
 
+import { LogicSelector } from "./LogicSelector";
+import { DecisionStrategySelect } from "../DecisionStragegySelect";
+import { NameDescription } from "./NameDescription";
+
+// type AggregateProps = {
+//   id: string;
+// };
+//{ id }: AggregateProps) => {
+
 export const Aggregate = () => {
-  return <h1>Aggregate</h1>;
+  return (
+    <>
+      <NameDescription prefix="policy" />
+      <DecisionStrategySelect helpLabel="policyDecisionStagey" />
+      <LogicSelector />
+    </>
+  );
 };

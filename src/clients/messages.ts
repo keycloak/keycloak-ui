@@ -161,6 +161,14 @@ export default {
       group:
         "Define conditions for your permissions where a set of one or more groups (and their hierarchies) is permitted to access an object.",
     },
+    logic: "Logic",
+    logicType: {
+      positive: "Positive",
+      negative: "Negative",
+    },
+    createPolicySuccess: "Successfully created the policy",
+    updatePolicySuccess: "Successfully updated the policy",
+    policySaveError: "Could not update the policy due to {{error}}",
     assignedClientScope: "Assigned client scope",
     assignedType: "Assigned type",
     hideInheritedRoles: "Hide inherited roles",

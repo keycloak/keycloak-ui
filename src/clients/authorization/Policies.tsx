@@ -27,7 +27,7 @@ import { useAdminClient, useFetch } from "../../context/auth/AdminClient";
 import { useAlerts } from "../../components/alert/Alerts";
 import { toCreateResource } from "../routes/NewResource";
 import { useRealm } from "../../context/realm-context/RealmContext";
-import { toResourceDetails } from "../routes/Resource";
+import { toPolicyDetails } from "../routes/PolicyDetails";
 import { MoreLabel } from "./MoreLabel";
 import { toUpperCase } from "../../util";
 import { ListEmptyState } from "../../components/list-empty-state/ListEmptyState";
@@ -224,10 +224,11 @@ export const AuthorizationPolicies = ({ clientId }: PoliciesProps) => {
                     />
                     <Td data-testid={`name-column-${policy.name}`}>
                       <Link
-                        to={toResourceDetails({
+                        to={toPolicyDetails({
                           realm,
                           id: clientId,
-                          resourceId: policy.id!,
+                          policyType: policy.type!,
+                          policyId: policy.id!,
                         })}
                       >
                         {policy.name}
