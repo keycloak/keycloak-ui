@@ -28,16 +28,23 @@ export const RoutableTabs = ({
 }: RoutableTabsProps) => {
   const { pathname } = useLocation();
 
-  // Determine which children have an eventKey that at least partially matches the current path, then sort them so the longest match ends up on top.
-  const matchedKeys = Children.toArray(children)
+  // Extract event keys from children.
+  const eventKeys = Children.toArray(children)
     .filter((child): child is ChildElement => isValidElement(child))
-    .map((child) => child.props.eventKey.toString())
+    .map((child) => child.props.eventKey.toString());
+
+  // Determine if there is an exact match.
+  const exactMatch = eventKeys.find((eventKey) => eventKey === pathname);
+
+  // Determine which event keys at least partially match the current path, then sort them so the nearest match ends up on top.
+  const nearestMatch = eventKeys
     .filter((eventKey) => pathname.includes(eventKey))
-    .sort((a, b) => b.length - a.length);
+    .sort((a, b) => a.length - b.length)
+    .pop();
 
   return (
     <Tabs
-      activeKey={matchedKeys[0] ?? pathname}
+      activeKey={exactMatch ?? nearestMatch ?? pathname}
       component={TabsComponent.nav}
       inset={{
         default: "insetNone",
