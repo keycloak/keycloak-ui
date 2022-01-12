@@ -1,18 +1,43 @@
-import { Tabs, TabsComponent, TabsProps } from "@patternfly/react-core";
+import {
+  TabProps,
+  Tabs,
+  TabsComponent,
+  TabsProps,
+} from "@patternfly/react-core";
 import type { History, LocationDescriptorObject } from "history";
-import React from "react";
+import React, {
+  Children,
+  isValidElement,
+  JSXElementConstructor,
+  ReactElement,
+} from "react";
 import { useLocation } from "react-router-dom";
 
-// TODO: Figure out why we need to omit 'ref' from the props.
-type RoutableTabsProps = Omit<TabsProps, "ref" | "activeKey" | "component">;
+type ChildElement = ReactElement<TabProps, JSXElementConstructor<TabProps>>;
+type Child = ChildElement | boolean | null | undefined;
 
-export const RoutableTabs = ({ ...otherProps }: RoutableTabsProps) => {
-  const location = useLocation();
-  const activeKey = location.pathname;
+// TODO: Figure out why we need to omit 'ref' from the props.
+type RoutableTabsProps = { children: Child | Child[] } & Omit<
+  TabsProps,
+  "ref" | "activeKey" | "component" | "children"
+>;
+
+export const RoutableTabs = ({
+  children,
+  ...otherProps
+}: RoutableTabsProps) => {
+  const { pathname } = useLocation();
+
+  // Determine which children have an eventKey that at least partially matches the current path, then sort them so the longest match ends up on top.
+  const matchedKeys = Children.toArray(children)
+    .filter((child): child is ChildElement => isValidElement(child))
+    .map((child) => child.props.eventKey.toString())
+    .filter((eventKey) => pathname.includes(eventKey))
+    .sort((a, b) => b.length - a.length);
 
   return (
     <Tabs
-      activeKey={activeKey}
+      activeKey={matchedKeys[0] ?? pathname}
       component={TabsComponent.nav}
       inset={{
         default: "insetNone",
@@ -21,7 +46,9 @@ export const RoutableTabs = ({ ...otherProps }: RoutableTabsProps) => {
         "2xl": "insetLg",
       }}
       {...otherProps}
-    />
+    >
+      {children}
+    </Tabs>
   );
 };
 
