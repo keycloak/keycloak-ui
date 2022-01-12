@@ -365,6 +365,7 @@ export const RealmSettingsTabs = ({
             </Tab>
             <Tab
               title={<TabTitleText>{t("securityDefences")}</TabTitleText>}
+              data-testid="rs-security-defenses-tab"
               {...routableTab({
                 to: toRealmSettings({
                   realm: realmName,
