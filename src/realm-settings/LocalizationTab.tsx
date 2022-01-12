@@ -115,13 +115,17 @@ export const LocalizationTab = ({
 
   useFetch(
     async () => {
-      let result = await adminClient.realms.getRealmLocalizationTexts({
-        first,
-        max,
-        realm: realm.realm!,
-        selectedLocale:
-          selectMenuLocale || getValues("defaultLocale") || whoAmI.getLocale(),
-      });
+      let result = await adminClient.realms
+        .getRealmLocalizationTexts({
+          first,
+          max,
+          realm: realm.realm!,
+          selectedLocale:
+            selectMenuLocale ||
+            getValues("defaultLocale") ||
+            whoAmI.getLocale(),
+        })
+        .catch(() => []);
 
       const searchInBundles = (idx: number) => {
         return Object.entries(result).filter((i) => i[idx].includes(filter));
