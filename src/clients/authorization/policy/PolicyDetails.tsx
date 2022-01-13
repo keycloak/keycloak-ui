@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { FunctionComponent, useState } from "react";
 import { Link, useHistory, useParams } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { FormProvider, useForm } from "react-hook-form";
@@ -21,8 +21,18 @@ import { useConfirmDialog } from "../../../components/confirm-dialog/ConfirmDial
 import { useAdminClient, useFetch } from "../../../context/auth/AdminClient";
 import { FormAccess } from "../../../components/form-access/FormAccess";
 import { useAlerts } from "../../../components/alert/Alerts";
-import { Aggregate } from "./Aggregate";
 import { toClient } from "../../routes/Client";
+import { Aggregate } from "./Aggregate";
+import { Client } from "./Client";
+
+const COMPONENTS: {
+  [index: string]: FunctionComponent;
+} = {
+  aggregate: Aggregate,
+  client: Client,
+} as const;
+
+const isValidComponentType = (value: string): boolean => value in COMPONENTS;
 
 export default function PolicyDetails() {
   const { t } = useTranslation("clients");
@@ -107,17 +117,10 @@ export default function PolicyDetails() {
     },
   });
 
-  let body;
-  switch (policyType) {
-    case "aggregate":
-      body = <Aggregate id={policyId} />;
-      break;
-    // case "js":
-    //   body = <JS id={policyId} />;
-    //   break;
-    default:
-      body = <>Not supported type!</>;
+  if (!isValidComponentType(policyType)) {
+    throw new Error(`Not a supported ${policyType}!`);
   }
+  const ComponentType = COMPONENTS[policyType];
 
   return (
     <>
@@ -144,7 +147,9 @@ export default function PolicyDetails() {
           onSubmit={handleSubmit(save)}
           role="manage-clients"
         >
-          <FormProvider {...form}>{body}</FormProvider>
+          <FormProvider {...form}>
+            <ComponentType />
+          </FormProvider>
           <ActionGroup>
             <div className="pf-u-mt-md">
               <Button
