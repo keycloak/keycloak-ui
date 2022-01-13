@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { Controller, useFieldArray, useFormContext } from "react-hook-form";
+// import { Controller, useFieldArray, useFormContext } from "react-hook-form";
 import {
   Button,
   FormGroup,
@@ -18,11 +18,11 @@ import {
   Tr,
 } from "@patternfly/react-table";
 import { MinusCircleIcon, PlusCircleIcon } from "@patternfly/react-icons";
+import { Controller, useFieldArray, useFormContext } from "react-hook-form";
 
 import "../attribute-form/attribute-form.css";
 import { defaultContextAttributes } from "../../clients/utils";
-import { alphaRegexPattern } from "../../util";
-import { camelCase } from "lodash";
+import type ResourceRepresentation from "@keycloak/keycloak-admin-client/lib/defs/resourceRepresentation";
 
 export type AttributeType = {
   key: string;
@@ -37,6 +37,7 @@ type AttributeInputProps = {
   name: string;
   selectableValues?: string[];
   isKeySelectable?: boolean;
+  resources?: ResourceRepresentation[];
 };
 
 export const AttributeInput = ({
@@ -62,9 +63,6 @@ export const AttributeInput = ({
   const watchLastValue = watch(`${name}[${fields.length - 1}].value`, "");
 
   const [valueOpen, setValueOpen] = useState(false);
-  const [selectedAttributes, setSelectedAttributes] = useState<AttributeType[]>(
-    []
-  );
   const toggleSelect = (rowIndex: number, open: boolean) => {
     const arr = [...isOpenArray];
     arr[rowIndex] = open;
@@ -73,11 +71,8 @@ export const AttributeInput = ({
 
   const renderValueInput = (rowIndex: number, attribute: any) => {
     const attributeValues = defaultContextAttributes.find(
-      (attr) => attr.name === attribute.key
+      (attr) => attr.key === attribute.key
     )?.values;
-
-    const getMessageBundleKey = (attributeName: string) =>
-      camelCase(attributeName).replace(alphaRegexPattern, "");
 
     return (
       <Td>
@@ -86,7 +81,7 @@ export const AttributeInput = ({
             name={`${name}[${rowIndex}].value`}
             defaultValue={attribute.value}
             control={control}
-            render={() => (
+            render={({ onChange, value }) => (
               <Select
                 id={`${attribute.id}-value`}
                 className="kc-attribute-value-selectable"
@@ -97,33 +92,30 @@ export const AttributeInput = ({
                 variant={SelectVariant.typeahead}
                 typeAheadAriaLabel={t("clients:selectOrTypeAKey")}
                 placeholderText={t("clients:selectOrTypeAKey")}
-                isGrouped
-                selections={attribute.value}
-                onSelect={(_, value) => {
+                selections={value}
+                onSelect={(_, selectedValue) => {
                   remove(rowIndex);
                   insert(rowIndex, {
                     key: attribute.key,
-                    value: value,
+                    value: selectedValue,
                   });
+                  onChange(selectedValue);
+
                   setValueOpen(false);
                 }}
               >
                 {attributeValues.map((attribute) => (
-                  <SelectOption
-                    selected={
-                      t(`clients:${getMessageBundleKey(attribute.name)}`) ===
-                      selectedAttributes[rowIndex]?.name
-                    }
-                    key={attribute.key}
-                    value={t(`clients:${getMessageBundleKey(attribute.name)}`)}
-                  />
+                  <SelectOption key={attribute.key} value={attribute.key}>
+                    {t(`${attribute.name}`)}
+                  </SelectOption>
                 ))}
               </Select>
             )}
           />
         ) : (
           <TextInput
-            id={`${attribute.id}-value`}
+            id={`$clients:${attribute.key}-value`}
+            className="value-input"
             name={`${name}[${rowIndex}].value`}
             ref={register()}
             defaultValue={attribute.value}
@@ -161,45 +153,34 @@ export const AttributeInput = ({
                     name={`${name}[${rowIndex}].key`}
                     defaultValue={attribute.key}
                     control={control}
-                    render={() => (
+                    render={({ onChange, value }) => (
                       <Select
+                        toggleId="id"
                         id={`${attribute.id}-key`}
-                        className="kc-attribute-key-selectable"
                         name={`${name}[${rowIndex}].key`}
-                        toggleId={`group-${name}`}
-                        onToggle={(open) => toggleSelect(rowIndex, open)}
-                        isOpen={isOpenArray[rowIndex]}
+                        className="kc-attribute-key-selectable"
                         variant={SelectVariant.typeahead}
                         typeAheadAriaLabel={t("clients:selectOrTypeAKey")}
                         placeholderText={t("clients:selectOrTypeAKey")}
-                        isGrouped
-                        selections={attribute.key}
-                        onSelect={(_, value) => {
-                          const arr = [...selectedAttributes];
-
-                          arr[rowIndex] = {
-                            ...selectedAttributes[rowIndex],
-                            name: value as string,
-                          };
-                          setSelectedAttributes(arr);
-
+                        onToggle={(open) => toggleSelect(rowIndex, open)}
+                        onSelect={(_, selectedValue) => {
                           remove(rowIndex);
                           insert(rowIndex, {
-                            key: value as string,
+                            key: selectedValue,
                             value: attribute.value,
                           });
+                          onChange(selectedValue);
 
                           toggleSelect(rowIndex, false);
                         }}
+                        selections={value}
+                        aria-label="some label"
+                        isOpen={isOpenArray[rowIndex]}
                       >
                         {selectableValues?.map((attribute) => (
-                          <SelectOption
-                            selected={
-                              attribute === selectedAttributes[rowIndex]?.name
-                            }
-                            key={attribute}
-                            value={attribute}
-                          />
+                          <SelectOption key={attribute} value={attribute}>
+                            {t(`clients:${attribute}`)}
+                          </SelectOption>
                         ))}
                       </Select>
                     )}

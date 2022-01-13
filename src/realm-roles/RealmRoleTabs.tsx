@@ -381,7 +381,7 @@ export default function RealmRoleTabs() {
                 <AttributesForm
                   isKeySelectable
                   selectableValues={defaultContextAttributes.map(
-                    (item) => item.name
+                    (item) => item.key
                   )}
                   form={form}
                   save={save}
