@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useFormContext, Controller } from "react-hook-form";
-import { MinusCircleIcon } from "@patternfly/react-icons";
 import { FormGroup, Button, Checkbox } from "@patternfly/react-core";
+import { MinusCircleIcon } from "@patternfly/react-icons";
 import {
   TableComposable,
   Thead,
@@ -12,127 +12,127 @@ import {
   Td,
 } from "@patternfly/react-table";
 
-import type GroupRepresentation from "@keycloak/keycloak-admin-client/lib/defs/groupRepresentation";
+import { Row, ServiceRole } from "../../../components/role-mapping/RoleMapping";
+import type { RequiredIdValue } from "./ClientScope";
 import { HelpItem } from "../../../components/help-enabler/HelpItem";
 import { useAdminClient, useFetch } from "../../../context/auth/AdminClient";
-import { GroupPickerDialog } from "../../../components/group/GroupPickerDialog";
+import { AddRoleMappingModal } from "../../../components/role-mapping/AddRoleMappingModal";
 
-export type GroupValue = {
-  id: string;
-  extendChildren: boolean;
-};
-
-export const Group = () => {
+export const Role = () => {
   const { t } = useTranslation("clients");
   const { control, getValues, setValue, errors } =
-    useFormContext<{ groups?: GroupValue[] }>();
-  const values = getValues("groups");
+    useFormContext<{ roles?: RequiredIdValue[] }>();
+  const values = getValues("roles");
 
   const [open, setOpen] = useState(false);
-  const [selectedGroups, setSelectedGroups] = useState<GroupRepresentation[]>(
-    []
-  );
+  const [selectedRoles, setSelectedRoles] = useState<Row[]>([]);
 
   const adminClient = useAdminClient();
 
   useFetch(
-    () => {
-      if (values && values.length > 0)
-        return Promise.all(
-          values.map((g) => adminClient.groups.findOne({ id: g.id }))
+    async () => {
+      if (values && values.length > 0) {
+        const roles = await Promise.all(
+          values.map((r) => adminClient.roles.findOneById({ id: r.id }))
         );
+        return Promise.all(
+          roles
+            .filter((r) => r?.clientRole)
+            .map(async (role) => ({
+              role: role!,
+              client: await adminClient.clients.findOne({
+                id: role?.containerId!,
+              }),
+            }))
+        );
+      }
       return Promise.resolve([]);
     },
-    (groups) => {
-      const filteredGroup = groups.filter((g) => g) as GroupRepresentation[];
-      setSelectedGroups(filteredGroup);
-    },
+    setSelectedRoles,
     []
   );
 
   return (
     <FormGroup
-      label={t("groups")}
+      label={t("roles")}
       labelIcon={
         <HelpItem
-          helpText="clients-help:policyGroups"
-          fieldLabelId="clients:groups"
+          helpText="clients-help:policyRoles"
+          fieldLabelId="clients:roles"
         />
       }
-      fieldId="groups"
-      helperTextInvalid={t("requiredGroups")}
-      validated={errors.groups ? "error" : "default"}
+      fieldId="roles"
+      helperTextInvalid={t("requiredRoles")}
+      validated={errors.roles ? "error" : "default"}
       isRequired
     >
       <Controller
-        name="groups"
+        name="roles"
         control={control}
         defaultValue={[]}
         rules={{
-          validate: (value: GroupValue[]) =>
+          validate: (value: RequiredIdValue[]) =>
             value.filter((c) => c.id).length > 0,
         }}
         render={({ onChange, value }) => (
           <>
             {open && (
-              <GroupPickerDialog
-                type="selectMany"
-                text={{
-                  title: "clients:addGroupsToGroupPolicy",
-                  ok: "common:add",
-                }}
-                onConfirm={(groups) => {
+              <AddRoleMappingModal
+                id="role"
+                type="role"
+                onAssign={(rows) => {
                   onChange([
                     ...value,
-                    ...groups.map((group) => ({ id: group.id })),
+                    ...rows.map((row) => ({ id: row.role.id })),
                   ]);
-                  setSelectedGroups([...selectedGroups, ...groups]);
+                  setSelectedRoles([...selectedRoles, ...rows]);
                   setOpen(false);
                 }}
                 onClose={() => {
                   setOpen(false);
                 }}
-                filterGroups={selectedGroups.map((g) => g.name!)}
+                isLDAPmapper
               />
             )}
             <Button
-              data-testid="select-group-button"
+              data-testid="select-role-button"
               variant="secondary"
               onClick={() => {
                 setOpen(true);
               }}
             >
-              {t("addGroups")}
+              {t("addRoles")}
             </Button>
           </>
         )}
       />
-      {selectedGroups.length > 0 && (
+      {selectedRoles.length > 0 && (
         <TableComposable>
           <Thead>
             <Tr>
-              <Th>{t("groups")}</Th>
-              <Th>{t("extendToChildren")}</Th>
+              <Th>{t("roles")}</Th>
+              <Th>{t("common:required")}</Th>
               <Th />
             </Tr>
           </Thead>
           <Tbody>
-            {selectedGroups.map((group, index) => (
-              <Tr key={group.id}>
-                <Td>{group.path}</Td>
+            {selectedRoles.map((row, index) => (
+              <Tr key={row.role.id}>
+                <Td>
+                  <ServiceRole role={row.role} client={row.client} />
+                </Td>
                 <Td>
                   <Controller
-                    name={`groups[${index}].extendChildren`}
+                    name={`roles[${index}].required`}
                     defaultValue={false}
                     control={control}
                     render={({ onChange, value }) => (
                       <Checkbox
-                        id="extendChildren"
+                        id="required"
                         data-testid="standard"
-                        name="extendChildren"
+                        name="required"
                         isChecked={value}
                         onChange={onChange}
-                        isDisabled={group.subGroups?.length === 0}
                       />
                     )}
                   />
@@ -143,11 +143,13 @@ export const Group = () => {
                     className="keycloak__client-authorization__policy-row-remove"
                     icon={<MinusCircleIcon />}
                     onClick={() => {
-                      setValue("groups", [
-                        ...(values || []).filter((s) => s.id !== group.id),
+                      setValue("roles", [
+                        ...(values || []).filter((s) => s.id !== row.role.id),
                       ]);
-                      setSelectedGroups([
-                        ...selectedGroups.filter((s) => s.id !== group.id),
+                      setSelectedRoles([
+                        ...selectedRoles.filter(
+                          (s) => s.role.id !== row.role.id
+                        ),
                       ]);
                     }}
                   />

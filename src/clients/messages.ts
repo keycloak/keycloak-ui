@@ -173,6 +173,7 @@ export default {
     extendToChildren: "Extend to children",
     targetClaim: "Target claim",
     regexPattern: "Regex pattern",
+    addRoles: "Add roles",
     logic: "Logic",
     logicType: {
       positive: "Positive",

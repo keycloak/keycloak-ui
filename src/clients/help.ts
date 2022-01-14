@@ -190,6 +190,7 @@ export default {
     policyGroups: "Specifies which user(s) are allowed by this policy.",
     targetClaim: "Specifies the target claim which the policy will fetch.",
     regexPattern: "Specifies the regex pattern.",
+    policyRoles: "Specifies the client roles allowed by this policy.",
     logic:
       "The logic dictates how the policy decision should be made. If 'Positive', the resulting effect (permit or deny) obtained during the evaluation of this policy will be used to perform a decision. If 'Negative', the resulting effect will be negated, in other words, a permit becomes a deny and vice-versa.",
 

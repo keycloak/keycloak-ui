@@ -17,9 +17,7 @@ import { useAdminClient, useFetch } from "../../../context/auth/AdminClient";
 import { HelpItem } from "../../../components/help-enabler/HelpItem";
 import { AddScopeDialog } from "../../scopes/AddScopeDialog";
 
-import "./client-scope.css";
-
-export type ClientScopeValue = {
+export type RequiredIdValue = {
   id: string;
   required: boolean;
 };
@@ -27,7 +25,7 @@ export type ClientScopeValue = {
 export const ClientScope = () => {
   const { t } = useTranslation("clients");
   const { control, getValues, setValue, errors } =
-    useFormContext<{ clientScopes: ClientScopeValue[] }>();
+    useFormContext<{ clientScopes: RequiredIdValue[] }>();
 
   const [open, setOpen] = useState(false);
   const [scopes, setScopes] = useState<ClientScopeRepresentation[]>([]);
@@ -67,7 +65,7 @@ export const ClientScope = () => {
         control={control}
         defaultValue={[]}
         rules={{
-          validate: (value: ClientScopeValue[]) =>
+          validate: (value: RequiredIdValue[]) =>
             value.filter((c) => c.id).length > 0,
         }}
         render={({ onChange, value }) => (
@@ -76,9 +74,7 @@ export const ClientScope = () => {
               <AddScopeDialog
                 clientScopes={scopes.filter(
                   (scope) =>
-                    !value
-                      .map((c: ClientScopeValue) => c.id)
-                      .includes(scope.id!)
+                    !value.map((c: RequiredIdValue) => c.id).includes(scope.id!)
                 )}
                 isClientScopesConditionType
                 open={open}
@@ -141,7 +137,7 @@ export const ClientScope = () => {
                 <Td>
                   <Button
                     variant="link"
-                    className="keycloak__client-authorization__client-scope-remove"
+                    className="keycloak__client-authorization__policy-row-remove"
                     icon={<MinusCircleIcon />}
                     onClick={() => {
                       setValue("clientScopes", [

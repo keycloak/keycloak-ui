@@ -27,13 +27,17 @@ import { Aggregate } from "./Aggregate";
 import { Client } from "./Client";
 import { NameDescription } from "./NameDescription";
 import { LogicSelector } from "./LogicSelector";
-import { ClientScope, ClientScopeValue } from "./ClientScope";
+import { ClientScope, RequiredIdValue } from "./ClientScope";
 import { Group, GroupValue } from "./Group";
 import { Regex } from "./Regex";
+import { Role } from "./Role";
+
+import "./policy-details.css";
 
 type Policy = PolicyRepresentation & {
   groups?: GroupValue[];
-  clientScopes?: ClientScopeValue[];
+  clientScopes?: RequiredIdValue[];
+  roles?: RequiredIdValue[];
 };
 
 const COMPONENTS: {
@@ -44,6 +48,7 @@ const COMPONENTS: {
   "client-scope": ClientScope,
   group: Group,
   regex: Regex,
+  role: Role,
 } as const;
 
 const isValidComponentType = (value: string): boolean => value in COMPONENTS;
@@ -94,8 +99,10 @@ export default function PolicyDetails() {
   );
 
   const save = async (policy: Policy) => {
+    // remove entries that only have the boolean set and no id
     policy.groups = policy.groups?.filter((g) => g.id);
-    policy.clientScopes = policy.clientScopes?.filter((g) => g.id);
+    policy.clientScopes = policy.clientScopes?.filter((c) => c.id);
+    policy.roles = policy.roles?.filter((r) => r.id);
 
     try {
       if (policyId) {
