@@ -29,6 +29,7 @@ import { NameDescription } from "./NameDescription";
 import { LogicSelector } from "./LogicSelector";
 import { ClientScope, ClientScopeValue } from "./ClientScope";
 import { Group, GroupValue } from "./Group";
+import { Regex } from "./Regex";
 
 type Policy = PolicyRepresentation & {
   groups?: GroupValue[];
@@ -42,6 +43,7 @@ const COMPONENTS: {
   client: Client,
   "client-scope": ClientScope,
   group: Group,
+  regex: Regex,
 } as const;
 
 const isValidComponentType = (value: string): boolean => value in COMPONENTS;

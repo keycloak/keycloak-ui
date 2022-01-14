@@ -171,6 +171,8 @@ export default {
     requiredGroups: "Please add at least one group.",
     addGroupsToGroupPolicy: "Add groups to group policy",
     extendToChildren: "Extend to children",
+    targetClaim: "Target claim",
+    regexPattern: "Regex pattern",
     logic: "Logic",
     logicType: {
       positive: "Positive",

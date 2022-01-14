@@ -82,7 +82,6 @@ export const Group = () => {
                   ok: "common:add",
                 }}
                 onConfirm={(groups) => {
-                  console.log(groups);
                   onChange([
                     ...value,
                     ...groups.map((group) => ({ id: group.id })),
