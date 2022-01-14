@@ -24,12 +24,16 @@ import { useAlerts } from "../../../components/alert/Alerts";
 import { toClient } from "../../routes/Client";
 import { Aggregate } from "./Aggregate";
 import { Client } from "./Client";
+import { NameDescription } from "./NameDescription";
+import { LogicSelector } from "./LogicSelector";
+import { ClientScope } from "./ClientScope";
 
 const COMPONENTS: {
   [index: string]: FunctionComponent;
 } = {
   aggregate: Aggregate,
   client: Client,
+  "client-scope": ClientScope,
 } as const;
 
 const isValidComponentType = (value: string): boolean => value in COMPONENTS;
@@ -38,7 +42,7 @@ export default function PolicyDetails() {
   const { t } = useTranslation("clients");
   const { id, realm, policyId, policyType } = useParams<PolicyDetailsParams>();
   const history = useHistory();
-  const form = useForm<PolicyRepresentation>();
+  const form = useForm();
   const { reset, handleSubmit } = form;
 
   const adminClient = useAdminClient();
@@ -49,21 +53,31 @@ export default function PolicyDetails() {
   useFetch(
     async () => {
       if (policyId) {
-        const policy = (await adminClient.clients.findOnePolicy({
-          id,
-          type: policyType,
-          policyId,
-        })) as PolicyRepresentation | undefined;
+        const result = await Promise.all([
+          adminClient.clients.findOnePolicy({
+            id,
+            type: policyType,
+            policyId,
+          }) as PolicyRepresentation | undefined,
+          adminClient.clients.getAssociatedPolicies({
+            id,
+            permissionId: policyId,
+          }),
+        ]);
 
-        if (!policy) {
+        if (!result[0]) {
           throw new Error(t("common:notFound"));
         }
 
-        return policy;
+        return {
+          policy: result[0],
+          policies: result[1].map((p) => p.id),
+        };
       }
+      return {};
     },
-    (policy) => {
-      reset({ ...policy });
+    ({ policy, policies }) => {
+      reset({ ...policy, policies });
       setPolicy(policy);
     },
     []
@@ -148,7 +162,9 @@ export default function PolicyDetails() {
           role="manage-clients"
         >
           <FormProvider {...form}>
+            <NameDescription prefix="policy" />
             <ComponentType />
+            <LogicSelector />
           </FormProvider>
           <ActionGroup>
             <div className="pf-u-mt-md">

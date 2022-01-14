@@ -161,6 +161,9 @@ export default {
       group:
         "Define conditions for your permissions where a set of one or more groups (and their hierarchies) is permitted to access an object.",
     },
+    applyPolicy: "Apply policy",
+    addClientScopes: "Add client scopes",
+    clientScope: "Client scope",
     logic: "Logic",
     logicType: {
       positive: "Positive",
