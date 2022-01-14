@@ -17,6 +17,7 @@ import {
   toPolicyDetails,
 } from "../../routes/PolicyDetails";
 import { ViewHeader } from "../../../components/view-header/ViewHeader";
+import { KeycloakSpinner } from "../../../components/keycloak-spinner/KeycloakSpinner";
 import { useConfirmDialog } from "../../../components/confirm-dialog/ConfirmDialog";
 import { useAdminClient, useFetch } from "../../../context/auth/AdminClient";
 import { FormAccess } from "../../../components/form-access/FormAccess";
@@ -26,7 +27,13 @@ import { Aggregate } from "./Aggregate";
 import { Client } from "./Client";
 import { NameDescription } from "./NameDescription";
 import { LogicSelector } from "./LogicSelector";
-import { ClientScope } from "./ClientScope";
+import { ClientScope, ClientScopeValue } from "./ClientScope";
+import { Group, GroupValue } from "./Group";
+
+type Policy = PolicyRepresentation & {
+  groups?: GroupValue[];
+  clientScopes?: ClientScopeValue[];
+};
 
 const COMPONENTS: {
   [index: string]: FunctionComponent;
@@ -34,6 +41,7 @@ const COMPONENTS: {
   aggregate: Aggregate,
   client: Client,
   "client-scope": ClientScope,
+  group: Group,
 } as const;
 
 const isValidComponentType = (value: string): boolean => value in COMPONENTS;
@@ -42,7 +50,7 @@ export default function PolicyDetails() {
   const { t } = useTranslation("clients");
   const { id, realm, policyId, policyType } = useParams<PolicyDetailsParams>();
   const history = useHistory();
-  const form = useForm();
+  const form = useForm({ shouldUnregister: false });
   const { reset, handleSubmit } = form;
 
   const adminClient = useAdminClient();
@@ -83,7 +91,10 @@ export default function PolicyDetails() {
     []
   );
 
-  const save = async (policy: PolicyRepresentation) => {
+  const save = async (policy: Policy) => {
+    policy.groups = policy.groups?.filter((g) => g.id);
+    policy.clientScopes = policy.clientScopes?.filter((g) => g.id);
+
     try {
       if (policyId) {
         await adminClient.clients.updatePolicy(
@@ -130,6 +141,10 @@ export default function PolicyDetails() {
       }
     },
   });
+
+  if (policyId && !policy) {
+    return <KeycloakSpinner />;
+  }
 
   if (!isValidComponentType(policyType)) {
     throw new Error(`Not a supported ${policyType}!`);

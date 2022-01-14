@@ -164,6 +164,13 @@ export default {
     applyPolicy: "Apply policy",
     addClientScopes: "Add client scopes",
     clientScope: "Client scope",
+    addGroups: "Add groups",
+    groups: "Groups",
+    requiredClient: "Please add at least one client.",
+    requiredClientScope: "Please add at least one client scope.",
+    requiredGroups: "Please add at least one group.",
+    addGroupsToGroupPolicy: "Add groups to group policy",
+    extendToChildren: "Extend to children",
     logic: "Logic",
     logicType: {
       positive: "Positive",

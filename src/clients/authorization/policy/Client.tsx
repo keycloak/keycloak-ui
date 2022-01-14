@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import { t } from "i18next";
 import { Controller, useFormContext } from "react-hook-form";
 import {
   SelectOption,
@@ -12,9 +11,11 @@ import type { ClientQuery } from "@keycloak/keycloak-admin-client/lib/resources/
 import type ClientRepresentation from "@keycloak/keycloak-admin-client/lib/defs/clientRepresentation";
 import { HelpItem } from "../../../components/help-enabler/HelpItem";
 import { useAdminClient, useFetch } from "../../../context/auth/AdminClient";
+import { useTranslation } from "react-i18next";
 
 export const Client = () => {
-  const { control, getValues } = useFormContext();
+  const { t } = useTranslation("clients");
+  const { control, getValues, errors } = useFormContext();
   const values: string[] | undefined = getValues("clients");
 
   const [open, setOpen] = useState(false);
@@ -68,11 +69,17 @@ export const Client = () => {
         />
       }
       fieldId="clients"
+      helperTextInvalid={t("requiredClient")}
+      validated={errors.clients ? "error" : "default"}
+      isRequired
     >
       <Controller
         name="clients"
         defaultValue={[]}
         control={control}
+        rules={{
+          validate: (value) => value.length > 0,
+        }}
         render={({ onChange, value }) => (
           <Select
             toggleId="clients"

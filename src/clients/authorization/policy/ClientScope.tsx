@@ -19,14 +19,14 @@ import { AddScopeDialog } from "../../scopes/AddScopeDialog";
 
 import "./client-scope.css";
 
-type ClientScopeValue = {
+export type ClientScopeValue = {
   id: string;
   required: boolean;
 };
 
 export const ClientScope = () => {
   const { t } = useTranslation("clients");
-  const { control, getValues, setValue } =
+  const { control, getValues, setValue, errors } =
     useFormContext<{ clientScopes: ClientScopeValue[] }>();
 
   const [open, setOpen] = useState(false);
@@ -58,12 +58,18 @@ export const ClientScope = () => {
         />
       }
       fieldId="clientScopes"
+      helperTextInvalid={t("requiredClientScope")}
+      validated={errors.clientScopes ? "error" : "default"}
+      isRequired
     >
       <Controller
         name="clientScopes"
         control={control}
         defaultValue={[]}
-        rules={{ required: true }}
+        rules={{
+          validate: (value: ClientScopeValue[]) =>
+            value.filter((c) => c.id).length > 0,
+        }}
         render={({ onChange, value }) => (
           <>
             {open && (
