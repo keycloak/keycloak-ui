@@ -32,6 +32,7 @@ import { Group, GroupValue } from "./Group";
 import { Regex } from "./Regex";
 import { Role } from "./Role";
 import { Time } from "./Time";
+import { JavaScript } from "./JavaScript";
 
 import "./policy-details.css";
 
@@ -51,6 +52,7 @@ const COMPONENTS: {
   regex: Regex,
   role: Role,
   time: Time,
+  js: JavaScript,
 } as const;
 
 const isValidComponentType = (value: string): boolean => value in COMPONENTS;

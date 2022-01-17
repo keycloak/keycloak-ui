@@ -202,6 +202,7 @@ export default {
     hour: "Defines the hour when the policy MUST be granted. You can also provide a range by filling the second field. In this case, permission is granted only if current hour is between or equal to the two values you provided.",
     minute:
       "Defines the minute when the policy MUST be granted. You can also provide a range by filling the second field. In this case, permission is granted only if current minute is between or equal to the two values you provided.",
+    policyCode: "The JavaScript code providing the conditions for this policy.",
     logic:
       "The logic dictates how the policy decision should be made. If 'Positive', the resulting effect (permit or deny) obtained during the evaluation of this policy will be used to perform a decision. If 'Negative', the resulting effect will be negated, in other words, a permit becomes a deny and vice-versa.",
     permissionName: "The name of this permission.",

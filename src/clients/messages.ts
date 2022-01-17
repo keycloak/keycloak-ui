@@ -181,6 +181,7 @@ export default {
     dayMonth: "Day",
     hour: "Hour",
     minute: "Minute",
+    code: "Code",
     expireTime: "Expire time",
     logic: "Logic",
     logicType: {
