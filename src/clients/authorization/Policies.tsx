@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import {
   Alert,
@@ -25,7 +25,6 @@ import { useConfirmDialog } from "../../components/confirm-dialog/ConfirmDialog"
 import { PaginatingTableToolbar } from "../../components/table-toolbar/PaginatingTableToolbar";
 import { useAdminClient, useFetch } from "../../context/auth/AdminClient";
 import { useAlerts } from "../../components/alert/Alerts";
-import { toCreateResource } from "../routes/NewResource";
 import { useRealm } from "../../context/realm-context/RealmContext";
 import { toPolicyDetails } from "../routes/PolicyDetails";
 import { MoreLabel } from "./MoreLabel";
@@ -33,6 +32,7 @@ import { toUpperCase } from "../../util";
 import { ListEmptyState } from "../../components/list-empty-state/ListEmptyState";
 import useToggle from "../../utils/useToggle";
 import { NewPolicyDialog } from "./NewPolicyDialog";
+import { toCreatePolicy } from "../routes/NewPolicy";
 
 type PoliciesProps = {
   clientId: string;
@@ -48,7 +48,7 @@ export const AuthorizationPolicies = ({ clientId }: PoliciesProps) => {
   const adminClient = useAdminClient();
   const { addAlert, addError } = useAlerts();
   const { realm } = useRealm();
-  // const history = useHistory();
+  const history = useHistory();
 
   const [policies, setPolicies] = useState<ExpandablePolicyRepresentation[]>();
   const [selectedPolicy, setSelectedPolicy] =
@@ -163,7 +163,11 @@ export const AuthorizationPolicies = ({ clientId }: PoliciesProps) => {
           {newDialog && (
             <NewPolicyDialog
               policyProviders={policyProviders}
-              onSelect={console.log}
+              onSelect={(p) =>
+                history.push(
+                  toCreatePolicy({ id: clientId, realm, policyType: p.type! })
+                )
+              }
               toggleDialog={toggleDialog}
             />
           )}
@@ -180,15 +184,7 @@ export const AuthorizationPolicies = ({ clientId }: PoliciesProps) => {
             }}
             toolbarItem={
               <ToolbarItem>
-                <Button
-                  data-testid="createPolicy"
-                  component={(props) => (
-                    <Link
-                      {...props}
-                      to={toCreateResource({ realm, id: clientId })}
-                    />
-                  )}
-                >
+                <Button data-testid="createPolicy" onClick={toggleDialog}>
                   {t("createPolicy")}
                 </Button>
               </ToolbarItem>
@@ -274,7 +270,11 @@ export const AuthorizationPolicies = ({ clientId }: PoliciesProps) => {
               policyProviders={policyProviders?.filter(
                 (p) => p.type !== "aggregate"
               )}
-              onSelect={console.log}
+              onSelect={(p) =>
+                history.push(
+                  toCreatePolicy({ id: clientId, realm, policyType: p.type! })
+                )
+              }
               toggleDialog={toggleDialog}
             />
           )}
