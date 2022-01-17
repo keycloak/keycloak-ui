@@ -423,13 +423,8 @@ export const RealmSettingsTabs = ({
                 history,
               })}
             >
-              <Tabs
-                activeKey={activeTab}
-                onSelect={(_, key) => setActiveTab(Number(key))}
-              >
+              <RoutableTabs>
                 <Tab
-                  id="profiles"
-                  eventKey={0}
                   data-testid="rs-policies-clientProfiles-tab"
                   aria-label={t("clientProfilesSubTab")}
                   title={
@@ -443,6 +438,13 @@ export const RealmSettingsTabs = ({
                       </span>
                     </TabTitleText>
                   }
+                  {...routableTab({
+                    to: toRealmSettings({
+                      realm: realmName,
+                      tab: "clientPolicies",
+                    }),
+                    history,
+                  })}
                 >
                   <ProfilesTab />
                 </Tab>
@@ -450,7 +452,14 @@ export const RealmSettingsTabs = ({
                   id="policies"
                   data-testid="rs-policies-clientPolicies-tab"
                   aria-label={t("clientPoliciesSubTab")}
-                  eventKey={1}
+                  {...routableTab({
+                    to: toRealmSettings({
+                      realm: realmName,
+                      tab: "clientPolicies",
+                      subTab: "policies",
+                    }),
+                    history,
+                  })}
                   title={
                     <TabTitleText>
                       {t("policies")}
@@ -465,7 +474,7 @@ export const RealmSettingsTabs = ({
                 >
                   <PoliciesTab />
                 </Tab>
-              </Tabs>
+              </RoutableTabs>
             </Tab>
             {isFeatureEnabled(Feature.DeclarativeUserProfile) &&
               userProfileEnabled === "true" && (
