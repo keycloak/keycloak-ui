@@ -409,17 +409,20 @@ export const LocalizationTab = ({
                       isOpen={supportedLocalesOpen}
                       placeholderText={t("selectLocales")}
                     >
-                      {themeTypes.login![0].locales.map(
-                        (locale: string, idx: number) => (
-                          <SelectOption
-                            selected={value.includes(locale)}
-                            key={`locale-${idx}`}
-                            value={locale}
-                          >
-                            {t(`allSupportedLocales.${locale}`)}
-                          </SelectOption>
+                      {
+                        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+                        themeTypes.login![0].locales?.map(
+                          (locale: string, idx: number) => (
+                            <SelectOption
+                              selected={value.includes(locale)}
+                              key={`locale-${idx}`}
+                              value={locale}
+                            >
+                              {t(`allSupportedLocales.${locale}`)}
+                            </SelectOption>
+                          )
                         )
-                      )}
+                      }
                     </Select>
                   )}
                 />
