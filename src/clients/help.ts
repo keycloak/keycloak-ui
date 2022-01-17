@@ -191,9 +191,19 @@ export default {
     targetClaim: "Specifies the target claim which the policy will fetch.",
     regexPattern: "Specifies the regex pattern.",
     policyRoles: "Specifies the client roles allowed by this policy.",
+    startTime:
+      "Defines the time before which the policy MUST NOT be granted. Only granted if current date/time is after or equal to this value.",
+    expireTime:
+      "Defines the time after which the policy MUST NOT be granted. Only granted if current date/time is before or equal to this value.",
+    month:
+      "Defines the month which the policy MUST be granted. You can also provide a range by filling the second field. In this case, permission is granted only if current month is between or equal to the two values you provided.",
+    dayMonth:
+      "Defines the day of month when the policy MUST be granted. You can also provide a range by filling the second field. In this case, permission is granted only if current day of month is between or equal to the two values you provided.",
+    hour: "Defines the hour when the policy MUST be granted. You can also provide a range by filling the second field. In this case, permission is granted only if current hour is between or equal to the two values you provided.",
+    minute:
+      "Defines the minute when the policy MUST be granted. You can also provide a range by filling the second field. In this case, permission is granted only if current minute is between or equal to the two values you provided.",
     logic:
       "The logic dictates how the policy decision should be made. If 'Positive', the resulting effect (permit or deny) obtained during the evaluation of this policy will be used to perform a decision. If 'Negative', the resulting effect will be negated, in other words, a permit becomes a deny and vice-versa.",
-
     permissionName: "The name of this permission.",
     permissionDescription: "A description for this permission.",
     applyToResourceTypeFlag:

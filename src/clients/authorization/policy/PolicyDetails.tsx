@@ -31,6 +31,7 @@ import { ClientScope, RequiredIdValue } from "./ClientScope";
 import { Group, GroupValue } from "./Group";
 import { Regex } from "./Regex";
 import { Role } from "./Role";
+import { Time } from "./Time";
 
 import "./policy-details.css";
 
@@ -49,6 +50,7 @@ const COMPONENTS: {
   group: Group,
   regex: Regex,
   role: Role,
+  time: Time,
 } as const;
 
 const isValidComponentType = (value: string): boolean => value in COMPONENTS;
