@@ -73,7 +73,7 @@ export const EditProfileCrumb = () => {
     <Breadcrumb>
       <BreadcrumbItem
         render={(props) => (
-          <Link {...props} to={toClientPolicies({ realm })}>
+          <Link {...props} to={toClientPolicies({ realm, tab: "profiles" })}>
             {t("clientPolicies")}
           </Link>
         )}
@@ -91,7 +91,7 @@ export const EditExecutorCrumb = () => {
     <Breadcrumb>
       <BreadcrumbItem
         render={(props) => (
-          <Link {...props} to={toClientPolicies({ realm })}>
+          <Link {...props} to={toClientPolicies({ realm, tab: "profiles" })}>
             {t("clientPolicies")}
           </Link>
         )}
@@ -109,7 +109,7 @@ export const NewPolicyCrumb = () => {
     <Breadcrumb>
       <BreadcrumbItem
         render={(props) => (
-          <Link {...props} to={toClientPolicies({ realm })}>
+          <Link {...props} to={toClientPolicies({ realm, tab: "policy" })}>
             {t("clientPolicies")}
           </Link>
         )}

@@ -57,6 +57,7 @@ import environment from "../environment";
 import helpUrls from "../help-urls";
 import { UserProfileTab } from "./user-profile/UserProfileTab";
 import useIsFeatureEnabled, { Feature } from "../utils/useIsFeatureEnabled";
+import { toClientPolicies } from "./routes/ClientPolicies";
 
 type RealmSettingsHeaderProps = {
   onChange: (value: boolean) => void;
@@ -423,7 +424,13 @@ export const RealmSettingsTabs = ({
                 history,
               })}
             >
-              <RoutableTabs>
+              <RoutableTabs
+                mountOnEnter
+                defaultLocation={toClientPolicies({
+                  realm: realmName,
+                  tab: "profiles",
+                })}
+              >
                 <Tab
                   data-testid="rs-policies-clientProfiles-tab"
                   aria-label={t("clientProfilesSubTab")}
@@ -439,9 +446,9 @@ export const RealmSettingsTabs = ({
                     </TabTitleText>
                   }
                   {...routableTab({
-                    to: toRealmSettings({
+                    to: toClientPolicies({
                       realm: realmName,
-                      tab: "clientPolicies",
+                      tab: "profiles",
                     }),
                     history,
                   })}
@@ -453,10 +460,9 @@ export const RealmSettingsTabs = ({
                   data-testid="rs-policies-clientPolicies-tab"
                   aria-label={t("clientPoliciesSubTab")}
                   {...routableTab({
-                    to: toRealmSettings({
+                    to: toClientPolicies({
                       realm: realmName,
-                      tab: "clientPolicies",
-                      subTab: "policies",
+                      tab: "policies",
                     }),
                     history,
                   })}
