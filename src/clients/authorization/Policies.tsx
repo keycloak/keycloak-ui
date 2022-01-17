@@ -5,6 +5,7 @@ import {
   Alert,
   AlertVariant,
   Button,
+  DescriptionList,
   PageSection,
   ToolbarItem,
 } from "@patternfly/react-core";
@@ -33,6 +34,7 @@ import { ListEmptyState } from "../../components/list-empty-state/ListEmptyState
 import useToggle from "../../utils/useToggle";
 import { NewPolicyDialog } from "./NewPolicyDialog";
 import { toCreatePolicy } from "../routes/NewPolicy";
+import { DetailDescription } from "./DetailDescription";
 
 type PoliciesProps = {
   clientId: string;
@@ -76,9 +78,9 @@ export const AuthorizationPolicies = ({ clientId }: PoliciesProps) => {
         adminClient.clients.listPolicyProviders({ id: clientId }),
         ...policies.map(async (policy) => {
           const dependentPolicies =
-            await adminClient.clients.getAssociatedPolicies({
+            await adminClient.clients.listDependentPolicies({
               id: clientId,
-              permissionId: policy.id!,
+              policyId: policy.id!,
             });
 
           return {
@@ -253,7 +255,18 @@ export const AuthorizationPolicies = ({ clientId }: PoliciesProps) => {
                     <Td />
                     <Td colSpan={4}>
                       <ExpandableRowContent>
-                        {policy.isExpanded && <h1>hello</h1>}
+                        {policy.isExpanded && (
+                          <DescriptionList
+                            isHorizontal
+                            className="keycloak_resource_details"
+                          >
+                            <DetailDescription
+                              name="dependentPermission"
+                              array={policy.dependentPolicies}
+                              convert={(p) => p.name!}
+                            />
+                          </DescriptionList>
+                        )}
                       </ExpandableRowContent>
                     </Td>
                   </Tr>
