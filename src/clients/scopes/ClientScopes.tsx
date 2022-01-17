@@ -16,7 +16,6 @@ import { AddScopeDialog } from "./AddScopeDialog";
 import {
   ClientScope,
   CellDropdown,
-  AllClientScopes,
   AllClientScopeType,
   changeClientScope,
   addClientScope,
@@ -24,13 +23,6 @@ import {
 } from "../../components/client-scope/ClientScopeTypes";
 import { useAlerts } from "../../components/alert/Alerts";
 import { KeycloakDataTable } from "../../components/table-toolbar/KeycloakDataTable";
-import {
-  nameFilter,
-  SearchDropdown,
-  SearchToolbar,
-  SearchType,
-  typeFilter,
-} from "../../client-scopes/details/SearchFilter";
 
 import "./client-scopes.css";
 import { ChangeTypeDropdown } from "../../client-scopes/ChangeTypeDropdown";
@@ -55,12 +47,6 @@ export const ClientScopes = ({
   const adminClient = useAdminClient();
   const { addAlert, addError } = useAlerts();
 
-  const [searchType, setSearchType] = useState<SearchType>("name");
-
-  const [searchTypeType, setSearchTypeType] = useState<AllClientScopes>(
-    AllClientScopes.none
-  );
-
   const [addDialogOpen, setAddDialogOpen] = useState(false);
   const [kebabOpen, setKebabOpen] = useState(false);
 
@@ -70,7 +56,7 @@ export const ClientScopes = ({
   const [key, setKey] = useState(0);
   const refresh = () => setKey(new Date().getTime());
 
-  const loader = async (first?: number, max?: number, search?: string) => {
+  const loader = async (first?: number, max?: number) => {
     const defaultClientScopes =
       await adminClient.clients.listDefaultClientScopes({ id: clientId });
     const optionalClientScopes =
@@ -108,9 +94,7 @@ export const ClientScopes = ({
         .filter((scope) => scope.protocol === protocol)
     );
 
-    const filter =
-      searchType === "name" ? nameFilter(search) : typeFilter(searchTypeType);
-    return rows.filter(filter).slice(first, Number(first) + Number(max));
+    return rows.slice(first, Number(first) + Number(max));
   };
 
   const TypeSelector = (scope: Row) => (
@@ -169,30 +153,11 @@ export const ClientScopes = ({
         key={key}
         loader={loader}
         ariaLabelKey="clients:clientScopeList"
-        searchPlaceholderKey={
-          searchType === "name" ? "clients:searchByName" : undefined
-        }
         canSelectAll
         isPaginated
-        isSearching={searchType === "type"}
         onSelect={(rows) => setSelectedRows([...rows])}
-        searchTypeComponent={
-          <SearchDropdown
-            searchType={searchType}
-            onSelect={(searchType) => setSearchType(searchType)}
-          />
-        }
         toolbarItem={
           <>
-            <SearchToolbar
-              searchType={searchType}
-              type={searchTypeType}
-              onSelect={(searchType) => setSearchType(searchType)}
-              onType={(value) => {
-                setSearchTypeType(value);
-                refresh();
-              }}
-            />
             <ToolbarItem>
               <Button onClick={() => setAddDialogOpen(true)}>
                 {t("addClientScope")}

@@ -34,15 +34,6 @@ import { toNewClientScope } from "./routes/NewClientScope";
 import "./client-scope.css";
 import { toClientScope } from "./routes/ClientScope";
 import { useWhoAmI } from "../context/whoami/WhoAmI";
-import {
-  nameFilter,
-  protocolFilter,
-  ProtocolType,
-  SearchDropdown,
-  SearchToolbar,
-  SearchType,
-  typeFilter,
-} from "./details/SearchFilter";
 import type { Row } from "../clients/scopes/ClientScopes";
 import { getProtocolName } from "../clients/utils";
 import helpUrls from "../help-urls";
@@ -63,25 +54,12 @@ export default function ClientScopesSection() {
     ClientScopeDefaultOptionalType[]
   >([]);
 
-  const [searchType, setSearchType] = useState<SearchType>("name");
-  const [searchTypeType, setSearchTypeType] = useState<AllClientScopes>(
-    AllClientScopes.none
-  );
-  const [searchProtocol, setSearchProtocol] = useState<ProtocolType>("all");
-
-  const loader = async (first?: number, max?: number, search?: string) => {
+  const loader = async (first?: number, max?: number) => {
     const defaultScopes =
       await adminClient.clientScopes.listDefaultClientScopes();
     const optionalScopes =
       await adminClient.clientScopes.listDefaultOptionalClientScopes();
     const clientScopes = await adminClient.clientScopes.find();
-
-    const filter =
-      searchType === "name"
-        ? nameFilter(search)
-        : searchType === "type"
-        ? typeFilter(searchTypeType)
-        : protocolFilter(searchProtocol);
 
     return clientScopes
       .map((scope) => {
@@ -99,7 +77,6 @@ export default function ClientScopesSection() {
         };
         return row;
       })
-      .filter(filter)
       .sort((a, b) => a.name!.localeCompare(b.name!, whoAmI.getLocale()))
       .slice(first, Number(first) + Number(max));
   };
@@ -175,37 +152,11 @@ export default function ClientScopesSection() {
           key={key}
           loader={loader}
           ariaLabelKey="client-scopes:clientScopeList"
-          searchPlaceholderKey={
-            searchType === "name" ? "client-scopes:searchFor" : undefined
-          }
-          isSearching={searchType !== "name"}
-          searchTypeComponent={
-            <SearchDropdown
-              searchType={searchType}
-              onSelect={(searchType) => setSearchType(searchType)}
-              withProtocol
-            />
-          }
           isPaginated
           onSelect={(clientScopes) => setSelectedScopes([...clientScopes])}
           canSelectAll
           toolbarItem={
             <>
-              <SearchToolbar
-                searchType={searchType}
-                type={searchTypeType}
-                onSelect={(searchType) => setSearchType(searchType)}
-                onType={(value) => {
-                  setSearchTypeType(value);
-                  refresh();
-                }}
-                protocol={searchProtocol}
-                onProtocol={(protocol) => {
-                  setSearchProtocol(protocol);
-                  refresh();
-                }}
-              />
-
               <ToolbarItem>
                 <Button
                   component={(props) => (
