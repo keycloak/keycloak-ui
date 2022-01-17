@@ -101,7 +101,6 @@ export default function RealmRoleTabs() {
         });
       }
     },
-
     [key, url]
   );
 

@@ -3,7 +3,7 @@ import LoginPage from "../support/pages/LoginPage";
 import RealmSettingsPage from "../support/pages/admin_console/manage/realm_settings/RealmSettingsPage";
 import Masthead from "../support/pages/admin_console/Masthead";
 import ModalUtils from "../support/util/ModalUtils";
-import { keycloakBefore } from "../support/util/keycloak_before";
+import { keycloakBefore } from "../support/util/keycloak_hooks";
 import ListingPage from "../support/pages/admin_console/ListingPage";
 import AdminClient from "../support/util/AdminClient";
 
@@ -197,7 +197,7 @@ describe("Realm settings events tab tests", () => {
 
   it("Realm header settings", () => {
     sidebarPage.goToRealmSettings();
-    cy.get("#pf-tab-securityDefences-securityDefences").click();
+    cy.findByTestId("rs-security-defenses-tab").click();
     cy.findByTestId("headers-form-tab-save").should("be.disabled");
     cy.get("#xFrameOptions").clear().type("DENY");
     cy.findByTestId("headers-form-tab-save").should("be.enabled").click();
@@ -207,7 +207,7 @@ describe("Realm settings events tab tests", () => {
 
   it("Brute force detection", () => {
     sidebarPage.goToRealmSettings();
-    cy.get("#pf-tab-securityDefences-securityDefences").click();
+    cy.findAllByTestId("rs-security-defenses-tab").click();
     cy.get("#pf-tab-20-bruteForce").click();
 
     cy.findByTestId("brute-force-tab-save").should("be.disabled");

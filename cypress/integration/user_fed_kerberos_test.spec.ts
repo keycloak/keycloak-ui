@@ -3,7 +3,7 @@ import SidebarPage from "../support/pages/admin_console/SidebarPage";
 import ProviderPage from "../support/pages/admin_console/manage/providers/ProviderPage";
 import Masthead from "../support/pages/admin_console/Masthead";
 import ModalUtils from "../support/util/ModalUtils";
-import { keycloakBefore } from "../support/util/keycloak_before";
+import { keycloakBefore } from "../support/util/keycloak_hooks";
 
 const loginPage = new LoginPage();
 const masthead = new Masthead();
@@ -150,7 +150,7 @@ describe("User Fed Kerberos tests", () => {
   });
 
   it("Delete a Kerberos provider using the Settings view's Action menu", () => {
-    providersPage.deleteCardFromMenu(provider, firstKerberosName);
+    providersPage.deleteCardFromMenu(firstKerberosName);
 
     modalUtils.checkModalTitle(deleteModalTitle).confirmModal();
     masthead.checkNotificationMessage(deletedSuccessMessage);

@@ -1,4 +1,4 @@
-import { keycloakBefore } from "../support/util/keycloak_before";
+import { keycloakBefore } from "../support/util/keycloak_hooks";
 import LoginPage from "../support/pages/LoginPage";
 import SidebarPage from "../support/pages/admin_console/SidebarPage";
 import Masthead from "../support/pages/admin_console/Masthead";
@@ -8,7 +8,6 @@ import FlowDetails from "../support/pages/admin_console/manage/authentication/Fl
 import RequiredActions from "../support/pages/admin_console/manage/authentication/RequiredActions";
 import AdminClient from "../support/util/AdminClient";
 import PasswordPolicies from "../support/pages/admin_console/manage/authentication/PasswordPolicies";
-import OTPPolicies from "../support/pages/admin_console/manage/authentication/OTPPolicies";
 
 describe("Authentication test", () => {
   const loginPage = new LoginPage();
@@ -182,23 +181,6 @@ describe("Authentication test", () => {
         "Password policies successfully updated"
       );
       passwordPoliciesPage.shouldShowEmptyState();
-    });
-  });
-
-  describe("OTP policies tab", () => {
-    const otpPoliciesPage = new OTPPolicies();
-    beforeEach(() => {
-      keycloakBefore();
-      loginPage.logIn();
-      sidebarPage.goToAuthentication();
-      otpPoliciesPage.goToTab();
-    });
-
-    it("should change to hotp", () => {
-      otpPoliciesPage.checkSupportedActions("FreeOTP, Google Authenticator");
-      otpPoliciesPage.setPolicyType("hotp").increaseInitialCounter().save();
-      masthead.checkNotificationMessage("OTP policy successfully updated");
-      otpPoliciesPage.checkSupportedActions("FreeOTP");
     });
   });
 });

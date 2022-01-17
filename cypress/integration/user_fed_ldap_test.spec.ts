@@ -3,7 +3,7 @@ import SidebarPage from "../support/pages/admin_console/SidebarPage";
 import ProviderPage from "../support/pages/admin_console/manage/providers/ProviderPage";
 import Masthead from "../support/pages/admin_console/Masthead";
 import ModalUtils from "../support/util/ModalUtils";
-import { keycloakBefore } from "../support/util/keycloak_before";
+import { keycloakBefore } from "../support/util/keycloak_hooks";
 
 const loginPage = new LoginPage();
 const masthead = new Masthead();
@@ -181,7 +181,7 @@ describe("User Fed LDAP tests", () => {
   });
 
   it("Delete an LDAP provider using the Settings view's Action menu", () => {
-    providersPage.deleteCardFromMenu(provider, firstLdapName);
+    providersPage.deleteCardFromMenu(firstLdapName);
     modalUtils.checkModalTitle(deleteModalTitle).confirmModal();
     masthead.checkNotificationMessage(deletedSuccessMessage);
   });

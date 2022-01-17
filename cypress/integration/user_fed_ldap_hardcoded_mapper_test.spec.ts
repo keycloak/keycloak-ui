@@ -6,7 +6,7 @@ import ProviderPage from "../support/pages/admin_console/manage/providers/Provid
 import CreateClientPage from "../support/pages/admin_console/manage/clients/CreateClientPage";
 import Masthead from "../support/pages/admin_console/Masthead";
 import ModalUtils from "../support/util/ModalUtils";
-import { keycloakBefore } from "../support/util/keycloak_before";
+import { keycloakBefore } from "../support/util/keycloak_hooks";
 
 const loginPage = new LoginPage();
 const masthead = new Masthead();
@@ -154,7 +154,7 @@ describe("User Fed LDAP mapper tests", () => {
     listingPage.itemExist(lastNameMapper, false);
 
     listingPage.itemExist(modifyDateMapper).deleteItem(modifyDateMapper);
-    modalUtils.checkModalTitle(mapperDeleteTitle).confirmModal();
+    modalUtils.checkModalTitle(mapperDeleteTitle).confirmModal(true);
     masthead.checkNotificationMessage(mapperDeletedSuccess, true);
     listingPage.itemExist(modifyDateMapper, false);
   });
@@ -207,7 +207,7 @@ describe("User Fed LDAP mapper tests", () => {
 
   // *** test cleanup ***
   it("Cleanup - delete LDAP provider", () => {
-    providersPage.deleteCardFromMenu(provider, ldapName);
+    providersPage.deleteCardFromMenu(ldapName);
     modalUtils.checkModalTitle(providerDeleteTitle).confirmModal();
     masthead.checkNotificationMessage(providerDeleteSuccess);
   });
