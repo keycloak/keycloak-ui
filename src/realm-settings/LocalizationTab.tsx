@@ -125,6 +125,7 @@ export const LocalizationTab = ({
             getValues("defaultLocale") ||
             whoAmI.getLocale(),
         })
+        // prevents server error in dev mode due to snowpack
         .catch(() => []);
 
       const searchInBundles = (idx: number) => {
