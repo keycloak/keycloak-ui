@@ -55,6 +55,7 @@ export const NewPolicyDialog = ({
           {policyProviders?.map((provider) => (
             <Tr
               key={provider.type}
+              data-testid={provider.type}
               onRowClick={() => onSelect(provider)}
               isHoverable
             >
