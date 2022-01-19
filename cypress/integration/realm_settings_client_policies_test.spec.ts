@@ -27,15 +27,15 @@ describe("Realm settings client policies tab tests", () => {
     await new AdminClient().deleteRealm(realmName);
   });
 
-  it("Go to client policies tab", () => {
+  it.skip("Go to client policies tab", () => {
     realmSettingsPage.shouldDisplayPoliciesTab();
   });
 
-  it("Check new client form is displaying", () => {
+  it.skip("Check new client form is displaying", () => {
     realmSettingsPage.shouldDisplayNewClientPolicyForm();
   });
 
-  it("Complete new client form and cancel", () => {
+  it.skip("Complete new client form and cancel", () => {
     realmSettingsPage.shouldCompleteAndCancelCreateNewClientPolicy();
   });
 
@@ -43,47 +43,47 @@ describe("Realm settings client policies tab tests", () => {
     realmSettingsPage.shouldCompleteAndCreateNewClientPolicyFromEmptyState();
   });
 
-  it("Should perform client profile search by profile name", () => {
+  it.skip("Should perform client profile search by profile name", () => {
     realmSettingsPage.shouldSearchClientPolicy();
   });
 
-  it("Should not have conditions configured by default", () => {
+  it.skip("Should not have conditions configured by default", () => {
     realmSettingsPage.shouldNotHaveConditionsConfigured();
   });
 
-  it("Should cancel adding a new condition to a client profile", () => {
+  it.skip("Should cancel adding a new condition to a client profile", () => {
     realmSettingsPage.shouldCancelAddingCondition();
   });
 
-  it("Should add a new client-roles condition to a client profile", () => {
+  it.skip("Should add a new client-roles condition to a client profile", () => {
     realmSettingsPage.shouldAddClientRolesCondition();
   });
 
-  it("Should add a new client-scopes condition to a client profile", () => {
+  it.skip("Should add a new client-scopes condition to a client profile", () => {
     realmSettingsPage.shouldAddClientScopesCondition();
   });
 
-  it("Should edit the client-roles condition of a client profile", () => {
+  it.skip("Should edit the client-roles condition of a client profile", () => {
     realmSettingsPage.shouldEditClientRolesCondition();
   });
 
-  it("Should edit the client-scopes condition of a client profile", () => {
+  it.skip("Should edit the client-scopes condition of a client profile", () => {
     realmSettingsPage.shouldEditClientScopesCondition();
   });
 
-  it("Should cancel deleting condition from a client profile", () => {
+  it.skip("Should cancel deleting condition from a client profile", () => {
     realmSettingsPage.shouldCancelDeletingCondition();
   });
 
-  it("Should delete client-roles condition from a client profile", () => {
+  it.skip("Should delete client-roles condition from a client profile", () => {
     realmSettingsPage.shouldDeleteClientRolesCondition();
   });
 
-  it("Should delete client-scopes condition from a client profile", () => {
+  it.skip("Should delete client-scopes condition from a client profile", () => {
     realmSettingsPage.shouldDeleteClientScopesCondition();
   });
 
-  it("Check cancelling the client policy deletion", () => {
+  it.skip("Check cancelling the client policy deletion", () => {
     realmSettingsPage.shouldDisplayDeleteClientPolicyDialog();
   });
 
@@ -91,7 +91,7 @@ describe("Realm settings client policies tab tests", () => {
     realmSettingsPage.shouldDeleteClientPolicyDialog();
   });
 
-  it("Check navigating between Form View and JSON editor", () => {
+  it.skip("Check navigating between Form View and JSON editor", () => {
     realmSettingsPage.shouldNavigateBetweenFormAndJSONViewPolicies();
   });
 
@@ -114,7 +114,7 @@ describe("Realm settings client policies tab tests", () => {
     realmSettingsPage.shouldRemoveClientPolicyFromCreateView();
   });
 
-  it("Check reloading JSON policies", () => {
+  it.skip("Check reloading JSON policies", () => {
     realmSettingsPage.shouldReloadJSONPolicies();
   });
 });

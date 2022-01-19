@@ -625,7 +625,7 @@ export default class RealmSettingsPage {
   }
 
   shouldDisplayDeleteClientPolicyDialog() {
-    cy.get(this.moreDrpDwn).last().click();
+    cy.get(this.moreDrpDwn).last().click({ force: true });
     cy.get(this.moreDrpDwnItems).click();
     cy.get(this.deleteDialogTitle).contains("Delete policy?");
     cy.get(this.deleteDialogBodyText).contains(
@@ -914,7 +914,7 @@ export default class RealmSettingsPage {
       "Test Description"
     );
     cy.findByTestId(this.cancelNewClientPolicyBtn).click();
-    cy.get("table").should("not.have.text", "Test");
+    cy.findByTestId(this.createPolicyEmptyStateBtn).should("exist");
   }
 
   shouldCompleteAndCreateNewClientPolicy() {
@@ -1119,12 +1119,12 @@ export default class RealmSettingsPage {
     );
     cy.findByTestId(this.saveNewClientPolicyBtn).click();
     cy.get(this.alertMessage).should("be.visible", "New client policy created");
-    cy.wait(200);
+    cy.wait(500);
     cy.findByTestId(this.clientPolicyDrpDwn).contains("Action").click();
     cy.findByTestId("deleteClientPolicyDropdown").click();
     cy.findByTestId("modalConfirm").contains("Delete").click();
     cy.get(this.alertMessage).should("be.visible", "Client profile deleted");
-    cy.get("table").should("not.have.text", "Test Again Description");
+    cy.findByTestId(this.createPolicyEmptyStateBtn).should("exist");
   }
 
   shouldReloadJSONPolicies() {
