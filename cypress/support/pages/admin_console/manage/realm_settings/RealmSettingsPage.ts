@@ -625,15 +625,15 @@ export default class RealmSettingsPage {
   }
 
   shouldDisplayDeleteClientPolicyDialog() {
-    cy.get(this.moreDrpDwn).last().click({ force: true });
-    cy.get(this.moreDrpDwnItems).click();
+    this.listingPage.searchItem("Test", false);
+    this.listingPage.clickRowDetails("Test").clickDetailMenu("Delete");
     cy.get(this.deleteDialogTitle).contains("Delete policy?");
     cy.get(this.deleteDialogBodyText).contains(
       "This action will permanently delete the policy Test. This cannot be undone."
     );
     cy.findByTestId("modalConfirm").contains("Delete");
     cy.get(this.deleteDialogCancelBtn).contains("Cancel").click();
-    cy.get("table").should("not.have.text", "Test");
+    cy.get("table").should("be.visible").contains("td", "Test");
   }
 
   shouldDeleteClientProfileDialog() {
