@@ -166,6 +166,7 @@ export default {
     clientScope: "Client scope",
     addGroups: "Add groups",
     groups: "Groups",
+    users: "Users",
     requiredClient: "Please add at least one client.",
     requiredClientScope: "Please add at least one client scope.",
     requiredGroups: "Please add at least one group.",

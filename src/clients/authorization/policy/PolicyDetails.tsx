@@ -25,6 +25,7 @@ import { useAlerts } from "../../../components/alert/Alerts";
 import { toClient } from "../../routes/Client";
 import { Aggregate } from "./Aggregate";
 import { Client } from "./Client";
+import { User } from "./User";
 import { NameDescription } from "./NameDescription";
 import { LogicSelector } from "./LogicSelector";
 import { ClientScope, RequiredIdValue } from "./ClientScope";
@@ -47,6 +48,7 @@ const COMPONENTS: {
 } = {
   aggregate: Aggregate,
   client: Client,
+  user: User,
   "client-scope": ClientScope,
   group: Group,
   regex: Regex,
