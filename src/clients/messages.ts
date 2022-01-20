@@ -174,6 +174,7 @@ export default {
     targetClaim: "Target claim",
     regexPattern: "Regex pattern",
     addRoles: "Add roles",
+    required: "Required",
     startTime: "Start time",
     repeat: "Repeat",
     notRepeat: "Not repeat",

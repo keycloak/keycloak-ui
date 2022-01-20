@@ -110,7 +110,7 @@ export const ClientScope = () => {
           <Thead>
             <Tr>
               <Th>{t("clientScope")}</Th>
-              <Th>{t("common:required")}</Th>
+              <Th>{t("required")}</Th>
               <Th />
             </Tr>
           </Thead>

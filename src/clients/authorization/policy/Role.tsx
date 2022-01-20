@@ -111,7 +111,7 @@ export const Role = () => {
           <Thead>
             <Tr>
               <Th>{t("roles")}</Th>
-              <Th>{t("common:required")}</Th>
+              <Th>{t("required")}</Th>
               <Th />
             </Tr>
           </Thead>
