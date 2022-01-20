@@ -170,6 +170,7 @@ export default {
     requiredClient: "Please add at least one client.",
     requiredClientScope: "Please add at least one client scope.",
     requiredGroups: "Please add at least one group.",
+    requiredRoles: "Please add at least one role.",
     addGroupsToGroupPolicy: "Add groups to group policy",
     extendToChildren: "Extend to children",
     targetClaim: "Target claim",
