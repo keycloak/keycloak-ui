@@ -7,7 +7,6 @@ import {
   Label,
   PageSection,
   Tab,
-  Tabs,
   TabTitleText,
   Tooltip,
 } from "@patternfly/react-core";
@@ -24,7 +23,6 @@ import {
   useConfirmDialog,
 } from "../components/confirm-dialog/ConfirmDialog";
 import { DownloadDialog } from "../components/download-dialog/DownloadDialog";
-import { KeycloakTabs } from "../components/keycloak-tabs/KeycloakTabs";
 import type { MultiLine } from "../components/multi-line-input/multi-line-convert";
 import {
   ViewHeader,
@@ -44,7 +42,7 @@ import { AdvancedTab } from "./AdvancedTab";
 import { ClientSettings } from "./ClientSettings";
 import { Credentials } from "./credentials/Credentials";
 import { Keys } from "./keys/Keys";
-import type { ClientParams } from "./routes/Client";
+import { ClientParams, ClientTab, toClient } from "./routes/Client";
 import { toClients } from "./routes/Clients";
 import { ClientScopes } from "./scopes/ClientScopes";
 import { EvaluateScopes } from "./scopes/EvaluateScopes";
@@ -63,6 +61,15 @@ import { AuthorizationPermissions } from "./authorization/Permissions";
 import { AuthorizationEvaluate } from "./authorization/AuthorizationEvaluate";
 import type UserRepresentation from "@keycloak/keycloak-admin-client/lib/defs/userRepresentation";
 import type RoleRepresentation from "@keycloak/keycloak-admin-client/lib/defs/roleRepresentation";
+import {
+  routableTab,
+  RoutableTabs,
+} from "../components/routable-tabs/RoutableTabs";
+import {
+  AuthorizationTab,
+  toAuthorizationTab,
+} from "./routes/AuthenticationTab";
+import { toClientScopesTab } from "./routes/ClientScopeTab";
 
 type ClientDetailHeaderProps = {
   onChange: (value: boolean) => void;
@@ -185,8 +192,6 @@ export default function ClientDetails() {
 
   const [downloadDialogOpen, toggleDownloadDialogOpen] = useToggle();
   const [changeAuthenticatorOpen, toggleChangeAuthenticatorOpen] = useToggle();
-  const [clientScopeSubTab, setClientScopeSubTab] = useState(30);
-  const [authorizationSubTab, setAuthorizationSubTab] = useState(40);
 
   const form = useForm<ClientForm>({ shouldUnregister: false });
   const { clientId } = useParams<ClientParams>();
@@ -341,6 +346,26 @@ export default function ClientDetails() {
     return <KeycloakSpinner />;
   }
 
+  const route = (tab: ClientTab) =>
+    routableTab({
+      to: toClient({
+        realm,
+        clientId,
+        tab,
+      }),
+      history,
+    });
+
+  const authenticationRoute = (tab: AuthorizationTab) =>
+    routableTab({
+      to: toAuthorizationTab({
+        realm,
+        clientId,
+        tab,
+      }),
+      history,
+    });
+
   return (
     <>
       <ConfirmDialogModal
@@ -385,11 +410,11 @@ export default function ClientDetails() {
       />
       <PageSection variant="light" className="pf-u-p-0">
         <FormProvider {...form}>
-          <KeycloakTabs data-testid="client-tabs" isBox mountOnEnter>
+          <RoutableTabs data-testid="client-tabs" isBox mountOnEnter>
             <Tab
               id="settings"
-              eventKey="settings"
               title={<TabTitleText>{t("common:settings")}</TabTitleText>}
+              {...route("settings")}
             >
               <ClientSettings
                 client={client}
@@ -401,8 +426,8 @@ export default function ClientDetails() {
               client.protocol === "saml") && (
               <Tab
                 id="keys"
-                eventKey="keys"
                 title={<TabTitleText>{t("keys")}</TabTitleText>}
+                {...route("keys")}
               >
                 {client.protocol === "openid-connect" && (
                   <Keys clientId={clientId} save={save} />
@@ -415,8 +440,8 @@ export default function ClientDetails() {
             {!client.publicClient && !isRealmClient(client) && (
               <Tab
                 id="credentials"
-                eventKey="credentials"
                 title={<TabTitleText>{t("credentials")}</TabTitleText>}
+                {...route("credentials")}
               >
                 <Credentials clientId={clientId} save={() => save()} />
               </Tab>
@@ -424,8 +449,8 @@ export default function ClientDetails() {
             {!isRealmClient(client) && (
               <Tab
                 id="mappers"
-                eventKey="mappers"
                 title={<TabTitleText>{t("mappers")}</TabTitleText>}
+                {...route("mappers")}
               >
                 <MapperList
                   model={client}
@@ -439,8 +464,8 @@ export default function ClientDetails() {
             )}
             <Tab
               id="roles"
-              eventKey="roles"
               title={<TabTitleText>{t("roles")}</TabTitleText>}
+              {...route("roles")}
             >
               <RolesList
                 loader={loader}
@@ -451,17 +476,27 @@ export default function ClientDetails() {
             {!isRealmClient(client) && (
               <Tab
                 id="clientScopes"
-                eventKey="clientScopes"
                 title={<TabTitleText>{t("clientScopes")}</TabTitleText>}
+                {...route("clientScopes")}
               >
-                <Tabs
-                  activeKey={clientScopeSubTab}
-                  onSelect={(_, key) => setClientScopeSubTab(key as number)}
+                <RoutableTabs
+                  defaultLocation={toClientScopesTab({
+                    realm,
+                    clientId,
+                    tab: "setup",
+                  })}
                 >
                   <Tab
                     id="setup"
-                    eventKey={30}
                     title={<TabTitleText>{t("setup")}</TabTitleText>}
+                    {...routableTab({
+                      to: toClientScopesTab({
+                        realm,
+                        clientId,
+                        tab: "setup",
+                      }),
+                      history,
+                    })}
                   >
                     <ClientScopes
                       clientName={client.clientId!}
@@ -471,68 +506,78 @@ export default function ClientDetails() {
                   </Tab>
                   <Tab
                     id="evaluate"
-                    eventKey={31}
                     title={<TabTitleText>{t("evaluate")}</TabTitleText>}
+                    {...routableTab({
+                      to: toClientScopesTab({
+                        realm,
+                        clientId,
+                        tab: "evaluate",
+                      }),
+                      history,
+                    })}
                   >
                     <EvaluateScopes
                       clientId={clientId}
                       protocol={client!.protocol!}
                     />
                   </Tab>
-                </Tabs>
+                </RoutableTabs>
               </Tab>
             )}
             {client!.serviceAccountsEnabled && (
               <Tab
                 id="authorization"
-                eventKey="authorization"
                 title={<TabTitleText>{t("authorization")}</TabTitleText>}
+                {...route("authorization")}
               >
-                <Tabs
-                  activeKey={authorizationSubTab}
-                  onSelect={(_, key) => setAuthorizationSubTab(key as number)}
+                <RoutableTabs
                   mountOnEnter
                   unmountOnExit
+                  defaultLocation={toAuthorizationTab({
+                    realm,
+                    clientId,
+                    tab: "settings",
+                  })}
                 >
                   <Tab
                     id="settings"
-                    eventKey={40}
                     title={<TabTitleText>{t("settings")}</TabTitleText>}
+                    {...authenticationRoute("settings")}
                   >
                     <AuthorizationSettings clientId={clientId} />
                   </Tab>
                   <Tab
                     id="resources"
-                    eventKey={41}
                     title={<TabTitleText>{t("resources")}</TabTitleText>}
+                    {...authenticationRoute("resources")}
                   >
                     <AuthorizationResources clientId={clientId} />
                   </Tab>
                   <Tab
                     id="scopes"
-                    eventKey={42}
                     title={<TabTitleText>{t("scopes")}</TabTitleText>}
+                    {...authenticationRoute("scopes")}
                   >
                     <AuthorizationScopes clientId={clientId} />
                   </Tab>
                   <Tab
                     id="policies"
-                    eventKey={43}
                     title={<TabTitleText>{t("policies")}</TabTitleText>}
+                    {...authenticationRoute("policies")}
                   >
                     <AuthorizationPolicies clientId={clientId} />
                   </Tab>
                   <Tab
                     id="permissions"
-                    eventKey={44}
                     title={<TabTitleText>{t("permissions")}</TabTitleText>}
+                    {...authenticationRoute("permissions")}
                   >
                     <AuthorizationPermissions clientId={clientId} />
                   </Tab>
                   <Tab
                     id="Evaluate"
-                    eventKey={44}
                     title={<TabTitleText>{t("evaluate")}</TabTitleText>}
+                    {...authenticationRoute("evaluate")}
                   >
                     <AuthorizationEvaluate
                       clients={clients}
@@ -543,26 +588,26 @@ export default function ClientDetails() {
                       reset={() => setupForm(client)}
                     />
                   </Tab>
-                </Tabs>
+                </RoutableTabs>
               </Tab>
             )}
             {client!.serviceAccountsEnabled && (
               <Tab
                 id="serviceAccount"
-                eventKey="serviceAccount"
                 title={<TabTitleText>{t("serviceAccount")}</TabTitleText>}
+                {...route("serviceAccount")}
               >
                 <ServiceAccount client={client} />
               </Tab>
             )}
             <Tab
               id="advanced"
-              eventKey="advanced"
               title={<TabTitleText>{t("advanced")}</TabTitleText>}
+              {...route("advanced")}
             >
               <AdvancedTab save={save} client={client} />
             </Tab>
-          </KeycloakTabs>
+          </RoutableTabs>
         </FormProvider>
       </PageSection>
     </>
