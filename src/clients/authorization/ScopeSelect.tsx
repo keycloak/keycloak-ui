@@ -3,64 +3,72 @@ import { useTranslation } from "react-i18next";
 import { Controller, useFormContext } from "react-hook-form";
 import { Select, SelectOption, SelectVariant } from "@patternfly/react-core";
 
-import type PolicyRepresentation from "@keycloak/keycloak-admin-client/lib/defs/policyRepresentation";
-import type { Clients } from "@keycloak/keycloak-admin-client/lib/resources/clients";
 import { useAdminClient, useFetch } from "../../context/auth/AdminClient";
 
-type ResourcesPolicySelectProps = {
-  name: string;
+type ScopeSelectProps = {
   clientId: string;
-  searchFunction: keyof Pick<Clients, "listPolicies" | "listResources">;
-  variant?: SelectVariant;
+  resourceId?: string;
 };
 
-export const ResourcesPolicySelect = ({
-  name,
-  searchFunction,
-  clientId,
-  variant = SelectVariant.typeaheadMulti,
-}: ResourcesPolicySelectProps) => {
+export const ScopeSelect = ({ clientId, resourceId }: ScopeSelectProps) => {
   const { t } = useTranslation("clients");
   const adminClient = useAdminClient();
 
-  const { control } = useFormContext<PolicyRepresentation>();
+  const { control, errors, getValues, setValue } = useFormContext();
+  const values: { id: string; name: string }[] | undefined =
+    getValues("scopes");
+
   const [items, setItems] = useState<JSX.Element[]>([]);
   const [search, setSearch] = useState("");
   const [open, setOpen] = useState(false);
 
   useFetch(
-    async () =>
-      (
-        await adminClient.clients[searchFunction](
+    async () => {
+      if (resourceId) {
+        return await adminClient.clients.listScopesByResource({
+          id: clientId,
+          resourceName: resourceId,
+        });
+      }
+
+      if (values?.length && !search) {
+        setValue(
+          "scopes",
+          values.map((v) => v.name)
+        );
+        return Promise.resolve(values);
+      }
+
+      return (
+        await adminClient.clients.listAllScopes(
           Object.assign(
-            { id: clientId, first: 0, max: 10 },
+            { id: clientId, first: 0, max: 10, deep: false },
             search === "" ? null : { name: search }
           )
         )
-      ).map((p) => ({
-        id: "_id" in p ? p._id : "id" in p ? p.id : undefined,
-        name: p.name,
-      })),
-    (policies) =>
+      ).map((s) => ({ id: s.id!, name: s.name! }));
+    },
+    (scopes) =>
       setItems(
-        policies.map((p) => (
-          <SelectOption key={p.id} value={p.id}>
-            {p.name}
+        scopes.map((scope) => (
+          <SelectOption key={scope.id} value={scope.id}>
+            {scope.name}
           </SelectOption>
         ))
       ),
-    [search]
+    [resourceId, search]
   );
 
   return (
     <Controller
-      name={name}
+      name="scopes"
       defaultValue={[]}
       control={control}
+      rules={{ validate: (value) => value.length > 0 }}
       render={({ onChange, value }) => (
         <Select
-          toggleId={name}
-          variant={variant}
+          toggleId="scopes"
+          variant={SelectVariant.typeaheadMulti}
           onToggle={setOpen}
           onFilter={(_, filter) => {
             setSearch(filter);
@@ -80,7 +88,8 @@ export const ResourcesPolicySelect = ({
             setSearch("");
           }}
           isOpen={open}
-          aria-labelledby={t(name)}
+          aria-labelledby={t("scopes")}
+          validated={errors.scopes ? "error" : "default"}
         >
           {items}
         </Select>

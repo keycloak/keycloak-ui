@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Link, useHistory, useParams } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import { Controller, FormProvider, useForm } from "react-hook-form";
+import { Controller, FormProvider, useForm, useWatch } from "react-hook-form";
 import {
   ActionGroup,
   AlertVariant,
@@ -11,6 +11,7 @@ import {
   FormGroup,
   PageSection,
   Radio,
+  SelectVariant,
   Switch,
   TextArea,
   TextInput,
@@ -30,6 +31,7 @@ import { useAlerts } from "../../components/alert/Alerts";
 import { HelpItem } from "../../components/help-enabler/HelpItem";
 import { ResourcesPolicySelect } from "./ResourcesPolicySelect";
 import { toAuthorizationTab } from "../routes/AuthenticationTab";
+import { ScopeSelect } from "./ScopeSelect";
 
 const DECISION_STRATEGIES = ["UNANIMOUS", "AFFIRMATIVE", "CONSENSUS"] as const;
 
@@ -69,6 +71,10 @@ export default function PermissionDetails() {
             id,
             permissionId,
           }),
+          adminClient.clients.getAssociatedScopes({
+            id,
+            permissionId,
+          }),
         ]);
 
         if (!r[0]) {
@@ -77,14 +83,15 @@ export default function PermissionDetails() {
 
         return {
           permission: r[0],
-          resources: r[1].map((p) => p._id),
+          resources: r[1].map((r) => r._id),
           policies: r[2].map((p) => p.id!),
+          scopes: r[3].map((s) => s.id!),
         };
       }
       return {};
     },
-    ({ permission, resources, policies }) => {
-      reset({ ...permission, resources, policies });
+    ({ permission, resources, policies, scopes }) => {
+      reset({ ...permission, resources, policies, scopes });
       if (permission && "resourceType" in permission) {
         setApplyToResourceTypeFlag(
           !!(permission as { resourceType: string }).resourceType
@@ -147,6 +154,12 @@ export default function PermissionDetails() {
         addError("clients:permissionDeletedError", error);
       }
     },
+  });
+
+  const resourcesIds = useWatch({
+    control,
+    name: "resources",
+    defaultValue: [],
   });
 
   return (
@@ -262,7 +275,29 @@ export default function PermissionDetails() {
                   name="resources"
                   searchFunction="listResources"
                   clientId={id}
+                  variant={
+                    permissionType === "scope"
+                      ? SelectVariant.typeahead
+                      : SelectVariant.typeaheadMulti
+                  }
                 />
+              </FormGroup>
+            )}
+            {permissionType === "scope" && (
+              <FormGroup
+                label={t("authorizationScopes")}
+                fieldId="scopes"
+                labelIcon={
+                  <HelpItem
+                    helpText="clients-help:permissionScopes"
+                    fieldLabelId="clients:scopesSelect"
+                  />
+                }
+                helperTextInvalid={t("common:required")}
+                validated={errors.scopes ? "error" : "default"}
+                isRequired
+              >
+                <ScopeSelect clientId={id} resourceId={resourcesIds[0]} />
               </FormGroup>
             )}
             <FormGroup
