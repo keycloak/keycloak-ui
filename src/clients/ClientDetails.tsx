@@ -413,6 +413,7 @@ export default function ClientDetails() {
           <RoutableTabs data-testid="client-tabs" isBox mountOnEnter>
             <Tab
               id="settings"
+              data-testid="clientSettingsTab"
               title={<TabTitleText>{t("common:settings")}</TabTitleText>}
               {...route("settings")}
             >
@@ -426,6 +427,7 @@ export default function ClientDetails() {
               client.protocol === "saml") && (
               <Tab
                 id="keys"
+                data-testid="keysTab"
                 title={<TabTitleText>{t("keys")}</TabTitleText>}
                 {...route("keys")}
               >
@@ -449,6 +451,7 @@ export default function ClientDetails() {
             {!isRealmClient(client) && (
               <Tab
                 id="mappers"
+                data-testid="mappersTab"
                 title={<TabTitleText>{t("mappers")}</TabTitleText>}
                 {...route("mappers")}
               >
@@ -464,6 +467,7 @@ export default function ClientDetails() {
             )}
             <Tab
               id="roles"
+              data-testid="rolesTab"
               title={<TabTitleText>{t("roles")}</TabTitleText>}
               {...route("roles")}
             >
@@ -476,6 +480,7 @@ export default function ClientDetails() {
             {!isRealmClient(client) && (
               <Tab
                 id="clientScopes"
+                data-testid="clientScopesTab"
                 title={<TabTitleText>{t("clientScopes")}</TabTitleText>}
                 {...route("clientScopes")}
               >
@@ -527,6 +532,7 @@ export default function ClientDetails() {
             {client!.serviceAccountsEnabled && (
               <Tab
                 id="authorization"
+                data-testid="authorizationTab"
                 title={<TabTitleText>{t("authorization")}</TabTitleText>}
                 {...route("authorization")}
               >
@@ -541,6 +547,7 @@ export default function ClientDetails() {
                 >
                   <Tab
                     id="settings"
+                    data-testid="authorizationSettings"
                     title={<TabTitleText>{t("settings")}</TabTitleText>}
                     {...authenticationRoute("settings")}
                   >
@@ -548,6 +555,7 @@ export default function ClientDetails() {
                   </Tab>
                   <Tab
                     id="resources"
+                    data-testid="authorizationResources"
                     title={<TabTitleText>{t("resources")}</TabTitleText>}
                     {...authenticationRoute("resources")}
                   >
@@ -555,6 +563,7 @@ export default function ClientDetails() {
                   </Tab>
                   <Tab
                     id="scopes"
+                    data-testid="authorizationScopes"
                     title={<TabTitleText>{t("scopes")}</TabTitleText>}
                     {...authenticationRoute("scopes")}
                   >
@@ -562,6 +571,7 @@ export default function ClientDetails() {
                   </Tab>
                   <Tab
                     id="policies"
+                    data-testid="authorizationPolicies"
                     title={<TabTitleText>{t("policies")}</TabTitleText>}
                     {...authenticationRoute("policies")}
                   >
@@ -569,6 +579,7 @@ export default function ClientDetails() {
                   </Tab>
                   <Tab
                     id="permissions"
+                    data-testid="authorizationPermissions"
                     title={<TabTitleText>{t("permissions")}</TabTitleText>}
                     {...authenticationRoute("permissions")}
                   >
@@ -576,6 +587,7 @@ export default function ClientDetails() {
                   </Tab>
                   <Tab
                     id="Evaluate"
+                    data-testid="authorizationEvaluate"
                     title={<TabTitleText>{t("evaluate")}</TabTitleText>}
                     {...authenticationRoute("evaluate")}
                   >
@@ -594,6 +606,7 @@ export default function ClientDetails() {
             {client!.serviceAccountsEnabled && (
               <Tab
                 id="serviceAccount"
+                data-testid="serviceAccountTab"
                 title={<TabTitleText>{t("serviceAccount")}</TabTitleText>}
                 {...route("serviceAccount")}
               >
@@ -602,6 +615,7 @@ export default function ClientDetails() {
             )}
             <Tab
               id="advanced"
+              data-testid="advancedTab"
               title={<TabTitleText>{t("advanced")}</TabTitleText>}
               {...route("advanced")}
             >
