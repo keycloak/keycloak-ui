@@ -172,7 +172,7 @@ export default class RealmSettingsPage {
   private moreDrpDwnItems = ".pf-c-dropdown__menu-item";
   private deleteDialogTitle = ".pf-c-modal-box__title-text";
   private deleteDialogBodyText = ".pf-c-modal-box__body";
-  private deleteDialogCancelBtn = ".pf-c-button.pf-m-link";
+  private deleteDialogCancelBtn = "#modal-cancel";
   private jsonEditorSaveBtn = "jsonEditor-saveBtn";
   private jsonEditorSavePoliciesBtn = "jsonEditor-policies-saveBtn";
   private jsonEditorReloadBtn = "jsonEditor-reloadBtn";
