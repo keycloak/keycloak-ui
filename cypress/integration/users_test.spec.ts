@@ -178,7 +178,7 @@ describe("User creation", () => {
     // Go to user groups
     userGroupsPage.goToGroupsTab();
     cy.findByTestId(`leave-${groupsList[0]}`).click();
-    cy.findByTestId("modalConfirm").click();
+    cy.findByTestId("confirm").click();
   });
 
   it("Go to user consents test", () => {
