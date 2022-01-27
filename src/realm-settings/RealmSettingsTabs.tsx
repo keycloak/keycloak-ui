@@ -270,7 +270,14 @@ export const RealmSettingsTabs = ({
       />
       <PageSection variant="light" className="pf-u-p-0">
         <FormProvider {...form}>
-          <RoutableTabs isBox mountOnEnter>
+          <RoutableTabs
+            isBox
+            mountOnEnter
+            defaultLocation={toRealmSettings({
+              realm: realmName,
+              tab: "general",
+            })}
+          >
             <Tab
               title={<TabTitleText>{t("general")}</TabTitleText>}
               data-testid="rs-general-tab"

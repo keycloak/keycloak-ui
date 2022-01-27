@@ -20,11 +20,11 @@ export type RealmSettingsTab =
 
 export type RealmSettingsParams = {
   realm: string;
-  tab: RealmSettingsTab;
+  tab?: RealmSettingsTab;
 };
 
 export const RealmSettingsRoute: RouteDef = {
-  path: "/:realm/realm-settings/:tab",
+  path: "/:realm/realm-settings/:tab?",
   component: lazy(() => import("../RealmSettingsSection")),
   breadcrumb: (t) => t("realmSettings"),
   access: "view-realm",
