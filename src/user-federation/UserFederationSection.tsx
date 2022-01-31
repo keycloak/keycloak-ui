@@ -80,10 +80,11 @@ export default function UserFederationSection() {
     []
   );
 
-  // const learnMoreLinkProps = {
-  //   title: t("common:learnMore"),
-  //   href: "https://www.keycloak.org/docs/latest/server_admin/index.html#_user-storage-federation",
-  // };
+  const lowerButtonProps = {
+    variant: "link",
+    onClick: undefined,
+    lowerButtonTitle: t("managePriorities"),
+  };
 
   let cards;
 
@@ -157,6 +158,7 @@ export default function UserFederationSection() {
           ? {
               lowerDropdownItems: ufAddProviderDropdownItems,
               lowerDropdownMenuTitle: "user-federation:addNewProvider",
+              lowerButton: lowerButtonProps,
             }
           : {})}
       />

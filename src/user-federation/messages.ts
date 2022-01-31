@@ -95,6 +95,7 @@ export default {
       "Error when trying to connect to LDAP. See server.log for details. {{error}}",
 
     learnMore: "Learn more",
+    managePriorities: "Manage priorities",
     addNewProvider: "Add new provider",
     addCustomProvider: "Add custom provider",
     providerDetails: "Provider details",
