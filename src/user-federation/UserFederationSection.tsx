@@ -20,6 +20,7 @@ import { useTranslation } from "react-i18next";
 import { useHistory } from "react-router-dom";
 import { useAlerts } from "../components/alert/Alerts";
 import { useConfirmDialog } from "../components/confirm-dialog/ConfirmDialog";
+import { ManagePriorityDialog } from "./ManagePriorityDialog";
 import { KeycloakCard } from "../components/keycloak-card/KeycloakCard";
 import { ViewHeader } from "../components/view-header/ViewHeader";
 import { useAdminClient, useFetch } from "../context/auth/AdminClient";
@@ -42,6 +43,8 @@ export default function UserFederationSection() {
   const refresh = () => setKey(new Date().getTime());
 
   const history = useHistory();
+
+  const [manageDisplayDialog, setManageDisplayDialog] = useState(false);
 
   const providers =
     useServerInfo().componentTypes?.[
@@ -82,7 +85,7 @@ export default function UserFederationSection() {
 
   const lowerButtonProps = {
     variant: "link",
-    onClick: undefined,
+    onClick: () => setManageDisplayDialog(true),
     lowerButtonTitle: t("managePriorities"),
   };
 
@@ -150,6 +153,13 @@ export default function UserFederationSection() {
 
   return (
     <>
+      <DeleteConfirm />
+      {manageDisplayDialog && userFederations && (
+        <ManagePriorityDialog
+          onClose={() => setManageDisplayDialog(false)}
+          components={userFederations.filter((p) => p.config?.enabled)}
+        />
+      )}
       <ViewHeader
         titleKey="userFederation"
         subKey="user-federation:userFederationExplain"
