@@ -219,6 +219,7 @@ describe("User creation", () => {
     modalUtils.checkModalTitle("Delete user?").confirmModal();
 
     masthead.checkNotificationMessage("The user has been deleted");
+    sidebarPage.waitForPageLoad();
 
     listingPage.itemExist(itemId, false);
   });
@@ -230,6 +231,7 @@ describe("User creation", () => {
     modalUtils.checkModalTitle("Delete user?").confirmModal();
 
     masthead.checkNotificationMessage("The user has been deleted");
+    sidebarPage.waitForPageLoad();
 
     listingPage.itemExist(itemIdWithCred, false);
   });
