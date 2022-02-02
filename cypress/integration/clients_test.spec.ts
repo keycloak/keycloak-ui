@@ -182,7 +182,7 @@ describe("Clients test", () => {
 
       masthead.checkNotificationMessage(
         "Initial access token deleted successfully"
-      ); // TODO fix message
+      );
       initialAccessTokenTab.shouldNotBeEmpty();
 
       initialAccessTokenTab.getFirstId((id) => {
