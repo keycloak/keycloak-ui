@@ -5,6 +5,7 @@ export default class ModalUtils {
   private confirmModalBtn = "confirm";
   private cancelModalBtn = "cancel";
   private closeModalBtn = ".pf-c-modal-box .pf-m-plain";
+  private copyToClipboardBtn = '[id*="copy-button"]';
 
   confirmModal(force = false) {
     cy.findByTestId(this.confirmModalBtn).click({ force });
@@ -14,6 +15,12 @@ export default class ModalUtils {
 
   cancelModal() {
     cy.findByTestId(this.cancelModalBtn).click();
+
+    return this;
+  }
+
+  copyToClipboard() {
+    cy.get(this.copyToClipboardBtn).click();
 
     return this;
   }

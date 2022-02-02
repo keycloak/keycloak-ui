@@ -1,6 +1,9 @@
 export default class ListingPage {
   private searchInput = '.pf-c-toolbar__item [type="search"]:visible';
   private itemsRows = "table:visible";
+  private emptyListImg =
+    '[role="tabpanel"]:not([hidden]) [data-testid="empty-state"]';
+  private progressBar = '[role="progressbar"]';
   private itemRowDrpDwn = ".pf-c-dropdown__toggle";
   public exportBtn = '[role="menuitem"]:nth-child(1)';
   public deleteBtn = '[role="menuitem"]:nth-child(2)';
@@ -45,11 +48,17 @@ export default class ListingPage {
       const searchUrl = `/auth/admin/realms/master/*${searchValue}*`;
       cy.intercept(searchUrl).as("search");
     }
-    cy.get(this.searchInput).clear().type(searchValue);
+
+    cy.get(this.searchInput).clear();
+    if (searchValue) {
+      cy.get(this.searchInput).type(searchValue);
+    }
     cy.get(this.searchBtn).click();
+
     if (wait) {
       cy.wait(["@search"]);
     }
+
     return this;
   }
 
@@ -59,6 +68,15 @@ export default class ListingPage {
       .parentsUntil("tbody")
       .find(this.itemRowDrpDwn)
       .click();
+    return this;
+  }
+
+  checkRowColumnValue(itemName: string, column: number, value: string) {
+    cy.get(this.itemsRows)
+      .contains(itemName)
+      .parentsUntil("tbody")
+      .find("td:nth-child(" + column + ")")
+      .should("have.text", value);
     return this;
   }
 
@@ -77,6 +95,12 @@ export default class ListingPage {
 
   goToItemDetails(itemName: string) {
     cy.get(this.itemsRows).contains(itemName).click();
+
+    return this;
+  }
+
+  checkEmptyList() {
+    cy.get(this.emptyListImg).should("be.visible");
 
     return this;
   }

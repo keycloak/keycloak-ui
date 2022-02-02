@@ -126,6 +126,8 @@ describe("Clients test", () => {
 
       sidebarPage.goToClients();
 
+      listingPage.searchItem("John Doe", false).checkEmptyList();
+      listingPage.searchItem("").itemExist("account");
       listingPage.searchItem(itemId).itemExist(itemId);
 
       // Delete
@@ -139,22 +141,55 @@ describe("Clients test", () => {
 
     it("Initial access token", () => {
       const initialAccessTokenTab = new InitialAccessTokenTab();
-      initialAccessTokenTab.goToInitialAccessTokenTab().shouldBeEmpty();
-      initialAccessTokenTab.createNewToken(1, 1).save();
+      initialAccessTokenTab
+        .goToInitialAccessTokenTab()
+        .shouldBeEmpty()
+        .goToCreateFromEmptyList()
+        .fillNewTokenData(1, 3)
+        .save();
 
       modalUtils.checkModalTitle("Initial access token details").closeModal();
 
+      masthead.checkNotificationMessage(
+        "New initial access token has been created"
+      );
+
       initialAccessTokenTab.shouldNotBeEmpty();
 
-      initialAccessTokenTab.getFistId((id) => {
+      listingPage
+        .searchItem("John Doe", false)
+        .checkEmptyList()
+        .searchItem("", false);
+
+      initialAccessTokenTab.getFirstId((id) => {
+        listingPage
+          .checkRowColumnValue(id, 4, "3")
+          .checkRowColumnValue(id, 5, "3")
+          .itemExist(id);
+      });
+
+      listingPage.goToCreateItem();
+      initialAccessTokenTab.fillNewTokenData(1, 3).save();
+
+      modalUtils.closeModal();
+
+      initialAccessTokenTab.getFirstId((id) => {
         listingPage.deleteItem(id);
         modalUtils
           .checkModalTitle("Delete initial access token?")
           .confirmModal();
-        masthead.checkNotificationMessage(
-          "initial access token created successfully"
-        );
       });
+
+      masthead.checkNotificationMessage(
+        "Initial access token deleted successfully"
+      ); // TODO fix message
+      initialAccessTokenTab.shouldNotBeEmpty();
+
+      initialAccessTokenTab.getFirstId((id) => {
+        listingPage.deleteItem(id);
+        modalUtils.confirmModal();
+      });
+      initialAccessTokenTab.shouldBeEmpty();
     });
   });
 
