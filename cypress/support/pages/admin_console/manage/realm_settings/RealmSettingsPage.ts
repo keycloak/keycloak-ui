@@ -179,6 +179,7 @@ export default class RealmSettingsPage {
   private jsonEditor = ".monaco-scrollable-element.editor-scrollable.vs";
   private createClientDrpDwn = ".pf-c-dropdown.pf-m-align-right";
   private clientPolicyDrpDwn = "action-dropdown";
+  private deleteclientPolicyDrpDwn = "deleteClientPolicyDropdown";
   private searchFld = "[id^=realm-settings][id$=profilesinput]";
   private searchFldPolicies = "[id^=realm-settings][id$=clientPoliciesinput]";
   private clientProfileOne =
@@ -330,6 +331,17 @@ export default class RealmSettingsPage {
     cy.findByTestId(this.confirmAddBundle).click();
 
     return this;
+  }
+
+  deleteProvider(providerName: string) {
+    cy.findAllByTestId("provider-name-link")
+      .contains(providerName)
+      .parent()
+      .siblings(".pf-c-data-list__item-action")
+      .click()
+      .findByTestId(this.deleteAction)
+      .click();
+    cy.wait(500).findByTestId(this.modalConfirm).click();
   }
 
   enterConsoleDisplayName(name: string) {
@@ -935,19 +947,6 @@ export default class RealmSettingsPage {
     );
   }
 
-  shouldCompleteAndCreateNewClientPolicyFromEmptyState() {
-    cy.findByTestId(this.createPolicyEmptyStateBtn).click();
-    cy.findByTestId(this.newClientPolicyNameInput).type("Test");
-    cy.findByTestId(this.newClientPolicyDescriptionInput).type(
-      "Test Description"
-    );
-    cy.findByTestId(this.saveNewClientPolicyBtn).click();
-    cy.get(this.alertMessage).should(
-      "be.visible",
-      "New client profile created"
-    );
-  }
-
   shouldSearchClientPolicy() {
     cy.get(this.searchFldPolicies).click({ force: true }).type("Test").click();
     cy.get("table").should("be.visible").contains("td", "Test");
@@ -1024,7 +1023,6 @@ export default class RealmSettingsPage {
     cy.intercept(`/auth/admin/realms/${this.realmName}/client-scopes`).as(
       "clientScopes"
     );
-
     cy.get(this.clientPolicy).click();
     cy.findByTestId(this.addCondition).click();
     cy.get(this.addConditionDrpDwn).click();
@@ -1065,6 +1063,7 @@ export default class RealmSettingsPage {
       "clientScopes"
     );
     cy.get(this.clientPolicy).click();
+
     cy.findByTestId(this.clientScopesConditionLink).click();
 
     cy.wait("@clientScopes");
@@ -1125,27 +1124,24 @@ export default class RealmSettingsPage {
     cy.get("table").should("not.have.text", "Test");
   }
 
-  shouldRemoveClientPolicyFromCreateView() {
+  createNewClientPolicyFromEmptyState(name: string, description: string) {
     cy.findByTestId(this.createPolicyEmptyStateBtn).click();
-    cy.findByTestId(this.newClientPolicyNameInput).type("Test again");
-    cy.findByTestId(this.newClientPolicyDescriptionInput).type(
-      "Test Again Description"
-    );
-    cy.intercept(
-      "PUT",
-      `/auth/admin/realms/${this.realmName}/client-policies/policies`
-    ).as("save");
-
+    cy.findByTestId(this.newClientPolicyNameInput).type(name);
+    cy.findByTestId(this.newClientPolicyDescriptionInput).type(description);
     cy.findByTestId(this.saveNewClientPolicyBtn).click();
-    cy.get(this.alertMessage).should("be.visible", "New client policy created");
-    cy.wait("@save");
-    cy.get(".pf-c-alert").should("not.exist");
+  }
 
+  checkAlertMessage(message: string) {
+    cy.get(this.alertMessage).should("be.visible", message);
+  }
+
+  deleteClientPolicy() {
     cy.findByTestId(this.clientPolicyDrpDwn).contains("Action").click();
-    cy.findByTestId("deleteClientPolicyDropdown").click();
-    cy.findByTestId(this.modalConfirm).contains("Delete").click();
-    cy.get(this.alertMessage).should("be.visible", "Client profile deleted");
-    cy.findByTestId(this.createPolicyEmptyStateBtn).should("exist");
+    cy.findByTestId(this.deleteclientPolicyDrpDwn).click();
+  }
+
+  checkTextIsNotInTable(text: string) {
+    cy.get("table").should("not.have.text", text);
   }
 
   shouldReloadJSONPolicies() {
