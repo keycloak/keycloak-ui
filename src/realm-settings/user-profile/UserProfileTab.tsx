@@ -12,6 +12,7 @@ import { useAdminClient, useFetch } from "../../context/auth/AdminClient";
 import { useRealm } from "../../context/realm-context/RealmContext";
 import { toUserProfile } from "../routes/UserProfile";
 import { AttributesGroupTab } from "./AttributesGroupTab";
+import { AttributesTab } from "./AttributesTab";
 import { JsonEditorTab } from "./JsonEditorTab";
 
 export type OnSaveCallback = (
@@ -78,7 +79,9 @@ export const UserProfileTab = () => {
           to: toUserProfile({ realm, tab: "attributes" }),
           history,
         })}
-      ></Tab>
+      >
+        <AttributesTab config={config} />
+      </Tab>
       <Tab
         title={<TabTitleText>{t("attributesGroup")}</TabTitleText>}
         data-testid="attributesGroupTab"

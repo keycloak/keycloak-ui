@@ -796,4 +796,9 @@ export default {
     deleteSuccess: "Attributes group deleted.",
     deleteError: "Could not delete user attributes group: {{error}}",
   },
+  name: "Name",
+  displayName: "Display name",
+  group: "Attribute group",
+  updatedUserProfileSuccess: "User Profile configuration has been saved",
+  updatedUserProfileError: "User Profile configuration hasn't been saved",
 };
