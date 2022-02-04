@@ -84,7 +84,8 @@ export default {
     },
     includeInAccessTokenResponse: {
       label: "Add to access token response",
-      tooltip: "Should the claim be added to the access token response? Should only be used for informative and non-sensitive data"
+      tooltip:
+        "Should the claim be added to the access token response? Should only be used for informative and non-sensitive data",
     },
     includeInUserInfo: {
       label: "Add to userinfo",
