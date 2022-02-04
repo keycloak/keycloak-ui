@@ -1,12 +1,20 @@
 import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { AlertVariant } from "@patternfly/react-core";
+import {
+  AlertVariant,
+  Button,
+  Divider,
+  ToolbarItem,
+} from "@patternfly/react-core";
 import { useAlerts } from "../../components/alert/Alerts";
 import { KeycloakSpinner } from "../../components/keycloak-spinner/KeycloakSpinner";
 import { DraggableTable } from "../../authentication/components/DraggableTable";
 import type UserProfileConfig from "@keycloak/keycloak-admin-client/lib/defs/userProfileConfig";
 import type { UserProfileAttribute } from "@keycloak/keycloak-admin-client/lib/defs/userProfileConfig";
 import { useAdminClient } from "../../context/auth/AdminClient";
+import { useHistory } from "react-router-dom";
+import { toAddAttribute } from "../routes/AddAttribute";
+import { useRealm } from "../../context/realm-context/RealmContext";
 
 type AttributesTabProps = {
   config?: UserProfileConfig;
@@ -23,6 +31,8 @@ type Row = {
 
 export const AttributesTab = ({ config }: AttributesTabProps) => {
   const { t } = useTranslation("realm-settings");
+  const history = useHistory();
+  const { realm } = useRealm();
   const adminClient = useAdminClient();
   const { addAlert, addError } = useAlerts();
 
@@ -51,34 +61,48 @@ export const AttributesTab = ({ config }: AttributesTabProps) => {
     return <KeycloakSpinner />;
   }
 
-  return (
-    <DraggableTable
-      keyField="name"
-      onDragFinish={async (nameDragged, items) => {
-        const keys = attributesList!.map((e) => e.name);
-        const newIndex = items.indexOf(nameDragged);
-        const oldIndex = keys.indexOf(nameDragged);
-        const dragged = attributesList![oldIndex].data;
-        if (!dragged.name) return;
+  const goToCreate = () => history.push(toAddAttribute({ realm }));
 
-        const times = newIndex - oldIndex;
-        executeMove(dragged, times);
-      }}
-      columns={[
-        {
-          name: "name",
-          displayKey: t("name"),
-        },
-        {
-          name: "displayName",
-          displayKey: t("displayName"),
-        },
-        {
-          name: "group",
-          displayKey: t("group"),
-        },
-      ]}
-      data={config.attributes!}
-    />
+  return (
+    <>
+      <ToolbarItem className="kc-toolbar-attributesTab">
+        <Button
+          data-testid="createAttributeBtn"
+          variant="primary"
+          onClick={goToCreate}
+        >
+          {t("createAttribute")}
+        </Button>
+      </ToolbarItem>
+      <Divider />
+      <DraggableTable
+        keyField="name"
+        onDragFinish={async (nameDragged, items) => {
+          const keys = attributesList!.map((e) => e.name);
+          const newIndex = items.indexOf(nameDragged);
+          const oldIndex = keys.indexOf(nameDragged);
+          const dragged = attributesList![oldIndex].data;
+          if (!dragged.name) return;
+
+          const times = newIndex - oldIndex;
+          executeMove(dragged, times);
+        }}
+        columns={[
+          {
+            name: "name",
+            displayKey: t("attributeName"),
+          },
+          {
+            name: "displayName",
+            displayKey: t("attributeDisplayName"),
+          },
+          {
+            name: "group",
+            displayKey: t("attributeGroup"),
+          },
+        ]}
+        data={config.attributes!}
+      />
+    </>
   );
 };
