@@ -32,7 +32,7 @@ type Row = {
 export const AttributesTab = ({ config }: AttributesTabProps) => {
   const { t } = useTranslation("realm-settings");
   const history = useHistory();
-  const { realm } = useRealm();
+  const { realm: realmName } = useRealm();
   const adminClient = useAdminClient();
   const { addAlert, addError } = useAlerts();
 
@@ -61,7 +61,7 @@ export const AttributesTab = ({ config }: AttributesTabProps) => {
     return <KeycloakSpinner />;
   }
 
-  const goToCreate = () => history.push(toAddAttribute({ realm }));
+  const goToCreate = () => history.push(toAddAttribute({ realm: realmName }));
 
   return (
     <>

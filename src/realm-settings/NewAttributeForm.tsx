@@ -2,7 +2,7 @@ import { PageSection } from "@patternfly/react-core";
 import React from "react";
 
 import { useTranslation } from "react-i18next";
-import { FormAccess } from "../../components/form-access/FormAccess";
+import { FormAccess } from "../components/form-access/FormAccess";
 import "./RealmSettingsSection.css";
 
 export default function NewAttributeForm() {
