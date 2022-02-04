@@ -113,8 +113,14 @@ export default function UserFederationSection() {
     toggleDeleteDialog();
   };
 
+  const cardSorter = (card1: any, card2: any) => {
+    const a = `${card1.name}`;
+    const b = `${card2.name}`;
+    return a < b ? -1 : 1;
+  };
+
   if (userFederations) {
-    cards = userFederations.map((userFederation, index) => {
+    cards = userFederations.sort(cardSorter).map((userFederation, index) => {
       const ufCardDropdownItems = [
         <DropdownItem
           key={`${index}-cardDelete`}
