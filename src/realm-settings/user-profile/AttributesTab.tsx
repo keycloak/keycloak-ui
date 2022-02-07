@@ -1,8 +1,9 @@
-import React, { Fragment, useEffect, useState } from "react";
+import React, { Fragment, useState } from "react";
 import { useTranslation } from "react-i18next";
 import {
   AlertVariant,
   Button,
+  ButtonVariant,
   Divider,
   Dropdown,
   DropdownItem,
@@ -19,6 +20,7 @@ import { useHistory } from "react-router-dom";
 import { toAddAttribute } from "../routes/AddAttribute";
 import { useRealm } from "../../context/realm-context/RealmContext";
 import { useUserProfile } from "./UserProfileContext";
+import { useConfirmDialog } from "../../components/confirm-dialog/ConfirmDialog";
 
 type DataType = UserProfileConfig & UserProfileAttribute;
 
@@ -39,8 +41,12 @@ export const AttributesTab = () => {
   const [attributesList, setAttributesList] = useState<Row[]>();
   const [key, setKey] = useState(0);
   const refresh = () => setKey(key + 1);
-
-  useEffect(() => setKey((value) => value + 1), [config]);
+  const [attributeToDelete, setAttributeToDelete] =
+    useState<{ name: string }>();
+  const [kebabOpen, setKebabOpen] = useState({
+    status: false,
+    rowKey: "",
+  });
 
   const executeMove = async (
     attribute: UserProfileAttribute,
@@ -63,6 +69,24 @@ export const AttributesTab = () => {
 
   const goToCreate = () => history.push(toAddAttribute({ realm: realmName }));
 
+//   const [toggleDeleteDialog, DeleteConfirm] = useConfirmDialog({
+//     titleKey: t("deleteAttributeConfirmTitle"),
+//     messageKey: t("deleteAttributeConfirm", {
+//       attributeName: attributeToDelete?.name!,
+//     }),
+//     continueButtonLabel: t("common:delete"),
+//     continueButtonVariant: ButtonVariant.danger,
+//     onConfirm: async () => {
+//       try {
+//         //TODO backend call
+//         addAlert(t("deleteAttributeSuccess"), AlertVariant.success);
+//         setKey((key) => key + 1);
+//       } catch (error) {
+//         addError(t("deleteAttributeError"), error);
+//       }
+//     },
+//   });
+
   return (
     <>
       <ToolbarItem className="kc-toolbar-attributesTab">
@@ -75,6 +99,7 @@ export const AttributesTab = () => {
         </Button>
       </ToolbarItem>
       <Divider />
+      {/* <DeleteConfirm /> */}
       <DraggableTable
         keyField="name"
         onDragFinish={async (nameDragged, items) => {
@@ -101,7 +126,7 @@ export const AttributesTab = () => {
             displayKey: t("attributeGroup"),
           },
           {
-            name: "dropdown",
+            name: "",
             displayKey: "",
             cellRenderer: (row) => (
               <Dropdown
@@ -110,27 +135,46 @@ export const AttributesTab = () => {
                 onSelect={() => console.log(row)}
                 toggle={
                   <KebabToggle
-                    onToggle={() => console.log("TODO onToggle")}
+                    onToggle={(status) =>
+                      setKebabOpen({
+                        status,
+                        rowKey: row.name!,
+                      })
+                    }
                     id={`toggle-${row.name}`}
                   />
                 }
-                isOpen={true}
+                isOpen={kebabOpen.status && kebabOpen.rowKey === row.name}
                 isPlain
                 dropdownItems={[
                   <DropdownItem
-                    key="edit"
-                    onClick={() => console.log("TODO got to edit page")}
+                    key={`edit-dropdown-item-${row.name}`}
+                    data-testid="editDropdownAttributeItem"
+                    onClick={() => {
+                      setKebabOpen({
+                        status: false,
+                        rowKey: row.name!,
+                      });
+                    }}
                   >
                     {t("common:edit")}
                   </DropdownItem>,
-                  <Fragment key="delete">
+                  <Fragment key={`delete-dropdown-${row.name}`}>
                     {row.name !== "email" && row.name !== "username"
                       ? [
                           <DropdownItem
-                            key="delete"
-                            onClick={() =>
-                              console.log("TODO show delete dialog")
-                            }
+                            key={`delete-dropdown-item-${row.name}`}
+                            data-testid="deleteDropdownAttributeItem"
+                            onClick={() => {
+                            //   toggleDeleteDialog();
+                              setAttributeToDelete({
+                                name: row.name!,
+                              });
+                              setKebabOpen({
+                                status: false,
+                                rowKey: row.name!,
+                              });
+                            }}
                           >
                             {t("common:delete")}
                           </DropdownItem>,

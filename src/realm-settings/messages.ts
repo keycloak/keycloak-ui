@@ -374,6 +374,11 @@ export default {
     updatedUserProfileError: "User Profile configuration hasn't been saved",
     createAttribute: "Create attribute",
     attributesDropdown: "Attributes dropdown",
+    deleteAttributeConfirmTitle: "Delete attribute?",
+    deleteAttributeConfirm:
+      "Are you sure you want to permanently delete the attribute {{attributeName}}",
+    deleteAttributeSuccess: "Attribute deleted",
+    deleteAttributeError: "",
     eventType: "Event saved type",
     searchEventType: "Search saved event type",
     addSavedTypes: "Add saved types",
