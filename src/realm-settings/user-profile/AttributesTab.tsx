@@ -1,9 +1,12 @@
-import React, { useEffect, useState } from "react";
+import React, { Fragment, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import {
   AlertVariant,
   Button,
   Divider,
+  Dropdown,
+  DropdownItem,
+  KebabToggle,
   ToolbarItem,
 } from "@patternfly/react-core";
 import { useAlerts } from "../../components/alert/Alerts";
@@ -61,8 +64,6 @@ export const AttributesTab = ({ config }: AttributesTabProps) => {
     return <KeycloakSpinner />;
   }
 
-  console.log(config);
-
   const goToCreate = () => history.push(toAddAttribute({ realm: realmName }));
 
   return (
@@ -101,6 +102,47 @@ export const AttributesTab = ({ config }: AttributesTabProps) => {
           {
             name: "group",
             displayKey: t("attributeGroup"),
+          },
+          {
+            name: "dropdown",
+            displayKey: "",
+            cellRenderer: (row) => (
+              <Dropdown
+                id={`${row.name}`}
+                label={t("attributesDropdown")}
+                onSelect={() => console.log(row)}
+                toggle={
+                  <KebabToggle
+                    onToggle={() => console.log("TODO onToggle")}
+                    id={`toggle-${row.name}`}
+                  />
+                }
+                isOpen={true}
+                isPlain
+                dropdownItems={[
+                  <DropdownItem
+                    key="edit"
+                    onClick={() => console.log("TODO got to edit page")}
+                  >
+                    {t("common:edit")}
+                  </DropdownItem>,
+                  <Fragment key="delete">
+                    {row.name !== "email" && row.name !== "username"
+                      ? [
+                          <DropdownItem
+                            key="delete"
+                            onClick={() =>
+                              console.log("TODO show delete dialog")
+                            }
+                          >
+                            {t("common:delete")}
+                          </DropdownItem>,
+                        ]
+                      : []}
+                  </Fragment>,
+                ]}
+              />
+            ),
           },
         ]}
         data={config.attributes!}
