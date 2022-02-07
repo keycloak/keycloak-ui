@@ -18,10 +18,7 @@ import { useAdminClient } from "../../context/auth/AdminClient";
 import { useHistory } from "react-router-dom";
 import { toAddAttribute } from "../routes/AddAttribute";
 import { useRealm } from "../../context/realm-context/RealmContext";
-
-type AttributesTabProps = {
-  config?: UserProfileConfig;
-};
+import { useUserProfile } from "./UserProfileContext";
 
 type DataType = UserProfileConfig & UserProfileAttribute;
 
@@ -32,13 +29,13 @@ type Row = {
   data: DataType;
 };
 
-export const AttributesTab = ({ config }: AttributesTabProps) => {
-  const { t } = useTranslation("realm-settings");
-  const history = useHistory();
+export const AttributesTab = () => {
+  const { config } = useUserProfile();
   const { realm: realmName } = useRealm();
   const adminClient = useAdminClient();
+  const { t } = useTranslation("realm-settings");
+  const history = useHistory();
   const { addAlert, addError } = useAlerts();
-
   const [attributesList, setAttributesList] = useState<Row[]>();
   const [key, setKey] = useState(0);
   const refresh = () => setKey(key + 1);
