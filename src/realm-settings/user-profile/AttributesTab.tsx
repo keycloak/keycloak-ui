@@ -69,23 +69,23 @@ export const AttributesTab = () => {
 
   const goToCreate = () => history.push(toAddAttribute({ realm: realmName }));
 
-//   const [toggleDeleteDialog, DeleteConfirm] = useConfirmDialog({
-//     titleKey: t("deleteAttributeConfirmTitle"),
-//     messageKey: t("deleteAttributeConfirm", {
-//       attributeName: attributeToDelete?.name!,
-//     }),
-//     continueButtonLabel: t("common:delete"),
-//     continueButtonVariant: ButtonVariant.danger,
-//     onConfirm: async () => {
-//       try {
-//         //TODO backend call
-//         addAlert(t("deleteAttributeSuccess"), AlertVariant.success);
-//         setKey((key) => key + 1);
-//       } catch (error) {
-//         addError(t("deleteAttributeError"), error);
-//       }
-//     },
-//   });
+  const [toggleDeleteDialog, DeleteConfirm] = useConfirmDialog({
+    titleKey: t("deleteAttributeConfirmTitle"),
+    messageKey: t("deleteAttributeConfirm", {
+      attributeName: attributeToDelete?.name!,
+    }),
+    continueButtonLabel: t("common:delete"),
+    continueButtonVariant: ButtonVariant.danger,
+    onConfirm: async () => {
+      try {
+        //TODO backend call
+        addAlert(t("deleteAttributeSuccess"), AlertVariant.success);
+        setKey((key) => key + 1);
+      } catch (error) {
+        addError(t("deleteAttributeError"), error);
+      }
+    },
+  });
 
   return (
     <>
@@ -99,7 +99,7 @@ export const AttributesTab = () => {
         </Button>
       </ToolbarItem>
       <Divider />
-      {/* <DeleteConfirm /> */}
+      <DeleteConfirm />
       <DraggableTable
         keyField="name"
         onDragFinish={async (nameDragged, items) => {
@@ -166,7 +166,7 @@ export const AttributesTab = () => {
                             key={`delete-dropdown-item-${row.name}`}
                             data-testid="deleteDropdownAttributeItem"
                             onClick={() => {
-                            //   toggleDeleteDialog();
+                              toggleDeleteDialog();
                               setAttributeToDelete({
                                 name: row.name!,
                               });
