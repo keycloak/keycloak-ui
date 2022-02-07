@@ -5,7 +5,7 @@ import { useTranslation } from "react-i18next";
 import { FormAccess } from "../components/form-access/FormAccess";
 import "./RealmSettingsSection.css";
 
-export default function NewAttributeForm() {
+export default function NewAttributeSettings() {
   const { t } = useTranslation("realm-settings");
 
   return (

@@ -61,6 +61,8 @@ export const AttributesTab = ({ config }: AttributesTabProps) => {
     return <KeycloakSpinner />;
   }
 
+  console.log(config);
+
   const goToCreate = () => history.push(toAddAttribute({ realm: realmName }));
 
   return (
