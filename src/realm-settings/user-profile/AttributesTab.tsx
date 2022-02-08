@@ -15,7 +15,6 @@ import { KeycloakSpinner } from "../../components/keycloak-spinner/KeycloakSpinn
 import { DraggableTable } from "../../authentication/components/DraggableTable";
 import type UserProfileConfig from "@keycloak/keycloak-admin-client/lib/defs/userProfileConfig";
 import type { UserProfileAttribute } from "@keycloak/keycloak-admin-client/lib/defs/userProfileConfig";
-import { useAdminClient } from "../../context/auth/AdminClient";
 import { useHistory } from "react-router-dom";
 import { toAddAttribute } from "../routes/AddAttribute";
 import { useRealm } from "../../context/realm-context/RealmContext";
@@ -34,11 +33,10 @@ type Row = {
 export const AttributesTab = () => {
   const { config } = useUserProfile();
   const { realm: realmName } = useRealm();
-  const adminClient = useAdminClient();
   const { t } = useTranslation("realm-settings");
   const history = useHistory();
   const { addAlert, addError } = useAlerts();
-  const [attributesList, setAttributesList] = useState<Row[]>();
+  const [attributesRows, setAttributesRows] = useState<Row[]>();
   const [key, setKey] = useState(0);
   const refresh = () => setKey(key + 1);
   const [attributeToDelete, setAttributeToDelete] =
@@ -63,10 +61,6 @@ export const AttributesTab = () => {
     }
   };
 
-  if (!config) {
-    return <KeycloakSpinner />;
-  }
-
   const goToCreate = () => history.push(toAddAttribute({ realm: realmName }));
 
   const [toggleDeleteDialog, DeleteConfirm] = useConfirmDialog({
@@ -87,6 +81,10 @@ export const AttributesTab = () => {
     },
   });
 
+  if (!config) {
+    return <KeycloakSpinner />;
+  }
+
   return (
     <>
       <ToolbarItem className="kc-toolbar-attributesTab">
@@ -103,10 +101,10 @@ export const AttributesTab = () => {
       <DraggableTable
         keyField="name"
         onDragFinish={async (nameDragged, items) => {
-          const keys = attributesList!.map((e) => e.name);
+          const keys = attributesRows!.map((e) => e.name);
           const newIndex = items.indexOf(nameDragged);
           const oldIndex = keys.indexOf(nameDragged);
-          const dragged = attributesList![oldIndex].data;
+          const dragged = attributesRows![oldIndex].data;
           if (!dragged.name) return;
 
           const times = newIndex - oldIndex;
