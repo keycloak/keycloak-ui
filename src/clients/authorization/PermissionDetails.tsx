@@ -103,7 +103,6 @@ export default function PermissionDetails() {
   );
 
   const save = async (permission: PolicyRepresentation) => {
-    console.log(permission);
     try {
       if (permissionId) {
         await adminClient.clients.updatePermission(
