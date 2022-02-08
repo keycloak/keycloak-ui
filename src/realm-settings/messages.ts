@@ -376,7 +376,7 @@ export default {
     attributesDropdown: "Attributes dropdown",
     deleteAttributeConfirmTitle: "Delete attribute?",
     deleteAttributeConfirm:
-      "Are you sure you want to permanently delete the attribute {{attributeName}}",
+      "Are you sure you want to permanently delete the attribute {{attributeName}}?",
     deleteAttributeSuccess: "Attribute deleted",
     deleteAttributeError: "",
     eventType: "Event saved type",
