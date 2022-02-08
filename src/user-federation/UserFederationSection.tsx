@@ -180,10 +180,7 @@ export default function UserFederationSection() {
       />
       <PageSection>
         {userFederations && userFederations.length > 0 ? (
-          <>
-            <DeleteConfirm />
-            <Gallery hasGutter>{cards}</Gallery>
-          </>
+          <Gallery hasGutter>{cards}</Gallery>
         ) : (
           <>
             <TextContent>

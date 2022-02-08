@@ -193,7 +193,7 @@ describe("User Fed Kerberos tests", () => {
 
   it("Delete a Kerberos provider from card view using the card's menu", () => {
     providersPage.deleteCardFromCard(secondKerberosName);
-    modalUtils.confirmModal(true);
+    modalUtils.checkModalTitle(deleteModalTitle).confirmModal();
     masthead.checkNotificationMessage(deletedSuccessMessage);
   });
 
