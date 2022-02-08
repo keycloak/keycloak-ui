@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Controller, useFormContext } from "react-hook-form";
 import { Select, SelectOption, SelectVariant } from "@patternfly/react-core";
@@ -14,39 +14,32 @@ export const ScopeSelect = ({ clientId, resourceId }: ScopeSelectProps) => {
   const { t } = useTranslation("clients");
   const adminClient = useAdminClient();
 
-  const { control, errors, getValues, setValue } = useFormContext();
-  const values: { id: string; name: string }[] | undefined =
-    getValues("scopes");
+  const { control, errors, setValue } = useFormContext();
 
   const [items, setItems] = useState<JSX.Element[]>([]);
   const [search, setSearch] = useState("");
   const [open, setOpen] = useState(false);
+  const firstUpdate = useRef(true);
 
   useFetch(
     async () => {
       if (resourceId) {
-        return await adminClient.clients.listScopesByResource({
+        if (!firstUpdate.current) {
+          setValue("scopes", []);
+        }
+        firstUpdate.current = false;
+        return adminClient.clients.listScopesByResource({
           id: clientId,
           resourceName: resourceId,
         });
       }
 
-      if (values?.length && !search) {
-        setValue(
-          "scopes",
-          values.map((v) => v.name)
-        );
-        return Promise.resolve(values);
-      }
-
-      return (
-        await adminClient.clients.listAllScopes(
-          Object.assign(
-            { id: clientId, first: 0, max: 10, deep: false },
-            search === "" ? null : { name: search }
-          )
+      return adminClient.clients.listAllScopes(
+        Object.assign(
+          { id: clientId, first: 0, max: 10, deep: false },
+          search === "" ? null : { name: search }
         )
-      ).map((s) => ({ id: s.id!, name: s.name! }));
+      );
     },
     (scopes) =>
       setItems(

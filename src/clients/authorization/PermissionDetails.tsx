@@ -103,6 +103,7 @@ export default function PermissionDetails() {
   );
 
   const save = async (permission: PolicyRepresentation) => {
+    console.log(permission);
     try {
       if (permissionId) {
         await adminClient.clients.updatePermission(
@@ -224,25 +225,27 @@ export default function PermissionDetails() {
                 validated={errors.description ? "error" : "default"}
               />
             </FormGroup>
-            <FormGroup
-              label={t("applyToResourceTypeFlag")}
-              fieldId="applyToResourceTypeFlag"
-              labelIcon={
-                <HelpItem
-                  helpText="clients-help:applyToResourceTypeFlag"
-                  fieldLabelId="clients:applyToResourceTypeFlag"
+            {permissionType !== "scope" && (
+              <FormGroup
+                label={t("applyToResourceTypeFlag")}
+                fieldId="applyToResourceTypeFlag"
+                labelIcon={
+                  <HelpItem
+                    helpText="clients-help:applyToResourceTypeFlag"
+                    fieldLabelId="clients:applyToResourceTypeFlag"
+                  />
+                }
+              >
+                <Switch
+                  id="applyToResourceTypeFlag"
+                  name="applyToResourceTypeFlag"
+                  label={t("common:on")}
+                  labelOff={t("common:off")}
+                  isChecked={applyToResourceTypeFlag}
+                  onChange={setApplyToResourceTypeFlag}
                 />
-              }
-            >
-              <Switch
-                id="applyToResourceTypeFlag"
-                name="applyToResourceTypeFlag"
-                label={t("common:on")}
-                labelOff={t("common:off")}
-                isChecked={applyToResourceTypeFlag}
-                onChange={setApplyToResourceTypeFlag}
-              />
-            </FormGroup>
+              </FormGroup>
+            )}
             {applyToResourceTypeFlag ? (
               <FormGroup
                 label={t("resourceType")}
