@@ -38,7 +38,7 @@ const DECISION_STRATEGIES = ["UNANIMOUS", "AFFIRMATIVE", "CONSENSUS"] as const;
 export default function PermissionDetails() {
   const { t } = useTranslation("clients");
 
-  const form = useForm({
+  const form = useForm<PolicyRepresentation>({
     shouldUnregister: false,
     mode: "onChange",
   });
@@ -56,39 +56,39 @@ export default function PermissionDetails() {
 
   useFetch(
     async () => {
-      if (permissionId) {
-        const r = await Promise.all([
-          adminClient.clients.findOnePermission({
-            id,
-            type: permissionType,
-            permissionId,
-          }),
-          adminClient.clients.getAssociatedResources({
-            id,
-            permissionId,
-          }),
-          adminClient.clients.getAssociatedPolicies({
-            id,
-            permissionId,
-          }),
-          adminClient.clients.getAssociatedScopes({
-            id,
-            permissionId,
-          }),
-        ]);
-
-        if (!r[0]) {
-          throw new Error(t("common:notFound"));
-        }
-
-        return {
-          permission: r[0],
-          resources: r[1].map((r) => r._id),
-          policies: r[2].map((p) => p.id!),
-          scopes: r[3].map((s) => s.id!),
-        };
+      if (!permissionId) {
+        return {};
       }
-      return {};
+      const [permission, resources, policies, scopes] = await Promise.all([
+        adminClient.clients.findOnePermission({
+          id,
+          type: permissionType,
+          permissionId,
+        }),
+        adminClient.clients.getAssociatedResources({
+          id,
+          permissionId,
+        }),
+        adminClient.clients.getAssociatedPolicies({
+          id,
+          permissionId,
+        }),
+        adminClient.clients.getAssociatedScopes({
+          id,
+          permissionId,
+        }),
+      ]);
+
+      if (!permission) {
+        throw new Error(t("common:notFound"));
+      }
+
+      return {
+        permission,
+        resources: resources.map((r) => r._id),
+        policies: policies.map((p) => p.id!),
+        scopes: scopes.map((s) => s.id!),
+      };
     },
     ({ permission, resources, policies, scopes }) => {
       reset({ ...permission, resources, policies, scopes });
@@ -156,7 +156,7 @@ export default function PermissionDetails() {
     },
   });
 
-  const resourcesIds = useWatch({
+  const resourcesIds = useWatch<PolicyRepresentation["resources"]>({
     control,
     name: "resources",
     defaultValue: [],
@@ -299,7 +299,7 @@ export default function PermissionDetails() {
                 validated={errors.scopes ? "error" : "default"}
                 isRequired
               >
-                <ScopeSelect clientId={id} resourceId={resourcesIds[0]} />
+                <ScopeSelect clientId={id} resourceId={resourcesIds?.[0]} />
               </FormGroup>
             )}
             <FormGroup

@@ -3,6 +3,7 @@ import { useTranslation } from "react-i18next";
 import { Controller, useFormContext } from "react-hook-form";
 import { Select, SelectOption, SelectVariant } from "@patternfly/react-core";
 
+import type ScopeRepresentation from "@keycloak/keycloak-admin-client/lib/defs/scopeRepresentation";
 import { useAdminClient, useFetch } from "../../context/auth/AdminClient";
 
 type ScopeSelectProps = {
@@ -16,10 +17,17 @@ export const ScopeSelect = ({ clientId, resourceId }: ScopeSelectProps) => {
 
   const { control, errors, setValue } = useFormContext();
 
-  const [items, setItems] = useState<JSX.Element[]>([]);
+  const [scopes, setScopes] = useState<ScopeRepresentation[]>([]);
   const [search, setSearch] = useState("");
   const [open, setOpen] = useState(false);
   const firstUpdate = useRef(true);
+
+  const toSelectOptions = (scopes: ScopeRepresentation[]) =>
+    scopes.map((scope) => (
+      <SelectOption key={scope.id} value={scope.id}>
+        {scope.name}
+      </SelectOption>
+    ));
 
   useFetch(
     async () => {
@@ -32,24 +40,17 @@ export const ScopeSelect = ({ clientId, resourceId }: ScopeSelectProps) => {
         );
       }
 
-      if (!firstUpdate.current) {
+      if (resourceId && !firstUpdate.current) {
         setValue("scopes", []);
-        firstUpdate.current = false;
       }
 
+      firstUpdate.current = false;
       return adminClient.clients.listScopesByResource({
         id: clientId,
         resourceName: resourceId,
       });
     },
-    (scopes) =>
-      setItems(
-        scopes.map((scope) => (
-          <SelectOption key={scope.id} value={scope.id}>
-            {scope.name}
-          </SelectOption>
-        ))
-      ),
+    setScopes,
     [resourceId, search]
   );
 
@@ -66,7 +67,7 @@ export const ScopeSelect = ({ clientId, resourceId }: ScopeSelectProps) => {
           onToggle={setOpen}
           onFilter={(_, filter) => {
             setSearch(filter);
-            return items;
+            return toSelectOptions(scopes);
           }}
           onClear={() => {
             onChange([]);
@@ -85,7 +86,7 @@ export const ScopeSelect = ({ clientId, resourceId }: ScopeSelectProps) => {
           aria-labelledby={t("scopes")}
           validated={errors.scopes ? "error" : "default"}
         >
-          {items}
+          {toSelectOptions(scopes)}
         </Select>
       )}
     />
