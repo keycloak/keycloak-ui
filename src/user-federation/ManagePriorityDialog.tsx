@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
-import _ from "lodash";
+import { sortBy } from "lodash-es";
 import {
   AlertVariant,
   Button,
@@ -110,7 +110,7 @@ export const ManagePriorityDialog = ({
         onDragCancel={onDragCancel}
         itemOrder={order}
       >
-        {_.sortBy(components, "config.priority").map((component) => (
+        {sortBy(components, "config.priority").map((component) => (
           <DataListItem
             aria-labelledby={component.name}
             id={component.name}
