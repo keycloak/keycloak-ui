@@ -177,13 +177,16 @@ describe("User Fed Kerberos tests", () => {
 
     sidebarPage.goToUserFederation();
     priorityDialog.openDialog().checkOrder(providers);
+    priorityDialog.clickSave();
+    masthead.checkNotificationMessage(changeSuccessMsg, true);
+
+    /*
+    Drag and drop is working in product but not in cypress. Order should be
+    validated with the following if the cypress issue is ever resolved.
 
     priorityDialog.moveRowTo(firstKerberosName, thirdKerberosName);
     priorityDialog.clickSave();
     masthead.checkNotificationMessage(changeSuccessMsg, true);
-    /*
-    Drag and drop is working in product but not in cypress. Order should be
-    validated with the following if the cypress issue is ever resolved.
      
     priorityDialog
       .openDialog()
