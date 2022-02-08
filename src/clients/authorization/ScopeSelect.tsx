@@ -23,23 +23,24 @@ export const ScopeSelect = ({ clientId, resourceId }: ScopeSelectProps) => {
 
   useFetch(
     async () => {
-      if (resourceId) {
-        if (!firstUpdate.current) {
-          setValue("scopes", []);
-        }
-        firstUpdate.current = false;
-        return adminClient.clients.listScopesByResource({
-          id: clientId,
-          resourceName: resourceId,
-        });
+      if (!resourceId) {
+        return adminClient.clients.listAllScopes(
+          Object.assign(
+            { id: clientId, first: 0, max: 10, deep: false },
+            search === "" ? null : { name: search }
+          )
+        );
       }
 
-      return adminClient.clients.listAllScopes(
-        Object.assign(
-          { id: clientId, first: 0, max: 10, deep: false },
-          search === "" ? null : { name: search }
-        )
-      );
+      if (!firstUpdate.current) {
+        setValue("scopes", []);
+        firstUpdate.current = false;
+      }
+
+      return adminClient.clients.listScopesByResource({
+        id: clientId,
+        resourceName: resourceId,
+      });
     },
     (scopes) =>
       setItems(
