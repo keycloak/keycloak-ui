@@ -30,11 +30,6 @@ const secondKerberosRealm = `${kerberosRealm}-2`;
 const secondKerberosPrincipal = `${kerberosPrincipal}-2`;
 const secondKerberosKeytab = `${kerberosKeytab}-2`;
 
-const thirdKerberosName = `${kerberosName}-3`;
-const thirdKerberosRealm = `${kerberosRealm}-3`;
-const thirdKerberosPrincipal = `${kerberosPrincipal}-3`;
-const thirdKerberosKeytab = `${kerberosKeytab}-3`;
-
 const defaultPolicy = "DEFAULT";
 const newPolicy = "EVICT_WEEKLY";
 const defaultKerberosDay = "Sunday";
@@ -157,41 +152,15 @@ describe("User Fed Kerberos tests", () => {
 
   it("Change the priority order of Kerberos providers", () => {
     const priorityDialog = new PriorityDialog();
-    const providers = [
-      firstKerberosName,
-      secondKerberosName,
-      thirdKerberosName,
-    ];
+    const providers = [firstKerberosName, secondKerberosName];
 
     sidebarPage.goToUserFederation();
     providersPage.clickMenuCommand(addProviderMenu, initCapProvider);
-
-    providersPage.fillKerberosRequiredData(
-      thirdKerberosName,
-      thirdKerberosRealm,
-      thirdKerberosPrincipal,
-      thirdKerberosKeytab
-    );
-    providersPage.save(provider);
-    masthead.checkNotificationMessage(createdSuccessMessage, true);
 
     sidebarPage.goToUserFederation();
     priorityDialog.openDialog().checkOrder(providers);
     priorityDialog.clickSave();
     masthead.checkNotificationMessage(changeSuccessMsg, true);
-
-    /*
-    Drag and drop is working in product but not in cypress. Order should be
-    validated with the following if the cypress issue is ever resolved.
-
-    priorityDialog.moveRowTo(firstKerberosName, thirdKerberosName);
-    priorityDialog.clickSave();
-    masthead.checkNotificationMessage(changeSuccessMsg, true);
-     
-    priorityDialog
-      .openDialog()
-      .checkOrder([secondKerberosName, thirdKerberosName, firstKerberosName]);
-    */
   });
 
   it("Delete a Kerberos provider from card view using the card's menu", () => {
@@ -201,10 +170,6 @@ describe("User Fed Kerberos tests", () => {
   });
 
   it("Delete a Kerberos provider using the Settings view's Action menu", () => {
-    providersPage.deleteCardFromMenu(thirdKerberosName);
-    modalUtils.checkModalTitle(deleteModalTitle).confirmModal();
-    masthead.checkNotificationMessage(deletedSuccessMessage);
-
     providersPage.deleteCardFromMenu(firstKerberosName);
     modalUtils.checkModalTitle(deleteModalTitle).confirmModal();
     masthead.checkNotificationMessage(deletedSuccessMessage);
