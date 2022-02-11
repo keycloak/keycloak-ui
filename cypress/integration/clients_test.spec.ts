@@ -269,7 +269,7 @@ describe("Clients test", () => {
       new AdminClient().deleteClient(serviceAccountName);
     });
 
-    it("list", () => {
+    it("List", () => {
       listingPage
         .searchItem(serviceAccountName)
         .goToItemDetails(serviceAccountName);
@@ -278,7 +278,7 @@ describe("Clients test", () => {
         .checkRoles(["manage-account", "offline_access", "uma_authorization"]);
     });
 
-    it("assign", () => {
+    it("Assign", () => {
       listingPage.goToItemDetails(serviceAccountName);
       serviceAccountTab
         .goToServiceAccountTab()

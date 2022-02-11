@@ -6,11 +6,15 @@ import {
   keycloakBeforeEach,
 } from "../support/util/keycloak_hooks";
 import AdminClient from "../support/util/AdminClient";
+import ModalUtils from "../support/util/ModalUtils";
 
 const loginPage = new LoginPage();
 const sidebarPage = new SidebarPage();
+const modalUtils = new ModalUtils();
 
 describe("Realm settings client profiles tab tests", () => {
+  const profileName = "Test";
+  const editedProfileName = "Edit";
   const realmName = "Realm_" + (Math.random() + 1).toString(36).substring(7);
   const realmSettingsPage = new RealmSettingsPage(realmName);
 
@@ -41,23 +45,21 @@ describe("Realm settings client profiles tab tests", () => {
   });
 
   it("Complete new client form and cancel", () => {
-    realmSettingsPage.shouldCompleteAndCancelCreateNewClientProfile();
+    realmSettingsPage
+      .createClientProfile(profileName, "Test Description")
+      .cancelClientProfileCreation()
+      .checkElementNotInList(profileName);
   });
 
   it("Complete new client form and submit", () => {
-    realmSettingsPage.shouldCompleteAndCreateNewClientProfile();
+    realmSettingsPage
+      .createClientProfile(profileName, "Test Description")
+      .saveClientProfileCreation()
+      .checkAlertMessage("New client profile created");
   });
 
   it("Should perform client profile search by profile name", () => {
-    realmSettingsPage.shouldSearchClientProfile();
-  });
-
-  it("Check cancelling the client profile deletion", () => {
-    realmSettingsPage.shouldDisplayDeleteClientProfileDialog();
-  });
-
-  it("Check deleting the client profile", () => {
-    realmSettingsPage.shouldDeleteClientProfileDialog();
+    realmSettingsPage.searchClientProfile(profileName);
   });
 
   it("Check navigating between Form View and JSON editor", () => {
@@ -66,15 +68,28 @@ describe("Realm settings client profiles tab tests", () => {
 
   it("Check saving changed JSON profiles", () => {
     realmSettingsPage.shouldSaveChangedJSONProfiles();
-    realmSettingsPage.shouldDeleteClientProfileDialog();
+    realmSettingsPage.deleteClientPolicyItemFromTable(profileName);
+    modalUtils.confirmModal();
+    realmSettingsPage
+      .checkAlertMessage("Client profile deleted")
+      .checkElementNotInList(profileName);
   });
 
   it("Should not create duplicate client profile", () => {
+    realmSettingsPage
+      .createClientProfile(profileName, "Test Description")
+      .saveClientProfileCreation();
+
     sidebarPage.goToRealmSettings();
-    cy.findByTestId("rs-clientPolicies-tab").click();
-    cy.findByTestId("rs-policies-clientProfiles-tab").click();
-    realmSettingsPage.shouldCompleteAndCreateNewClientProfile();
-    realmSettingsPage.shouldNotCreateDuplicateClientProfile();
+    realmSettingsPage.goToClientPoliciesTab().goToClientProfilesList();
+
+    modalUtils.waitForProgressbar();
+    realmSettingsPage
+      .createClientProfile(profileName, "Test Description")
+      .saveClientProfileCreation();
+    realmSettingsPage.checkAlertMessage(
+      "Could not create client profile: 'proposed client profile name duplicated.'"
+    );
   });
 
   it("Should edit client profile", () => {
@@ -83,9 +98,10 @@ describe("Realm settings client profiles tab tests", () => {
 
   it("Should check that edited client profile is now listed", () => {
     sidebarPage.goToRealmSettings();
-    cy.findByTestId("rs-clientPolicies-tab").click();
-    cy.findByTestId("rs-policies-clientProfiles-tab").click();
-    realmSettingsPage.shouldCheckEditedClientProfileListed();
+    realmSettingsPage
+      .goToClientPoliciesTab()
+      .goToClientProfilesList()
+      .shouldCheckEditedClientProfileListed();
   });
 
   it("Should show error when client profile left blank", () => {
@@ -113,18 +129,47 @@ describe("Realm settings client profiles tab tests", () => {
   });
 
   it("Should cancel editing executor", () => {
-    realmSettingsPage.shouldCancelEditingExecutor();
+    realmSettingsPage.openProfileDetails(editedProfileName).editExecutor(4000);
+    modalUtils.waitForProgressbar();
+    realmSettingsPage
+      .cancelEditingExecutor()
+      .checkExecutorNotInList()
+      .editExecutor()
+      .checkAvailablePeriodExecutor(3600);
   });
 
   it("Should edit executor", () => {
-    realmSettingsPage.shouldEditExecutor();
+    realmSettingsPage
+      .openProfileDetails(editedProfileName)
+      .editExecutor(4000)
+      .saveExecutor()
+      .checkAlertMessage("Executor updated successfully")
+      .editExecutor();
+    // TODO: UNCOMMENT LINE WHEN ISSUE 2037 IS FIXED
+    //.checkAvailablePeriodExecutor(4000);
   });
 
   it("Should delete executor from a client profile", () => {
     realmSettingsPage.shouldDeleteExecutor();
   });
 
-  it("Should delete edited client profile", () => {
-    realmSettingsPage.shouldDeleteEditedProfile();
+  it("Check cancelling the client profile deletion", () => {
+    realmSettingsPage.deleteClientPolicyItemFromTable(editedProfileName);
+    modalUtils
+      .checkModalMessage(
+        "This action will permanently delete the profile " +
+          editedProfileName +
+          ". This cannot be undone."
+      )
+      .cancelModal();
+    realmSettingsPage.checkElementInList(editedProfileName);
+  });
+
+  it("Check deleting the client profile", () => {
+    realmSettingsPage.deleteClientPolicyItemFromTable(editedProfileName);
+    modalUtils.confirmModal();
+    realmSettingsPage
+      .checkAlertMessage("Client profile deleted")
+      .checkElementNotInList(editedProfileName);
   });
 });
