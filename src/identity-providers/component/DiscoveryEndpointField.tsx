@@ -78,7 +78,10 @@ export const DiscoveryEndpointField = ({
           label={t("common:on")}
           labelOff={t("common:off")}
           isChecked={discovery}
-          onChange={setDiscovery}
+          onChange={(checked) => {
+            clearErrors("discoveryError");
+            setDiscovery(checked);
+          }}
         />
       </FormGroup>
       {discovery && (
@@ -101,7 +104,9 @@ export const DiscoveryEndpointField = ({
           helperTextInvalid={
             errors.discoveryEndpoint
               ? t("common:required")
-              : t("noValidMetaDataFound")
+              : t("noValidMetaDataFound", {
+                  error: errors.discoveryError?.message,
+                })
           }
           isRequired
         >
