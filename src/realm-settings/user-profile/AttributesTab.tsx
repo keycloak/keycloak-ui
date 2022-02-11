@@ -13,30 +13,21 @@ import {
 import { useAlerts } from "../../components/alert/Alerts";
 import { KeycloakSpinner } from "../../components/keycloak-spinner/KeycloakSpinner";
 import { DraggableTable } from "../../authentication/components/DraggableTable";
-import type UserProfileConfig from "@keycloak/keycloak-admin-client/lib/defs/userProfileConfig";
 import type { UserProfileAttribute } from "@keycloak/keycloak-admin-client/lib/defs/userProfileConfig";
 import { useHistory } from "react-router-dom";
 import { toAddAttribute } from "../routes/AddAttribute";
+import { useAdminClient } from "../../context/auth/AdminClient";
 import { useRealm } from "../../context/realm-context/RealmContext";
 import { useUserProfile } from "./UserProfileContext";
 import { useConfirmDialog } from "../../components/confirm-dialog/ConfirmDialog";
 
-type DataType = UserProfileConfig & UserProfileAttribute;
-
-type Row = {
-  name: string;
-  displayName: string;
-  attributeGroup: string;
-  data: DataType;
-};
-
 export const AttributesTab = () => {
   const { config } = useUserProfile();
+  const adminClient = useAdminClient();
   const { realm: realmName } = useRealm();
   const { t } = useTranslation("realm-settings");
   const history = useHistory();
   const { addAlert, addError } = useAlerts();
-  const [attributesRows, setAttributesRows] = useState<Row[]>();
   const [key, setKey] = useState(0);
   const refresh = () => setKey(key + 1);
   const [attributeToDelete, setAttributeToDelete] =
@@ -48,13 +39,22 @@ export const AttributesTab = () => {
 
   const executeMove = async (
     attribute: UserProfileAttribute,
-    times: number
+    newIndex: number
   ) => {
     try {
-      //TODO backend call
-      console.log(attribute, times);
-      refresh();
+      console.log(config?.attributes);
+      console.log(attribute, newIndex);
 
+      const updatedAttributesOrder = config?.attributes!.map((attribute) =>
+        console.log(attribute)
+      );
+
+      console.log(">>>> updatedAttributesOrder ", updatedAttributesOrder);
+      //   await adminClient.users.updateProfile({
+      //     attributes: updatedAttributesOrder,
+      //     realm: realmName,
+      //   });
+      refresh();
       addAlert(t("updatedUserProfileSuccess"), AlertVariant.success);
     } catch (error) {
       addError(t("updatedUserProfileError"), error);
@@ -62,6 +62,10 @@ export const AttributesTab = () => {
   };
 
   const goToCreate = () => history.push(toAddAttribute({ realm: realmName }));
+
+  const updatedAttributes = config?.attributes!.filter(
+    (attribute) => attribute.name !== attributeToDelete?.name
+  );
 
   const [toggleDeleteDialog, DeleteConfirm] = useConfirmDialog({
     titleKey: t("deleteAttributeConfirmTitle"),
@@ -72,9 +76,12 @@ export const AttributesTab = () => {
     continueButtonVariant: ButtonVariant.danger,
     onConfirm: async () => {
       try {
-        //TODO backend call
+        await adminClient.users.updateProfile({
+          attributes: updatedAttributes,
+          realm: realmName,
+        });
         addAlert(t("deleteAttributeSuccess"), AlertVariant.success);
-        setKey((key) => key + 1);
+        refresh();
       } catch (error) {
         addError(t("deleteAttributeError"), error);
       }
@@ -87,28 +94,29 @@ export const AttributesTab = () => {
 
   return (
     <>
-      <ToolbarItem className="kc-toolbar-attributesTab">
-        <Button
-          data-testid="createAttributeBtn"
-          variant="primary"
-          onClick={goToCreate}
-        >
-          {t("createAttribute")}
-        </Button>
-      </ToolbarItem>
+      <div className="pf-u-mt-md pf-u-mb-md pf-u-ml-md">
+        <ToolbarItem className="kc-toolbar-attributesTab">
+          <Button
+            data-testid="createAttributeBtn"
+            variant="primary"
+            onClick={goToCreate}
+          >
+            {t("createAttribute")}
+          </Button>
+        </ToolbarItem>
+      </div>
       <Divider />
       <DeleteConfirm />
       <DraggableTable
         keyField="name"
         onDragFinish={async (nameDragged, items) => {
-          const keys = attributesRows!.map((e) => e.name);
+          const keys = config.attributes!.map((e) => e.name);
           const newIndex = items.indexOf(nameDragged);
           const oldIndex = keys.indexOf(nameDragged);
-          const dragged = attributesRows![oldIndex].data;
+          const dragged = config.attributes![oldIndex];
           if (!dragged.name) return;
 
-          const times = newIndex - oldIndex;
-          executeMove(dragged, times);
+          executeMove(dragged, newIndex);
         }}
         columns={[
           {
@@ -130,7 +138,6 @@ export const AttributesTab = () => {
               <Dropdown
                 id={`${row.name}`}
                 label={t("attributesDropdown")}
-                onSelect={() => console.log(row)}
                 toggle={
                   <KebabToggle
                     onToggle={(status) =>
