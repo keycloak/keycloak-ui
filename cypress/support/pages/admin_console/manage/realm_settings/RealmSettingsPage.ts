@@ -619,7 +619,9 @@ export default class RealmSettingsPage {
   }
 
   cancelDeleteClientPolicy() {
-    cy.get(this.deleteDialogCancelBtn).contains("Cancel").click({ force: true });
+    cy.get(this.deleteDialogCancelBtn)
+      .contains("Cancel")
+      .click({ force: true });
     cy.get("table").should("be.visible").contains("td", "Test");
     return this;
   }
