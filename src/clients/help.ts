@@ -10,6 +10,8 @@ export default {
       "This defines the type of the OIDC client. When it's ON, the OIDC type is set to confidential access type. When it's OFF, it is set to public access type",
     authorization:
       "Enable/Disable fine-grained authorization support for a client",
+    authDetails:
+      "Export and download all resource settings for this resource server.",
     directAccess:
       "This enables support for Direct Access Grants, which means that client has access to username/password of user and exchange it directly with Keycloak server for access token. In terms of OAuth2 specification, this enables support of 'Resource Owner Password Credentials Grant' for this client.",
     standardFlow:
@@ -226,6 +228,8 @@ export default {
       "Specifies if this permission should be applied to all resources with a given type. In this case, this permission will be evaluated for all instances of a given resource type.",
     permissionResources:
       "Specifies that this permission must be applied to a specific resource instance.",
+    permissionScopes:
+      "Specifies that this permission must be applied to one or more scopes.",
     permissionType:
       "Specifies that this permission must be applied to all resources instances of a given type.",
     permissionDecisionStrategy:

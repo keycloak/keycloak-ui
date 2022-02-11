@@ -23,7 +23,7 @@
     "prepare": "husky install"
   },
   "dependencies": {
-    "@keycloak/keycloak-admin-client": "^17.0.0-dev.26",
+    "@keycloak/keycloak-admin-client": "^17.0.0-dev.29",
     "@patternfly/patternfly": "^4.171.1",
     "@patternfly/react-code-editor": "^4.33.14",
     "@patternfly/react-core": "^4.192.14",
@@ -68,7 +68,7 @@
     "@typescript-eslint/eslint-plugin": "^5.10.2",
     "@typescript-eslint/parser": "^5.10.2",
     "cli-progress": "^3.10.0",
-    "cypress": "^8.5.0",
+    "cypress": "^8.4.1",
     "decompress": "^4.2.1",
     "eslint": "^8.8.0",
     "eslint-config-prettier": "^8.3.0",
