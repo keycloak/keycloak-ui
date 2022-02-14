@@ -42,7 +42,7 @@ export const OpenIdConnectSettings = () => {
           method: "POST",
           body: formData,
           headers: {
-            Authorization: `bearer ${await adminClient.getAccessToken()}`,
+            Authorization: `Bearer ${await adminClient.getAccessToken()}`,
           },
         }
       );
