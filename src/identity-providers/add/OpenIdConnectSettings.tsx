@@ -55,10 +55,10 @@ export const OpenIdConnectSettings = () => {
           message: response.statusText,
         });
       }
-    } catch (error) {
+    } catch (error: Error) {
       setError("discoveryError", {
         type: "manual",
-        message: (error as Error).message,
+        message: error.message,
       });
     }
   };
