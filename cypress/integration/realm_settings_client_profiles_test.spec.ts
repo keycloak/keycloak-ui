@@ -7,10 +7,12 @@ import {
 } from "../support/util/keycloak_hooks";
 import AdminClient from "../support/util/AdminClient";
 import ModalUtils from "../support/util/ModalUtils";
+import Masthead from "../support/pages/admin_console/Masthead";
 
 const loginPage = new LoginPage();
 const sidebarPage = new SidebarPage();
 const modalUtils = new ModalUtils();
+const masthead = new Masthead();
 
 describe("Realm settings client profiles tab tests", () => {
   const profileName = "Test";
@@ -54,8 +56,8 @@ describe("Realm settings client profiles tab tests", () => {
   it("Complete new client form and submit", () => {
     realmSettingsPage
       .createClientProfile(profileName, "Test Description")
-      .saveClientProfileCreation()
-      .checkAlertMessage("New client profile created");
+      .saveClientProfileCreation();
+    masthead.checkNotificationMessage("New client profile created");
   });
 
   it("Should perform client profile search by profile name", () => {
@@ -70,9 +72,8 @@ describe("Realm settings client profiles tab tests", () => {
     realmSettingsPage.shouldSaveChangedJSONProfiles();
     realmSettingsPage.deleteClientPolicyItemFromTable(profileName);
     modalUtils.confirmModal();
-    realmSettingsPage
-      .checkAlertMessage("Client profile deleted")
-      .checkElementNotInList(profileName);
+    masthead.checkNotificationMessage("Client profile deleted");
+    realmSettingsPage.checkElementNotInList(profileName);
   });
 
   it("Should not create duplicate client profile", () => {
@@ -83,11 +84,11 @@ describe("Realm settings client profiles tab tests", () => {
     sidebarPage.goToRealmSettings();
     realmSettingsPage.goToClientPoliciesTab().goToClientProfilesList();
 
-    modalUtils.waitForProgressbar();
+    sidebarPage.waitForPageLoad();
     realmSettingsPage
       .createClientProfile(profileName, "Test Description")
       .saveClientProfileCreation();
-    realmSettingsPage.checkAlertMessage(
+    masthead.checkNotificationMessage(
       "Could not create client profile: 'proposed client profile name duplicated.'"
     );
   });
@@ -130,7 +131,7 @@ describe("Realm settings client profiles tab tests", () => {
 
   it("Should cancel editing executor", () => {
     realmSettingsPage.openProfileDetails(editedProfileName).editExecutor(4000);
-    modalUtils.waitForProgressbar();
+    sidebarPage.waitForPageLoad();
     realmSettingsPage
       .cancelEditingExecutor()
       .checkExecutorNotInList()
@@ -142,9 +143,9 @@ describe("Realm settings client profiles tab tests", () => {
     realmSettingsPage
       .openProfileDetails(editedProfileName)
       .editExecutor(4000)
-      .saveExecutor()
-      .checkAlertMessage("Executor updated successfully")
-      .editExecutor();
+      .saveExecutor();
+    masthead.checkNotificationMessage("Executor updated successfully");
+    realmSettingsPage.editExecutor();
     // TODO: UNCOMMENT LINE WHEN ISSUE 2037 IS FIXED
     //.checkAvailablePeriodExecutor(4000);
   });
@@ -168,8 +169,7 @@ describe("Realm settings client profiles tab tests", () => {
   it("Check deleting the client profile", () => {
     realmSettingsPage.deleteClientPolicyItemFromTable(editedProfileName);
     modalUtils.confirmModal();
-    realmSettingsPage
-      .checkAlertMessage("Client profile deleted")
-      .checkElementNotInList(editedProfileName);
+    masthead.checkNotificationMessage("Client profile deleted");
+    realmSettingsPage.checkElementNotInList(editedProfileName);
   });
 });

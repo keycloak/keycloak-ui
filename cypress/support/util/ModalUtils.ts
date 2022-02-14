@@ -14,14 +14,20 @@ export default class ModalUtils {
     return this;
   }
 
-  cancelModal() {
-    cy.findByTestId(this.cancelModalBtn).click();
+  checkConfirmButtonText(text: string) {
+    cy.findByTestId(this.confirmModalBtn).contains(text);
 
     return this;
   }
 
-  waitForProgressbar() {
-    cy.get(this.progressBar).should("not.exist");
+  cancelModal(force = false) {
+    cy.findByTestId(this.cancelModalBtn).click({ force });
+
+    return this;
+  }
+
+  cancelButtonContains(text: string) {
+    cy.findByTestId(this.cancelModalBtn).contains(text);
 
     return this;
   }
@@ -32,8 +38,8 @@ export default class ModalUtils {
     return this;
   }
 
-  closeModal() {
-    cy.get(this.closeModalBtn).click();
+  closeModal(force = false) {
+    cy.get(this.closeModalBtn).click({ force });
 
     return this;
   }

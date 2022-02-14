@@ -168,8 +168,6 @@ export default class RealmSettingsPage {
   private saveNewClientPolicyBtn = "saveCreatePolicy";
   private cancelNewClientPolicyBtn = "cancelCreatePolicy";
   private alertMessage = ".pf-c-alert__title";
-  private alertMessageCloseBtn =
-    ".pf-c-alert-group > li:first-child .pf-c-alert__action button";
   private moreDrpDwn = ".pf-c-dropdown__toggle.pf-m-plain";
   private moreDrpDwnItems = ".pf-c-dropdown__menu-item";
   private deleteDialogTitle = ".pf-c-modal-box__title-text";
@@ -222,8 +220,8 @@ export default class RealmSettingsPage {
   private eventListenerRemove = '[data-ouia-component-id="Remove"]';
   private roleSelect = ".pf-c-select.kc-role-select";
   private selectScopeButton = "select-scope-button";
-  private deleteClientRolesCondition = "delete-client-roles-condition";
-  private deleteClientScopesCondition = "delete-client-scopes-condition";
+  private deleteClientRolesConditionBtn = "delete-client-roles-condition";
+  private deleteClientScopesConditionBtn = "delete-client-scopes-condition";
 
   private realmName?: string;
   constructor(realmName?: string) {
@@ -1031,34 +1029,20 @@ export default class RealmSettingsPage {
     );
   }
 
-  shouldCancelDeletingCondition() {
-    cy.get(this.clientPolicy).click();
-    cy.findByTestId(this.deleteClientRolesCondition).click();
-    cy.get(this.deleteDialogTitle).contains("Delete condition?");
-    cy.get(this.deleteDialogBodyText).contains(
-      "This action will permanently delete client-roles. This cannot be undone."
-    );
-    cy.findByTestId(this.modalConfirm).contains("Delete");
-    cy.get(this.deleteDialogCancelBtn).contains("Cancel");
-    cy.get(this.deleteDialogCancelBtn).click();
-    cy.get('ul[class*="pf-c-data-list"]').contains("client-roles");
+  checkConditionsListContains(name: string) {
+    cy.get('ul[class*="pf-c-data-list"]').contains(name);
+    return this;
   }
 
-  shouldDeleteClientRolesCondition() {
+  deleteClientRolesCondition() {
     cy.get(this.clientPolicy).click();
-    cy.findByTestId(this.deleteClientRolesCondition).click();
-    cy.get(this.deleteDialogTitle).contains("Delete condition?");
-    cy.get(this.deleteDialogBodyText).contains(
-      "This action will permanently delete client-roles. This cannot be undone."
-    );
-    cy.findByTestId(this.modalConfirm).contains("Delete");
-    cy.findByTestId(this.modalConfirm).click();
-    cy.get('ul[class*="pf-c-data-list"]').contains("client-scopes");
+    cy.findByTestId(this.deleteClientRolesConditionBtn).click();
+    return this;
   }
 
   shouldDeleteClientScopesCondition() {
     cy.get(this.clientPolicy).click();
-    cy.findByTestId(this.deleteClientScopesCondition).click();
+    cy.findByTestId(this.deleteClientScopesConditionBtn).click();
     cy.get(this.deleteDialogTitle).contains("Delete condition?");
     cy.get(this.deleteDialogBodyText).contains(
       "This action will permanently delete client-scopes. This cannot be undone."
@@ -1100,15 +1084,6 @@ export default class RealmSettingsPage {
     return this;
   }
 
-  checkAlertMessage(message: string) {
-    cy.get(this.alertMessage).should("contain.text", message);
-    return this;
-  }
-
-  closeAlertMessage() {
-    cy.get(this.alertMessageCloseBtn).click();
-    return this;
-  }
   checkEmptyPolicyList() {
     cy.findByTestId(this.createPolicyEmptyStateBtn).should("exist");
     return this;
@@ -1126,7 +1101,7 @@ export default class RealmSettingsPage {
 
   deleteClientPolicyFromDetails() {
     cy.get(this.clientPolicyDrpDwn).click();
-    cy.findByTestId(this.deleteclientPolicyDrpDwn).click();
+    cy.findByTestId(this.deleteclientPolicyDrpDwn).click({ force: true });
     return this;
   }
 

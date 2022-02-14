@@ -1,8 +1,6 @@
-import { capitalize } from "lodash-es";
-
 export default class SidebarPage {
   private realmsDrpDwn = "realmSelectorToggle";
-  private realmsList = "realmSelector";
+  private realmsList = "#realm-select ul";
   private createRealmBtn = "add-realm";
 
   private clientsBtn = "#nav-item-clients";
@@ -23,10 +21,8 @@ export default class SidebarPage {
   }
 
   goToRealm(realmName: string) {
-    cy.findByTestId(this.realmsList).scrollIntoView().click();
-    cy.findByTestId(this.realmsList).within(() => {
-      cy.get("ul").contains(capitalize(realmName)).click();
-    });
+    cy.findByTestId(this.realmsDrpDwn).scrollIntoView().click({ force: true });
+    cy.get(this.realmsList).contains(realmName).click({ force: true });
 
     return this;
   }
@@ -101,13 +97,13 @@ export default class SidebarPage {
 
   goToUserFederation() {
     cy.get(this.userFederationBtn).click();
-    cy.wait(1000);
+    this.waitForPageLoad();
 
     return this;
   }
 
   waitForPageLoad() {
-    cy.get(".pf-c-spinner__tail-ball").should("not.exist");
+    cy.get('[role="progressbar"]').should("not.exist");
     return this;
   }
 }

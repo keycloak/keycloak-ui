@@ -7,10 +7,12 @@ import {
 } from "../support/util/keycloak_hooks";
 import AdminClient from "../support/util/AdminClient";
 import ModalUtils from "../support/util/ModalUtils";
+import Masthead from "../support/pages/admin_console/Masthead";
 
 const loginPage = new LoginPage();
 const sidebarPage = new SidebarPage();
 const modalUtils = new ModalUtils();
+const masthead = new Masthead();
 
 describe("Realm settings client policies tab tests", () => {
   const realmName = "Realm_" + (Math.random() + 1).toString(36).substring(7);
@@ -18,10 +20,12 @@ describe("Realm settings client policies tab tests", () => {
 
   beforeEach(() => {
     keycloakBeforeEach();
-    sidebarPage.goToRealm(realmName);
-    sidebarPage.goToRealmSettings();
-    cy.findByTestId("rs-clientPolicies-tab").click();
-    cy.findByTestId("rs-policies-clientPolicies-tab").click();
+    sidebarPage
+      .waitForPageLoad()
+      .goToRealm(realmName)
+      .goToRealmSettings()
+      .waitForPageLoad();
+    realmSettingsPage.goToClientPoliciesTab().goToClientPoliciesList();
   });
 
   before(() => {
@@ -51,7 +55,7 @@ describe("Realm settings client policies tab tests", () => {
       "Test",
       "Test Description"
     );
-    realmSettingsPage.checkAlertMessage("New policy created");
+    masthead.checkNotificationMessage("New policy created");
     cy.wait("@save");
   });
 
@@ -84,16 +88,27 @@ describe("Realm settings client policies tab tests", () => {
   });
 
   it("Should cancel deleting condition from a client profile", () => {
-    realmSettingsPage.shouldCancelDeletingCondition();
+    realmSettingsPage.deleteClientRolesCondition();
+    sidebarPage.waitForPageLoad();
+    modalUtils
+      .checkModalTitle("Delete condition?")
+      .checkModalMessage(
+        "This action will permanently delete client-roles. This cannot be undone."
+      )
+      .checkConfirmButtonText("Delete")
+      .cancelButtonContains("Cancel")
+      .cancelModal();
+    realmSettingsPage.checkConditionsListContains("client-roles");
   });
 
-  // TODO: Fix this test so it passes.
-  it.skip("Should delete client-roles condition from a client profile", () => {
-    realmSettingsPage.shouldDeleteClientRolesCondition();
+  it("Should delete client-roles condition from a client profile", () => {
+    realmSettingsPage.deleteClientRolesCondition();
+    sidebarPage.waitForPageLoad();
+    modalUtils.confirmModal(true);
+    realmSettingsPage.checkConditionsListContains("client-scopes");
   });
 
-  // TODO: Fix this test so it passes.
-  it.skip("Should delete client-scopes condition from a client profile", () => {
+  it("Should delete client-scopes condition from a client profile", () => {
     realmSettingsPage.shouldDeleteClientScopesCondition();
   });
 
@@ -111,9 +126,8 @@ describe("Realm settings client policies tab tests", () => {
     realmSettingsPage.deleteClientPolicyItemFromTable("Test");
 
     modalUtils.confirmModal();
-    realmSettingsPage
-      .checkAlertMessage("Client policy deleted")
-      .checkEmptyPolicyList();
+    masthead.checkNotificationMessage("Client policy deleted");
+    realmSettingsPage.checkEmptyPolicyList();
   });
 
   it("Check navigating between Form View and JSON editor", () => {
@@ -128,7 +142,7 @@ describe("Realm settings client policies tab tests", () => {
       "Test",
       "Test Description"
     );
-    realmSettingsPage.checkAlertMessage("New policy created");
+    masthead.checkNotificationMessage("New policy created");
     cy.wait("@save");
 
     sidebarPage.goToRealmSettings();
@@ -144,7 +158,7 @@ describe("Realm settings client policies tab tests", () => {
     // TODO: UNCOMMENT WHEN THE ISSUE 2050 IS FIXED
     //realmSettingsPage.checkAlertMessage("Could not create client policy: 'proposed client policy name duplicated.'");
 
-    modalUtils.waitForProgressbar();
+    sidebarPage.waitForPageLoad();
     sidebarPage.goToRealmSettings();
 
     realmSettingsPage
@@ -153,9 +167,9 @@ describe("Realm settings client policies tab tests", () => {
       .deleteClientPolicyItemFromTable("Test");
 
     modalUtils.confirmModal();
-    realmSettingsPage
-      .checkAlertMessage("Client policy deleted")
-      .checkEmptyPolicyList();
+    cy.wait("@save");
+    masthead.checkNotificationMessage("Client policy deleted");
+    realmSettingsPage.checkEmptyPolicyList();
   });
 
   it("Check deleting newly created client policy from create view via dropdown", () => {
@@ -165,14 +179,14 @@ describe("Realm settings client policies tab tests", () => {
       "Test again",
       "Test Again Description"
     );
-    realmSettingsPage.checkAlertMessage("New policy created");
-    modalUtils.waitForProgressbar();
+    masthead.checkNotificationMessage("New policy created");
+    sidebarPage.waitForPageLoad();
     cy.wait("@save");
-    realmSettingsPage.closeAlertMessage().closeAlertMessage();
+    masthead.closeLastAlertMessage();
     realmSettingsPage.deleteClientPolicyFromDetails();
-    modalUtils.confirmModal();
-    realmSettingsPage.checkAlertMessage("Client policy deleted");
-    modalUtils.waitForProgressbar();
+    modalUtils.confirmModal(true);
+    masthead.checkNotificationMessage("Client policy deleted");
+    sidebarPage.waitForPageLoad();
     realmSettingsPage.checkEmptyPolicyList();
   });
 
