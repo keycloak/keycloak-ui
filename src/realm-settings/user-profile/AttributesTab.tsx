@@ -144,6 +144,7 @@ export const AttributesTab = () => {
               <Dropdown
                 id={`${row.name}`}
                 label={t("attributesDropdown")}
+                data-testid="actions-dropdown"
                 toggle={
                   <KebabToggle
                     onToggle={(status) =>
