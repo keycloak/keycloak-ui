@@ -83,8 +83,11 @@ export const AttributesTab = () => {
           attributes: updatedAttributes,
           realm: realmName,
         });
-        addAlert(t("deleteAttributeSuccess"), AlertVariant.success);
+        setAttributeToDelete({
+          name: "",
+        });
         refresh();
+        addAlert(t("deleteAttributeSuccess"), AlertVariant.success);
       } catch (error) {
         addError(t("deleteAttributeError"), error);
       }
