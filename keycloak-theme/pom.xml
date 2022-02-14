@@ -20,12 +20,12 @@
 
     <groupId>org.keycloak</groupId>
     <artifactId>keycloak-admin-ui</artifactId>
-    <version>17.0.0-SNAPSHOT</version>
+    <version>18.0.0-SNAPSHOT</version>
     <name>Keycloak Administration UI</name>
     <description>Keycloak Administration UI</description>
     
     <properties>
-        <nexus.staging.plugin.version>1.6.8</nexus.staging.plugin.version>
+        <nexus.staging.plugin.version>1.6.10</nexus.staging.plugin.version>
     </properties>
 
     <licenses>
