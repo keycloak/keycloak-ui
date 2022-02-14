@@ -5,6 +5,7 @@ export default class RealmSettingsPage {
   generalSaveBtn = "general-tab-save";
   themesSaveBtn = "themes-tab-save";
   loginTab = "rs-login-tab";
+  userProfileTab = "rs-user-profile-tab";
   selectLoginTheme = "#kc-login-theme";
   loginThemeList = "#kc-login-theme + ul";
   selectAccountTheme = "#kc-account-theme";

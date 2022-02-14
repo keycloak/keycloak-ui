@@ -18,6 +18,8 @@ const getUserProfileTab = () => userProfileTab.goToTab();
 const getAttributesTab = () => userProfileTab.goToAttributesTab();
 const getAttributesGroupTab = () => userProfileTab.goToAttributesGroupTab();
 const getJsonEditorTab = () => userProfileTab.goToJsonEditorTab();
+const clickCreateAttributeButton = () =>
+  userProfileTab.createAttributeButtonClick();
 
 describe("User profile tabs", () => {
   const realmName = "Realm_" + (Math.random() + 1).toString(36).substring(7);
@@ -41,6 +43,7 @@ describe("User profile tabs", () => {
     it("Goes to create attribute page", () => {
       getUserProfileTab();
       getAttributesTab();
+      clickCreateAttributeButton();
       cy.get("p").should("have.text", "Create attribute");
     });
   });
