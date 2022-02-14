@@ -46,7 +46,7 @@ export const OpenIdConnectSettings = () => {
           },
         }
       );
-      if (response.status === 200) {
+      if (response.ok) {
         const result = await response.json();
         setupForm(result);
       } else {
@@ -55,10 +55,10 @@ export const OpenIdConnectSettings = () => {
           message: response.statusText,
         });
       }
-    } catch (error: Error) {
+    } catch (error) {
       setError("discoveryError", {
         type: "manual",
-        message: error.message,
+        message: (error as Error).message,
       });
     }
   };

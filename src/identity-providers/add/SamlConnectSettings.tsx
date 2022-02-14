@@ -50,7 +50,7 @@ export const SamlConnectSettings = () => {
           },
         }
       );
-      if (response.status === 200) {
+      if (response.ok) {
         const result = await response.json();
         setupForm(result);
       } else {
