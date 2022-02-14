@@ -349,22 +349,25 @@ export default function DetailSettings() {
                 }
                 loader={loader}
                 key={key}
-                isPaginated
                 ariaLabelKey="identity-providers:mappersList"
                 searchPlaceholderKey="identity-providers:searchForMapper"
                 toolbarItem={
                   <ToolbarItem>
-                    <Link
-                      to={toIdentityProviderAddMapper({
-                        realm,
-                        alias: alias!,
-                        providerId: provider.providerId!,
-                        tab: "mappers",
-                      })}
+                    <Button
                       id="add-mapper-button"
+                      onClick={() =>
+                        history.push(
+                          toIdentityProviderAddMapper({
+                            realm,
+                            alias: alias!,
+                            providerId: provider.providerId!,
+                            tab: "mappers",
+                          })
+                        )
+                      }
                     >
                       {t("addMapper")}
-                    </Link>
+                    </Button>
                   </ToolbarItem>
                 }
                 columns={[
