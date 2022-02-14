@@ -1,5 +1,5 @@
 export default class SidebarPage {
-  private realmsDrpDwn = "realmSelectorToggle";
+  private realmsDrpDwn = '[data-testid="realmSelectorToggle"]';
   private realmsList = "#realm-select ul";
   private createRealmBtn = "add-realm";
 
@@ -17,20 +17,23 @@ export default class SidebarPage {
   private userFederationBtn = "#nav-item-user-federation";
 
   getCurrentRealm() {
-    return cy.findByTestId(this.realmsDrpDwn).scrollIntoView().invoke("text");
+    return cy.get(this.realmsDrpDwn).scrollIntoView().invoke("text");
   }
 
   goToRealm(realmName: string) {
-    cy.findByTestId(this.realmsDrpDwn).scrollIntoView().click({ force: true });
+    this.waitForPageLoad();
+    cy.get(this.realmsDrpDwn).scrollIntoView().click({ force: true });
     cy.get(this.realmsList).contains(realmName).click({ force: true });
+    this.waitForPageLoad();
 
     return this;
   }
 
   goToCreateRealm() {
-    cy.findByTestId(this.realmsDrpDwn).scrollIntoView();
-    cy.findByTestId(this.realmsDrpDwn).click();
-    cy.findByTestId(this.createRealmBtn).click();
+    this.waitForPageLoad();
+    cy.get(this.realmsDrpDwn).scrollIntoView().click({ force: true });
+    cy.findByTestId(this.createRealmBtn).click({ force: true });
+    this.waitForPageLoad();
 
     return this;
   }

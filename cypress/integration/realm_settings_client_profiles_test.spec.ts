@@ -22,8 +22,7 @@ describe("Realm settings client profiles tab tests", () => {
 
   beforeEach(() => {
     keycloakBeforeEach();
-    sidebarPage.goToRealm(realmName);
-    sidebarPage.goToRealmSettings();
+    sidebarPage.waitForPageLoad().goToRealm(realmName).goToRealmSettings();
     cy.findByTestId("rs-clientPolicies-tab").click();
     cy.findByTestId("rs-policies-clientProfiles-tab").click();
   });

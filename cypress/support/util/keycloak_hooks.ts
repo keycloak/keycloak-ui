@@ -11,7 +11,8 @@ export const keycloakBefore = () => {
     console.log("--------------------");
     return false;
   });
-  cy.visit("");
+  cy.reload();
+  cy.visit("/#/");
 };
 
 export const keycloakBeforeEach = () => {
