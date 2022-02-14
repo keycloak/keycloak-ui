@@ -73,13 +73,12 @@ export const OpenIdConnectCompatibilityModes = ({
         />
       </FormGroup>
       <FormGroup
-        label={t("useRefreshTokenForClientCredentialsGrant")}
-        fieldId="useRefreshTokenForClientCredentialsGrant"
-        hasNoPaddingTop
+        label={t("useRefreshTokensForClientCredentialsGrant")}
+        fieldId="useRefreshTokensForClientCredentialsGrant"
         labelIcon={
           <HelpItem
-            helpText="clients-help:useRefreshTokenForClientCredentialsGrant"
-            fieldLabelId="clients:useRefreshTokenForClientCredentialsGrant"
+            helpText="clients-help:useRefreshTokensForClientCredentialsGrant"
+            fieldLabelId="clients:useRefreshTokensForClientCredentialsGrant"
           />
         }
       >
@@ -89,16 +88,15 @@ export const OpenIdConnectCompatibilityModes = ({
           control={control}
           render={({ onChange, value }) => (
             <Switch
-              id="useRefreshTokenForClientCredentialsGrant"
+              id="useRefreshTokensForClientCredentialsGrant-switch"
               label={t("common:on")}
               labelOff={t("common:off")}
               isChecked={value === "true"}
-              onChange={(value) => onChange(value.toString())}
+              onChange={(value) => onChange("" + value)}
             />
           )}
         />
       </FormGroup>
-
       <ActionGroup>
         <Button variant="secondary" onClick={save}>
           {t("common:save")}

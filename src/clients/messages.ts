@@ -485,7 +485,7 @@ export default {
     excludeSessionStateFromAuthenticationResponse:
       "Exclude Session State From Authentication Response",
     useRefreshTokens: "Use refresh tokens",
-    useRefreshTokenForClientCredentialsGrant:
+    useRefreshTokensForClientCredentialsGrant:
       "Use refresh tokens for client credentials grant",
     assertionConsumerServicePostBindingURL:
       "Assertion Consumer Service POST Binding URL",
