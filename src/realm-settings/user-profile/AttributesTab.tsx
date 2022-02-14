@@ -21,6 +21,8 @@ import { useRealm } from "../../context/realm-context/RealmContext";
 import { useUserProfile } from "./UserProfileContext";
 import { useConfirmDialog } from "../../components/confirm-dialog/ConfirmDialog";
 
+type movedAttributeType = UserProfileAttribute;
+
 export const AttributesTab = () => {
   const { config } = useUserProfile();
   const adminClient = useAdminClient();
@@ -46,13 +48,10 @@ export const AttributesTab = () => {
         return attr.name === attribute.name;
       });
 
-      const movedAttribute = config?.attributes![fromIndex!];
+      let movedAttribute: movedAttributeType = {};
+      movedAttribute = config?.attributes![fromIndex!]!;
       config?.attributes!.splice(fromIndex!, 1);
-      config?.attributes!.splice(
-        newIndex,
-        0,
-        movedAttribute as UserProfileAttribute
-      );
+      config?.attributes!.splice(newIndex, 0, movedAttribute);
 
       await adminClient.users.updateProfile({
         attributes: config?.attributes,
