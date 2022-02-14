@@ -355,23 +355,9 @@ export default function DetailSettings() {
                   <ToolbarItem>
                     <Button
                       id="add-mapper-button"
-                      onClick={() =>
-                        history.push(
-                          toIdentityProviderAddMapper({
-                            realm,
-                            alias: alias!,
-                            providerId: provider.providerId!,
-                            tab: "mappers",
-                          })
-                        )
-                      }
-                    >
-                      {t("addMapper")}
-                    </Button>
-                    <Button
-                      id="add-mapper-button"
-                      component={() => (
+                      component={(props) => (
                         <Link
+                          {...props}
                           to={toIdentityProviderAddMapper({
                             realm,
                             alias: alias!,
