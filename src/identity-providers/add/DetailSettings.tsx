@@ -368,6 +368,22 @@ export default function DetailSettings() {
                     >
                       {t("addMapper")}
                     </Button>
+                    <Button
+                      id="add-mapper-button"
+                      component={() => (
+                        <Link
+                          to={toIdentityProviderAddMapper({
+                            realm,
+                            alias: alias!,
+                            providerId: provider.providerId!,
+                            tab: "mappers",
+                          })}
+                        />
+                      )}
+                      data-testid="addMapper"
+                    >
+                      {t("addMapper")}
+                    </Button>
                   </ToolbarItem>
                 }
                 columns={[
