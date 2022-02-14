@@ -42,18 +42,24 @@ export const AttributesTab = () => {
     newIndex: number
   ) => {
     try {
-      console.log(config?.attributes);
-      console.log(attribute, newIndex);
+      const fromIndex = config?.attributes!.findIndex((attr) => {
+        return attr.name === attribute.name;
+      });
 
-      const updatedAttributesOrder = config?.attributes!.map((attribute) =>
-        console.log(attribute)
-      );
+      if (fromIndex) {
+        const movedAttribute = config?.attributes![fromIndex];
+        config?.attributes!.splice(fromIndex, 1);
+        config?.attributes!.splice(
+          newIndex,
+          0,
+          movedAttribute as UserProfileAttribute
+        );
+      }
 
-      console.log(">>>> updatedAttributesOrder ", updatedAttributesOrder);
-      //   await adminClient.users.updateProfile({
-      //     attributes: updatedAttributesOrder,
-      //     realm: realmName,
-      //   });
+      await adminClient.users.updateProfile({
+        attributes: config?.attributes,
+        realm: realmName,
+      });
       refresh();
       addAlert(t("updatedUserProfileSuccess"), AlertVariant.success);
     } catch (error) {
