@@ -12,6 +12,7 @@ export const keycloakBefore = () => {
     return false;
   });
   cy.reload();
+  cy.get('[role="progressbar"]').should("not.exist");
   cy.visit("/#/");
 };
 

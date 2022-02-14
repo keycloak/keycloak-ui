@@ -54,7 +54,6 @@ export default class Masthead {
 
   checkNotificationMessage(message: string, closeNotification?: boolean) {
     cy.get(this.alertMessage).should("contain.text", message);
-    //cy.get(this.alertMessage).contains(message).should("exist");
     if (closeNotification) {
       this.closeLastAlertMessage();
     }

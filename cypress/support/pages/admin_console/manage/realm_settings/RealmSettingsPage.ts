@@ -1100,7 +1100,7 @@ export default class RealmSettingsPage {
   }
 
   deleteClientPolicyFromDetails() {
-    cy.get(this.clientPolicyDrpDwn).click();
+    cy.get(this.clientPolicyDrpDwn).click({ force: true });
     cy.findByTestId(this.deleteclientPolicyDrpDwn).click({ force: true });
     return this;
   }

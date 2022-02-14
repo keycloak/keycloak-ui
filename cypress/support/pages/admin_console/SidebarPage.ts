@@ -82,6 +82,7 @@ export default class SidebarPage {
 
   goToRealmSettings() {
     cy.get(this.realmSettingsBtn).click({ force: true });
+    this.waitForPageLoad();
 
     return this;
   }
