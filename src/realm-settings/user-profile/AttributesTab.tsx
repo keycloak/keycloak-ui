@@ -46,15 +46,13 @@ export const AttributesTab = () => {
         return attr.name === attribute.name;
       });
 
-      if (fromIndex) {
-        const movedAttribute = config?.attributes![fromIndex];
-        config?.attributes!.splice(fromIndex, 1);
-        config?.attributes!.splice(
-          newIndex,
-          0,
-          movedAttribute as UserProfileAttribute
-        );
-      }
+      const movedAttribute = config?.attributes![fromIndex!];
+      config?.attributes!.splice(fromIndex!, 1);
+      config?.attributes!.splice(
+        newIndex,
+        0,
+        movedAttribute as UserProfileAttribute
+      );
 
       await adminClient.users.updateProfile({
         attributes: config?.attributes,
