@@ -34,7 +34,7 @@ export type FormAccessProps = FormProps & {
    * An override property if fine grained access has been setup for this form.
    * @type {boolean}
    */
-  fineGrainedAccess?: boolean;
+  fineGrainedAccess?: boolean | undefined;
 
   /**
    * Set unWrap when you don't want this component to wrap your "children" in a {@link Form} component.
@@ -55,8 +55,12 @@ export type FormAccessProps = FormProps & {
 export const FormAccess: FunctionComponent<FormAccessProps> = ({
   children,
   role,
+<<<<<<< HEAD
   fineGrainedAccess = false,
   isReadOnly = false,
+=======
+  fineGrainedAccess,
+>>>>>>> 7b64ee57 (Fix bugs when admin has limited roles.)
   unWrap = false,
   ...rest
 }) => {
@@ -113,7 +117,8 @@ export const FormAccess: FunctionComponent<FormAccessProps> = ({
     });
   };
 
-  const isDisabled = isReadOnly || (!hasAccess(role) && !fineGrainedAccess);
+  let isDisabled = isReadOnly || !hasAccess(role);
+  if (fineGrainedAccess !== undefined) isDisabled = !fineGrainedAccess;
 
   return (
     <>
