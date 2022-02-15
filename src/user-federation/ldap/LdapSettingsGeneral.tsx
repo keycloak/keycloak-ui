@@ -115,14 +115,7 @@ export const LdapSettingsGeneral = ({
           isRequired
         >
           {/* These hidden fields are required so data object written back matches data retrieved */}
-          <TextInput
-            hidden
-            type="text"
-            id="kc-console-id"
-            name="id"
-            defaultValue=""
-            ref={form.register}
-          />
+          <TextInput hidden type="text" id="kc-console-id" name="id" />
           <TextInput
             hidden
             type="text"
