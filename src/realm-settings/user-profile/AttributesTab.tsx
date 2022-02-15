@@ -24,14 +24,12 @@ import { useConfirmDialog } from "../../components/confirm-dialog/ConfirmDialog"
 type movedAttributeType = UserProfileAttribute;
 
 export const AttributesTab = () => {
-  const { config } = useUserProfile();
+  const { config, save } = useUserProfile();
   const adminClient = useAdminClient();
   const { realm: realmName } = useRealm();
   const { t } = useTranslation("realm-settings");
   const history = useHistory();
   const { addAlert, addError } = useAlerts();
-  const [key, setKey] = useState(0);
-  const refresh = () => setKey(key + 1);
   const [attributeToDelete, setAttributeToDelete] =
     useState<{ name: string }>();
   const [kebabOpen, setKebabOpen] = useState({
@@ -57,7 +55,6 @@ export const AttributesTab = () => {
         attributes: config?.attributes,
         realm: realmName,
       });
-      refresh();
       addAlert(t("updatedUserProfileSuccess"), AlertVariant.success);
     } catch (error) {
       addError(t("updatedUserProfileError"), error);
@@ -86,7 +83,13 @@ export const AttributesTab = () => {
         setAttributeToDelete({
           name: "",
         });
-        refresh();
+        save(
+          { attributes: updatedAttributes! },
+          {
+            successMessageKey: "realm-settings:deleteAttributeSuccess",
+            errorMessageKey: "realm-settings:deleteAttributeError",
+          }
+        );
         addAlert(t("deleteAttributeSuccess"), AlertVariant.success);
       } catch (error) {
         addError(t("deleteAttributeError"), error);
