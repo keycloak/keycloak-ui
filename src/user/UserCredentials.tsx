@@ -167,7 +167,6 @@ export const UserCredentials = ({ user }: UserCredentialsProps) => {
         })
         .toString()
     );
-    console.log(test);
     return test;
   }, [groupedUserCredentials]);
 
@@ -287,7 +286,16 @@ export const UserCredentials = ({ user }: UserCredentialsProps) => {
   };
 
   const onDragFinish = (dragged: string, newOrder: string[]) => {
-    console.log(dragged, newOrder);
+    const keys = groupedUserCredentials.map((e) => e.key);
+    const newIndex = newOrder.indexOf(dragged);
+    const oldIndex = keys.indexOf(dragged);
+    const times = newIndex - oldIndex;
+
+    const allGroupedCredentials = groupedUserCredentials.map((credentials) =>
+      credentials.value.filter((value) => value.id === dragged)
+    );
+
+    console.log("allGroupedCredentials ", allGroupedCredentials);
   };
 
   return (
@@ -345,6 +353,7 @@ export const UserCredentials = ({ user }: UserCredentialsProps) => {
                     fieldLabelId="users:userCredentialsHelpTextLabel"
                   />
                 </Th>
+                <Th />
                 <Th>{t("type")}</Th>
                 <Th>{t("userLabel")}</Th>
                 <Th>{t("data")}</Th>
