@@ -1,7 +1,6 @@
 import React, { Fragment, useState } from "react";
 import { useTranslation } from "react-i18next";
 import {
-  AlertVariant,
   Button,
   ButtonVariant,
   Divider,
@@ -10,7 +9,6 @@ import {
   KebabToggle,
   ToolbarItem,
 } from "@patternfly/react-core";
-import { useAlerts } from "../../components/alert/Alerts";
 import { KeycloakSpinner } from "../../components/keycloak-spinner/KeycloakSpinner";
 import { DraggableTable } from "../../authentication/components/DraggableTable";
 import type { UserProfileAttribute } from "@keycloak/keycloak-admin-client/lib/defs/userProfileConfig";
@@ -27,7 +25,6 @@ export const AttributesTab = () => {
   const { realm: realmName } = useRealm();
   const { t } = useTranslation("realm-settings");
   const history = useHistory();
-  const { addAlert, addError } = useAlerts();
   const [attributeToDelete, setAttributeToDelete] =
     useState<{ name: string }>();
   const [kebabOpen, setKebabOpen] = useState({
@@ -39,27 +36,22 @@ export const AttributesTab = () => {
     attribute: UserProfileAttribute,
     newIndex: number
   ) => {
-    try {
-      const fromIndex = config?.attributes!.findIndex((attr) => {
-        return attr.name === attribute.name;
-      });
+    const fromIndex = config?.attributes!.findIndex((attr) => {
+      return attr.name === attribute.name;
+    });
 
-      let movedAttribute: movedAttributeType = {};
-      movedAttribute = config?.attributes![fromIndex!]!;
-      config?.attributes!.splice(fromIndex!, 1);
-      config?.attributes!.splice(newIndex, 0, movedAttribute);
+    let movedAttribute: movedAttributeType = {};
+    movedAttribute = config?.attributes![fromIndex!]!;
+    config?.attributes!.splice(fromIndex!, 1);
+    config?.attributes!.splice(newIndex, 0, movedAttribute);
 
-      save(
-        { attributes: config?.attributes! },
-        {
-          successMessageKey: "realm-settings:updatedUserProfileSuccess",
-          errorMessageKey: "realm-settings:updatedUserProfileError",
-        }
-      );
-      addAlert(t("updatedUserProfileSuccess"), AlertVariant.success);
-    } catch (error) {
-      addError(t("updatedUserProfileError"), error);
-    }
+    save(
+      { attributes: config?.attributes! },
+      {
+        successMessageKey: "realm-settings:updatedUserProfileSuccess",
+        errorMessageKey: "realm-settings:updatedUserProfileError",
+      }
+    );
   };
 
   const goToCreate = () => history.push(toAddAttribute({ realm: realmName }));
@@ -76,21 +68,16 @@ export const AttributesTab = () => {
     continueButtonLabel: t("common:delete"),
     continueButtonVariant: ButtonVariant.danger,
     onConfirm: async () => {
-      try {
-        save(
-          { attributes: updatedAttributes! },
-          {
-            successMessageKey: "realm-settings:deleteAttributeSuccess",
-            errorMessageKey: "realm-settings:deleteAttributeError",
-          }
-        );
-        setAttributeToDelete({
-          name: "",
-        });
-        addAlert(t("deleteAttributeSuccess"), AlertVariant.success);
-      } catch (error) {
-        addError(t("deleteAttributeError"), error);
-      }
+      save(
+        { attributes: updatedAttributes! },
+        {
+          successMessageKey: "realm-settings:deleteAttributeSuccess",
+          errorMessageKey: "realm-settings:deleteAttributeError",
+        }
+      );
+      setAttributeToDelete({
+        name: "",
+      });
     },
   });
 
