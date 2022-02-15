@@ -30,6 +30,7 @@ export default class LoginPage {
           cy.get(this.submitBtn).click();
         }
       });
+    cy.get('[role="progressbar"]').should("not.exist");
   }
 
   checkErrorIsDisplayed() {
