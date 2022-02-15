@@ -16,7 +16,6 @@ import { DraggableTable } from "../../authentication/components/DraggableTable";
 import type { UserProfileAttribute } from "@keycloak/keycloak-admin-client/lib/defs/userProfileConfig";
 import { useHistory } from "react-router-dom";
 import { toAddAttribute } from "../routes/AddAttribute";
-import { useAdminClient } from "../../context/auth/AdminClient";
 import { useRealm } from "../../context/realm-context/RealmContext";
 import { useUserProfile } from "./UserProfileContext";
 import { useConfirmDialog } from "../../components/confirm-dialog/ConfirmDialog";
@@ -25,7 +24,6 @@ type movedAttributeType = UserProfileAttribute;
 
 export const AttributesTab = () => {
   const { config, save } = useUserProfile();
-  const adminClient = useAdminClient();
   const { realm: realmName } = useRealm();
   const { t } = useTranslation("realm-settings");
   const history = useHistory();
@@ -51,10 +49,13 @@ export const AttributesTab = () => {
       config?.attributes!.splice(fromIndex!, 1);
       config?.attributes!.splice(newIndex, 0, movedAttribute);
 
-      await adminClient.users.updateProfile({
-        attributes: config?.attributes,
-        realm: realmName,
-      });
+      save(
+        { attributes: config?.attributes! },
+        {
+          successMessageKey: "realm-settings:updatedUserProfileSuccess",
+          errorMessageKey: "realm-settings:updatedUserProfileError",
+        }
+      );
       addAlert(t("updatedUserProfileSuccess"), AlertVariant.success);
     } catch (error) {
       addError(t("updatedUserProfileError"), error);
@@ -76,13 +77,6 @@ export const AttributesTab = () => {
     continueButtonVariant: ButtonVariant.danger,
     onConfirm: async () => {
       try {
-        await adminClient.users.updateProfile({
-          attributes: updatedAttributes,
-          realm: realmName,
-        });
-        setAttributeToDelete({
-          name: "",
-        });
         save(
           { attributes: updatedAttributes! },
           {
@@ -90,6 +84,9 @@ export const AttributesTab = () => {
             errorMessageKey: "realm-settings:deleteAttributeError",
           }
         );
+        setAttributeToDelete({
+          name: "",
+        });
         addAlert(t("deleteAttributeSuccess"), AlertVariant.success);
       } catch (error) {
         addError(t("deleteAttributeError"), error);
