@@ -104,7 +104,7 @@ describe("Realm settings client policies tab tests", () => {
   it("Should delete client-roles condition from a client profile", () => {
     realmSettingsPage.deleteClientRolesCondition();
     sidebarPage.waitForPageLoad();
-    modalUtils.confirmModal(true);
+    modalUtils.confirmModal();
     realmSettingsPage.checkConditionsListContains("client-scopes");
   });
 
@@ -184,7 +184,7 @@ describe("Realm settings client policies tab tests", () => {
     cy.wait("@save");
     masthead.closeLastAlertMessage();
     realmSettingsPage.deleteClientPolicyFromDetails();
-    modalUtils.confirmModal(true);
+    modalUtils.confirmModal();
     masthead.checkNotificationMessage("Client policy deleted");
     sidebarPage.waitForPageLoad();
     realmSettingsPage.checkEmptyPolicyList();

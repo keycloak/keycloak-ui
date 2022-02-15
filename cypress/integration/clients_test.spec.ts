@@ -133,7 +133,7 @@ describe("Clients test", () => {
       // Delete
       listingPage.deleteItem(itemId);
       sidebarPage.waitForPageLoad();
-      modalUtils.checkModalTitle(`Delete ${itemId} ?`).confirmModal(true);
+      modalUtils.checkModalTitle(`Delete ${itemId} ?`).confirmModal();
 
       masthead.checkNotificationMessage("The client has been deleted");
 
@@ -179,7 +179,7 @@ describe("Clients test", () => {
         sidebarPage.waitForPageLoad();
         modalUtils
           .checkModalTitle("Delete initial access token?")
-          .confirmModal(true);
+          .confirmModal();
       });
 
       masthead.checkNotificationMessage(
@@ -190,7 +190,7 @@ describe("Clients test", () => {
       initialAccessTokenTab.getFirstId((id) => {
         listingPage.deleteItem(id);
         sidebarPage.waitForPageLoad();
-        modalUtils.confirmModal(true);
+        modalUtils.confirmModal();
       });
       initialAccessTokenTab.shouldBeEmpty();
     });
@@ -291,7 +291,7 @@ describe("Clients test", () => {
       masthead.checkNotificationMessage("Role mapping updated");
       serviceAccountTab.selectRow("create-realm").unAssign();
       sidebarPage.waitForPageLoad();
-      modalUtils.checkModalTitle("Remove mapping?").confirmModal(true);
+      modalUtils.checkModalTitle("Remove mapping?").confirmModal();
       masthead.checkNotificationMessage("Scope mapping successfully removed");
     });
   });

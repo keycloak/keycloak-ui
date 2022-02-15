@@ -39,48 +39,63 @@ export default class SidebarPage {
   }
 
   goToClients() {
+    this.waitForPageLoad();
     cy.get(this.clientsBtn).scrollIntoView().click({ force: true });
+    this.waitForPageLoad();
 
     return this;
   }
 
   goToClientScopes() {
+    this.waitForPageLoad();
     cy.get(this.clientScopesBtn).scrollIntoView().click();
+    this.waitForPageLoad();
 
     return this;
   }
 
   goToRealmRoles() {
+    this.waitForPageLoad();
     cy.get(this.realmRolesBtn).click();
+    this.waitForPageLoad();
 
     return this;
   }
 
   goToUsers() {
+    this.waitForPageLoad();
     cy.get(this.usersBtn).click();
+    this.waitForPageLoad();
 
     return this;
   }
 
   goToGroups() {
+    this.waitForPageLoad();
     cy.get(this.groupsBtn).click();
+    this.waitForPageLoad();
 
     return this;
   }
 
   goToSessions() {
+    this.waitForPageLoad();
     cy.get(this.sessionsBtn).click();
+    this.waitForPageLoad();
 
     return this;
   }
 
   goToEvents() {
+    this.waitForPageLoad();
     cy.get(this.eventsBtn).click();
+    this.waitForPageLoad();
 
     return this;
   }
 
   goToRealmSettings() {
+    this.waitForPageLoad();
     cy.get(this.realmSettingsBtn).click({ force: true });
     this.waitForPageLoad();
 
@@ -88,18 +103,23 @@ export default class SidebarPage {
   }
 
   goToAuthentication() {
+    this.waitForPageLoad();
     cy.get(this.authenticationBtn).click();
+    this.waitForPageLoad();
 
     return this;
   }
 
   goToIdentityProviders() {
+    this.waitForPageLoad();
     cy.get(this.identityProvidersBtn).click();
+    this.waitForPageLoad();
 
     return this;
   }
 
   goToUserFederation() {
+    this.waitForPageLoad();
     cy.get(this.userFederationBtn).click();
     this.waitForPageLoad();
 

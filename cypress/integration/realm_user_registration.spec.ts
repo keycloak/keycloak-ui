@@ -58,7 +58,7 @@ describe("Realm settings - User registration tab", () => {
         "This action will remove the associated roles of default-roles-master. Users who have permission to default-roles-master will no longer have access to these roles."
       )
       .checkConfirmButtonText("Remove")
-      .confirmModal(true);
+      .confirmModal();
     masthead.checkNotificationMessage("Associated roles have been removed");
   });
 
