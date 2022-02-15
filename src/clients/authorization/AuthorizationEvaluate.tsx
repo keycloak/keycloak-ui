@@ -542,7 +542,6 @@ export const AuthorizationEvaluate = ({
                     }))}
                     resources={resources}
                     isKeySelectable
-                    reset={() => reset()}
                     name="resources"
                   />
                 )}
@@ -638,7 +637,6 @@ export const AuthorizationEvaluate = ({
                 selectableValues={defaultContextAttributes}
                 isKeySelectable
                 name="context.attributes"
-                reset={() => reset()}
               />
             </FormGroup>
           </ExpandableSection>
