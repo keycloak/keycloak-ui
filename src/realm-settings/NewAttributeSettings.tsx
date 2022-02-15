@@ -3,7 +3,7 @@ import React from "react";
 
 import { useTranslation } from "react-i18next";
 import { FormAccess } from "../components/form-access/FormAccess";
-import "./RealmSettingsSection.css";
+import "./realm-settings-section.css";
 
 export default function NewAttributeSettings() {
   const { t } = useTranslation("realm-settings");
