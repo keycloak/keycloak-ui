@@ -14,6 +14,7 @@ export const keycloakBefore = () => {
   cy.reload();
   cy.get('[role="progressbar"]').should("not.exist");
   cy.visit("/#/");
+  cy.get('[role="progressbar"]').should("not.exist");
 };
 
 export const keycloakBeforeEach = () => {

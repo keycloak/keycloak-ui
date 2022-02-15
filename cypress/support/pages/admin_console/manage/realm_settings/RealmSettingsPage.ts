@@ -554,13 +554,13 @@ export default class RealmSettingsPage {
   }
 
   shouldRemoveEventFromEventListener() {
-    cy.get(this.eventListenerRemove).first().click();
+    cy.get(this.eventListenerRemove).last().click();
     cy.findByTestId(this.eventListenersSaveBtn).click();
     cy.get(this.alertMessage).should(
       "be.visible",
       "Event listener has been updated."
     );
-    cy.get(this.eventListenersDrpDwn).should("not.have.text", "jboss-logging");
+    cy.get(this.eventListenersDrpDwn).should("not.have.text", "email");
   }
 
   shouldRemoveAllEventListeners() {
