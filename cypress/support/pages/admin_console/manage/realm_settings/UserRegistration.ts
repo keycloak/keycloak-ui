@@ -3,7 +3,7 @@ export default class UserRegistration {
   private defaultGroupTab = "#pf-tab-20-groups";
   private addRoleButton = "add-role-button";
   private addDefaultGroup = "no-default-groups-empty-action";
-  private namesColumn = 'td[data-label="Role name"]:visible';
+  private namesColumn = 'th[data-label="Role name"]:visible';
   private addBtn = "add-associated-roles-button";
 
   goToTab() {
