@@ -286,16 +286,10 @@ export const UserCredentials = ({ user }: UserCredentialsProps) => {
   };
 
   const onDragFinish = async (dragged: string, newOrder: string[]) => {
-    const keys = groupedUserCredentials.map((e) => e.key);
-    const newIndex = newOrder.indexOf(dragged);
-    const oldIndex = keys.indexOf(dragged);
+    const keys = groupedUserCredentials.map((e) => e.value.map((c) => c.id));
+    const oldIndex = keys.findIndex((el) => el.join().includes(dragged));
+    const newIndex = newOrder.findIndex((el) => el.includes(dragged));
     const times = newIndex - oldIndex;
-
-    const newPreviousCredential = groupedUserCredentials.map((credentials) =>
-      credentials.value.filter((value) => value.id !== dragged)
-    );
-
-    console.log("newPreviousCredential ", newPreviousCredential);
 
     try {
       for (let index = 0; index < Math.abs(times); index++) {
@@ -303,7 +297,7 @@ export const UserCredentials = ({ user }: UserCredentialsProps) => {
           await adminClient.users.moveCredentialPositionDown({
             id: user.id!,
             credentialId: dragged,
-            newPreviousCredentialId: "",
+            newPreviousCredentialId: "", //Todo
           });
         } else {
           await adminClient.users.moveCredentialPositionUp({
