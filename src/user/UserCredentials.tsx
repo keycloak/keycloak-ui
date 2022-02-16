@@ -285,17 +285,33 @@ export const UserCredentials = ({ user }: UserCredentialsProps) => {
     });
   };
 
-  const onDragFinish = (dragged: string, newOrder: string[]) => {
+  const onDragFinish = async (dragged: string, newOrder: string[]) => {
     const keys = groupedUserCredentials.map((e) => e.key);
     const newIndex = newOrder.indexOf(dragged);
     const oldIndex = keys.indexOf(dragged);
     const times = newIndex - oldIndex;
 
-    const allGroupedCredentials = groupedUserCredentials.map((credentials) =>
-      credentials.value.filter((value) => value.id === dragged)
-    );
+    try {
+      for (let index = 0; index < Math.abs(times); index++) {
+        if (times > 0) {
+          await adminClient.users.moveCredentialPositionDown({
+            id: user.id!,
+            credentialId: dragged,
+            newPreviousCredentialId: "",
+          });
+        } else {
+          await adminClient.users.moveCredentialPositionUp({
+            id: user.id!,
+            credentialId: dragged,
+          });
+        }
+      }
+      refresh();
 
-    console.log("allGroupedCredentials ", allGroupedCredentials);
+      addAlert(t("updatedRequiredActionSuccess"), AlertVariant.success);
+    } catch (error) {
+      addError("authentication:updatedRequiredActionError", error);
+    }
   };
 
   return (
