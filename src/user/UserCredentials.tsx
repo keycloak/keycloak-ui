@@ -308,9 +308,9 @@ export const UserCredentials = ({ user }: UserCredentialsProps) => {
       }
       refresh();
 
-      addAlert(t("updatedRequiredActionSuccess"), AlertVariant.success);
+      addAlert(t("users:updatedCredentialMoveSuccess"), AlertVariant.success);
     } catch (error) {
-      addError("authentication:updatedRequiredActionError", error);
+      addError("users:updatedCredentialMoveError", error);
     }
   };
 
