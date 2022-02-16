@@ -1,6 +1,6 @@
 export default class SidebarPage {
-  private realmsDrpDwn = '[data-testid="realmSelector"] > button';
-  private realmsList = '[data-testid="realmSelector"] > div ul';
+  private realmsDrpDwn = "#realm-select button.pf-c-dropdown__toggle";
+  private realmsList = '#realm-select ul[role="menu"]';
   private createRealmBtn = "add-realm";
 
   private clientsBtn = "#nav-item-clients";
