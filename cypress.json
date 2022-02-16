@@ -9,7 +9,9 @@
         "runMode": 2,
         "openMode": 0
       },
-    "defaultCommandTimeout": 10000,
+    "defaultCommandTimeout": 30000,
+    "slowTestThreshold": 30000,
+    "pageLoadTimeout": 120000,
     "videoCompression": false,
     "numTestsKeptInMemory": 30,
     "videoUploadOnPasses": false
