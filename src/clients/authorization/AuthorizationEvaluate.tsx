@@ -201,12 +201,6 @@ export const AuthorizationEvaluate = ({
 
   const noEvaluatedData = evaluateResults.length === 0;
   const noFilteredData = filteredResources.length === 0;
-  const searching = searchVal.length !== 0;
-
-  console.log("no evaluated data?", noEvaluatedData);
-  console.log("no filtered data?", noFilteredData);
-  console.log("evaluate results", evaluateResults);
-  console.log("filtered resources", filteredResources);
 
   const options = [
     <SelectOption
@@ -312,7 +306,7 @@ export const AuthorizationEvaluate = ({
         </TableComposable>
       )}
       {noEvaluatedData ||
-        (searching && noFilteredData && (
+        (noFilteredData && (
           <ListEmptyState
             isSearchVariant
             message={t("common:noSearchResults")}
