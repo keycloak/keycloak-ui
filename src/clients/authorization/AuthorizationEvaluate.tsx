@@ -61,12 +61,6 @@ export type AttributeType = {
   }[];
 };
 
-enum FilterType {
-  allResults = "All results",
-  resultPermit = "Result-Permit",
-  resultDeny = "Result-Deny",
-}
-
 type ClientSettingsProps = {
   clients: ClientRepresentation[];
   clientName?: string;
@@ -120,12 +114,19 @@ export const AuthorizationEvaluate = ({
     EvaluationResultRepresentation[]
   >([]);
   const [filterDropdownOpen, setFilterDropdownOpen] = useState(false);
-  const [filterType, setFilterType] = useState(FilterType.allResults);
   const [key, setKey] = useState(0);
 
   const refresh = () => {
     setKey(new Date().getTime());
   };
+
+  const FilterType = {
+    allResults: t("allResults"),
+    resultPermit: t("resultPermit"),
+    resultDeny: t("resultDeny"),
+  };
+
+  const [filterType, setFilterType] = useState(FilterType.allResults);
 
   useFetch(
     async () =>
@@ -198,25 +199,31 @@ export const AuthorizationEvaluate = ({
     setSearchVal(value);
   };
 
-  const noData = evaluateResults.length === 0 || filteredResources.length === 0;
+  const noEvaluatedData = evaluateResults.length === 0;
+  const noFilteredData = filteredResources.length === 0;
   const searching = searchVal.length !== 0;
+
+  console.log("no evaluated data?", noEvaluatedData);
+  console.log("no filtered data?", noFilteredData);
+  console.log("evaluate results", evaluateResults);
+  console.log("filtered resources", filteredResources);
 
   const options = [
     <SelectOption
       key={1}
       data-testid="all-results-option"
-      value={t("allResults")}
+      value={FilterType.allResults}
       isPlaceholder
     />,
     <SelectOption
       data-testid="result-permit-option"
       key={2}
-      value={t("resultPermit")}
+      value={FilterType.resultPermit}
     />,
     <SelectOption
       data-testid="result-deny-option"
       key={3}
-      value={t("resultDeny")}
+      value={FilterType.resultDeny}
     />,
   ];
 
@@ -280,8 +287,7 @@ export const AuthorizationEvaluate = ({
           </ToolbarItem>
         </ToolbarGroup>
       </Toolbar>
-      {((!searching && evaluateResults.length !== 0) ||
-        (searching && filteredResources.length !== 0)) && (
+      {!noEvaluatedData && !noFilteredData && (
         <TableComposable aria-label={t("evaluationResults")}>
           <Thead>
             <Tr>
@@ -292,7 +298,7 @@ export const AuthorizationEvaluate = ({
               <Th />
             </Tr>
           </Thead>
-          {(!searching && filterType == FilterType.allResults
+          {(filterType == FilterType.allResults
             ? evaluateResults
             : filteredResources
           ).map((resource, rowIndex) => (
@@ -305,13 +311,14 @@ export const AuthorizationEvaluate = ({
           ))}
         </TableComposable>
       )}
-      {noData && searching && (
-        <ListEmptyState
-          isSearchVariant
-          message={t("common:noSearchResults")}
-          instructions={t("common:noSearchResultsInstructions")}
-        />
-      )}
+      {noEvaluatedData ||
+        (searching && noFilteredData && (
+          <ListEmptyState
+            isSearchVariant
+            message={t("common:noSearchResults")}
+            instructions={t("common:noSearchResultsInstructions")}
+          />
+        ))}
       <ActionGroup className="kc-evaluated-options">
         <Button
           data-testid="authorization-eval"
@@ -530,21 +537,14 @@ export const AuthorizationEvaluate = ({
               helperTextInvalid={t("common:required")}
               fieldId="resourcesAndAuthScopes"
             >
-              <Controller
-                name="applyToResource"
-                defaultValue=""
-                control={control}
-                render={() => (
-                  <AttributeInput
-                    selectableValues={resources.map<AttributeType>((item) => ({
-                      name: item.name!,
-                      key: item._id!,
-                    }))}
-                    resources={resources}
-                    isKeySelectable
-                    name="resources"
-                  />
-                )}
+              <AttributeInput
+                selectableValues={resources.map<AttributeType>((item) => ({
+                  name: item.name!,
+                  key: item._id!,
+                }))}
+                resources={resources}
+                isKeySelectable
+                name="resources"
               />
             </FormGroup>
           )}
