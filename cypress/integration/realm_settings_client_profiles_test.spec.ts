@@ -23,8 +23,7 @@ describe("Realm settings client profiles tab tests", () => {
   beforeEach(() => {
     keycloakBeforeEach();
     sidebarPage.waitForPageLoad().goToRealm(realmName).goToRealmSettings();
-    cy.findByTestId("rs-clientPolicies-tab").click();
-    cy.findByTestId("rs-policies-clientProfiles-tab").click();
+    realmSettingsPage.goToClientPoliciesTab().goToClientProfilesList();
   });
 
   before(() => {
@@ -53,9 +52,12 @@ describe("Realm settings client profiles tab tests", () => {
   });
 
   it("Complete new client form and submit", () => {
+    const url = `/auth/admin/realms/${realmName}/client-policies/profiles`;
+    cy.intercept("PUT", url).as("save");
     realmSettingsPage
       .createClientProfile(profileName, "Test Description")
       .saveClientProfileCreation();
+    cy.wait("@save");
     masthead.checkNotificationMessage("New client profile created");
   });
 
@@ -76,9 +78,12 @@ describe("Realm settings client profiles tab tests", () => {
   });
 
   it("Should not create duplicate client profile", () => {
+    const url = `/auth/admin/realms/${realmName}/client-policies/profiles`;
+    cy.intercept("PUT", url).as("save");
     realmSettingsPage
       .createClientProfile(profileName, "Test Description")
       .saveClientProfileCreation();
+    cy.wait("@save");
 
     sidebarPage.goToRealmSettings();
     realmSettingsPage.goToClientPoliciesTab().goToClientProfilesList();
@@ -87,6 +92,7 @@ describe("Realm settings client profiles tab tests", () => {
     realmSettingsPage
       .createClientProfile(profileName, "Test Description")
       .saveClientProfileCreation();
+    cy.wait("@save");
     masthead.checkNotificationMessage(
       "Could not create client profile: 'proposed client profile name duplicated.'"
     );
@@ -169,6 +175,7 @@ describe("Realm settings client profiles tab tests", () => {
     realmSettingsPage.deleteClientPolicyItemFromTable(editedProfileName);
     modalUtils.confirmModal();
     masthead.checkNotificationMessage("Client profile deleted");
+    sidebarPage.waitForPageLoad();
     realmSettingsPage.checkElementNotInList(editedProfileName);
   });
 });

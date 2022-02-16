@@ -71,7 +71,7 @@ export default class Masthead {
   }
 
   checkKebabShown() {
-    cy.get(this.userDrpDwn).should("not.exist");
+    cy.get(this.userDrpDwn).should("not.be.visible");
     cy.get(this.userDrpDwnKebab).should("exist");
 
     return this;

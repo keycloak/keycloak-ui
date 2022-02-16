@@ -1,6 +1,6 @@
 export default class SidebarPage {
-  private realmsDrpDwn = '[data-testid="realmSelectorToggle"]';
-  private realmsList = "#realm-select ul";
+  private realmsDrpDwn = '[data-testid="realmSelector"] > button';
+  private realmsList = '[data-testid="realmSelector"] > div ul';
   private createRealmBtn = "add-realm";
 
   private clientsBtn = "#nav-item-clients";

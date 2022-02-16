@@ -779,7 +779,7 @@ export default class RealmSettingsPage {
   }
 
   cancelEditingExecutor() {
-    cy.get(this.addExecutorCancelBtn).contains("Cancel").click();
+    cy.get(this.addExecutorCancelBtn).contains("Cancel").click({ force: true });
     return this;
   }
 
