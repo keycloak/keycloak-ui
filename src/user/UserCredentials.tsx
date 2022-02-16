@@ -291,6 +291,12 @@ export const UserCredentials = ({ user }: UserCredentialsProps) => {
     const oldIndex = keys.indexOf(dragged);
     const times = newIndex - oldIndex;
 
+    const newPreviousCredential = groupedUserCredentials.map((credentials) =>
+      credentials.value.filter((value) => value.id !== dragged)
+    );
+
+    console.log("newPreviousCredential ", newPreviousCredential);
+
     try {
       for (let index = 0; index < Math.abs(times); index++) {
         if (times > 0) {
