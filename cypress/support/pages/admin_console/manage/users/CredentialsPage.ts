@@ -17,6 +17,15 @@ export default class CredentialsPage {
     "terms_and_conditions-option",
   ];
   private readonly confirmationButton = "confirm";
+  private readonly cancellationButton = "cancel";
+  private readonly editLabelBtn = "editUserLabelBtn";
+  private readonly labelField = "user-label-fld";
+  private readonly editCancellationBtn = "editUserLabel-cancelBtn";
+  private readonly editConfirmationBtn = "editUserLabel-acceptBtn";
+  private readonly showDataDialogBtn = "showDataBtn";
+  private readonly closeDataDialogBtn = "";
+  private readonly dropdownAction = ".pf-c-dropdown__toggle pf-m-plain";
+  private readonly deleteAction = "deleteDropdownItem";
 
   goToCredentialsTab() {
     cy.findByTestId(this.credentialsTab).click();
@@ -59,6 +68,12 @@ export default class CredentialsPage {
     return this;
   }
 
+  clickCancellationBtn() {
+    cy.findByTestId(this.cancellationButton).dblclick();
+
+    return this;
+  }
+
   fillPasswordForm() {
     cy.findByTestId(this.passwordField).type("test");
     cy.findByTestId(this.passwordConfirmationField).type("test");
@@ -78,6 +93,54 @@ export default class CredentialsPage {
 
   clickSetPasswordBtn() {
     cy.findByTestId(this.setPasswordBtn).click();
+
+    return this;
+  }
+
+  clickEditCredentialLabelBtn() {
+    cy.findByTestId(this.editLabelBtn).click();
+
+    return this;
+  }
+
+  fillEditCredentialForm() {
+    cy.findByTestId(this.labelField).type("test");
+
+    return this;
+  }
+
+  clickEditCancellationBtn() {
+    cy.findByTestId(this.editCancellationBtn).click();
+
+    return this;
+  }
+
+  clickEditConfirmationBtn() {
+    cy.findByTestId(this.editConfirmationBtn).click();
+
+    return this;
+  }
+
+  clickShowDataDialogBtn() {
+    cy.findByTestId(this.showDataDialogBtn).click();
+
+    return this;
+  }
+
+  clickCloseDataDialogBtn() {
+    cy.findByTestId(this.closeDataDialogBtn).click();
+
+    return this;
+  }
+
+  clickDrpDwnAction() {
+    cy.get(this.dropdownAction).click();
+
+    return this;
+  }
+
+  clickDeleteBtn() {
+    cy.findByTestId(this.deleteAction).click();
 
     return this;
   }

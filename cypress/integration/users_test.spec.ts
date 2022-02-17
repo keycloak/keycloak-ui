@@ -31,6 +31,9 @@ describe("User creation", () => {
 
   let itemId = "user_crud";
   let itemIdWithCred = "user_crud_cred";
+  const passwordItem = "credentialType";
+  const labelField = "user-label-fld";
+  const passwordDataDialog = "passwordDataDialog";
   const adminClient = new AdminClient();
 
   before(() => {
@@ -211,6 +214,68 @@ describe("User creation", () => {
 
     masthead.checkNotificationMessage(
       "Failed: Failed to send execute actions email"
+    );
+  });
+
+  it("Cancel editing credential label", () => {
+    listingPage.goToItemDetails(itemIdWithCred);
+    credentialsPage
+      .goToCredentialsTab()
+      .clickEditCredentialLabelBtn()
+      .fillEditCredentialForm()
+      .clickEditCancellationBtn();
+
+    cy.findByTestId(labelField).should("have.be", "");
+  });
+
+  it("Edit credential label", () => {
+    listingPage.goToItemDetails(itemIdWithCred);
+    credentialsPage
+      .goToCredentialsTab()
+      .clickEditCredentialLabelBtn()
+      .fillEditCredentialForm()
+      .clickEditConfirmationBtn();
+
+    masthead.checkNotificationMessage(
+      "The user label has been changed successfully."
+    );
+  });
+
+  it("Show credential data dialog", () => {
+    listingPage.goToItemDetails(itemIdWithCred);
+    credentialsPage.goToCredentialsTab().clickShowDataDialogBtn();
+
+    cy.get(passwordDataDialog).should("have.text", "Name");
+  });
+
+  it("Close credential data dialog", () => {
+    listingPage.goToItemDetails(itemIdWithCred);
+    credentialsPage.goToCredentialsTab().clickCloseDataDialogBtn();
+
+    cy.findByTestId(passwordItem).should("have.text", "Password");
+  });
+
+  it("Cancel deleting credential", () => {
+    listingPage.goToItemDetails(itemIdWithCred);
+    credentialsPage
+      .goToCredentialsTab()
+      .clickDrpDwnAction()
+      .clickDeleteBtn()
+      .clickCancellationBtn();
+
+    cy.findByTestId(passwordItem).should("have.text", "Password");
+  });
+
+  it("Delete credential", () => {
+    listingPage.goToItemDetails(itemIdWithCred);
+    credentialsPage
+      .goToCredentialsTab()
+      .clickDrpDwnAction()
+      .clickDeleteBtn()
+      .clickConfirmationBtn();
+
+    masthead.checkNotificationMessage(
+      "The credentials has been deleted successfully."
     );
   });
 

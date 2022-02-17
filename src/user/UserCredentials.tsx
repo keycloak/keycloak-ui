@@ -160,14 +160,14 @@ export const UserCredentials = ({ user }: UserCredentialsProps) => {
   );
 
   const itemOrder: string[] = useMemo(() => {
-    const test = groupedUserCredentials.map((d) =>
+    const credential = groupedUserCredentials.map((d) =>
       d.value
         .map((credential) => {
           return credential.id;
         })
         .toString()
     );
-    return test;
+    return credential;
   }, [groupedUserCredentials]);
 
   const onDragStart = (evt: React.DragEvent) => {
@@ -297,7 +297,7 @@ export const UserCredentials = ({ user }: UserCredentialsProps) => {
           await adminClient.users.moveCredentialPositionDown({
             id: user.id!,
             credentialId: dragged,
-            newPreviousCredentialId: "", //Todo
+            newPreviousCredentialId: "",
           });
         } else {
           await adminClient.users.moveCredentialPositionUp({
@@ -432,6 +432,7 @@ export const UserCredentials = ({ user }: UserCredentialsProps) => {
                       key={`table-item-${groupedCredential.key}`}
                       dataLabel={`columns-${groupedCredential.key}`}
                       className="kc-notExpandableRow-credentialType"
+                      data-testid="credentialType"
                     >
                       {toUpperCase(groupedCredential.key)}
                     </Td>
