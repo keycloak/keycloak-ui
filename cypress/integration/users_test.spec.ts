@@ -31,9 +31,7 @@ describe("User creation", () => {
 
   let itemId = "user_crud";
   let itemIdWithCred = "user_crud_cred";
-  const passwordItem = "credentialType";
-  const labelField = "user-label-fld";
-  const passwordDataDialog = "passwordDataDialog";
+  const itemCredential = "Password";
   const adminClient = new AdminClient();
 
   before(() => {
@@ -217,17 +215,6 @@ describe("User creation", () => {
     );
   });
 
-  it("Cancel editing credential label", () => {
-    listingPage.goToItemDetails(itemIdWithCred);
-    credentialsPage
-      .goToCredentialsTab()
-      .clickEditCredentialLabelBtn()
-      .fillEditCredentialForm()
-      .clickEditCancellationBtn();
-
-    cy.findByTestId(labelField).should("have.be", "");
-  });
-
   it("Edit credential label", () => {
     listingPage.goToItemDetails(itemIdWithCred);
     credentialsPage
@@ -243,44 +230,24 @@ describe("User creation", () => {
 
   it("Show credential data dialog", () => {
     listingPage.goToItemDetails(itemIdWithCred);
-    credentialsPage.goToCredentialsTab().clickShowDataDialogBtn();
-
-    cy.get(passwordDataDialog).should("have.text", "Name");
-  });
-
-  it("Close credential data dialog", () => {
-    listingPage.goToItemDetails(itemIdWithCred);
-    credentialsPage.goToCredentialsTab().clickCloseDataDialogBtn();
-
-    cy.findByTestId(passwordItem).should("have.text", "Password");
-  });
-
-  it("Cancel deleting credential", () => {
-    listingPage.goToItemDetails(itemIdWithCred);
     credentialsPage
       .goToCredentialsTab()
-      .clickDrpDwnAction()
-      .clickDeleteBtn()
-      .clickCancellationBtn();
-
-    cy.findByTestId(passwordItem).should("have.text", "Password");
+      .clickShowDataDialogBtn()
+      .clickCloseDataDialogBtn();
   });
 
   it("Delete credential", () => {
     listingPage.goToItemDetails(itemIdWithCred);
-    credentialsPage
-      .goToCredentialsTab()
-      .clickDrpDwnAction()
-      .clickDeleteBtn()
-      .clickConfirmationBtn();
+    credentialsPage.goToCredentialsTab();
+    listingPage.deleteItem(itemCredential);
+    modalUtils.checkModalTitle("Delete credentials?").confirmModal();
 
     masthead.checkNotificationMessage(
       "The credentials has been deleted successfully."
     );
   });
 
-  // TODO: Fix this test so it passes.
-  it.skip("Delete user test", () => {
+  it("Delete user test", () => {
     // Delete
     listingPage.deleteItem(itemId);
 
