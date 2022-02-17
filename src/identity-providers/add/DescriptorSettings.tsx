@@ -53,6 +53,24 @@ const Fields = ({ readOnly }: DescriptorSettingsProps) => {
   return (
     <div className="pf-c-form pf-m-horizontal">
       <FormGroup
+        label={t("serviceProviderEntityId")}
+        fieldId="kc-service-provider-entity-id"
+        labelIcon={
+          <HelpItem
+            helpText="identity-providers-help:serviceProviderEntityId"
+            fieldLabelId="identity-providers:serviceProviderEntityId"
+          />
+        }
+      >
+        <TextInput
+          type="text"
+          name="config.entityId"
+          data-testid="serviceProviderEntityId"
+          id="kc-service-provider-entity-id"
+          ref={register()}
+        />
+      </FormGroup>
+      <FormGroup
         label={t("ssoServiceUrl")}
         labelIcon={
           <HelpItem
@@ -138,6 +156,7 @@ const Fields = ({ readOnly }: DescriptorSettingsProps) => {
               }}
               selections={value}
               variant={SelectVariant.single}
+              isDisabled={readOnly}
             >
               <SelectOption
                 data-testid="persistent-option"
@@ -218,6 +237,7 @@ const Fields = ({ readOnly }: DescriptorSettingsProps) => {
               }}
               selections={value}
               variant={SelectVariant.single}
+              isDisabled={readOnly}
             >
               <SelectOption
                 data-testid="subjectNameId-option"
@@ -322,6 +342,7 @@ const Fields = ({ readOnly }: DescriptorSettingsProps) => {
                   }}
                   selections={value}
                   variant={SelectVariant.single}
+                  isDisabled={readOnly}
                 >
                   <SelectOption value="RSA_SHA1" />
                   <SelectOption value="RSA_SHA256" isPlaceholder />
@@ -360,6 +381,7 @@ const Fields = ({ readOnly }: DescriptorSettingsProps) => {
                   }}
                   selections={value}
                   variant={SelectVariant.single}
+                  isDisabled={readOnly}
                 >
                   <SelectOption value="NONE" />
                   <SelectOption value={t("keyID")} isPlaceholder />
