@@ -89,8 +89,6 @@ export default function NewClientPolicyForm() {
   const [profileToDelete, setProfileToDelete] =
     useState<PolicyDetailAttributes>();
 
-  const [selectedProfiles, setSelectedProfiles] = useState<string[]>([]);
-
   const { policyName } = useParams<EditClientPolicyParams>();
 
   const history = useHistory();
@@ -387,10 +385,9 @@ export default function NewClientPolicyForm() {
   };
 
   const addProfiles = async (profiles: string[]) => {
-    console.log("current", currentPolicy);
     const createdPolicy = {
       ...currentPolicy,
-      profiles: profiles,
+      profiles: policyProfiles.concat(profiles),
       conditions: currentPolicy?.conditions,
     };
 
@@ -429,12 +426,7 @@ export default function NewClientPolicyForm() {
       <DeleteProfileConfirm />
       <AddClientProfileModal
         onConfirm={(profiles: ClientProfileRepresentation[]) => {
-          setSelectedProfiles([
-            ...selectedProfiles,
-            ...profiles.map((item) => item.name!),
-          ]);
-          console.log(selectedProfiles);
-          addProfiles(selectedProfiles);
+          addProfiles(profiles.map((item) => item.name!));
         }}
         allProfiles={policyProfiles}
         open={profilesModalOpen}
