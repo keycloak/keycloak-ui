@@ -285,7 +285,8 @@ export const UserCredentials = ({ user }: UserCredentialsProps) => {
     });
   };
 
-  const onDragFinish = async (dragged: string, newOrder: string[]) => {
+  const onDragFinish = async (_dragged: string, newOrder: string[]) => {
+    const dragged = _dragged.split(",")[0];
     const keys = groupedUserCredentials.map((e) => e.value.map((c) => c.id));
     const oldIndex = keys.findIndex((el) => el.join().includes(dragged));
     const newIndex = newOrder.findIndex((el) => el.includes(dragged));
@@ -297,7 +298,7 @@ export const UserCredentials = ({ user }: UserCredentialsProps) => {
           await adminClient.users.moveCredentialPositionDown({
             id: user.id!,
             credentialId: dragged,
-            newPreviousCredentialId: "",
+            newPreviousCredentialId: `${keys[newIndex][0]}`,
           });
         } else {
           await adminClient.users.moveCredentialPositionUp({
