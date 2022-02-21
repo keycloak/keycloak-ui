@@ -363,9 +363,12 @@ export const UserCredentials = ({ user }: UserCredentialsProps) => {
               {t("credentialResetBtn")}
             </Button>
           )}
-          <TableComposable aria-label="password-data-table" variant={"compact"}>
+          <TableComposable
+            aria-label="userCredentials-table"
+            variant={"compact"}
+          >
             <Thead>
-              <Tr>
+              <Tr className="kc-table-header">
                 <Th>
                   <HelpItem
                     helpText="users:userCredentialsHelpText"
