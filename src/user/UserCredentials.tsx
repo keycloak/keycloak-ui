@@ -355,7 +355,7 @@ export const UserCredentials = ({ user }: UserCredentialsProps) => {
         <>
           {user.email && (
             <Button
-              className="resetCredentialBtn-header"
+              className="kc-resetCredentialBtn-header"
               variant="primary"
               data-testid="credentialResetBtn"
               onClick={() => setOpenCredentialReset(true)}
