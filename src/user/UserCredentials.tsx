@@ -159,16 +159,13 @@ export const UserCredentials = ({ user }: UserCredentialsProps) => {
     </CredentialRow>
   );
 
-  const itemOrder: string[] = useMemo(() => {
-    const credential = groupedUserCredentials.map((d) =>
-      d.value
-        .map((credential) => {
-          return credential.id;
-        })
-        .toString()
-    );
-    return credential;
-  }, [groupedUserCredentials]);
+  const itemOrder = useMemo(
+    () =>
+      groupedUserCredentials.map(({ value }) =>
+        value.map(({ id }) => id).toString()
+      ),
+    [groupedUserCredentials]
+  );
 
   const onDragStart = (evt: React.DragEvent) => {
     evt.dataTransfer.effectAllowed = "move";
@@ -179,33 +176,32 @@ export const UserCredentials = ({ user }: UserCredentialsProps) => {
     setState({ ...state, draggedItemId, dragging: true });
   };
 
-  const moveItem = (arr: string[], i1: string, toIndex: number) => {
-    const fromIndex = arr.indexOf(i1);
+  const moveItem = (items: string[], targetItem: string, toIndex: number) => {
+    const fromIndex = items.indexOf(targetItem);
     if (fromIndex === toIndex) {
-      return arr;
+      return items;
     }
-    const temp = arr.splice(fromIndex, 1);
-    arr.splice(toIndex, 0, temp[0]);
-    return arr;
+    const result = [...items];
+    result.splice(toIndex, 0, result.splice(fromIndex, 1)[0]);
+    return result;
   };
 
   const move = (itemOrder: string[]) => {
     if (!bodyRef.current) return;
     const ulNode = bodyRef.current;
     const nodes = Array.from(ulNode.children);
-    if (nodes.map((node) => node.id).every((id, i) => id === itemOrder[i])) {
+    if (nodes.every(({ id }, i) => id === itemOrder[i])) {
       return;
     }
-    while (ulNode.firstChild) {
-      ulNode.removeChild(ulNode.lastChild!);
-    }
-    itemOrder.forEach((id) => {
-      ulNode.appendChild(nodes.find((n) => n.id === id)!);
+    ulNode.replaceChildren();
+    itemOrder.forEach((itemId) => {
+      ulNode.appendChild(nodes.find(({ id }) => id === itemId)!);
     });
   };
 
   const onDragCancel = () => {
-    Array.from(bodyRef.current?.children || []).forEach((el) => {
+    if (!bodyRef.current) return;
+    Array.from(bodyRef.current.children).forEach((el) => {
       el.classList.remove(styles.modifiers.ghostRow);
       el.setAttribute("aria-pressed", "false");
     });
@@ -225,7 +221,8 @@ export const UserCredentials = ({ user }: UserCredentialsProps) => {
   };
 
   const isValidDrop = (evt: React.DragEvent) => {
-    const ulRect = bodyRef.current!.getBoundingClientRect();
+    if (!bodyRef.current) return false;
+    const ulRect = bodyRef.current.getBoundingClientRect();
     return (
       evt.clientX > ulRect.x &&
       evt.clientX < ulRect.x + ulRect.width &&
@@ -251,32 +248,35 @@ export const UserCredentials = ({ user }: UserCredentialsProps) => {
       (bodyRef.current && !bodyRef.current.contains(curListItem)) ||
       curListItem.id === state.draggedItemId
     ) {
-      return null;
+      return;
     } else {
       const dragId = curListItem.id;
       const draggingToItemIndex = Array.from(
         bodyRef.current?.children || []
       ).findIndex((item) => item.id === dragId);
-      if (draggingToItemIndex !== state.draggingToItemIndex) {
-        const tempItemOrder = moveItem(
-          itemOrder,
-          state.draggedItemId,
-          draggingToItemIndex
-        );
-        move(tempItemOrder);
-        setState({
-          ...state,
-          draggingToItemIndex,
-          tempItemOrder,
-        });
+      if (draggingToItemIndex === state.draggingToItemIndex) {
+        return;
       }
+      const tempItemOrder = moveItem(
+        itemOrder,
+        state.draggedItemId,
+        draggingToItemIndex
+      );
+      move(tempItemOrder);
+      setState({
+        ...state,
+        draggingToItemIndex,
+        tempItemOrder,
+      });
     }
   };
 
-  const onDragEnd = (evt: React.DragEvent) => {
-    const tr = evt.target as HTMLTableRowElement;
-    tr.classList.remove(styles.modifiers.ghostRow);
-    tr.setAttribute("aria-pressed", "false");
+  const onDragEnd = ({ target }: React.DragEvent) => {
+    if (!(target instanceof HTMLTableRowElement)) {
+      return;
+    }
+    target.classList.remove(styles.modifiers.ghostRow);
+    target.setAttribute("aria-pressed", "false");
     setState({
       ...state,
       draggedItemId: "",
@@ -285,9 +285,11 @@ export const UserCredentials = ({ user }: UserCredentialsProps) => {
     });
   };
 
-  const onDragFinish = async (_dragged: string, newOrder: string[]) => {
-    const dragged = _dragged.split(",")[0];
-    const keys = groupedUserCredentials.map((e) => e.value.map((c) => c.id));
+  const onDragFinish = async (dragged: string, newOrder: string[]) => {
+    dragged = dragged.split(",")[0];
+    const keys = groupedUserCredentials.map(({ value }) =>
+      value.map(({ id }) => id)
+    );
     const oldIndex = keys.findIndex((el) => el.join().includes(dragged));
     const newIndex = newOrder.findIndex((el) => el.includes(dragged));
     const times = newIndex - oldIndex;
@@ -307,8 +309,8 @@ export const UserCredentials = ({ user }: UserCredentialsProps) => {
           });
         }
       }
-      refresh();
 
+      refresh();
       addAlert(t("users:updatedCredentialMoveSuccess"), AlertVariant.success);
     } catch (error) {
       addError("users:updatedCredentialMoveError", error);
@@ -387,11 +389,7 @@ export const UserCredentials = ({ user }: UserCredentialsProps) => {
               {groupedUserCredentials.map((groupedCredential, rowIndex) => (
                 <Fragment key={`table-${groupedCredential.key}`}>
                   <Tr
-                    id={groupedCredential.value
-                      .map((credential) => {
-                        return credential.id;
-                      })
-                      .toString()}
+                    id={groupedCredential.value.map(({ id }) => id).toString()}
                     draggable
                     onDrop={onDrop}
                     onDragEnd={onDragEnd}
@@ -400,9 +398,7 @@ export const UserCredentials = ({ user }: UserCredentialsProps) => {
                     <Td
                       draggableRow={{
                         id: `draggable-row-${groupedCredential.value.map(
-                          (credential) => {
-                            return credential.id;
-                          }
+                          ({ id }) => id
                         )}`,
                       }}
                     />
@@ -459,7 +455,9 @@ export const UserCredentials = ({ user }: UserCredentialsProps) => {
                         <Td
                           className="kc-draggable-dropdown-type-icon"
                           draggableRow={{
-                            id: `draggable-row-${credential.id}`,
+                            id: `draggable-row-${groupedCredential.value.map(
+                              ({ id }) => id
+                            )}`,
                           }}
                         />
                         <Td
