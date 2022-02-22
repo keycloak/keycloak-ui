@@ -101,6 +101,7 @@ export default {
     noKeys: "No keys",
     noKeysDescription: "You haven't created any ",
     certificate: "Certificate",
+    loginScreenCustomization: "Login screen customization",
     userRegistration: "User registration",
     userRegistrationHelpText:
       "Enable/disable the registration page. A link for registration will show on login page too.",
@@ -110,6 +111,8 @@ export default {
     rememberMe: "Remember me",
     rememberMeHelpText:
       "Show checkbox on login page to allow user to remain logged in between browser restarts until session expires.",
+    emailSettings: "Email settings",
+
     emailAsUsername: "Email as username",
     emailAsUsernameHelpText: "Allow users to set email as username.",
     loginWithEmail: "Login with email",
@@ -123,6 +126,7 @@ export default {
     verifyEmail: "Verify email",
     verifyEmailHelpText:
       "Require user to verify their email address after initial login or after address changes are submitted.",
+    userInfoSettings: "User info settings",
     editUsername: "Edit username",
     testConnection: "Test connection",
     testConnectionSuccess:
@@ -199,7 +203,6 @@ export default {
     accessTokenLifespan: "Access Token Lifespan",
     accessTokenLifespanImplicitFlow: "Access Token Lifespan For Implicit Flow",
     clientLoginTimeout: "Client Login Timeout",
-    userInfoSettings: "User info settings",
     userInitiatedActionLifespan: "User-Initiated Action Lifespan",
     defaultAdminInitiated: "Default Admin-Initiated Action Lifespan",
     emailVerification: "Email Verification",
