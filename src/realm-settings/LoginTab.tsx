@@ -268,6 +268,40 @@ export const RealmSettingsLoginTab = ({
           </FormGroup>
         </FormAccess>
       </FormPanel>
+      <FormPanel className="kc-user-info-settings" title="User info settings">
+        <FormAccess isHorizontal role="manage-realm">
+          <FormGroup
+            label={t("editUsername")}
+            fieldId="kc-edit-username"
+            labelIcon={
+              <HelpItem
+                helpText="realm-settings-help:editUsername"
+                fieldLabelId="realm-settings:editUsername"
+              />
+            }
+            hasNoPaddingTop
+          >
+            <Controller
+              name="editUsernameAllowed"
+              defaultValue={realm.editUsernameAllowed}
+              control={form.control}
+              render={({ onChange, value }) => (
+                <Switch
+                  id="kc-edit-username-switch"
+                  data-testid="edit-username-switch"
+                  name="editUsernameAllowed"
+                  label={t("common:on")}
+                  labelOff={t("common:off")}
+                  isChecked={value}
+                  onChange={(value) => {
+                    updateSwitchValue(onChange, value, "editUsernameAllowed");
+                  }}
+                />
+              )}
+            />
+          </FormGroup>
+        </FormAccess>
+      </FormPanel>
     </PageSection>
   );
 };

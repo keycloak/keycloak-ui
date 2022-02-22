@@ -123,6 +123,7 @@ export default {
     verifyEmail: "Verify email",
     verifyEmailHelpText:
       "Require user to verify their email address after initial login or after address changes are submitted.",
+    editUsername: "Edit username",
     testConnection: "Test connection",
     testConnectionSuccess:
       "Success! SMTP connection successful. E-mail was sent!",
