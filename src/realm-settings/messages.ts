@@ -112,7 +112,6 @@ export default {
     rememberMeHelpText:
       "Show checkbox on login page to allow user to remain logged in between browser restarts until session expires.",
     emailSettings: "Email settings",
-
     emailAsUsername: "Email as username",
     emailAsUsernameHelpText: "Allow users to set email as username.",
     loginWithEmail: "Login with email",
