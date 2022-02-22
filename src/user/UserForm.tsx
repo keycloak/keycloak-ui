@@ -182,7 +182,7 @@ export const UserForm = ({
           </FormGroup>
         </>
       )}
-      {realm?.registrationEmailAsUsername && (
+      {!realm?.registrationEmailAsUsername && (
         <FormGroup
           label={t("username")}
           fieldId="kc-username"
@@ -195,7 +195,7 @@ export const UserForm = ({
             type="text"
             id="kc-username"
             name="username"
-            isReadOnly={!!user?.id}
+            isReadOnly={!realm?.editUsernameAllowed}
           />
         </FormGroup>
       )}
