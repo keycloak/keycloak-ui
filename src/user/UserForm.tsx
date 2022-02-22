@@ -195,7 +195,7 @@ export const UserForm = ({
             type="text"
             id="kc-username"
             name="username"
-            isReadOnly={!realm?.editUsernameAllowed}
+            isReadOnly={!!user?.id && !realm?.editUsernameAllowed}
           />
         </FormGroup>
       )}
@@ -418,7 +418,7 @@ export const UserForm = ({
         <Button
           data-testid="cancel-create-user"
           onClick={() =>
-            user?.id ? reset(user) : history.push(`/${realm}/users`)
+            user?.id ? reset(user) : history.push(`/${realmName}/users`)
           }
           variant="link"
         >
