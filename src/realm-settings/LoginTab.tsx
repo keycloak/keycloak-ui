@@ -268,7 +268,10 @@ export const RealmSettingsLoginTab = ({
           </FormGroup>
         </FormAccess>
       </FormPanel>
-      <FormPanel className="kc-user-info-settings" title="User info settings">
+      <FormPanel
+        className="kc-user-info-settings"
+        title={t("userInfoSettings")}
+      >
         <FormAccess isHorizontal role="manage-realm">
           <FormGroup
             label={t("editUsername")}

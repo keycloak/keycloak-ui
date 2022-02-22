@@ -199,6 +199,7 @@ export default {
     accessTokenLifespan: "Access Token Lifespan",
     accessTokenLifespanImplicitFlow: "Access Token Lifespan For Implicit Flow",
     clientLoginTimeout: "Client Login Timeout",
+    userInfoSettings: "User info settings",
     userInitiatedActionLifespan: "User-Initiated Action Lifespan",
     defaultAdminInitiated: "Default Admin-Initiated Action Lifespan",
     emailVerification: "Email Verification",
