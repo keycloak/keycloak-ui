@@ -339,6 +339,7 @@ export default {
     copyInitialAccessToken:
       "Please copy and paste the initial access token before closing as it can not be retrieved later.",
     copySuccess: "Successfully copied to clipboard!",
+    clipboardCopyError: "Error copying to clipboard.",
     copyToClipboard: "Copy to clipboard",
     clientAuthentication: "Client authentication",
     authentication: "Authentication",

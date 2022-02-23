@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import {
   ClipboardCopyButton,
@@ -11,7 +11,7 @@ import {
 } from "@patternfly/react-core";
 
 import type UserRepresentation from "@keycloak/keycloak-admin-client/lib/defs/userRepresentation";
-import useToggle from "../../utils/useToggle";
+import useSetTimeout from "../../utils/useSetTimeout";
 
 type GeneratedCodeTabProps = {
   user?: UserRepresentation;
@@ -19,25 +19,44 @@ type GeneratedCodeTabProps = {
   label: string;
 };
 
+enum CopyState {
+  Ready,
+  Copied,
+  Error,
+}
+
 export const GeneratedCodeTab = ({
   text,
   user,
   label,
 }: GeneratedCodeTabProps) => {
   const { t } = useTranslation("clients");
-  const [copy, toggle] = useToggle();
-  let timer: number | undefined = undefined;
-
-  const copyToClipboard = (text: string) => {
-    if (timer) {
-      window.clearTimeout(timer);
+  const setTimeout = useSetTimeout();
+  const [copy, setCopy] = useState(CopyState.Ready);
+  const copyMessage = useMemo(() => {
+    switch (copy) {
+      case CopyState.Ready:
+        return t("copyToClipboard");
+      case CopyState.Copied:
+        return t("copySuccess");
+      case CopyState.Error:
+        return t("clipboardCopyError");
     }
-    navigator.clipboard.writeText(text);
-    toggle();
-    timer = window.setTimeout(() => {
-      toggle();
-      timer = undefined;
-    }, 1000);
+  }, [copy]);
+
+  useEffect(() => {
+    if (copy !== CopyState.Ready) {
+      return setTimeout(() => setCopy(CopyState.Ready), 1000);
+    }
+  }, [copy]);
+
+  const copyToClipboard = async (text: string) => {
+    try {
+      await navigator.clipboard.writeText(text);
+      setCopy(CopyState.Copied);
+    } catch (error) {
+      setCopy(CopyState.Error);
+    }
   };
 
   return (
@@ -55,7 +74,7 @@ export const GeneratedCodeTab = ({
                 exitDelay={600}
                 variant="plain"
               >
-                {copy ? t("copySuccess") : t("copyToClipboard")}
+                {copyMessage}
               </ClipboardCopyButton>
             </CodeBlockAction>
           }
