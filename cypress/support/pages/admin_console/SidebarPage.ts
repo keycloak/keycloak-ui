@@ -1,6 +1,6 @@
 export default class SidebarPage {
-  private realmsDrpDwn = "#realm-select button.pf-c-dropdown__toggle";
-  private realmsList = '#realm-select ul[role="menu"]';
+  private realmsDrpDwn = "realmSelector";
+  private realmsList = ".pf-c-context-selector__menu";
   private createRealmBtn = "add-realm";
 
   private clientsBtn = "#nav-item-clients";
@@ -17,13 +17,17 @@ export default class SidebarPage {
   private userFederationBtn = "#nav-item-user-federation";
 
   getCurrentRealm() {
-    return cy.get(this.realmsDrpDwn).scrollIntoView().invoke("text");
+    return cy.findByTestId(this.realmsDrpDwn).scrollIntoView().invoke("text");
   }
 
   goToRealm(realmName: string) {
     this.waitForPageLoad();
-    cy.get(this.realmsDrpDwn).scrollIntoView().click({ force: true });
-    cy.get(this.realmsList).contains(realmName).click({ force: true });
+    cy.findByTestId(this.realmsDrpDwn)
+      .click({ force: true })
+      .find(this.realmsList)
+      .find('ul[role="menu"]')
+      .contains(realmName)
+      .click({ force: true });
     this.waitForPageLoad();
 
     return this;
@@ -31,7 +35,7 @@ export default class SidebarPage {
 
   goToCreateRealm() {
     this.waitForPageLoad();
-    cy.get(this.realmsDrpDwn).scrollIntoView().click({ force: true });
+    cy.findByTestId(this.realmsDrpDwn).scrollIntoView().click({ force: true });
     cy.findByTestId(this.createRealmBtn).click({ force: true });
     this.waitForPageLoad();
 
