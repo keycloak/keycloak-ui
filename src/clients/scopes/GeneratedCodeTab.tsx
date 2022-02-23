@@ -59,37 +59,32 @@ export const GeneratedCodeTab = ({
     }
   };
 
-  return (
-    <>
-      {user && (
-        <CodeBlock
-          id={label}
-          actions={
-            <CodeBlockAction>
-              <ClipboardCopyButton
-                id={`copy-button-${label}`}
-                textId={label}
-                aria-label={t("copyToClipboard")}
-                onClick={() => copyToClipboard(text)}
-                exitDelay={600}
-                variant="plain"
-              >
-                {copyMessage}
-              </ClipboardCopyButton>
-            </CodeBlockAction>
-          }
-        >
-          <TextArea id={`text-area-${label}`} rows={20} value={text} />
-        </CodeBlock>
-      )}
-      {!user && (
-        <EmptyState variant="large">
-          <Title headingLevel="h4" size="lg">
-            {t(`${label}No`)}
-          </Title>
-          <EmptyStateBody>{t(`${label}IsDisabled`)}</EmptyStateBody>
-        </EmptyState>
-      )}
-    </>
+  return user ? (
+    <CodeBlock
+      id={label}
+      actions={
+        <CodeBlockAction>
+          <ClipboardCopyButton
+            id={`copy-button-${label}`}
+            textId={label}
+            aria-label={t("copyToClipboard")}
+            onClick={() => copyToClipboard(text)}
+            exitDelay={600}
+            variant="plain"
+          >
+            {copyMessage}
+          </ClipboardCopyButton>
+        </CodeBlockAction>
+      }
+    >
+      <TextArea id={`text-area-${label}`} rows={20} value={text} />
+    </CodeBlock>
+  ) : (
+    <EmptyState variant="large">
+      <Title headingLevel="h4" size="lg">
+        {t(`${label}No`)}
+      </Title>
+      <EmptyStateBody>{t(`${label}IsDisabled`)}</EmptyStateBody>
+    </EmptyState>
   );
 };
