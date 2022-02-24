@@ -30,6 +30,7 @@ describe("User creation", () => {
   const attributesTab = new AttributesTab();
 
   let itemId = "user_crud";
+  let itemIdWithGroups = "user_with_groups_crud";
   let itemIdWithCred = "user_crud_cred";
 
   before(() => {
@@ -63,11 +64,22 @@ describe("User creation", () => {
 
   it("Create user test", () => {
     itemId += "_" + (Math.random() + 1).toString(36).substring(7);
-
     // Create
     createUserPage.goToCreateUser();
 
     createUserPage.createUser(itemId);
+
+    createUserPage.save();
+
+    masthead.checkNotificationMessage("The user has been created");
+  });
+
+  it("Create user with groups test", () => {
+    itemIdWithGroups += (Math.random() + 1).toString(36).substring(7);
+    // Create
+    createUserPage.goToCreateUser();
+
+    createUserPage.createUser(itemIdWithGroups);
 
     createUserPage.toggleAddGroupModal();
 
@@ -237,15 +249,29 @@ describe("User creation", () => {
     listingPage.itemExist(itemId, false);
   });
 
-  it("Delete user with credential test", () => {
-    // Delete
-    listingPage.deleteItem(itemIdWithCred);
+  it("Delete multiple users from list", () => {
+    it("Delete user with groups test", () => {
+      // Delete
+      listingPage.deleteItem(itemIdWithGroups);
 
-    modalUtils.checkModalTitle("Delete user?").confirmModal();
+      modalUtils.checkModalTitle("Delete user?").confirmModal();
 
-    masthead.checkNotificationMessage("The user has been deleted");
-    sidebarPage.waitForPageLoad();
+      masthead.checkNotificationMessage("The user has been deleted");
+      sidebarPage.waitForPageLoad();
 
-    listingPage.itemExist(itemIdWithCred, false);
+      listingPage.itemExist(itemIdWithGroups, false);
+    });
+
+    it("Delete user with credential test", () => {
+      // Delete
+      listingPage.deleteItem(itemIdWithCred);
+
+      modalUtils.checkModalTitle("Delete user?").confirmModal();
+
+      masthead.checkNotificationMessage("The user has been deleted");
+      sidebarPage.waitForPageLoad();
+
+      listingPage.itemExist(itemIdWithCred, false);
+    });
   });
 });
