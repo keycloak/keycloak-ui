@@ -74,46 +74,48 @@ describe("User creation", () => {
     masthead.checkNotificationMessage("The user has been created");
   });
 
-  it("Create user with groups test", () => {
-    itemIdWithGroups += (Math.random() + 1).toString(36).substring(7);
-    // Create
-    createUserPage.goToCreateUser();
+  it("Add users from search bar", () => {
+    it("Create user with groups test", () => {
+      itemIdWithGroups += (Math.random() + 1).toString(36).substring(7);
+      // Create
+      createUserPage.goToCreateUser();
 
-    createUserPage.createUser(itemIdWithGroups);
+      createUserPage.createUser(itemIdWithGroups);
 
-    createUserPage.toggleAddGroupModal();
+      createUserPage.toggleAddGroupModal();
 
-    const groupsListCopy = groupsList.slice(0, 1);
+      const groupsListCopy = groupsList.slice(0, 1);
 
-    groupsListCopy.forEach((element) => {
-      cy.findByTestId(`${element}-check`).click();
+      groupsListCopy.forEach((element) => {
+        cy.findByTestId(`${element}-check`).click();
+      });
+
+      createUserPage.joinGroups();
+
+      createUserPage.save();
+
+      masthead.checkNotificationMessage("The user has been created");
     });
 
-    createUserPage.joinGroups();
+    it("Create user with credentials test", () => {
+      itemIdWithCred += "_" + (Math.random() + 1).toString(36).substring(7);
 
-    createUserPage.save();
+      createUserPage.goToCreateUser();
 
-    masthead.checkNotificationMessage("The user has been created");
-  });
+      createUserPage.createUser(itemIdWithCred);
 
-  it("Create user with credentials test", () => {
-    itemIdWithCred += "_" + (Math.random() + 1).toString(36).substring(7);
+      userDetailsPage.fillUserData();
+      createUserPage.save();
+      masthead.checkNotificationMessage("The user has been created");
+      sidebarPage.waitForPageLoad();
 
-    createUserPage.goToCreateUser();
-
-    createUserPage.createUser(itemIdWithCred);
-
-    userDetailsPage.fillUserData();
-    createUserPage.save();
-    masthead.checkNotificationMessage("The user has been created");
-    sidebarPage.waitForPageLoad();
-
-    credentialsPage
-      .goToCredentialsTab()
-      .clickEmptyStatePasswordBtn()
-      .fillPasswordForm()
-      .clickConfirmationBtn()
-      .clickSetPasswordBtn();
+      credentialsPage
+        .goToCredentialsTab()
+        .clickEmptyStatePasswordBtn()
+        .fillPasswordForm()
+        .clickConfirmationBtn()
+        .clickSetPasswordBtn();
+    });
   });
 
   it("Search existing user test", () => {
