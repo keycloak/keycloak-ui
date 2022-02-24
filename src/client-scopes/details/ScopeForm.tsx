@@ -52,6 +52,8 @@ export const ScopeForm = ({ clientScope, save }: ScopeFormProps) => {
   const displayOnConsentScreen = useWatch({
     control,
     name: "attributes.display.on.consent.screen",
+    defaultValue:
+      clientScope.attributes?.["display.on.consent.screen"] ?? "true",
   });
 
   useEffect(() => {
@@ -199,7 +201,7 @@ export const ScopeForm = ({ clientScope, save }: ScopeFormProps) => {
         <Controller
           name="attributes.display.on.consent.screen"
           control={control}
-          defaultValue="true"
+          defaultValue={displayOnConsentScreen}
           render={({ onChange, value }) => (
             <Switch
               id="kc-display.on.consent.screen-switch"
