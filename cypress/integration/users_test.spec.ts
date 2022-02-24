@@ -74,48 +74,47 @@ describe("User creation", () => {
     masthead.checkNotificationMessage("The user has been created");
   });
 
-  it("Add users from search bar", () => {
-    it("Create user with groups test", () => {
-      itemIdWithGroups += (Math.random() + 1).toString(36).substring(7);
-      // Create
-      createUserPage.goToCreateUser();
+  it("Create user with groups test", () => {
+    itemIdWithGroups += (Math.random() + 1).toString(36).substring(7);
+    // Add user from search bar
+    createUserPage.goToCreateUser();
 
-      createUserPage.createUser(itemIdWithGroups);
+    createUserPage.createUser(itemIdWithGroups);
 
-      createUserPage.toggleAddGroupModal();
+    createUserPage.toggleAddGroupModal();
 
-      const groupsListCopy = groupsList.slice(0, 1);
+    const groupsListCopy = groupsList.slice(0, 1);
 
-      groupsListCopy.forEach((element) => {
-        cy.findByTestId(`${element}-check`).click();
-      });
-
-      createUserPage.joinGroups();
-
-      createUserPage.save();
-
-      masthead.checkNotificationMessage("The user has been created");
+    groupsListCopy.forEach((element) => {
+      cy.findByTestId(`${element}-check`).click();
     });
 
-    it("Create user with credentials test", () => {
-      itemIdWithCred += "_" + (Math.random() + 1).toString(36).substring(7);
+    createUserPage.joinGroups();
 
-      createUserPage.goToCreateUser();
+    createUserPage.save();
 
-      createUserPage.createUser(itemIdWithCred);
+    masthead.checkNotificationMessage("The user has been created");
+  });
 
-      userDetailsPage.fillUserData();
-      createUserPage.save();
-      masthead.checkNotificationMessage("The user has been created");
-      sidebarPage.waitForPageLoad();
+  it("Create user with credentials test", () => {
+    itemIdWithCred += "_" + (Math.random() + 1).toString(36).substring(7);
 
-      credentialsPage
-        .goToCredentialsTab()
-        .clickEmptyStatePasswordBtn()
-        .fillPasswordForm()
-        .clickConfirmationBtn()
-        .clickSetPasswordBtn();
-    });
+    // Add user from search bar
+    createUserPage.goToCreateUser();
+
+    createUserPage.createUser(itemIdWithCred);
+
+    userDetailsPage.fillUserData();
+    createUserPage.save();
+    masthead.checkNotificationMessage("The user has been created");
+    sidebarPage.waitForPageLoad();
+
+    credentialsPage
+      .goToCredentialsTab()
+      .clickEmptyStatePasswordBtn()
+      .fillPasswordForm()
+      .clickConfirmationBtn()
+      .clickSetPasswordBtn();
   });
 
   it("Search existing user test", () => {
@@ -251,29 +250,27 @@ describe("User creation", () => {
     listingPage.itemExist(itemId, false);
   });
 
-  it("Delete multiple users from list", () => {
-    it("Delete user with groups test", () => {
-      // Delete
-      listingPage.deleteItem(itemIdWithGroups);
+  it("Delete user with groups test", () => {
+    // Delete
+    listingPage.deleteItem(itemIdWithGroups);
 
-      modalUtils.checkModalTitle("Delete user?").confirmModal();
+    modalUtils.checkModalTitle("Delete user?").confirmModal();
 
-      masthead.checkNotificationMessage("The user has been deleted");
-      sidebarPage.waitForPageLoad();
+    masthead.checkNotificationMessage("The user has been deleted");
+    sidebarPage.waitForPageLoad();
 
-      listingPage.itemExist(itemIdWithGroups, false);
-    });
+    listingPage.itemExist(itemIdWithGroups, false);
+  });
 
-    it("Delete user with credential test", () => {
-      // Delete
-      listingPage.deleteItem(itemIdWithCred);
+  it("Delete user with credential test", () => {
+    // Delete
+    listingPage.deleteItem(itemIdWithCred);
 
-      modalUtils.checkModalTitle("Delete user?").confirmModal();
+    modalUtils.checkModalTitle("Delete user?").confirmModal();
 
-      masthead.checkNotificationMessage("The user has been deleted");
-      sidebarPage.waitForPageLoad();
+    masthead.checkNotificationMessage("The user has been deleted");
+    sidebarPage.waitForPageLoad();
 
-      listingPage.itemExist(itemIdWithCred, false);
-    });
+    listingPage.itemExist(itemIdWithCred, false);
   });
 });
