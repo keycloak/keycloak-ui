@@ -104,6 +104,15 @@ describe("User creation", () => {
       .clickSetPasswordBtn();
   });
 
+  it("Search existing user test", () => {
+    listingPage.searchItem(itemId).itemExist(itemId);
+  });
+
+  it("Search non-existing user test", () => {
+    listingPage.searchItem("user_DNE");
+    cy.findByTestId(listingPage.emptyState).should("exist");
+  });
+
   it("User details test", () => {
     sidebarPage.waitForPageLoad();
     listingPage.searchItem(itemId).itemExist(itemId);
@@ -213,10 +222,12 @@ describe("User creation", () => {
     );
   });
 
-  // TODO: Fix this test so it passes.
-  it.skip("Delete user test", () => {
+  it("Delete user from search bar test", () => {
     // Delete
-    listingPage.deleteItem(itemId);
+    sidebarPage.waitForPageLoad();
+
+    listingPage.searchItem(itemId).itemExist(itemId);
+    listingPage.deleteItemFromSearchBar(itemId);
 
     modalUtils.checkModalTitle("Delete user?").confirmModal();
 
