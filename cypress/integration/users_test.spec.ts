@@ -184,7 +184,7 @@ describe("User creation", () => {
     userGroupsPage.goToGroupsTab();
     userGroupsPage.toggleAddGroupModal();
 
-    const groupsListCopy = groupsList.slice(1, 2);
+    const groupsListCopy = groupsList.slice(0, 1);
 
     groupsListCopy.forEach((element) => {
       cy.findByTestId(`${element}-check`).click();
