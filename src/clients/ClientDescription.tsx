@@ -1,8 +1,9 @@
 import React from "react";
-import { useFormContext } from "react-hook-form";
+import { Controller, useFormContext } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import {
   FormGroup,
+  Switch,
   TextArea,
   TextInput,
   ValidatedOptions,
@@ -15,7 +16,7 @@ import type { ClientForm } from "./ClientDetails";
 
 export const ClientDescription = () => {
   const { t } = useTranslation("clients");
-  const { register, errors } = useFormContext<ClientForm>();
+  const { register, errors, control } = useFormContext<ClientForm>();
   return (
     <FormAccess role="manage-clients" unWrap>
       <FormGroup
@@ -78,6 +79,32 @@ export const ClientDescription = () => {
               ? ValidatedOptions.error
               : ValidatedOptions.default
           }
+        />
+      </FormGroup>
+      <FormGroup
+        label={t("clients:alwaysDisplayInConsole")}
+        labelIcon={
+          <HelpItem
+            helpText="clients-help:alwaysDisplayInConsole"
+            fieldLabelId="clients:alwaysDisplayInConsole"
+          />
+        }
+        fieldId="kc-always-display-in-console"
+        hasNoPaddingTop
+      >
+        <Controller
+          name="alwaysDisplayInConsole"
+          defaultValue={false}
+          control={control}
+          render={({ onChange, value }) => (
+            <Switch
+              id="kc-always-display-in-console-switch"
+              label={t("common:on")}
+              labelOff={t("common:off")}
+              isChecked={value}
+              onChange={onChange}
+            />
+          )}
         />
       </FormGroup>
     </FormAccess>
