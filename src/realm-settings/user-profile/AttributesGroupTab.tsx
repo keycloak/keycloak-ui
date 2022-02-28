@@ -83,6 +83,11 @@ export const AttributesGroupTab = () => {
           {
             name: "name",
             displayKey: "attributes-group:columnName",
+            cellRenderer: (group) => (
+              <Link to={toEditAttributesGroup({ realm, name: group.name! })}>
+                {group.name}
+              </Link>
+            ),
           },
           {
             name: "displayHeader",
@@ -94,11 +99,6 @@ export const AttributesGroupTab = () => {
           },
         ]}
         actions={[
-          {
-            title: t("common:edit"),
-            onRowClick: ({ name }) =>
-              history.push(toEditAttributesGroup({ realm, name: name! })),
-          },
           {
             title: t("common:delete"),
             onRowClick: deleteAttributeGroup,
