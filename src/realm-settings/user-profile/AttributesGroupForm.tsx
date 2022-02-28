@@ -14,7 +14,13 @@ import {
 } from "@patternfly/react-core";
 import { MinusCircleIcon, PlusCircleIcon } from "@patternfly/react-icons";
 import React, { useEffect, useMemo } from "react";
-import { SubmitHandler, useFieldArray, useForm } from "react-hook-form";
+import {
+  ArrayField,
+  SubmitHandler,
+  useFieldArray,
+  useForm,
+  useWatch,
+} from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { Link, useHistory, useParams } from "react-router-dom";
 import { FormAccess } from "../../components/form-access/FormAccess";
@@ -80,11 +86,26 @@ export default function AttributesGroupForm() {
   const { config, save } = useUserProfile();
   const history = useHistory();
   const params = useParams<Partial<EditAttributesGroupParams>>();
-  const form = useForm<FormFields>({ defaultValues });
+  const form = useForm<FormFields>({ defaultValues, shouldUnregister: false });
   const annotationsField = useFieldArray<Annotation>({
     control: form.control,
     name: "annotations",
   });
+
+  const annotations = useWatch({
+    control: form.control,
+    name: "annotations",
+    defaultValue: defaultValues.annotations,
+  });
+
+  const annotationsValid = annotations
+    .filter(
+      (annotation): annotation is StringAnnotation =>
+        annotation.type === AnnotationType.String
+    )
+    .every(
+      ({ key, value }) => key.trim().length !== 0 && value.trim().length !== 0
+    );
 
   const matchingGroup = useMemo(
     () => config?.groups?.find(({ name }) => name === params.name),
@@ -219,40 +240,50 @@ export default function AttributesGroupForm() {
             fieldId="kc-annotations"
           >
             <Flex direction={{ default: "column" }}>
-              {annotationsField.fields.map((item, index) => (
-                <Flex key={item.id}>
-                  <FlexItem grow={{ default: "grow" }}>
-                    <TextInput
-                      name={`annotations[${index}].key`}
-                      ref={form.register()}
-                      placeholder={t("attributes-group:keyPlaceholder")}
-                      aria-label={t("attributes-group:keyLabel")}
-                    />
-                  </FlexItem>
-                  <FlexItem
-                    grow={{ default: "grow" }}
-                    spacer={{ default: "spacerNone" }}
-                  >
-                    <TextInput
-                      name={`annotations[${index}].value`}
-                      ref={form.register()}
-                      placeholder={t("attributes-group:valuePlaceholder")}
-                      aria-label={t("attributes-group:valueLabel")}
-                    />
-                  </FlexItem>
-                  <FlexItem>
-                    <Button
-                      variant="link"
-                      title={t("attributes-group:removeAnnotationText")}
-                      aria-label={t("attributes-group:removeAnnotationText")}
-                      isDisabled={annotationsField.fields.length === 1}
-                      onClick={() => removeAnnotation(index)}
+              {annotationsField.fields
+                .filter(
+                  (
+                    annotation
+                  ): annotation is Partial<
+                    ArrayField<StringAnnotation, "id">
+                  > => annotation.type === AnnotationType.String
+                )
+                .map((item, index) => (
+                  <Flex key={item.id}>
+                    <FlexItem grow={{ default: "grow" }}>
+                      <TextInput
+                        name={`annotations[${index}].key`}
+                        ref={form.register()}
+                        placeholder={t("attributes-group:keyPlaceholder")}
+                        aria-label={t("attributes-group:keyLabel")}
+                        defaultValue={item.key}
+                      />
+                    </FlexItem>
+                    <FlexItem
+                      grow={{ default: "grow" }}
+                      spacer={{ default: "spacerNone" }}
                     >
-                      <MinusCircleIcon />
-                    </Button>
-                  </FlexItem>
-                </Flex>
-              ))}
+                      <TextInput
+                        name={`annotations[${index}].value`}
+                        ref={form.register()}
+                        placeholder={t("attributes-group:valuePlaceholder")}
+                        aria-label={t("attributes-group:valueLabel")}
+                        defaultValue={item.value}
+                      />
+                    </FlexItem>
+                    <FlexItem>
+                      <Button
+                        variant="link"
+                        title={t("attributes-group:removeAnnotationText")}
+                        aria-label={t("attributes-group:removeAnnotationText")}
+                        isDisabled={annotationsField.fields.length === 1}
+                        onClick={() => removeAnnotation(index)}
+                      >
+                        <MinusCircleIcon />
+                      </Button>
+                    </FlexItem>
+                  </Flex>
+                ))}
             </Flex>
             <ActionList>
               <ActionListItem>
@@ -260,6 +291,7 @@ export default function AttributesGroupForm() {
                   className="pf-u-px-0 pf-u-mt-sm"
                   variant="link"
                   icon={<PlusCircleIcon />}
+                  isDisabled={!annotationsValid}
                   onClick={addAnnotation}
                 >
                   {t("attributes-group:addAnnotationText")}
