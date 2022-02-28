@@ -174,6 +174,7 @@ export default function AttributesGroupForm() {
               type="text"
               id="kc-name"
               name="name"
+              isDisabled={!!matchingGroup}
             />
           </FormGroup>
           <FormGroup
