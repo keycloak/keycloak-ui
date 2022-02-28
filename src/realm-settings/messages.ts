@@ -821,6 +821,7 @@ export default {
   },
   "attributes-group": {
     createGroupText: "Create attributes group",
+    editGroupText: "Edit attributes group",
     tableTitle: "Attributes groups",
     columnName: "Name",
     columnDisplayName: "Display name",

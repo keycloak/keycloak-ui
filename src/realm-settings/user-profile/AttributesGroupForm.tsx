@@ -145,7 +145,14 @@ export default function AttributesGroupForm() {
 
   return (
     <>
-      <ViewHeader titleKey="attributes-group:createGroupText" divider />
+      <ViewHeader
+        titleKey={
+          matchingGroup
+            ? "attributes-group:editGroupText"
+            : "attributes-group:createGroupText"
+        }
+        divider
+      />
       <PageSection variant="light" onSubmit={form.handleSubmit(onSubmit)}>
         <FormAccess isHorizontal role="manage-realm">
           <FormGroup
