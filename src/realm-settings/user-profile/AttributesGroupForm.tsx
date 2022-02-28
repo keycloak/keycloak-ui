@@ -18,6 +18,7 @@ import { SubmitHandler, useFieldArray, useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { Link, useHistory, useParams } from "react-router-dom";
 import { FormAccess } from "../../components/form-access/FormAccess";
+import { HelpItem } from "../../components/help-enabler/HelpItem";
 import { ViewHeader } from "../../components/view-header/ViewHeader";
 import { useRealm } from "../../context/realm-context/RealmContext";
 import "../realm-settings-section.css";
@@ -161,6 +162,12 @@ export default function AttributesGroupForm() {
             isRequired
             helperTextInvalid={t("common:required")}
             validated={form.errors.name ? "error" : "default"}
+            labelIcon={
+              <HelpItem
+                helpText="attributes-group:nameHint"
+                fieldLabelId="attributes-group:nameField"
+              />
+            }
           >
             <TextInput
               ref={form.register({ required: true })}
@@ -172,6 +179,12 @@ export default function AttributesGroupForm() {
           <FormGroup
             label={t("attributes-group:displayHeaderField")}
             fieldId="kc-display-header"
+            labelIcon={
+              <HelpItem
+                helpText="attributes-group:displayHeaderHint"
+                fieldLabelId="attributes-group:displayHeaderField"
+              />
+            }
           >
             <TextInput
               ref={form.register()}
@@ -183,6 +196,12 @@ export default function AttributesGroupForm() {
           <FormGroup
             label={t("attributes-group:displayDescriptionField")}
             fieldId="kc-display-description"
+            labelIcon={
+              <HelpItem
+                helpText="attributes-group:displayDescriptionHint"
+                fieldLabelId="attributes-group:displayDescriptionField"
+              />
+            }
           >
             <TextInput
               ref={form.register()}
