@@ -31,7 +31,7 @@ describe("Realm roles test", () => {
     sidebarPage.goToRealmRoles();
   });
 
-  it.skip("should fail creating realm role", () => {
+  it("should fail creating realm role", () => {
     listingPage.goToCreateItem();
     createRealmRolePage.save().checkRealmRoleNameRequiredMessage();
     createRealmRolePage.fillRealmRoleData("admin").save();
@@ -43,14 +43,14 @@ describe("Realm roles test", () => {
     );
   });
 
-  it.skip("shouldn't create a realm role based with only whitespace name", () => {
+  it("shouldn't create a realm role based with only whitespace name", () => {
     listingPage.goToCreateItem();
     createRealmRolePage
       .fillRealmRoleData("  ")
       .checkRealmRoleNameRequiredMessage();
   });
 
-  it.skip("Realm role CRUD test", () => {
+  it("Realm role CRUD test", () => {
     itemId += "_" + (Math.random() + 1).toString(36).substring(7);
 
     // Create
@@ -71,7 +71,7 @@ describe("Realm roles test", () => {
     listingPage.itemExist(itemId, false);
   });
 
-  it.skip("should delete role from details action", () => {
+  it("should delete role from details action", () => {
     itemId += "_" + (Math.random() + 1).toString(36).substring(7);
     listingPage.goToCreateItem();
     createRealmRolePage.fillRealmRoleData(itemId).save();
@@ -81,7 +81,7 @@ describe("Realm roles test", () => {
     masthead.checkNotificationMessage("The role has been deleted", true);
   });
 
-  it.skip("should not be able to delete default role", () => {
+  it("should not be able to delete default role", () => {
     const defaultRole = "default-roles-master";
     listingPage.itemExist(defaultRole).deleteItem(defaultRole);
     masthead.checkNotificationMessage(
@@ -90,7 +90,7 @@ describe("Realm roles test", () => {
     );
   });
 
-  it.skip("Associated roles test", () => {
+  it("Associated roles test", () => {
     itemId += "_" + (Math.random() + 1).toString(36).substring(7);
 
     // Create
