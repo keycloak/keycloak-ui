@@ -111,7 +111,7 @@ export const Group = () => {
                   onClose={() => {
                     setOpen(false);
                   }}
-                  filterGroups={selectedGroups.map((g) => g.name!)}
+                  filterGroups={selectedGroups.map(({ name }) => name!)}
                 />
               )}
               <Button
