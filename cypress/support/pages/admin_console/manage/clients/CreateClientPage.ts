@@ -8,6 +8,8 @@ export default class CreateClientPage {
   clientDescriptionInput = "#kc-description";
   alwaysDisplayInConsoleSwitch =
     '[for="kc-always-display-in-console-switch"]  .pf-c-switch__toggle';
+  frontchannelLogoutSwitch =
+    '[for="kc-frontchannelLogout-switch"]  .pf-c-switch__toggle';
   clientAuthenticationSwitch = '[for="kc-authentication"] .pf-c-switch__toggle';
   standardFlowChkBx = "#kc-flow-standard";
   directAccessChkBx = "#kc-flow-direct";
@@ -30,7 +32,8 @@ export default class CreateClientPage {
     id: string,
     name = "",
     description = "",
-    alwaysDisplay?: boolean
+    alwaysDisplay?: boolean,
+    frontchannelLogout?: boolean
   ) {
     cy.get(this.clientIdInput).clear();
 
@@ -48,6 +51,10 @@ export default class CreateClientPage {
 
     if (alwaysDisplay) {
       cy.get(this.alwaysDisplayInConsoleSwitch).click();
+    }
+
+    if (frontchannelLogout) {
+      cy.get(this.frontchannelLogoutSwitch).click();
     }
 
     return this;

@@ -171,6 +171,8 @@ export default {
       "SAML ARTIFACT Binding URL for the client's single logout service. You can leave this blank if you are using a different binding.",
     artifactBindingUrl:
       "URL to send the HTTP ARTIFACT messages to. You can leave this blank if you are using a different binding. This value should be set when forcing ARTIFACT binding together with IdP initiated login.",
+    frontchannelLogout:
+      "When true, logout requires a browser redirect to client. When false, server performs a background invocation for logout.",
     backchannelLogoutUrl:
       "URL that will cause the client to log itself out when a logout request is sent to this realm (via end_session_endpoint). If omitted, no logout request will be sent to the client is this case.",
     backchannelLogoutSessionRequired:

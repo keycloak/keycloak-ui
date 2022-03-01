@@ -366,6 +366,7 @@ export default {
     backchannelLogoutSessionRequired: "Backchannel logout session required",
     backchannelLogoutRevokeOfflineSessions:
       "Backchannel logout revoke offline sessions",
+    frontchannelLogout: "Front channel logout",
     accessSettings: "Access settings",
     rootUrl: "Root URL",
     validRedirectUri: "Valid redirect URIs",
