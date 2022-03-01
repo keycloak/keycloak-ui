@@ -24,13 +24,4 @@ export default class RolesTab {
     cy.findByTestId(this.createRoleBtn).click();
     return this;
   }
-
-  clickActionMenu(item: string) {
-    cy.get(this.actionsDropdown)
-      .click()
-      .within(() => {
-        cy.findByText(item).click();
-      });
-    return this;
-  }
 }
