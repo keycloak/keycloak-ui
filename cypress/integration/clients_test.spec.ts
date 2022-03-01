@@ -239,12 +239,7 @@ describe("Clients test", () => {
 
       createClientPage
         .selectClientType("openid-connect")
-        .fillClientData(
-          itemId,
-          itemId + "_name",
-          `some description for ${itemId}`,
-          true
-        )
+        .fillClientData(itemId)
         .continue()
         .continue();
 
