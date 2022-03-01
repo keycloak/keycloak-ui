@@ -166,7 +166,7 @@ export const Group = () => {
                           ...(values || []).filter(({ id }) => id !== group.id),
                         ]);
                         setSelectedGroups([
-                          ...selectedGroups.filter((s) => s.id !== group.id),
+                          ...selectedGroups.filter(({ id }) => id !== group.id),
                         ]);
                       }}
                     />
