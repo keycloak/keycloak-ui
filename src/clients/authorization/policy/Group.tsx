@@ -89,7 +89,7 @@ export const Group = () => {
           defaultValue={[]}
           rules={{
             validate: (value: GroupValue[]) =>
-              value.filter((c) => c.id).length > 0,
+              value.filter(({ id }) => id).length > 0,
           }}
           render={({ onChange, value }) => (
             <>
