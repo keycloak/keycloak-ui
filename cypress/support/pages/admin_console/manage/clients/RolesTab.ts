@@ -1,8 +1,7 @@
 export default class RolesTab {
   private createRoleBtn = "create-role";
   private createRoleEmptyStateBtn = "no-roles-for-this-client-empty-action";
-  private actionsDropdown =
-    "[aria-label=Actions] .pf-c-dropdown__toggle.pf-m-plain";
+  private actionsDropdown = `[aria-label="Actions"]`;
 
   private rolesTab = "rolesTab";
 

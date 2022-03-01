@@ -30,7 +30,7 @@ const modalUtils = new ModalUtils();
 const createRealmRolePage = new CreateRealmRolePage();
 
 describe("Clients test", () => {
-  describe.skip("Client details - Client scopes subtab", () => {
+  describe("Client details - Client scopes subtab", () => {
     const clientScopesTab = new ClientScopesTab();
     const clientId = "client-scopes-subtab-test";
     const clientScopeName = "client-scope-test";
@@ -204,7 +204,7 @@ describe("Clients test", () => {
     });*/
   });
 
-  describe.skip("Client creation", () => {
+  describe("Client creation", () => {
     before(() => {
       keycloakBefore();
       loginPage.logIn();
@@ -260,7 +260,7 @@ describe("Clients test", () => {
       );
     });
 
-    it.skip("Client CRUD test", () => {
+    it("Client CRUD test", () => {
       itemId += "_" + (Math.random() + 1).toString(36).substring(7);
 
       // Create
@@ -405,17 +405,9 @@ describe("Clients test", () => {
       cy.findByTestId(listingPage.emptyState).should("exist");
     });
 
-    it.skip("roles empty search test", () => {
+    it("roles empty search test", () => {
       listingPage.searchItem("", false);
       cy.findByTestId(listingPage.emptyState).should("not.exist");
-    });
-
-    it("delete client role test", () => {
-      listingPage.searchItem(client).goToItemDetails(client);
-      rolesTab.goToRolesTab();
-      rolesTab.clickActionMenu("Delete");
-      modalUtils.confirmModal();
-      masthead.checkNotificationMessage("The role has been deleted", true);
     });
   });
 
