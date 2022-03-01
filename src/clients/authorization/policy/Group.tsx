@@ -163,7 +163,7 @@ export const Group = () => {
                       icon={<MinusCircleIcon />}
                       onClick={() => {
                         setValue("groups", [
-                          ...(values || []).filter((s) => s.id !== group.id),
+                          ...(values || []).filter(({ id }) => id !== group.id),
                         ]);
                         setSelectedGroups([
                           ...selectedGroups.filter((s) => s.id !== group.id),
