@@ -107,6 +107,35 @@ describe("Realm roles test", () => {
     masthead.checkNotificationMessage("Associated roles have been added", true);
   });
 
+  describe("search roles", () => {
+    const searchRoleName = "going to search";
+    const description = "some description";
+    before(() => {
+      adminClient.createRealmRole({
+        name: searchRoleName,
+        description,
+      });
+    });
+
+    after(() => {
+      adminClient.deleteRealmRole(searchRoleName);
+    });
+
+    it("should search existing realm role", () => {
+      listingPage.searchItem(searchRoleName).itemExist(searchRoleName);
+    });
+
+    it("should search non-existing role test", () => {
+      listingPage.searchItem("role_DNE");
+      cy.findByTestId(listingPage.emptyState).should("exist");
+    });
+
+    it("roles empty search test", () => {
+      listingPage.searchItem("");
+      cy.findByTestId(listingPage.emptyState).should("exist");
+    });
+  });
+
   describe("edit role details", () => {
     const editRoleName = "going to edit";
     const description = "some description";
