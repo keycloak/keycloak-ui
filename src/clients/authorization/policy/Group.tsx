@@ -103,7 +103,7 @@ export const Group = () => {
                   onConfirm={(groups) => {
                     onChange([
                       ...value,
-                      ...groups.map((group) => ({ id: group.id })),
+                      ...groups.map(({ id }) => ({ id })),
                     ]);
                     setSelectedGroups([...selectedGroups, ...groups]);
                     setOpen(false);
