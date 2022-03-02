@@ -151,7 +151,7 @@ export const CapabilityConfig = ({
                         label={t("directAccess")}
                         id="kc-flow-direct"
                         name="directAccessGrantsEnabled"
-                        isChecked={value.toString() === "true"}
+                        isChecked={value}
                         onChange={onChange}
                       />
                       <HelpItem
@@ -165,7 +165,7 @@ export const CapabilityConfig = ({
               <GridItem lg={4} sm={6}>
                 <Controller
                   name="implicitFlowEnabled"
-                  defaultValue={false}
+                  defaultValue={true}
                   control={control}
                   render={({ onChange, value }) => (
                     <InputGroup>
@@ -250,7 +250,7 @@ export const CapabilityConfig = ({
                         label={t("oidcCibaGrant")}
                         id="kc-oidc-ciba-grant"
                         name="oidc.ciba.grant.enabled"
-                        isChecked={value.toString === "true"}
+                        isChecked={value.toString() === "true"}
                         onChange={onChange}
                         isDisabled={clientAuthentication}
                       />
