@@ -10,7 +10,8 @@ export default class CreateClientPage {
     '[for="kc-always-display-in-console-switch"]  .pf-c-switch__toggle';
   frontchannelLogoutSwitch =
     '[for="kc-frontchannelLogout-switch"]  .pf-c-switch__toggle';
-  clientAuthenticationSwitch = '[for="kc-authentication"] .pf-c-switch__toggle';
+  clientAuthenticationSwitch =
+    '[for="kc-authentication-switch"] > .pf-c-switch__toggle';
   clientAuthorizationSwitch =
     '[for="kc-authorization-switch"] > .pf-c-switch__toggle';
   standardFlowChkBx = "#kc-flow-standard";
