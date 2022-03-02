@@ -41,8 +41,6 @@ export const BindFlowDialog = ({ flowAlias, onClose }: BindFlowDialogProps) => {
   const save = async ({ bindingType }: BindingForm) => {
     const realmRep = await adminClient.realms.findOne({ realm });
 
-    console.log(bindingType, flowAlias);
-    console.log("realm", { ...realmRep, [bindingType]: flowAlias });
     try {
       await adminClient.realms.update(
         { realm },
