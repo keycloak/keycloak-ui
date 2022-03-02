@@ -384,6 +384,14 @@ describe("Clients test", () => {
       adminClient.deleteClient(client);
     });
 
+    it("should fail to create client role with empty name", () => {
+      listingPage.searchItem(client).goToItemDetails(client);
+      rolesTab.goToRolesTab();
+      rolesTab.goToCreateRoleFromEmptyState();
+      createRealmRolePage.fillRealmRoleData("").save();
+      createRealmRolePage.checkRealmRoleNameRequiredMessage();
+    });
+
     it("should create client role", () => {
       listingPage.searchItem(client).goToItemDetails(client);
       rolesTab.goToRolesTab();
@@ -392,13 +400,24 @@ describe("Clients test", () => {
       masthead.checkNotificationMessage("Role created", true);
     });
 
-    it.skip("should search existing client role", () => {
+    it("should fail to create duplicate client role", () => {
+      listingPage.searchItem(client).goToItemDetails(client);
+      rolesTab.goToRolesTab();
+      rolesTab.goToCreateRoleFromToolbar();
+      createRealmRolePage.fillRealmRoleData(itemId).save();
+      masthead.checkNotificationMessage(
+        `Could not create role: Role with name ${itemId} already exists`,
+        true
+      );
+    });
+
+    it("should search existing client role", () => {
       listingPage.searchItem(client).goToItemDetails(client);
       rolesTab.goToRolesTab();
       listingPage.searchItem(itemId, false).itemExist(itemId);
     });
 
-    it.skip("should search non-existing role test", () => {
+    it("should search non-existing role test", () => {
       listingPage.searchItem(client).goToItemDetails(client);
       rolesTab.goToRolesTab();
       listingPage.searchItem("role_DNE", false);
@@ -408,6 +427,14 @@ describe("Clients test", () => {
     it("roles empty search test", () => {
       listingPage.searchItem("", false);
       cy.findByTestId(listingPage.emptyState).should("not.exist");
+    });
+
+    it("should delete client role test", () => {
+      listingPage.searchItem(client).goToItemDetails(client);
+      rolesTab.goToRolesTab();
+      listingPage.deleteItem(itemId);
+      sidebarPage.waitForPageLoad();
+      modalUtils.checkModalTitle("Delete role?").confirmModal();
     });
   });
 
