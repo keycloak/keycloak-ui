@@ -173,7 +173,7 @@ export default function AuthenticationSection() {
           {t("default")}
         </>
       )}
-      {!type && <>{t("notInUse")}</>}
+      {!type && t("notInUse")}
     </>
   );
 
