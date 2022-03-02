@@ -17,11 +17,13 @@ import {
 import RoleMappingTab from "../support/pages/admin_console/manage/RoleMappingTab";
 import KeysTab from "../support/pages/admin_console/manage/clients/KeysTab";
 import ClientScopesTab from "../support/pages/admin_console/manage/clients/ClientScopesTab";
-import RolesTab from "../support/pages/admin_console/manage/clients/RolesTab";
 import CreateRealmRolePage from "../support/pages/admin_console/manage/realm_roles/CreateRealmRolePage";
+import AssociatedRolesPage from "../support/pages/admin_console/manage/realm_roles/AssociatedRolesPage";
+import ClientRolesTab from "../support/pages/admin_console/manage/clients/ClientRolesTab";
 
 let itemId = "client_crud";
 const loginPage = new LoginPage();
+const associatedRolesPage = new AssociatedRolesPage();
 const masthead = new Masthead();
 const sidebarPage = new SidebarPage();
 const listingPage = new ListingPage();
@@ -30,7 +32,7 @@ const modalUtils = new ModalUtils();
 const createRealmRolePage = new CreateRealmRolePage();
 
 describe("Clients test", () => {
-  describe("Client details - Client scopes subtab", () => {
+  describe.skip("Client details - Client scopes subtab", () => {
     const clientScopesTab = new ClientScopesTab();
     const clientId = "client-scopes-subtab-test";
     const clientScopeName = "client-scope-test";
@@ -204,7 +206,7 @@ describe("Clients test", () => {
     });*/
   });
 
-  describe("Client creation", () => {
+  describe.skip("Client creation", () => {
     before(() => {
       keycloakBefore();
       loginPage.logIn();
@@ -354,7 +356,7 @@ describe("Clients test", () => {
   });
 
   describe("Roles tab test", () => {
-    const rolesTab = new RolesTab();
+    const rolesTab = new ClientRolesTab();
     let client: string;
 
     before(() => {
@@ -384,7 +386,7 @@ describe("Clients test", () => {
       adminClient.deleteClient(client);
     });
 
-    it("should fail to create client role with empty name", () => {
+    it.skip("should fail to create client role with empty name", () => {
       listingPage.searchItem(client).goToItemDetails(client);
       rolesTab.goToRolesTab();
       rolesTab.goToCreateRoleFromEmptyState();
@@ -400,7 +402,7 @@ describe("Clients test", () => {
       masthead.checkNotificationMessage("Role created", true);
     });
 
-    it("should fail to create duplicate client role", () => {
+    it.skip("should fail to create duplicate client role", () => {
       listingPage.searchItem(client).goToItemDetails(client);
       rolesTab.goToRolesTab();
       rolesTab.goToCreateRoleFromToolbar();
@@ -411,22 +413,50 @@ describe("Clients test", () => {
       );
     });
 
-    it("should search existing client role", () => {
+    it.skip("should search existing client role", () => {
       listingPage.searchItem(client).goToItemDetails(client);
       rolesTab.goToRolesTab();
       listingPage.searchItem(itemId, false).itemExist(itemId);
     });
 
-    it("should search non-existing role test", () => {
+    it.skip("should search non-existing role test", () => {
       listingPage.searchItem(client).goToItemDetails(client);
       rolesTab.goToRolesTab();
       listingPage.searchItem("role_DNE", false);
       cy.findByTestId(listingPage.emptyState).should("exist");
     });
 
-    it("roles empty search test", () => {
+    it.skip("roles empty search test", () => {
       listingPage.searchItem("", false);
-      cy.findByTestId(listingPage.emptyState).should("not.exist");
+      cy.get("table:visible");
+    });
+
+    it("Associated roles test", () => {
+      listingPage.searchItem(client).goToItemDetails(client);
+      rolesTab.goToRolesTab();
+      listingPage.searchItem(itemId, false).goToItemDetails(itemId);
+
+      // Add associated realm role
+      associatedRolesPage.addAssociatedRealmRole();
+      masthead.checkNotificationMessage(
+        "Associated roles have been added",
+        true
+      );
+
+      // Add associated client role
+      associatedRolesPage.addAssociatedClientRole();
+      masthead.checkNotificationMessage(
+        "Associated roles have been added",
+        true
+      );
+    });
+
+    it("should hide inherited roles test", () => {
+      listingPage.searchItem(client).goToItemDetails(client);
+      rolesTab.goToRolesTab();
+      listingPage.searchItem(itemId, false).goToItemDetails(itemId);
+      rolesTab.goToAssociatedRolesTab();
+      rolesTab.hideInheritedRoles();
     });
 
     it("should delete client role test", () => {
