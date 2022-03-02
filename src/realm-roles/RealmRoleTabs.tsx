@@ -10,7 +10,7 @@ import {
 } from "@patternfly/react-core";
 import { useTranslation } from "react-i18next";
 import { useForm } from "react-hook-form";
-import { omit } from "lodash-es";
+import { omit } from "lodash";
 
 import { useAlerts } from "../components/alert/Alerts";
 import { useAdminClient, useFetch } from "../context/auth/AdminClient";
@@ -182,7 +182,7 @@ export default function RealmRoleTabs() {
   const [toggleDeleteDialog, DeleteConfirm] = useConfirmDialog({
     titleKey: "roles:roleDeleteConfirm",
     messageKey: t("roles:roleDeleteConfirmDialog", {
-      selectedRoleName: role?.name || t("createRole"),
+      name: role?.name || t("createRole"),
     }),
     continueButtonLabel: "common:delete",
     continueButtonVariant: ButtonVariant.danger,
