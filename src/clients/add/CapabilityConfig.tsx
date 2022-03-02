@@ -128,7 +128,7 @@ export const CapabilityConfig = ({
                         label={t("standardFlow")}
                         id="kc-flow-standard"
                         name="standardFlowEnabled"
-                        isChecked={value}
+                        isChecked={value.toString() === "true"}
                         onChange={onChange}
                       />
                       <HelpItem
@@ -151,7 +151,7 @@ export const CapabilityConfig = ({
                         label={t("directAccess")}
                         id="kc-flow-direct"
                         name="directAccessGrantsEnabled"
-                        isChecked={value}
+                        isChecked={value.toString() === "true"}
                         onChange={onChange}
                       />
                       <HelpItem
@@ -174,7 +174,7 @@ export const CapabilityConfig = ({
                         label={t("implicitFlow")}
                         id="kc-flow-implicit"
                         name="implicitFlowEnabled"
-                        isChecked={value}
+                        isChecked={value.toString() === "true"}
                         onChange={onChange}
                       />
                       <HelpItem
@@ -198,7 +198,8 @@ export const CapabilityConfig = ({
                         id="kc-flow-service-account"
                         name="serviceAccountsEnabled"
                         isChecked={
-                          value || (clientAuthentication && authorization)
+                          value.toString() === "true" ||
+                          (clientAuthentication && authorization)
                         }
                         onChange={onChange}
                         isDisabled={
@@ -226,7 +227,7 @@ export const CapabilityConfig = ({
                         label={t("oauthDeviceAuthorizationGrant")}
                         id="kc-oauth-device-authorization-grant"
                         name="oauth2.device.authorization.grant.enabled"
-                        isChecked={value}
+                        isChecked={value.toString() === "true"}
                         onChange={onChange}
                       />
                       <HelpItem
@@ -249,7 +250,7 @@ export const CapabilityConfig = ({
                         label={t("oidcCibaGrant")}
                         id="kc-oidc-ciba-grant"
                         name="oidc.ciba.grant.enabled"
-                        isChecked={value}
+                        isChecked={value.toString === "true"}
                         onChange={onChange}
                         isDisabled={clientAuthentication}
                       />
