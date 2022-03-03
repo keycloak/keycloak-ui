@@ -372,7 +372,7 @@ describe("Clients test", () => {
         .selectClientType("openid-connect")
         .fillClientData(client)
         .continue()
-        .continue();
+        .save();
       masthead.checkNotificationMessage("Client created successfully", true);
     });
 
@@ -431,7 +431,7 @@ describe("Clients test", () => {
       cy.get("table:visible");
     });
 
-    it("Associated roles test", () => {
+    it("Add associated roles test", () => {
       listingPage.searchItem(client).goToItemDetails(client);
       rolesTab.goToRolesTab();
       listingPage.searchItem(itemId, false).goToItemDetails(itemId);
@@ -451,12 +451,32 @@ describe("Clients test", () => {
       );
     });
 
-    it("should hide inherited roles test", () => {
+    it.skip("should hide inherited roles test", () => {
       listingPage.searchItem(client).goToItemDetails(client);
       rolesTab.goToRolesTab();
       listingPage.searchItem(itemId, false).goToItemDetails(itemId);
       rolesTab.goToAssociatedRolesTab();
       rolesTab.hideInheritedRoles();
+    });
+
+    it("should delete associated roles test", () => {
+      listingPage.searchItem(client).goToItemDetails(client);
+      rolesTab.goToRolesTab();
+      listingPage.searchItem(itemId, false).goToItemDetails(itemId);
+      rolesTab.goToAssociatedRolesTab();
+      listingPage.removeItem("create-realm");
+      sidebarPage.waitForPageLoad();
+      modalUtils.checkModalTitle("Remove associated role?").confirmModal();
+      sidebarPage.waitForPageLoad();
+
+      masthead.checkNotificationMessage(
+        "Associated roles have been removed",
+        true
+      );
+
+      listingPage.removeItem("manage-account");
+      sidebarPage.waitForPageLoad();
+      modalUtils.checkModalTitle("Remove associated role?").confirmModal();
     });
 
     it("should delete client role test", () => {

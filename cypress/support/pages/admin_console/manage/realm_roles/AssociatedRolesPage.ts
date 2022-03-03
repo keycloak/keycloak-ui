@@ -14,8 +14,12 @@ export default class AssociatedRolesPage {
 
     cy.findByTestId(this.addRolesDropdownItem).click();
 
-    cy.get(this.checkbox).eq(2).check();
-
+    cy.get('[data-testid="addAssociatedRole"] td[data-label="Role name"]')
+      .contains("create-realm")
+      .parent()
+      .within(() => {
+        cy.get("input").click();
+      });
     cy.findByTestId(this.addAssociatedRolesModalButton).contains("Add").click();
 
     cy.url().should("include", "/associated-roles");
