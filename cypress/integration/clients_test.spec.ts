@@ -32,7 +32,7 @@ const modalUtils = new ModalUtils();
 const createRealmRolePage = new CreateRealmRolePage();
 
 describe("Clients test", () => {
-  describe.skip("Client details - Client scopes subtab", () => {
+  describe("Client details - Client scopes subtab", () => {
     const clientScopesTab = new ClientScopesTab();
     const clientId = "client-scopes-subtab-test";
     const clientScopeName = "client-scope-test";
@@ -206,7 +206,7 @@ describe("Clients test", () => {
     });*/
   });
 
-  describe.skip("Client creation", () => {
+  describe("Client creation", () => {
     before(() => {
       keycloakBefore();
       loginPage.logIn();
@@ -386,7 +386,7 @@ describe("Clients test", () => {
       adminClient.deleteClient(client);
     });
 
-    it.skip("should fail to create client role with empty name", () => {
+    it("should fail to create client role with empty name", () => {
       listingPage.searchItem(client).goToItemDetails(client);
       rolesTab.goToRolesTab();
       rolesTab.goToCreateRoleFromEmptyState();
@@ -402,6 +402,42 @@ describe("Clients test", () => {
       masthead.checkNotificationMessage("Role created", true);
     });
 
+    it("should update client role description", () => {
+      listingPage.searchItem(client).goToItemDetails(client);
+      rolesTab.goToRolesTab();
+      listingPage.searchItem(itemId, false).goToItemDetails(itemId);
+      const updateDescription = "updated description";
+      createRealmRolePage.updateDescription(updateDescription).save();
+      masthead.checkNotificationMessage("The role has been saved", true);
+      createRealmRolePage.checkDescription(updateDescription);
+    });
+
+    // TODO: network call intercepts input of attribute key
+    it.skip("should add attribute to client role", () => {
+      cy.intercept("/auth/admin/realms/master/roles-by-id/*").as(
+        "fetchClientRole"
+      );
+      listingPage.searchItem(client).goToItemDetails(client);
+      rolesTab.goToRolesTab();
+
+      listingPage.searchItem(itemId, false).goToItemDetails(itemId);
+      rolesTab.goToAttributesTab();
+      rolesTab.addAttribute();
+
+      cy.wait("@fetchClientRole");
+
+      masthead.checkNotificationMessage("The role has been saved", true);
+    });
+
+    it.skip("should delete attribute from client role", () => {
+      listingPage.searchItem(client).goToItemDetails(client);
+      rolesTab.goToRolesTab();
+      listingPage.searchItem(itemId, false).goToItemDetails(itemId);
+      rolesTab.goToAttributesTab();
+      rolesTab.deleteAttribute();
+      masthead.checkNotificationMessage("The role has been saved", true);
+    });
+
     it("should create client role to be deleted", () => {
       listingPage.searchItem(client).goToItemDetails(client);
       rolesTab.goToRolesTab();
@@ -410,7 +446,7 @@ describe("Clients test", () => {
       masthead.checkNotificationMessage("Role created", true);
     });
 
-    it.skip("should fail to create duplicate client role", () => {
+    it("should fail to create duplicate client role", () => {
       listingPage.searchItem(client).goToItemDetails(client);
       rolesTab.goToRolesTab();
       rolesTab.goToCreateRoleFromToolbar();
@@ -421,20 +457,20 @@ describe("Clients test", () => {
       );
     });
 
-    it.skip("should search existing client role", () => {
+    it("should search existing client role", () => {
       listingPage.searchItem(client).goToItemDetails(client);
       rolesTab.goToRolesTab();
       listingPage.searchItem(itemId, false).itemExist(itemId);
     });
 
-    it.skip("should search non-existing role test", () => {
+    it("should search non-existing role test", () => {
       listingPage.searchItem(client).goToItemDetails(client);
       rolesTab.goToRolesTab();
       listingPage.searchItem("role_DNE", false);
       cy.findByTestId(listingPage.emptyState).should("exist");
     });
 
-    it.skip("roles empty search test", () => {
+    it("roles empty search test", () => {
       listingPage.searchItem("", false);
       cy.get("table:visible");
     });
@@ -468,7 +504,7 @@ describe("Clients test", () => {
       );
     });
 
-    it.skip("should hide inherited roles test", () => {
+    it("should hide inherited roles test", () => {
       listingPage.searchItem(client).goToItemDetails(client);
       rolesTab.goToRolesTab();
       listingPage.searchItem(itemId, false).goToItemDetails(itemId);
@@ -541,7 +577,7 @@ describe("Clients test", () => {
     });
   });
 
-  describe.skip("Advanced tab test", () => {
+  describe("Advanced tab test", () => {
     const advancedTab = new AdvancedTab();
     let client: string;
 
