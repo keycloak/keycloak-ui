@@ -8,14 +8,15 @@ export default class AssociatedRolesPage {
   private filterTypeDropdown = "filter-type-dropdown";
   private filterTypeDropdownItem = "filter-type-dropdown-item";
   private usersPage = "users-page";
+  private removeRolesButton = "removeRoles";
 
-  addAssociatedRealmRole() {
+  addAssociatedRealmRole(roleName: string) {
     cy.findByTestId(this.actionDropdown).last().click();
 
     cy.findByTestId(this.addRolesDropdownItem).click();
 
     cy.get('[data-testid="addAssociatedRole"] td[data-label="Role name"]')
-      .contains("create-realm")
+      .contains(roleName)
       .parent()
       .within(() => {
         cy.get("input").click();
@@ -32,7 +33,7 @@ export default class AssociatedRolesPage {
     return this;
   }
 
-  addAssociatedClientRole() {
+  addAssociatedClientRole(roleName: string) {
     cy.findByTestId(this.addRoleToolbarButton).click();
 
     cy.findByTestId(this.filterTypeDropdown).click();
@@ -42,7 +43,7 @@ export default class AssociatedRolesPage {
     cy.findByTestId(".pf-c-spinner__tail-ball").should("not.exist");
 
     cy.get('[data-testid="addAssociatedRole"] td[data-label="Role name"]')
-      .contains("manage-account")
+      .contains(roleName)
       .parent()
       .within(() => {
         cy.get("input").click();
@@ -52,5 +53,10 @@ export default class AssociatedRolesPage {
 
     cy.contains("Users in role").click();
     cy.findByTestId(this.usersPage).should("exist");
+  }
+
+  removeAssociatedRoles() {
+    cy.findByTestId(this.removeRolesButton).click();
+    return this;
   }
 }

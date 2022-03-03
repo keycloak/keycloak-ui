@@ -402,6 +402,14 @@ describe("Clients test", () => {
       masthead.checkNotificationMessage("Role created", true);
     });
 
+    it("should create client role to be deleted", () => {
+      listingPage.searchItem(client).goToItemDetails(client);
+      rolesTab.goToRolesTab();
+      rolesTab.goToCreateRoleFromToolbar();
+      createRealmRolePage.fillRealmRoleData("client_role_to_be_deleted").save();
+      masthead.checkNotificationMessage("Role created", true);
+    });
+
     it.skip("should fail to create duplicate client role", () => {
       listingPage.searchItem(client).goToItemDetails(client);
       rolesTab.goToRolesTab();
@@ -437,14 +445,23 @@ describe("Clients test", () => {
       listingPage.searchItem(itemId, false).goToItemDetails(itemId);
 
       // Add associated realm role
-      associatedRolesPage.addAssociatedRealmRole();
+      associatedRolesPage.addAssociatedRealmRole("create-realm");
       masthead.checkNotificationMessage(
         "Associated roles have been added",
         true
       );
 
       // Add associated client role
-      associatedRolesPage.addAssociatedClientRole();
+      associatedRolesPage.addAssociatedClientRole("create-client");
+      masthead.checkNotificationMessage(
+        "Associated roles have been added",
+        true
+      );
+
+      rolesTab.goToAssociatedRolesTab();
+
+      // Add associated client role
+      associatedRolesPage.addAssociatedClientRole("manage-consent");
       masthead.checkNotificationMessage(
         "Associated roles have been added",
         true
@@ -474,9 +491,34 @@ describe("Clients test", () => {
         true
       );
 
-      listingPage.removeItem("manage-account");
+      listingPage.removeItem("manage-consent");
       sidebarPage.waitForPageLoad();
       modalUtils.checkModalTitle("Remove associated role?").confirmModal();
+    });
+
+    it("should delete associated role from search bar test", () => {
+      listingPage.searchItem(client).goToItemDetails(client);
+      rolesTab.goToRolesTab();
+      listingPage.searchItem(itemId, false).goToItemDetails(itemId);
+      rolesTab.goToAssociatedRolesTab();
+
+      cy.get('td[data-label="Role name"]')
+        .contains("create-client")
+        .parent()
+        .within(() => {
+          cy.get("input").click();
+        });
+
+      associatedRolesPage.removeAssociatedRoles();
+
+      sidebarPage.waitForPageLoad();
+      modalUtils.checkModalTitle("Remove associated roles?").confirmModal();
+      sidebarPage.waitForPageLoad();
+
+      masthead.checkNotificationMessage(
+        "Associated roles have been removed",
+        true
+      );
     });
 
     it("should delete client role test", () => {
@@ -486,9 +528,20 @@ describe("Clients test", () => {
       sidebarPage.waitForPageLoad();
       modalUtils.checkModalTitle("Delete role?").confirmModal();
     });
+
+    it("should delete client role from role details test", () => {
+      listingPage.searchItem(client).goToItemDetails(client);
+      rolesTab.goToRolesTab();
+      listingPage
+        .searchItem("client_role_to_be_deleted", false)
+        .goToItemDetails("client_role_to_be_deleted");
+      createRealmRolePage.clickActionMenu("Delete this role");
+      modalUtils.confirmModal();
+      masthead.checkNotificationMessage("The role has been deleted", true);
+    });
   });
 
-  describe("Advanced tab test", () => {
+  describe.skip("Advanced tab test", () => {
     const advancedTab = new AdvancedTab();
     let client: string;
 
