@@ -6,7 +6,6 @@ import {
   AlertVariant,
   FormGroup,
   ValidatedOptions,
-  Switch,
   TextInput,
   PageSection,
   ActionGroup,
@@ -21,12 +20,8 @@ import { FormAccess } from "../../../components/form-access/FormAccess";
 import { HelpItem } from "../../../components/help-enabler/HelpItem";
 import { KEY_PROVIDER_TYPE } from "../../../util";
 import { ViewHeader } from "../../../components/view-header/ViewHeader";
-import AesView from "./aes-generated/View";
-import EcdsaView from "./ecdsa-generated/View";
-import HmacView from "./hmac-generated/View";
-import JavaKeystoreView from "./java-keystore/View";
-import RsaView from "./rsa/View";
-import RsaGeneratedView from "./rsa-generated/View";
+import { DynamicComponents } from "../../../components/dynamic/DynamicComponents";
+import { useServerInfo } from "../../../context/server-info/ServerInfoProvider";
 
 type KeyProviderFormProps = {
   id?: string;
@@ -34,30 +29,8 @@ type KeyProviderFormProps = {
   onClose?: () => void;
 };
 
-const SubView = ({ providerType }: { providerType: ProviderType }) => {
-  switch (providerType) {
-    case "aes-generated":
-      return <AesView />;
-    case "ecdsa-generated":
-      return <EcdsaView />;
-    case "hmac-generated":
-      return <HmacView />;
-    case "java-keystore":
-      return <JavaKeystoreView />;
-    case "rsa":
-      return <RsaView />;
     case "rsa-enc":
       return <RsaView isEnc />;
-    case "rsa-enc-generated":
-      return <RsaGeneratedView isEnc />;
-    case "rsa-generated":
-      return <RsaGeneratedView />;
-
-    default:
-      return <>invalid view type</>;
-  }
-};
-
 export const KeyProviderForm = ({
   providerType,
   onClose,
@@ -66,6 +39,10 @@ export const KeyProviderForm = ({
   const { id } = useParams<{ id: string }>();
   const adminClient = useAdminClient();
   const { addAlert, addError } = useAlerts();
+
+  const serverInfo = useServerInfo();
+  const allComponentTypes =
+    serverInfo.componentTypes?.[KEY_PROVIDER_TYPE] ?? [];
 
   const form = useForm<ComponentRepresentation>({
     shouldUnregister: false,
@@ -168,66 +145,13 @@ export const KeyProviderForm = ({
           )}
         />
       </FormGroup>
-      <FormGroup
-        label={t("common:enabled")}
-        fieldId="kc-enabled"
-        labelIcon={
-          <HelpItem
-            helpText={t("realm-settings-help:enabled")}
-            fieldLabelId="enabled"
-          />
-        }
-      >
-        <Controller
-          name="config.enabled"
-          control={control}
-          defaultValue={["true"]}
-          render={({ onChange, value }) => (
-            <Switch
-              id="kc-enabled"
-              label={t("common:on")}
-              labelOff={t("common:off")}
-              isChecked={value[0] === "true"}
-              data-testid="enabled"
-              onChange={(value) => {
-                onChange([value.toString()]);
-              }}
-            />
-          )}
-        />
-      </FormGroup>
-      <FormGroup
-        label={t("active")}
-        fieldId="kc-active"
-        labelIcon={
-          <HelpItem
-            helpText="realm-settings-help:active"
-            fieldLabelId="realm-settings:active"
-          />
-        }
-      >
-        <Controller
-          name="config.active"
-          control={control}
-          defaultValue={["true"]}
-          render={({ onChange, value }) => {
-            return (
-              <Switch
-                id="kc-active"
-                label={t("common:on")}
-                labelOff={t("common:off")}
-                isChecked={value[0] === "true"}
-                data-testid="active"
-                onChange={(value) => {
-                  onChange([value.toString()]);
-                }}
-              />
-            );
-          }}
-        />
-      </FormGroup>
       <FormProvider {...form}>
-        <SubView providerType={providerType} />
+        <DynamicComponents
+          properties={
+            allComponentTypes.find((type) => type.id === providerType)
+              ?.properties || []
+          }
+        />
       </FormProvider>
       <ActionGroup>
         <Button
