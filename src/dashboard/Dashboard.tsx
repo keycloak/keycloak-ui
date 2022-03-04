@@ -22,16 +22,16 @@ import {
 } from "@patternfly/react-core";
 import React from "react";
 import { Trans, useTranslation } from "react-i18next";
-import { xor } from "lodash-es";
+import { difference } from "lodash-es";
 
 import { useRealm } from "../context/realm-context/RealmContext";
 import { useServerInfo } from "../context/server-info/ServerInfoProvider";
 import { toUpperCase } from "../util";
 import { HelpItem } from "../components/help-enabler/HelpItem";
 import environment from "../environment";
+import { KeycloakSpinner } from "../components/keycloak-spinner/KeycloakSpinner";
 
 import "./dashboard.css";
-import { KeycloakSpinner } from "../components/keycloak-spinner/KeycloakSpinner";
 
 const EmptyDashboard = () => {
   const { t } = useTranslation("dashboard");
@@ -56,15 +56,30 @@ const EmptyDashboard = () => {
   );
 };
 
+const ALL_FEATURES = [
+  "ADMIN2",
+  "ADMIN_FINE_GRAINED_AUTHZ",
+  "DECLARATIVE_USER_PROFILE",
+  "DOCKER",
+  "DYNAMIC_SCOPES",
+  "MAP_STORAGE",
+  "OPENSHIFT_INTEGRATION",
+  "SCRIPTS",
+  "TOKEN_EXCHANGE",
+  "UPLOAD_SCRIPTS",
+];
+
+//this is the actual list of features:
+//AUTHORIZATION, ACCOUNT2, ACCOUNT, ADMIN, ADMIN2, DOCKER, IMPERSONATION, OPENSHIFT, SCRIPTS, TOKEN, UPLOAD, WEB, CLIENT, CIBA, MAP, PAR, DECLARATIVE, DYNAMIC;
+
 const Dashboard = () => {
   const { t } = useTranslation("dashboard");
   const { realm } = useRealm();
   const serverInfo = useServerInfo();
 
-  const enabledFeatures = xor(
-    serverInfo.profileInfo?.disabledFeatures,
-    serverInfo.profileInfo?.experimentalFeatures,
-    serverInfo.profileInfo?.previewFeatures
+  const enabledFeatures = difference(
+    ALL_FEATURES,
+    serverInfo.profileInfo?.disabledFeatures || []
   );
 
   const isExperimentalFeature = (feature: string) => {
