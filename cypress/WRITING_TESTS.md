@@ -2,7 +2,7 @@
 
 ### Create PageObjects for the page screens to reuse the methods
 
-don't do this:
+Don't do this:
 ```typescript
 cy.findByTestId("rs-keys-tab").click();
 cy.findByTestId("rs-providers-tab").click();
