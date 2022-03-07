@@ -412,19 +412,13 @@ describe("Clients test", () => {
       createRealmRolePage.checkDescription(updateDescription);
     });
 
-    // TODO: network call intercepts input of attribute key
-    it.skip("should add attribute to client role", () => {
-      cy.intercept("/auth/admin/realms/master/roles-by-id/*").as(
-        "fetchClientRole"
-      );
+    it("should add attribute to client role", () => {
       listingPage.searchItem(client).goToItemDetails(client);
       rolesTab.goToRolesTab();
 
       listingPage.searchItem(itemId, false).goToItemDetails(itemId);
       rolesTab.goToAttributesTab();
       rolesTab.addAttribute();
-
-      cy.wait("@fetchClientRole");
 
       masthead.checkNotificationMessage("The role has been saved", true);
     });
