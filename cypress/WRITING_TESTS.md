@@ -80,7 +80,7 @@ You can see the rest calls in the cypress IDE.
   cy.wait(["@search"]); // wait for the call named search
 ```
 
-If there where no calls, but you still get this error try using `{force: true}`, but try not to use it everywhere, there could be an unexpected modal opened blocking the element so even the user wouldn’t be able to use that element.
+If there were no calls and you still get this error, try using `{force: true}`, but try not to use it everywhere. For example, there could be an unexpected open modal blocking the element, so even the user wouldn’t be able to use that element.
 
 ### Some more reading:
 
