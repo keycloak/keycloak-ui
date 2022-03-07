@@ -2,7 +2,7 @@ import {
   keycloakBefore,
   keycloakBeforeEach,
 } from "../support/util/keycloak_hooks";
-import AdminClient from "../support/util/AdminClient";
+import adminClient from "../support/util/AdminClient";
 import LoginPage from "../support/pages/LoginPage";
 import ListingPage from "../support/pages/admin_console/ListingPage";
 import Masthead from "../support/pages/admin_console/Masthead";
@@ -11,7 +11,6 @@ import AuthorizationTab from "../support/pages/admin_console/manage/clients/Auth
 import ModalUtils from "../support/util/ModalUtils";
 
 describe("Client authentication subtab", () => {
-  const adminClient = new AdminClient();
   const loginPage = new LoginPage();
   const listingPage = new ListingPage();
   const masthead = new Masthead();
@@ -89,7 +88,7 @@ describe("Client authentication subtab", () => {
     authenticationTab.goToPolicySubTab();
     cy.intercept(
       "GET",
-      "/auth/admin/realms/master/clients/*/authz/resource-server/policy/regex/*"
+      "/admin/realms/master/clients/*/authz/resource-server/policy/regex/*"
     ).as("get");
     authenticationTab
       .goToCreatePolicy("regex")
@@ -118,7 +117,7 @@ describe("Client authentication subtab", () => {
     authenticationTab.goToPolicySubTab();
     cy.intercept(
       "GET",
-      "/auth/admin/realms/master/clients/*/authz/resource-server/policy/client/*"
+      "/admin/realms/master/clients/*/authz/resource-server/policy/client/*"
     ).as("get");
     authenticationTab
       .goToCreatePolicy("client")

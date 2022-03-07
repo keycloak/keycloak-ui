@@ -10,7 +10,7 @@ export default {
       "If you delete this realm, all associated data will be removed.",
     deleteProviderTitle: "Delete key provider?",
     deleteProviderConfirm:
-      "Are you sure you want to permanently delete the key provider ",
+      "Are you sure you want to permanently delete the key provider {{provider}}?",
     deleteProviderSuccess: "Success. The provider has been deleted.",
     deleteProviderError: "Error deleting the provider",
     deletedSuccess: "The realm has been deleted",
@@ -84,6 +84,7 @@ export default {
     AESKeySize: "AES Key Size",
     active: "Active",
     privateRSAKey: "Private RSA Key",
+    filenamePlaceholder: "Upload a PEM file or paste key below",
     x509Certificate: "X509 Certificate",
     ellipticCurve: "Elliptic Curve",
     secretSize: "Secret size",
@@ -96,12 +97,15 @@ export default {
     providerDescription: "Provider description",
     addProvider: "Add provider",
     publicKeys: "Public keys",
-    activeKeys: "Active keys",
-    passiveKeys: "Passive keys",
-    disabledKeys: "Disabled keys",
+    keysFilter: {
+      ACTIVE: "Active keys",
+      PASSIVE: "Passive keys",
+      DISABLED: "Disabled keys",
+    },
     noKeys: "No keys",
-    noKeysDescription: "You haven't created any ",
+    noKeysDescription: "You haven't created any active keys",
     certificate: "Certificate",
+    loginScreenCustomization: "Login screen customization",
     userRegistration: "User registration",
     userRegistrationHelpText:
       "Enable/disable the registration page. A link for registration will show on login page too.",
@@ -111,6 +115,7 @@ export default {
     rememberMe: "Remember me",
     rememberMeHelpText:
       "Show checkbox on login page to allow user to remain logged in between browser restarts until session expires.",
+    emailSettings: "Email settings",
     emailAsUsername: "Email as username",
     emailAsUsernameHelpText: "Allow users to set email as username.",
     loginWithEmail: "Login with email",
@@ -124,6 +129,8 @@ export default {
     verifyEmail: "Verify email",
     verifyEmailHelpText:
       "Require user to verify their email address after initial login or after address changes are submitted.",
+    userInfoSettings: "User info settings",
+    editUsername: "Edit username",
     testConnection: "Test connection",
     testConnectionSuccess:
       "Success! SMTP connection successful. E-mail was sent!",
@@ -813,7 +820,8 @@ export default {
     exportFail: "Could not export realm: '{{error}}'",
   },
   "attributes-group": {
-    createButtonText: "Create attributes group",
+    createGroupText: "Create attributes group",
+    editGroupText: "Edit attributes group",
     tableTitle: "Attributes groups",
     columnName: "Name",
     columnDisplayName: "Display name",
@@ -826,5 +834,21 @@ export default {
       "Are you sure you want to permanently delete the attributes group <1>{{group}}</1>?",
     deleteSuccess: "Attributes group deleted.",
     deleteError: "Could not delete user attributes group: {{error}}",
+    nameField: "Name",
+    nameHint:
+      "A unique name for the group. This name will be used to reference the group when binding an attribute to a group.",
+    displayHeaderField: "Display name",
+    displayHeaderHint:
+      "A user-friendly name for the group that should be used when rendering a group of attributes in user-facing forms. Supports keys for localized values as well. For example: ${profile.attribute.group.address}.",
+    displayDescriptionField: "Display description",
+    displayDescriptionHint:
+      "A text that should be used as a tooltip when rendering user-facing forms.",
+    annotationsText: "Annotations",
+    addAnnotationText: "Add annotation",
+    removeAnnotationText: "Remove annotation",
+    keyPlaceholder: "Type a key",
+    keyLabel: "Key",
+    valuePlaceholder: "Type a value",
+    valueLabel: "Value",
   },
 };

@@ -18,10 +18,16 @@ export default {
       "This enables standard OpenID Connect redirect based authentication with authorization code. In terms of OpenID Connect or OAuth2 specifications, this enables support of 'Authorization Code Flow' for this client.",
     implicitFlow:
       "This enables support for OpenID Connect redirect based authentication without authorization code. In terms of OpenID Connect or OAuth2 specifications, this enables support of 'Implicit Flow' for this client.",
+    oauthDeviceAuthorizationGrant:
+      "This enables support for OAuth 2.0 Device Authorization Grant, which means that client is an application on device that has limited input capabilities or lack a suitable browser.",
+    oidcCibaGrant:
+      "This enables support for OIDC CIBA Grant, which means that the user is authenticated via some external authentication device instead of the user's browser.",
     rootURL: "Root URL appended to relative URLs",
     validRedirectURIs:
       "Valid URI pattern a browser can redirect to after a successful login or logout. Simple wildcards are allowed such as 'http://example.com/*'. Relative path can be specified too such as /my/relative/path/*. Relative paths are relative to the client root URL, or if none is specified the auth server root URL is used. For SAML, you must set valid URI patterns if you are relying on the consumer service URL embedded with the login request.",
     nameIdFormat: "The name ID format to use for the subject.",
+    alwaysDisplayInConsole:
+      "Always list this client in the Account Console, even if the user does not have an active session.",
     forceNameIdFormat:
       "Ignore requested NameID subject format and use admin console configured one.",
     forcePostBinding: "Always use POST binding for responses.",
@@ -92,7 +98,12 @@ export default {
       "Contains all default client scopes and selected optional scopes. All protocol mappers and role scope mappings of all those client scopes will be used when generating access token issued for your client",
     effectiveRoleScopeMappings:
       "Selected Optional Client Scopes, which will be used when issuing access token for this client. You can see above what value of OAuth Scope Parameter needs to be used when you want to have these optional client scopes applied when the initial OpenID Connect Authentication request will be sent from your client adapter",
-    generatedAccessToken: "Example access token",
+    generatedAccessToken:
+      "See the example access token, which will be generated and sent to the client when selected user is authenticated. You can see claims and roles that the token will contain based on the effective protocol mappers and role scope mappings and also based on the claims/roles assigned to user himself",
+    generatedIdToken:
+      "See the example ID Token, which will be generated and sent to the client when selected user is authenticated. You can see claims and roles that the token will contain based on the effective protocol mappers and role scope mappings and also based on the claims/roles assigned to user himself",
+    generatedUserInfo:
+      "See the example User Info, which will be provided by the User Info Endpoint",
     scopeParameter:
       "You can copy/paste this value of scope parameter and use it in initial OpenID Connect Authentication Request sent from this client adapter. Default client scopes and selected optional client scopes will be used when generating token issued for this client",
     user: "Optionally select user, for whom the example access token will be generated. If you do not select a user, example access token will not be generated during evaluation",
@@ -164,6 +175,16 @@ export default {
       "SAML ARTIFACT Binding URL for the client's single logout service. You can leave this blank if you are using a different binding.",
     artifactBindingUrl:
       "URL to send the HTTP ARTIFACT messages to. You can leave this blank if you are using a different binding. This value should be set when forcing ARTIFACT binding together with IdP initiated login.",
+    frontchannelLogout:
+      "When true, logout requires a browser redirect to client. When false, server performs a background invocation for logout.",
+    frontchannelLogoutUrl:
+      "URL that will cause the client to log itself out when a logout request is sent to this realm (via end_session_endpoint). If not provided, it defaults to the base url.",
+    backchannelLogoutUrl:
+      "URL that will cause the client to log itself out when a logout request is sent to this realm (via end_session_endpoint). If omitted, no logout request will be sent to the client is this case.",
+    backchannelLogoutSessionRequired:
+      "Specifying whether a sid (session ID) Claim is included in the Logout Token when the Backchannel Logout URL is used.",
+    backchannelLogoutRevokeOfflineSessions:
+      'Specifying whether a "revoke_offline_access" event is included in the Logout Token when the Backchannel Logout URL is used. Keycloak will revoke offline sessions when receiving a Logout Token with this event.',
     artifactResolutionService:
       "SAML Artifact resolution service for the client. This is the endpoint to which Keycloak will send a SOAP ArtifactResolve message. You can leave this blank if you do not have a URL for this binding.",
     authenticationOverrides: "Override realm authentication flow bindings.",

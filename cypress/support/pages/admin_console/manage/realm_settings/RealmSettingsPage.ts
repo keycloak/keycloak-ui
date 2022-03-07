@@ -68,15 +68,15 @@ export default class RealmSettingsPage {
   enableStartTlsCheck = "enable-start-tls";
   addProviderDropdown = "addProviderDropdown";
   addProviderButton = "add-provider-button";
-  displayName = "display-name-input";
+  displayName = "name-input";
   enableEvents = "eventsEnabled";
   eventsUserSave = "save-user";
   enableAdminEvents = "adminEventsEnabled";
   eventsAdminSave = "save-admin";
   eventTypeColumn = 'tbody > tr > [data-label="Event saved type"]';
   filterSelectMenu = ".kc-filter-type-select";
-  passiveKeysOption = "passive-keys-option";
-  disabledKeysOption = "disabled-keys-option";
+  passiveKeysOption = "PASSIVE-option";
+  disabledKeysOption = "DISABLED-option";
   testConnectionButton = "test-connection-button";
   modalTestConnectionButton = "modal-test-connection-button";
   emailAddressInput = "email-address-input";
@@ -218,8 +218,8 @@ export default class RealmSettingsPage {
   private eventListenersDrwDwnSelect =
     ".pf-c-button.pf-c-select__toggle-button.pf-m-plain";
   private eventListenerRemove = '[data-ouia-component-id="Remove"]';
-  private roleSelect = ".pf-c-select.kc-role-select";
-  private selectScopeButton = "select-scope-button";
+  private roleSelect = "#config\\.roles0";
+  private selectScopeButton = "addValue";
   private deleteClientRolesConditionBtn = "delete-client-roles-condition";
   private deleteClientScopesConditionBtn = "delete-client-scopes-condition";
 
@@ -311,7 +311,7 @@ export default class RealmSettingsPage {
   }
 
   toggleAddProviderDropdown() {
-    const keysUrl = `/auth/admin/realms/${this.realmName}/keys`;
+    const keysUrl = `/admin/realms/${this.realmName}/keys`;
     cy.intercept(keysUrl).as("keysFetch");
     cy.findByTestId(this.addProviderDropdown).click();
 
@@ -554,8 +554,8 @@ export default class RealmSettingsPage {
   }
 
   shouldRemoveEventFromEventListener() {
-    cy.get(this.eventListenerRemove).last().click();
-    cy.findByTestId(this.eventListenersSaveBtn).click();
+    cy.get(this.eventListenerRemove).last().click({ force: true });
+    cy.findByTestId(this.eventListenersSaveBtn).click({ force: true });
     cy.get(this.alertMessage).should(
       "be.visible",
       "Event listener has been updated."
@@ -750,7 +750,7 @@ export default class RealmSettingsPage {
 
   openProfileDetails(name: string) {
     cy.intercept(
-      `/auth/admin/realms/${this.realmName}/client-policies/profiles*`
+      `/admin/realms/${this.realmName}/client-policies/profiles*`
     ).as("profilesFetch");
     cy.get(
       'a[href*="realm-settings/clientPolicies/' + name + '/edit-profile"]'
@@ -761,7 +761,7 @@ export default class RealmSettingsPage {
 
   editExecutor(availablePeriod?: number) {
     cy.intercept(
-      `/auth/admin/realms/${this.realmName}/client-policies/profiles*`
+      `/admin/realms/${this.realmName}/client-policies/profiles*`
     ).as("profilesFetch");
     cy.get(this.editExecutorBtn).click();
     cy.wait("@profilesFetch");
@@ -947,13 +947,7 @@ export default class RealmSettingsPage {
     cy.findByTestId(this.addConditionDrpDwnOption)
       .contains("client-roles")
       .click();
-    cy.get(this.roleSelect).click().contains("impersonation").click();
-
-    cy.get(this.roleSelect).contains("manage-realm").click();
-
-    cy.get(this.roleSelect).contains("view-users").click();
-
-    cy.get(this.roleSelect).click();
+    cy.get(this.roleSelect).clear().type("manage-realm");
 
     cy.findByTestId(this.addConditionSaveBtn).click();
     cy.get(this.alertMessage).should(
@@ -964,18 +958,14 @@ export default class RealmSettingsPage {
   }
 
   addClientScopes() {
+    cy.get("#config\\.scopes0").clear().type("one");
     cy.findByTestId(this.selectScopeButton).click();
-    cy.get(".pf-c-table__check input[name=checkrow0]").click();
-    cy.get(".pf-c-table__check input[name=checkrow1]").click();
-    cy.get(".pf-c-table__check input[name=checkrow2]").click();
-
-    cy.findByTestId(this.modalConfirm).contains("Add").click();
+    cy.get("#config\\.scopes1").clear().type("two");
+    cy.findByTestId(this.selectScopeButton).click();
+    cy.get("#config\\.scopes2").clear().type("three");
   }
 
   shouldAddClientScopesCondition() {
-    cy.intercept(`/auth/admin/realms/${this.realmName}/client-scopes`).as(
-      "clientScopes"
-    );
     cy.get(this.clientPolicy).click();
     cy.findByTestId(this.addCondition).click();
     cy.get(this.addConditionDrpDwn).click();
@@ -983,7 +973,6 @@ export default class RealmSettingsPage {
       .contains("client-scopes")
       .click();
 
-    cy.wait("@clientScopes");
     this.addClientScopes();
 
     cy.findByTestId(this.addConditionSaveBtn).click();
@@ -999,10 +988,8 @@ export default class RealmSettingsPage {
 
     cy.findByTestId(this.clientRolesConditionLink).click();
 
-    cy.get(this.roleSelect).click();
-    cy.get(this.roleSelect).contains("create-client").click();
-
-    cy.get(this.roleSelect).click();
+    cy.get(this.roleSelect).should("have.value", "manage-realm");
+    cy.get(this.roleSelect).clear().type("admin");
 
     cy.findByTestId(this.addConditionSaveBtn).click();
     cy.get(this.alertMessage).should(
@@ -1012,15 +999,11 @@ export default class RealmSettingsPage {
   }
 
   shouldEditClientScopesCondition() {
-    cy.intercept(`/auth/admin/realms/${this.realmName}/client-scopes`).as(
-      "clientScopes"
-    );
     cy.get(this.clientPolicy).click();
 
     cy.findByTestId(this.clientScopesConditionLink).click();
 
-    cy.wait("@clientScopes");
-    this.addClientScopes();
+    cy.get("#config\\.scopes0").clear().type("edit");
 
     cy.findByTestId(this.addConditionSaveBtn).click();
     cy.get(this.alertMessage).should(

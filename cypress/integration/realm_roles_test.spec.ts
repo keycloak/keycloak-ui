@@ -5,7 +5,11 @@ import ListingPage from "../support/pages/admin_console/ListingPage";
 import SidebarPage from "../support/pages/admin_console/SidebarPage";
 import CreateRealmRolePage from "../support/pages/admin_console/manage/realm_roles/CreateRealmRolePage";
 import AssociatedRolesPage from "../support/pages/admin_console/manage/realm_roles/AssociatedRolesPage";
-import { keycloakBefore } from "../support/util/keycloak_hooks";
+import {
+  keycloakBefore,
+  keycloakBeforeEach,
+} from "../support/util/keycloak_hooks";
+import adminClient from "../support/util/AdminClient";
 
 let itemId = "realm_role_crud";
 const loginPage = new LoginPage();
@@ -17,69 +21,111 @@ const createRealmRolePage = new CreateRealmRolePage();
 const associatedRolesPage = new AssociatedRolesPage();
 
 describe("Realm roles test", () => {
-  describe("Realm roles creation", () => {
-    beforeEach(() => {
-      keycloakBefore();
-      loginPage.logIn();
-      sidebarPage.goToRealmRoles();
-    });
+  before(() => {
+    keycloakBefore();
+    loginPage.logIn();
+  });
 
-    it("should fail creating realm role", () => {
-      listingPage.goToCreateItem();
+  beforeEach(() => {
+    keycloakBeforeEach();
+    sidebarPage.goToRealmRoles();
+  });
 
-      createRealmRolePage.save().checkRealmRoleNameRequiredMessage();
+  it("should fail creating realm role", () => {
+    listingPage.goToCreateItem();
+    createRealmRolePage.save().checkRealmRoleNameRequiredMessage();
+    createRealmRolePage.fillRealmRoleData("admin").save();
 
-      createRealmRolePage.fillRealmRoleData("admin").save();
+    // The error should inform about duplicated name/id (THIS MESSAGE DOES NOT HAVE QUOTES AS THE OTHERS)
+    masthead.checkNotificationMessage(
+      "Could not create role: Role with name admin already exists",
+      true
+    );
+  });
 
-      // The error should inform about duplicated name/id (THIS MESSAGE DOES NOT HAVE QUOTES AS THE OTHERS)
-      masthead.checkNotificationMessage(
-        "Could not create role: Role with name admin already exists"
-      );
-    });
+  it("shouldn't create a realm role based with only whitespace name", () => {
+    listingPage.goToCreateItem();
+    createRealmRolePage
+      .fillRealmRoleData("  ")
+      .checkRealmRoleNameRequiredMessage();
+  });
 
-    it("Realm role CRUD test", () => {
-      itemId += "_" + (Math.random() + 1).toString(36).substring(7);
+  it("Realm role CRUD test", () => {
+    itemId += "_" + (Math.random() + 1).toString(36).substring(7);
 
-      // Create
-      listingPage.itemExist(itemId, false).goToCreateItem();
+    // Create
+    listingPage.itemExist(itemId, false).goToCreateItem();
+    createRealmRolePage.fillRealmRoleData(itemId).save();
+    masthead.checkNotificationMessage("Role created", true);
+    sidebarPage.goToRealmRoles();
 
-      createRealmRolePage.fillRealmRoleData(itemId).save();
+    const fetchUrl = "/admin/realms/master/roles?first=0&max=11";
+    cy.intercept(fetchUrl).as("fetch");
 
-      masthead.checkNotificationMessage("Role created");
+    listingPage.deleteItem(itemId);
 
-      sidebarPage.goToRealmRoles();
+    cy.wait(["@fetch"]);
+    modalUtils.checkModalTitle("Delete role?").confirmModal();
+    masthead.checkNotificationMessage("The role has been deleted", true);
 
-      listingPage.searchItem(itemId).itemExist(itemId);
+    listingPage.itemExist(itemId, false);
+  });
 
-      const fetchUrl = "/auth/admin/realms/master/roles?first=0&max=11";
-      cy.intercept(fetchUrl).as("fetch");
+  it("should delete role from details action", () => {
+    itemId += "_" + (Math.random() + 1).toString(36).substring(7);
+    listingPage.goToCreateItem();
+    createRealmRolePage.fillRealmRoleData(itemId).save();
+    masthead.checkNotificationMessage("Role created", true);
+    createRealmRolePage.clickActionMenu("Delete this role");
+    modalUtils.confirmModal();
+    masthead.checkNotificationMessage("The role has been deleted", true);
+  });
 
-      listingPage.deleteItem(itemId);
+  it("should not be able to delete default role", () => {
+    const defaultRole = "default-roles-master";
+    listingPage.itemExist(defaultRole).deleteItem(defaultRole);
+    masthead.checkNotificationMessage(
+      "You cannot delete a default role.",
+      true
+    );
+  });
 
-      cy.wait(["@fetch"]);
-      modalUtils.checkModalTitle("Delete role?").confirmModal();
-      masthead.checkNotificationMessage("The role has been deleted");
+  it("Associated roles test", () => {
+    itemId += "_" + (Math.random() + 1).toString(36).substring(7);
 
-      listingPage.itemExist(itemId, false);
-    });
+    // Create
+    listingPage.itemExist(itemId, false).goToCreateItem();
+    createRealmRolePage.fillRealmRoleData(itemId).save();
+    masthead.checkNotificationMessage("Role created", true);
 
-    it("Associated roles test", () => {
-      itemId += "_" + (Math.random() + 1).toString(36).substring(7);
+    // Add associated realm role
+    associatedRolesPage.addAssociatedRealmRole();
+    masthead.checkNotificationMessage("Associated roles have been added", true);
 
-      // Create
-      listingPage.itemExist(itemId, false).goToCreateItem();
+    // Add associated client role
+    associatedRolesPage.addAssociatedClientRole();
+    masthead.checkNotificationMessage("Associated roles have been added", true);
+  });
 
-      createRealmRolePage.fillRealmRoleData(itemId).save();
+  describe("edit role details", () => {
+    const editRoleName = "going to edit";
+    const description = "some description";
+    before(() =>
+      adminClient.createRealmRole({
+        name: editRoleName,
+        description,
+      })
+    );
 
-      masthead.checkNotificationMessage("Role created");
+    after(() => adminClient.deleteRealmRole(editRoleName));
 
-      // Add associated realm role
-
-      associatedRolesPage.addAssociatedRealmRole();
-
-      // Add associated client role
-
-      associatedRolesPage.addAssociatedClientRole();
+    it("should edit realm role details", () => {
+      listingPage.itemExist(editRoleName).goToItemDetails(editRoleName);
+      createRealmRolePage.checkNameDisabled().checkDescription(description);
+      const updateDescription = "updated description";
+      createRealmRolePage.updateDescription(updateDescription).save();
+      masthead.checkNotificationMessage("The role has been saved", true);
+      createRealmRolePage.checkDescription(updateDescription);
     });
   });
 });

@@ -4,19 +4,17 @@ import type ClientRepresentation from "@keycloak/keycloak-admin-client/lib/defs/
 import type ClientScopeRepresentation from "@keycloak/keycloak-admin-client/lib/defs/clientScopeRepresentation";
 import type RealmRepresentation from "@keycloak/keycloak-admin-client/lib/defs/realmRepresentation";
 import type UserProfileConfig from "@keycloak/keycloak-admin-client/lib/defs/userProfileConfig";
+import type RoleRepresentation from "@keycloak/keycloak-admin-client/lib/defs/roleRepresentation";
 import { merge } from "lodash-es";
 
-export default class AdminClient {
-  private client: KeycloakAdminClient;
-  constructor() {
-    this.client = new KeycloakAdminClient({
-      baseUrl: `${Cypress.env("KEYCLOAK_SERVER")}/auth`,
-      realmName: "master",
-    });
-  }
+class AdminClient {
+  private readonly client = new KeycloakAdminClient({
+    baseUrl: Cypress.env("KEYCLOAK_SERVER"),
+    realmName: "master",
+  });
 
-  private async login() {
-    await this.client.auth({
+  private login() {
+    return this.client.auth({
       username: "admin",
       password: "admin",
       grantType: "password",
@@ -113,6 +111,15 @@ export default class AdminClient {
     return await this.client.clientScopes.del({ id: clientScope?.id! });
   }
 
+  async existsClientScope(clientScopeName: string) {
+    await this.login();
+    return (await this.client.clientScopes.findOneByName({
+      name: clientScopeName,
+    })) == undefined
+      ? false
+      : true;
+  }
+
   async addDefaultClientScopeInClient(
     clientScopeName: string,
     clientId: string
@@ -152,4 +159,19 @@ export default class AdminClient {
       merge(currentProfile, payload, { realm })
     );
   }
+
+  async createRealmRole(payload: RoleRepresentation) {
+    await this.login();
+
+    return await this.client.roles.create(payload);
+  }
+
+  async deleteRealmRole(name: string) {
+    await this.login();
+    return await this.client.roles.delByName({ name });
+  }
 }
+
+const adminClient = new AdminClient();
+
+export default adminClient;

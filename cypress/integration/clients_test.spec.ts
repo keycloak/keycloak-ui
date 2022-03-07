@@ -1,11 +1,14 @@
 import LoginPage from "../support/pages/LoginPage";
 import Masthead from "../support/pages/admin_console/Masthead";
-import ListingPage from "../support/pages/admin_console/ListingPage";
+import ListingPage, {
+  Filter,
+  FilterAssignedType,
+} from "../support/pages/admin_console/ListingPage";
 import SidebarPage from "../support/pages/admin_console/SidebarPage";
 import CreateClientPage from "../support/pages/admin_console/manage/clients/CreateClientPage";
 import ModalUtils from "../support/util/ModalUtils";
 import AdvancedTab from "../support/pages/admin_console/manage/clients/AdvancedTab";
-import AdminClient from "../support/util/AdminClient";
+import adminClient from "../support/util/AdminClient";
 import InitialAccessTokenTab from "../support/pages/admin_console/manage/clients/InitialAccessTokenTab";
 import {
   keycloakBefore,
@@ -26,9 +29,10 @@ const modalUtils = new ModalUtils();
 describe("Clients test", () => {
   describe("Client details - Client scopes subtab", () => {
     const clientScopesTab = new ClientScopesTab();
-    const client = new AdminClient();
     const clientId = "client-scopes-subtab-test";
     const clientScopeName = "client-scope-test";
+    const clientScopeNameDefaultType = "client-scope-test-default-type";
+    const clientScopeNameOptionalType = "client-scope-test-optional-type";
     const clientScope = {
       name: clientScopeName,
       description: "",
@@ -40,44 +44,161 @@ describe("Clients test", () => {
         "consent.screen.text": "",
       },
     };
+    const msgScopeMappingRemoved = "Scope mapping successfully removed";
 
     before(async () => {
-      client.createClient({
+      adminClient.createClient({
         clientId,
         protocol: "openid-connect",
         publicClient: false,
       });
       for (let i = 0; i < 5; i++) {
         clientScope.name = clientScopeName + i;
-        await client.createClientScope(clientScope);
-        await client.addDefaultClientScopeInClient(
+        await adminClient.createClientScope(clientScope);
+        await adminClient.addDefaultClientScopeInClient(
           clientScopeName + i,
           clientId
         );
       }
+      clientScope.name = clientScopeNameDefaultType;
+      await adminClient.createClientScope(clientScope);
+      clientScope.name = clientScopeNameOptionalType;
+      await adminClient.createClientScope(clientScope);
     });
 
     beforeEach(() => {
       keycloakBefore();
       loginPage.logIn();
       sidebarPage.goToClients();
-      cy.intercept("/auth/admin/realms/master/clients/*").as("fetchClient");
+      cy.intercept("/admin/realms/master/clients/*").as("fetchClient");
       listingPage.searchItem(clientId).goToItemDetails(clientId);
       cy.wait("@fetchClient");
       clientScopesTab.goToClientScopesTab();
     });
 
     after(async () => {
-      client.deleteClient(clientId);
+      adminClient.deleteClient(clientId);
       for (let i = 0; i < 5; i++) {
-        await client.deleteClientScope(clientScopeName + i);
+        await adminClient.deleteClientScope(clientScopeName + i);
       }
+      await adminClient.deleteClientScope(clientScopeNameDefaultType);
+      await adminClient.deleteClientScope(clientScopeNameOptionalType);
+    });
+
+    it("should list client scopes", () => {
+      listingPage.itemsGreaterThan(1).itemExist(clientScopeName + 0);
+    });
+
+    it("should search existing client scope by name", () => {
+      listingPage
+        .searchItem(clientScopeName + 0, false)
+        .itemExist(clientScopeName + 0)
+        .itemsEqualTo(2);
+    });
+
+    it("should search non-existent client scope by name", () => {
+      const itemName = "non-existent-item";
+      listingPage.searchItem(itemName, false).checkTableExists(false);
+    });
+
+    it("should search existing client scope by assigned type", () => {
+      listingPage
+        .selectFilter(Filter.AssignedType)
+        .selectSecondaryFilterAssignedType(FilterAssignedType.Default)
+        .itemExist(FilterAssignedType.Default)
+        .itemExist(FilterAssignedType.Optional, false)
+        .selectSecondaryFilterAssignedType(FilterAssignedType.Optional)
+        .itemExist(FilterAssignedType.Default, false)
+        .itemExist(FilterAssignedType.Optional)
+        .selectSecondaryFilterAssignedType(FilterAssignedType.AllTypes)
+        .itemExist(FilterAssignedType.Default)
+        .itemExist(FilterAssignedType.Optional);
+    });
+
+    /*it("should empty search", () => {
+
+    });*/
+
+    const newItemsWithExpectedAssignedTypes = [
+      [clientScopeNameOptionalType, FilterAssignedType.Optional],
+      [clientScopeNameDefaultType, FilterAssignedType.Default],
+    ];
+    newItemsWithExpectedAssignedTypes.forEach(($type) => {
+      const [itemName, assignedType] = $type;
+      it(`should add client scope ${itemName} with ${assignedType} assigned type`, () => {
+        listingPage.clickPrimaryButton();
+        modalUtils.checkModalTitle("Add client scopes to " + clientId);
+        listingPage.clickItemCheckbox(itemName);
+        modalUtils.confirmModalWithItem(assignedType);
+        masthead.checkNotificationMessage("Scope mapping successfully updated");
+        listingPage
+          .searchItem(itemName, false)
+          .itemExist(itemName)
+          .itemExist(assignedType);
+      });
+    });
+
+    const expectedItemAssignedTypes = [
+      FilterAssignedType.Optional,
+      FilterAssignedType.Default,
+    ];
+    expectedItemAssignedTypes.forEach(($assignedType) => {
+      const itemName = clientScopeName + 0;
+      it(`should change item ${itemName} AssignedType to ${$assignedType} from search bar`, () => {
+        listingPage
+          .searchItem(itemName, false)
+          .clickItemCheckbox(itemName)
+          .changeTypeToOfSelectedItems($assignedType);
+        masthead.checkNotificationMessage("Scope mapping updated");
+        listingPage.searchItem(itemName, false).itemExist($assignedType);
+      });
     });
 
     it("should show items on next page are more than 11", () => {
-      listingPage.showNextPageTableItems();
-      cy.get(listingPage.tableRowItem).its("length").should("be.gt", 1);
+      listingPage.showNextPageTableItems().itemsGreaterThan(1);
     });
+
+    it("should remove client scope from item bar", () => {
+      const itemName = clientScopeName + 0;
+      listingPage.searchItem(itemName, false).removeItem(itemName);
+      masthead.checkNotificationMessage(msgScopeMappingRemoved);
+      listingPage.searchItem(itemName, false).checkTableExists(false);
+    });
+
+    /*it("should remove client scope from search bar", () => {
+      //covered by next test
+    });*/
+
+    // TODO: https://github.com/keycloak/keycloak-admin-ui/issues/1854
+    it("should remove multiple client scopes from search bar", () => {
+      const itemName1 = clientScopeName + 1;
+      const itemName2 = clientScopeName + 2;
+      listingPage
+        .clickSearchBarActionButton()
+        .checkDropdownItemIsDisabled("Remove")
+        .searchItem(clientScopeName, false)
+        .clickItemCheckbox(itemName1)
+        .clickItemCheckbox(itemName2)
+        .clickSearchBarActionButton()
+        .clickSearchBarActionItem("Remove");
+      masthead.checkNotificationMessage(msgScopeMappingRemoved);
+      listingPage
+        .searchItem(clientScopeName, false)
+        .itemExist(itemName1, false)
+        .itemExist(itemName2, false)
+        .clickSearchBarActionButton();
+      //.checkDropdownItemIsDisabled("Remove");
+    });
+
+    //TODO: https://github.com/keycloak/keycloak-admin-ui/issues/1874
+    /* it("should show initial items after filtering", () => { 
+      listingPage
+        .selectFilter(Filter.AssignedType)
+        .selectFilterAssignedType(FilterAssignedType.Optional)
+        .selectFilter(Filter.Name)
+        .itemExist(FilterAssignedType.Default)
+        .itemExist(FilterAssignedType.Optional);
+    });*/
   });
 
   describe("Client creation", () => {
@@ -91,6 +212,32 @@ describe("Clients test", () => {
       sidebarPage.goToClients();
     });
 
+    it("Should cancel creating client", () => {
+      listingPage.goToCreateItem();
+
+      createClientPage.continue().checkClientIdRequiredMessage();
+
+      createClientPage
+        .fillClientData("")
+        .selectClientType("openid-connect")
+        .cancel();
+
+      cy.url().should("not.include", "/add-client");
+    });
+
+    it("Should navigate to previous using 'back' button", () => {
+      listingPage.goToCreateItem();
+
+      createClientPage.continue().checkClientIdRequiredMessage();
+
+      createClientPage
+        .fillClientData("test_client")
+        .selectClientType("openid-connect")
+        .continue()
+        .back()
+        .checkGeneralSettingsStepActive();
+    });
+
     it("Should fail creating client", () => {
       listingPage.goToCreateItem();
 
@@ -102,7 +249,7 @@ describe("Clients test", () => {
         .continue()
         .checkClientIdRequiredMessage();
 
-      createClientPage.fillClientData("account").continue().continue();
+      createClientPage.fillClientData("account").continue().save();
 
       // The error should inform about duplicated name/id
       masthead.checkNotificationMessage(
@@ -120,7 +267,14 @@ describe("Clients test", () => {
         .selectClientType("openid-connect")
         .fillClientData(itemId)
         .continue()
-        .continue();
+        .switchClientAuthentication()
+        .clickDirectAccess()
+        .clickImplicitFlow()
+        .clickOAuthDeviceAuthorizationGrant()
+        .clickOidcCibaGrant()
+        .clickServiceAccountRoles()
+        .clickStandardFlow()
+        .save();
 
       masthead.checkNotificationMessage("Client created successfully");
 
@@ -217,13 +371,13 @@ describe("Clients test", () => {
         .selectClientType("openid-connect")
         .fillClientData(client)
         .continue()
-        .continue();
+        .save();
 
       advancedTab.goToAdvancedTab();
     });
 
     afterEach(() => {
-      new AdminClient().deleteClient(client);
+      adminClient.deleteClient(client);
     });
 
     it("Clustering", () => {
@@ -253,7 +407,7 @@ describe("Clients test", () => {
     before(() => {
       keycloakBefore();
       loginPage.logIn();
-      new AdminClient().createClient({
+      adminClient.createClient({
         protocol: "openid-connect",
         clientId: serviceAccountName,
         publicClient: false,
@@ -269,7 +423,7 @@ describe("Clients test", () => {
     });
 
     after(() => {
-      new AdminClient().deleteClient(serviceAccountName);
+      adminClient.deleteClient(serviceAccountName);
     });
 
     it("List", () => {
@@ -307,7 +461,7 @@ describe("Clients test", () => {
     });
 
     before(() => {
-      new AdminClient().createClient({
+      adminClient.createClient({
         protocol: "openid-connect",
         clientId: mappingClient,
         publicClient: false,
@@ -315,7 +469,7 @@ describe("Clients test", () => {
     });
 
     after(() => {
-      new AdminClient().deleteClient(mappingClient);
+      adminClient.deleteClient(mappingClient);
     });
 
     it("Add mapping to openid client", () => {
@@ -333,7 +487,7 @@ describe("Clients test", () => {
     before(() => {
       keycloakBefore();
       loginPage.logIn();
-      new AdminClient().createClient({
+      adminClient.createClient({
         protocol: "openid-connect",
         clientId: keysName,
         publicClient: false,
@@ -347,7 +501,7 @@ describe("Clients test", () => {
     });
 
     after(() => {
-      new AdminClient().deleteClient(keysName);
+      adminClient.deleteClient(keysName);
     });
 
     it("Change use JWKS Url", () => {
@@ -408,20 +562,20 @@ describe("Clients test", () => {
     before(() => {
       keycloakBefore();
       loginPage.logIn();
-      new AdminClient().createClient({
+      adminClient.createClient({
         clientId,
         protocol: "openid-connect",
         publicClient: false,
         bearerOnly: true,
       });
       sidebarPage.goToClients();
-      cy.intercept("/auth/admin/realms/master/clients/*").as("fetchClient");
+      cy.intercept("/admin/realms/master/clients/*").as("fetchClient");
       listingPage.searchItem(clientId).goToItemDetails(clientId);
       cy.wait("@fetchClient");
     });
 
     after(() => {
-      new AdminClient().deleteClient(clientId);
+      adminClient.deleteClient(clientId);
     });
 
     beforeEach(() => {

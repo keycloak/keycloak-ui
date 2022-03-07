@@ -5,7 +5,7 @@ import Masthead from "../support/pages/admin_console/Masthead";
 import ModalUtils from "../support/util/ModalUtils";
 import { keycloakBefore } from "../support/util/keycloak_hooks";
 import ListingPage from "../support/pages/admin_console/ListingPage";
-import AdminClient from "../support/util/AdminClient";
+import adminClient from "../support/util/AdminClient";
 
 const loginPage = new LoginPage();
 const sidebarPage = new SidebarPage();
@@ -24,15 +24,15 @@ describe("Realm settings events tab tests", () => {
   });
 
   before(async () => {
-    await new AdminClient().createRealm(realmName);
+    await adminClient.createRealm(realmName);
   });
 
   after(async () => {
-    await new AdminClient().deleteRealm(realmName);
+    await adminClient.deleteRealm(realmName);
   });
 
   const goToDetails = () => {
-    const keysUrl = `/auth/admin/realms/${realmName}/keys`;
+    const keysUrl = `/admin/realms/${realmName}/keys`;
     cy.intercept(keysUrl).as("keysFetch");
 
     cy.findByTestId("rs-keys-tab").click();
@@ -77,7 +77,7 @@ describe("Realm settings events tab tests", () => {
   };
 
   const goToKeys = () => {
-    const keysUrl = `/auth/admin/realms/${realmName}/keys`;
+    const keysUrl = `/admin/realms/${realmName}/keys`;
     cy.intercept(keysUrl).as("keysFetch");
     cy.findByTestId("rs-keys-tab").click();
     cy.findByTestId("rs-keys-list-tab").click();
@@ -96,9 +96,7 @@ describe("Realm settings events tab tests", () => {
   };
 
   it("Enable user events", () => {
-    cy.intercept("GET", `/auth/admin/realms/${realmName}/events/config`).as(
-      "load"
-    );
+    cy.intercept("GET", `/admin/realms/${realmName}/events/config`).as("load");
     sidebarPage.goToRealmSettings();
     cy.findByTestId("rs-realm-events-tab").click();
     cy.findByTestId("rs-events-tab").click();
@@ -115,7 +113,7 @@ describe("Realm settings events tab tests", () => {
       .confirmModal();
     masthead.checkNotificationMessage("The user events have been cleared");
     const events = ["Client info", "Client info error"];
-    cy.intercept("GET", `/auth/admin/realms/${realmName}/events/config`).as(
+    cy.intercept("GET", `/admin/realms/${realmName}/events/config`).as(
       "fetchConfig"
     );
     realmSettingsPage.addUserEvents(events).clickAdd();
@@ -183,8 +181,7 @@ describe("Realm settings events tab tests", () => {
     realmSettingsPage.testSelectFilter();
   });
 
-  // TODO: Fix this test so it passes.
-  it.skip("add locale", () => {
+  it("add locale", () => {
     sidebarPage.goToRealmSettings();
 
     cy.findByTestId("rs-localization-tab").click();

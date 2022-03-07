@@ -11,7 +11,7 @@ import {
   keycloakBeforeEach,
 } from "../support/util/keycloak_hooks";
 import UserGroupsPage from "../support/pages/admin_console/manage/users/UserGroupsPage";
-import AdminClient from "../support/util/AdminClient";
+import adminClient from "../support/util/AdminClient";
 import CredentialsPage from "../support/pages/admin_console/manage/users/CredentialsPage";
 
 let groupName = "group";
@@ -30,9 +30,9 @@ describe("User creation", () => {
   const attributesTab = new AttributesTab();
 
   let itemId = "user_crud";
+  let itemIdWithGroups = "user_with_groups_crud";
   let itemIdWithCred = "user_crud_cred";
   const itemCredential = "Password";
-  const adminClient = new AdminClient();
 
   before(() => {
     for (let i = 0; i <= 2; i++) {
@@ -65,11 +65,22 @@ describe("User creation", () => {
 
   it("Create user test", () => {
     itemId += "_" + (Math.random() + 1).toString(36).substring(7);
-
     // Create
     createUserPage.goToCreateUser();
 
     createUserPage.createUser(itemId);
+
+    createUserPage.save();
+
+    masthead.checkNotificationMessage("The user has been created");
+  });
+
+  it("Create user with groups test", () => {
+    itemIdWithGroups += (Math.random() + 1).toString(36).substring(7);
+    // Add user from search bar
+    createUserPage.goToCreateUser();
+
+    createUserPage.createUser(itemIdWithGroups);
 
     createUserPage.toggleAddGroupModal();
 
@@ -89,6 +100,7 @@ describe("User creation", () => {
   it("Create user with credentials test", () => {
     itemIdWithCred += "_" + (Math.random() + 1).toString(36).substring(7);
 
+    // Add user from search bar
     createUserPage.goToCreateUser();
 
     createUserPage.createUser(itemIdWithCred);
@@ -104,6 +116,15 @@ describe("User creation", () => {
       .fillPasswordForm()
       .clickConfirmationBtn()
       .clickSetPasswordBtn();
+  });
+
+  it("Search existing user test", () => {
+    listingPage.searchItem(itemId).itemExist(itemId);
+  });
+
+  it("Search non-existing user test", () => {
+    listingPage.searchItem("user_DNE");
+    cy.findByTestId(listingPage.emptyState).should("exist");
   });
 
   it("User details test", () => {
@@ -136,7 +157,7 @@ describe("User creation", () => {
     listingPage.searchItem(itemId).itemExist(itemId);
     listingPage.goToItemDetails(itemId);
 
-    cy.intercept("PUT", `/auth/admin/realms/master/users/*`).as("save-user");
+    cy.intercept("PUT", `/admin/realms/master/users/*`).as("save-user");
 
     const attributeKey = "key-multiple";
     attributesTab
@@ -164,7 +185,7 @@ describe("User creation", () => {
     userGroupsPage.goToGroupsTab();
     userGroupsPage.toggleAddGroupModal();
 
-    const groupsListCopy = groupsList.slice(1, 2);
+    const groupsListCopy = groupsList.slice(0, 1);
 
     groupsListCopy.forEach((element) => {
       cy.findByTestId(`${element}-check`).click();
@@ -179,7 +200,7 @@ describe("User creation", () => {
     // Go to user groups
     userGroupsPage.goToGroupsTab();
     cy.findByTestId(`leave-${groupsList[0]}`).click();
-    cy.findByTestId("confirm").click();
+    cy.findByTestId("confirm").click({ force: true });
   });
 
   it("Go to user consents test", () => {
@@ -247,9 +268,12 @@ describe("User creation", () => {
     );
   });
 
-  it("Delete user test", () => {
+  it("Delete user from search bar test", () => {
     // Delete
-    listingPage.deleteItem(itemId);
+    sidebarPage.waitForPageLoad();
+
+    listingPage.searchItem(itemId).itemExist(itemId);
+    listingPage.deleteItemFromSearchBar(itemId);
 
     modalUtils.checkModalTitle("Delete user?").confirmModal();
 
@@ -257,6 +281,18 @@ describe("User creation", () => {
     sidebarPage.waitForPageLoad();
 
     listingPage.itemExist(itemId, false);
+  });
+
+  it("Delete user with groups test", () => {
+    // Delete
+    listingPage.deleteItem(itemIdWithGroups);
+
+    modalUtils.checkModalTitle("Delete user?").confirmModal();
+
+    masthead.checkNotificationMessage("The user has been deleted");
+    sidebarPage.waitForPageLoad();
+
+    listingPage.itemExist(itemIdWithGroups, false);
   });
 
   it("Delete user with credential test", () => {

@@ -5,7 +5,7 @@ import {
   keycloakBefore,
   keycloakBeforeEach,
 } from "../support/util/keycloak_hooks";
-import AdminClient from "../support/util/AdminClient";
+import adminClient from "../support/util/AdminClient";
 import ModalUtils from "../support/util/ModalUtils";
 import Masthead from "../support/pages/admin_console/Masthead";
 
@@ -30,12 +30,12 @@ describe("Realm settings client policies tab tests", () => {
 
   before(() => {
     keycloakBefore();
-    new AdminClient().createRealm(realmName);
+    adminClient.createRealm(realmName);
     loginPage.logIn();
   });
 
   after(() => {
-    new AdminClient().deleteRealm(realmName);
+    adminClient.deleteRealm(realmName);
   });
 
   it("Complete new client form and cancel", () => {
@@ -48,7 +48,7 @@ describe("Realm settings client policies tab tests", () => {
   });
 
   it("Complete new client form and submit", () => {
-    const url = `/auth/admin/realms/${realmName}/client-policies/policies`;
+    const url = `/admin/realms/${realmName}/client-policies/policies`;
     cy.intercept("PUT", url).as("save");
 
     realmSettingsPage.createNewClientPolicyFromEmptyState(
@@ -135,7 +135,7 @@ describe("Realm settings client policies tab tests", () => {
   });
 
   it("Should not create duplicate client profile", () => {
-    const url = `/auth/admin/realms/${realmName}/client-policies/policies`;
+    const url = `admin/realms/${realmName}/client-policies/policies`;
     cy.intercept("PUT", url).as("save");
 
     realmSettingsPage.createNewClientPolicyFromEmptyState(
@@ -158,7 +158,6 @@ describe("Realm settings client policies tab tests", () => {
     // TODO: UNCOMMENT WHEN THE ISSUE 2050 IS FIXED
     //realmSettingsPage.checkAlertMessage("Could not create client policy: 'proposed client policy name duplicated.'");
 
-    sidebarPage.waitForPageLoad();
     sidebarPage.goToRealmSettings();
 
     realmSettingsPage
@@ -173,7 +172,7 @@ describe("Realm settings client policies tab tests", () => {
   });
 
   it("Check deleting newly created client policy from create view via dropdown", () => {
-    const url = `/auth/admin/realms/${realmName}/client-policies/policies`;
+    const url = `admin/realms/${realmName}/client-policies/policies`;
     cy.intercept("PUT", url).as("save");
     realmSettingsPage.createNewClientPolicyFromEmptyState(
       "Test again",
