@@ -337,7 +337,6 @@ export const UserCredentials = ({ user }: UserCredentialsProps) => {
       {userCredentials.length !== 0 && passwordTypeFinder === undefined && (
         <>
           <Button
-            key={`confirmSaveBtn-table-${user.id}`}
             className="kc-setPasswordBtn-tbl"
             data-testid="setPasswordBtn-table"
             variant="primary"
@@ -390,7 +389,7 @@ export const UserCredentials = ({ user }: UserCredentialsProps) => {
               onDragLeave={onDragLeave}
             >
               {groupedUserCredentials.map((groupedCredential, rowIndex) => (
-                <Fragment key={`table-${groupedCredential.key}`}>
+                <Fragment key={groupedCredential.key}>
                   <Tr
                     id={groupedCredential.value.map(({ id }) => id).toString()}
                     draggable
@@ -429,7 +428,6 @@ export const UserCredentials = ({ user }: UserCredentialsProps) => {
                       <Td />
                     )}
                     <Td
-                      key={`table-item-${groupedCredential.key}`}
                       dataLabel={`columns-${groupedCredential.key}`}
                       className="kc-notExpandableRow-credentialType"
                       data-testid="credentialType"
@@ -438,16 +436,13 @@ export const UserCredentials = ({ user }: UserCredentialsProps) => {
                     </Td>
                     {groupedCredential.value.length <= 1 &&
                       groupedCredential.value.map((credential) => (
-                        <Row
-                          key={`subrow-${credential.id}`}
-                          credential={credential}
-                        />
+                        <Row key={credential.id} credential={credential} />
                       ))}
                   </Tr>
                   {groupedCredential.isExpanded &&
                     groupedCredential.value.map((credential) => (
                       <Tr
-                        key={`child-key-${credential.id}`}
+                        key={credential.id}
                         id={credential.id}
                         draggable
                         onDrop={onDrop}
