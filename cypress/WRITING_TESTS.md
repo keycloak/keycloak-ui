@@ -69,7 +69,7 @@ describe("edit role details", () => {
 Sometimes you will get the following error:
 > Cypress failed because the element has been detached from the DOM
 
-This is because the DOM has been updated in between selectors you can remedy this by waiting on REST calls. 
+This is because the DOM has been updated in between selectors. You can remedy this by waiting on REST calls. 
 You can see the rest calls in the cypress IDE.
 
 ```typescript
