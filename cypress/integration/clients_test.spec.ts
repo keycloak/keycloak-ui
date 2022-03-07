@@ -415,9 +415,10 @@ describe("Clients test", () => {
     it("should add attribute to client role", () => {
       listingPage.searchItem(client).goToItemDetails(client);
       rolesTab.goToRolesTab();
-
       listingPage.searchItem(itemId, false).goToItemDetails(itemId);
       rolesTab.goToAttributesTab();
+      // TODO: remove wait
+      cy.wait(500);
       rolesTab.addAttribute();
 
       masthead.checkNotificationMessage("The role has been saved", true);

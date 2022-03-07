@@ -49,13 +49,7 @@ export default class ClientRolesTab {
   }
 
   addAttribute() {
-    cy.intercept("/auth/admin/realms/master/roles-by-id/*").as(
-      "fetchClientRole"
-    );
-    cy.wait(["@fetchClientRole"]);
-
     cy.findByTestId(this.attributeKeyInput).type("crud_attribute_key");
-
     cy.findByTestId(this.attributeValueInput).type("crud_attribute_value");
 
     cy.findByTestId(this.addAttributeButton).click();
