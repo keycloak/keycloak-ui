@@ -11,7 +11,7 @@ cy.findAllByTestId("provider-name-link")
   .click();
 ```
 
-Instead use a page object it just a lot easier to get the intended of the test
+Instead use a page object as it is a lot easier to get the intended functionality of the test:
 ```typescript
 realmSettings.goToProvidersTab();
 realmSettings.fillOutForm({ name: "test" }).save();
