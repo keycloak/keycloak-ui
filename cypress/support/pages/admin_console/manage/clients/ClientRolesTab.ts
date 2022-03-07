@@ -50,6 +50,7 @@ export default class ClientRolesTab {
 
   addAttribute() {
     cy.findByTestId(this.attributeKeyInput).type("crud_attribute_key");
+
     cy.findByTestId(this.attributeValueInput).type("crud_attribute_value");
 
     cy.findByTestId(this.addAttributeButton).click();
@@ -66,7 +67,7 @@ export default class ClientRolesTab {
   }
 
   deleteAttribute() {
-    cy.findByTestId(this.removeFirstAttributeButton).click();
+    cy.get(this.removeFirstAttributeButton).click();
     this.saveAttribute();
     cy.findByTestId(this.attributeKeyInput).should("have.value", "");
     cy.findByTestId(this.attributeValueInput).should("have.value", "");
