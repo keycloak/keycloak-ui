@@ -424,7 +424,7 @@ describe("Clients test", () => {
       masthead.checkNotificationMessage("The role has been saved", true);
     });
 
-    it.skip("should delete attribute from client role", () => {
+    it("should delete attribute from client role", () => {
       listingPage.searchItem(client).goToItemDetails(client);
       rolesTab.goToRolesTab();
       listingPage.searchItem(itemId, false).goToItemDetails(itemId);
