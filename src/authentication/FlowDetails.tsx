@@ -20,7 +20,7 @@ import { CheckCircleIcon, PlusIcon, TableIcon } from "@patternfly/react-icons";
 import type AuthenticationExecutionInfoRepresentation from "@keycloak/keycloak-admin-client/lib/defs/authenticationExecutionInfoRepresentation";
 import type { AuthenticationProviderRepresentation } from "@keycloak/keycloak-admin-client/lib/defs/authenticatorConfigRepresentation";
 import type AuthenticationFlowRepresentation from "@keycloak/keycloak-admin-client/lib/defs/authenticationFlowRepresentation";
-import { FlowParams } from "./routes/Flow";
+import type { FlowParams } from "./routes/Flow";
 import { ViewHeader } from "../components/view-header/ViewHeader";
 import { useAdminClient, useFetch } from "../context/auth/AdminClient";
 import { EmptyExecutionState } from "./EmptyExecutionState";
