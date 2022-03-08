@@ -421,6 +421,7 @@ describe("Clients test", () => {
     it("should delete attribute from client role", () => {
       listingPage.searchItem(itemId, false).goToItemDetails(itemId);
       rolesTab.goToAttributesTab();
+      cy.wait(500);
       rolesTab.deleteAttribute();
       masthead.checkNotificationMessage("The role has been saved", true);
     });
@@ -507,6 +508,7 @@ describe("Clients test", () => {
 
     it("should delete associated role from search bar test", () => {
       listingPage.searchItem(itemId, false).goToItemDetails(itemId);
+      sidebarPage.waitForPageLoad();
       rolesTab.goToAssociatedRolesTab();
 
       cy.get('td[data-label="Role name"]')
