@@ -6,7 +6,7 @@ export default class Masthead {
   private closeLastAlertMessageBtn =
     ".pf-c-alert-group > li:first-child .pf-c-alert__action button";
 
-  private alertMessage = ".pf-c-alert__title";
+  private alertMessage = ".pf-c-alert";
   private userDrpDwn = "#user-dropdown";
   private userDrpDwnKebab = "#user-dropdown-kebab";
 
