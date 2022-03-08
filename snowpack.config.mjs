@@ -27,6 +27,7 @@ export default {
     "@snowpack/plugin-postcss",
     "@snowpack/plugin-react-refresh",
     "@snowpack/plugin-typescript",
+    "@snowpack-plugin-svgr",
   ],
   routes: [
     {
