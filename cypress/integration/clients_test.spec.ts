@@ -299,7 +299,7 @@ describe("Clients test", () => {
       listingPage.itemExist(itemId, false);
     });
 
-    it.skip("Initial access token", () => {
+    it("Initial access token", () => {
       const initialAccessTokenTab = new InitialAccessTokenTab();
       initialAccessTokenTab
         .goToInitialAccessTokenTab()
@@ -380,6 +380,8 @@ describe("Clients test", () => {
       keycloakBefore();
       loginPage.logIn();
       sidebarPage.goToClients();
+      listingPage.searchItem(client).goToItemDetails(client);
+      rolesTab.goToRolesTab();
     });
 
     after(() => {
@@ -387,24 +389,18 @@ describe("Clients test", () => {
     });
 
     it("should fail to create client role with empty name", () => {
-      listingPage.searchItem(client).goToItemDetails(client);
-      rolesTab.goToRolesTab();
       rolesTab.goToCreateRoleFromEmptyState();
       createRealmRolePage.fillRealmRoleData("").save();
       createRealmRolePage.checkRealmRoleNameRequiredMessage();
     });
 
     it("should create client role", () => {
-      listingPage.searchItem(client).goToItemDetails(client);
-      rolesTab.goToRolesTab();
       rolesTab.goToCreateRoleFromEmptyState();
       createRealmRolePage.fillRealmRoleData(itemId).save();
       masthead.checkNotificationMessage("Role created", true);
     });
 
     it("should update client role description", () => {
-      listingPage.searchItem(client).goToItemDetails(client);
-      rolesTab.goToRolesTab();
       listingPage.searchItem(itemId, false).goToItemDetails(itemId);
       const updateDescription = "updated description";
       createRealmRolePage.updateDescription(updateDescription).save();
@@ -413,8 +409,6 @@ describe("Clients test", () => {
     });
 
     it("should add attribute to client role", () => {
-      listingPage.searchItem(client).goToItemDetails(client);
-      rolesTab.goToRolesTab();
       listingPage.goToItemDetails(itemId);
 
       rolesTab.goToAttributesTab();
@@ -425,8 +419,6 @@ describe("Clients test", () => {
     });
 
     it("should delete attribute from client role", () => {
-      listingPage.searchItem(client).goToItemDetails(client);
-      rolesTab.goToRolesTab();
       listingPage.searchItem(itemId, false).goToItemDetails(itemId);
       rolesTab.goToAttributesTab();
       cy.wait(500);
@@ -435,16 +427,12 @@ describe("Clients test", () => {
     });
 
     it("should create client role to be deleted", () => {
-      listingPage.searchItem(client).goToItemDetails(client);
-      rolesTab.goToRolesTab();
       rolesTab.goToCreateRoleFromToolbar();
       createRealmRolePage.fillRealmRoleData("client_role_to_be_deleted").save();
       masthead.checkNotificationMessage("Role created", true);
     });
 
     it("should fail to create duplicate client role", () => {
-      listingPage.searchItem(client).goToItemDetails(client);
-      rolesTab.goToRolesTab();
       rolesTab.goToCreateRoleFromToolbar();
       createRealmRolePage.fillRealmRoleData(itemId).save();
       masthead.checkNotificationMessage(
@@ -454,28 +442,20 @@ describe("Clients test", () => {
     });
 
     it("should search existing client role", () => {
-      listingPage.searchItem(client).goToItemDetails(client);
-      rolesTab.goToRolesTab();
       listingPage.searchItem(itemId, false).itemExist(itemId);
     });
 
     it("should search non-existing role test", () => {
-      listingPage.searchItem(client).goToItemDetails(client);
-      rolesTab.goToRolesTab();
       listingPage.searchItem("role_DNE", false);
       cy.findByTestId(listingPage.emptyState).should("exist");
     });
 
     it("roles empty search test", () => {
-      listingPage.searchItem(client).goToItemDetails(client);
-      rolesTab.goToRolesTab();
       listingPage.searchItem("", false);
       cy.get("table:visible");
     });
 
     it("Add associated roles test", () => {
-      listingPage.searchItem(client).goToItemDetails(client);
-      rolesTab.goToRolesTab();
       listingPage.searchItem(itemId, false).goToItemDetails(itemId);
 
       // Add associated realm role
@@ -503,16 +483,12 @@ describe("Clients test", () => {
     });
 
     it("should hide inherited roles test", () => {
-      listingPage.searchItem(client).goToItemDetails(client);
-      rolesTab.goToRolesTab();
       listingPage.searchItem(itemId, false).goToItemDetails(itemId);
       rolesTab.goToAssociatedRolesTab();
       rolesTab.hideInheritedRoles();
     });
 
     it("should delete associated roles test", () => {
-      listingPage.searchItem(client).goToItemDetails(client);
-      rolesTab.goToRolesTab();
       listingPage.searchItem(itemId, false).goToItemDetails(itemId);
       rolesTab.goToAssociatedRolesTab();
       listingPage.removeItem("create-realm");
@@ -531,8 +507,6 @@ describe("Clients test", () => {
     });
 
     it("should delete associated role from search bar test", () => {
-      listingPage.searchItem(client).goToItemDetails(client);
-      rolesTab.goToRolesTab();
       listingPage.searchItem(itemId, false).goToItemDetails(itemId);
       sidebarPage.waitForPageLoad();
       rolesTab.goToAssociatedRolesTab();
@@ -557,16 +531,12 @@ describe("Clients test", () => {
     });
 
     it("should delete client role test", () => {
-      listingPage.searchItem(client).goToItemDetails(client);
-      rolesTab.goToRolesTab();
       listingPage.deleteItem(itemId);
       sidebarPage.waitForPageLoad();
       modalUtils.checkModalTitle("Delete role?").confirmModal();
     });
 
     it("should delete client role from role details test", () => {
-      listingPage.searchItem(client).goToItemDetails(client);
-      rolesTab.goToRolesTab();
       listingPage
         .searchItem("client_role_to_be_deleted", false)
         .goToItemDetails("client_role_to_be_deleted");
@@ -576,7 +546,7 @@ describe("Clients test", () => {
     });
   });
 
-  describe.skip("Advanced tab test", () => {
+  describe("Advanced tab test", () => {
     const advancedTab = new AdvancedTab();
     let client: string;
 
@@ -782,7 +752,7 @@ describe("Clients test", () => {
     });
   });
 
-  describe.skip("Bearer only", () => {
+  describe("Bearer only", () => {
     const clientId = "bearer-only";
 
     before(() => {
