@@ -2,7 +2,7 @@
 // @ts-ignore
 import webpackPreprocessor from "@cypress/webpack-batteries-included-preprocessor";
 import ForkTsCheckerWebpackPlugin from "fork-ts-checker-webpack-plugin";
-import fs from "fs";
+import del from "del";
 import path from "path";
 
 // ***********************************************************
@@ -49,7 +49,7 @@ const configurePlugins: Cypress.PluginConfig = (on) => {
 
     // delete the video if the spec passed and no tests retried
     if (!failures) {
-      fs.rmSync(results.video);
+      del(results.video);
     }
   });
 };
