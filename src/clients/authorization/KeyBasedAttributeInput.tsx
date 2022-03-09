@@ -40,6 +40,7 @@ type AttributeInputProps = {
 };
 
 type ValueInputProps = {
+  name: string;
   rowIndex: number;
   attribute: any;
   selectableValues?: AttributeType[];
@@ -47,6 +48,7 @@ type ValueInputProps = {
 };
 
 const ValueInput = ({
+  name,
   rowIndex,
   attribute,
   selectableValues,
@@ -226,6 +228,7 @@ export const KeyBasedAttributeInput = ({
               />
             </Td>
             <ValueInput
+              name={name}
               attribute={attribute}
               rowIndex={rowIndex}
               selectableValues={selectableValues}
