@@ -17,6 +17,7 @@ import {
   Toolbar,
   ToolbarGroup,
   ToolbarItem,
+  Divider,
 } from "@patternfly/react-core";
 import { Controller, useFormContext } from "react-hook-form";
 
@@ -180,20 +181,37 @@ export const AuthorizationEvaluate = ({ client }: Props) => {
     );
 
     setEvaluateResults(evaluation.results);
+    setFilteredResources(evaluation.results);
     setShowEvaluateResults(true);
     return evaluateResults;
   };
 
+  const filterPermit = evaluateResults.filter(
+    (resource) => resource.status === "PERMIT"
+  );
+  const filterDeny = evaluateResults.filter(
+    (resource) => resource.status === "DENY"
+  );
+
   const onSearch = () => {
-    if (searchVal !== "") {
-      setSearchVal(searchVal);
+    if (searchVal === "") {
+      setSearchVal("");
+    }
+    if (filterType === FilterType.allResults) {
       const filtered = evaluateResults.filter((resource) =>
         resource.resource?.name?.includes(searchVal)
       );
       setFilteredResources(filtered);
-    } else {
-      setSearchVal("");
-      setFilteredResources(evaluateResults);
+    } else if (filterType === FilterType.resultPermit) {
+      const searched = filterPermit.filter((resource) =>
+        resource.resource?.name?.includes(searchVal)
+      );
+      setFilteredResources(searched);
+    } else if (filterType === FilterType.resultDeny) {
+      const searched = filterDeny.filter((resource) =>
+        resource.resource?.name?.includes(searchVal)
+      );
+      setFilteredResources(searched);
     }
   };
 
@@ -263,6 +281,7 @@ export const AuthorizationEvaluate = ({ client }: Props) => {
               onToggle={() => setFilterDropdownOpen(!filterDropdownOpen)}
               onSelect={(_, value) => {
                 if (value === FilterType.allResults) {
+                  setFilteredResources(evaluateResults);
                   setFilterType(FilterType.allResults);
                 } else if (value === FilterType.resultPermit) {
                   const filterPermit = evaluateResults.filter(
@@ -289,7 +308,7 @@ export const AuthorizationEvaluate = ({ client }: Props) => {
           </ToolbarItem>
         </ToolbarGroup>
       </Toolbar>
-      {!noEvaluatedData && !noFilteredData && (
+      {!noFilteredData && (
         <TableComposable aria-label={t("evaluationResults")}>
           <Thead>
             <Tr>
@@ -313,14 +332,16 @@ export const AuthorizationEvaluate = ({ client }: Props) => {
           ))}
         </TableComposable>
       )}
-      {noEvaluatedData ||
-        (noFilteredData && (
+      {(noFilteredData || noEvaluatedData) && (
+        <>
+          <Divider />
           <ListEmptyState
             isSearchVariant
             message={t("common:noSearchResults")}
             instructions={t("common:noSearchResultsInstructions")}
           />
-        ))}
+        </>
+      )}
       <ActionGroup className="kc-evaluated-options">
         <Button
           data-testid="authorization-eval"
