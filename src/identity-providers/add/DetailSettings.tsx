@@ -41,7 +41,6 @@ import type IdentityProviderMapperRepresentation from "@keycloak/keycloak-admin-
 import { toIdentityProviderAddMapper } from "../routes/AddMapper";
 import { toIdentityProviderEditMapper } from "../routes/EditMapper";
 import { toIdentityProviders } from "../routes/IdentityProviders";
-import { stringToMultiline } from "../../components/multi-line-input/multi-line-convert";
 
 import { toUpperCase } from "../../util";
 import {
@@ -144,7 +143,7 @@ export default function DetailSettings() {
       setProvider(fetchedProvider);
       form.setValue(
         "config.authnContextClassRefs",
-        stringToMultiline(fetchedProvider.config?.["authnContextClassRefs"])
+        JSON.parse(fetchedProvider.config?.authnContextClassRefs)
       );
     },
     []
@@ -152,6 +151,10 @@ export default function DetailSettings() {
 
   const save = async (provider?: IdentityProviderRepresentation) => {
     const p = provider || getValues();
+    if (p.config?.authnContextClassRefs)
+      p.config.authnContextClassRefs = JSON.stringify(
+        p.config.authnContextClassRefs
+      );
     try {
       await adminClient.identityProviders.update(
         { alias },
