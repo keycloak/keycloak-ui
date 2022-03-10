@@ -8,7 +8,7 @@ import {
   SelectVariant,
 } from "@patternfly/react-core";
 
-// import { MultiLineInput } from "../../components/multi-line-input/MultiLineInput";
+import { MultiLineInput } from "../../components/multi-line-input/MultiLineInput";
 import { HelpItem } from "../../components/help-enabler/HelpItem";
 
 const comparisonValues = ["exact", "minimum", "maximum", "better"];
@@ -61,7 +61,7 @@ export const ReqAuthnConstraints = () => {
           )}
         />
       </FormGroup>
-      {/* <FormGroup
+      <FormGroup
         label={t("authnContextClassRefs")}
         fieldId="kc-authnContextClassRefs"
         labelIcon={
@@ -76,8 +76,8 @@ export const ReqAuthnConstraints = () => {
           aria-label={t("identify-providers:authnContextClassRefs")}
           addButtonLabel="identity-providers:addAuthnContextClassRef"
         />
-      </FormGroup> */}
-      {/* <FormGroup
+      </FormGroup>
+      <FormGroup
         label={t("authnContextDeclRefs")}
         fieldId="kc-authnContextDeclRefs"
         labelIcon={
@@ -92,7 +92,7 @@ export const ReqAuthnConstraints = () => {
           aria-label={t("identify-providers:authnContextDeclRefs")}
           addButtonLabel="identity-providers:addAuthnContextDeclRef"
         />
-      </FormGroup> */}
+      </FormGroup>
     </>
   );
 };

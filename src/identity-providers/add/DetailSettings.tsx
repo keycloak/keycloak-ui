@@ -41,6 +41,7 @@ import type IdentityProviderMapperRepresentation from "@keycloak/keycloak-admin-
 import { toIdentityProviderAddMapper } from "../routes/AddMapper";
 import { toIdentityProviderEditMapper } from "../routes/EditMapper";
 import { toIdentityProviders } from "../routes/IdentityProviders";
+import { stringToMultiline } from "../../components/multi-line-input/multi-line-convert";
 
 import { toUpperCase } from "../../util";
 import {
@@ -141,6 +142,10 @@ export default function DetailSettings() {
 
       reset(fetchedProvider);
       setProvider(fetchedProvider);
+      form.setValue(
+        "config.authnContextClassRefs",
+        stringToMultiline(fetchedProvider.config?.["authnContextClassRefs"])
+      );
     },
     []
   );
