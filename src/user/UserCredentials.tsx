@@ -161,14 +161,12 @@ export const UserCredentials = ({ user }: UserCredentialsProps) => {
 
   const itemOrder = useMemo(
     () =>
-      groupedUserCredentials
-        .map((groupedCredential) => [
-          groupedCredential.value.map(({ id }) => id).toString(),
-          ...(groupedCredential.isExpanded
-            ? groupedCredential.value.map((c) => c.id!)
-            : []),
-        ])
-        .flat(),
+      groupedUserCredentials.flatMap((groupedCredential) => [
+        groupedCredential.value.map(({ id }) => id).toString(),
+        ...(groupedCredential.isExpanded
+          ? groupedCredential.value.map((c) => c.id!)
+          : []),
+      ]),
     [groupedUserCredentials]
   );
 
