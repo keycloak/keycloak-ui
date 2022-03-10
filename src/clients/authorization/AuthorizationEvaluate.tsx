@@ -1,5 +1,5 @@
 import type ClientRepresentation from "@keycloak/keycloak-admin-client/lib/defs/clientRepresentation";
-import React, { useState, KeyboardEvent } from "react";
+import React, { useState, KeyboardEvent, useMemo, useRef } from "react";
 import { useTranslation } from "react-i18next";
 import {
   FormGroup,
@@ -79,6 +79,26 @@ export type AttributeForm = Omit<
 
 type Props = ClientSettingsProps & EvaluationResultRepresentation;
 
+enum ResultsFilter {
+  All = "ALL",
+  StatusDenied = "STATUS_DENIED",
+  StatusPermitted = "STATUS_PERMITTED",
+}
+
+function filterResults(
+  results: EvaluationResultRepresentation[],
+  filter: ResultsFilter
+) {
+  switch (filter) {
+    case ResultsFilter.StatusPermitted:
+      return results.filter(({ status }) => status === "PERMIT");
+    case ResultsFilter.StatusDenied:
+      return results.filter(({ status }) => status === "DENY");
+    default:
+      return results;
+  }
+}
+
 export const AuthorizationEvaluate = ({ client }: Props) => {
   const form = useFormContext<EvaluateFormInputs>();
   const { control, reset, trigger } = form;
@@ -99,10 +119,8 @@ export const AuthorizationEvaluate = ({ client }: Props) => {
     EvaluationResultRepresentation[]
   >([]);
   const [showEvaluateResults, setShowEvaluateResults] = useState(false);
-  const [searchVal, setSearchVal] = useState("");
-  const [filteredResources, setFilteredResources] = useState<
-    EvaluationResultRepresentation[]
-  >([]);
+  const searchQueryRef = useRef("");
+  const [searchQuery, setSearchQuery] = useState("");
   const [filterDropdownOpen, setFilterDropdownOpen] = useState(false);
   const [key, setKey] = useState(0);
 
@@ -110,17 +128,19 @@ export const AuthorizationEvaluate = ({ client }: Props) => {
     setKey(key + 1);
   };
 
-  const FilterType = {
-    allResults: t("allResults"),
-    resultPermit: t("resultPermit"),
-    resultDeny: t("resultDeny"),
-  };
-
-  const [filterType, setFilterType] = useState(FilterType.allResults);
+  const [filter, setFilter] = useState(ResultsFilter.All);
 
   const [clients, setClients] = useState<ClientRepresentation[]>([]);
   const [clientRoles, setClientRoles] = useState<RoleRepresentation[]>([]);
   const [users, setUsers] = useState<UserRepresentation[]>([]);
+
+  const filteredResources = useMemo(
+    () =>
+      filterResults(evaluateResults, filter).filter(
+        ({ resource }) => resource?.name?.includes(searchQuery) ?? false
+      ),
+    [evaluateResults, filter, searchQuery]
+  );
 
   useFetch(
     () =>
@@ -138,7 +158,7 @@ export const AuthorizationEvaluate = ({ client }: Props) => {
   );
 
   useFetch(
-    async () =>
+    () =>
       Promise.all([
         adminClient.clients.listResources({
           id: client.id!,
@@ -151,7 +171,7 @@ export const AuthorizationEvaluate = ({ client }: Props) => {
       setResources(resources);
       setScopes(scopes);
     },
-    [key, filterType]
+    [key, filter]
   );
 
   const evaluate = async () => {
@@ -181,71 +201,26 @@ export const AuthorizationEvaluate = ({ client }: Props) => {
     );
 
     setEvaluateResults(evaluation.results);
-    setFilteredResources(evaluation.results);
     setShowEvaluateResults(true);
     return evaluateResults;
   };
 
-  const filterPermit = evaluateResults.filter(
-    (resource) => resource.status === "PERMIT"
-  );
-  const filterDeny = evaluateResults.filter(
-    (resource) => resource.status === "DENY"
-  );
-
-  const onSearch = () => {
-    if (searchVal === "") {
-      setSearchVal("");
-    }
-    if (filterType === FilterType.allResults) {
-      const filtered = evaluateResults.filter((resource) =>
-        resource.resource?.name?.includes(searchVal)
-      );
-      setFilteredResources(filtered);
-    } else if (filterType === FilterType.resultPermit) {
-      const searched = filterPermit.filter((resource) =>
-        resource.resource?.name?.includes(searchVal)
-      );
-      setFilteredResources(searched);
-    } else if (filterType === FilterType.resultDeny) {
-      const searched = filterDeny.filter((resource) =>
-        resource.resource?.name?.includes(searchVal)
-      );
-      setFilteredResources(searched);
-    }
+  const confirmSearchQuery = () => {
+    setSearchQuery(searchQueryRef.current);
   };
 
   const handleKeyDown = (e: KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "Enter") {
-      onSearch();
+      confirmSearchQuery();
     }
   };
 
   const handleInputChange = (value: string) => {
-    setSearchVal(value);
+    searchQueryRef.current = value;
   };
 
   const noEvaluatedData = evaluateResults.length === 0;
   const noFilteredData = filteredResources.length === 0;
-
-  const options = [
-    <SelectOption
-      key={1}
-      data-testid="all-results-option"
-      value={FilterType.allResults}
-      isPlaceholder
-    />,
-    <SelectOption
-      data-testid="result-permit-option"
-      key={2}
-      value={FilterType.resultPermit}
-    />,
-    <SelectOption
-      data-testid="result-deny-option"
-      key={3}
-      value={FilterType.resultDeny}
-    />,
-  ];
 
   return showEvaluateResults ? (
     <PageSection>
@@ -265,7 +240,7 @@ export const AuthorizationEvaluate = ({ client }: Props) => {
               <Button
                 variant={ButtonVariant.control}
                 aria-label={t("common:search")}
-                onClick={() => onSearch()}
+                onClick={() => confirmSearchQuery()}
               >
                 <SearchIcon />
               </Button>
@@ -280,30 +255,31 @@ export const AuthorizationEvaluate = ({ client }: Props) => {
               variant={SelectVariant.single}
               onToggle={() => setFilterDropdownOpen(!filterDropdownOpen)}
               onSelect={(_, value) => {
-                if (value === FilterType.allResults) {
-                  setFilteredResources(evaluateResults);
-                  setFilterType(FilterType.allResults);
-                } else if (value === FilterType.resultPermit) {
-                  const filterPermit = evaluateResults.filter(
-                    (resource) => resource.status === "PERMIT"
-                  );
-                  setFilteredResources(filterPermit);
-                  setFilterType(FilterType.resultPermit);
-
-                  refresh();
-                } else if (value === FilterType.resultDeny) {
-                  const filterDeny = evaluateResults.filter(
-                    (resource) => resource.status === "DENY"
-                  );
-                  setFilterType(FilterType.resultDeny);
-                  setFilteredResources(filterDeny);
-                  refresh();
-                }
+                setFilter(value as ResultsFilter);
                 setFilterDropdownOpen(false);
+                refresh();
               }}
-              selections={filterType}
+              selections={filter}
             >
-              {options}
+              <SelectOption
+                data-testid="all-results-option"
+                value={ResultsFilter.All}
+                isPlaceholder
+              >
+                {t("allResults")}
+              </SelectOption>
+              <SelectOption
+                data-testid="result-permit-option"
+                value={ResultsFilter.StatusPermitted}
+              >
+                {t("resultPermit")}
+              </SelectOption>
+              <SelectOption
+                data-testid="result-deny-option"
+                value={ResultsFilter.StatusDenied}
+              >
+                {t("resultDeny")}
+              </SelectOption>
             </Select>
           </ToolbarItem>
         </ToolbarGroup>
@@ -319,10 +295,7 @@ export const AuthorizationEvaluate = ({ client }: Props) => {
               <Th />
             </Tr>
           </Thead>
-          {(filterType == FilterType.allResults
-            ? evaluateResults
-            : filteredResources
-          ).map((resource, rowIndex) => (
+          {filteredResources.map((resource, rowIndex) => (
             <AuthorizationEvaluateResource
               key={rowIndex}
               rowIndex={rowIndex}
