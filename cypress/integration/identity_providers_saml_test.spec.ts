@@ -26,9 +26,7 @@ describe("Identity provider test", () => {
   const samlDiscoveryUrl = `${keycloakServer}/realms/master/protocol/saml/descriptor`;
 
   describe("SAML identity provider creation", () => {
-    const identityProviderName = "github";
     const samlProviderName = "saml";
-    const secret = "123";
 
     beforeEach(() => {
       keycloakBefore();
@@ -36,22 +34,21 @@ describe("Identity provider test", () => {
       sidebarPage.goToIdentityProviders();
     });
 
-    it("should create provider", () => {
-      createProviderPage.checkGitHubCardVisible().clickGitHubCard();
+    it("should create a SAML provider using entity descriptor", () => {
+      createProviderPage
+        .checkVisible(samlProviderName)
+        .clickCard(samlProviderName);
 
       createProviderPage.checkAddButtonDisabled();
-      createProviderPage
-        .fill(identityProviderName)
-        .clickAdd()
-        .checkClientIdRequiredMessage(true);
-      createProviderPage.fill(identityProviderName, secret).clickAdd();
-      masthead.checkNotificationMessage(createSuccessMsg, true);
 
-      sidebarPage.goToIdentityProviders();
-      listingPage.itemExist(identityProviderName);
+      createProviderPage
+        .fillDiscoveryUrl(samlDiscoveryUrl)
+        .shouldBeSuccessful()
+        .clickAdd();
+      masthead.checkNotificationMessage(createSuccessMsg, true);
     });
 
-    it("should create a SAML provider using SSO service url", () => {
+    it("should edit requested authnContext Constraints", () => {
       createProviderPage
         .clickCreateDropdown()
         .clickItem(samlProviderName)
@@ -151,11 +148,6 @@ describe("Identity provider test", () => {
 
       sidebarPage.goToIdentityProviders();
       listingPage.itemExist(samlProviderName).deleteItem(samlProviderName);
-      modalUtils.checkModalTitle(deletePrompt).confirmModal();
-      masthead.checkNotificationMessage(deleteSuccessMsg, true);
-      listingPage
-        .itemExist(identityProviderName)
-        .deleteItem(identityProviderName);
       modalUtils.checkModalTitle(deletePrompt).confirmModal();
       masthead.checkNotificationMessage(deleteSuccessMsg, true);
     });
