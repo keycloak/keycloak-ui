@@ -141,14 +141,20 @@ export default function DetailSettings() {
 
       reset(fetchedProvider);
       setProvider(fetchedProvider);
-      form.setValue(
-        "config.authnContextClassRefs",
-        JSON.parse(fetchedProvider.config?.authnContextClassRefs)
-      );
-      form.setValue(
-        "config.authnContextDeclRefs",
-        JSON.parse(fetchedProvider.config?.authnContextDeclRefs)
-      );
+
+      if (fetchedProvider.config!.authnContextClassRefs) {
+        form.setValue(
+          "config.authnContextClassRefs",
+          JSON.parse(fetchedProvider.config?.authnContextClassRefs)
+        );
+      }
+
+      if (fetchedProvider.config!.authnContextDeclRefs) {
+        form.setValue(
+          "config.authnContextDeclRefs",
+          JSON.parse(fetchedProvider.config?.authnContextDeclRefs)
+        );
+      }
     },
     []
   );
