@@ -29,8 +29,6 @@ type KeyProviderFormProps = {
   onClose?: () => void;
 };
 
-    case "rsa-enc":
-      return <RsaView isEnc />;
 export const KeyProviderForm = ({
   providerType,
   onClose,
