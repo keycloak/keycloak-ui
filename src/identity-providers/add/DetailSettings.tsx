@@ -145,6 +145,10 @@ export default function DetailSettings() {
         "config.authnContextClassRefs",
         JSON.parse(fetchedProvider.config?.authnContextClassRefs)
       );
+      form.setValue(
+        "config.authnContextDeclRefs",
+        JSON.parse(fetchedProvider.config?.authnContextDeclRefs)
+      );
     },
     []
   );
@@ -154,6 +158,10 @@ export default function DetailSettings() {
     if (p.config?.authnContextClassRefs)
       p.config.authnContextClassRefs = JSON.stringify(
         p.config.authnContextClassRefs
+      );
+    if (p.config?.authnContextDeclRefs)
+      p.config.authnContextDeclRefs = JSON.stringify(
+        p.config.authnContextDeclRefs
       );
     try {
       await adminClient.identityProviders.update(
