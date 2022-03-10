@@ -49,6 +49,11 @@ export const KeyProviderForm = ({
   const { register, control, handleSubmit, errors, reset } = form;
 
   const save = async (component: ComponentRepresentation) => {
+    if (component.config)
+      Object.entries(component.config).map(
+        ([key, value]) =>
+          (component.config![key] = Array.isArray(value) ? value : [value])
+      );
     try {
       if (id) {
         await adminClient.components.update(
