@@ -66,7 +66,7 @@
                 <repository>
                     <id>jboss-releases-repository</id>
                     <name>JBoss Releases Repository</name>
-                    <url>https://repository.jboss.org/nexus/service/local/staging/deploy/maven2/</url>
+                    <url>https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/</url>
                 </repository>
             </distributionManagement>
             <build>
@@ -89,7 +89,7 @@
                     <version>${nexus.staging.plugin.version}</version>
                     <extensions>true</extensions>
                     <configuration>
-                        <nexusUrl>https://repository.jboss.org/nexus</nexusUrl>
+                        <nexusUrl>https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/</nexusUrl>
                         <serverId>jboss-releases-repository</serverId>
                     </configuration>
                 </plugin>
