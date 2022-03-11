@@ -7,7 +7,7 @@ import CreateProviderPage from "../support/pages/admin_console/manage/identity_p
 import ModalUtils from "../support/util/ModalUtils";
 import AddMapperPage from "../support/pages/admin_console/manage/identity_providers/AddMapperPage";
 
-describe("Identity provider test", () => {
+describe("SAML identity provider test", () => {
   const loginPage = new LoginPage();
   const sidebarPage = new SidebarPage();
   const masthead = new Masthead();
@@ -16,11 +16,16 @@ describe("Identity provider test", () => {
   const addMapperPage = new AddMapperPage();
 
   const createSuccessMsg = "Identity provider successfully created";
+  const saveSuccessMsg = "Provider successfully updated";
+
   const createMapperSuccessMsg = "Mapper created successfully.";
   const saveMapperSuccessMsg = "Mapper saved successfully.";
 
   const deletePrompt = "Delete provider?";
   const deleteSuccessMsg = "Provider successfully deleted";
+
+  const classRefName = "acClassRef-1";
+  const declRefName = "acDeclRef-1";
 
   const keycloakServer = Cypress.env("KEYCLOAK_SERVER");
   const samlDiscoveryUrl = `${keycloakServer}/realms/master/protocol/saml/descriptor`;
@@ -38,9 +43,7 @@ describe("Identity provider test", () => {
       createProviderPage
         .checkVisible(samlProviderName)
         .clickCard(samlProviderName);
-
       createProviderPage.checkAddButtonDisabled();
-
       createProviderPage
         .fillDiscoveryUrl(samlDiscoveryUrl)
         .shouldBeSuccessful()
@@ -48,14 +51,16 @@ describe("Identity provider test", () => {
       masthead.checkNotificationMessage(createSuccessMsg, true);
     });
 
-    it("should edit requested authnContext Constraints", () => {
+    it("should add auth constraints to existing SAML provider", () => {
+      sidebarPage.goToIdentityProviders();
+      listingPage.goToItemDetails(samlProviderName);
       createProviderPage
-        .clickCreateDropdown()
-        .clickItem(samlProviderName)
-        .fillDiscoveryUrl(samlDiscoveryUrl)
-        .shouldBeSuccessful()
-        .clickAdd();
-      masthead.checkNotificationMessage(createSuccessMsg, true);
+        .fillAuthnContextClassRefs(classRefName)
+        .clickClassRefsAdd()
+        .fillAuthnContextDeclRefs(declRefName)
+        .clickDeclRefsAdd()
+        .clickSave();
+      masthead.checkNotificationMessage(saveSuccessMsg, true);
     });
 
     it("should add SAML mapper of type Advanced Attribute to Role", () => {

@@ -75,6 +75,7 @@ export const ReqAuthnConstraints = () => {
           name="config.authnContextClassRefs"
           aria-label={t("identify-providers:authnContextClassRefs")}
           addButtonLabel="identity-providers:addAuthnContextClassRef"
+          data-testid="classref-field"
         />
       </FormGroup>
       <FormGroup
@@ -91,6 +92,7 @@ export const ReqAuthnConstraints = () => {
           name="config.authnContextDeclRefs"
           aria-label={t("identify-providers:authnContextDeclRefs")}
           addButtonLabel="identity-providers:addAuthnContextDeclRef"
+          data-testid="declref-field"
         />
       </FormGroup>
     </>
