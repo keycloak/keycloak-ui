@@ -63,7 +63,7 @@ export const ClientSettings = ({
     } else if (!client.bearerOnly) {
       result = [...result, "capabilityConfig"];
     } else {
-      return [result];
+      return result;
     }
 
     return [...result, "loginSettings", "logoutSettings"];
