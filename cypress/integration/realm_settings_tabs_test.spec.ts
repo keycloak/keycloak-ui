@@ -27,7 +27,7 @@ describe("Realm settings tabs tests", () => {
     await adminClient.deleteRealm(realmName);
   });
 
-  it("Go to general tab", () => {
+  it.skip("Go to general tab", () => {
     sidebarPage.goToRealmSettings();
     realmSettingsPage.toggleSwitch(realmSettingsPage.managedAccessSwitch);
     realmSettingsPage.save(realmSettingsPage.generalSaveBtn);
@@ -50,7 +50,7 @@ describe("Realm settings tabs tests", () => {
     masthead.checkNotificationMessage("Realm successfully updated");
   });
 
-  it("shows the 'user profile' tab if enabled", () => {
+  it.skip("shows the 'user profile' tab if enabled", () => {
     sidebarPage.goToRealmSettings();
     cy.findByTestId(realmSettingsPage.userProfileTab).should("not.exist");
     realmSettingsPage.toggleSwitch(realmSettingsPage.profileEnabledSwitch);
@@ -63,8 +63,14 @@ describe("Realm settings tabs tests", () => {
     sidebarPage.goToRealmSettings();
     cy.findByTestId("rs-login-tab").click();
     realmSettingsPage.toggleSwitch(realmSettingsPage.userRegSwitch);
+
     realmSettingsPage.toggleSwitch(realmSettingsPage.forgotPwdSwitch);
+
     realmSettingsPage.toggleSwitch(realmSettingsPage.rememberMeSwitch);
+
+    realmSettingsPage.toggleSwitch(realmSettingsPage.emailAsUsernameSwitch);
+
+    realmSettingsPage.toggleSwitch(realmSettingsPage.loginWithEmailSwitch);
   });
 
   it("Check login tab values", () => {
@@ -79,6 +85,18 @@ describe("Realm settings tabs tests", () => {
     cy.findByTestId(realmSettingsPage.rememberMeSwitch).should(
       "have.value",
       "on"
+    );
+    cy.findByTestId(realmSettingsPage.emailAsUsernameSwitch).should(
+      "have.value",
+      "on"
+    );
+    cy.findByTestId(realmSettingsPage.loginWithEmailSwitch).should(
+      "have.value",
+      "off"
+    );
+    cy.findByTestId(realmSettingsPage.verifyEmailSwitch).should(
+      "have.value",
+      "off"
     );
   });
 
