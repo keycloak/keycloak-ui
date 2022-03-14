@@ -68,9 +68,9 @@ describe("Realm settings tabs tests", () => {
 
     realmSettingsPage.toggleSwitch(realmSettingsPage.rememberMeSwitch);
 
-    realmSettingsPage.toggleSwitch(realmSettingsPage.emailAsUsernameSwitch);
-
     realmSettingsPage.toggleSwitch(realmSettingsPage.loginWithEmailSwitch);
+
+    realmSettingsPage.toggleSwitch(realmSettingsPage.duplicateEmailsSwitch);
   });
 
   it("Check login tab values", () => {
@@ -94,6 +94,12 @@ describe("Realm settings tabs tests", () => {
       "have.value",
       "off"
     );
+
+    cy.findByTestId(realmSettingsPage.duplicateEmailsSwitch).should(
+      "have.value",
+      "on"
+    );
+
     cy.findByTestId(realmSettingsPage.verifyEmailSwitch).should(
       "have.value",
       "off"
