@@ -50,7 +50,7 @@ export const KeyProviderForm = ({
 
   const save = async (component: ComponentRepresentation) => {
     if (component.config)
-      Object.entries(component.config).map(
+      Object.entries(component.config).forEach(
         ([key, value]) =>
           (component.config![key] = Array.isArray(value) ? value : [value])
       );
