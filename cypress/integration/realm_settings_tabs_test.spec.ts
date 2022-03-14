@@ -88,7 +88,7 @@ describe("Realm settings tabs tests", () => {
     );
     cy.findByTestId(realmSettingsPage.emailAsUsernameSwitch).should(
       "have.value",
-      "on"
+      "off"
     );
     cy.findByTestId(realmSettingsPage.loginWithEmailSwitch).should(
       "have.value",
