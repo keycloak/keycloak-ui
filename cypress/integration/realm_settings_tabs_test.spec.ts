@@ -27,7 +27,7 @@ describe("Realm settings tabs tests", () => {
     await adminClient.deleteRealm(realmName);
   });
 
-  it.skip("Go to general tab", () => {
+  it("Go to general tab", () => {
     sidebarPage.goToRealmSettings();
     realmSettingsPage.toggleSwitch(realmSettingsPage.managedAccessSwitch);
     realmSettingsPage.save(realmSettingsPage.generalSaveBtn);
@@ -50,7 +50,7 @@ describe("Realm settings tabs tests", () => {
     masthead.checkNotificationMessage("Realm successfully updated");
   });
 
-  it.skip("shows the 'user profile' tab if enabled", () => {
+  it("shows the 'user profile' tab if enabled", () => {
     sidebarPage.goToRealmSettings();
     cy.findByTestId(realmSettingsPage.userProfileTab).should("not.exist");
     realmSettingsPage.toggleSwitch(realmSettingsPage.profileEnabledSwitch);
