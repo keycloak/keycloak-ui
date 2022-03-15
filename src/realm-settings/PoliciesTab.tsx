@@ -65,6 +65,7 @@ export const PoliciesTab = () => {
 
   const saveStatus = async () => {
     const switchValues = form.getValues();
+    console.log(switchValues);
 
     const updatedPolicies = policies?.map<ClientPolicyRepresentation>(
       (policy) => {
