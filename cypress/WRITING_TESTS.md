@@ -38,7 +38,6 @@ describe("Realm roles test", () => {
   });
 
   beforeEach(() => {
-    keycloakBeforeEach();
     sidebarPage.goToRealmRoles();
   });
 ```
@@ -48,7 +47,7 @@ Example of `describe` to setup data for that test:
 ```typescript
 import adminClient from "../support/util/AdminClient";
 
-describe("edit role details", () => {
+describe("Edit role details", () => {
   before(() => {
     adminClient.createRealmRole({
       name: editRoleName,
@@ -60,7 +59,7 @@ describe("edit role details", () => {
     adminClient.deleteRealmRole(editRoleName);
   });
 
-  it("should edit realm role details", () => {
+  it("Should edit realm role details", () => {
       // ...
 ```
 
@@ -85,4 +84,5 @@ If there were no calls and you still get this error, try using `{force: true}`, 
 ### Some more reading:
 
 * [Moises document](https://docs.google.com/document/d/11sm1IpEvVLHO59JEVmwgNOUD0zoP4YMvInIU4v5iVNk/edit)
-* [Cypress blog do not get too detached](https://www.cypress.io/blog/2020/07/22/do-not-get-too-detached/) 
+* [Cypress blog do not get too detached](https://www.cypress.io/blog/2020/07/22/do-not-get-too-detached/)
+* [See the clients_test.spec as an example](./cypress/integration/clients_test.spec.ts)
