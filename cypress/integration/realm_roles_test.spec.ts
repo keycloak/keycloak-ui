@@ -7,6 +7,7 @@ import CreateRealmRolePage from "../support/pages/admin_console/manage/realm_rol
 import AssociatedRolesPage from "../support/pages/admin_console/manage/realm_roles/AssociatedRolesPage";
 import { keycloakBefore } from "../support/util/keycloak_hooks";
 import adminClient from "../support/util/AdminClient";
+import ClientRolesTab from "../support/pages/admin_console/manage/clients/ClientRolesTab";
 
 let itemId = "realm_role_crud";
 const loginPage = new LoginPage();
@@ -16,6 +17,7 @@ const sidebarPage = new SidebarPage();
 const listingPage = new ListingPage();
 const createRealmRolePage = new CreateRealmRolePage();
 const associatedRolesPage = new AssociatedRolesPage();
+const rolesTab = new ClientRolesTab();
 
 describe("Realm roles test", () => {
   before(() => {
@@ -86,7 +88,7 @@ describe("Realm roles test", () => {
     );
   });
 
-  it("Associated roles test", () => {
+  it("Add associated roles test", () => {
     itemId += "_" + (Math.random() + 1).toString(36).substring(7);
 
     // Create
@@ -94,13 +96,43 @@ describe("Realm roles test", () => {
     createRealmRolePage.fillRealmRoleData(itemId).save();
     masthead.checkNotificationMessage("Role created", true);
 
-    // Add associated realm role
+    // Add associated realm role from action dropdown
     associatedRolesPage.addAssociatedRealmRole("create-realm");
     masthead.checkNotificationMessage("Associated roles have been added", true);
 
-    // Add associated client role
+    // Add associated client role from search bar
     associatedRolesPage.addAssociatedClientRole("manage-account");
     masthead.checkNotificationMessage("Associated roles have been added", true);
+  });
+
+  it("Should hide inherited roles test", () => {
+    listingPage.searchItem(itemId, false).goToItemDetails(itemId);
+    rolesTab.goToAssociatedRolesTab();
+    rolesTab.hideInheritedRoles();
+  });
+
+  it("Should delete associated role from search bar test", () => {
+    listingPage.searchItem(itemId, false).goToItemDetails(itemId);
+    sidebarPage.waitForPageLoad();
+    rolesTab.goToAssociatedRolesTab();
+
+    cy.get('td[data-label="Role name"]')
+      .contains("create-client")
+      .parent()
+      .within(() => {
+        cy.get("input").click();
+      });
+
+    associatedRolesPage.removeAssociatedRoles();
+
+    sidebarPage.waitForPageLoad();
+    modalUtils.checkModalTitle("Remove associated roles?").confirmModal();
+    sidebarPage.waitForPageLoad();
+
+    masthead.checkNotificationMessage(
+      "Associated roles have been removed",
+      true
+    );
   });
 
   describe("edit role details", () => {
