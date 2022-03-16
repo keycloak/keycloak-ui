@@ -6,9 +6,6 @@ import {
   AlertVariant,
   Button,
   DescriptionList,
-  DescriptionListDescription,
-  DescriptionListGroup,
-  DescriptionListTerm,
   PageSection,
   ToolbarItem,
 } from "@patternfly/react-core";
@@ -39,6 +36,7 @@ import { NewPolicyDialog } from "./NewPolicyDialog";
 import { toCreatePolicy } from "../routes/NewPolicy";
 import { toPermissionDetails } from "../routes/PermissionDetails";
 import { SearchDropdown, SearchForm } from "./SearchDropdown";
+import { DetailDescriptionLink } from "./DetailDescription";
 
 type PoliciesProps = {
   clientId: string;
@@ -281,31 +279,19 @@ export const AuthorizationPolicies = ({ clientId }: PoliciesProps) => {
                               isHorizontal
                               className="keycloak_resource_details"
                             >
-                              <DescriptionListGroup>
-                                <DescriptionListTerm>
-                                  {t("dependentPermission")}
-                                </DescriptionListTerm>
-                                <DescriptionListDescription>
-                                  {policy.dependentPolicies?.map(
-                                    (permission) => (
-                                      <Link
-                                        key={permission.id}
-                                        to={toPermissionDetails({
-                                          realm,
-                                          id: clientId,
-                                          permissionId: permission.id!,
-                                          permissionType: permission.type!,
-                                        })}
-                                      >
-                                        {permission.name}
-                                      </Link>
-                                    )
-                                  )}
-                                  {policy.dependentPolicies?.length === 0 && (
-                                    <i>{t("common:none")}</i>
-                                  )}
-                                </DescriptionListDescription>
-                              </DescriptionListGroup>
+                              <DetailDescriptionLink
+                                name="dependentPermission"
+                                array={policy.dependentPolicies}
+                                convert={(p) => p.name!}
+                                link={(permission) =>
+                                  toPermissionDetails({
+                                    realm,
+                                    id: clientId,
+                                    permissionId: permission.id!,
+                                    permissionType: permission.type!,
+                                  })
+                                }
+                              />
                             </DescriptionList>
                           )}
                         </ExpandableRowContent>
