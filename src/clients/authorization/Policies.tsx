@@ -6,6 +6,9 @@ import {
   AlertVariant,
   Button,
   DescriptionList,
+  DescriptionListDescription,
+  DescriptionListGroup,
+  DescriptionListTerm,
   PageSection,
   ToolbarItem,
 } from "@patternfly/react-core";
@@ -34,7 +37,7 @@ import { ListEmptyState } from "../../components/list-empty-state/ListEmptyState
 import useToggle from "../../utils/useToggle";
 import { NewPolicyDialog } from "./NewPolicyDialog";
 import { toCreatePolicy } from "../routes/NewPolicy";
-import { DetailDescription } from "./DetailDescription";
+import { toPermissionDetails } from "../routes/PermissionDetails";
 import { SearchDropdown, SearchForm } from "./SearchDropdown";
 
 type PoliciesProps = {
@@ -278,11 +281,31 @@ export const AuthorizationPolicies = ({ clientId }: PoliciesProps) => {
                               isHorizontal
                               className="keycloak_resource_details"
                             >
-                              <DetailDescription
-                                name="dependentPermission"
-                                array={policy.dependentPolicies}
-                                convert={(p) => p.name!}
-                              />
+                              <DescriptionListGroup>
+                                <DescriptionListTerm>
+                                  {t("dependentPermission")}
+                                </DescriptionListTerm>
+                                <DescriptionListDescription>
+                                  {policy.dependentPolicies?.map(
+                                    (permission) => (
+                                      <Link
+                                        key={permission.id}
+                                        to={toPermissionDetails({
+                                          realm,
+                                          id: clientId,
+                                          permissionId: permission.id!,
+                                          permissionType: permission.type!,
+                                        })}
+                                      >
+                                        {permission.name}
+                                      </Link>
+                                    )
+                                  )}
+                                  {policy.dependentPolicies?.length === 0 && (
+                                    <i>{t("common:none")}</i>
+                                  )}
+                                </DescriptionListDescription>
+                              </DescriptionListGroup>
                             </DescriptionList>
                           )}
                         </ExpandableRowContent>
