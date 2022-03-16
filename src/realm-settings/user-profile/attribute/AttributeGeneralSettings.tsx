@@ -21,7 +21,7 @@ import "../../realm-settings-section.css";
 
 const ENABLED_REQUIRED_WHEN = ["Always", "Scopes are requested"] as const;
 const REQUIRED_FOR = [
-	{ label: "Both users and admins", value: ["admin", "user"]}, { label: "Only users", value: "user" },{ label: "Only admins", value: "admin" }
+	{ label: "Both users and admins", value: ["admin", "user"]}, { label: "Only users", value: ["user"] },{ label: "Only admins", value: ["admin"] }
   ] as const;
 
 export const AttributeGeneralSettings = () => {
@@ -36,6 +36,7 @@ export const AttributeGeneralSettings = () => {
     useState(false);
   const [enabledWhenSelection, setEnabledWhenSelection] = useState("Always");
   const [requiredWhenSelection, setRequiredWhenSelection] = useState("Always");
+  const [requiredToggle, setRequiredToggle] = useState(false);
 
   useFetch(
     () => adminClient.clientScopes.find(),
@@ -225,126 +226,129 @@ export const AttributeGeneralSettings = () => {
       >
         <Controller
           name="required"
-          defaultValue={["false"]}
+          defaultValue={false}
           control={form.control}
           render={({ onChange, value }) => (
             <Switch
               id={"kc-required"}
-              isDisabled={false}
-              onChange={(value) => onChange([`${value}`])}
-              isChecked={value[0] === "true"}
+              onChange={(value) => {
+				onChange(value);
+				setRequiredToggle(value);
+		      }}
+              isChecked={value === true}
               label={t("common:on")}
               labelOff={t("common:off")}
             />
           )}
         ></Controller>
       </FormGroup>
-      <FormGroup label={t("requiredFor")} fieldId="requiredFor" hasNoPaddingTop>
-        <Controller
-          name="roles"
-          data-testid="requiredFor"
-          defaultValue={REQUIRED_FOR[0].value}
-          control={form.control}
-          render={({ onChange, value }) => (
-            <div className="kc-requiredFor">
-              {REQUIRED_FOR.map((option) => (
-                <Radio
-                  id={option.label}
-                  key={option.label}
-                  data-testid={option}
-                  isChecked={value === option.value}
-                  name="roles"
-                  onChange={() => onChange(Array.isArray(option.value) ? option.value : [option.value])}
-                  label={option.label}
-                  className="kc-requiredFor-option"
-                />
-              ))}
-            </div>
-          )}
-        />
-      </FormGroup>
-      <FormGroup
-        label={t("requiredWhen")}
-        fieldId="requiredWhen"
-        hasNoPaddingTop
-      >
-        <Controller
-          name="requiredWhen"
-          data-testid="requiredWhen"
-          defaultValue={ENABLED_REQUIRED_WHEN[0]}
-          control={form.control}
-          render={({ onChange, value }) => (
-            <>
-              {ENABLED_REQUIRED_WHEN.map((option) => (
-                <Radio
-                  id={option}
-                  key={option}
-                  data-testid={option}
-                  isChecked={value === option}
-                  name="requiredWhen"
-                  onChange={() => {
-                    onChange(option);
-                    setRequiredWhenSelection(option);
-                  }}
-                  label={option}
-                  className="pf-u-mb-md"
-                />
-              ))}
-            </>
-          )}
-        />
-      </FormGroup>
-      <FormGroup fieldId="kc-scope-required-when">
-        <Controller
-          name="scopeRequired"
-          control={form.control}
-		  defaultValue={[]}
-          render={({
-            onChange,
-            value,
-          }: {
-            onChange: (newValue: string[]) => void;
-            value: string[];
-          }) => (
-			<Select
-			  name="scopeRequired"
-              data-testid="required-when-scope-field"
-              variant={SelectVariant.typeaheadMulti}
-              typeAheadAriaLabel="Select"
-              chipGroupProps={{
-                numChips: 3,
-                expandedText: t("common:hide"),
-                collapsedText: t("common:showRemaining"),
-              }}
-              onToggle={(isOpen) => setSelectRequiredForOpen(isOpen)}
-              selections={value}
-              onSelect={(_, selectedValue) => {
-                const option = selectedValue.toString();
-                let changedValue = [""];
-                if (value) {
-	              changedValue = value.includes(option)
-	              ? value.filter((item) => item !== option)
-	              : [...value, option];
-                } else {
-	            changedValue = [option];
-              }
-              onChange(changedValue);
-            }}
-            onClear={(selectedValues) => {
-              selectedValues.stopPropagation();
-              onChange([]);
-            }}
-            isOpen={selectRequiredForOpen}
-            isDisabled={requiredWhenSelection === "Always"}
-            aria-labelledby={"scope"}
-          > 
-            {clientScopes?.map((option) => (
-              <SelectOption key={option.name} value={option.name} />
-            ))}
-          </Select>
-          )}
-        />
-      </FormGroup>
+	  {requiredToggle && 
+        <>
+		  <FormGroup label={t("requiredFor")} fieldId="requiredFor" hasNoPaddingTop>
+		    <Controller
+			  name="roles"
+			  data-testid="requiredFor"
+			  defaultValue={REQUIRED_FOR[0].value}
+			  control={form.control}
+			  render={({ onChange, value }) => (
+			    <div className="kc-requiredFor">
+				  {REQUIRED_FOR.map((option) => (
+				    <Radio
+					  id={option.label}
+					  key={option.label}
+					  data-testid={option}
+					  isChecked={value === option.value}
+					  name="roles"
+					  onChange={() => onChange(option.value)}
+					  label={option.label}
+					  className="kc-requiredFor-option" />
+					))}
+				  </div>
+				)} 
+			  />
+			  </FormGroup>
+			  <FormGroup
+			    label={t("requiredWhen")}
+				fieldId="requiredWhen"
+				hasNoPaddingTop
+			  >
+			  <Controller
+			    name="requiredWhen"
+				data-testid="requiredWhen"
+				defaultValue={ENABLED_REQUIRED_WHEN[0]}
+				control={form.control}
+				render={({ onChange, value }) => (
+				  <>
+				    {ENABLED_REQUIRED_WHEN.map((option) => (
+					  <Radio
+					    id={option}
+						key={option}
+						data-testid={option}
+						isChecked={value === option}
+						name="requiredWhen"
+						onChange={() => {
+						  onChange(option);
+						  setRequiredWhenSelection(option);
+						}}
+						label={option}
+						className="pf-u-mb-md" />
+					))}
+				  </>
+				)} 
+			  />
+			</FormGroup>
+			<FormGroup fieldId="kc-scope-required-when">
+		      <Controller
+			    name="scopeRequired"
+				control={form.control}
+				defaultValue={[]}
+				render={({
+				  onChange, value,
+				}: {
+				  onChange: (newValue: string[]) => void;
+				  value: string[];
+				}) => (
+				  <Select
+				    name="scopeRequired"
+					data-testid="required-when-scope-field"
+					variant={SelectVariant.typeaheadMulti}
+					typeAheadAriaLabel="Select"
+					chipGroupProps={{
+					  numChips: 3,
+					  expandedText: t("common:hide"),
+					  collapsedText: t("common:showRemaining"),
+					}}
+					onToggle={(isOpen) => setSelectRequiredForOpen(isOpen)}
+					selections={value}
+					onSelect={(_, selectedValue) => {
+					  const option = selectedValue.toString();
+					  let changedValue = [""];
+					  if (value) {
+						changedValue = value.includes(option)
+						? value.filter((item) => item !== option)
+						: [...value, option];
+					  } else {
+						changedValue = [option];
+					  }
+					  onChange(changedValue);
+					}}
+					onClear={(selectedValues) => {
+					  selectedValues.stopPropagation();
+					  onChange([]);
+					}}
+					isOpen={selectRequiredForOpen}
+					isDisabled={requiredWhenSelection === "Always"}
+					aria-labelledby={"scope"}
+				  >
+					{clientScopes?.map((option) => (
+					  <SelectOption key={option.name} value={option.name} />
+					))}
+				  </Select>
+				)} 
+			  />
+			</FormGroup>
+		  </>
+        }
     </FormAccess>
   );
 };
