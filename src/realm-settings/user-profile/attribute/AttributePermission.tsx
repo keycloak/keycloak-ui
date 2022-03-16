@@ -66,7 +66,6 @@ const Permissions = ({ name }: { name: string }) => {
 
 export const AttributePermission = () => {
   const { t } = useTranslation("realm-settings");
-  const form = useFormContext();
 
   return (
     <FormAccess role="manage-realm" isHorizontal>
