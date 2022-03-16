@@ -144,11 +144,6 @@ export default function NewAttributeSettings() {
 
     const validations = profileConfig.validations;
 
-    const permissions = {
-      view: profileConfig.view,
-      edit: profileConfig.edit,
-    };
-
     const annotations = (profileConfig.annotations! as KeyValueType[]).reduce(
       (obj, item) => Object.assign(obj, { [item.key]: item.value }),
       {}
@@ -161,7 +156,7 @@ export default function NewAttributeSettings() {
         required,
         validations,
         selector,
-        permissions,
+        permissions: profileConfig.permissions,
         annotations,
       },
     ];

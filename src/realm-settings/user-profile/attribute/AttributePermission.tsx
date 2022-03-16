@@ -6,6 +6,64 @@ import { Controller, useFormContext } from "react-hook-form";
 import { FormAccess } from "../../../components/form-access/FormAccess";
 import "../../realm-settings-section.css";
 
+const Permissions = ({ name }: { name: string }) => {
+  const { t } = useTranslation("realm-settings");
+  const { control } = useFormContext();
+  return (
+    <Grid>
+      <GridItem lg={4} sm={6}>
+        <Controller
+          name={`permissions.${name}`}
+          control={control}
+          defaultValue={[]}
+          render={({ onChange, value }) => (
+            <Checkbox
+              id={`user-${name}`}
+              label={t("user")}
+              value="user"
+              data-testid={`user-${name}`}
+              isChecked={value.includes("user")}
+              onChange={() => {
+                const option = "user";
+                const changedValue = value.includes(option)
+                  ? value.filter((item: string) => item !== option)
+                  : [option];
+
+                onChange(changedValue);
+              }}
+              isDisabled={value.includes("admin")}
+            />
+          )}
+        />
+      </GridItem>
+      <GridItem lg={8} sm={6}>
+        <Controller
+          name={`permissions.${name}`}
+          control={control}
+          defaultValue={[]}
+          render={({ onChange, value }) => (
+            <Checkbox
+              id={`admin-${name}`}
+              label={t("admin")}
+              value="admin"
+              data-testid={`admin-${name}`}
+              isChecked={value.includes("admin")}
+              onChange={() => {
+                const option = "admin";
+                const changedValue = value.includes(option)
+                  ? value.filter((item: string) => item !== option)
+                  : ["user", option];
+
+                onChange(changedValue);
+              }}
+            />
+          )}
+        />
+      </GridItem>
+    </Grid>
+  );
+};
+
 export const AttributePermission = () => {
   const { t } = useTranslation("realm-settings");
   const form = useFormContext();
@@ -23,48 +81,7 @@ export const AttributePermission = () => {
         }
         fieldId="kc-who-can-edit"
       >
-        <Grid>
-          <GridItem lg={4} sm={6}>
-            <Controller
-              name="userEdit"
-              control={form.control}
-              defaultValue={"user"}
-              render={({ onChange, value }) => (
-                <Checkbox
-                  id="user-edit"
-                  label={t("user")}
-                  value="user"
-                  data-testid="userEdit"
-                  ref={form.register}
-                  isChecked={value}
-                  onChange={(value) => {
-                    onChange(value);
-                  }}
-                />
-              )}
-            />
-          </GridItem>
-          <GridItem lg={8} sm={6}>
-            <Controller
-              name="adminEdit"
-              control={form.control}
-              defaultValue={"admin"}
-              render={({ onChange, value }) => (
-                <Checkbox
-                  id="admin-edit"
-                  label={t("admin")}
-                  value="admin"
-                  data-testid="adminEdit"
-                  ref={form.register}
-                  isChecked={value}
-                  onChange={(value) => {
-                    onChange(value);
-                  }}
-                />
-              )}
-            />
-          </GridItem>
-        </Grid>
+        <Permissions name="edit" />
       </FormGroup>
       <FormGroup
         hasNoPaddingTop
@@ -77,48 +94,7 @@ export const AttributePermission = () => {
         }
         fieldId="kc-who-can-view"
       >
-        <Grid>
-          <GridItem lg={4} sm={6}>
-            <Controller
-              name="userView"
-              control={form.control}
-              defaultValue={""}
-              render={({ onChange, value }) => (
-                <Checkbox
-                  id="user-view"
-                  label={t("user")}
-                  value="user"
-                  data-testid="userView"
-                  ref={form.register}
-                  isChecked={value}
-                  onChange={(value) => {
-                    onChange(value);
-                  }}
-                />
-              )}
-            />
-          </GridItem>
-          <GridItem lg={8} sm={6}>
-            <Controller
-              name="adminView"
-              control={form.control}
-              defaultValue={""}
-              render={({ onChange, value }) => (
-                <Checkbox
-                  id="admin-view"
-                  label={t("admin")}
-                  value="admin"
-                  data-testid="adminView"
-                  ref={form.register}
-                  isChecked={value}
-                  onChange={(value) => {
-                    onChange(value);
-                  }}
-                />
-              )}
-            />
-          </GridItem>
-        </Grid>
+        <Permissions name="view" />
       </FormGroup>
     </FormAccess>
   );
