@@ -100,9 +100,37 @@ describe("Realm roles test", () => {
     associatedRolesPage.addAssociatedRealmRole("create-realm");
     masthead.checkNotificationMessage("Associated roles have been added", true);
 
-    // Add associated client role from search bar
-    associatedRolesPage.addAssociatedClientRole("manage-account");
+    // Add associated realm role from search bar
+    associatedRolesPage.addAssociatedRoleFromSearchBar("offline_access");
     masthead.checkNotificationMessage("Associated roles have been added", true);
+
+    rolesTab.goToAssociatedRolesTab();
+
+    // Add associated client role from search bar
+    associatedRolesPage.addAssociatedRoleFromSearchBar("manage-account", true);
+    masthead.checkNotificationMessage("Associated roles have been added", true);
+
+    rolesTab.goToAssociatedRolesTab();
+
+    // Add associated client role
+    associatedRolesPage.addAssociatedRoleFromSearchBar("manage-consent", true);
+    masthead.checkNotificationMessage("Associated roles have been added", true);
+
+    rolesTab.goToAssociatedRolesTab();
+
+    // Add associated client role
+    associatedRolesPage.addAssociatedRoleFromSearchBar("manage-clients", true);
+    masthead.checkNotificationMessage("Associated roles have been added", true);
+  });
+
+  it("Should search existing associated role by name", () => {
+    listingPage.searchItem("create-realm", false).itemExist("create-realm");
+  });
+
+  it("Should search non-existent associated role by name", () => {
+    const itemName = "non-existent-associated-role";
+    listingPage.searchItem(itemName, false);
+    cy.findByTestId(listingPage.emptyState).should("exist");
   });
 
   it("Should hide inherited roles test", () => {
@@ -111,22 +139,76 @@ describe("Realm roles test", () => {
     rolesTab.hideInheritedRoles();
   });
 
-  it("Should delete associated role from search bar test", () => {
+  it("Should fail to remove role when all unchecked from search bar", () => {
+    listingPage.searchItem(itemId, false).goToItemDetails(itemId);
+    rolesTab.goToAssociatedRolesTab();
+    associatedRolesPage.isRemoveAssociatedRolesBtnDisabled();
+  });
+
+  it("Should delete single non-inherited role item", () => {
+    listingPage.searchItem(itemId, false).goToItemDetails(itemId);
+    rolesTab.goToAssociatedRolesTab();
+    listingPage.removeItem("create-realm");
+    sidebarPage.waitForPageLoad();
+    modalUtils.checkModalTitle("Remove associated role?").confirmModal();
+    sidebarPage.waitForPageLoad();
+
+    masthead.checkNotificationMessage(
+      "Associated roles have been removed",
+      true
+    );
+  });
+
+  it("Should delete all roles from search bar", () => {
     listingPage.searchItem(itemId, false).goToItemDetails(itemId);
     sidebarPage.waitForPageLoad();
     rolesTab.goToAssociatedRolesTab();
 
-    cy.get('td[data-label="Role name"]')
-      .contains("create-client")
-      .parent()
-      .within(() => {
-        cy.get("input").click();
-      });
+    cy.get('input[name="check-all"]').check();
 
     associatedRolesPage.removeAssociatedRoles();
 
     sidebarPage.waitForPageLoad();
     modalUtils.checkModalTitle("Remove associated roles?").confirmModal();
+    sidebarPage.waitForPageLoad();
+
+    masthead.checkNotificationMessage(
+      "Associated roles have been removed",
+      true
+    );
+  });
+
+  it("Should delete associated roles from list test", () => {
+    itemId += "_" + (Math.random() + 1).toString(36).substring(7);
+
+    // Create
+    listingPage.itemExist(itemId, false).goToCreateItem();
+    createRealmRolePage.fillRealmRoleData(itemId).save();
+    masthead.checkNotificationMessage("Role created", true);
+
+    // Add associated realm role from action dropdown
+    associatedRolesPage.addAssociatedRealmRole("create-realm");
+    masthead.checkNotificationMessage("Associated roles have been added", true);
+
+    // Add associated realm role from search bar
+    associatedRolesPage.addAssociatedRoleFromSearchBar("offline_access");
+    masthead.checkNotificationMessage("Associated roles have been added", true);
+
+    rolesTab.goToAssociatedRolesTab();
+
+    // delete associated roles from list
+    listingPage.removeItem("create-realm");
+    sidebarPage.waitForPageLoad();
+    modalUtils.checkModalTitle("Remove associated role?").confirmModal();
+    sidebarPage.waitForPageLoad();
+
+    masthead.checkNotificationMessage(
+      "Associated roles have been removed",
+      true
+    );
+    listingPage.removeItem("offline_access");
+    sidebarPage.waitForPageLoad();
+    modalUtils.checkModalTitle("Remove associated role?").confirmModal();
     sidebarPage.waitForPageLoad();
 
     masthead.checkNotificationMessage(

@@ -494,14 +494,14 @@ describe("Clients test", () => {
       listingPage.searchItem(itemId, false).goToItemDetails(itemId);
 
       // Add associated realm role
-      associatedRolesPage.addAssociatedRealmRole("create-realm");
+      associatedRolesPage.addAssociatedRoleFromSearchBar("create-realm", false);
       masthead.checkNotificationMessage(
         "Associated roles have been added",
         true
       );
 
       // Add associated client role
-      associatedRolesPage.addAssociatedClientRole("create-client");
+      associatedRolesPage.addAssociatedRoleFromSearchBar("create-client", true);
       masthead.checkNotificationMessage(
         "Associated roles have been added",
         true
@@ -510,7 +510,10 @@ describe("Clients test", () => {
       rolesTab.goToAssociatedRolesTab();
 
       // Add associated client role
-      associatedRolesPage.addAssociatedClientRole("manage-consent");
+      associatedRolesPage.addAssociatedRoleFromSearchBar(
+        "manage-consent",
+        true
+      );
       masthead.checkNotificationMessage(
         "Associated roles have been added",
         true
