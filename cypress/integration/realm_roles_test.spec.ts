@@ -67,6 +67,8 @@ describe("Realm roles test", () => {
     masthead.checkNotificationMessage("The role has been deleted", true);
 
     listingPage.itemExist(itemId, false);
+
+    itemId = "realm_role_crud";
   });
 
   it("should delete role from details action", () => {
@@ -77,6 +79,7 @@ describe("Realm roles test", () => {
     createRealmRolePage.clickActionMenu("Delete this role");
     modalUtils.confirmModal();
     masthead.checkNotificationMessage("The role has been deleted", true);
+    itemId = "realm_role_crud";
   });
 
   it("should not be able to delete default role", () => {
@@ -179,6 +182,7 @@ describe("Realm roles test", () => {
   });
 
   it("Should delete associated roles from list test", () => {
+    itemId = "realm_role_crud";
     itemId += "_" + (Math.random() + 1).toString(36).substring(7);
 
     // Create
