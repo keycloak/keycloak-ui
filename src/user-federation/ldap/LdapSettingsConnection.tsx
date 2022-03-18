@@ -68,6 +68,7 @@ export const LdapSettingsConnection = ({
   const { addAlert, addError } = useAlerts();
 
   const testLdap = async (testType: TestTypes) => {
+    if (!(await form.trigger())) return;
     try {
       const settings = convertFormToSettings(form);
       await adminClient.realms.testLDAPConnection(
