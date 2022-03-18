@@ -56,7 +56,7 @@ export default {
     xRobotsTag:
       "Prevent pages from appearing in search engines <1>Learn more</1>",
     xXSSProtection:
-      "This header configures the Cross-site scripting (XSS) filter in your browser. Using the default behaviour, the browser will prevent rendering of the page when a XSS attack is detected. <1>Learn more</1>",
+      "This header configures the Cross-site scripting (XSS) filter in your browser. Using the default behavior, the browser will prevent rendering of the page when a XSS attack is detected (click label for more information)",
     strictTransportSecurity:
       "The Strict-Transport-Security HTTP header tells browsers to always use HTTPS. Once a browser sees this header, it will only visit the site over HTTPS for the time specified (1 year) at max-age, including the subdomains. <1>Learn more</1>",
     failureFactor: "How many failures before wait is triggered.",
