@@ -54,6 +54,7 @@ jobs:
         working-directory: ${{ env.KEYCLOAK_SERVER_BIN }}
         run: |
           KEYCLOAK_ADMIN=admin KEYCLOAK_ADMIN_PASSWORD=admin ./kc.sh start-dev -Dkeycloak.profile.feature.admin2=enabled -Dkeycloak.profile.feature.declarative_user_profile=enabled &
+          sleep 30s
 
       - name: Set up Node
         uses: actions/setup-node@v2
