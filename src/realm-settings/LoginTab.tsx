@@ -78,11 +78,7 @@ export const RealmSettingsLoginTab = ({
                 <Switch
                   id="kc-user-reg-switch"
                   data-testid="user-reg-switch"
-                  value={
-                    value
-                      ? t("common:on").toLowerCase()
-                      : t("common:off").toLowerCase()
-                  }
+                  value={value ? "on" : "off"}
                   label={t("common:on")}
                   labelOff={t("common:off")}
                   isChecked={value}
