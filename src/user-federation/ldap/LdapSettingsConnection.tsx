@@ -114,6 +114,10 @@ export const LdapSettingsConnection = ({
           }
           fieldId="kc-console-connection-url"
           isRequired
+          validated={
+            form.errors.config?.connectionUrl?.[0] ? "error" : "default"
+          }
+          helperTextInvalid={form.errors.config?.connectionUrl?.[0].message}
         >
           <TextInput
             isRequired
@@ -127,12 +131,10 @@ export const LdapSettingsConnection = ({
                 message: `${t("validateConnectionUrl")}`,
               },
             })}
+            validated={
+              form.errors.config?.connectionUrl?.[0] ? "error" : "default"
+            }
           />
-          {form.errors.config?.connectionUrl?.[0] && (
-            <div className="error">
-              {form.errors.config.connectionUrl[0].message}
-            </div>
-          )}
         </FormGroup>
         <FormGroup
           label={t("enableStartTls")}
@@ -313,6 +315,11 @@ export const LdapSettingsConnection = ({
                 data-testid="ldap-bind-dn"
                 name="config.bindDn[0]"
                 ref={form.register({ required: true })}
+                validated={
+                  form.errors.config?.bindDn
+                    ? ValidatedOptions.error
+                    : ValidatedOptions.default
+                }
               />
             </FormGroup>
             <FormGroup
@@ -341,6 +348,11 @@ export const LdapSettingsConnection = ({
                 ref={form.register({
                   required: true,
                 })}
+                validated={
+                  form.errors.config?.bindCredential
+                    ? ValidatedOptions.error
+                    : ValidatedOptions.default
+                }
               />
             </FormGroup>
           </>
