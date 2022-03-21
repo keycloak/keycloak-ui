@@ -13,7 +13,7 @@ import {
 } from "@patternfly/react-core";
 import { useTranslation } from "react-i18next";
 import { HelpItem } from "../../../components/help-enabler/HelpItem";
-import { Controller, useFormContext } from "react-hook-form";
+import { Controller, useFormContext, useWatch } from "react-hook-form";
 import { FormAccess } from "../../../components/form-access/FormAccess";
 import { useAdminClient, useFetch } from "../../../context/auth/AdminClient";
 import type ClientScopeRepresentation from "@keycloak/keycloak-admin-client/lib/defs/clientScopeRepresentation";
@@ -36,7 +36,12 @@ export const AttributeGeneralSettings = () => {
     useState(false);
   const [enabledWhenSelection, setEnabledWhenSelection] = useState("Always");
   const [requiredWhenSelection, setRequiredWhenSelection] = useState("Always");
-  const [requiredToggle, setRequiredToggle] = useState(false);
+
+  const requiredToggle = useWatch({
+    control: form.control,
+    name: "required",
+    defaultValue: false,
+  });
 
   useFetch(
     () => adminClient.clientScopes.find(),
@@ -233,7 +238,7 @@ export const AttributeGeneralSettings = () => {
               id={"kc-required"}
               onChange={(value) => {
 				onChange(value);
-				setRequiredToggle(value);
+				form.setValue("required", value);
 		      }}
               isChecked={value === true}
               label={t("common:on")}
@@ -352,3 +357,4 @@ export const AttributeGeneralSettings = () => {
     </FormAccess>
   );
 };
+
