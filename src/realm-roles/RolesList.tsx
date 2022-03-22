@@ -17,6 +17,7 @@ import { HelpItem } from "../components/help-enabler/HelpItem";
 import { ClientParams, ClientRoute } from "../clients/routes/Client";
 import { toClientRole } from "./routes/ClientRole";
 import { toRealmRole } from "./routes/RealmRole";
+import { toAddRole } from "./routes/AddRole";
 import { toRealmSettings } from "../realm-settings/routes/RealmSettings";
 
 import "./RealmRolesSection.css";
@@ -56,7 +57,6 @@ export const RolesList = ({
   const history = useHistory();
   const adminClient = useAdminClient();
   const { addAlert, addError } = useAlerts();
-  const { url } = useRouteMatch();
   const { realm: realmName } = useRealm();
   const [realm, setRealm] = useState<RealmRepresentation>();
 
@@ -113,7 +113,7 @@ export const RolesList = ({
     },
   });
 
-  const goToCreate = () => history.push(`${url}/add-role`);
+  const goToCreate = () => history.push(toAddRole({ realm: realmName }));
 
   if (!realm) {
     return <KeycloakSpinner />;
