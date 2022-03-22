@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Controller, useFormContext, useWatch } from "react-hook-form";
+import { Controller, useForm, useFormContext, useWatch } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import {
   ActionGroup,
@@ -29,6 +29,7 @@ import { useAdminClient, useFetch } from "../../context/auth/AdminClient";
 import { ClientSecret } from "./ClientSecret";
 import { SignedJWT } from "./SignedJWT";
 import { X509 } from "./X509";
+import type ClientRepresentation from "@keycloak/keycloak-admin-client/lib/defs/clientRepresentation";
 
 type AccessToken = {
   registrationAccessToken: string;
@@ -52,6 +53,9 @@ export const Credentials = ({ clientId, save }: CredentialsProps) => {
     control,
     formState: { isDirty },
   } = useFormContext();
+
+  const form = useForm<ClientRepresentation>();
+
   const clientAuthenticatorType = useWatch({
     control: control,
     name: "clientAuthenticatorType",
@@ -195,6 +199,7 @@ export const Credentials = ({ clientId, save }: CredentialsProps) => {
             clientAuthenticatorType === "client-secret-jwt") && (
             <CardBody>
               <ClientSecret
+                form={form}
                 secret={secret}
                 toggle={toggleClientSecretConfirm}
               />
