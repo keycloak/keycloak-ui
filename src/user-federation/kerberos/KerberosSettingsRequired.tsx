@@ -192,7 +192,7 @@ export const KerberosSettingsRequired = ({
           fieldId="kc-key-tab"
           isRequired
           validated={form.errors.config?.keyTab?.[0] ? "error" : "default"}
-          helperTextInvalid={form.errors.config.keyTab[0].message}
+          helperTextInvalid={form.errors.config?.keyTab?.[0].message}
         >
           <TextInput
             isRequired
