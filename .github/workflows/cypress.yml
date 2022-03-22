@@ -104,10 +104,8 @@ jobs:
         uses: cypress-io/github-action@v2
         with:
           install: false
-          record: true
-          parallel: true
-          browser: chrome
           wait-on: http://localhost:8080
+          command: npx currents run --record --parallel --key ${{ secrets.CURRENTS_RECORD_KEY }} --ci-build-id "${{ github.repository }}-${{ github.run_id }}-${{ github.run_attempt}} --browser chrome"
         env:
           CYPRESS_BASE_URL: http://localhost:8080/admin/
           CYPRESS_KEYCLOAK_SERVER: http://localhost:8080
