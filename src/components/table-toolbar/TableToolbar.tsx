@@ -63,6 +63,7 @@ export const TableToolbar: FunctionComponent<TableToolbarProps> = ({
                 {searchTypeComponent}
                 {inputGroupPlaceholder && (
                   <SearchInput
+                    id={inputGroupName}
                     placeholder={inputGroupPlaceholder}
                     aria-label={t("search")}
                     value={searchValue}
