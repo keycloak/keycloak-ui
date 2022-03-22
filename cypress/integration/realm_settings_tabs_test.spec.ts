@@ -71,12 +71,8 @@ describe("Realm settings tabs tests", () => {
     realmSettingsPage.toggleSwitch(realmSettingsPage.loginWithEmailSwitch);
 
     realmSettingsPage.toggleSwitch(realmSettingsPage.duplicateEmailsSwitch);
-  });
 
-  it("Check login tab values", () => {
-    sidebarPage.goToRealmSettings();
-    cy.findByTestId("rs-login-tab").click();
-
+    // Check values
     cy.findByTestId(realmSettingsPage.userRegSwitch).should("have.value", "on");
     cy.findByTestId(realmSettingsPage.forgotPwdSwitch).should(
       "have.value",
