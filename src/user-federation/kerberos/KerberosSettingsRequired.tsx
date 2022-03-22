@@ -161,7 +161,7 @@ export const KerberosSettingsRequired = ({
           validated={
             form.errors.config?.serverPrincipal?.[0] ? "error" : "default"
           }
-          helperTextInvalid={form.errors.config.serverPrincipal[0].message}
+          helperTextInvalid={form.errors.config?.serverPrincipal?.[0].message}
         >
           <TextInput
             isRequired
