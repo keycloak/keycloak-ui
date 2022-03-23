@@ -27,32 +27,6 @@ describe("Realm settings tabs tests", () => {
     await adminClient.deleteRealm(realmName);
   });
 
-  it("Go to general tab", () => {
-    sidebarPage.goToRealmSettings();
-    realmSettingsPage.toggleSwitch(realmSettingsPage.managedAccessSwitch);
-    realmSettingsPage.save(realmSettingsPage.generalSaveBtn);
-    masthead.checkNotificationMessage("Realm successfully updated", true);
-    realmSettingsPage.toggleSwitch(realmSettingsPage.managedAccessSwitch);
-    realmSettingsPage.save(realmSettingsPage.generalSaveBtn);
-    masthead.checkNotificationMessage("Realm successfully updated", true);
-
-    // Enable realm
-    realmSettingsPage.toggleSwitch(`${realmName}-switch`);
-    masthead.checkNotificationMessage("Realm successfully updated", true);
-    cy.findByTestId(`${realmName}-switch`).should("have.value", "on");
-
-    // Disable realm
-    realmSettingsPage.toggleSwitch(`${realmName}-switch`);
-    realmSettingsPage.disableRealm();
-    masthead.checkNotificationMessage("Realm successfully updated", true);
-    cy.findByTestId(`${realmName}-switch`).should("have.value", "off");
-
-    // Re-enable realm
-    realmSettingsPage.toggleSwitch(`${realmName}-switch`);
-    masthead.checkNotificationMessage("Realm successfully updated");
-    cy.findByTestId(`${realmName}-switch`).should("have.value", "on");
-  });
-
   it("shows the 'user profile' tab if enabled", () => {
     sidebarPage.goToRealmSettings();
     cy.findByTestId(realmSettingsPage.userProfileTab).should("not.exist");
