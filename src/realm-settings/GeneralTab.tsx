@@ -64,7 +64,9 @@ export const RealmSettingsGeneralTab = ({
             control={control}
             defaultValue=""
             render={({ onChange, value }) => (
-              <ClipboardCopy onChange={onChange}>{value}</ClipboardCopy>
+              <ClipboardCopy data-testid="realmName" onChange={onChange}>
+                {value}
+              </ClipboardCopy>
             )}
           />
         </FormGroup>
@@ -162,6 +164,7 @@ export const RealmSettingsGeneralTab = ({
                 data-testid="user-managed-access-switch"
                 label={t("common:on")}
                 labelOff={t("common:off")}
+                value={value ? "on" : "off"}
                 isChecked={value}
                 onChange={onChange}
               />
@@ -190,6 +193,7 @@ export const RealmSettingsGeneralTab = ({
                   data-testid="user-profile-enabled-switch"
                   label={t("common:on")}
                   labelOff={t("common:off")}
+                  value={value ? "on" : "off"}
                   isChecked={value === "true"}
                   onChange={(value) => onChange(value.toString())}
                 />

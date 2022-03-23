@@ -220,6 +220,10 @@ export default class RealmSettingsPage {
   private selectScopeButton = "addValue";
   private deleteClientRolesConditionBtn = "delete-client-roles-condition";
   private deleteClientScopesConditionBtn = "delete-client-scopes-condition";
+  private realmDisplayName = "#kc-display-name";
+  private displayNameHTML = "#kc-html-display-name";
+  private frontEndURL = "#kc-frontend-url";
+  private requireSSL = "#kc-require-ssl";
 
   private realmName?: string;
   constructor(realmName?: string) {
@@ -266,6 +270,34 @@ export default class RealmSettingsPage {
   fillHostField(host: string) {
     cy.get(this.hostInput).clear().type(host);
     return this;
+  }
+
+  getDisplayName(name: string) {
+    cy.get(this.realmDisplayName).should("have.value", name);
+    return this;
+  }
+
+  getFrontendURL(url: string) {
+    cy.get(this.frontEndURL).should("have.value", url);
+    return this;
+  }
+
+  getRequireSSL(option: string) {
+    cy.get(this.requireSSL).should("have.value", option);
+
+    return this;
+  }
+
+  fillDisplayName(displayName: string) {
+    cy.get(this.realmDisplayName).type(displayName);
+  }
+
+  fillFrontendURL(url: string) {
+    cy.get(this.frontEndURL).type(url);
+  }
+
+  fillRequireSSL(option: string) {
+    cy.get(this.requireSSL).click().contains(option).click();
   }
 
   setDefaultLocale(locale: string) {

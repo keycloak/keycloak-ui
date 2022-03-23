@@ -39,15 +39,18 @@ describe("Realm settings tabs tests", () => {
     // Enable realm
     realmSettingsPage.toggleSwitch(`${realmName}-switch`);
     masthead.checkNotificationMessage("Realm successfully updated", true);
+    cy.findByTestId(`${realmName}-switch`).should("have.value", "on");
 
     // Disable realm
     realmSettingsPage.toggleSwitch(`${realmName}-switch`);
     realmSettingsPage.disableRealm();
     masthead.checkNotificationMessage("Realm successfully updated", true);
+    cy.findByTestId(`${realmName}-switch`).should("have.value", "off");
 
     // Re-enable realm
     realmSettingsPage.toggleSwitch(`${realmName}-switch`);
     masthead.checkNotificationMessage("Realm successfully updated");
+    cy.findByTestId(`${realmName}-switch`).should("have.value", "on");
   });
 
   it("shows the 'user profile' tab if enabled", () => {
