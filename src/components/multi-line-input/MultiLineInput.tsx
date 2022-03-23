@@ -1,4 +1,4 @@
-import React, { Fragment, useEffect } from "react";
+import React, { Fragment, useState } from "react";
 import { useFormContext } from "react-hook-form";
 import {
   TextInput,
@@ -25,35 +25,34 @@ export const MultiLineInput = ({
   ...rest
 }: MultiLineInputProps) => {
   const { t } = useTranslation();
-  const { register, watch, setValue } = useFormContext();
+  const { register, watch } = useFormContext();
 
   const value = watch(name, defaultValue);
-  const fields = Array.isArray(value) && value.length !== 0 ? value : [""];
+  const [indexes, setIndexes] = useState<number[]>(
+    Array.isArray(value) ? value.map((_, index) => index) : []
+  );
+  const [counter, setCounter] = useState(0);
 
   const remove = (index: number) => {
-    setValue(name, [...fields.slice(0, index), ...fields.slice(index + 1)]);
+    setIndexes((prevIndexes) => [
+      ...prevIndexes.filter((item) => item !== index),
+    ]);
+    setCounter((prevCounter) => prevCounter - 1);
   };
 
   const append = () => {
-    setValue(name, [...fields, ""]);
+    setIndexes((prevIndexes) => [...prevIndexes, counter]);
+    setCounter((prevCounter) => prevCounter + 1);
   };
-
-  useEffect(() => register(name), [register]);
 
   return (
     <>
-      {fields.map((value: string, index: number) => (
+      {indexes.map((index) => (
         <Fragment key={index}>
           <InputGroup>
             <TextInput
               id={name + index}
-              onChange={(value) => {
-                setValue(name, [
-                  ...fields.slice(0, index),
-                  value,
-                  ...fields.slice(index + 1),
-                ]);
-              }}
+              ref={register}
               name={`${name}[${index}]`}
               value={value}
               isDisabled={isDisabled}
@@ -64,12 +63,12 @@ export const MultiLineInput = ({
               onClick={() => remove(index)}
               tabIndex={-1}
               aria-label={t("common:remove")}
-              isDisabled={index === fields.length - 1}
+              isDisabled={index === indexes.length - 1}
             >
               <MinusCircleIcon />
             </Button>
           </InputGroup>
-          {index === fields.length - 1 && (
+          {index === indexes.length - 1 && (
             <Button
               variant={ButtonVariant.link}
               onClick={append}
