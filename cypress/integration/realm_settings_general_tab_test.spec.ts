@@ -27,7 +27,7 @@ describe("Realm settings general tab tests", () => {
     await adminClient.deleteRealm(realmName);
   });
 
-  it.skip("Test all general tab switches", () => {
+  it("Test all general tab switches", () => {
     sidebarPage.goToRealmSettings();
     realmSettingsPage.toggleSwitch(realmSettingsPage.managedAccessSwitch);
     realmSettingsPage.save(realmSettingsPage.generalSaveBtn);

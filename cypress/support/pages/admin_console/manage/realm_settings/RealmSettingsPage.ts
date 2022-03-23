@@ -283,7 +283,7 @@ export default class RealmSettingsPage {
   }
 
   getRequireSSL(option: string) {
-    cy.get(this.requireSSL).should("have.value", option);
+    cy.get(this.requireSSL).contains(option);
 
     return this;
   }
@@ -297,7 +297,11 @@ export default class RealmSettingsPage {
   }
 
   fillRequireSSL(option: string) {
-    cy.get(this.requireSSL).click().contains(option).click();
+    cy.get(this.requireSSL)
+      .click()
+      .get(".pf-c-select__menu-item")
+      .contains(option)
+      .click();
   }
 
   setDefaultLocale(locale: string) {
