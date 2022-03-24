@@ -28,7 +28,7 @@ export const MultiLineInput = ({
   const { register, watch } = useFormContext();
 
   const value = watch(name, defaultValue);
-  const [indexes, setIndexes] = useState<number[]>(
+  const [indexes, setIndexes] = useState(
     Array.isArray(value) ? value.map((_, index) => index) : []
   );
   const [counter, setCounter] = useState(0);
