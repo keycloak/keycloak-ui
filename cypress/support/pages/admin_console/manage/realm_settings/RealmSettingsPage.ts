@@ -297,6 +297,10 @@ export default class RealmSettingsPage {
     cy.get(this.frontEndURL).clear().type(url);
   }
 
+  clearFrontendURL() {
+    cy.get(this.frontEndURL).clear();
+  }
+
   fillRequireSSL(option: string) {
     cy.get(this.requireSSL)
       .click()

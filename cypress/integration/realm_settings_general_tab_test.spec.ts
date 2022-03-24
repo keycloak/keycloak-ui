@@ -72,7 +72,7 @@ describe("Realm settings general tab tests", () => {
   it("Check and clear front end display name value", () => {
     sidebarPage.goToRealmSettings();
     realmSettingsPage.getFrontendURL("www.example.com");
-    realmSettingsPage.fillFrontendURL("");
+    realmSettingsPage.clearFrontendURL();
   });
 
   it("Select SSL all requests", () => {
