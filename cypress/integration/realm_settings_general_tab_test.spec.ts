@@ -39,18 +39,15 @@ describe("Realm settings general tab tests", () => {
     // Enable realm
     realmSettingsPage.toggleSwitch(`${realmName}-switch`);
     masthead.checkNotificationMessage("Realm successfully updated", true);
-    cy.findByTestId(`${realmName}-switch`).should("have.value", "on");
 
     // Disable realm
     realmSettingsPage.toggleSwitch(`${realmName}-switch`);
     realmSettingsPage.disableRealm();
     masthead.checkNotificationMessage("Realm successfully updated", true);
-    cy.findByTestId(`${realmName}-switch`).should("have.value", "off");
 
     // Re-enable realm
     realmSettingsPage.toggleSwitch(`${realmName}-switch`);
     masthead.checkNotificationMessage("Realm successfully updated");
-    cy.findByTestId(`${realmName}-switch`).should("have.value", "on");
   });
 
   it("Modify Display name", () => {
@@ -72,9 +69,10 @@ describe("Realm settings general tab tests", () => {
     masthead.checkNotificationMessage("Realm successfully updated", true);
   });
 
-  it("Check front end display name value", () => {
+  it("Check and clear front end display name value", () => {
     sidebarPage.goToRealmSettings();
     realmSettingsPage.getFrontendURL("www.example.com");
+    realmSettingsPage.fillFrontendURL("");
   });
 
   it("Select SSL all requests", () => {
@@ -84,7 +82,7 @@ describe("Realm settings general tab tests", () => {
     masthead.checkNotificationMessage("Realm successfully updated", true);
   });
 
-  it("Check SSL all requests", () => {
+  it("Verify SSL all requests displays", () => {
     sidebarPage.goToRealmSettings();
     realmSettingsPage.getRequireSSL("All requests");
   });
@@ -96,7 +94,7 @@ describe("Realm settings general tab tests", () => {
     masthead.checkNotificationMessage("Realm successfully updated", true);
   });
 
-  it("Check SSL external requests", () => {
+  it("Verify SSL external requests displays", () => {
     sidebarPage.goToRealmSettings();
     realmSettingsPage.getRequireSSL("External requests");
   });
@@ -108,8 +106,65 @@ describe("Realm settings general tab tests", () => {
     masthead.checkNotificationMessage("Realm successfully updated", true);
   });
 
-  it("Check SSL None", () => {
+  it("Verify SSL None displays", () => {
     sidebarPage.goToRealmSettings();
     realmSettingsPage.getRequireSSL("None");
+  });
+
+  it("Check Access Endpoints OpenID Endpoint Configuration link", () => {
+    sidebarPage.goToRealmSettings();
+
+    // Check link exists
+    cy.get("a")
+      .contains("OpenID Endpoint Configuration")
+      .should(
+        "have.attr",
+        "href",
+        `http://localhost:8180/realms/${realmName}/.well-known/openid-configuration`
+      )
+      .should("have.attr", "target", "_blank")
+      .should("have.attr", "rel", "noreferrer noopener");
+  });
+
+  it("Access Endpoints OpenID Endpoint Configuration link", () => {
+    sidebarPage.goToRealmSettings();
+    // Check the link is live
+    cy.get("a")
+      .contains("OpenID Endpoint Configuration")
+      .then((link) => {
+        cy.request(link.prop("href")).its("status").should("eq", 200);
+      });
+  });
+
+  it("Check if Access Endpoints SAML 2.0 Identity Provider Metadata link exists", () => {
+    sidebarPage.goToRealmSettings();
+    cy.get("a")
+      .contains("SAML 2.0 Identity Provider Metadata")
+      .should(
+        "have.attr",
+        "href",
+        `http://localhost:8180/realms/${realmName}/protocol/saml/descriptor`
+      )
+      .should("have.attr", "target", "_blank")
+      .should("have.attr", "rel", "noreferrer noopener");
+  });
+
+  it("Access Endpoints SAML 2.0 Identity Provider Metadata link", () => {
+    sidebarPage.goToRealmSettings();
+
+    // Check the link is live
+    cy.get("a")
+      .contains("SAML 2.0 Identity Provider Metadata ")
+      .then((link) => {
+        cy.request(link.prop("href")).its("status").should("eq", 200);
+      });
+  });
+
+  it("Verify 'Revert' button works", () => {
+    sidebarPage.goToRealmSettings();
+
+    realmSettingsPage.fillDisplayName("should_be_reverted");
+    realmSettingsPage.revert(realmSettingsPage.generalRevertBtn);
+    realmSettingsPage.getDisplayName("display_name");
   });
 });

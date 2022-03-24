@@ -164,7 +164,6 @@ export const RealmSettingsGeneralTab = ({
                 data-testid="user-managed-access-switch"
                 label={t("common:on")}
                 labelOff={t("common:off")}
-                value={value ? "on" : "off"}
                 isChecked={value}
                 onChange={onChange}
               />
@@ -193,7 +192,6 @@ export const RealmSettingsGeneralTab = ({
                   data-testid="user-profile-enabled-switch"
                   label={t("common:on")}
                   labelOff={t("common:off")}
-                  value={value ? "on" : "off"}
                   isChecked={value === "true"}
                   onChange={(value) => onChange(value.toString())}
                 />
@@ -236,7 +234,11 @@ export const RealmSettingsGeneralTab = ({
           >
             {t("common:save")}
           </Button>
-          <Button variant="link" onClick={reset}>
+          <Button
+            data-testid="general-tab-revert"
+            variant="link"
+            onClick={reset}
+          >
             {t("common:revert")}
           </Button>
         </ActionGroup>

@@ -3,6 +3,7 @@ import ListingPage from "../../ListingPage";
 const expect = chai.expect;
 export default class RealmSettingsPage {
   generalSaveBtn = "general-tab-save";
+  generalRevertBtn = "general-tab-revert";
   themesSaveBtn = "themes-tab-save";
   loginTab = "rs-login-tab";
   userProfileTab = "rs-user-profile-tab";
@@ -289,11 +290,11 @@ export default class RealmSettingsPage {
   }
 
   fillDisplayName(displayName: string) {
-    cy.get(this.realmDisplayName).type(displayName);
+    cy.get(this.realmDisplayName).clear().type(displayName);
   }
 
   fillFrontendURL(url: string) {
-    cy.get(this.frontEndURL).type(url);
+    cy.get(this.frontEndURL).clear().type(url);
   }
 
   fillRequireSSL(option: string) {
@@ -382,6 +383,12 @@ export default class RealmSettingsPage {
 
   save(saveBtn: string) {
     cy.findByTestId(saveBtn).click();
+
+    return this;
+  }
+
+  revert(revertBtn: string) {
+    cy.findByTestId(revertBtn).click();
 
     return this;
   }
