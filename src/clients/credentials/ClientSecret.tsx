@@ -7,8 +7,8 @@ import {
   Split,
   SplitItem,
 } from "@patternfly/react-core";
-import type { UseFormMethods } from "react-hook-form";
 import type ClientRepresentation from "@keycloak/keycloak-admin-client/lib/defs/clientRepresentation";
+import type { UseFormMethods } from "react-hook-form";
 
 export type ClientSecretProps = {
   secret: string;
@@ -18,8 +18,6 @@ export type ClientSecretProps = {
 
 export const ClientSecret = ({ secret, toggle, form }: ClientSecretProps) => {
   const { t } = useTranslation("clients");
-
-  console.log(form.getValues());
 
   return (
     <FormGroup label={t("clientSecret")} fieldId="kc-client-secret">
@@ -32,8 +30,8 @@ export const ClientSecret = ({ secret, toggle, form }: ClientSecretProps) => {
         <SplitItem>
           <Button
             variant="secondary"
-            onClick={toggle}
             isDisabled={form.formState.isDirty}
+            onClick={toggle}
           >
             {t("regenerate")}
           </Button>

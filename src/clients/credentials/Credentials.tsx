@@ -1,5 +1,10 @@
 import React, { useState } from "react";
-import { Controller, useForm, useFormContext, useWatch } from "react-hook-form";
+import {
+  Controller,
+  useFormContext,
+  UseFormMethods,
+  useWatch,
+} from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import {
   ActionGroup,
@@ -38,9 +43,10 @@ type AccessToken = {
 export type CredentialsProps = {
   clientId: string;
   save: () => void;
+  form: UseFormMethods<ClientRepresentation>;
 };
 
-export const Credentials = ({ clientId, save }: CredentialsProps) => {
+export const Credentials = ({ clientId, save, form }: CredentialsProps) => {
   const { t } = useTranslation("clients");
   const adminClient = useAdminClient();
   const { addAlert, addError } = useAlerts();
@@ -52,9 +58,8 @@ export const Credentials = ({ clientId, save }: CredentialsProps) => {
   const {
     control,
     formState: { isDirty },
+    handleSubmit,
   } = useFormContext();
-
-  const form = useForm<ClientRepresentation>();
 
   const clientAuthenticatorType = useWatch({
     control: control,
@@ -135,7 +140,12 @@ export const Credentials = ({ clientId, save }: CredentialsProps) => {
 
   return (
     <PageSection>
-      <FormAccess isHorizontal className="pf-u-mt-md" role="manage-clients">
+      <FormAccess
+        onSubmit={handleSubmit(save)}
+        isHorizontal
+        className="pf-u-mt-md"
+        role="manage-clients"
+      >
         <ClientSecretConfirm />
         <AccessTokenConfirm />
         <Card isFlat>
@@ -184,11 +194,7 @@ export const Credentials = ({ clientId, save }: CredentialsProps) => {
             {clientAuthenticatorType === "client-jwt" && <SignedJWT />}
             {clientAuthenticatorType === "client-x509" && <X509 />}
             <ActionGroup>
-              <Button
-                variant="primary"
-                onClick={() => save()}
-                isDisabled={!isDirty}
-              >
+              <Button variant="primary" type="submit" isDisabled={!isDirty}>
                 {t("common:save")}
               </Button>
             </ActionGroup>
