@@ -16,6 +16,12 @@ export default class SidebarPage {
   private identityProvidersBtn = "#nav-item-identity-providers";
   private userFederationBtn = "#nav-item-user-federation";
 
+  showCurrentRealms(length: number) {
+    cy.get(this.realmsDrpDwn).scrollIntoView().click({ force: true });
+    cy.get(this.realmsList).children("li").should("have.length", length);
+    cy.get(this.realmsDrpDwn).click({ force: true });
+  }
+
   getCurrentRealm() {
     return cy.get(this.realmsDrpDwn).scrollIntoView().invoke("text");
   }

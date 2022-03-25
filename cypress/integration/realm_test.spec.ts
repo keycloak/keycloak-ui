@@ -40,11 +40,34 @@ describe("Realms test", () => {
       cy.reload();
     });
 
+    it("should fail creating realm with empty name", () => {
+      sidebarPage.goToCreateRealm();
+      createRealmPage.createRealm();
+
+      createRealmPage.verifyRealmNameFieldInvalid();
+      cy.reload();
+    });
+
     it("should create Test realm", () => {
       sidebarPage.goToCreateRealm();
       createRealmPage.fillRealmName(testRealmName).createRealm();
 
       masthead.checkNotificationMessage("Realm created");
+    });
+
+    it("should create Test Delete realm", () => {
+      sidebarPage.goToCreateRealm();
+      createRealmPage.fillRealmName("Test Delete").createRealm();
+
+      masthead.checkNotificationMessage("Realm created");
+    });
+
+    it("Should delete Test Delete realm", () => {
+      adminClient.deleteRealm("Test Delete");
+    });
+
+    it("Should update realms on delete", () => {
+      sidebarPage.showCurrentRealms(3);
     });
 
     it("should create realm from new a realm", () => {
@@ -64,6 +87,10 @@ describe("Realms test", () => {
       masthead.checkNotificationMessage("Realm created");
 
       cy.wait(["@fetch"]);
+    });
+
+    it("Should show current realms", () => {
+      sidebarPage.showCurrentRealms(5);
     });
 
     it("should change to Test realm", () => {

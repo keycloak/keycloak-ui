@@ -25,4 +25,13 @@ export default class CreateRealmPage {
 
     return this;
   }
+
+  verifyRealmNameFieldInvalid() {
+    cy.get(this.realmNameInput)
+      .next("div")
+      .contains("Required field")
+      .should("have.class", "pf-m-error");
+
+    return this;
+  }
 }
