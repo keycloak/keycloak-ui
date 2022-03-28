@@ -21,10 +21,10 @@ For development on this project you will need a running Keycloak server listenin
 
     * or download Keycloak server from [keycloak downloads page][2] unpack and run it like:
 
-        ```bash
-        $> cd <unpacked download folder>/bin
-        $> standalone -Djboss.socket.binding.port-offset=100
-        ```
+      ```bash
+      $> cd <unpacked download folder>/bin
+      $> standalone -Djboss.socket.binding.port-offset=100
+      ```
 
 3. Go to the clients section of the existing Keycloak Admin Console and add the client
     * like this:
@@ -34,10 +34,10 @@ For development on this project you will need a running Keycloak server listenin
 
 4. Install dependencies and run:
 
-    ```bash
-    $> npm install
-    $> npm run start
-    ```
+      ```bash
+      $> npm install
+      $> npm run start
+      ```
 
 ## Building as a Keycloak theme
 
