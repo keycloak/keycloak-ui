@@ -109,11 +109,7 @@ export const RealmSettingsLoginTab = ({
                   id="kc-forgot-pw-switch"
                   data-testid="forgot-pw-switch"
                   name="resetPasswordAllowed"
-                  value={
-                    value
-                      ? t("common:on").toLowerCase()
-                      : t("common:off").toLowerCase()
-                  }
+                  value={value ? "on" : "off"}
                   label={t("common:on")}
                   labelOff={t("common:off")}
                   isChecked={value}
@@ -143,11 +139,7 @@ export const RealmSettingsLoginTab = ({
                 <Switch
                   id="kc-remember-me-switch"
                   data-testid="remember-me-switch"
-                  value={
-                    value
-                      ? t("common:on").toLowerCase()
-                      : t("common:off").toLowerCase()
-                  }
+                  value={value ? "on" : "off"}
                   label={t("common:on")}
                   labelOff={t("common:off")}
                   isChecked={value}
@@ -181,11 +173,7 @@ export const RealmSettingsLoginTab = ({
                 <Switch
                   id="kc-email-as-username-switch"
                   data-testid="email-as-username-switch"
-                  value={
-                    value
-                      ? t("common:on").toLowerCase()
-                      : t("common:off").toLowerCase()
-                  }
+                  value={value ? "on" : "off"}
                   label={t("common:on")}
                   labelOff={t("common:off")}
                   isChecked={value}
@@ -215,11 +203,7 @@ export const RealmSettingsLoginTab = ({
                 <Switch
                   id="kc-login-with-email-switch"
                   data-testid="login-with-email-switch"
-                  value={
-                    value
-                      ? t("common:on").toLowerCase()
-                      : t("common:off").toLowerCase()
-                  }
+                  value={value ? "on" : "off"}
                   label={t("common:on")}
                   labelOff={t("common:off")}
                   isChecked={value}
@@ -287,11 +271,7 @@ export const RealmSettingsLoginTab = ({
                   id="kc-verify-email-switch"
                   data-testid="verify-email-switch"
                   name="verifyEmail"
-                  value={
-                    value
-                      ? t("common:on").toLowerCase()
-                      : t("common:off").toLowerCase()
-                  }
+                  value={value ? "on" : "off"}
                   label={t("common:on")}
                   labelOff={t("common:off")}
                   isChecked={value}
@@ -328,11 +308,7 @@ export const RealmSettingsLoginTab = ({
                 <Switch
                   id="kc-edit-username-switch"
                   data-testid="edit-username-switch"
-                  value={
-                    value
-                      ? t("common:on").toLowerCase()
-                      : t("common:off").toLowerCase()
-                  }
+                  value={value ? "on" : "off"}
                   label={t("common:on")}
                   labelOff={t("common:off")}
                   isChecked={value}
