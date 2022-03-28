@@ -29,7 +29,7 @@ describe("Realms test", () => {
       );
     });
 
-    it.skip("should fail creating Master realm", () => {
+    it("should fail creating Master realm", () => {
       sidebarPage.goToCreateRealm();
       createRealmPage.fillRealmName("master").createRealm();
 
@@ -40,7 +40,7 @@ describe("Realms test", () => {
       cy.reload();
     });
 
-    it.skip("should fail creating realm with empty name", () => {
+    it("should fail creating realm with empty name", () => {
       sidebarPage.goToCreateRealm();
       createRealmPage.createRealm();
 
@@ -48,8 +48,13 @@ describe("Realms test", () => {
       cy.reload();
     });
 
-    it.skip("should create Test realm", () => {
+    it("should create Test realm", () => {
       sidebarPage.goToCreateRealm();
+
+      // Test and clear resource field
+      createRealmPage.fillCodeEditor();
+      createRealmPage.clearTextField();
+
       createRealmPage.fillRealmName(testRealmName).createRealm();
 
       masthead.checkNotificationMessage("Realm created");
@@ -91,7 +96,7 @@ describe("Realms test", () => {
     });
 
     it("Should show current realms", () => {
-      sidebarPage.showCurrentRealms(5);
+      sidebarPage.showCurrentRealms(4);
     });
 
     it("should change to Test realm", () => {

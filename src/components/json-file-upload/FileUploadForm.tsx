@@ -84,7 +84,7 @@ export const FileUploadForm = ({
             <Button
               key="confirm"
               variant="primary"
-              data-testid="clear"
+              data-testid="clear-button"
               onClick={() => {
                 setFileUpload(defaultUpload);
                 onChange("");
