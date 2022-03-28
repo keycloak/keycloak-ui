@@ -1,6 +1,7 @@
 export default class CreateRealmPage {
   private browseBtn = "#kc-realm-filename-browse-button";
   private clearBtn = ".pf-c-file-upload__file-select button:last-child";
+  private modalClearBtn = "clear";
   private realmFileNameInput = "#kc-realm-filename";
   private realmNameInput = "#kc-realm-name";
   private enabledSwitch =
@@ -20,8 +21,21 @@ export default class CreateRealmPage {
     return this;
   }
 
+  disableRealm() {
+    cy.get(this.enabledSwitch).click();
+
+    return this;
+  }
+
   cancelRealmCreation() {
     cy.get(this.cancelBtn).click();
+
+    return this;
+  }
+
+  clearTextField() {
+    cy.get(this.clearBtn).click();
+    cy.findByTestId(this.modalClearBtn);
 
     return this;
   }

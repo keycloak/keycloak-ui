@@ -29,7 +29,7 @@ describe("Realms test", () => {
       );
     });
 
-    it("should fail creating Master realm", () => {
+    it.skip("should fail creating Master realm", () => {
       sidebarPage.goToCreateRealm();
       createRealmPage.fillRealmName("master").createRealm();
 
@@ -40,7 +40,7 @@ describe("Realms test", () => {
       cy.reload();
     });
 
-    it("should fail creating realm with empty name", () => {
+    it.skip("should fail creating realm with empty name", () => {
       sidebarPage.goToCreateRealm();
       createRealmPage.createRealm();
 
@@ -48,22 +48,23 @@ describe("Realms test", () => {
       cy.reload();
     });
 
-    it("should create Test realm", () => {
+    it.skip("should create Test realm", () => {
       sidebarPage.goToCreateRealm();
       createRealmPage.fillRealmName(testRealmName).createRealm();
 
       masthead.checkNotificationMessage("Realm created");
     });
 
-    it("should create Test Delete realm", () => {
+    it("should create Test Disabled realm", () => {
       sidebarPage.goToCreateRealm();
-      createRealmPage.fillRealmName("Test Delete").createRealm();
+      createRealmPage.fillRealmName("Test Disabled").createRealm();
+      createRealmPage.disableRealm();
 
       masthead.checkNotificationMessage("Realm created");
     });
 
-    it("Should delete Test Delete realm", () => {
-      adminClient.deleteRealm("Test Delete");
+    it("Should delete Test Disabled realm", () => {
+      adminClient.deleteRealm("Test Disabled");
     });
 
     it("Should update realms on delete", () => {
