@@ -73,7 +73,7 @@ describe("Realms test", () => {
     });
 
     it("Should update realms on delete", () => {
-      sidebarPage.showCurrentRealms(3);
+      sidebarPage.showCurrentRealms(4);
     });
 
     it("should create realm from new a realm", () => {
@@ -96,7 +96,7 @@ describe("Realms test", () => {
     });
 
     it("Should show current realms", () => {
-      sidebarPage.showCurrentRealms(4);
+      sidebarPage.showCurrentRealms(5);
     });
 
     it("should change to Test realm", () => {
