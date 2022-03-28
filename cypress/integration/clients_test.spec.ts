@@ -29,7 +29,7 @@ const modalUtils = new ModalUtils();
 const createRealmRolePage = new CreateRealmRolePage();
 
 describe("Clients test", () => {
-  describe("Client details - Client scopes subtab", () => {
+  describe.skip("Client details - Client scopes subtab", () => {
     const clientScopesTab = new ClientScopesTab();
     const clientId = "client-scopes-subtab-test";
     const clientScopeName = "client-scope-test";
@@ -203,7 +203,7 @@ describe("Clients test", () => {
     });*/
   });
 
-  describe("Client creation", () => {
+  describe.skip("Client creation", () => {
     before(() => {
       keycloakBefore();
       loginPage.logIn();
@@ -333,7 +333,7 @@ describe("Clients test", () => {
         .checkSaveButtonIsDisabled();
     });
 
-    it.skip("Initial access token", () => {
+    it("Initial access token", () => {
       const initialAccessTokenTab = new InitialAccessTokenTab();
       initialAccessTokenTab
         .goToInitialAccessTokenTab()
@@ -494,7 +494,7 @@ describe("Clients test", () => {
       listingPage.searchItem(itemId, false).goToItemDetails(itemId);
 
       // Add associated realm role
-      associatedRolesPage.addAssociatedRoleFromSearchBar("create-realm", false);
+      associatedRolesPage.addAssociatedRealmRole("create-realm");
       masthead.checkNotificationMessage(
         "Associated roles have been added",
         true
