@@ -29,7 +29,7 @@ export const MultiLineInput = ({
 
   const value = watch(name, defaultValue);
   const [indexes, setIndexes] = useState(
-    Array.isArray(value) ? value.map((_, index) => index) : []
+    Array.isArray(value) ? value.map((_, index) => index) : [0]
   );
   const [counter, setCounter] = useState(0);
 
