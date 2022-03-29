@@ -1,44 +1,51 @@
-name: "CodeQL"
-
+name: CodeQL
 on:
   push:
     branches: [main]
     paths-ignore:
-      - 'cypress/**'
-      - 'mocks/**'   
+      - cypress/**
+      - mocks/**
   pull_request:
     branches: [main]
     paths-ignore:
-      - 'cypress/**'
-      - 'mocks/**' 
-
+      - cypress/**
+      - mocks/**
 env:
   NODE_VERSION: 16
 jobs:
   analyze:
     runs-on: ubuntu-latest
-    # Skip any PR created by dependabot to avoid permission issues
-    if: (github.actor != 'dependabot[bot]')
+    permissions:
+      security-events: write
     steps:
-    - name: Checkout repository
-      uses: actions/checkout@v3
+      - name: Checkout repository
+        uses: actions/checkout@v3
 
-    # Initializes the CodeQL tools for scanning.
-    - name: Initialize CodeQL
-      uses: github/codeql-action/init@v1
-      with:
-        languages: javascript
+      - name: Initialize CodeQL
+        uses: github/codeql-action/init@v1
+        with:
+          languages: javascript
 
-    - name: Install dependencies
-      run: npm ci
+      - name: Set up Node
+        uses: actions/setup-node@v2
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          check-latest: true
+          cache: npm
 
-    - name: Set up Node
-      uses: actions/setup-node@v2
-      with:
-        node-version: ${{ env.NODE_VERSION }}
+      - name: Cache Node modules
+        id: cache-node-modules
+        uses: actions/cache@v3
+        with:
+          path: node_modules
+          key: ${{ runner.os }}-${{ hashFiles('**/package-lock.json') }}
 
-    - name: Run build task
-      run: npm run build
-  
-    - name: Perform CodeQL Analysis
-      uses: github/codeql-action/analyze@v1
+      - name: Install dependencies
+        if: steps.cache-node-modules.outputs.cache-hit != 'true'
+        run: npm ci
+
+      - name: Run build task
+        run: npm run build
+
+      - name: Perform CodeQL Analysis
+        uses: github/codeql-action/analyze@v1
