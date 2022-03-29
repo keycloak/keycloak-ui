@@ -73,7 +73,14 @@ const isAttributeArray = (value: any) => {
   if (!Array.isArray(value)) {
     return false;
   }
-  return value.filter((e) => e.key && e.value).length !== 0;
+
+  return (
+    value.filter(
+      (e) =>
+        Object.prototype.hasOwnProperty.call(e, "key") &&
+        Object.prototype.hasOwnProperty.call(e, "value")
+    ).length !== 0
+  );
 };
 
 const isEmpty = (obj: any) => Object.keys(obj).length === 0;
