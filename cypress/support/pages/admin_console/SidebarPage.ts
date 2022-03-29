@@ -18,7 +18,9 @@ export default class SidebarPage {
 
   showCurrentRealms(length: number) {
     cy.get(this.realmsDrpDwn).scrollIntoView().click({ force: true });
-    cy.get(this.realmsList).children("li").should("have.length", length);
+    cy.get(this.realmsList)
+      .children("li")
+      .should("have.length", length + 1); // account for button
     cy.get(this.realmsDrpDwn).click({ force: true });
   }
 
