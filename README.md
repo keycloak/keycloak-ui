@@ -12,7 +12,7 @@ For development on this project you will need a running Keycloak server listenin
       $> npm install
       ```
 
-2. Start Keycloak
+1. Start Keycloak
     * Download and run with one command
 
       ```bash
@@ -26,13 +26,13 @@ For development on this project you will need a running Keycloak server listenin
       $> standalone -Djboss.socket.binding.port-offset=100
       ```
 
-3. Go to the clients section of the existing Keycloak Admin Console and add the client
+1. Go to the clients section of the existing Keycloak Admin Console and add the client
     * like this:
     ![realm settings](./realm-settings.png "Realm Settings")
     * or click on the "Select file" button and import `security-admin-console-v2.json`
     * or run `$> ./import.mjs`
 
-4. Install dependencies and run:
+1. Install dependencies and run:
 
       ```bash
       $> npm install
