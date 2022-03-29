@@ -69,9 +69,7 @@ describe("Realm settings general tab tests", () => {
     // TODO: Fix internal server error 500 when front-end URL is saved
     // realmSettingsPage.save(realmSettingsPage.generalSaveBtn);
     // masthead.checkNotificationMessage("Realm successfully updated", true);
-  });
 
-  it("Check and clear front end display name value", () => {
     realmSettingsPage.getFrontendURL("www.example.com");
     realmSettingsPage.clearFrontendURL();
   });
