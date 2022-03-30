@@ -4,6 +4,7 @@ import ProviderPage from "../support/pages/admin_console/manage/providers/Provid
 import Masthead from "../support/pages/admin_console/Masthead";
 import ModalUtils from "../support/util/ModalUtils";
 import { keycloakBefore } from "../support/util/keycloak_hooks";
+// import { first } from "cypress/types/lodash";
 
 const loginPage = new LoginPage();
 const masthead = new Masthead();
@@ -17,12 +18,22 @@ const allCapProvider = provider.toUpperCase();
 const firstLdapName = "my-ldap";
 const firstLdapVendor = "Active Directory";
 
-const connectionUrl = "ldap://";
-const firstBindType = "simple";
-const firstBindDn = "user-1";
-const firstBindCreds = "password1";
+// connection and authentication settings
+const connectionUrlInvalid = "ldap://nowhere.com";
+const connectionUrlValid = "ldap://ldap.forumsys.com:389";
+const truststoreSpiNever = "Never";
+// const truststoreSpiOnlyLdaps = "Only for ldaps";
+const connectionTimeoutTwoSecs = "2000";
+// const connectionTimeoutZeroSecs = "0";
+const bindTypeSimple = "simple";
+const bindTypeNone = "none";
+// const bindDnCnDc = "cn=read-only-admin,dc=example,dc=com";
+const bindDnCnOnly = "cn=read-only-admin";
+// const bindCredsValid = "password";
+const bindCredsInvalid = "not-my-password";
 
-const firstEditMode = "READ_ONLY";
+// ldap searching and updating
+const editModeReadOnly = "READ_ONLY";
 const firstUsersDn = "user-dn-1";
 const firstUserLdapAtt = "uid";
 const firstRdnLdapAtt = "uid";
@@ -32,14 +43,15 @@ const firstUserObjClasses = "inetOrgPerson, organizationalPerson";
 const secondLdapName = `${firstLdapName}-2`;
 const secondLdapVendor = "Other";
 
-const secondBindType = "none";
+const editModeWritable = "WRITABLE";
 
-const secondEditMode = "WRITABLE";
 const secondUsersDn = "user-dn-2";
 const secondUserLdapAtt = "cn";
 const secondRdnLdapAtt = "cn";
 const secondUuidLdapAtt = "objectGUID";
 const secondUserObjClasses = "person, organizationalPerson, user";
+
+const updatedLdapName = `${firstLdapName}-updated`;
 
 const defaultPolicy = "DEFAULT";
 const newPolicy = "EVICT_WEEKLY";
@@ -56,6 +68,10 @@ const savedSuccessMessage = "User federation provider successfully saved";
 const deletedSuccessMessage = "The user federation provider has been deleted.";
 const deleteModalTitle = "Delete user federation provider?";
 const disableModalTitle = "Disable user federation provider?";
+
+// const ldapTestSuccessMsg = "Successfully connected to LDAP";
+// const ldapTestFailMsg =
+//   "Error when trying to connect to LDAP. See server.log for details. LDAP test error";
 
 describe("User Fed LDAP tests", () => {
   beforeEach(() => {
@@ -75,14 +91,18 @@ describe("User Fed LDAP tests", () => {
       }
     });
     providersPage.fillLdapRequiredGeneralData(firstLdapName, firstLdapVendor);
+
     providersPage.fillLdapRequiredConnectionData(
-      connectionUrl,
-      firstBindType,
-      firstBindDn,
-      firstBindCreds
+      connectionUrlInvalid,
+      truststoreSpiNever,
+      connectionTimeoutTwoSecs,
+      bindTypeSimple,
+      bindDnCnOnly,
+      bindCredsInvalid
     );
+
     providersPage.fillLdapRequiredSearchingData(
-      firstEditMode,
+      editModeReadOnly,
       firstUsersDn,
       firstUserLdapAtt,
       firstRdnLdapAtt,
@@ -96,7 +116,7 @@ describe("User Fed LDAP tests", () => {
     sidebarPage.goToUserFederation();
   });
 
-  it("Update an existing LDAP provider and save", () => {
+  it.skip("Update an existing LDAP provider and save", () => {
     providersPage.clickExistingCard(firstLdapName);
     providersPage.selectCacheType(newPolicy);
 
@@ -114,8 +134,90 @@ describe("User Fed LDAP tests", () => {
     expect(cy.contains(defaultPolicy).should("not.exist"));
   });
 
-  it("Change existing LDAP provider and click button to cancel", () => {
+  it.skip("Update connection and authentication settings and save", () => {
     providersPage.clickExistingCard(firstLdapName);
+
+    providersPage.fillLdapRequiredConnectionData(
+      connectionUrlInvalid,
+      truststoreSpiNever,
+      connectionTimeoutTwoSecs,
+      bindTypeNone
+    );
+    providersPage.toggleSwitch(providersPage.enableStartTls);
+    providersPage.toggleSwitch(providersPage.connectionPooling);
+
+    providersPage.save(provider);
+    masthead.checkNotificationMessage(savedSuccessMessage);
+
+    // now verify
+    sidebarPage.goToUserFederation();
+    providersPage.clickExistingCard(firstLdapName);
+
+    providersPage.verifyTextField(
+      providersPage.connectionUrlInput,
+      connectionUrlInvalid
+    );
+
+    // MF Can't use the new verifyTextField with Selects, just text fields
+    // providersPage.verifyTextField(
+    //   providersPage.truststoreSpiInput,
+    //   truststoreSpiNever
+    // );
+
+    providersPage.verifyTextField(
+      providersPage.connectionTimeoutInput,
+      connectionTimeoutTwoSecs
+    );
+    // MF Can't use the new verifyTextField with Selects, just text fields
+    // providersPage.verifyTextField(providersPage.bindTypeInput, bindTypeNone);
+
+    // providersPage.verifyTextField(providersPage.bindDnInput, connectionUrlInvalid);
+    // providersPage.verifyTextField(providersPage.bindCredsInput, connectionUrlInvalid);
+    providersPage.verifyToggle(providersPage.enableStartTls, "on");
+    providersPage.verifyToggle(providersPage.connectionPooling, "on");
+    sidebarPage.goToUserFederation();
+  });
+
+  it.skip("Should fail connection and authentication tests", () => {
+    providersPage.clickExistingCard(firstLdapName);
+
+    // click Test connection button (Test connection should fail)
+    // click Test authentication button (Test connection should fail)
+
+    sidebarPage.goToUserFederation();
+  });
+
+  it.skip("Should make changes and pass connection and authentication tests", () => {
+    providersPage.clickExistingCard(firstLdapName);
+    // set enable startTLS switch to OFF
+    // set Use Truststore SPI dropdown to Only for ldaps
+    // set Connection pooling to OFF
+    // enter Bind type to simple
+    // enter bind DN of "cn=read-only-admin,dc=example,dc=com"
+    // enter bind credentials of "password"
+    // click Save (save should succeed)
+
+    // click Test connection button (Test connection should succeed)
+    // click Test authentication button (Test connection should succeed)
+
+    sidebarPage.goToUserFederation();
+  });
+
+  it.skip("Should update display name", () => {
+    providersPage.clickExistingCard(firstLdapName);
+    providersPage.fillLdapRequiredGeneralData(updatedLdapName);
+
+    providersPage.save(provider);
+    masthead.checkNotificationMessage(savedSuccessMessage);
+
+    sidebarPage.goToUserFederation();
+    providersPage.clickExistingCard(updatedLdapName);
+
+    sidebarPage.goToUserFederation();
+  });
+
+  it.skip("Change existing LDAP provider and click button to cancel", () => {
+    providersPage.clickExistingCard(updatedLdapName);
     providersPage.selectCacheType(newPolicy);
 
     providersPage.changeCacheTime("day", defaultLdapDay);
@@ -123,9 +225,8 @@ describe("User Fed LDAP tests", () => {
     providersPage.changeCacheTime("minute", defaultLdapMinute);
 
     providersPage.cancel(provider);
-    cy.wait(1000);
 
-    providersPage.clickExistingCard(firstLdapName);
+    providersPage.clickExistingCard(updatedLdapName);
     providersPage.selectCacheType(newPolicy);
 
     providersPage.verifyChangedHourInput(newLdapHour, defaultLdapHour);
@@ -140,8 +241,8 @@ describe("User Fed LDAP tests", () => {
     modalUtils.checkModalTitle(disableModalTitle).confirmModal();
 
     masthead.checkNotificationMessage(savedSuccessMessage);
-    sidebarPage.goToUserFederation();
-    masthead.checkNotificationMessage(savedSuccessMessage);
+    // sidebarPage.goToUserFederation();
+    // masthead.checkNotificationMessage(savedSuccessMessage);
 
     sidebarPage.goToUserFederation();
     expect(cy.contains("Disabled").should("exist"));
@@ -157,12 +258,19 @@ describe("User Fed LDAP tests", () => {
     expect(cy.contains("Enabled").should("exist"));
   });
 
-  it("Create new LDAP provider using the New Provider dropdown", () => {
+  it.skip("Create new LDAP provider using the New Provider dropdown", () => {
     providersPage.clickMenuCommand(addProviderMenu, allCapProvider);
     providersPage.fillLdapRequiredGeneralData(secondLdapName, secondLdapVendor);
-    providersPage.fillLdapRequiredConnectionData(connectionUrl, secondBindType);
+    providersPage.fillLdapRequiredConnectionData(
+      connectionUrlValid,
+      truststoreSpiNever,
+      connectionTimeoutTwoSecs,
+      bindTypeSimple,
+      bindDnCnOnly,
+      bindCredsInvalid
+    );
     providersPage.fillLdapRequiredSearchingData(
-      secondEditMode,
+      editModeWritable,
       secondUsersDn,
       secondUserLdapAtt,
       secondRdnLdapAtt,
@@ -174,14 +282,21 @@ describe("User Fed LDAP tests", () => {
     sidebarPage.goToUserFederation();
   });
 
+  // temp
   it("Delete an LDAP provider from card view using the card's menu", () => {
+    providersPage.deleteCardFromCard(firstLdapName);
+    modalUtils.checkModalTitle(deleteModalTitle).confirmModal();
+    masthead.checkNotificationMessage(deletedSuccessMessage);
+  });
+
+  it.skip("Delete an LDAP provider from card view using the card's menu", () => {
     providersPage.deleteCardFromCard(secondLdapName);
     modalUtils.checkModalTitle(deleteModalTitle).confirmModal();
     masthead.checkNotificationMessage(deletedSuccessMessage);
   });
 
-  it("Delete an LDAP provider using the Settings view's Action menu", () => {
-    providersPage.deleteCardFromMenu(firstLdapName);
+  it.skip("Delete an LDAP provider using the Settings view's Action menu", () => {
+    providersPage.deleteCardFromMenu(updatedLdapName);
     modalUtils.checkModalTitle(deleteModalTitle).confirmModal();
     masthead.checkNotificationMessage(deletedSuccessMessage);
   });

@@ -154,6 +154,7 @@ export const LdapSettingsConnection = ({
             render={({ onChange, value }) => (
               <Switch
                 id={"kc-enable-start-tls"}
+                data-testid="enable-start-tls"
                 isDisabled={false}
                 onChange={(value) => onChange([`${value}`])}
                 isChecked={value[0] === "true"}
@@ -216,6 +217,7 @@ export const LdapSettingsConnection = ({
             render={({ onChange, value }) => (
               <Switch
                 id={"kc-connection-pooling"}
+                data-testid="connection-pooling"
                 isDisabled={false}
                 onChange={(value) => onChange([`${value}`])}
                 isChecked={value[0] === "true"}
@@ -239,6 +241,7 @@ export const LdapSettingsConnection = ({
             type="number"
             min={0}
             id="kc-console-connection-timeout"
+            data-testid="connection-timeout"
             name="config.connectionTimeout[0]"
             ref={form.register}
           />
