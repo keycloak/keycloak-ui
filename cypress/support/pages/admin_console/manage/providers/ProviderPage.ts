@@ -189,9 +189,9 @@ export default class ProviderPage {
 
   fillLdapConnectionData(
     connectionUrl: string,
+    truststoreSpi: string,
+    connectionTimeout: string,
     bindType: string,
-    truststoreSpi?: string,
-    connectionTimeout?: string,
     bindDn?: string,
     bindCreds?: string
   ) {
@@ -274,7 +274,7 @@ export default class ProviderPage {
     const ldapDnValue = "ou=groups";
 
     cy.contains("Add").click();
-    cy.wait(1000);
+    // cy.wait(1000);
 
     cy.get("#kc-providerId").click();
     cy.get("button").contains(mapperType).click();
