@@ -77,8 +77,8 @@ const isAttributeArray = (value: any) => {
   return (
     value.filter(
       (e) =>
-        Object.prototype.hasOwnProperty.call(e, "key") &&
-        Object.prototype.hasOwnProperty.call(e, "value")
+        Object.hasOwn(e, "key") &&
+        Object.hasOwn(e, "value")
     ).length !== 0
   );
 };
