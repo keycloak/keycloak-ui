@@ -138,6 +138,9 @@ describe("Realm settings events tab tests", () => {
 
     cy.findByTestId("rs-providers-tab").click();
 
+    // search providers
+    listingPage.searchItem("rsa").itemExist("rsa").itemsEqualTo(2);
+
     realmSettingsPage.toggleAddProviderDropdown();
 
     cy.findByTestId("option-aes-generated").click();
@@ -167,6 +170,22 @@ describe("Realm settings events tab tests", () => {
     cy.findByTestId("option-rsa-enc-generated").click();
     realmSettingsPage.enterConsoleDisplayName("test_rsa-enc-generated");
     realmSettingsPage.addProvider();
+
+    realmSettingsPage.toggleAddProviderDropdown();
+
+    cy.findByTestId("delete-option-rsa-enc-generated").click();
+    realmSettingsPage.enterConsoleDisplayName("delete-test_rsa-enc-generated");
+    realmSettingsPage.addProvider();
+  });
+
+  it("delete provider", () => {
+    sidebarPage.goToRealmSettings();
+
+    cy.findByTestId("rs-keys-tab").click();
+
+    cy.findByTestId("rs-providers-tab").click();
+
+    realmSettingsPage.deleteProvider("delete-test_rsa-enc-generated");
   });
 
   it("go to details", () => {

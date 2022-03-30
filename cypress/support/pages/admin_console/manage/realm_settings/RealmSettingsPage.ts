@@ -1,4 +1,5 @@
 import ListingPage from "../../ListingPage";
+import ModalUtils from "../../../../util/ModalUtils";
 
 const expect = chai.expect;
 export default class RealmSettingsPage {
@@ -196,6 +197,7 @@ export default class RealmSettingsPage {
   private executorAvailablePeriodInput = "#available-period";
 
   private listingPage = new ListingPage();
+  private modalUtils = new ModalUtils();
   private addCondition = "addCondition";
   private addConditionDrpDwn = ".pf-c-select__toggle";
   private addConditionDrpDwnOption = "conditionType-select";
@@ -362,6 +364,17 @@ export default class RealmSettingsPage {
   addProvider() {
     cy.findByTestId(this.addProviderButton).click();
 
+    return this;
+  }
+
+  deleteProvider(name: string) {
+    this.listingPage.deleteItem(name);
+    this.modalUtils.checkModalTitle("Delete key provider?").confirmModal();
+
+    cy.get(this.alertMessage).should(
+      "be.visible",
+      "Success. The provider has been deleted."
+    );
     return this;
   }
 
