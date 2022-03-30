@@ -74,9 +74,8 @@ const isAttributeArray = (value: any) => {
     return false;
   }
 
-  return (
-    value.filter((e) => Object.hasOwn(e, "key") && Object.hasOwn(e, "value"))
-      .length !== 0
+  return value.some(
+    (e) => Object.hasOwn(e, "key") && Object.hasOwn(e, "value")
   );
 };
 
