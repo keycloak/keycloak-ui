@@ -4,11 +4,15 @@ import CreateRealmPage from "../support/pages/admin_console/CreateRealmPage";
 import Masthead from "../support/pages/admin_console/Masthead";
 import adminClient from "../support/util/AdminClient";
 import { keycloakBefore } from "../support/util/keycloak_hooks";
+import RealmSettings from "../support/pages/admin_console/configure/realm_settings/RealmSettings";
+import ModalUtils from "../support/util/ModalUtils";
 
 const masthead = new Masthead();
 const loginPage = new LoginPage();
 const sidebarPage = new SidebarPage();
 const createRealmPage = new CreateRealmPage();
+const realmSettings = new RealmSettings();
+const modalUtils = new ModalUtils();
 
 describe("Realms test", () => {
   const testRealmName =
@@ -68,12 +72,23 @@ describe("Realms test", () => {
       masthead.checkNotificationMessage("Realm created");
     });
 
+    it("Should cancel deleting Test Disabled realm", () => {
+      sidebarPage.goToRealmSettings();
+      realmSettings.clickActionMenu();
+      cy.findByText("Delete").click();
+      modalUtils.cancelModal();
+    });
+
     it("Should delete Test Disabled realm", () => {
-      adminClient.deleteRealm("Test Disabled");
+      sidebarPage.goToRealmSettings();
+      realmSettings.clickActionMenu();
+      cy.findByText("Delete").click();
+      modalUtils.confirmModal();
+      masthead.checkNotificationMessage("The realm has been deleted");
     });
 
     it("Should update realms on delete", () => {
-      sidebarPage.showCurrentRealms(3);
+      sidebarPage.showCurrentRealms(2);
     });
 
     it("should create realm from new a realm", () => {
