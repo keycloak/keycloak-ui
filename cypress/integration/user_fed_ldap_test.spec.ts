@@ -4,7 +4,6 @@ import ProviderPage from "../support/pages/admin_console/manage/providers/Provid
 import Masthead from "../support/pages/admin_console/Masthead";
 import ModalUtils from "../support/util/ModalUtils";
 import { keycloakBefore } from "../support/util/keycloak_hooks";
-// import { first } from "cypress/types/lodash";
 
 const loginPage = new LoginPage();
 const masthead = new Masthead();
@@ -113,7 +112,7 @@ describe("User Fed LDAP tests", () => {
     sidebarPage.goToUserFederation();
   });
 
-  it.skip("Update an existing LDAP provider and save", () => {
+  it("Update an existing LDAP provider and save", () => {
     providersPage.clickExistingCard(firstLdapName);
     providersPage.selectCacheType(newPolicy);
 
@@ -254,7 +253,7 @@ describe("User Fed LDAP tests", () => {
     expect(cy.contains("Enabled").should("exist"));
   });
 
-  it.skip("Create new LDAP provider using the New Provider dropdown", () => {
+  it("Create new LDAP provider using the New Provider dropdown", () => {
     providersPage.clickMenuCommand(addProviderMenu, allCapProvider);
     providersPage.fillLdapGeneralData(secondLdapName, secondLdapVendor);
     providersPage.fillLdapConnectionData(
@@ -278,14 +277,7 @@ describe("User Fed LDAP tests", () => {
     sidebarPage.goToUserFederation();
   });
 
-  // temp
   it("Delete an LDAP provider from card view using the card's menu", () => {
-    providersPage.deleteCardFromCard(firstLdapName);
-    modalUtils.checkModalTitle(deleteModalTitle).confirmModal();
-    masthead.checkNotificationMessage(deletedSuccessMessage);
-  });
-
-  it.skip("Delete an LDAP provider from card view using the card's menu", () => {
     providersPage.deleteCardFromCard(secondLdapName);
     modalUtils.checkModalTitle(deleteModalTitle).confirmModal();
     masthead.checkNotificationMessage(deletedSuccessMessage);
