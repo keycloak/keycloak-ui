@@ -15,25 +15,25 @@ import { AttributeGeneralSettings } from "./user-profile/attribute/AttributeGene
 import { AttributePermission } from "./user-profile/attribute/AttributePermission";
 import { AttributeValidations } from "./user-profile/attribute/AttributeValidations";
 import { toUserProfile } from "./routes/UserProfile";
-import "./realm-settings-section.css";
 import { ViewHeader } from "../components/view-header/ViewHeader";
 import { AttributeAnnotations } from "./user-profile/attribute/AttributeAnnotations";
 import { useAdminClient, useFetch } from "../context/auth/AdminClient";
 import { useAlerts } from "../components/alert/Alerts";
 import { UserProfileProvider } from "./user-profile/UserProfileContext";
 import type { UserProfileAttribute } from "@keycloak/keycloak-admin-client/lib/defs/userProfileConfig";
-import type { KeyValueType } from "../components/attribute-form/attribute-convert";
-import type ClientScopeRepresentation from "@keycloak/keycloak-admin-client/lib/defs/clientScopeRepresentation";
 import type { AttributeParams } from "./routes/Attribute";
+import type { KeyValueType } from "../components/attribute-form/attribute-convert";
+import { convertToFormValues } from "../util";
+import { flatten } from "flat";
+
+import "./realm-settings-section.css";
 
 type UserProfileAttributeType = UserProfileAttribute & Attribute & Permission;
 
 type Attribute = {
   roles: string[];
   scopes: string[];
-  scopeRequired: string[];
-  enabledWhen: string;
-  requiredWhen: string;
+  isRequired: boolean;
 };
 
 type Permission = {
@@ -105,52 +105,49 @@ const CreateAttributeFormContent = ({
 export default function NewAttributeSettings() {
   const { realm, attributeName } = useParams<AttributeParams>();
   const adminClient = useAdminClient();
-  const form = useForm<UserProfileConfig>();
+  const form = useForm<UserProfileConfig>({ shouldUnregister: false });
   const { t } = useTranslation("realm-settings");
   const history = useHistory();
   const { addAlert, addError } = useAlerts();
   const [config, setConfig] = useState<UserProfileConfig | null>(null);
-  const [clientScopes, setClientScopes] =
-    useState<ClientScopeRepresentation[]>();
   const editMode = attributeName ? true : false;
 
+  const convert = (obj: Record<string, unknown>[] | undefined) =>
+    Object.entries(obj || []).map(([key, value]) => ({
+      key,
+      value,
+    }));
+
   useFetch(
-    () =>
-      Promise.all([
-        adminClient.users.getProfile({ realm }),
-        adminClient.clientScopes.find(),
-      ]),
-    ([config, clientScopes]) => {
+    () => adminClient.users.getProfile({ realm }),
+    (config) => {
       setConfig(config);
-      setClientScopes(clientScopes);
+      const {
+        annotations,
+        validations,
+        permissions,
+        selector,
+        required,
+        ...values
+      } = config.attributes!.find(
+        (attribute) => attribute.name === attributeName
+      )!;
+      convertToFormValues(values, form.setValue);
+      Object.entries(
+        flatten({ permissions, selector, required }, { safe: true })
+      ).map(([key, value]) => form.setValue(key, value));
+      form.setValue("annotations", convert(annotations));
+      form.setValue("validations", convert(validations));
+      form.setValue("isRequired", required !== undefined);
     },
     []
   );
 
-  const scopeNames = clientScopes?.map((clientScope) => clientScope.name);
-
   const save = async (profileConfig: UserProfileAttributeType) => {
-    const selector = {
-      scopes:
-        profileConfig.enabledWhen === "Always"
-          ? scopeNames
-          : profileConfig.scopes,
-    };
-
-    const required = {
-      roles: profileConfig.roles,
-      scopes:
-        profileConfig.requiredWhen === "Always"
-          ? scopeNames
-          : profileConfig.scopeRequired,
-    };
-
     const validations = profileConfig.validations?.reduce(
       (prevValidations: any, currentValidations: any) => {
-        prevValidations[currentValidations.name] =
-          currentValidations.config.length === 0
-            ? {}
-            : currentValidations.config;
+        prevValidations[currentValidations.key] =
+          currentValidations.value.length === 0 ? {} : currentValidations.value;
         return prevValidations;
       },
       {}
@@ -167,29 +164,38 @@ export default function NewAttributeSettings() {
           return attribute;
         }
 
-        return {
-          ...attribute,
-          name: attributeName,
-          displayName: profileConfig.displayName!,
-          required,
-          validations,
-          selector,
-          permissions: profileConfig.permissions!,
-          annotations,
-        };
+        return Object.assign(
+          {
+            ...attribute,
+            name: attributeName,
+            displayName: profileConfig.displayName!,
+            validations,
+            selector: profileConfig.selector,
+            permissions: profileConfig.permissions!,
+            annotations,
+          },
+          profileConfig.isRequired
+            ? { required: profileConfig.required }
+            : undefined
+        );
       });
 
     const addAttribute = () =>
       config?.attributes!.concat([
-        {
-          name: profileConfig.name,
-          displayName: profileConfig.displayName!,
-          required,
-          validations,
-          selector,
-          permissions: profileConfig.permissions!,
-          annotations,
-        },
+        Object.assign(
+          {
+            name: profileConfig.name,
+            displayName: profileConfig.displayName!,
+            required: profileConfig.isRequired ? profileConfig.required : {},
+            validations,
+            selector: profileConfig.selector,
+            permissions: profileConfig.permissions!,
+            annotations,
+          },
+          profileConfig.isRequired
+            ? { required: profileConfig.required }
+            : undefined
+        ),
       ] as UserProfileAttribute);
 
     const updatedAttributes = editMode ? patchAttributes() : addAttribute();

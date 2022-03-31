@@ -21,71 +21,29 @@ import {
   Tr,
 } from "@patternfly/react-table";
 import { useConfirmDialog } from "../../../components/confirm-dialog/ConfirmDialog";
-import type { Validator } from "./Validators";
 import useToggle from "../../../utils/useToggle";
 import { useFormContext, useWatch } from "react-hook-form";
 
+import type { KeyValueType } from "../../../components/attribute-form/attribute-convert";
+
 import "../../realm-settings-section.css";
-import type { AttributeParams } from "../../routes/Attribute";
-import { useParams } from "react-router-dom";
-import { useAdminClient, useFetch } from "../../../context/auth/AdminClient";
 
 export const AttributeValidations = () => {
   const { t } = useTranslation("realm-settings");
   const [addValidatorModalOpen, toggleModal] = useToggle();
   const [validatorToDelete, setValidatorToDelete] =
     useState<{ name: string }>();
-  const adminClient = useAdminClient();
-  const { getValues, setValue, control, register } = useFormContext();
-  const { realm, attributeName } = useParams<AttributeParams>();
-  const [attribute, setAttribute] = useState<any>();
+  const { setValue, control, register } = useFormContext();
 
-  const editMode = attributeName ? true : false;
-  const validators = useWatch<Validator[]>({
+  const validators = useWatch<KeyValueType[]>({
     name: "validations",
     control,
     defaultValue: [],
   });
 
-  useFetch(
-    () => adminClient.users.getProfile({ realm }),
-    (config) =>
-      setAttribute(
-        config.attributes!.find((attribute) => attribute.name === attributeName)
-      ),
-    []
-  );
-
-  let updatedEditValidatorsValues: Validator[] = [];
-  const updatedEditValidators = getValues();
-
-  const attributeValidators = Object.entries(attribute?.validations ?? []).map(
-    ([key, value]) => ({
-      name: key,
-      config: value,
-    })
-  );
-
-  if (updatedEditValidators.validations) {
-    updatedEditValidatorsValues = Object.assign(
-      updatedEditValidatorsValues,
-      updatedEditValidators.validations
-    );
-  } else {
-    updatedEditValidatorsValues = Object.assign(
-      updatedEditValidatorsValues,
-      attributeValidators
-    );
-  }
-
   useEffect(() => {
     register("validations");
-
-    if (!attribute) {
-      return;
-    }
-    setValue("validations", attributeValidators);
-  }, [attribute]);
+  }, []);
 
   const [toggleDeleteDialog, DeleteConfirm] = useConfirmDialog({
     titleKey: t("deleteValidatorConfirmTitle"),
@@ -96,16 +54,10 @@ export const AttributeValidations = () => {
     continueButtonVariant: ButtonVariant.danger,
     onConfirm: async () => {
       const updatedValidators = validators.filter(
-        (validator) => validator.name !== validatorToDelete?.name
+        (validator) => validator.key !== validatorToDelete?.name
       );
 
-      const updatedEditValidators = updatedEditValidatorsValues.filter(
-        (validator) => validator.name !== validatorToDelete?.name
-      );
-      setValue(
-        "validations",
-        editMode ? [...updatedEditValidators] : [...updatedValidators]
-      );
+      setValue("validations", [...updatedValidators]);
     },
   });
 
@@ -114,7 +66,10 @@ export const AttributeValidations = () => {
       {addValidatorModalOpen && (
         <AddValidatorDialog
           onConfirm={(newValidator) => {
-            setValue("validations", [...validators, newValidator]);
+            setValue("validations", [
+              ...validators,
+              { key: newValidator.name, value: newValidator.config },
+            ]);
           }}
           toggleDialog={toggleModal}
         />
@@ -145,66 +100,36 @@ export const AttributeValidations = () => {
             </Tr>
           </Thead>
           <Tbody>
-            {!editMode && validators.length
-              ? validators.map((validator: Validator) => (
-                  <Tr key={validator.name}>
-                    <Td dataLabel={t("validatorColNames.colName")}>
-                      {validator.name}
-                    </Td>
-                    <Td dataLabel={t("validatorColNames.colConfig")}>
-                      {JSON.stringify(validator.config)}
-                    </Td>
-                    <Td>
-                      <Button
-                        key="validator"
-                        variant="link"
-                        data-testid="deleteValidator"
-                        onClick={() => {
-                          toggleDeleteDialog();
-                          setValidatorToDelete({
-                            name: validator.name,
-                          });
-                        }}
-                      >
-                        {t("common:delete")}
-                      </Button>
-                    </Td>
-                  </Tr>
-                ))
-              : updatedEditValidatorsValues.map((validator) => (
-                  <Tr key={validator.name}>
-                    <Td dataLabel={t("validatorColNames.colName")}>
-                      {validator.name}
-                    </Td>
-                    <Td dataLabel={t("validatorColNames.colConfig")}>
-                      {JSON.stringify(validator.config)}
-                    </Td>
-                    <Td>
-                      <Button
-                        key="validator"
-                        variant="link"
-                        data-testid="deleteValidator"
-                        onClick={() => {
-                          toggleDeleteDialog();
-                          setValidatorToDelete({
-                            name: validator.name,
-                          });
-                        }}
-                      >
-                        {t("common:delete")}
-                      </Button>
-                    </Td>
-                  </Tr>
-                ))}
-            {validators.length === 0 &&
-              updatedEditValidatorsValues.length === 0 && (
-                <Text
-                  className="kc-emptyValidators"
-                  component={TextVariants.h6}
-                >
-                  {t("realm-settings:emptyValidators")}
-                </Text>
-              )}
+            {validators.map((validator) => (
+              <Tr key={validator.key}>
+                <Td dataLabel={t("validatorColNames.colName")}>
+                  {validator.key}
+                </Td>
+                <Td dataLabel={t("validatorColNames.colConfig")}>
+                  {JSON.stringify(validator.value)}
+                </Td>
+                <Td>
+                  <Button
+                    key="validator"
+                    variant="link"
+                    data-testid="deleteValidator"
+                    onClick={() => {
+                      toggleDeleteDialog();
+                      setValidatorToDelete({
+                        name: validator.key,
+                      });
+                    }}
+                  >
+                    {t("common:delete")}
+                  </Button>
+                </Td>
+              </Tr>
+            ))}
+            {validators.length === 0 && (
+              <Text className="kc-emptyValidators" component={TextVariants.h6}>
+                {t("realm-settings:emptyValidators")}
+              </Text>
+            )}
           </Tbody>
         </TableComposable>
       </div>
