@@ -239,7 +239,6 @@ describe("User Fed LDAP tests", () => {
     cy.wait("@getProvider");
     providersPage.disableEnabledSwitch(allCapProvider);
     modalUtils.checkModalTitle(disableModalTitle).confirmModal();
-    cy.wait("@getProvider");
     masthead.checkNotificationMessage(savedSuccessMessage);
     sidebarPage.goToUserFederation();
     expect(cy.contains("Disabled").should("exist"));
