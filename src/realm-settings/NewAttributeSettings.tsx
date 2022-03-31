@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unnecessary-condition */
 import React, { useState } from "react";
 import {
   ActionGroup,
@@ -129,9 +130,10 @@ export default function NewAttributeSettings() {
         selector,
         required,
         ...values
-      } = config.attributes!.find(
-        (attribute) => attribute.name === attributeName
-      )!;
+      } =
+        config.attributes!.find(
+          (attribute) => attribute.name === attributeName
+        )! || {};
       convertToFormValues(values, form.setValue);
       Object.entries(
         flatten({ permissions, selector, required }, { safe: true })
