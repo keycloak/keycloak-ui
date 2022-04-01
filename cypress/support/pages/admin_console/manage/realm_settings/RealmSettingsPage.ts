@@ -1,5 +1,5 @@
-import ListingPage from "../../ListingPage";
 import ModalUtils from "../../../../util/ModalUtils";
+import ListingPage from "../../ListingPage";
 
 const expect = chai.expect;
 export default class RealmSettingsPage {
@@ -69,6 +69,8 @@ export default class RealmSettingsPage {
   enableSslCheck = "enable-ssl";
   enableStartTlsCheck = "enable-start-tls";
   addProviderDropdown = "addProviderDropdown";
+  activeSwitch = "active";
+  enabledSwitch = "enabled";
   addProviderButton = "add-provider-button";
   displayName = "name-input";
   enableEvents = "eventsEnabled";
@@ -79,6 +81,7 @@ export default class RealmSettingsPage {
   filterSelectMenu = ".kc-filter-type-select";
   passiveKeysOption = "PASSIVE-option";
   disabledKeysOption = "DISABLED-option";
+  activeKeysOption = "ACTIVE-option";
   testConnectionButton = "test-connection-button";
   modalTestConnectionButton = "modal-test-connection-button";
   emailAddressInput = "email-address-input";
@@ -341,6 +344,32 @@ export default class RealmSettingsPage {
     cy.findByTestId(this.disabledKeysOption).click();
   }
 
+  deleteProvider(name: string) {
+    this.listingPage.deleteItem(name);
+    this.modalUtils.checkModalTitle("Delete key provider?").confirmModal();
+
+    cy.get(this.alertMessage).should(
+      "be.visible",
+      "Success. The provider has been deleted."
+    );
+    return this;
+  }
+
+  switchToActiveFilter() {
+    cy.get(this.filterSelectMenu).first().click();
+    cy.findByTestId(this.activeKeysOption).click();
+  }
+
+  switchToPassiveFilter() {
+    cy.get(this.filterSelectMenu).first().click();
+    cy.findByTestId(this.passiveKeysOption).click();
+  }
+
+  switchToDisabledFilter() {
+    cy.get(this.filterSelectMenu).first().click();
+    cy.findByTestId(this.disabledKeysOption).click();
+  }
+
   toggleSwitch(switchName: string) {
     cy.findByTestId(switchName).click({ force: true });
 
@@ -364,17 +393,6 @@ export default class RealmSettingsPage {
   addProvider() {
     cy.findByTestId(this.addProviderButton).click();
 
-    return this;
-  }
-
-  deleteProvider(name: string) {
-    this.listingPage.deleteItem(name);
-    this.modalUtils.checkModalTitle("Delete key provider?").confirmModal();
-
-    cy.get(this.alertMessage).should(
-      "be.visible",
-      "Success. The provider has been deleted."
-    );
     return this;
   }
 

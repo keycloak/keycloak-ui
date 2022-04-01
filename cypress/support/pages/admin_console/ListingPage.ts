@@ -104,9 +104,9 @@ export default class ListingPage extends CommonElements {
     return this;
   }
 
-  checkTableLength(length: number) {
+  checkTableLength(length: number, identifier: string) {
     cy.get("table")
-      .should("have.class", "kc-draggable-table")
+      .should("have.class", identifier)
       .get("tbody")
       .children()
       .should("have.length", length);

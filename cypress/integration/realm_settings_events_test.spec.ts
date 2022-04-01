@@ -148,12 +148,14 @@ describe("Realm settings events tab tests", () => {
 
     cy.findByTestId("option-ecdsa-generated").click();
     realmSettingsPage.enterConsoleDisplayName("test_ecdsa-generated");
+    realmSettingsPage.toggleSwitch("active");
     realmSettingsPage.addProvider();
 
     realmSettingsPage.toggleAddProviderDropdown();
 
     cy.findByTestId("option-hmac-generated").click();
     realmSettingsPage.enterConsoleDisplayName("test_hmac-generated");
+    realmSettingsPage.toggleSwitch("enabled");
     realmSettingsPage.addProvider();
 
     realmSettingsPage.toggleAddProviderDropdown();
@@ -178,13 +180,47 @@ describe("Realm settings events tab tests", () => {
 
     // search providers
     cy.findByTestId("provider-search-input").type("rsa{enter}");
-    listingPage.checkTableLength(4);
+    listingPage.checkTableLength(3, "kc-draggable-table");
     cy.findByTestId("provider-search-input").clear().type("{enter}");
   });
 
   it("go to details", () => {
     sidebarPage.goToRealmSettings();
     goToDetails();
+  });
+
+  it("Test keys", () => {
+    sidebarPage.goToRealmSettings();
+    goToKeys();
+
+    realmSettingsPage.testSelectFilter();
+  });
+
+  it("Should search active keys", () => {
+    sidebarPage.goToRealmSettings();
+    goToKeys();
+
+    realmSettingsPage.switchToActiveFilter();
+    listingPage.searchItem("rs", false);
+    listingPage.checkTableLength(3, "kc-keys-list");
+  });
+
+  it("Should search passive keys", () => {
+    sidebarPage.goToRealmSettings();
+    goToKeys();
+
+    realmSettingsPage.switchToPassiveFilter();
+    listingPage.searchItem("ec", false);
+    listingPage.checkTableLength(1, "kc-keys-list");
+  });
+
+  it("Should search disabled keys", () => {
+    sidebarPage.goToRealmSettings();
+    goToKeys();
+
+    realmSettingsPage.switchToDisabledFilter();
+    listingPage.searchItem("hs", false);
+    listingPage.checkTableLength(1, "kc-keys-list");
   });
 
   it("delete provider", () => {
@@ -195,13 +231,6 @@ describe("Realm settings events tab tests", () => {
     cy.findByTestId("rs-providers-tab").click();
 
     realmSettingsPage.deleteProvider("test_aes-generated");
-  });
-
-  it("Test keys", () => {
-    sidebarPage.goToRealmSettings();
-    goToKeys();
-
-    realmSettingsPage.testSelectFilter();
   });
 
   it("add locale", () => {
