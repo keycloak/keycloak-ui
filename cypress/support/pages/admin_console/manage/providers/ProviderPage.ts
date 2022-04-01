@@ -23,13 +23,18 @@ export default class ProviderPage {
   private testAuthBtn = "test-auth-button";
 
   // LdapSettingsSearching input values
-  private ldapEditModeInput = "#kc-edit-mode";
+  ldapEditModeInput = "#kc-edit-mode";
   private ldapEditModeList = "#kc-edit-mode + ul";
-  private ldapUsersDnInput = "ldap-users-dn";
-  private ldapUserLdapAttInput = "ldap-username-attribute";
-  private ldapRdnLdapAttInput = "ldap-rdn-attribute";
-  private ldapUuidLdapAttInput = "ldap-uuid-attribute";
-  private ldapUserObjClassesInput = "ldap-user-object-classes";
+  ldapSearchScopeInput = "#kc-search-scope";
+  private ldapSearchScopeInputList = "#kc-search-scope + ul";
+  ldapPagination = "console-pagination";
+  ldapUsersDnInput = "ldap-users-dn";
+  ldapUserLdapAttInput = "ldap-username-attribute";
+  ldapRdnLdapAttInput = "ldap-rdn-attribute";
+  ldapUuidLdapAttInput = "ldap-uuid-attribute";
+  ldapUserObjClassesInput = "ldap-user-object-classes";
+  ldapUserLdapFilter = "user-ldap-filter";
+  ldapReadTimeout = "ldap-read-timeout";
 
   // LdapSettingsKerberosIntegration input values
   ldapKerberosRealmInput = "kerberos-realm";
@@ -246,11 +251,13 @@ export default class ProviderPage {
     userLdapAtt?: string,
     rdnLdapAtt?: string,
     uuidLdapAtt?: string,
-    userObjClasses?: string
+    userObjClasses?: string,
+    userLdapFilter?: string,
+    searchScope?: string,
+    readTimeout?: string
   ) {
     cy.get(this.ldapEditModeInput).click();
     cy.get(this.ldapEditModeList).contains(editMode).click();
-
     cy.findByTestId(this.ldapUsersDnInput).clear().type(usersDn);
     if (userLdapAtt) {
       cy.findByTestId(this.ldapUserLdapAttInput).clear().type(userLdapAtt);
@@ -265,6 +272,16 @@ export default class ProviderPage {
       cy.findByTestId(this.ldapUserObjClassesInput)
         .clear()
         .type(userObjClasses);
+    }
+    if (userLdapFilter) {
+      cy.findByTestId(this.ldapUserLdapFilter).clear().type(userLdapFilter);
+    }
+    if (searchScope) {
+      cy.get(this.ldapSearchScopeInput).click();
+      cy.get(this.ldapSearchScopeInputList).contains(searchScope).click();
+    }
+    if (readTimeout) {
+      cy.findByTestId(this.ldapReadTimeout).clear().type(readTimeout);
     }
     return this;
   }
