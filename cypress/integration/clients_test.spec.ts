@@ -29,7 +29,7 @@ const modalUtils = new ModalUtils();
 const createRealmRolePage = new CreateRealmRolePage();
 
 describe("Clients test", () => {
-  describe.skip("Client details - Client scopes subtab", () => {
+  describe("Client details - Client scopes subtab", () => {
     const clientScopesTab = new ClientScopesTab();
     const clientId = "client-scopes-subtab-test";
     const clientScopeName = "client-scope-test";
