@@ -180,7 +180,7 @@ describe("Realm settings events tab tests", () => {
 
     // search providers
     cy.findByTestId("provider-search-input").type("rsa{enter}");
-    listingPage.checkTableLength(3, "kc-draggable-table");
+    listingPage.checkTableLength(4, "kc-draggable-table");
     cy.findByTestId("provider-search-input").clear().type("{enter}");
   });
 
