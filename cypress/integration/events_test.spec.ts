@@ -21,7 +21,7 @@ describe("Events tests", () => {
       sidebarPage.goToEvents();
     });
 
-    it("Check search dropdown display", () => {
+    it.skip("Check search dropdown display", () => {
       sidebarPage.goToRealmSettings();
       cy.findByTestId("rs-realm-events-tab").click();
       cy.findByTestId("rs-events-tab").click();
@@ -50,7 +50,7 @@ describe("Events tests", () => {
       userEventsTab.shouldHaveSearchBtnDisabled();
     });
 
-    it("Check user events search and removal work", () => {
+    it.skip("Check user events search and removal work", () => {
       userEventsTab.shouldDoSearchAndRemoveChips();
     });
 

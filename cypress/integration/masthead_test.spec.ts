@@ -24,7 +24,7 @@ const goToAcctMgtTest = () => {
   masthead.checkIsAdminConsole();
 };
 
-describe("Masthead tests in desktop mode", () => {
+describe.skip("Masthead tests in desktop mode", () => {
   beforeEach(() => {
     keycloakBefore();
     loginPage.logIn();
