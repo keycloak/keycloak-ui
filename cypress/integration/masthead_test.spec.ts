@@ -48,7 +48,7 @@ describe.skip("Masthead tests in desktop mode", () => {
   });
 });
 
-describe("Masthead tests with kebab menu", () => {
+describe.skip("Masthead tests with kebab menu", () => {
   beforeEach(() => {
     keycloakBefore();
     loginPage.logIn();

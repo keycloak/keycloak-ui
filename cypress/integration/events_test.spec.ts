@@ -14,14 +14,14 @@ const realmSettingsPage = new RealmSettingsPage();
 const masthead = new Masthead();
 
 describe("Events tests", () => {
-  describe("Search user events", () => {
+  describe.skip("Search user events", () => {
     beforeEach(() => {
       keycloakBefore();
       loginPage.logIn();
       sidebarPage.goToEvents();
     });
 
-    it.skip("Check search dropdown display", () => {
+    it("Check search dropdown display", () => {
       sidebarPage.goToRealmSettings();
       cy.findByTestId("rs-realm-events-tab").click();
       cy.findByTestId("rs-events-tab").click();
