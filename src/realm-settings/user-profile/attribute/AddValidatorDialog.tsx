@@ -34,7 +34,7 @@ export const AddValidatorDialog = ({
           onConfirm={(newValidator) => {
             onConfirm(newValidator);
             setValidators(
-              validators.filter((v) => v.name !== newValidator.name)
+              validators.filter(({ name }) => name !== newValidator.name)
             );
           }}
           open={addValidatorRoleModalOpen}
