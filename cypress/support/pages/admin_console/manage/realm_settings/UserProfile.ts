@@ -10,7 +10,16 @@ export default class UserProfile {
   private cancelNewAttribute = "attribute-cancel";
   private newAttributeNameInput = "attribute-name";
   private newAttributeDisplayNameInput = "attribute-display-name";
+  private newAttributeEnabledWhen = 'input[name="enabledWhen"]';
+  private newAttributeCheckboxes = 'input[type="checkbox"]';
+  private newAttributeRequiredFor = 'input[name="roles"]';
+  private newAttributeRequiredWhen = 'input[name="requiredWhen"]';
+  private newAttributeEmptyValidators = 'tbody [class="kc-emptyValidators"]';
+  private newAttributeAnnotationKey = 'input[name="annotations[0].key"]';
+  private newAttributeAnnotationValue = 'input[name="annotations[0].value"]';
   private saveNewAttributeBtn = "attribute-create";
+  private addValidatorBtn = "addValidator";
+  private saveValidatorBtn = "save-validator-role-button";
 
   goToTab() {
     cy.findByTestId(this.userProfileTab).click();
@@ -83,6 +92,20 @@ export default class UserProfile {
       .click()
       .clear()
       .type(displayName);
+    cy.get(this.newAttributeEnabledWhen).first().check();
+    cy.get(this.newAttributeCheckboxes).check({ force: true });
+    cy.get(this.newAttributeRequiredFor).first().check({ force: true });
+    cy.get(this.newAttributeRequiredWhen).first().check();
+    cy.get(this.newAttributeEmptyValidators).contains("No validators.");
+    cy.get(this.newAttributeAnnotationKey).type("test");
+    cy.get(this.newAttributeAnnotationValue).type("123");
+    return this;
+  }
+
+  addValidator() {
+    cy.findByTestId(this.addValidatorBtn).click();
+    cy.get('tbody [data-label="Role name"]').contains("email").click();
+    cy.findByTestId(this.saveValidatorBtn).click();
     return this;
   }
 }

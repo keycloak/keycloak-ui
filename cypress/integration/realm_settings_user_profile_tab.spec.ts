@@ -71,7 +71,7 @@ describe("User profile tabs", () => {
       );
     });
 
-    it("Modifies existing attribute and performs submit", () => {
+    it("Modifies existing attribute and performs save", () => {
       getUserProfileTab();
       getAttributesTab();
       userProfileTab
@@ -81,6 +81,12 @@ describe("User profile tabs", () => {
       masthead.checkNotificationMessage(
         "Success! User Profile configuration has been saved."
       );
+    });
+
+    it("Adds validator to existing attribute and performs save", () => {
+      getUserProfileTab();
+      getAttributesTab();
+      userProfileTab.selectElementInList(attributeName).addValidator();
     });
   });
 
