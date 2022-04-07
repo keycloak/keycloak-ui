@@ -1,5 +1,6 @@
 import ListingPage from "../support/pages/admin_console/ListingPage";
 import UserProfile from "../support/pages/admin_console/manage/realm_settings/UserProfile";
+import Masthead from "../support/pages/admin_console/Masthead";
 import SidebarPage from "../support/pages/admin_console/SidebarPage";
 import LoginPage from "../support/pages/LoginPage";
 import adminClient from "../support/util/AdminClient";
@@ -11,6 +12,7 @@ const sidebarPage = new SidebarPage();
 const userProfileTab = new UserProfile();
 const listingPage = new ListingPage();
 const modalUtils = new ModalUtils();
+const masthead = new Masthead();
 
 // Selectors
 const getUserProfileTab = () => userProfileTab.goToTab();
@@ -22,6 +24,7 @@ const clickCreateAttributeButton = () =>
 
 describe("User profile tabs", () => {
   const realmName = "Realm_" + (Math.random() + 1).toString(36).substring(7);
+  const attributeName = "Test";
 
   before(() =>
     adminClient.createRealm(realmName, {
@@ -39,15 +42,40 @@ describe("User profile tabs", () => {
   });
 
   describe("Attributes sub tab tests", () => {
-    it("Goes to create attribute page", () => {
+    it.skip("Goes to create attribute page", () => {
       getUserProfileTab();
       getAttributesTab();
       clickCreateAttributeButton();
       cy.get("p").should("have.text", "Create a new attribute");
     });
+
+    it.skip("Completes new attribute form and performs cancel", () => {
+      getUserProfileTab();
+      getAttributesTab();
+      clickCreateAttributeButton();
+      userProfileTab
+        .createAttribute(attributeName, "Test display name")
+        .cancelAttributeCreation()
+        .checkElementNotInList(attributeName);
+    });
+
+    it("Completes new attribute form and performs submit", () => {
+      const url = `admin/realms/${realmName}/realm-settings/userProfile/attributes/add-attribute`;
+      cy.intercept("PUT", url).as("save");
+      getUserProfileTab();
+      getAttributesTab();
+      clickCreateAttributeButton();
+      userProfileTab
+        .createAttribute(attributeName, "Test display name")
+        .saveAttributeCreation();
+      cy.wait("@save");
+      masthead.checkNotificationMessage(
+        "Success! User Profile configuration has been saved."
+      );
+    });
   });
 
-  describe("Attribute groups sub tab tests", () => {
+  describe.skip("Attribute groups sub tab tests", () => {
     it("Deletes an attributes group", () => {
       cy.wrap(null).then(() =>
         adminClient.patchUserProfile(realmName, {
@@ -63,7 +91,7 @@ describe("User profile tabs", () => {
     });
   });
 
-  describe("Json Editor sub tab tests", () => {
+  describe.skip("Json Editor sub tab tests", () => {
     it("Goes to Json Editor tab", () => {
       getUserProfileTab();
       getJsonEditorTab();
