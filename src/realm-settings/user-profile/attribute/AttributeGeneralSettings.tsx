@@ -41,6 +41,8 @@ export const AttributeGeneralSettings = () => {
     useState(false);
   const { attributeName } = useParams<AttributeParams>();
   const editMode = attributeName ? true : false;
+  const nameInput = document.getElementById("kc-attribute-name");
+  nameInput?.focus();
 
   const selectedScopes = useWatch({
     control: form.control,

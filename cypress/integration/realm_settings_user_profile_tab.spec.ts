@@ -60,15 +60,24 @@ describe("User profile tabs", () => {
     });
 
     it("Completes new attribute form and performs submit", () => {
-      const url = `admin/realms/${realmName}/realm-settings/userProfile/attributes/add-attribute`;
-      cy.intercept("PUT", url).as("save");
       getUserProfileTab();
       getAttributesTab();
       clickCreateAttributeButton();
       userProfileTab
-        .createAttribute(attributeName, "Test display name")
+        .createAttribute(attributeName, "Display name")
         .saveAttributeCreation();
-      cy.wait("@save");
+      masthead.checkNotificationMessage(
+        "Success! User Profile configuration has been saved."
+      );
+    });
+
+    it("Modifies existing attribute and performs submit", () => {
+      getUserProfileTab();
+      getAttributesTab();
+      userProfileTab
+        .selectElementInList(attributeName)
+        .editAttribute("Edited display name")
+        .saveAttributeCreation();
       masthead.checkNotificationMessage(
         "Success! User Profile configuration has been saved."
       );

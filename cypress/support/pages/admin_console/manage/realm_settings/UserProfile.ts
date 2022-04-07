@@ -9,7 +9,7 @@ export default class UserProfile {
   private editDrpDwnOption = "editDropdownAttributeItem";
   private cancelNewAttribute = "attribute-cancel";
   private newAttributeNameInput = "attribute-name";
-  private newDisplayNameInput = "attribute-display-name";
+  private newAttributeDisplayNameInput = "attribute-display-name";
   private saveNewAttributeBtn = "attribute-create";
 
   goToTab() {
@@ -59,7 +59,7 @@ export default class UserProfile {
 
   createAttribute(name: string, displayName: string) {
     cy.findByTestId(this.newAttributeNameInput).type(name);
-    cy.findByTestId(this.newDisplayNameInput).type(displayName);
+    cy.findByTestId(this.newAttributeDisplayNameInput).type(displayName);
     return this;
   }
 
@@ -70,6 +70,19 @@ export default class UserProfile {
 
   saveAttributeCreation() {
     cy.findByTestId(this.saveNewAttributeBtn).click();
+    return this;
+  }
+
+  selectElementInList(name: string) {
+    cy.get('tbody [data-label="name"]').contains(name).click();
+    return this;
+  }
+
+  editAttribute(displayName: string) {
+    cy.findByTestId(this.newAttributeDisplayNameInput)
+      .click()
+      .clear()
+      .type(displayName);
     return this;
   }
 }
