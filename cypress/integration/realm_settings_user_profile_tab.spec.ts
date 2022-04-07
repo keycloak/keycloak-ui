@@ -42,14 +42,14 @@ describe("User profile tabs", () => {
   });
 
   describe("Attributes sub tab tests", () => {
-    it.skip("Goes to create attribute page", () => {
+    it("Goes to create attribute page", () => {
       getUserProfileTab();
       getAttributesTab();
       clickCreateAttributeButton();
       cy.get("p").should("have.text", "Create a new attribute");
     });
 
-    it.skip("Completes new attribute form and performs cancel", () => {
+    it("Completes new attribute form and performs cancel", () => {
       getUserProfileTab();
       getAttributesTab();
       clickCreateAttributeButton();
@@ -84,7 +84,7 @@ describe("User profile tabs", () => {
     });
   });
 
-  describe.skip("Attribute groups sub tab tests", () => {
+  describe("Attribute groups sub tab tests", () => {
     it("Deletes an attributes group", () => {
       cy.wrap(null).then(() =>
         adminClient.patchUserProfile(realmName, {
@@ -100,7 +100,7 @@ describe("User profile tabs", () => {
     });
   });
 
-  describe.skip("Json Editor sub tab tests", () => {
+  describe("Json Editor sub tab tests", () => {
     it("Goes to Json Editor tab", () => {
       getUserProfileTab();
       getJsonEditorTab();
