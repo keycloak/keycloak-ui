@@ -83,7 +83,7 @@ describe("User profile tabs", () => {
       );
     });
 
-    it("Adds and removes validator to existing attribute and performs save", () => {
+    it("Adds and removes validator to/from existing attribute and performs save", () => {
       getUserProfileTab();
       getAttributesTab();
       userProfileTab.selectElementInList(attributeName).cancelAddingValidator();
