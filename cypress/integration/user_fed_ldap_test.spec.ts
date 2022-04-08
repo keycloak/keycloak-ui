@@ -143,7 +143,7 @@ describe("User Federation LDAP tests", () => {
     providersPage.toggleSwitch(providersPage.validatePwPolicySwitch);
     providersPage.toggleSwitch(providersPage.trustEmailSwitch);
     providersPage.save(provider);
-    masthead.checkNotificationMessage(nonWritableFailMessage, true);
+    masthead.checkNotificationMessage(nonWritableFailMessage);
     sidebarPage.goToUserFederation();
   });
 
