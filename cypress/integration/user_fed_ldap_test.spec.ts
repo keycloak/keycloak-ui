@@ -79,7 +79,7 @@ const defaultLdapMinute = "00";
 const newLdapDay = "Wednesday";
 const newLdapHour = "15";
 const newLdapMinute = "55";
-const maxLifespan = 60000;
+const maxLifespan = 5;
 
 const addProviderMenu = "Add new provider";
 const createdSuccessMessage = "User federation provider successfully created";
@@ -429,6 +429,7 @@ describe("User Federation LDAP tests", () => {
 
     providersPage.fillSelect(providersPage.ldapEditModeInput, editModeUnsynced);
     providersPage.toggleSwitch(providersPage.importUsers);
+    providersPage.toggleSwitch(providersPage.validatePwPolicySwitch);
 
     providersPage.save(provider);
     masthead.checkNotificationMessage(savedSuccessMessage);
