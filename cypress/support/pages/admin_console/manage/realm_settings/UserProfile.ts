@@ -17,9 +17,16 @@ export default class UserProfile {
   private newAttributeEmptyValidators = 'tbody [class="kc-emptyValidators"]';
   private newAttributeAnnotationKey = 'input[name="annotations[0].key"]';
   private newAttributeAnnotationValue = 'input[name="annotations[0].value"]';
+  private validatorRolesList = 'tbody [data-label="Role name"]';
+  private validatorsList = 'tbody [data-label="name"]';
   private saveNewAttributeBtn = "attribute-create";
   private addValidatorBtn = "addValidator";
   private saveValidatorBtn = "save-validator-role-button";
+  private removeValidatorBtn = "deleteValidator";
+  private deleteValidatorBtn = "confirm";
+  private cancelAddingValidatorBtn = "cancel-validator-role-button";
+  private cancelRemovingValidatorBtn = "cancel";
+  private validatorDialogCloseBtn = 'button[aria-label="Close"]';
 
   goToTab() {
     cy.findByTestId(this.userProfileTab).click();
@@ -73,7 +80,7 @@ export default class UserProfile {
   }
 
   checkElementNotInList(name: string) {
-    cy.get('tbody [data-label="name"]').should("not.contain.text", name);
+    cy.get(this.validatorsList).should("not.contain.text", name);
     return this;
   }
 
@@ -83,7 +90,7 @@ export default class UserProfile {
   }
 
   selectElementInList(name: string) {
-    cy.get('tbody [data-label="name"]').contains(name).click();
+    cy.get(this.validatorsList).contains(name).click();
     return this;
   }
 
@@ -103,9 +110,28 @@ export default class UserProfile {
   }
 
   addValidator() {
-    cy.findByTestId(this.addValidatorBtn).click();
-    cy.get('tbody [data-label="Role name"]').contains("email").click();
+    cy.get(this.validatorRolesList).contains("email").click();
     cy.findByTestId(this.saveValidatorBtn).click();
+    cy.get(this.validatorDialogCloseBtn).click();
+    return this;
+  }
+
+  removeValidator() {
+    cy.findByTestId(this.removeValidatorBtn).click();
+    cy.findByTestId(this.deleteValidatorBtn).click();
+    return this;
+  }
+
+  cancelAddingValidator() {
+    cy.findByTestId(this.addValidatorBtn).click();
+    cy.get(this.validatorRolesList).contains("email").click();
+    cy.findByTestId(this.cancelAddingValidatorBtn).click();
+    return this;
+  }
+
+  cancelRemovingValidator() {
+    cy.findByTestId(this.removeValidatorBtn).click();
+    cy.findByTestId(this.cancelRemovingValidatorBtn).click();
     return this;
   }
 }

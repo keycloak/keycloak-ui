@@ -83,10 +83,16 @@ describe("User profile tabs", () => {
       );
     });
 
-    it("Adds validator to existing attribute and performs save", () => {
+    it("Adds and removes validator to existing attribute and performs save", () => {
       getUserProfileTab();
       getAttributesTab();
-      userProfileTab.selectElementInList(attributeName).addValidator();
+      userProfileTab.selectElementInList(attributeName).cancelAddingValidator();
+      userProfileTab.addValidator();
+      cy.get('tbody [data-label="Validator name"]').contains("email");
+
+      userProfileTab.cancelRemovingValidator();
+      userProfileTab.removeValidator();
+      cy.get('tbody [class="kc-emptyValidators"]').contains("No validators.");
     });
   });
 
