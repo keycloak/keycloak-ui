@@ -107,7 +107,7 @@ jobs:
 
       - name: Start Keycloak Server
         working-directory: ${{ needs.setup.outputs.server-path }}/bin
-        run: ./kc.sh start-dev --features=admin2,admin-fine-grained-authz,declarative-user-profile &> ~/server.log
+        run: ./kc.sh start-dev --features=admin2,admin-fine-grained-authz,declarative-user-profile &> ~/server.log &
         env:
           KEYCLOAK_ADMIN: admin
           KEYCLOAK_ADMIN_PASSWORD: admin
