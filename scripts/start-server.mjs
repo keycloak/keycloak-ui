@@ -10,8 +10,10 @@ import { pipeline } from "node:stream/promises";
 import { fileURLToPath } from "node:url";
 import tar from "tar-fs";
 
+const args = process.argv.slice(2);
+const version = args[0] && !args[0].startsWith("-") ? args[0] : "17.0.0";
 const DIR_NAME = path.dirname(fileURLToPath(import.meta.url));
-const SERVER_DIR = path.resolve(DIR_NAME, "../server");
+const SERVER_DIR = path.resolve(DIR_NAME, `../server/keycloak-${version}`);
 const SCRIPT_EXTENSION = process.platform === "win32" ? ".bat" : ".sh";
 
 await startServer();
