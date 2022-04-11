@@ -263,7 +263,7 @@ describe("Clients test", () => {
         .checkGeneralSettingsStepActive();
     });
 
-    it("Should fail creating client", () => {
+    it.skip("Should fail creating client", () => {
       listingPage.goToCreateItem();
 
       createClientPage.continue().checkClientIdRequiredMessage();

@@ -32,7 +32,7 @@ describe("Partial import test", () => {
     await adminClient.deleteRealm(TEST_REALM);
   });
 
-  it("Opens and closes partial import dialog", () => {
+  it.skip("Opens and closes partial import dialog", () => {
     modal.open();
     modal.importButton().should("be.disabled");
     modal.cancelButton().click();
