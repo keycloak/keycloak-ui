@@ -87,8 +87,7 @@ const savedSuccessMessage = "User federation provider successfully saved";
 const deletedSuccessMessage = "The user federation provider has been deleted.";
 const deleteModalTitle = "Delete user federation provider?";
 const disableModalTitle = "Disable user federation provider?";
-const nonWritableFailMessage =
-  "User federation provider could not be saved: Validate Password Policy is applicable only with WRITABLE edit mode";
+const nonWritableFailMessage = "User federation provider could not be saved:";
 
 const ldapTestSuccessMsg = "Successfully connected to LDAP";
 const ldapTestFailMsg =
