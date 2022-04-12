@@ -226,11 +226,8 @@ describe("Clients test", () => {
       loginPage.logIn();
     });
 
-    beforeEach(() => {
-      commonPage.sidebar().goToClients();
-    });
-
     it("Should cancel creating client", () => {
+      commonPage.sidebar().goToClients();
       commonPage.tableToolbarUtils().createClient();
 
       createClientPage.continue().checkClientIdRequiredMessage();
@@ -283,6 +280,7 @@ describe("Clients test", () => {
     });
 
     it("Should fail creating client", () => {
+      commonPage.sidebar().goToClients();
       commonPage.tableToolbarUtils().createClient();
 
       createClientPage.continue().checkClientIdRequiredMessage();
@@ -305,6 +303,7 @@ describe("Clients test", () => {
     });
 
     it("Client CRUD test", () => {
+      sidebarPage.goToClients();
       itemId += "_" + (Math.random() + 1).toString(36).substring(7);
 
       // Create
@@ -354,6 +353,7 @@ describe("Clients test", () => {
     });
 
     it("Initial access token can't be created with 0 days and count", () => {
+      sidebarPage.goToClients(false);
       const initialAccessTokenTab = new InitialAccessTokenTab();
       initialAccessTokenTab
         .goToInitialAccessTokenTab()
@@ -366,6 +366,7 @@ describe("Clients test", () => {
     });
 
     it("Initial access token", () => {
+      sidebarPage.goToClients(false);
       const initialAccessTokenTab = new InitialAccessTokenTab();
       initialAccessTokenTab
         .goToInitialAccessTokenTab()

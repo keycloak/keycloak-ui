@@ -51,11 +51,12 @@ export default class SidebarPage extends CommonElements {
     return this;
   }
 
-  goToClients() {
-    this.waitForPageLoad();
+  goToClients(wait: boolean | undefined = true) {
+    cy.intercept("/admin/realms/master/clients*").as("load");
     cy.get(this.clientsBtn).click({ force: true });
-    this.waitForPageLoad();
-
+    if (wait) {
+      cy.wait("@load");
+    }
     return this;
   }
 
