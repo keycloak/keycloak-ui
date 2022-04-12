@@ -9,7 +9,7 @@ export default class CreateRealmPage {
   private codeEditor = ".pf-c-code-editor__code";
 
   fillRealmName(realmName: string) {
-    cy.get(this.realmNameInput).should("be.visible").type(realmName);
+    cy.get(this.realmNameInput).should("exist").type(realmName);
 
     return this;
   }
