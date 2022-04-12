@@ -173,7 +173,7 @@ export default class CreateClientPage extends CommonPage {
   //#endregion
 
   save() {
-    cy.findByTestId(this.saveBtn).click();
+    cy.findByTestId(this.saveBtn).should("not.be.disabled").click();
 
     return this;
   }
@@ -185,7 +185,7 @@ export default class CreateClientPage extends CommonPage {
   }
 
   back() {
-    cy.findByTestId(this.backBtn).click();
+    cy.findByTestId(this.backBtn).should("not.be.disabled").click();
 
     return this;
   }

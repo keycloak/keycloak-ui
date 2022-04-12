@@ -1121,7 +1121,11 @@ export default class RealmSettingsPage {
   }
 
   goToClientProfilesList() {
+    cy.intercept(
+      `/admin/realms/${this.realmName}/client-policies/profiles?include-global-profiles=true`
+    ).as("load");
     cy.findByTestId("rs-policies-clientProfiles-tab").click();
+    cy.wait("@load");
     return this;
   }
 

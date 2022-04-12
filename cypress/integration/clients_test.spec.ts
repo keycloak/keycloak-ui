@@ -299,7 +299,8 @@ describe("Clients test", () => {
       commonPage
         .masthead()
         .checkNotificationMessage(
-          "Could not create client: 'Client account already exists'"
+          "Could not create client: 'Client account already exists'",
+          true
         );
     });
 
@@ -328,7 +329,7 @@ describe("Clients test", () => {
 
       commonPage
         .masthead()
-        .checkNotificationMessage("Client created successfully");
+        .checkNotificationMessage("Client created successfully", true);
 
       commonPage.sidebar().goToClients();
 
@@ -348,7 +349,7 @@ describe("Clients test", () => {
         .confirmModal();
       commonPage
         .masthead()
-        .checkNotificationMessage("The client has been deleted");
+        .checkNotificationMessage("The client has been deleted", true);
       commonPage.tableUtils().checkRowItemExists(itemId, false);
     });
 
