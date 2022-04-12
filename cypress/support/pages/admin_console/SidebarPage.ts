@@ -27,7 +27,7 @@ export default class SidebarPage extends CommonElements {
   }
 
   getCurrentRealm() {
-    return cy.findByTestId(this.realmsDrpDwn).scrollIntoView().invoke("text");
+    return cy.findByTestId(this.realmsDrpDwn).invoke("text");
   }
 
   goToRealm(realmName: string) {
@@ -45,7 +45,7 @@ export default class SidebarPage extends CommonElements {
   goToCreateRealm() {
     this.waitForPageLoad();
     cy.findByTestId(this.realmsDrpDwn).click({ force: true });
-    cy.findByTestId(this.createRealmBtn).click({ force: true });
+    cy.findByTestId(this.createRealmBtn).click();
     this.waitForPageLoad();
 
     return this;
@@ -108,7 +108,7 @@ export default class SidebarPage extends CommonElements {
 
   goToRealmSettings() {
     this.waitForPageLoad();
-    cy.get(this.realmSettingsBtn).click({ force: true });
+    cy.get(this.realmSettingsBtn).click();
     this.waitForPageLoad();
 
     return this;
