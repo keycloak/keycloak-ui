@@ -28,7 +28,7 @@ export const AddValidatorDialog = ({
 }: AddValidatorDialogProps) => {
   const { t } = useTranslation("realm-settings");
   const [selectedValidator, setSelectedValidator] = useState<Validator>();
-  const [validators, setValidators] = useState(
+  const [validators, setValidators] = useState(() =>
     allValidator.filter(
       ({ name }) => !selectedValidators.map(({ key }) => key).includes(name)
     )
