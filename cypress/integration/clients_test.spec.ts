@@ -264,6 +264,7 @@ describe("Clients test", () => {
     });
 
     it("Should fail creating client", () => {
+      sidebarPage.goToClients();
       listingPage.goToCreateItem();
 
       createClientPage.continue().checkClientIdRequiredMessage();
@@ -278,7 +279,8 @@ describe("Clients test", () => {
 
       // The error should inform about duplicated name/id
       masthead.checkNotificationMessage(
-        "Could not create client: 'Client account already exists'"
+        "Could not create client: 'Client account already exists'",
+        true
       );
     });
 
