@@ -281,6 +281,7 @@ describe("Clients test", () => {
 
     it("Should fail creating client", () => {
       commonPage.sidebar().goToClients();
+      cy.wait("@load");
       commonPage.tableToolbarUtils().createClient();
 
       createClientPage.continue().checkClientIdRequiredMessage();

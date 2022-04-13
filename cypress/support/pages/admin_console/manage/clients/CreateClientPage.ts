@@ -179,7 +179,7 @@ export default class CreateClientPage extends CommonPage {
   }
 
   continue() {
-    cy.findByTestId(this.continueBtn).click();
+    cy.findByTestId(this.continueBtn).should("not.be.disabled").click();
 
     return this;
   }
