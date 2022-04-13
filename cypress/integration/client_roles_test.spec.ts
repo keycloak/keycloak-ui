@@ -44,8 +44,6 @@ describe("Roles tab test", () => {
   });
 
   beforeEach(() => {
-    keycloakBefore();
-    loginPage.logIn();
     sidebarPage.goToClients();
     listingPage.searchItem(client).goToItemDetails(client);
     rolesTab.goToRolesTab();
@@ -79,7 +77,7 @@ describe("Roles tab test", () => {
     cy.intercept("/admin/realms/master/roles-by-id/*").as("load");
     listingPage.goToItemDetails(itemId);
     rolesTab.goToAttributesTab();
-    cy.wait(["@load", "@load"]);
+    cy.wait(["@load", "@load", "@load", "@load"]);
     rolesTab.addAttribute();
 
     masthead.checkNotificationMessage("The role has been saved", true);
@@ -89,7 +87,7 @@ describe("Roles tab test", () => {
     cy.intercept("/admin/realms/master/roles-by-id/*").as("load");
     listingPage.goToItemDetails(itemId);
     rolesTab.goToAttributesTab();
-    cy.wait(["@load", "@load"]);
+    cy.wait(["@load", "@load", "@load", "@load"]);
     rolesTab.deleteAttribute();
     masthead.checkNotificationMessage("The role has been saved", true);
   });
