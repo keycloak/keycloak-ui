@@ -86,7 +86,6 @@ export default function NewRealmForm() {
               name="realm"
               validated={errors.realm ? "error" : "default"}
               ref={register({ required: true })}
-              data-testid="realm-name"
             />
           </FormGroup>
           <FormGroup label={t("enabled")} fieldId="kc-realm-enabled-switch">
