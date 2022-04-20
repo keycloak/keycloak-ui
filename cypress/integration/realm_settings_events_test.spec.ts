@@ -196,7 +196,7 @@ describe("Realm settings events tab tests", () => {
     realmSettingsPage.testSelectFilter();
   });
 
-  it("Should search active keys", () => {
+  it.skip("Should search active keys", () => {
     sidebarPage.goToRealmSettings();
     goToKeys();
 
