@@ -1,5 +1,5 @@
 import { TextInput, TextInputProps } from "@patternfly/react-core";
-import React, { ComponentProps, HTMLProps } from "react";
+import React, { ComponentProps, forwardRef, HTMLProps } from "react";
 
 // PatternFly changes the signature of the 'onChange' handler for input elements.
 // This causes issues with React Hook Form as it expects the default signature for an input element.
@@ -11,12 +11,14 @@ export type KeycloakTextInputProps = Omit<
 > &
   Pick<HTMLProps<HTMLInputElement>, "onChange">;
 
-export const KeycloakTextInput = ({
-  onChange,
-  ...props
-}: KeycloakTextInputProps) => {
+export const KeycloakTextInput = forwardRef<
+  HTMLInputElement,
+  KeycloakTextInputProps
+>(({ onChange, ...props }, ref) => {
   const onChangeForward: TextInputProps["onChange"] = (_, event) =>
     onChange?.(event);
 
-  return <TextInput {...props} onChange={onChangeForward} />;
-};
+  return <TextInput {...props} ref={ref} onChange={onChangeForward} />;
+});
+
+KeycloakTextInput.displayName = "KeycloakTextInput";
