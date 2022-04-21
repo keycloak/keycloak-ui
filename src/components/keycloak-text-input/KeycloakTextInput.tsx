@@ -21,4 +21,7 @@ export const KeycloakTextInput = forwardRef<
   return <TextInput {...props} ref={ref} onChange={onChangeForward} />;
 });
 
-KeycloakTextInput.displayName = "KeycloakTextInput";
+// We need to fake the displayName to match what PatternFly expects.
+// This is because PatternFly uses it to filter children in certain aspects.
+// This is a stupid approach, but it's not like we can change that.
+KeycloakTextInput.displayName = "TextInput";
