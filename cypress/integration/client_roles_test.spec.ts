@@ -1,51 +1,48 @@
 import ClientRolesTab from "../support/pages/admin_console/manage/clients/ClientRolesTab";
-import CreateRealmRolePage from "../support/pages/admin_console/manage/realm_roles/CreateRealmRolePage";
+import createRealmRolePage from "../support/pages/admin_console/manage/realm_roles/CreateRealmRolePage";
 import AssociatedRolesPage from "../support/pages/admin_console/manage/realm_roles/AssociatedRolesPage";
-import CreateClientPage from "../support/pages/admin_console/manage/clients/CreateClientPage";
 
 import LoginPage from "../support/pages/LoginPage";
-import ModalUtils from "../support/util/ModalUtils";
-import SidebarPage from "../support/pages/admin_console/SidebarPage";
-import ListingPage from "../support/pages/admin_console/ListingPage";
-import Masthead from "../support/pages/admin_console/Masthead";
 import { keycloakBefore } from "../support/util/keycloak_hooks";
 import adminClient from "../support/util/AdminClient";
+import CreateClientPage from "../support/pages/admin_console/manage/clients/CreateClientPage";
+import CommonPage from "../support/pages/CommonPage";
 
+const itemId = "client_crud";
 const loginPage = new LoginPage();
-const sidebarPage = new SidebarPage();
-const listingPage = new ListingPage();
-const masthead = new Masthead();
-const modalUtils = new ModalUtils();
+const createClientPage = new CreateClientPage();
+const commonPage = new CommonPage();
+const associatedRolesPage = new AssociatedRolesPage();
 
-describe("Roles tab test", () => {
+describe.only("Roles tab test", () => {
   const rolesTab = new ClientRolesTab();
-  const associatedRolesPage = new AssociatedRolesPage();
-  const createRealmRolePage = new CreateRealmRolePage();
-  const createClientPage = new CreateClientPage();
-
   let client: string;
-  const itemId = "client_role_id";
 
   before(() => {
     keycloakBefore();
     loginPage.logIn();
-    sidebarPage.goToClients();
+    commonPage.sidebar().goToClients();
 
     client = "client_" + (Math.random() + 1).toString(36).substring(7);
 
-    listingPage.goToCreateItem();
+    commonPage.tableToolbarUtils().createClient();
 
     createClientPage
       .selectClientType("openid-connect")
       .fillClientData(client)
       .continue()
       .save();
-    masthead.checkNotificationMessage("Client created successfully", true);
+    commonPage
+      .masthead()
+      .checkNotificationMessage("Client created successfully", true);
   });
 
   beforeEach(() => {
-    sidebarPage.goToClients();
-    listingPage.searchItem(client).goToItemDetails(client);
+    keycloakBefore();
+    loginPage.logIn();
+    commonPage.sidebar().goToClients();
+    commonPage.tableToolbarUtils().searchItem(client);
+    commonPage.tableUtils().clickRowItemLink(client);
     rolesTab.goToRolesTab();
   });
 
@@ -62,110 +59,134 @@ describe("Roles tab test", () => {
   it("Should create client role", () => {
     rolesTab.goToCreateRoleFromEmptyState();
     createRealmRolePage.fillRealmRoleData(itemId).save();
-    masthead.checkNotificationMessage("Role created", true);
+    commonPage.masthead().checkNotificationMessage("Role created", true);
   });
 
   it("Should update client role description", () => {
-    listingPage.searchItem(itemId, false).goToItemDetails(itemId);
     const updateDescription = "updated description";
+    commonPage.tableToolbarUtils().searchItem(itemId, false);
+    commonPage.tableUtils().clickRowItemLink(itemId);
     createRealmRolePage.updateDescription(updateDescription).save();
-    masthead.checkNotificationMessage("The role has been saved", true);
+    commonPage
+      .masthead()
+      .checkNotificationMessage("The role has been saved", true);
     createRealmRolePage.checkDescription(updateDescription);
   });
 
   it("Should add attribute to client role", () => {
     cy.intercept("/admin/realms/master/roles-by-id/*").as("load");
-    listingPage.goToItemDetails(itemId);
+    commonPage.tableUtils().clickRowItemLink(itemId);
     rolesTab.goToAttributesTab();
-    cy.wait(["@load", "@load", "@load", "@load"]);
-    rolesTab.addAttribute();
-
-    masthead.checkNotificationMessage("The role has been saved", true);
+    cy.wait(["@load", "@load"]);
+    rolesTab.addAttribute(1, "crud_attribute_key", "crud_attribute_value");
+    rolesTab.checkRowItemsEqualTo(1);
+    commonPage
+      .masthead()
+      .checkNotificationMessage("The role has been saved", true);
   });
 
   it("Should delete attribute from client role", () => {
     cy.intercept("/admin/realms/master/roles-by-id/*").as("load");
-    listingPage.goToItemDetails(itemId);
+    commonPage.tableUtils().clickRowItemLink(itemId);
     rolesTab.goToAttributesTab();
-    cy.wait(["@load", "@load", "@load", "@load"]);
-    rolesTab.deleteAttribute();
-    masthead.checkNotificationMessage("The role has been saved", true);
+    cy.wait(["@load", "@load"]);
+    rolesTab.deleteAttribute(1);
+    commonPage
+      .masthead()
+      .checkNotificationMessage("The role has been saved", true);
   });
 
   it("Should create client role to be deleted", () => {
     rolesTab.goToCreateRoleFromToolbar();
     createRealmRolePage.fillRealmRoleData("client_role_to_be_deleted").save();
-    masthead.checkNotificationMessage("Role created", true);
+    commonPage.masthead().checkNotificationMessage("Role created", true);
   });
 
   it("Should fail to create duplicate client role", () => {
     rolesTab.goToCreateRoleFromToolbar();
     createRealmRolePage.fillRealmRoleData(itemId).save();
-    masthead.checkNotificationMessage(
-      `Could not create role: Role with name ${itemId} already exists`,
-      true
-    );
+    commonPage
+      .masthead()
+      .checkNotificationMessage(
+        `Could not create role: Role with name ${itemId} already exists`,
+        true
+      );
   });
 
   it("Should search existing client role", () => {
-    listingPage.searchItem(itemId, false).itemExist(itemId);
+    commonPage.tableToolbarUtils().searchItem(itemId, false);
+    commonPage.tableUtils().checkRowItemExists(itemId);
   });
 
   it("Should search non-existing role test", () => {
-    listingPage.searchItem("role_DNE", false);
-    cy.findByTestId(listingPage.emptyState).should("exist");
+    commonPage.tableToolbarUtils().searchItem("role_DNE", false);
+    commonPage.emptyState().checkIfExists(true);
   });
 
   it("roles empty search test", () => {
-    listingPage.searchItem("", false);
-    cy.get("table:visible");
+    commonPage.tableToolbarUtils().searchItem("", false);
+    commonPage.tableUtils().checkIfExists(true);
   });
 
   it("Add associated roles test", () => {
-    listingPage.searchItem(itemId, false).goToItemDetails(itemId);
+    commonPage.tableToolbarUtils().searchItem(itemId, false);
+    commonPage.tableUtils().clickRowItemLink(itemId);
 
     // Add associated realm role
     associatedRolesPage.addAssociatedRealmRole("create-realm");
-    masthead.checkNotificationMessage("Associated roles have been added", true);
+    commonPage
+      .masthead()
+      .checkNotificationMessage("Associated roles have been added", true);
 
     // Add associated client role
     associatedRolesPage.addAssociatedRoleFromSearchBar("create-client", true);
-    masthead.checkNotificationMessage("Associated roles have been added", true);
+    commonPage
+      .masthead()
+      .checkNotificationMessage("Associated roles have been added", true);
 
     rolesTab.goToAssociatedRolesTab();
 
     // Add associated client role
     associatedRolesPage.addAssociatedRoleFromSearchBar("manage-consent", true);
-    masthead.checkNotificationMessage("Associated roles have been added", true);
+    commonPage
+      .masthead()
+      .checkNotificationMessage("Associated roles have been added", true);
   });
 
   it("Should hide inherited roles test", () => {
-    listingPage.searchItem(itemId, false).goToItemDetails(itemId);
-    rolesTab.goToAssociatedRolesTab();
-    rolesTab.hideInheritedRoles();
+    commonPage.tableToolbarUtils().searchItem(itemId, false);
+    commonPage.tableUtils().clickRowItemLink(itemId);
+    rolesTab.goToAssociatedRolesTab().hideInheritedRoles();
   });
 
   it("Should delete associated roles test", () => {
-    listingPage.searchItem(itemId, false).goToItemDetails(itemId);
+    commonPage.tableToolbarUtils().searchItem(itemId, false);
+    commonPage.tableUtils().clickRowItemLink(itemId);
     rolesTab.goToAssociatedRolesTab();
-    listingPage.removeItem("create-realm");
-    sidebarPage.waitForPageLoad();
-    modalUtils.checkModalTitle("Remove associated role?").confirmModal();
-    sidebarPage.waitForPageLoad();
+    commonPage.tableUtils().selectRowItemAction("create-realm", "Remove");
+    commonPage.sidebar().waitForPageLoad();
+    commonPage
+      .modalUtils()
+      .checkModalTitle("Remove associated role?")
+      .confirmModal();
+    commonPage.sidebar().waitForPageLoad();
 
-    masthead.checkNotificationMessage(
-      "Associated roles have been removed",
-      true
-    );
+    commonPage
+      .masthead()
+      .checkNotificationMessage("Associated roles have been removed", true);
 
-    listingPage.removeItem("manage-consent");
-    sidebarPage.waitForPageLoad();
-    modalUtils.checkModalTitle("Remove associated role?").confirmModal();
+    commonPage.tableUtils().selectRowItemAction("manage-consent", "Remove");
+    commonPage.sidebar().waitForPageLoad();
+    commonPage
+      .modalUtils()
+      .checkModalTitle("Remove associated role?")
+      .confirmModal();
   });
 
   it("Should delete associated role from search bar test", () => {
-    listingPage.searchItem(itemId, false).goToItemDetails(itemId);
-    sidebarPage.waitForPageLoad();
+    commonPage.tableToolbarUtils().searchItem(itemId, false);
+    commonPage.tableUtils().clickRowItemLink(itemId);
+    commonPage.sidebar().waitForPageLoad();
     rolesTab.goToAssociatedRolesTab();
 
     cy.get('td[data-label="Role name"]')
@@ -177,28 +198,33 @@ describe("Roles tab test", () => {
 
     associatedRolesPage.removeAssociatedRoles();
 
-    sidebarPage.waitForPageLoad();
-    modalUtils.checkModalTitle("Remove associated roles?").confirmModal();
-    sidebarPage.waitForPageLoad();
+    commonPage.sidebar().waitForPageLoad();
+    commonPage
+      .modalUtils()
+      .checkModalTitle("Remove associated roles?")
+      .confirmModal();
+    commonPage.sidebar().waitForPageLoad();
 
-    masthead.checkNotificationMessage(
-      "Associated roles have been removed",
-      true
-    );
+    commonPage
+      .masthead()
+      .checkNotificationMessage("Associated roles have been removed", true);
   });
 
   it("Should delete client role test", () => {
-    listingPage.deleteItem(itemId);
-    sidebarPage.waitForPageLoad();
-    modalUtils.checkModalTitle("Delete role?").confirmModal();
+    commonPage.tableUtils().selectRowItemAction(itemId, "Delete");
+    commonPage.sidebar().waitForPageLoad();
+    commonPage.modalUtils().checkModalTitle("Delete role?").confirmModal();
   });
 
   it("Should delete client role from role details test", () => {
-    listingPage
-      .searchItem("client_role_to_be_deleted", false)
-      .goToItemDetails("client_role_to_be_deleted");
+    commonPage
+      .tableToolbarUtils()
+      .searchItem("client_role_to_be_deleted", false);
+    commonPage.tableUtils().clickRowItemLink("client_role_to_be_deleted");
     createRealmRolePage.clickActionMenu("Delete this role");
-    modalUtils.confirmModal();
-    masthead.checkNotificationMessage("The role has been deleted", true);
+    commonPage.modalUtils().confirmModal();
+    commonPage
+      .masthead()
+      .checkNotificationMessage("The role has been deleted", true);
   });
 });
