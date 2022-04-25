@@ -27,9 +27,9 @@ import { toPermissionDetails } from "../../clients/routes/PermissionDetails";
 import { KeycloakSpinner } from "../../components/keycloak-spinner/KeycloakSpinner";
 import { HelpItem } from "../../components/help-enabler/HelpItem";
 import { useWhoAmI } from "../../context/whoami/WhoAmI";
+import { useConfirmDialog } from "../confirm-dialog/ConfirmDialog";
 
 import "./permissions-tab.css";
-import { useConfirmDialog } from "../confirm-dialog/ConfirmDialog";
 
 type PermissionScreenType = "clients" | "users";
 
@@ -58,7 +58,7 @@ export const PermissionsTab = ({ id, type }: PermissionsTabProps) => {
         return adminClient.realms.updateUsersManagementPermissions({
           realm,
           enabled,
-        }) as unknown as ManagementPermissionReference;
+        });
     }
   };
 
@@ -76,7 +76,7 @@ export const PermissionsTab = ({ id, type }: PermissionsTabProps) => {
             case "users":
               return adminClient.realms.getUsersManagementPermissions({
                 realm,
-              }) as unknown as ManagementPermissionReference;
+              });
           }
         })(),
       ]),
