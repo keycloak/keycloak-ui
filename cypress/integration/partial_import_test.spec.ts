@@ -1,4 +1,3 @@
-//import CreateRealmPage from "../support/pages/admin_console/CreateRealmPage";
 import SidebarPage from "../support/pages/admin_console/SidebarPage";
 import LoginPage from "../support/pages/LoginPage";
 import PartialImportModal from "../support/pages/admin_console/configure/realm_settings/PartialImportModal";
@@ -11,7 +10,6 @@ describe("Partial import test", () => {
   const TEST_REALM_2 = "Partial-import-test-realm-2";
   const loginPage = new LoginPage();
   const sidebarPage = new SidebarPage();
-  //const createRealmPage = new CreateRealmPage();
   const modal = new PartialImportModal();
   const realmSettings = new RealmSettings();
 
@@ -27,19 +25,6 @@ describe("Partial import test", () => {
     await adminClient.createRealm(TEST_REALM);
     await adminClient.createRealm(TEST_REALM_2);
   });
-
-  /* beforeEach(async () => {
-    await adminClient.createRealm(TEST_REALM);
-  });
-
-  before(() => {
-    keycloakBefore();
-    loginPage.logIn();
-  });*/
-
-  /* afterEach(async () => {
-    await adminClient.deleteRealm(TEST_REALM);
-  });*/
 
   after(async () => {
     await adminClient.deleteRealm(TEST_REALM);
