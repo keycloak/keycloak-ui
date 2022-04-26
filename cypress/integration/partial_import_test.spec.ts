@@ -1,4 +1,4 @@
-import CreateRealmPage from "../support/pages/admin_console/CreateRealmPage";
+//import CreateRealmPage from "../support/pages/admin_console/CreateRealmPage";
 import SidebarPage from "../support/pages/admin_console/SidebarPage";
 import LoginPage from "../support/pages/LoginPage";
 import PartialImportModal from "../support/pages/admin_console/configure/realm_settings/PartialImportModal";
@@ -7,30 +7,43 @@ import { keycloakBefore } from "../support/util/keycloak_hooks";
 import adminClient from "../support/util/AdminClient";
 
 describe("Partial import test", () => {
-  const TEST_REALM = "partial-import-test-realm";
+  const TEST_REALM = "Partial-import-test-realm";
+  const TEST_REALM_2 = "Partial-import-test-realm-2";
   const loginPage = new LoginPage();
   const sidebarPage = new SidebarPage();
-  const createRealmPage = new CreateRealmPage();
+  //const createRealmPage = new CreateRealmPage();
   const modal = new PartialImportModal();
   const realmSettings = new RealmSettings();
+
+  beforeEach(() => {
+    keycloakBefore();
+    loginPage.logIn();
+    sidebarPage.goToRealm(TEST_REALM);
+    sidebarPage.goToRealmSettings();
+    realmSettings.clickActionMenu();
+  });
+
+  before(async () => {
+    await adminClient.createRealm(TEST_REALM);
+    await adminClient.createRealm(TEST_REALM_2);
+  });
+
+  /* beforeEach(async () => {
+    await adminClient.createRealm(TEST_REALM);
+  });
 
   before(() => {
     keycloakBefore();
     loginPage.logIn();
-  });
+  });*/
 
-  beforeEach(() => {
-    // doing this from the UI has the added bonus of putting you in the test realm
-    sidebarPage.goToCreateRealm();
-    createRealmPage.fillRealmName(TEST_REALM).createRealm();
-
-    sidebarPage.goToRealmSettings();
-    sidebarPage.waitForPageLoad();
-    realmSettings.clickActionMenu();
-  });
-
-  afterEach(async () => {
+  /* afterEach(async () => {
     await adminClient.deleteRealm(TEST_REALM);
+  });*/
+
+  after(async () => {
+    await adminClient.deleteRealm(TEST_REALM);
+    await adminClient.deleteRealm(TEST_REALM_2);
   });
 
   it("Opens and closes partial import dialog", () => {
@@ -87,6 +100,9 @@ describe("Partial import test", () => {
   });
 
   it("Displays user options after realmless import and does the import", () => {
+    sidebarPage.goToRealm(TEST_REALM_2);
+    sidebarPage.goToRealmSettings();
+    realmSettings.clickActionMenu();
     modal.open();
 
     modal.typeResourceFile("client-only.json");
