@@ -69,7 +69,7 @@ export default function UsersSection() {
   const [kebabOpen, setKebabOpen] = useState(false);
   const [selectedRows, setSelectedRows] = useState<UserRepresentation[]>([]);
 
-  const [key, setKey] = useState("");
+  const [key, setKey] = useState(0);
   const refresh = () => setKey(key + 1);
 
   useFetch(
@@ -280,10 +280,6 @@ export default function UsersSection() {
       )}
     </>
   );
-
-  if (!realm) {
-    return <KeycloakSpinner />;
-  }
 
   const route = (tab: UserTab) =>
     routableTab({
