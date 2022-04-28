@@ -45,7 +45,7 @@ import {
   routableTab,
   RoutableTabs,
 } from "../components/routable-tabs/RoutableTabs";
-import { DashboardTabs, toDashboard } from "./routes/Dashboard";
+import { DashboardTab, toDashboard } from "./routes/Dashboard";
 
 import "./dashboard.css";
 
@@ -94,7 +94,7 @@ const Dashboard = () => {
     return <KeycloakSpinner />;
   }
 
-  const route = (tab: DashboardTabs) =>
+  const route = (tab: DashboardTab) =>
     routableTab({
       to: toDashboard({
         realm,
