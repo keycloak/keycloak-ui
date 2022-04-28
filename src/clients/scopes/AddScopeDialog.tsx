@@ -55,7 +55,7 @@ enum ProtocolType {
 }
 
 export const AddScopeDialog = ({
-  clientScopes,
+  clientScopes: scopes,
   clientName,
   open,
   toggleDialog,
@@ -67,8 +67,7 @@ export const AddScopeDialog = ({
   const [rows, setRows] = useState<ClientScopeRepresentation[]>([]);
   const [filterType, setFilterType] = useState(FilterType.Name);
   const [protocolType, setProtocolType] = useState(ProtocolType.All);
-  const [key, setKey] = useState(0);
-  const refresh = () => setKey(key + 1);
+  const [clientScopes, setClientScopes] = useState(scopes);
 
   const [isFilterTypeDropdownOpen, toggleIsFilterTypeDropdownOpen] =
     useToggle();
@@ -77,18 +76,18 @@ export const AddScopeDialog = ({
     useToggle(false);
 
   useEffect(() => {
-    refresh();
-  }, [filterType, protocolType]);
-
-  const loader = async () => {
-    if (protocolType === ProtocolType.OpenIDConnect) {
-      return clientScopes.filter((item) => item.protocol === "openid-connect");
-    } else if (protocolType === ProtocolType.SAML) {
-      return clientScopes.filter((item) => item.protocol === "saml");
+    if (filterType !== FilterType.Name) {
+      if (protocolType === ProtocolType.OpenIDConnect) {
+        setClientScopes(
+          scopes.filter((item) => item.protocol === "openid-connect")
+        );
+      } else if (protocolType === ProtocolType.SAML) {
+        setClientScopes(scopes.filter((item) => item.protocol === "saml"));
+      }
+    } else {
+      setClientScopes(scopes);
     }
-
-    return clientScopes;
-  };
+  }, [filterType, protocolType]);
 
   const action = (scope: ClientScopeType) => {
     const scopes = rows.map((row) => {
@@ -104,6 +103,7 @@ export const AddScopeDialog = ({
       setFilterType(FilterType.Protocol);
     } else if (filterType === FilterType.Protocol) {
       setFilterType(FilterType.Name);
+      setProtocolType(ProtocolType.All);
     }
 
     toggleIsFilterTypeDropdownOpen();
@@ -207,11 +207,12 @@ export const AddScopeDialog = ({
       }
     >
       <KeycloakDataTable
-        loader={loader}
+        loader={clientScopes}
         ariaLabelKey="client-scopes:chooseAMapperType"
         searchPlaceholderKey={
           filterType === FilterType.Name ? "client-scopes:searchFor" : undefined
         }
+        isSearching={filterType !== FilterType.Name}
         searchTypeComponent={
           <Dropdown
             onSelect={() => {
@@ -241,7 +242,6 @@ export const AddScopeDialog = ({
             ]}
           />
         }
-        key={key}
         toolbarItem={
           filterType === FilterType.Protocol && (
             <>
