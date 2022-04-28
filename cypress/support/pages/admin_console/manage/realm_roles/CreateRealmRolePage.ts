@@ -63,7 +63,7 @@ class CreateRealmRolePage {
   }
 
   goToAttributesTab() {
-    cy.intercept("admin/realms/master/roles-by-id/*").as("load");
+    cy.intercept("/admin/realms/master/roles-by-id/*").as("load");
     cy.get(".kc-attributes-tab > button").click();
     cy.wait(["@load", "@load"]);
     return this;
