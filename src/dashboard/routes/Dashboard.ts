@@ -3,9 +3,9 @@ import { lazy } from "react";
 import { generatePath } from "react-router-dom";
 import type { RouteDef } from "../../route-config";
 
-export type DashboardTabs = "info" | "providers";
+export type DashboardTab = "info" | "providers";
 
-export type DashboardParams = { realm?: string; tab?: DashboardTabs };
+export type DashboardParams = { realm?: string; tab?: DashboardTab };
 
 export const DashboardRoute: RouteDef = {
   path: "/:realm?/:tab?",
