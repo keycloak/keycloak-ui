@@ -84,7 +84,7 @@ export default function UsersSection() {
           adminClient.realms.findOne({ realm: realmName }),
         ]);
       } catch {
-        return [[], undefined] as [
+        return [[{}], undefined] as [
           ComponentRepresentation[],
           RealmRepresentation | undefined
         ];
