@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import {
   Button,
@@ -67,7 +67,6 @@ export const AddScopeDialog = ({
   const [rows, setRows] = useState<ClientScopeRepresentation[]>([]);
   const [filterType, setFilterType] = useState(FilterType.Name);
   const [protocolType, setProtocolType] = useState(ProtocolType.All);
-  const [clientScopes, setClientScopes] = useState(scopes);
 
   const [isFilterTypeDropdownOpen, toggleIsFilterTypeDropdownOpen] =
     useToggle();
@@ -75,19 +74,14 @@ export const AddScopeDialog = ({
   const [isProtocolTypeDropdownOpen, toggleIsProtocolTypeDropdownOpen] =
     useToggle(false);
 
-  useEffect(() => {
-    if (filterType !== FilterType.Name) {
-      if (protocolType === ProtocolType.OpenIDConnect) {
-        setClientScopes(
-          scopes.filter((item) => item.protocol === "openid-connect")
-        );
-      } else if (protocolType === ProtocolType.SAML) {
-        setClientScopes(scopes.filter((item) => item.protocol === "saml"));
-      }
-    } else {
-      setClientScopes(scopes);
+  const clientScopes = useMemo(() => {
+    if (protocolType === ProtocolType.OpenIDConnect) {
+      return scopes.filter((item) => item.protocol === "openid-connect");
+    } else if (protocolType === ProtocolType.SAML) {
+      return scopes.filter((item) => item.protocol === "saml");
     }
-  }, [filterType, protocolType]);
+    return scopes;
+  }, [scopes, filterType, protocolType]);
 
   const action = (scope: ClientScopeType) => {
     const scopes = rows.map((row) => {
