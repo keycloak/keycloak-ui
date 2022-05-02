@@ -57,8 +57,8 @@ export const ProviderInfo = () => {
                   <ul>
                     {Object.entries(providers).map(
                       ([key, { operationalInfo }]) => (
-                        <>
-                          <li key={key}>{key}</li>
+                        <Fragment key={key}>
+                          <li>{key}</li>
                           {/* eslint-disable-next-line @typescript-eslint/no-unnecessary-condition */}
                           {operationalInfo && (
                             <ExpandableSection
@@ -84,7 +84,7 @@ export const ProviderInfo = () => {
                               </TableComposable>
                             </ExpandableSection>
                           )}
-                        </>
+                        </Fragment>
                       )
                     )}
                   </ul>
