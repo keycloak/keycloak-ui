@@ -3,7 +3,7 @@
   // overwrite exclude so test files are included.
   "exclude": [],
   "compilerOptions": {
-    "types": ["jest"],
+    "types": ["jest", "@testing-library/jest-dom"],
     "jsx": "react"
   }
 }
