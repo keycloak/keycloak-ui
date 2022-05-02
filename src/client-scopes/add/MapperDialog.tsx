@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from "react";
+import React, { useState } from "react";
 import {
   Button,
   ButtonVariant,
@@ -24,8 +24,8 @@ import type ProtocolMapperRepresentation from "@keycloak/keycloak-admin-client/l
 import type { ProtocolMapperTypeRepresentation } from "@keycloak/keycloak-admin-client/lib/defs/serverInfoRepesentation";
 
 import { useServerInfo } from "../../context/server-info/ServerInfoProvider";
-import { useWhoAmI } from "../../context/whoami/WhoAmI";
 import { ListEmptyState } from "../../components/list-empty-state/ListEmptyState";
+import useSort from "../../utils/useSort";
 
 export type AddMapperDialogModalProps = {
   protocol: string;
@@ -44,27 +44,22 @@ export const AddMapperDialog = (props: AddMapperDialogProps) => {
   const { t } = useTranslation("client-scopes");
 
   const serverInfo = useServerInfo();
-  const { whoAmI } = useWhoAmI();
   const protocol = props.protocol;
   const protocolMappers = serverInfo.protocolMapperTypes![protocol];
   const builtInMappers = serverInfo.builtinProtocolMappers![protocol];
   const [filter, setFilter] = useState<ProtocolMapperRepresentation[]>([]);
 
-  const allRows = useMemo(
-    () =>
-      builtInMappers
-        .sort((a, b) => a.name!.localeCompare(b.name!, whoAmI.getLocale()))
-        .map((mapper) => {
-          const mapperType = protocolMappers.filter(
-            (type) => type.id === mapper.protocolMapper
-          )[0];
-          return {
-            item: mapper,
-            selected: false,
-            cells: [mapper.name, mapperType.helpText],
-          };
-        }),
-    []
+  const allRows = useSort({ data: builtInMappers, key: "name" }).map(
+    (mapper) => {
+      const mapperType = protocolMappers.filter(
+        (type) => type.id === mapper.protocolMapper
+      )[0];
+      return {
+        item: mapper,
+        selected: false,
+        cells: [mapper.name, mapperType.helpText],
+      };
+    }
   );
   const [rows, setRows] = useState(allRows);
 
@@ -78,13 +73,7 @@ export const AddMapperDialog = (props: AddMapperDialogProps) => {
     .filter((row) => row.selected)
     .map((row) => row.item);
 
-  const sortedProtocolMappers = useMemo(
-    () =>
-      protocolMappers.sort((a, b) =>
-        a.name!.localeCompare(b.name!, whoAmI.getLocale())
-      ),
-    [protocolMappers]
-  );
+  const sortedProtocolMappers = useSort({ data: protocolMappers, key: "name" });
 
   const isBuiltIn = !!props.filter;
 

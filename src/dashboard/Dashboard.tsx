@@ -48,6 +48,7 @@ import {
 import { DashboardTab, toDashboard } from "./routes/Dashboard";
 
 import "./dashboard.css";
+import useSort from "../utils/useSort";
 
 const EmptyDashboard = () => {
   const { t } = useTranslation("dashboard");
@@ -78,11 +79,17 @@ const Dashboard = () => {
   const serverInfo = useServerInfo();
   const history = useHistory();
 
-  const enabledFeatures = xor(
-    serverInfo.profileInfo?.disabledFeatures,
-    serverInfo.profileInfo?.experimentalFeatures,
-    serverInfo.profileInfo?.previewFeatures
-  );
+  const enabledFeatures = useSort({
+    data: xor(
+      serverInfo.profileInfo?.disabledFeatures,
+      serverInfo.profileInfo?.experimentalFeatures,
+      serverInfo.profileInfo?.previewFeatures
+    ),
+  });
+
+  const disabledFeatures = useSort({
+    data: serverInfo.profileInfo?.disabledFeatures || [],
+  });
 
   const isExperimentalFeature = (feature: string) =>
     serverInfo.profileInfo?.experimentalFeatures?.includes(feature);
@@ -200,11 +207,9 @@ const Dashboard = () => {
                           </DescriptionListTerm>
                           <DescriptionListDescription>
                             <List variant={ListVariant.inline}>
-                              {serverInfo.profileInfo?.disabledFeatures?.map(
-                                (feature) => (
-                                  <ListItem key={feature}>{feature}</ListItem>
-                                )
-                              )}
+                              {disabledFeatures.map((feature) => (
+                                <ListItem key={feature}>{feature}</ListItem>
+                              ))}
                             </List>
                           </DescriptionListDescription>
                         </DescriptionListGroup>
