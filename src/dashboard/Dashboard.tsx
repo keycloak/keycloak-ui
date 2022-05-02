@@ -72,17 +72,17 @@ const Dashboard = () => {
   const serverInfo = useServerInfo();
   const history = useHistory();
 
-  const enabledFeatures = useSort({
-    data: xor(
+  const enabledFeatures = useSort(
+    xor(
       serverInfo.profileInfo?.disabledFeatures,
       serverInfo.profileInfo?.experimentalFeatures,
       serverInfo.profileInfo?.previewFeatures
-    ),
-  });
+    )
+  );
 
-  const disabledFeatures = useSort({
-    data: serverInfo.profileInfo?.disabledFeatures || [],
-  });
+  const disabledFeatures = useSort(
+    serverInfo.profileInfo?.disabledFeatures || []
+  );
 
   const isExperimentalFeature = (feature: string) =>
     serverInfo.profileInfo?.experimentalFeatures?.includes(feature);

@@ -32,9 +32,7 @@ import {
 import { ChangeTypeDropdown } from "./ChangeTypeDropdown";
 import { toNewClientScope } from "./routes/NewClientScope";
 
-import "./client-scope.css";
 import { toClientScope } from "./routes/ClientScope";
-import { useWhoAmI } from "../context/whoami/WhoAmI";
 import {
   nameFilter,
   protocolFilter,
@@ -47,10 +45,12 @@ import {
 import type { Row } from "../clients/scopes/ClientScopes";
 import { getProtocolName } from "../clients/utils";
 import helpUrls from "../help-urls";
+import { useLocalSortFunction } from "../utils/useSort";
+
+import "./client-scope.css";
 
 export default function ClientScopesSection() {
   const { realm } = useRealm();
-  const { whoAmI } = useWhoAmI();
   const { t } = useTranslation("client-scopes");
 
   const adminClient = useAdminClient();
@@ -66,6 +66,7 @@ export default function ClientScopesSection() {
     AllClientScopes.none
   );
   const [searchProtocol, setSearchProtocol] = useState<ProtocolType>("all");
+  const sortFunction = useLocalSortFunction<Row>("name");
 
   const [key, setKey] = useState(0);
   const refresh = () => {
@@ -104,7 +105,7 @@ export default function ClientScopesSection() {
         return row;
       })
       .filter(filter)
-      .sort((a, b) => a.name!.localeCompare(b.name!, whoAmI.getLocale()))
+      .sort(sortFunction)
       .slice(first, Number(first) + Number(max));
   };
 

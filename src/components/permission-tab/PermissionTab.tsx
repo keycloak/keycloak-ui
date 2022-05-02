@@ -26,8 +26,8 @@ import { useRealm } from "../../context/realm-context/RealmContext";
 import { toPermissionDetails } from "../../clients/routes/PermissionDetails";
 import { KeycloakSpinner } from "../../components/keycloak-spinner/KeycloakSpinner";
 import { HelpItem } from "../../components/help-enabler/HelpItem";
-import { useWhoAmI } from "../../context/whoami/WhoAmI";
 import { useConfirmDialog } from "../confirm-dialog/ConfirmDialog";
+import { useLocalSortFunction } from "../../utils/useSort";
 
 import "./permissions-tab.css";
 
@@ -43,9 +43,9 @@ export const PermissionsTab = ({ id, type }: PermissionsTabProps) => {
   const history = useHistory();
   const adminClient = useAdminClient();
   const { realm } = useRealm();
-  const { whoAmI } = useWhoAmI();
   const [realmId, setRealmId] = useState("");
   const [permission, setPermission] = useState<ManagementPermissionReference>();
+  const sortFunction = useLocalSortFunction();
 
   const togglePermissionEnabled = (enabled: boolean) => {
     switch (type) {
@@ -174,9 +174,7 @@ export const PermissionsTab = ({ id, type }: PermissionsTabProps) => {
                 </Thead>
                 <Tbody>
                   {Object.entries(permission.scopePermissions || {})
-                    .sort((a, b) =>
-                      a[0]!.localeCompare(b[0]!, whoAmI.getLocale())
-                    )
+                    .sort(sortFunction)
                     .map(([name, id]) => (
                       <Tr key={id}>
                         <Td>

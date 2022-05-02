@@ -11,7 +11,7 @@ import { useAdminClient, useFetch } from "../../context/auth/AdminClient";
 import type ClientScopeRepresentation from "@keycloak/keycloak-admin-client/lib/defs/clientScopeRepresentation";
 import { useParams } from "react-router";
 import type { EditClientPolicyConditionParams } from "../../realm-settings/routes/EditCondition";
-import { useWhoAmI } from "../../context/whoami/WhoAmI";
+import { useLocalSortFunction } from "../../utils/useSort";
 
 export const MultivaluedScopesComponent = ({
   defaultValue,
@@ -22,8 +22,8 @@ export const MultivaluedScopesComponent = ({
   const { control } = useFormContext();
   const { conditionName } = useParams<EditClientPolicyConditionParams>();
   const adminClient = useAdminClient();
-  const { whoAmI } = useWhoAmI();
   const [open, setOpen] = useState(false);
+  const sortFunction = useLocalSortFunction<ClientScopeRepresentation>("name");
   const [clientScopes, setClientScopes] = useState<ClientScopeRepresentation[]>(
     []
   );
@@ -64,9 +64,7 @@ export const MultivaluedScopesComponent = ({
                 <AddScopeDialog
                   clientScopes={clientScopes
                     .filter((scope) => !value.includes(scope.name!))
-                    .sort((a, b) =>
-                      a.name!.localeCompare(b.name!, whoAmI.getLocale())
-                    )}
+                    .sort(sortFunction)}
                   isClientScopesConditionType
                   open={open}
                   toggleDialog={() => setOpen(!open)}

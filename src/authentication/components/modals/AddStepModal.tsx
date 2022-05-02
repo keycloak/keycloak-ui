@@ -14,6 +14,7 @@ import type { AuthenticationProviderRepresentation } from "@keycloak/keycloak-ad
 import { PaginatingTableToolbar } from "../../../components/table-toolbar/PaginatingTableToolbar";
 import { useAdminClient, useFetch } from "../../../context/auth/AdminClient";
 import { providerConditionFilter } from "../../FlowDetails";
+import { useLocalSort } from "../../../utils/useSort";
 
 type AuthenticationProviderListProps = {
   list?: AuthenticationProviderRepresentation[];
@@ -64,6 +65,8 @@ export const AddStepModal = ({ name, type, onSelect }: AddStepModalProps) => {
     useState<AuthenticationProviderRepresentation[]>();
   const [max, setMax] = useState(10);
   const [first, setFirst] = useState(0);
+  const localSort =
+    useLocalSort<AuthenticationProviderRepresentation>("displayName");
 
   useFetch(
     async () => {
@@ -89,7 +92,7 @@ export const AddStepModal = ({ name, type, onSelect }: AddStepModalProps) => {
     []
   );
 
-  const page = providers?.slice(first, first + max + 1);
+  const page = localSort(providers || []).slice(first, first + max + 1);
 
   return (
     <Modal
@@ -121,7 +124,7 @@ export const AddStepModal = ({ name, type, onSelect }: AddStepModalProps) => {
     >
       {providers && providers.length > max && (
         <PaginatingTableToolbar
-          count={page?.length || 0}
+          count={page.length || 0}
           first={first}
           max={max}
           onNextClick={setFirst}

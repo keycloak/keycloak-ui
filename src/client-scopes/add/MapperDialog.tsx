@@ -52,18 +52,16 @@ export const AddMapperDialog = (props: AddMapperDialogProps) => {
   const [filter, setFilter] = useState<ProtocolMapperRepresentation[]>([]);
   const [selectedRows, setSelectedRows] = useState<Row[]>([]);
 
-  const allRows = useSort({ data: builtInMappers, key: "name" }).map(
-    (mapper) => {
-      const mapperType = protocolMappers.filter(
-        (type) => type.id === mapper.protocolMapper
-      )[0];
-      return {
-        item: mapper,
-        name: mapper.name!,
-        description: mapperType.helpText,
-      };
-    }
-  );
+  const allRows = useSort(builtInMappers, "name").map((mapper) => {
+    const mapperType = protocolMappers.filter(
+      (type) => type.id === mapper.protocolMapper
+    )[0];
+    return {
+      item: mapper,
+      name: mapper.name!,
+      description: mapperType.helpText,
+    };
+  });
   const [rows, setRows] = useState(allRows);
 
   if (props.filter && props.filter.length !== filter.length) {
@@ -72,7 +70,7 @@ export const AddMapperDialog = (props: AddMapperDialogProps) => {
     setRows([...allRows.filter((row) => !nameFilter.includes(row.item.name))]);
   }
 
-  const sortedProtocolMappers = useSort({ data: protocolMappers, key: "name" });
+  const sortedProtocolMappers = useSort(protocolMappers, "name");
 
   const isBuiltIn = !!props.filter;
 

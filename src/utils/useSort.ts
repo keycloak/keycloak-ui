@@ -4,21 +4,25 @@ import { useWhoAmI } from "../context/whoami/WhoAmI";
 
 export type ItemKey<T> = keyof T;
 
-type SortProps<T> = {
-  data: T[];
-  key?: ItemKey<T>;
-  dependencies?: [];
-};
-
-export default function useSort<T>({ data, key, dependencies }: SortProps<T>) {
-  const { whoAmI } = useWhoAmI();
-  useMemo(() => {
-    data.sort((a, b) =>
-      `${key ? a[key] : a}`.localeCompare(
-        `${key ? b[key] : b}`,
-        whoAmI.getLocale()
-      )
-    );
-  }, dependencies || data);
+export default function useSort<T>(
+  data: T[],
+  key?: ItemKey<T>,
+  dependencies?: []
+) {
+  useMemo(() => useLocalSort(key)(data), dependencies || data);
   return data;
+}
+
+export function useLocalSort<T>(key?: ItemKey<T>) {
+  return (data: T[]) => data.sort(useLocalSortFunction(key));
+}
+
+export function useLocalSortFunction<T>(key?: ItemKey<T>) {
+  const { whoAmI } = useWhoAmI();
+
+  return (a: T, b: T) =>
+    `${key ? a[key] : a}`.localeCompare(
+      `${key ? b[key] : b}`,
+      whoAmI.getLocale()
+    );
 }

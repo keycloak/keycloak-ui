@@ -10,9 +10,9 @@ import {
 } from "@patternfly/react-core";
 
 import type CredentialRepresentation from "@keycloak/keycloak-admin-client/lib/defs/credentialRepresentation";
-import { useWhoAmI } from "../../context/whoami/WhoAmI";
 import useToggle from "../../utils/useToggle";
 import { CredentialDataDialog } from "./CredentialDataDialog";
+import { useLocalSortFunction } from "../../utils/useSort";
 
 type CredentialRowProps = {
   credential: CredentialRepresentation;
@@ -31,7 +31,7 @@ export const CredentialRow = ({
   const [showData, toggleShow] = useToggle();
   const [kebabOpen, toggleKebab] = useToggle();
 
-  const { whoAmI } = useWhoAmI();
+  const sortFunction = useLocalSortFunction();
 
   const rows = useMemo(() => {
     if (!credential.credentialData) {
@@ -41,10 +41,8 @@ export const CredentialRow = ({
     const credentialData: Record<string, unknown> = JSON.parse(
       credential.credentialData
     );
-    const locale = whoAmI.getLocale();
-
     return Object.entries(credentialData)
-      .sort(([a], [b]) => a.localeCompare(b, locale))
+      .sort(sortFunction)
       .map<[string, string]>(([key, value]) => {
         if (typeof value === "string") {
           return [key, value];
