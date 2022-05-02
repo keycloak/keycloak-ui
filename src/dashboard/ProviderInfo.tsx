@@ -59,7 +59,6 @@ export const ProviderInfo = () => {
                       ([key, { operationalInfo }]) => (
                         <Fragment key={key}>
                           <li>{key}</li>
-                          {/* eslint-disable-next-line @typescript-eslint/no-unnecessary-condition */}
                           {operationalInfo && (
                             <ExpandableSection
                               isExpanded={open.includes(key)}
