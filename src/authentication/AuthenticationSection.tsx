@@ -63,7 +63,7 @@ export default function AuthenticationSection() {
   const [bindFlowOpen, toggleBindFlow] = useToggle();
 
   const loader = async () => {
-    const [clients, idps, realmRep, flows] = await Promise.all([
+    const [allClients, allIdps, realmRep, flows] = await Promise.all([
       adminClient.clients.find(),
       adminClient.identityProviders.find(),
       adminClient.realms.findOne({ realm }),
@@ -79,26 +79,26 @@ export default function AuthenticationSection() {
 
     for (const flow of flows as AuthenticationType[]) {
       flow.usedBy = { values: [] };
-      const client = clients.filter(
+      const clients = allClients.filter(
         (client) =>
           client.authenticationFlowBindingOverrides &&
           (client.authenticationFlowBindingOverrides["direct_grant"] ===
             flow.id ||
             client.authenticationFlowBindingOverrides["browser"] === flow.id)
       );
-      if (client.length > 0) {
+      if (clients.length > 0) {
         flow.usedBy.type = "specificClients";
-        flow.usedBy.values = client.map(({ clientId }) => clientId!);
+        flow.usedBy.values = clients.map(({ clientId }) => clientId!);
       }
 
-      const idp = idps.filter(
+      const idps = allIdps.filter(
         (idp) =>
           idp.firstBrokerLoginFlowAlias === flow.alias ||
           idp.postBrokerLoginFlowAlias === flow.alias
       );
-      if (idp.length > 0) {
+      if (idps.length > 0) {
         flow.usedBy.type = "specificProviders";
-        flow.usedBy.values = idp.map(({ alias }) => alias!);
+        flow.usedBy.values = idps.map(({ alias }) => alias!);
       }
 
       const isDefault = defaultFlows.includes(flow.alias);

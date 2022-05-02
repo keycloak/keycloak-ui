@@ -16,16 +16,15 @@ import { KeycloakDataTable } from "../../components/table-toolbar/KeycloakDataTa
 import { toUpperCase } from "../../util";
 import useToggle from "../../utils/useToggle";
 
+import "./used-by.css";
+
 type UsedByProps = {
   authType: AuthenticationType;
 };
 
-const Label = ({ id, label }: { id: string; label: string }) => (
+const Label = ({ label }: { label: string }) => (
   <>
-    <CheckCircleIcon
-      className="keycloak_authentication-section__usedby"
-      key={`icon-${id}`}
-    />{" "}
+    <CheckCircleIcon className="keycloak_authentication-section__usedby" />{" "}
     {label}
   </>
 );
@@ -33,10 +32,14 @@ const Label = ({ id, label }: { id: string; label: string }) => (
 type UsedByModalProps = {
   values: string[];
   onClose: () => void;
-  clients: boolean;
+  isSpecificClient: boolean;
 };
 
-const UsedByModal = ({ values, clients, onClose }: UsedByModalProps) => {
+const UsedByModal = ({
+  values,
+  isSpecificClient,
+  onClose,
+}: UsedByModalProps) => {
   const { t } = useTranslation("authentication");
   return (
     <Modal
@@ -45,7 +48,7 @@ const UsedByModal = ({ values, clients, onClose }: UsedByModalProps) => {
           <Text component={TextVariants.h1}>{t("flowUsedBy")}</Text>
           <Text>
             {t("flowUsedByDescription", {
-              value: clients ? t("clients") : t("identiyProviders"),
+              value: isSpecificClient ? t("clients") : t("identiyProviders"),
             })}
           </Text>
         </TextContent>
@@ -93,7 +96,7 @@ export const UsedBy = ({
         <UsedByModal
           values={values}
           onClose={toggle}
-          clients={type === "specificClients"}
+          isSpecificClient={type === "specificClients"}
         />
       )}
       {(type === "specificProviders" || type === "specificClients") &&
@@ -116,16 +119,23 @@ export const UsedBy = ({
               </div>
             }
           >
-            <a href="javascript:;">
-              <Label id={id!} label={t(type!)} />
-            </a>
+            <Button
+              variant="link"
+              className="keycloak__used-by__popover-button"
+            >
+              <Label label={t(type!)} />
+            </Button>
           </Popover>
         ) : (
-          <a href="javascript:;" onClick={toggle}>
-            <Label id={id!} label={t(type!)} />
-          </a>
+          <Button
+            variant="link"
+            className="keycloak__used-by__popover-button"
+            onClick={toggle}
+          >
+            <Label label={t(type!)} />
+          </Button>
         ))}
-      {type === "default" && <Label id={id!} label={toUpperCase(values[0])} />}
+      {type === "default" && <Label label={toUpperCase(values[0])} />}
       {!type && t("notInUse")}
     </>
   );
