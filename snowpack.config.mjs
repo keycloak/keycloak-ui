@@ -33,7 +33,7 @@ export default {
       src: "/admin/.*",
       dest: (req, res) =>
         proxy.web(req, res, {
-          hostname: "localhost",
+          hostname: "127.0.0.1",
           port: 8180,
         }),
     },
