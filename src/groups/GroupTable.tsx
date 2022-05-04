@@ -47,7 +47,10 @@ export const GroupTable = () => {
   const id = getLastId(location.pathname);
 
   const { hasAccess } = useAccess();
-  const isManager = hasAccess("manage-users", "query-clients");
+  const isManager = hasAccess("manage-users");
+  const canView =
+    hasAccess("query-groups", "view-users") ||
+    hasAccess("manage-users", "query-groups");
 
   const loader = async () => {
     let groupsData = undefined;
@@ -90,7 +93,7 @@ export const GroupTable = () => {
   };
 
   const GroupNameCell = (group: GroupRepresentation) => {
-    if (!isManager) return <span>{group.name}</span>;
+    if (!canView) return <span>{group.name}</span>;
 
     return (
       <Link

@@ -26,6 +26,7 @@ import { MemberModal } from "./MembersModal";
 import { ListEmptyState } from "../components/list-empty-state/ListEmptyState";
 import { GroupPath } from "../components/group/GroupPath";
 import { toUser } from "../user/routes/User";
+import { useAccess } from "../context/access/Access";
 
 type MembersOf = UserRepresentation & {
   membership: GroupRepresentation[];
@@ -43,6 +44,7 @@ export const Members = () => {
   const [addMembers, setAddMembers] = useState(false);
   const [isKebabOpen, setIsKebabOpen] = useState(false);
   const [selectedRows, setSelectedRows] = useState<UserRepresentation[]>([]);
+  const { hasAccess } = useAccess();
 
   const [key, setKey] = useState(0);
   const refresh = () => setKey(new Date().getTime());
@@ -123,86 +125,95 @@ export const Members = () => {
         canSelectAll
         onSelect={(rows) => setSelectedRows([...rows])}
         toolbarItem={
-          <>
-            <ToolbarItem>
-              <Button
-                data-testid="addMember"
-                variant="primary"
-                onClick={() => setAddMembers(true)}
-              >
-                {t("addMember")}
-              </Button>
-            </ToolbarItem>
-            <ToolbarItem>
-              <Checkbox
-                data-testid="includeSubGroupsCheck"
-                label={t("includeSubGroups")}
-                id="kc-include-sub-groups"
-                isChecked={includeSubGroup}
-                onChange={() => setIncludeSubGroup(!includeSubGroup)}
-              />
-            </ToolbarItem>
-            <ToolbarItem>
-              <Dropdown
-                toggle={
-                  <KebabToggle
-                    onToggle={() => setIsKebabOpen(!isKebabOpen)}
-                    isDisabled={selectedRows.length === 0}
-                  />
-                }
-                isOpen={isKebabOpen}
-                isPlain
-                dropdownItems={[
-                  <DropdownItem
-                    key="action"
-                    component="button"
-                    onClick={async () => {
-                      try {
-                        await Promise.all(
-                          selectedRows.map((user) =>
-                            adminClient.users.delFromGroup({
-                              id: user.id!,
-                              groupId: id!,
-                            })
-                          )
-                        );
-                        setIsKebabOpen(false);
-                        addAlert(
-                          t("usersLeft", { count: selectedRows.length }),
-                          AlertVariant.success
-                        );
-                      } catch (error) {
-                        addError("groups:usersLeftError", error);
-                      }
+          hasAccess("manage-users") && (
+            <>
+              <ToolbarItem>
+                <Button
+                  data-testid="addMember"
+                  variant="primary"
+                  onClick={() => setAddMembers(true)}
+                >
+                  {t("addMember")}
+                </Button>
+              </ToolbarItem>
+              <ToolbarItem>
+                <Checkbox
+                  data-testid="includeSubGroupsCheck"
+                  label={t("includeSubGroups")}
+                  id="kc-include-sub-groups"
+                  isChecked={includeSubGroup}
+                  onChange={() => setIncludeSubGroup(!includeSubGroup)}
+                />
+              </ToolbarItem>
+              <ToolbarItem>
+                <Dropdown
+                  toggle={
+                    <KebabToggle
+                      onToggle={() => setIsKebabOpen(!isKebabOpen)}
+                      isDisabled={selectedRows.length === 0}
+                    />
+                  }
+                  isOpen={isKebabOpen}
+                  isPlain
+                  dropdownItems={[
+                    <DropdownItem
+                      key="action"
+                      component="button"
+                      onClick={async () => {
+                        try {
+                          await Promise.all(
+                            selectedRows.map((user) =>
+                              adminClient.users.delFromGroup({
+                                id: user.id!,
+                                groupId: id!,
+                              })
+                            )
+                          );
+                          setIsKebabOpen(false);
+                          addAlert(
+                            t("usersLeft", { count: selectedRows.length }),
+                            AlertVariant.success
+                          );
+                        } catch (error) {
+                          addError("groups:usersLeftError", error);
+                        }
 
-                      refresh();
-                    }}
-                  >
-                    {t("leave")}
-                  </DropdownItem>,
-                ]}
-              />
-            </ToolbarItem>
-          </>
+                        refresh();
+                      }}
+                    >
+                      {t("leave")}
+                    </DropdownItem>,
+                  ]}
+                />
+              </ToolbarItem>
+            </>
+          )
         }
-        actions={[
-          {
-            title: t("leave"),
-            onRowClick: async (user) => {
-              try {
-                await adminClient.users.delFromGroup({
-                  id: user.id!,
-                  groupId: id!,
-                });
-                addAlert(t("usersLeft", { count: 1 }), AlertVariant.success);
-              } catch (error) {
-                addError("groups:usersLeftError", error);
-              }
+        actions={
+          hasAccess("manage-users")
+            ? [
+                {
+                  title: t("leave"),
+                  onRowClick: async (user) => {
+                    try {
+                      await adminClient.users.delFromGroup({
+                        id: user.id!,
+                        groupId: id!,
+                      });
+                      addAlert(
+                        t("usersLeft", { count: 1 }),
+                        AlertVariant.success
+                      );
+                    } catch (error) {
+                      addError("groups:usersLeftError", error);
+                    }
 
-              return true;
-            },
-          },
-        ]}
+                    return true;
+                  },
+                },
+              ]
+            : []
+        }
         columns={[
           {
             name: "username",
@@ -233,8 +244,14 @@ export const Members = () => {
         emptyState={
           <ListEmptyState
             message={t("users:noUsersFound")}
-            instructions={t("users:emptyInstructions")}
-            primaryActionText={t("addMember")}
+            instructions={
+              hasAccess("manage-users")
+                ? t("users:emptyInstructions")
+                : undefined
+            }
+            primaryActionText={
+              hasAccess("manage-users") ? t("addMember") : undefined
+            }
             onPrimaryAction={() => setAddMembers(true)}
           />
         }

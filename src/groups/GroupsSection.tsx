@@ -28,6 +28,7 @@ import { toGroupsSearch } from "./routes/GroupsSearch";
 import { GroupRoleMapping } from "./GroupRoleMapping";
 import helpUrls from "../help-urls";
 import { PermissionsTab } from "../components/permission-tab/PermissionTab";
+import { useAccess } from "../context/access/Access";
 
 import "./GroupsSection.css";
 
@@ -45,6 +46,9 @@ export default function GroupsSection() {
   const history = useHistory();
   const location = useLocation();
   const id = getLastId(location.pathname);
+
+  const { hasAccess } = useAccess();
+  const canViewPermissions = hasAccess("manage-authorization", "manage-users");
 
   const deleteGroup = async (group: GroupRepresentation) => {
     try {
@@ -112,7 +116,7 @@ export default function GroupsSection() {
         helpUrl={!id ? helpUrls.groupsUrl : ""}
         divider={!id}
         dropdownItems={
-          id
+          id && hasAccess("manage-users")
             ? [
                 SearchDropdown,
                 <DropdownItem
@@ -177,13 +181,15 @@ export default function GroupsSection() {
             >
               <GroupRoleMapping id={id!} name={currentGroup()?.name!} />
             </Tab>
-            <Tab
-              eventKey={4}
-              data-testid="permissionsTab"
-              title={<TabTitleText>{t("common:permissions")}</TabTitleText>}
-            >
-              <PermissionsTab id={id} type="groups" />
-            </Tab>
+            {canViewPermissions && (
+              <Tab
+                eventKey={4}
+                data-testid="permissionsTab"
+                title={<TabTitleText>{t("common:permissions")}</TabTitleText>}
+              >
+                <PermissionsTab id={id} type="groups" />
+              </Tab>
+            )}
           </Tabs>
         )}
         {subGroups.length === 0 && <GroupTable />}
