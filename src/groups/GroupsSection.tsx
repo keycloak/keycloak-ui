@@ -48,7 +48,14 @@ export default function GroupsSection() {
   const id = getLastId(location.pathname);
 
   const { hasAccess } = useAccess();
-  const canViewPermissions = hasAccess("manage-authorization", "manage-users");
+  const canViewPermissions = hasAccess(
+    "manage-authorization",
+    "manage-users",
+    "manage-clients"
+  );
+  const canManageGroup =
+    hasAccess("manage-users") || currentGroup()?.access?.manage;
+  const canManageRoles = hasAccess("manage-users");
 
   const deleteGroup = async (group: GroupRepresentation) => {
     try {
@@ -116,7 +123,7 @@ export default function GroupsSection() {
         helpUrl={!id ? helpUrls.groupsUrl : ""}
         divider={!id}
         dropdownItems={
-          id && hasAccess("manage-users")
+          id && canManageGroup
             ? [
                 SearchDropdown,
                 <DropdownItem
@@ -174,13 +181,15 @@ export default function GroupsSection() {
             >
               <GroupAttributes />
             </Tab>
-            <Tab
-              eventKey={3}
-              data-testid="role-mapping-tab"
-              title={<TabTitleText>{t("roleMapping")}</TabTitleText>}
-            >
-              <GroupRoleMapping id={id!} name={currentGroup()?.name!} />
-            </Tab>
+            {canManageRoles && (
+              <Tab
+                eventKey={3}
+                data-testid="role-mapping-tab"
+                title={<TabTitleText>{t("roleMapping")}</TabTitleText>}
+              >
+                <GroupRoleMapping id={id!} name={currentGroup()?.name!} />
+              </Tab>
+            )}
             {canViewPermissions && (
               <Tab
                 eventKey={4}

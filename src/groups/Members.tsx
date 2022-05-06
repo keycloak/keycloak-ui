@@ -46,6 +46,9 @@ export const Members = () => {
   const [selectedRows, setSelectedRows] = useState<UserRepresentation[]>([]);
   const { hasAccess } = useAccess();
 
+  const isManager =
+    hasAccess("manage-users") || currentGroup()!.access!.manageMembership;
+
   const [key, setKey] = useState(0);
   const refresh = () => setKey(new Date().getTime());
 
@@ -125,7 +128,7 @@ export const Members = () => {
         canSelectAll
         onSelect={(rows) => setSelectedRows([...rows])}
         toolbarItem={
-          hasAccess("manage-users") && (
+          isManager && (
             <>
               <ToolbarItem>
                 <Button
@@ -190,7 +193,7 @@ export const Members = () => {
           )
         }
         actions={
-          hasAccess("manage-users")
+          isManager
             ? [
                 {
                   title: t("leave"),
@@ -244,14 +247,8 @@ export const Members = () => {
         emptyState={
           <ListEmptyState
             message={t("users:noUsersFound")}
-            instructions={
-              hasAccess("manage-users")
-                ? t("users:emptyInstructions")
-                : undefined
-            }
-            primaryActionText={
-              hasAccess("manage-users") ? t("addMember") : undefined
-            }
+            instructions={isManager ? t("users:emptyInstructions") : undefined}
+            primaryActionText={isManager ? t("addMember") : undefined}
             onPrimaryAction={() => setAddMembers(true)}
           />
         }

@@ -37,7 +37,7 @@ export const GroupTable = () => {
   const [selectedRows, setSelectedRows] = useState<GroupRepresentation[]>([]);
   const [move, setMove] = useState<GroupRepresentation>();
 
-  const { subGroups, setSubGroups } = useSubGroups();
+  const { subGroups, currentGroup, setSubGroups } = useSubGroups();
 
   const [key, setKey] = useState(0);
   const refresh = () => setKey(new Date().getTime());
@@ -47,7 +47,7 @@ export const GroupTable = () => {
   const id = getLastId(location.pathname);
 
   const { hasAccess } = useAccess();
-  const isManager = hasAccess("manage-users");
+  const isManager = hasAccess("manage-users") || currentGroup()?.access?.manage;
   const canView =
     hasAccess("query-groups", "view-users") ||
     hasAccess("manage-users", "query-groups");
@@ -99,8 +99,11 @@ export const GroupTable = () => {
       <Link
         key={group.id}
         to={`${location.pathname}/${group.id}`}
-        onClick={() => {
-          setSubGroups([...subGroups, group]);
+        onClick={async () => {
+          const loadedGroup = await adminClient.groups.findOne({
+            id: group.id!,
+          });
+          setSubGroups([...subGroups, loadedGroup!]);
         }}
       >
         {group.name}
