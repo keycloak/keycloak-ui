@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import {
   Button,
@@ -9,12 +9,12 @@ import {
   PageSection,
   Radio,
 } from "@patternfly/react-core";
-
 import type { AuthenticationProviderRepresentation } from "@keycloak/keycloak-admin-client/lib/defs/authenticatorConfigRepresentation";
+
 import { PaginatingTableToolbar } from "../../../components/table-toolbar/PaginatingTableToolbar";
 import { useAdminClient, useFetch } from "../../../context/auth/AdminClient";
+import useLocaleSort, { mapByKey } from "../../../utils/useLocaleSort";
 import { providerConditionFilter } from "../../FlowDetails";
-import { useLocalSort } from "../../../utils/useSort";
 
 type AuthenticationProviderListProps = {
   list?: AuthenticationProviderRepresentation[];
@@ -65,8 +65,7 @@ export const AddStepModal = ({ name, type, onSelect }: AddStepModalProps) => {
     useState<AuthenticationProviderRepresentation[]>();
   const [max, setMax] = useState(10);
   const [first, setFirst] = useState(0);
-  const localSort =
-    useLocalSort<AuthenticationProviderRepresentation>("displayName");
+  const localeSort = useLocaleSort();
 
   useFetch(
     async () => {
@@ -92,7 +91,14 @@ export const AddStepModal = ({ name, type, onSelect }: AddStepModalProps) => {
     []
   );
 
-  const page = localSort(providers || []).slice(first, first + max + 1);
+  const page = useMemo(
+    () =>
+      localeSort(providers ?? [], mapByKey("displayName")).slice(
+        first,
+        first + max + 1
+      ),
+    [providers, first, max]
+  );
 
   return (
     <Modal

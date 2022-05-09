@@ -26,8 +26,8 @@ import { useRealm } from "../../context/realm-context/RealmContext";
 import { toPermissionDetails } from "../../clients/routes/PermissionDetails";
 import { KeycloakSpinner } from "../../components/keycloak-spinner/KeycloakSpinner";
 import { HelpItem } from "../../components/help-enabler/HelpItem";
+import useLocaleSort from "../../utils/useLocaleSort";
 import { useConfirmDialog } from "../confirm-dialog/ConfirmDialog";
-import { useLocalSortFunction } from "../../utils/useSort";
 
 import "./permissions-tab.css";
 
@@ -45,7 +45,7 @@ export const PermissionsTab = ({ id, type }: PermissionsTabProps) => {
   const { realm } = useRealm();
   const [realmId, setRealmId] = useState("");
   const [permission, setPermission] = useState<ManagementPermissionReference>();
-  const sortFunction = useLocalSortFunction();
+  const localeSort = useLocaleSort();
 
   const togglePermissionEnabled = (enabled: boolean) => {
     switch (type) {
@@ -173,46 +173,47 @@ export const PermissionsTab = ({ id, type }: PermissionsTabProps) => {
                   </Tr>
                 </Thead>
                 <Tbody>
-                  {Object.entries(permission.scopePermissions || {})
-                    .sort(sortFunction)
-                    .map(([name, id]) => (
-                      <Tr key={id}>
-                        <Td>
-                          <Link
-                            to={toPermissionDetails({
-                              realm,
-                              id: realmId,
-                              permissionType: "scope",
-                              permissionId: id,
-                            })}
-                          >
-                            {name}
-                          </Link>
-                        </Td>
-                        <Td>
-                          {t(`scopePermissions.${type}.${name}-description`)}
-                        </Td>
-                        <Td isActionCell>
-                          <ActionsColumn
-                            items={[
-                              {
-                                title: t("common:edit"),
-                                onClick() {
-                                  history.push(
-                                    toPermissionDetails({
-                                      realm,
-                                      id: realmId,
-                                      permissionType: "scope",
-                                      permissionId: id,
-                                    })
-                                  );
-                                },
+                  {localeSort(
+                    Object.entries(permission.scopePermissions || {}),
+                    ([name]) => name
+                  ).map(([name, id]) => (
+                    <Tr key={id}>
+                      <Td>
+                        <Link
+                          to={toPermissionDetails({
+                            realm,
+                            id: realmId,
+                            permissionType: "scope",
+                            permissionId: id,
+                          })}
+                        >
+                          {name}
+                        </Link>
+                      </Td>
+                      <Td>
+                        {t(`scopePermissions.${type}.${name}-description`)}
+                      </Td>
+                      <Td isActionCell>
+                        <ActionsColumn
+                          items={[
+                            {
+                              title: t("common:edit"),
+                              onClick() {
+                                history.push(
+                                  toPermissionDetails({
+                                    realm,
+                                    id: realmId,
+                                    permissionType: "scope",
+                                    permissionId: id,
+                                  })
+                                );
                               },
-                            ]}
-                          />
-                        </Td>
-                      </Tr>
-                    ))}
+                            },
+                          ]}
+                        />
+                      </Td>
+                    </Tr>
+                  ))}
                 </Tbody>
               </TableComposable>
             </CardBody>

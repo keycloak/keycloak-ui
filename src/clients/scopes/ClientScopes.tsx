@@ -36,7 +36,7 @@ import { ChangeTypeDropdown } from "../../client-scopes/ChangeTypeDropdown";
 
 import { toDedicatedScope } from "../routes/DedicatedScopeDetails";
 import { useRealm } from "../../context/realm-context/RealmContext";
-import { useLocalSortFunction } from "../../utils/useSort";
+import useLocaleSort, { mapByKey } from "../../utils/useLocaleSort";
 
 import "./client-scopes.css";
 
@@ -62,7 +62,7 @@ export const ClientScopes = ({
   const adminClient = useAdminClient();
   const { addAlert, addError } = useAlerts();
   const { realm } = useRealm();
-  const sortFunction = useLocalSortFunction<ClientScopeRepresentation>("name");
+  const localeSort = useLocaleSort();
 
   const [searchType, setSearchType] = useState<SearchType>("name");
 
@@ -121,10 +121,10 @@ export const ClientScopes = ({
     const filter =
       searchType === "name" ? nameFilter(search) : typeFilter(searchTypeType);
     const firstNum = Number(first);
-    const page = rows
-      .filter(filter)
-      .sort(sortFunction)
-      .slice(firstNum, firstNum + Number(max));
+    const page = localeSort(rows.filter(filter), mapByKey("name")).slice(
+      firstNum,
+      firstNum + Number(max)
+    );
     if (firstNum === 0) {
       return [
         {

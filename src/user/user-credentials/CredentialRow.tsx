@@ -11,8 +11,8 @@ import {
 
 import type CredentialRepresentation from "@keycloak/keycloak-admin-client/lib/defs/credentialRepresentation";
 import useToggle from "../../utils/useToggle";
+import useLocaleSort from "../../utils/useLocaleSort";
 import { CredentialDataDialog } from "./CredentialDataDialog";
-import { useLocalSortFunction } from "../../utils/useSort";
 
 type CredentialRowProps = {
   credential: CredentialRepresentation;
@@ -30,8 +30,7 @@ export const CredentialRow = ({
   const { t } = useTranslation("users");
   const [showData, toggleShow] = useToggle();
   const [kebabOpen, toggleKebab] = useToggle();
-
-  const sortFunction = useLocalSortFunction();
+  const localeSort = useLocaleSort();
 
   const rows = useMemo(() => {
     if (!credential.credentialData) {
@@ -41,15 +40,15 @@ export const CredentialRow = ({
     const credentialData: Record<string, unknown> = JSON.parse(
       credential.credentialData
     );
-    return Object.entries(credentialData)
-      .sort(sortFunction)
-      .map<[string, string]>(([key, value]) => {
-        if (typeof value === "string") {
-          return [key, value];
-        }
+    return localeSort(Object.entries(credentialData), ([key]) => key).map<
+      [string, string]
+    >(([key, value]) => {
+      if (typeof value === "string") {
+        return [key, value];
+      }
 
-        return [key, JSON.stringify(value)];
-      });
+      return [key, JSON.stringify(value)];
+    });
   }, [credential.credentialData]);
 
   return (

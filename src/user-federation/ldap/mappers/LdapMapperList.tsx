@@ -14,7 +14,7 @@ import { ListEmptyState } from "../../../components/list-empty-state/ListEmptySt
 import { useAlerts } from "../../../components/alert/Alerts";
 import { useAdminClient, useFetch } from "../../../context/auth/AdminClient";
 import { useConfirmDialog } from "../../../components/confirm-dialog/ConfirmDialog";
-import { useLocalSortFunction } from "../../../utils/useSort";
+import useLocaleSort, { mapByKey } from "../../../utils/useLocaleSort";
 
 export const LdapMapperList = () => {
   const history = useHistory();
@@ -26,7 +26,7 @@ export const LdapMapperList = () => {
   const refresh = () => setKey(key + 1);
 
   const [mappers, setMappers] = useState<ComponentRepresentation[]>([]);
-  const localSort = useLocalSortFunction<ComponentRepresentation>("name");
+  const localeSort = useLocaleSort();
 
   const { id } = useParams<{ id: string }>();
 
@@ -41,13 +41,14 @@ export const LdapMapperList = () => {
       }),
     (mapper) => {
       setMappers(
-        mapper
-          .map((mapper) => ({
+        localeSort(
+          mapper.map((mapper) => ({
             ...mapper,
             name: mapper.name,
             type: mapper.providerId,
-          }))
-          .sort(localSort)
+          })),
+          mapByKey("name")
+        )
       );
     },
     [key]

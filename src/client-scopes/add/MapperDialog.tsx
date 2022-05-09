@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import {
   Button,
@@ -21,7 +21,7 @@ import type { ProtocolMapperTypeRepresentation } from "@keycloak/keycloak-admin-
 import { useServerInfo } from "../../context/server-info/ServerInfoProvider";
 import { ListEmptyState } from "../../components/list-empty-state/ListEmptyState";
 import { KeycloakDataTable } from "../../components/table-toolbar/KeycloakDataTable";
-import useSort from "../../utils/useSort";
+import useLocaleSort, { mapByKey } from "../../utils/useLocaleSort";
 
 type Row = {
   name: string;
@@ -51,17 +51,22 @@ export const AddMapperDialog = (props: AddMapperDialogProps) => {
   const builtInMappers = serverInfo.builtinProtocolMappers![protocol];
   const [filter, setFilter] = useState<ProtocolMapperRepresentation[]>([]);
   const [selectedRows, setSelectedRows] = useState<Row[]>([]);
+  const localeSort = useLocaleSort();
 
-  const allRows = useSort(builtInMappers, "name").map((mapper) => {
-    const mapperType = protocolMappers.filter(
-      (type) => type.id === mapper.protocolMapper
-    )[0];
-    return {
-      item: mapper,
-      name: mapper.name!,
-      description: mapperType.helpText,
-    };
-  });
+  const allRows = useMemo(
+    () =>
+      localeSort(builtInMappers, mapByKey("name")).map((mapper) => {
+        const mapperType = protocolMappers.filter(
+          (type) => type.id === mapper.protocolMapper
+        )[0];
+        return {
+          item: mapper,
+          name: mapper.name!,
+          description: mapperType.helpText,
+        };
+      }),
+    [builtInMappers, protocolMappers]
+  );
   const [rows, setRows] = useState(allRows);
 
   if (props.filter && props.filter.length !== filter.length) {
@@ -70,7 +75,10 @@ export const AddMapperDialog = (props: AddMapperDialogProps) => {
     setRows([...allRows.filter((row) => !nameFilter.includes(row.item.name))]);
   }
 
-  const sortedProtocolMappers = useSort(protocolMappers, "name");
+  const sortedProtocolMappers = useMemo(
+    () => localeSort(protocolMappers, mapByKey("name")),
+    [protocolMappers]
+  );
 
   const isBuiltIn = !!props.filter;
 

@@ -11,7 +11,7 @@ import { useAdminClient, useFetch } from "../../context/auth/AdminClient";
 import type ClientScopeRepresentation from "@keycloak/keycloak-admin-client/lib/defs/clientScopeRepresentation";
 import { useParams } from "react-router";
 import type { EditClientPolicyConditionParams } from "../../realm-settings/routes/EditCondition";
-import { useLocalSortFunction } from "../../utils/useSort";
+import useLocaleSort, { mapByKey } from "../../utils/useLocaleSort";
 
 export const MultivaluedScopesComponent = ({
   defaultValue,
@@ -23,7 +23,7 @@ export const MultivaluedScopesComponent = ({
   const { conditionName } = useParams<EditClientPolicyConditionParams>();
   const adminClient = useAdminClient();
   const [open, setOpen] = useState(false);
-  const sortFunction = useLocalSortFunction<ClientScopeRepresentation>("name");
+  const localeSort = useLocaleSort();
   const [clientScopes, setClientScopes] = useState<ClientScopeRepresentation[]>(
     []
   );
@@ -62,9 +62,12 @@ export const MultivaluedScopesComponent = ({
             <>
               {open && (
                 <AddScopeDialog
-                  clientScopes={clientScopes
-                    .filter((scope) => !value.includes(scope.name!))
-                    .sort(sortFunction)}
+                  clientScopes={localeSort(
+                    clientScopes.filter(
+                      (scope) => !value.includes(scope.name!)
+                    ),
+                    mapByKey("name")
+                  )}
                   isClientScopesConditionType
                   open={open}
                   toggleDialog={() => setOpen(!open)}

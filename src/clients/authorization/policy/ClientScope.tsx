@@ -16,7 +16,7 @@ import type ClientScopeRepresentation from "@keycloak/keycloak-admin-client/lib/
 import { useAdminClient, useFetch } from "../../../context/auth/AdminClient";
 import { HelpItem } from "../../../components/help-enabler/HelpItem";
 import { AddScopeDialog } from "../../scopes/AddScopeDialog";
-import { useLocalSortFunction } from "../../../utils/useSort";
+import useLocaleSort, { mapByKey } from "../../../utils/useLocaleSort";
 
 export type RequiredIdValue = {
   id: string;
@@ -41,7 +41,7 @@ export const ClientScope = () => {
   >([]);
 
   const adminClient = useAdminClient();
-  const localSort = useLocalSortFunction<ClientScopeRepresentation>("name");
+  const localeSort = useLocaleSort();
 
   useFetch(
     () => adminClient.clientScopes.find(),
@@ -49,7 +49,7 @@ export const ClientScope = () => {
       setSelectedScopes(
         getValues("clientScopes").map((s) => scopes.find((c) => c.id === s.id)!)
       );
-      setScopes(scopes.sort(localSort));
+      setScopes(localeSort(scopes, mapByKey("name")));
     },
     []
   );

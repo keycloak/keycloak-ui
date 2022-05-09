@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useMemo } from "react";
 import { useHistory } from "react-router-dom";
 import { Trans, useTranslation } from "react-i18next";
 import { xor } from "lodash-es";
@@ -33,13 +33,13 @@ import { toUpperCase } from "../util";
 import { HelpItem } from "../components/help-enabler/HelpItem";
 import environment from "../environment";
 import { KeycloakSpinner } from "../components/keycloak-spinner/KeycloakSpinner";
+import useLocaleSort from "../utils/useLocaleSort";
 import {
   routableTab,
   RoutableTabs,
 } from "../components/routable-tabs/RoutableTabs";
 import { DashboardTab, toDashboard } from "./routes/Dashboard";
 import { ProviderInfo } from "./ProviderInfo";
-import useSort from "../utils/useSort";
 
 import "./dashboard.css";
 
@@ -71,17 +71,28 @@ const Dashboard = () => {
   const { realm } = useRealm();
   const serverInfo = useServerInfo();
   const history = useHistory();
+  const localeSort = useLocaleSort();
 
-  const enabledFeatures = useSort(
-    xor(
-      serverInfo.profileInfo?.disabledFeatures,
-      serverInfo.profileInfo?.experimentalFeatures,
-      serverInfo.profileInfo?.previewFeatures
-    )
+  const enabledFeatures = useMemo(
+    () =>
+      localeSort(
+        xor(
+          serverInfo.profileInfo?.disabledFeatures,
+          serverInfo.profileInfo?.experimentalFeatures,
+          serverInfo.profileInfo?.previewFeatures
+        ),
+        (item) => item
+      ),
+    [serverInfo.profileInfo]
   );
 
-  const disabledFeatures = useSort(
-    serverInfo.profileInfo?.disabledFeatures || []
+  const disabledFeatures = useMemo(
+    () =>
+      localeSort(
+        serverInfo.profileInfo?.disabledFeatures ?? [],
+        (item) => item
+      ),
+    [serverInfo.profileInfo]
   );
 
   const isExperimentalFeature = (feature: string) =>
