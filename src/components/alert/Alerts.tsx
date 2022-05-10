@@ -43,7 +43,7 @@ export const AlertProvider: FunctionComponent = ({ children }) => {
     setAlerts([{ key, message, variant, description }, ...alerts]);
   };
 
-  const addError = (message: string, error: Error | AxiosError) => {
+  const addError = (message: string, error: Error | AxiosError | string) => {
     addAlert(
       t(message, {
         error: getErrorMessage(error),
@@ -60,7 +60,13 @@ export const AlertProvider: FunctionComponent = ({ children }) => {
   );
 };
 
-function getErrorMessage(error: Error | AxiosError<Record<string, unknown>>) {
+function getErrorMessage(
+  error: Error | AxiosError<Record<string, unknown>> | string
+) {
+  if (typeof error === "string") {
+    return error;
+  }
+
   if (!axios.isAxiosError(error)) {
     return error.message;
   }
@@ -68,8 +74,10 @@ function getErrorMessage(error: Error | AxiosError<Record<string, unknown>>) {
   const responseData = error.response?.data ?? {};
 
   for (const key of ["error_description", "errorMessage", "error"]) {
-    if (typeof responseData[key] === "string") {
-      return responseData[key];
+    const value = responseData[key];
+
+    if (typeof value === "string") {
+      return value;
     }
   }
 
