@@ -1,6 +1,7 @@
 import React, { createContext, FunctionComponent, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { AlertVariant } from "@patternfly/react-core";
+import axios from "axios";
 import type { AxiosError } from "axios";
 
 import useRequiredContext from "../../utils/useRequiredContext";
@@ -45,12 +46,7 @@ export const AlertProvider: FunctionComponent = ({ children }) => {
   const addError = (message: string, error: Error | AxiosError) => {
     addAlert(
       t(message, {
-        error:
-          "response" in error
-            ? (error.response?.data as any)?.error_description ||
-              (error.response?.data as any)?.errorMessage ||
-              (error.response?.data as any)?.error
-            : error,
+        error: getErrorMessage(error),
       }),
       AlertVariant.danger
     );
@@ -63,3 +59,19 @@ export const AlertProvider: FunctionComponent = ({ children }) => {
     </AlertContext.Provider>
   );
 };
+
+function getErrorMessage(error: Error | AxiosError<Record<string, unknown>>) {
+  if (!axios.isAxiosError(error)) {
+    return error.message;
+  }
+
+  const responseData = error.response?.data ?? {};
+
+  for (const key of ["error_description", "errorMessage", "error"]) {
+    if (typeof responseData[key] === "string") {
+      return responseData[key];
+    }
+  }
+
+  return error.message;
+}
