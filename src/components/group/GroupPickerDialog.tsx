@@ -27,7 +27,7 @@ export type GroupPickerDialogProps = {
   type: "selectOne" | "selectMany";
   filterGroups?: string[];
   text: { title: string; ok: string };
-  onConfirm: (groups: GroupRepresentation[]) => void;
+  onConfirm: (groups: GroupRepresentation[] | undefined[]) => void;
   onClose: () => void;
 };
 
