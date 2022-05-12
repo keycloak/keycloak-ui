@@ -1,4 +1,5 @@
 import React from "react";
+import { useTranslation } from "react-i18next";
 import { PageSection } from "@patternfly/react-core";
 
 import type { AccessType } from "@keycloak/keycloak-admin-client/lib/defs/whoAmIRepresentation";
@@ -10,7 +11,12 @@ type ForbiddenSectionProps = {
 export const ForbiddenSection = ({
   permissionNeeded,
 }: ForbiddenSectionProps) => {
+  const { t } = useTranslation("common");
+  const count = Array.isArray(permissionNeeded) ? permissionNeeded.length : 1;
+
   return (
-    <PageSection>Forbidden, permission needed: {permissionNeeded}</PageSection>
+    <PageSection>
+      {t("forbidden", { count })} {permissionNeeded}
+    </PageSection>
   );
 };
