@@ -70,7 +70,7 @@ export default class RoleMappingTab {
     return this;
   }
 
-  checkRoles(roleNames: string[], exist: boolean = true) {
+  checkRoles(roleNames: string[], exist = true) {
     if (roleNames.length) {
       cy.findByTestId(this.assignedRolesTable)
         .get(this.namesColumn)
