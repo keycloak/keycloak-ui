@@ -115,6 +115,7 @@ export const FlowRow = ({
                   <Tooltip content={t("common:delete")}>
                     <Button
                       variant="plain"
+                      data-testid={`${execution.displayName}-delete`}
                       aria-label={t("common:delete")}
                       onClick={() => onDelete(execution)}
                     >
