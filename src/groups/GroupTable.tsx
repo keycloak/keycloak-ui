@@ -231,7 +231,7 @@ export const GroupTable = () => {
           onClose={() => setMove(undefined)}
           onConfirm={async (group) => {
             try {
-              if (group[0] !== undefined) {
+              if (group !== undefined) {
                 try {
                   await adminClient.groups.setOrCreateChild(
                     { id: group[0].id! },
