@@ -10,12 +10,12 @@ import adminClient from "../support/util/AdminClient";
 import PasswordPolicies from "../support/pages/admin_console/manage/authentication/PasswordPolicies";
 import ModalUtils from "../support/util/ModalUtils";
 
-describe("Authentication test", () => {
-  const loginPage = new LoginPage();
-  const masthead = new Masthead();
-  const sidebarPage = new SidebarPage();
-  const listingPage = new ListingPage();
+const loginPage = new LoginPage();
+const masthead = new Masthead();
+const sidebarPage = new SidebarPage();
+const listingPage = new ListingPage();
 
+describe("Authentication test", () => {
   const detailPage = new FlowDetails();
   const duplicateFlowModal = new DuplicateFlowModal();
   const modalUtil = new ModalUtils();
@@ -138,9 +138,6 @@ describe("Authentication test", () => {
 });
 
 describe("Required actions", () => {
-  const loginPage = new LoginPage();
-  const masthead = new Masthead();
-  const sidebarPage = new SidebarPage();
   const requiredActionsPage = new RequiredActions();
 
   before(() => {
@@ -188,9 +185,6 @@ describe("Required actions", () => {
 });
 
 describe("Password policies tab", () => {
-  const loginPage = new LoginPage();
-  const masthead = new Masthead();
-  const sidebarPage = new SidebarPage();
   const passwordPoliciesPage = new PasswordPolicies();
 
   beforeEach(() => {
