@@ -166,7 +166,7 @@ export const AuthorizationSettings = ({ clientId }: { clientId: string }) => {
           name="authenticationSettings"
           save={() => handleSubmit(save)()}
           reset={() => reset(resource)}
-          isActive={true}
+          isActive
         />
       </FormAccess>
     </PageSection>

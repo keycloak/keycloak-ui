@@ -149,7 +149,7 @@ export default function ClientsSection() {
               isPaginated
               ariaLabelKey="clients:clientList"
               searchPlaceholderKey="clients:searchForClient"
-              toolbarItem={ToolbarItems()}
+              toolbarItem={<ToolbarItems />}
               actionResolver={(rowData: IRowData) => {
                 const client: ClientRepresentation = rowData.data;
                 const actions: Action<ClientRepresentation>[] = [
