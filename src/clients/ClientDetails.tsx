@@ -234,6 +234,11 @@ export default function ClientDetails() {
         )
       );
     }
+    Object.entries(client.attributes || {})
+      .filter(([key]) => key.startsWith("saml.server.signature"))
+      .map(([key, value]) =>
+        form.setValue("attributes." + key.replaceAll(".", "$"), value)
+      );
   };
 
   useFetch(
@@ -274,6 +279,13 @@ export default function ClientDetails() {
 
       const submittedClient =
         convertFormValuesToObject<ClientRepresentation>(values);
+
+      Object.entries(values.attributes || {})
+        .filter(([key]) => key.includes("$"))
+        .map(
+          ([key, value]) =>
+            (submittedClient.attributes![key.replaceAll("$", ".")] = value)
+        );
 
       if (submittedClient.attributes?.["acr.loa.map"]) {
         submittedClient.attributes["acr.loa.map"] = JSON.stringify(
