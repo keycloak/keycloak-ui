@@ -73,7 +73,7 @@ export default class PageObject {
   }
 
   protected assertDropdownMenuIsOpen(
-    isOpen: boolean = true,
+    isOpen = true,
     element?: Cypress.Chainable<JQuery>
   ) {
     element = element ?? cy.get(this.drpDwnMenuList);
