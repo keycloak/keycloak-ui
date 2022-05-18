@@ -58,7 +58,7 @@ export default class PageObject {
 
   protected assertSwitchStateOn(
     element?: Cypress.Chainable<JQuery>,
-    isOn: boolean = true
+    isOn = true
   ) {
     element = element ?? cy.get(this.switchInput);
     element
