@@ -88,8 +88,7 @@ export default class PageObject {
     itemName: string,
     element?: Cypress.Chainable<JQuery>
   ) {
-    element = element ?? cy.get(this.drpDwnMenuItem);
-    element.contains(itemName).click();
+    (element ?? cy.get(this.drpDwnMenuItem)).contains(itemName).click();
     return this;
   }
 
