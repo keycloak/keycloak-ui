@@ -58,7 +58,7 @@ describe("Authentication test", () => {
     detailPage.executionExists("Cookie");
   });
 
-  it("should move kerberos down", () => {
+  it.skip("should move kerberos down", () => {
     listingPage.goToItemDetails("Copy of browser");
 
     detailPage.moveRowTo("Kerberos", "Identity Provider Redirector");
