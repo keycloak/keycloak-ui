@@ -60,8 +60,7 @@ export default class PageObject {
     element?: Cypress.Chainable<JQuery>,
     isOn = true
   ) {
-    element = element ?? cy.get(this.switchInput);
-    element
+    (element ?? cy.get(this.switchInput))
       .parent()
       .contains(isOn ? "On" : "Off")
       .should("be.visible");
