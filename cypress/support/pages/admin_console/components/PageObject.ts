@@ -75,8 +75,7 @@ export default class PageObject {
     isOpen = true,
     element?: Cypress.Chainable<JQuery>
   ) {
-    element = element ?? cy.get(this.drpDwnMenuList);
-    this.assertExist(element, isOpen);
+    this.assertExist(element ?? cy.get(this.drpDwnMenuList), isOpen);
     return this;
   }
 
