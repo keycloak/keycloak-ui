@@ -47,9 +47,7 @@ describe("Events tests", () => {
     eventsTestUser.eventsTestUserId = result.id;
   });
 
-  after(async () => {
-    await adminClient.deleteUser(eventsTestUser.userRepresentation.username);
-  });
+  after(() => adminClient.deleteUser(eventsTestUser.userRepresentation.username));
 
   describe("User events list", () => {
     beforeEach(() => {
