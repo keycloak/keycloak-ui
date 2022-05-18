@@ -150,10 +150,12 @@ describe("Events tests", () => {
     });
 
     it("Search by user ID", () => {
-      adminClient.loginUser(
-        eventsTestUser.userRepresentation.username,
-        eventsTestUser.userRepresentation.credentials[0].value,
-        eventsTestUserClientId
+      cy.wrap(null).then(() =>
+        adminClient.loginUser(
+          eventsTestUser.userRepresentation.username,
+          eventsTestUser.userRepresentation.credentials[0].value,
+          eventsTestUserClientId
+        )
       );
       userEventsTab
         .searchUserEventByUserId(eventsTestUser.eventsTestUserId)
