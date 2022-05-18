@@ -80,7 +80,10 @@ export default class PageObject {
   }
 
   protected assertDropdownMenuIsClosed(element?: Cypress.Chainable<JQuery>) {
-    return this.assertDropdownMenuIsOpen(false, element ?? cy.get(this.drpDwnMenuList));
+    return this.assertDropdownMenuIsOpen(
+      false,
+      element ?? cy.get(this.drpDwnMenuList)
+    );
   }
 
   protected clickDropdownMenuItem(
