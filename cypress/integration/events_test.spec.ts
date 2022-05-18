@@ -157,6 +157,13 @@ describe("Events tests", () => {
     });
 
     it("Search by user ID", () => {
+      sidebarPage.goToRealmSettings();
+      realmSettingsPage
+        .goToEventsTab()
+        .goToUserEventsSettingsSubTab()
+        .enableSaveEventsSwitch()
+        .save();
+      sidebarPage.goToEvents();
       cy.wrap(null).then(() =>
         adminClient.loginUser(
           eventsTestUser.userRepresentation.username,
