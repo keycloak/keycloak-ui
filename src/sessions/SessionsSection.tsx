@@ -5,7 +5,6 @@ import { useTranslation } from "react-i18next";
 
 import { ViewHeader } from "../components/view-header/ViewHeader";
 import { useAdminClient } from "../context/auth/AdminClient";
-import { useRealm } from "../context/realm-context/RealmContext";
 import helpUrls from "../help-urls";
 import { LogoutAllSessionsModal } from "./LogoutAllSessionsModal";
 import { RevocationModal } from "./RevocationModal";
@@ -15,7 +14,6 @@ import "./SessionsSection.css";
 
 export default function SessionsSection() {
   const adminClient = useAdminClient();
-  const { realm } = useRealm();
   const { t } = useTranslation("sessions");
   const [revocationModalOpen, setRevocationModalOpen] = useState(false);
   const [logoutAllSessionsModalOpen, setLogoutAllSessionsModalOpen] =
@@ -34,7 +32,7 @@ export default function SessionsSection() {
   };
 
   const loader = async () => {
-    const activeClients = await adminClient.sessions.find({ realm });
+    const activeClients = await adminClient.sessions.find();
     const clientSessions = (
       await Promise.all(
         activeClients.map((client) =>
@@ -45,7 +43,7 @@ export default function SessionsSection() {
 
     setNoSessions(clientSessions.length === 0);
 
-    const allClients = await adminClient.clients.find({ realm });
+    const allClients = await adminClient.clients.find();
 
     const getActiveClientDetails = allClients.filter((x) =>
       activeClients.map((y) => y.id).includes(x.id)
@@ -58,9 +56,7 @@ export default function SessionsSection() {
     );
     const userSessions = (
       await Promise.all(
-        userIds.map((userId) =>
-          adminClient.users.listSessions({ realm, id: userId! })
-        )
+        userIds.map((userId) => adminClient.users.listSessions({ id: userId! }))
       )
     ).flat();
 

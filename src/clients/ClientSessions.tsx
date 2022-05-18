@@ -6,7 +6,6 @@ import { useTranslation } from "react-i18next";
 
 import type { LoaderFunction } from "../components/table-toolbar/KeycloakDataTable";
 import { useAdminClient } from "../context/auth/AdminClient";
-import { useRealm } from "../context/realm-context/RealmContext";
 import SessionsTable from "../sessions/SessionsTable";
 
 type ClientSessionsProps = {
@@ -15,11 +14,10 @@ type ClientSessionsProps = {
 
 export const ClientSessions = ({ client }: ClientSessionsProps) => {
   const adminClient = useAdminClient();
-  const { realm } = useRealm();
   const { t } = useTranslation("sessions");
 
   const loader: LoaderFunction<UserSessionRepresentation> = (first, max) =>
-    adminClient.clients.listSessions({ realm, id: client.id!, first, max });
+    adminClient.clients.listSessions({ id: client.id!, first, max });
 
   return (
     <PageSection variant="light" className="pf-u-p-0">

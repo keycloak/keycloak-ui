@@ -3,7 +3,7 @@
   "sessionExplain": "Sessions are sessions of users in this realm and the clients that they access within the session.",
   "searchForSession": "Search session",
   "user": "User",
-  "lastAccess": "Last Access",
+  "lastAccess": "Last access",
   "started": "Started",
   "clients": "Clients",
   "sessionsType": {
