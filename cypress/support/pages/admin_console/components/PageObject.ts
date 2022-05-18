@@ -12,7 +12,7 @@ export default class PageObject {
   private chipGroupCloseBtn = ".pf-c-chip-group__close";
   private chipItem = ".pf-c-chip-group__list-item";
 
-  protected assertExist(element: Cypress.Chainable<any>, exist: boolean) {
+  protected assertExist(element: Cypress.Chainable<JQuery>, exist: boolean) {
     element.should((!exist ? "not." : "") + "exist");
     return this;
   }
@@ -298,8 +298,9 @@ export default class PageObject {
 
   protected assertChipItemExist(itemName: string, exist: boolean) {
     cy.get(this.chipItem).within(() => {
-      return this.assertExist(cy.contains(itemName), exist);
+      cy.contains(itemName).should((exist ? "" : "not.") + "exist");
     });
+    return this;
   }
 
   protected assertChipGroupItemExist(

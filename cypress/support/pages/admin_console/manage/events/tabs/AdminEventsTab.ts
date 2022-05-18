@@ -30,37 +30,20 @@ const emptyStatePage = new EmptyStatePage();
 const modalUtils = new ModalUtils();
 
 export default class AdminEventsTab extends PageObject {
-  searchAdminEventDrpDwn = ".pf-c-dropdown__toggle";
-  searchAdminEventDrpDwnBtn = "adminEventsSearchSelectorToggle";
-  searchForm = ".pf-c-dropdown__menu";
-  resourceTypesDrpDwnFld = "resource-types-searchField";
-  operationTypesDrpDwnFld = "operation-types-searchField";
-  resourcePathInputFld = "resourcePath-searchField";
-  userInputFld = "user-searchField";
-  realmInputFld = "realm-searchField";
-  ipAddressInputFld = "ipAddress-searchField";
-  dateFromInputFld = "dateFrom-searchField";
-  dateToInputFld = "dateTo-searchField";
-  searchEventsBtn = "search-events-btn";
-  operationTypesList = ".pf-c-form-control";
-  operationTypesOption = ".pf-c-select__menu-item";
-  operationTypesInputFld = ".pf-c-form-control.pf-c-select__toggle-typeahead";
-  operationTypesBtn = ".pf-c-button.pf-c-select__toggle-button.pf-m-plain";
-  adminEventsTabTitle = ".pf-c-title";
-  moreBtn = ".pf-c-dropdown__toggle.pf-m-plain";
-  moreDrpDwnItems = ".pf-c-dropdown__menu";
-  dialogTitle = ".pf-c-modal-box__title-text";
-  dialogClose = `[aria-label="Close"]`;
-  authAttrDataRow = 'tbody > tr > [data-label="Attribute"]';
-  authValDataRow = 'tbody > tr > [data-label="Value"]';
-  refreshBtn = "refresh-btn";
-  resourcePathInput = "#kc-resourcePath";
-  realmInput = "#kc-realm";
-  clienInput = "#kc-client";
-  userInput = "#kc-user";
-  ipAddressInput = "#kc-ipAddress";
-  dateFromInput = "#kc-dateFrom";
-  dateToInput = "#kc-dateTo";
+  private searchAdminEventDrpDwnBtn = "adminEventsSearchSelectorToggle";
+  private searchEventsBtn = "search-events-btn";
+  private operationTypesInputFld =
+    ".pf-c-form-control.pf-c-select__toggle-typeahead";
+  private authAttrDataRow = 'tbody > tr > [data-label="Attribute"]';
+  private authValDataRow = 'tbody > tr > [data-label="Value"]';
+  private refreshBtn = "refresh-btn";
+  private resourcePathInput = "#kc-resourcePath";
+  private realmInput = "#kc-realm";
+  private clienInput = "#kc-client";
+  private userInput = "#kc-user";
+  private ipAddressInput = "#kc-ipAddress";
+  private dateFromInput = "#kc-dateFrom";
+  private dateToInput = "#kc-dateTo";
 
   public refresh() {
     cy.findByTestId(this.refreshBtn).click();

@@ -65,6 +65,11 @@ export default class UserEventsTab extends PageObject {
     return this;
   }
 
+  public assertSearchUserEventDropdownMenuExist(exist: boolean) {
+    super.assertExist(cy.findByTestId(this.searchUserEventDrpDwnToggle), exist);
+    return this;
+  }
+
   public refresh() {
     cy.findByTestId(this.refreshBtn).click();
     return this;

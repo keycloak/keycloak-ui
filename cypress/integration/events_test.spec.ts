@@ -89,15 +89,20 @@ describe("Events tests", () => {
       sidebarPage.goToEvents();
     });
 
-    it.skip("Check search dropdown display", () => {
+    it("Check search dropdown display", () => {
       sidebarPage.goToRealmSettings();
-      //realmSettingsPage.goToEventsTab().goToUserEventsSettingsSubTab().turnOffSaveEventsSwitch();
+      realmSettingsPage
+        .goToEventsTab()
+        .goToUserEventsSettingsSubTab()
+        .disableSaveEventsSwitch()
+        .save();
 
       masthead.signOut();
       loginPage.logIn();
 
       sidebarPage.goToEvents();
       eventsPage.tabUtils().checkIsCurrentTab(EventsTab.UserEvents);
+      userEventsTab.assertSearchUserEventDropdownMenuExist(true);
     });
 
     it("Check user events search form fields display", () => {
