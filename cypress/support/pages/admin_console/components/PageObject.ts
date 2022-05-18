@@ -27,7 +27,7 @@ export default class PageObject {
 
   protected assertIsEnabled(
     element: Cypress.Chainable<JQuery>,
-    isEnabled: boolean = true
+    isEnabled = true
   ) {
     element.then(($btn) => {
       if ($btn.hasClass("pf-m-disabled")) {
