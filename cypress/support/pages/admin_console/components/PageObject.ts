@@ -175,7 +175,7 @@ export default class PageObject {
   }
 
   protected assertSelectMenuIsOpen(
-    isOpen: boolean = true,
+    isOpen = true,
     element?: Cypress.Chainable<JQuery>
   ) {
     element = element ?? cy.get(this.selectMenuList);
