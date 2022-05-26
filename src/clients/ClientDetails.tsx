@@ -128,7 +128,7 @@ const ClientDetailHeader = ({
   }, [client, t]);
 
   const { hasAccess } = useAccess();
-  const isManager = hasAccess("manage-clients");
+  const isManager = hasAccess("manage-clients") || client.access?.configure;
 
   const dropdownItems = [
     <DropdownItem key="download" onClick={toggleDownloadDialog}>
@@ -189,12 +189,11 @@ export default function ClientDetails() {
   const { profileInfo } = useServerInfo();
 
   const { hasAccess } = useAccess();
-  const isManager = hasAccess("manage-clients");
-  const canViewPermissions = hasAccess(
-    "manage-authorization",
-    "manage-clients"
-  );
-  const canViewServiceAccountRoles = hasAccess("view-users");
+  const permissionsEnabled =
+    !profileInfo?.disabledFeatures?.includes("ADMIN_FINE_GRAINED_AUTHZ") &&
+    hasAccess("manage-authorization");
+  const hasManageClients = hasAccess("manage-clients");
+  const hasViewUsers = hasAccess("view-users");
 
   const history = useHistory();
 
@@ -416,27 +415,33 @@ export default function ClientDetails() {
                 {...route("keys")}
               >
                 {client.protocol === "openid-connect" && (
-                  <Keys clientId={clientId} save={save} />
+                  <Keys
+                    clientId={clientId}
+                    save={save}
+                    fineGrainedAccess={client.access?.configure!}
+                  />
                 )}
                 {client.protocol === "saml" && (
                   <SamlKeys clientId={clientId} save={save} />
                 )}
               </Tab>
             )}
-            {!client.publicClient && !isRealmClient(client) && (
-              <Tab
-                id="credentials"
-                title={<TabTitleText>{t("credentials")}</TabTitleText>}
-                {...route("credentials")}
-              >
-                <Credentials
-                  key={key}
-                  client={client}
-                  save={save}
-                  refresh={() => setKey(key + 1)}
-                />
-              </Tab>
-            )}
+            {!client.publicClient &&
+              !isRealmClient(client) &&
+              (hasManageClients || client.access?.configure) && (
+                <Tab
+                  id="credentials"
+                  title={<TabTitleText>{t("credentials")}</TabTitleText>}
+                  {...route("credentials")}
+                >
+                  <Credentials
+                    key={key}
+                    client={client}
+                    save={save}
+                    refresh={() => setKey(key + 1)}
+                  />
+                </Tab>
+              )}
             <Tab
               id="roles"
               data-testid="rolesTab"
@@ -447,7 +452,7 @@ export default function ClientDetails() {
                 loader={loader}
                 paginated={false}
                 messageBundle="clients"
-                isReadOnly={!isManager}
+                isReadOnly={!(hasManageClients || client.access?.configure)}
               />
             </Tab>
             {!isRealmClient(client) && !client.bearerOnly && (
@@ -480,6 +485,7 @@ export default function ClientDetails() {
                       clientName={client.clientId!}
                       clientId={clientId}
                       protocol={client!.protocol!}
+                      fineGrainedAccess={client!.access?.manage!}
                     />
                   </Tab>
                   <Tab
@@ -579,7 +585,7 @@ export default function ClientDetails() {
                 </RoutableTabs>
               </Tab>
             )}
-            {client!.serviceAccountsEnabled && canViewServiceAccountRoles && (
+            {client!.serviceAccountsEnabled && hasViewUsers && (
               <Tab
                 id="serviceAccount"
                 data-testid="serviceAccountTab"
@@ -589,19 +595,16 @@ export default function ClientDetails() {
                 <ServiceAccount client={client} />
               </Tab>
             )}
-            {!profileInfo?.disabledFeatures?.includes(
-              "ADMIN_FINE_GRAINED_AUTHZ"
-            ) &&
-              canViewPermissions && (
-                <Tab
-                  id="permissions"
-                  data-testid="permissionsTab"
-                  title={<TabTitleText>{t("common:permissions")}</TabTitleText>}
-                  {...route("permissions")}
-                >
-                  <PermissionsTab id={client.id!} type="clients" />
-                </Tab>
-              )}
+            {permissionsEnabled && (hasManageClients || client.access?.manage) && (
+              <Tab
+                id="permissions"
+                data-testid="permissionsTab"
+                title={<TabTitleText>{t("common:permissions")}</TabTitleText>}
+                {...route("permissions")}
+              >
+                <PermissionsTab id={client.id!} type="clients" />
+              </Tab>
+            )}
             <Tab
               id="advanced"
               data-testid="advancedTab"
