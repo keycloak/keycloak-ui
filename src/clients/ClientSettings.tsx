@@ -85,7 +85,7 @@ export const ClientSettings = ({
       <Form isHorizontal>
         <ClientDescription
           protocol={client.protocol}
-          configure={client.access?.configure!}
+          hasConfigureAccess={client.access?.configure!}
         />
       </Form>
       {protocol === "saml" ? (

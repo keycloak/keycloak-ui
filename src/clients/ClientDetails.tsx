@@ -418,7 +418,7 @@ export default function ClientDetails() {
                   <Keys
                     clientId={clientId}
                     save={save}
-                    fineGrainedAccess={client.access?.configure!}
+                    hasConfigureAccess={client.access?.configure!}
                   />
                 )}
                 {client.protocol === "saml" && (

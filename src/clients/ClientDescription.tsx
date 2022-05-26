@@ -11,12 +11,12 @@ import { KeycloakTextArea } from "../components/keycloak-text-area/KeycloakTextA
 
 type ClientDescriptionProps = {
   protocol?: string;
-  configure: boolean;
+  hasConfigureAccess: boolean;
 };
 
 export const ClientDescription = ({
   protocol,
-  configure,
+  hasConfigureAccess: configure,
 }: ClientDescriptionProps) => {
   const { t } = useTranslation("clients");
   const {

@@ -68,7 +68,7 @@ export const GeneralSettings = () => {
           )}
         />
       </FormGroup>
-      <ClientDescription configure />
+      <ClientDescription hasConfigureAccess />
     </FormAccess>
   );
 };
