@@ -56,7 +56,7 @@ export const RealmSettingsEmailTab = ({
 
   const authenticationEnabled = useWatch({
     control,
-    name: "smtpServer.authentication",
+    name: "smtpServer.auth",
     defaultValue: "",
   });
 
@@ -93,10 +93,8 @@ export const RealmSettingsEmailTab = ({
       serverSettings.starttls = serverSettings.starttls === true.toString();
     }
 
-    // For some reason the API wants a duplicate field for the authentication status.
-    // Somebody thought this was a good idea, so here we are.
-    if (serverSettings.authentication === true.toString()) {
-      serverSettings.auth = true;
+    if (serverSettings.auth === "string") {
+      serverSettings.auth = serverSettings.auth === true.toString();
     }
 
     try {
@@ -321,7 +319,7 @@ export const RealmSettingsEmailTab = ({
               fieldId="kc-authentication"
             >
               <Controller
-                name="smtpServer.authentication"
+                name="smtpServer.auth"
                 control={control}
                 defaultValue=""
                 render={({ onChange, value }) => (
