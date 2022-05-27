@@ -200,7 +200,7 @@ export const AdvancedTab = ({
             </Text>
             <FormAccess
               role="manage-clients"
-              fineGrainedAccess={access?.configure!}
+              fineGrainedAccess={access?.configure}
               isHorizontal
             >
               <FormGroup
@@ -265,7 +265,7 @@ export const AdvancedTab = ({
           <>
             <FormAccess
               role="manage-clients"
-              fineGrainedAccess={access?.configure!}
+              fineGrainedAccess={access?.configure}
               isHorizontal
             >
               <FormGroup
