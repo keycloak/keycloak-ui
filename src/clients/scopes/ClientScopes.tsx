@@ -46,7 +46,7 @@ export type ClientScopesProps = {
   clientId: string;
   protocol: string;
   clientName: string;
-  fineGrainedAccess: boolean;
+  fineGrainedAccess?: boolean;
 };
 
 export type Row = ClientScopeRepresentation & {

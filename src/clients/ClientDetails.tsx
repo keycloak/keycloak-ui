@@ -485,7 +485,7 @@ export default function ClientDetails() {
                       clientName={client.clientId!}
                       clientId={clientId}
                       protocol={client!.protocol!}
-                      fineGrainedAccess={client!.access?.manage!}
+                      fineGrainedAccess={client!.access?.manage}
                     />
                   </Tab>
                   <Tab
