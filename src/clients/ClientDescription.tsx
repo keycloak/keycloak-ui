@@ -11,7 +11,7 @@ import { KeycloakTextArea } from "../components/keycloak-text-area/KeycloakTextA
 
 type ClientDescriptionProps = {
   protocol?: string;
-  hasConfigureAccess: boolean;
+  hasConfigureAccess?: boolean;
 };
 
 export const ClientDescription = ({

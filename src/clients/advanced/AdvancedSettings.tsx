@@ -22,7 +22,7 @@ type AdvancedSettingsProps = {
   save: () => void;
   reset: () => void;
   protocol?: string;
-  hasConfigureAccess: boolean;
+  hasConfigureAccess?: boolean;
 };
 
 export const AdvancedSettings = ({

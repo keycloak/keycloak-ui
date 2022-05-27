@@ -20,7 +20,7 @@ type AuthenticationOverridesProps = {
   save: () => void;
   reset: () => void;
   protocol?: string;
-  hasConfigureAccess: boolean;
+  hasConfigureAccess?: boolean;
 };
 
 export const AuthenticationOverrides = ({

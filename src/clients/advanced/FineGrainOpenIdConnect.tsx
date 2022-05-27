@@ -20,7 +20,7 @@ import { KeycloakTextInput } from "../../components/keycloak-text-input/Keycloak
 type FineGrainOpenIdConnectProps = {
   save: () => void;
   reset: () => void;
-  hasConfigureAccess: boolean;
+  hasConfigureAccess?: boolean;
 };
 
 export const FineGrainOpenIdConnect = ({

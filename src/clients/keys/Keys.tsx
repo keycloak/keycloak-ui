@@ -33,7 +33,7 @@ import { Certificate } from "./Certificate";
 type KeysProps = {
   save: () => void;
   clientId: string;
-  hasConfigureAccess: boolean;
+  hasConfigureAccess?: boolean;
 };
 
 const attr = "jwt.credential";

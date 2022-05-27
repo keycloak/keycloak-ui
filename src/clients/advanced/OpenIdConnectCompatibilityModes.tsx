@@ -10,7 +10,7 @@ type OpenIdConnectCompatibilityModesProps = {
   control: Control<Record<string, any>>;
   save: () => void;
   reset: () => void;
-  hasConfigureAccess: boolean;
+  hasConfigureAccess?: boolean;
 };
 
 export const OpenIdConnectCompatibilityModes = ({

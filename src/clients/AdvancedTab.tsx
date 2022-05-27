@@ -402,7 +402,7 @@ export const AdvancedTab = ({
                     setValue(`attributes.${key}`, value)
                   )
                 }
-                hasConfigureAccess={access?.configure!}
+                hasConfigureAccess={access?.configure}
               />
             </>
           )}
@@ -434,7 +434,7 @@ export const AdvancedTab = ({
               reset={() =>
                 resetFields(["exclude.session.state.from.auth.response"])
               }
-              hasConfigureAccess={access?.configure!}
+              hasConfigureAccess={access?.configure}
             />
           </>
         )}
@@ -445,7 +445,7 @@ export const AdvancedTab = ({
           <AdvancedSettings
             protocol={protocol}
             control={control}
-            hasConfigureAccess={access?.configure!}
+            hasConfigureAccess={access?.configure}
             save={() => save()}
             reset={() => {
               resetFields([
@@ -475,7 +475,7 @@ export const AdvancedTab = ({
                 authenticationFlowBindingOverrides?.direct_grant
               );
             }}
-            hasConfigureAccess={access?.configure!}
+            hasConfigureAccess={access?.configure}
           />
         </>
       </ScrollForm>
