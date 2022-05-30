@@ -78,23 +78,19 @@ export const RealmSettingsEmailTab = ({
   };
 
   const testConnection = async () => {
+    const toNumber = (value: string) => Number(value);
+    const toBoolean = (value: string) => value === true.toString();
+    const valueMapper = new Map<string, (value: string) => unknown>([
+      ["port", toNumber],
+      ["ssl", toBoolean],
+      ["starttls", toBoolean],
+      ["auth", toBoolean],
+    ]);
+
     const serverSettings = { ...getValues()["smtpServer"] };
 
-    // Code below uses defensive coding as the server configuration uses an ambiguous record type.
-    if (typeof serverSettings.port === "string") {
-      serverSettings.port = Number(serverSettings.port);
-    }
-
-    if (typeof serverSettings.ssl === "string") {
-      serverSettings.ssl = serverSettings.ssl === true.toString();
-    }
-
-    if (typeof serverSettings.starttls === "string") {
-      serverSettings.starttls = serverSettings.starttls === true.toString();
-    }
-
-    if (serverSettings.auth === "string") {
-      serverSettings.auth = serverSettings.auth === true.toString();
+    for (const [key, mapperFn] of valueMapper.entries()) {
+      serverSettings[key] = mapperFn(serverSettings[key]);
     }
 
     try {
