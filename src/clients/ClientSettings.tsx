@@ -26,11 +26,6 @@ export const ClientSettings = (props: ClientSettingsProps) => {
   const protocol = watch("protocol");
 
   const { client } = props;
-        ...result,
-        "samlCapabilityConfig",
-        "signatureAndEncryption",
-        "loginSettings",
-      ];
 
   return (
     <ScrollForm
@@ -40,10 +35,10 @@ export const ClientSettings = (props: ClientSettingsProps) => {
           title: t("generalSettings"),
           panel: (
             <Form isHorizontal>
-              <ClientDescription protocol={client.protocol} />
-          protocol={client.protocol}
-          hasConfigureAccess={client.access?.configure}
-        />
+              <ClientDescription
+                protocol={client.protocol}
+                hasConfigureAccess={client.access?.configure}
+              />
             </Form>
           ),
         },
@@ -69,31 +64,14 @@ export const ClientSettings = (props: ClientSettingsProps) => {
         {
           title: t("loginSettings"),
           isHidden: protocol !== "openid-connect" || client.bearerOnly,
-          panel: <LoginSettingsPanel />,
+          panel: <LoginSettingsPanel access={client.access?.configure} />,
         },
         {
           title: t("logoutSettings"),
           isHidden: client.bearerOnly,
           panel: <LogoutPanel {...props} />,
         },
-        isHorizontal
-        role="manage-clients"
-        fineGrainedAccess={client.access?.configure}
-      >
       ]}
-        {protocol === "saml" && (
-          <SaveReset
-            className="keycloak__form_actions"
-            name="settings"
-            save={save}
-            reset={reset}
-            isActive={isManager}
-          />
-        )}
-        isHorizontal
-        role="manage-clients"
-        fineGrainedAccess={client.access?.configure}
-      >
     />
   );
 };

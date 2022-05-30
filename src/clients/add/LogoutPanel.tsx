@@ -11,7 +11,11 @@ import { KeycloakTextInput } from "../../components/keycloak-text-input/Keycloak
 import { useAccess } from "../../context/access/Access";
 import { SaveReset } from "../advanced/SaveReset";
 
-export const LogoutPanel = ({ save, reset }: ClientSettingsProps) => {
+export const LogoutPanel = ({
+  save,
+  reset,
+  client: { access },
+}: ClientSettingsProps) => {
   const { t } = useTranslation("clients");
   const {
     register,
@@ -21,13 +25,17 @@ export const LogoutPanel = ({ save, reset }: ClientSettingsProps) => {
   } = useFormContext<ClientRepresentation>();
 
   const { hasAccess } = useAccess();
-  const isManager = hasAccess("manage-clients");
+  const isManager = hasAccess("manage-clients") || access?.configure;
 
   const protocol = watch("protocol");
   const frontchannelLogout = watch("frontchannelLogout");
 
   return (
-    <FormAccess isHorizontal role="manage-clients">
+    <FormAccess
+      isHorizontal
+      fineGrainedAccess={access?.configure}
+      role="manage-clients"
+    >
       {protocol === "openid-connect" && (
         <>
           <FormGroup

@@ -24,7 +24,7 @@ export const AccessSettings = ({
   const { realm } = useRealm();
 
   const { hasAccess } = useAccess();
-  const isManager = hasAccess("manage-clients");
+  const isManager = hasAccess("manage-clients") || client.access?.configure;
 
   const protocol = watch("protocol");
   const idpInitiatedSsoUrlName: string = watch(
@@ -32,7 +32,11 @@ export const AccessSettings = ({
   );
 
   return (
-    <FormAccess isHorizontal role="manage-clients">
+    <FormAccess
+      isHorizontal
+      fineGrainedAccess={client.access?.configure}
+      role="manage-clients"
+    >
       {!client.bearerOnly && (
         <>
           <FormGroup

@@ -26,7 +26,7 @@ import { AddHostDialog } from ".././advanced/AddHostDialog";
 
 export const ClusteringPanel = ({
   save,
-  client: { id, registeredNodes },
+  client: { id, registeredNodes, access },
 }: AdvancedProps) => {
   const { t } = useTranslation("clients");
   const { control } = useFormContext();
@@ -76,7 +76,11 @@ export const ClusteringPanel = ({
 
   return (
     <>
-      <FormAccess role="manage-clients" isHorizontal>
+      <FormAccess
+        role="manage-clients"
+        fineGrainedAccess={access?.configure}
+        isHorizontal
+      >
         <FormGroup
           label={t("nodeReRegistrationTimeout")}
           fieldId="kc-node-reregistration-timeout"

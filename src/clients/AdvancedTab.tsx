@@ -18,7 +18,6 @@ import type { SaveOptions } from "./ClientDetails";
 import type { TFunction } from "i18next";
 import { RevocationPanel } from "./advanced/RevocationPanel";
 import { ClusteringPanel } from "./advanced/ClusteringPanel";
-    access,
 
 export const parseResult = (
   result: GlobalRequestResult,
@@ -77,14 +76,6 @@ export const AdvancedTab = ({ save, client }: AdvancedProps) => {
     <PageSection variant="light" className="pf-u-py-0">
       <ScrollForm
         sections={[
-              role="manage-clients"
-              fineGrainedAccess={access?.configure}
-              isHorizontal
-            >
-              role="manage-clients"
-              fineGrainedAccess={access?.configure}
-              isHorizontal
-            >
           {
             title: t("revocation"),
             isHidden: protocol !== openIdConnect,
@@ -110,7 +101,6 @@ export const AdvancedTab = ({ save, client }: AdvancedProps) => {
                       setValue(`attributes.${key}`, value)
                     )
                   }
-                hasConfigureAccess={access?.configure}
                 />
               </>
             ),
@@ -149,7 +139,6 @@ export const AdvancedTab = ({ save, client }: AdvancedProps) => {
                       setValue(`attributes.${key}`, value)
                     )
                   }
-              hasConfigureAccess={access?.configure}
                 />
               </>
             ),
@@ -167,7 +156,6 @@ export const AdvancedTab = ({ save, client }: AdvancedProps) => {
                 <AdvancedSettings
                   protocol={protocol}
                   control={control}
-            hasConfigureAccess={access?.configure}
                   save={() => save()}
                   reset={() => {
                     resetFields([
@@ -202,7 +190,6 @@ export const AdvancedTab = ({ save, client }: AdvancedProps) => {
                       authenticationFlowBindingOverrides?.direct_grant
                     );
                   }}
-            hasConfigureAccess={access?.configure}
                 />
               </>
             ),

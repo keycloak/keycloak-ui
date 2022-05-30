@@ -15,7 +15,7 @@ import { HelpItem } from "../../components/help-enabler/HelpItem";
 import { useServerInfo } from "../../context/server-info/ServerInfoProvider";
 import { KeycloakTextArea } from "../../components/keycloak-text-area/KeycloakTextArea";
 
-export const LoginSettingsPanel = () => {
+export const LoginSettingsPanel = ({ access }: { access?: boolean }) => {
   const { t } = useTranslation("clients");
   const { register, control, watch } = useFormContext<ClientRepresentation>();
 
@@ -27,7 +27,7 @@ export const LoginSettingsPanel = () => {
   );
 
   return (
-    <FormAccess isHorizontal role="manage-clients">
+    <FormAccess isHorizontal fineGrainedAccess={access} role="manage-clients">
       <FormGroup
         label={t("loginTheme")}
         labelIcon={

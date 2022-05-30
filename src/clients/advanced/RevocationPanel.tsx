@@ -23,7 +23,7 @@ import { toClient } from "../routes/Client";
 
 export const RevocationPanel = ({
   save,
-  client: { id, adminUrl },
+  client: { id, adminUrl, access },
 }: AdvancedProps) => {
   const revocationFieldName = "notBefore";
   const pushRevocationButtonRef = useRef<HTMLElement>();
@@ -71,7 +71,11 @@ export const RevocationPanel = ({
           tab
         </Trans>
       </Text>
-      <FormAccess role="manage-clients" isHorizontal>
+      <FormAccess
+        role="manage-clients"
+        fineGrainedAccess={access?.configure}
+        isHorizontal
+      >
         <FormGroup
           label={t("notBefore")}
           fieldId="kc-not-before"
