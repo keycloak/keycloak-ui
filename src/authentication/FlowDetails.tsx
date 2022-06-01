@@ -362,7 +362,7 @@ export default function FlowDetails() {
             <DeleteConfirm />
             {tableView && (
               <DataList
-                aria-label="flows"
+                aria-label={t("flows")}
                 onDragFinish={(order) => {
                   const withoutHeaderId = order.slice(1);
                   setLiveText(
