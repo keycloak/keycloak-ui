@@ -54,6 +54,7 @@ import useIsFeatureEnabled, { Feature } from "../utils/useIsFeatureEnabled";
 import { ClientPoliciesTab, toClientPolicies } from "./routes/ClientPolicies";
 import { KeysTab } from "./keys/KeysTab";
 import { DEFAULT_LOCALE } from "../i18n";
+import type { KeyValueType } from "../components/key-value-form/key-value-convert";
 
 type RealmSettingsHeaderProps = {
   onChange: (value: boolean) => void;
@@ -187,6 +188,15 @@ export const RealmSettingsTabs = ({
 
   const setupForm = (r: RealmRepresentation = realm) => {
     convertToFormValues(r, setValue);
+    if (r.attributes?.["acr.loa.map"]) {
+      form.setValue(
+        "attributes.acr.loa.map",
+        Object.entries(JSON.parse(r.attributes["acr.loa.map"])).flatMap(
+          ([key, value]) => ({ key, value })
+        )
+      );
+    }
+
     if (r.supportedLocales?.length === 0) {
       setValue("supportedLocales", [DEFAULT_LOCALE]);
     }
@@ -200,6 +210,15 @@ export const RealmSettingsTabs = ({
   const save = async (realm: RealmRepresentation) => {
     try {
       realm = convertFormValuesToObject(realm);
+      if (realm.attributes?.["acr.loa.map"]) {
+        realm.attributes["acr.loa.map"] = JSON.stringify(
+          Object.fromEntries(
+            (realm.attributes["acr.loa.map"] as KeyValueType[])
+              .filter(({ key }) => key !== "")
+              .map(({ key, value }) => [key, value])
+          )
+        );
+      }
 
       await adminClient.realms.update(
         { realm: realmName },

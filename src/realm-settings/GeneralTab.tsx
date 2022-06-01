@@ -24,6 +24,7 @@ import { FormAccess } from "../components/form-access/FormAccess";
 import { HelpItem } from "../components/help-enabler/HelpItem";
 import { FormattedLink } from "../components/external-link/FormattedLink";
 import { KeycloakTextInput } from "../components/keycloak-text-input/KeycloakTextInput";
+import { KeyValueInput } from "../components/key-value-form/KeyValueInput";
 
 type RealmSettingsGeneralTabProps = {
   save: (realm: RealmRepresentation) => void;
@@ -142,6 +143,18 @@ export const RealmSettingsGeneralTab = ({
               </Select>
             )}
           />
+        </FormGroup>
+        <FormGroup
+          label={t("clients:acrToLoAMapping")}
+          fieldId="acrToLoAMapping"
+          labelIcon={
+            <HelpItem
+              helpText="clients-help:acrToLoAMapping"
+              fieldLabelId="clients:acrToLoAMapping"
+            />
+          }
+        >
+          <KeyValueInput name="attributes.acr.loa.map" />
         </FormGroup>
         <FormGroup
           hasNoPaddingTop
