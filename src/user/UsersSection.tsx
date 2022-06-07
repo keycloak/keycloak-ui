@@ -380,7 +380,7 @@ export default function UsersSection() {
                   />
                 )
               }
-              toolbarItem={isManager ? toolbar : <span />}
+              toolbarItem={isManager ? toolbar : undefined}
               actionResolver={(rowData: IRowData) => {
                 const user: UserRepresentation = rowData.data;
                 if (!user.access?.manage) return [];
