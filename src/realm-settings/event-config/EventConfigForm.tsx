@@ -113,7 +113,7 @@ export const EventConfigForm = ({
               />
             </FormGroup>
           )}
-          {type === "user" && (
+          {
             <FormGroup
               label={t("expiration")}
               fieldId="expiration"
@@ -125,7 +125,11 @@ export const EventConfigForm = ({
               }
             >
               <Controller
-                name="eventsExpiration"
+                name={
+                  type === "admin"
+                    ? "adminEventsExpiration"
+                    : "eventsExpiration"
+                }
                 defaultValue=""
                 control={control}
                 render={({ onChange, value }) => (
@@ -137,7 +141,7 @@ export const EventConfigForm = ({
                 )}
               />
             </FormGroup>
-          )}
+          }
         </>
       )}
       <ActionGroup>
