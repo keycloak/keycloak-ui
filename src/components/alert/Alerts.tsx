@@ -49,7 +49,7 @@ export const AlertProvider: FunctionComponent = ({ children }) => {
   const addError = (message: string, error: Error | AxiosError | string) => {
     addAlert(
       t(message, {
-        error: getErrorMessage(error),
+        error: t(getErrorMessage(error)),
       }),
       AlertVariant.danger
     );
