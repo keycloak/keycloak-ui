@@ -29,7 +29,7 @@
     "@patternfly/patternfly": "^4.194.4",
     "@patternfly/react-code-editor": "^4.55.1",
     "@patternfly/react-core": "^4.214.1",
-    "@patternfly/react-icons": "^4.65.1",
+    "@patternfly/react-icons": "^4.72.3",
     "@patternfly/react-table": "^4.83.1",
     "dagre": "^0.8.5",
     "file-saver": "^2.0.5",
