@@ -171,5 +171,6 @@
     "local": "LOCAL",
     "brokerId": "BROKER_ID",
     "brokerUsername": "BROKER_USERNAME"
-  }
+  },
+  "ldapErrorValidatePasswordPolicyAvailableForWritableOnly": "Validate Password Policy is applicable only with WRITABLE edit mode"
 }
