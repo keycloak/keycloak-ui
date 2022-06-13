@@ -62,8 +62,8 @@ export const AttributeGeneralSettings = () => {
     defaultValue: false,
   });
 
-  useFetch(adminClient.clientScopes.find, setClientScopes, []);
-  useFetch(adminClient.users.getProfile, setConfig, []);
+  useFetch(() => adminClient.clientScopes.find(), setClientScopes, []);
+  useFetch(() => adminClient.users.getProfile(), setConfig, []);
 
   return (
     <FormAccess role="manage-realm" isHorizontal>

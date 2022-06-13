@@ -114,7 +114,7 @@ export default function NewAttributeSettings() {
     }));
 
   useFetch(
-    adminClient.users.getProfile,
+    () => adminClient.users.getProfile(),
     (config) => {
       setConfig(config);
       const {
