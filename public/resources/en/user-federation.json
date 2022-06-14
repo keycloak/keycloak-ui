@@ -73,7 +73,7 @@
   "saveError": "User federation provider could not be saved: {{error}}",
   "createSuccess": "User federation provider successfully created",
   "createError": "User federation provider could not be created: {{error}}",
-  "ldapErrorValidatePasswordPolicyAvailableForWritableOnly": "Validate password policy is only available for the WRITABLE edit mode",
+  "ldapErrorValidatePasswordPolicyAvailableForWritableOnly": "Validate Password Policy is applicable only with WRITABLE edit mode",
   "queryExtensions": "Query Supported Extensions",
   "testAuthentication": "Test authentication",
   "testSuccess": "Successfully connected to LDAP",
