@@ -1,4 +1,4 @@
-import React, { Children, isValidElement, useState } from "react";
+import { Children, isValidElement, useState } from "react";
 import { useHistory, useRouteMatch } from "react-router-dom";
 import { TabProps, Tabs, TabsProps } from "@patternfly/react-core";
 import { useFormContext } from "react-hook-form";
@@ -64,7 +64,7 @@ export const KeycloakTabs = ({
         }}
         activeKey={tab}
         onSelect={(_, key) => {
-          if (form?.formState.isDirty) {
+          if (form.formState.isDirty) {
             setKey(key as string);
             toggleChangeTabDialog();
           } else {

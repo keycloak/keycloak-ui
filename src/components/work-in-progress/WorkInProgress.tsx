@@ -1,5 +1,3 @@
-import React from "react";
-
 import "./work-in-progress.css";
 
 type WorkInProgressProps = {

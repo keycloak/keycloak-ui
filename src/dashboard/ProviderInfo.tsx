@@ -1,4 +1,4 @@
-import React, { Fragment, useMemo, useState } from "react";
+import { Fragment, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { ExpandableSection, PageSection } from "@patternfly/react-core";
 import {

@@ -1,5 +1,5 @@
 import type ClientRepresentation from "@keycloak/keycloak-admin-client/lib/defs/clientRepresentation";
-import React, { useState, KeyboardEvent, useMemo, useRef } from "react";
+import { useState, KeyboardEvent, useMemo, useRef } from "react";
 import { useTranslation } from "react-i18next";
 import {
   FormGroup,

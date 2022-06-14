@@ -1,4 +1,10 @@
-import React, { useState, useEffect } from "react";
+import {
+  useState,
+  useEffect,
+  FormEvent,
+  ChangeEvent,
+  MouseEvent as ReactMouseEvent,
+} from "react";
 import { useTranslation } from "react-i18next";
 import {
   Alert,
@@ -123,7 +129,7 @@ export const PartialImportDialog = (props: PartialImportProps) => {
 
   const handleResourceCheckBox = (
     checked: boolean,
-    event: React.FormEvent<HTMLInputElement>
+    event: FormEvent<HTMLInputElement>
   ) => {
     const resource = event.currentTarget.name as Resource;
 
@@ -145,7 +151,7 @@ export const PartialImportDialog = (props: PartialImportProps) => {
     ));
 
   const handleCollisionSelect = (
-    event: React.ChangeEvent<Element> | React.MouseEvent<Element, MouseEvent>,
+    event: ChangeEvent<Element> | ReactMouseEvent<Element, MouseEvent>,
     option: string | SelectOptionObject
   ) => {
     setCollisionOption(option as CollisionOption);

@@ -4,7 +4,7 @@
 import { render, waitFor } from "@testing-library/react";
 import type KeycloakAdminClient from "@keycloak/keycloak-admin-client";
 import type { ServerInfoRepresentation } from "@keycloak/keycloak-admin-client/lib/defs/serverInfoRepesentation";
-import React, { FunctionComponent } from "react";
+import { FunctionComponent } from "react";
 import { HashRouter } from "react-router-dom";
 import { AccessContextProvider } from "../../context/access/Access";
 import { AdminClient } from "../../context/auth/AdminClient";
