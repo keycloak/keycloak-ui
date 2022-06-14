@@ -166,7 +166,7 @@
                             <outputDirectory>target/classes/theme/keycloak.v2/admin/resources</outputDirectory>
                             <resources>
                                 <resource>
-                                    <directory>../build</directory>
+                                    <directory>../dist</directory>
                                 </resource>
                             </resources>
                         </configuration>
