@@ -101,7 +101,7 @@ describe("User Federation LDAP tests", () => {
     cy.intercept("GET", "/admin/realms/master").as("getProvider");
   });
 
-  it.only("Should create LDAP provider from empty state", () => {
+  it("Should create LDAP provider from empty state", () => {
     // if tests don't start at empty state, e.g. user has providers configured locally,
     // create a new card from the card view instead
     cy.get("body").then(($body) => {
@@ -362,7 +362,7 @@ describe("User Federation LDAP tests", () => {
     sidebarPage.goToUserFederation();
   });
 
-  it.only("Should update LDAP searching and updating settings and save", () => {
+  it("Should update LDAP searching and updating settings and save", () => {
     providersPage.clickExistingCard(firstLdapName);
 
     providersPage.fillLdapSearchingData(
@@ -427,7 +427,6 @@ describe("User Federation LDAP tests", () => {
     providersPage.clickExistingCard(firstLdapName);
 
     providersPage.fillSelect(providersPage.ldapEditModeInput, editModeUnsynced);
-    providersPage.toggleSwitch(providersPage.importUsers);
 
     providersPage.save(provider);
     masthead.checkNotificationMessage(
@@ -563,7 +562,7 @@ describe("User Federation LDAP tests", () => {
     masthead.checkNotificationMessage(deletedSuccessMessage);
   });
 
-  it.only("Should delete LDAP provider using Settings view Action menu", () => {
+  it("Should delete LDAP provider using Settings view Action menu", () => {
     providersPage.deleteCardFromMenu(firstLdapName);
     modalUtils.checkModalTitle(deleteModalTitle).confirmModal();
     masthead.checkNotificationMessage(deletedSuccessMessage);
