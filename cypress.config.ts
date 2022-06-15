@@ -1,8 +1,5 @@
-import webpackPreprocessor from "@cypress/webpack-batteries-included-preprocessor";
 import { defineConfig } from "cypress";
 import del from "del";
-import ForkTsCheckerWebpackPlugin from "fork-ts-checker-webpack-plugin";
-import path from "node:path";
 
 export default defineConfig({
   projectId: "j4yhox",
@@ -20,24 +17,7 @@ export default defineConfig({
   },
   e2e: {
     setupNodeEvents(on) {
-      // Use a Webpack based TypeScript pre-processor to ensure types are correct.
-      on(
-        "file:preprocessor",
-        webpackPreprocessor({
-          typescript: require.resolve("typescript"),
-          webpackOptions: {
-            ...webpackPreprocessor.defaultOptions.webpackOptions,
-            context: path.resolve(__dirname, "cypress"),
-            plugins: [
-              new ForkTsCheckerWebpackPlugin({
-                async: false,
-              }),
-            ],
-          },
-        })
-      );
-
-      on("after:spec", async (spec, results) => {
+      on("after:spec", async (_, results) => {
         if (!results.video) {
           return;
         }
