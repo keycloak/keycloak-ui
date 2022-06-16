@@ -239,9 +239,7 @@ describe("Group test", () => {
       await adminClient.createGroup(predefinedGroups[0]);
     });
 
-    after(async () => {
-      await adminClient.deleteGroups();
-    });
+    after(() => adminClient.deleteGroups());
 
     beforeEach(() => {
       groupPage.goToGroupChildGroupsTab(predefinedGroups[0]);
