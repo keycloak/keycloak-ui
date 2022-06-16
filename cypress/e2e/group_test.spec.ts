@@ -235,9 +235,7 @@ describe("Group test", () => {
   });
 
   describe("Child Groups", () => {
-    before(async () => {
-      await adminClient.createGroup(predefinedGroups[0]);
-    });
+    before(() => adminClient.createGroup(predefinedGroups[0]));
 
     after(() => adminClient.deleteGroups());
 
