@@ -172,9 +172,7 @@ describe("Group test", () => {
 
     before(() => adminClient.createGroup(groupNameDeleteHeaderAction));
 
-    after(async () => {
-      await adminClient.deleteGroups();
-    });
+    after(() => adminClient.deleteGroups());
 
     describe("Search globally", () => {
       it("Check empty state", () => {
