@@ -170,9 +170,7 @@ describe("Group test", () => {
   describe("Group Actions", () => {
     const groupNameDeleteHeaderAction = "group_test_delete_header_action";
 
-    before(async () => {
-      await adminClient.createGroup(groupNameDeleteHeaderAction);
-    });
+    before(() => adminClient.createGroup(groupNameDeleteHeaderAction));
 
     after(async () => {
       await adminClient.deleteGroups();
