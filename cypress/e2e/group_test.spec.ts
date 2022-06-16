@@ -430,7 +430,7 @@ describe("Group test", () => {
         .addAttribute("key", "value")
         .addAnAttributeButton()
         .revert()
-        .asseertRowItemsEqualTo(1);
+        .assertRowItemsEqualTo(1);
     });
   });
 
