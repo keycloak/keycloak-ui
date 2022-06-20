@@ -428,13 +428,15 @@ describe("User Federation LDAP tests", () => {
 
     providersPage.fillSelect(providersPage.ldapEditModeInput, editModeUnsynced);
 
+    providersPage.toggleSwitch(providersPage.importUsers);
+
     providersPage.save(provider);
     masthead.checkNotificationMessage(
       "User federation provider could not be saved: Validate Password Policy is applicable only with WRITABLE edit mode"
     );
 
-    providersPage.toggleSwitch(providersPage.validatePwPolicySwitch);
     providersPage.toggleSwitch(providersPage.importUsers);
+    providersPage.toggleSwitch(providersPage.validatePwPolicySwitch);
 
     masthead.checkNotificationMessage(
       "User federation provider could not be saved: Can not disable Importing users when LDAP provider mode is UNSYNCED"
