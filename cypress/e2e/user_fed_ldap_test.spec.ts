@@ -437,6 +437,7 @@ describe("User Federation LDAP tests", () => {
 
     providersPage.toggleSwitch(providersPage.importUsers);
     providersPage.toggleSwitch(providersPage.validatePwPolicySwitch);
+    providersPage.save(provider);
 
     masthead.checkNotificationMessage(
       "User federation provider could not be saved: Can not disable Importing users when LDAP provider mode is UNSYNCED"
