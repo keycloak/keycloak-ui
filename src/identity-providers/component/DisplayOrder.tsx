@@ -31,6 +31,7 @@ export const DisplayOrder = () => {
             type="number"
             value={value}
             data-testid="displayOrder"
+            aria-label={`value-${value}`}
             min={0}
             onChange={(value) => {
               const num = Number(value);
