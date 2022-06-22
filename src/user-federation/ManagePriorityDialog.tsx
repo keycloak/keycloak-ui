@@ -113,14 +113,14 @@ export const ManagePriorityDialog = ({
         {sortBy(components, "config.priority").map((component) => (
           <DataListItem
             aria-labelledby={component.name}
-            id={component.name}
+            id={`${component.name}-item`}
             key={component.name}
           >
             <DataListItemRow>
               <DataListControl>
                 <DataListDragButton
                   aria-label="Reorder"
-                  aria-labelledby={component.name}
+                  aria-labelledby={`${component.name}-reorder`}
                   aria-describedby={t("manageOrderItemAria")}
                   aria-pressed="false"
                 />
