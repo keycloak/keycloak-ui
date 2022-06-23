@@ -120,7 +120,7 @@ export const ManagePriorityDialog = ({
               <DataListControl>
                 <DataListDragButton
                   aria-label="Reorder"
-                  aria-labelledby={`${component.name}-reorder`}
+                  aria-labelledby={component.name}
                   aria-describedby={t("manageOrderItemAria")}
                   aria-pressed="false"
                 />
