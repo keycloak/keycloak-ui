@@ -239,7 +239,7 @@ export const GroupPickerDialog = ({
                   <DataListCheck
                     className="kc-join-group-modal-check"
                     data-testid={`${group.name}-check`}
-                    aria-label="data-list-check"
+                    aria-label={t("users:checkbox") + `${group.name}`}
                     checked={group.checked}
                     isDisabled={isRowDisabled(group)}
                     onChange={(checked) => {
