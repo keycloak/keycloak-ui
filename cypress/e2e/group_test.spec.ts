@@ -9,6 +9,7 @@ import GroupPage from "../support/pages/admin_console/manage/groups/GroupPage";
 import ChildGroupsTab from "../support/pages/admin_console/manage/groups/group_details/tabs/ChildGroupsTab";
 import MembersTab from "../support/pages/admin_console/manage/groups/group_details/tabs/MembersTab";
 import adminClient from "../support/util/AdminClient";
+import { range } from "lodash-es";
 
 describe("Group test", () => {
   const loginPage = new LoginPage();
@@ -26,19 +27,23 @@ describe("Group test", () => {
   const groupNames: string[] = [];
   const predefinedGroups = ["level", "level1", "level2", "level3"];
   const emptyGroup = "empty-group";
-  const users: { id: string; username: string }[] = [];
+  let users: { id: string; username: string }[] = [];
+  const username = "test-user";
 
   before(async () => {
-    for (let i = 0; i < 5; i++) {
-      const username = "user" + i;
-      const user = await adminClient.createUser({
-        username: username,
-        enabled: true,
-      });
-      users.push({ id: user.id, username: username });
-    }
-    console.log("DEBUG USERS");
-    console.log(users);
+    users = await Promise.all(
+      range(5).map((index) => {
+        const user = adminClient
+          .createUser({
+            username: username + index,
+            enabled: true,
+          })
+          .then((user) => {
+            return { id: user.id, username: username + index };
+          });
+        return user;
+      })
+    );
   });
 
   beforeEach(() => {
@@ -137,10 +142,15 @@ describe("Group test", () => {
   describe("Search group under current group", () => {
     before(async () => {
       const createdGroups = await adminClient.createSubGroups(predefinedGroups);
-      for (let i = 0; i < 5; i++) {
-        adminClient.addUserToGroup(users[i].id!, createdGroups[i % 3].id);
-      }
-      adminClient.createUser({ username: "new", enabled: true });
+      await Promise.all([
+        range(5).map((index) => {
+          adminClient.addUserToGroup(
+            users[index].id!,
+            createdGroups[index % 3].id
+          );
+        }),
+        adminClient.createUser({ username: "new", enabled: true }),
+      ]);
     });
 
     it("Search child group in group", () => {
@@ -170,9 +180,13 @@ describe("Group test", () => {
   describe("Group Actions", () => {
     const groupNameDeleteHeaderAction = "group_test_delete_header_action";
 
-    before(() => adminClient.createGroup(groupNameDeleteHeaderAction));
+    before(async () => {
+      await adminClient.createGroup(groupNameDeleteHeaderAction);
+    });
 
-    after(() => adminClient.deleteGroups());
+    after(async () => {
+      await adminClient.deleteGroups();
+    });
 
     describe("Search globally", () => {
       it("Check empty state", () => {
@@ -235,9 +249,13 @@ describe("Group test", () => {
   });
 
   describe("Child Groups", () => {
-    before(() => adminClient.createGroup(predefinedGroups[0]));
+    before(async () => {
+      await adminClient.createGroup(predefinedGroups[0]);
+    });
 
-    after(() => adminClient.deleteGroups());
+    after(async () => {
+      await adminClient.deleteGroups();
+    });
 
     beforeEach(() => {
       groupPage.goToGroupChildGroupsTab(predefinedGroups[0]);
@@ -316,10 +334,15 @@ describe("Group test", () => {
   describe("Members", () => {
     before(async () => {
       const createdGroups = await adminClient.createSubGroups(predefinedGroups);
-      for (let i = 0; i < 5; i++) {
-        adminClient.addUserToGroup(users[i].id!, createdGroups[i % 3].id);
-      }
-      await adminClient.createGroup(emptyGroup);
+      await Promise.all([
+        range(5).map((index) => {
+          adminClient.addUserToGroup(
+            users[index].id!,
+            createdGroups[index % 3].id
+          );
+        }),
+        adminClient.createGroup(emptyGroup),
+      ]);
     });
 
     beforeEach(() => {
@@ -428,7 +451,7 @@ describe("Group test", () => {
         .addAttribute("key", "value")
         .addAnAttributeButton()
         .revert()
-        .assertRowItemsEqualTo(1);
+        .asseertRowItemsEqualTo(1);
     });
   });
 

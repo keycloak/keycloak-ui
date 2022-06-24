@@ -123,11 +123,6 @@ export default class GroupDetailPage extends GroupPage {
     return this;
   }
 
-  /* clickAdd() {
-    cy.findByTestId(this.addMember).click();
-    return this;
-  }*/
-
   clickAddMembers() {
     cy.findByTestId(this.addMembers).click();
     return this;
