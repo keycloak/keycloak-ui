@@ -164,6 +164,5 @@
   "credentialResetConfirmText": "Are you sure you want to send email to user",
   "credentialResetEmailSuccess": "Email sent to user.",
   "credentialResetEmailError": "Failed: {{error}}",
-  "editUserLabel": "Edit User Label Button",
-  "checkbox": "Checkbox for "
+  "editUserLabel": "Edit User Label Button"
 }
