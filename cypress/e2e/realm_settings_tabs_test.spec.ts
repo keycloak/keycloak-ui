@@ -39,9 +39,10 @@ describe("Realm settings tabs tests", () => {
     cy.findByTestId(realmSettingsPage.userProfileTab).should("exist");
   });
 
-  // Toggles will update the database immediately.
-  // So we need to force realm settings to reload - otherwise you aren't testing anything but patternfly
-  // This also keeps Cypress from getting hung.
+  // Clicking multiple toggles in succession causes quick re-renderings of the screen
+  // and there will be a noticeable flicker during the test.
+  // Sometimes, this will screw up the test and cause Cypress to hang.
+  // Clicking to another section each time fixes the problem.
   function reloadRealm() {
     sidebarPage.goToClientScopes();
     sidebarPage.goToRealmSettings();
