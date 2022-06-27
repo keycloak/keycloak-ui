@@ -239,6 +239,7 @@ export const GroupPickerDialog = ({
                   <DataListCheck
                     className="kc-join-group-modal-check"
                     data-testid={`${group.name}-check`}
+                    aria-label={group.name}
                     checked={group.checked}
                     isDisabled={isRowDisabled(group)}
                     onChange={(checked) => {
@@ -283,7 +284,11 @@ export const GroupPickerDialog = ({
                 >
                   {((hasSubgroups(group) && filter === "") ||
                     type === "selectOne") && (
-                    <Button isDisabled variant="link">
+                    <Button
+                      isDisabled
+                      variant="link"
+                      aria-label={t("common:select")}
+                    >
                       <AngleRightIcon />
                     </Button>
                   )}
