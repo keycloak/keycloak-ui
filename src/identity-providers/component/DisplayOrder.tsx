@@ -27,11 +27,11 @@ export const DisplayOrder = () => {
         defaultValue=""
         render={({ onChange, value }) => (
           <TextInput
-            id="displayOrder"
+            id="kc-display-order"
             type="number"
             value={value}
             data-testid="displayOrder"
-            aria-label={`value-${value}`}
+            aria-label={value}
             min={0}
             onChange={(value) => {
               const num = Number(value);
