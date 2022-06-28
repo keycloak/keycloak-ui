@@ -13,4 +13,5 @@ export const keycloakBefore = () => {
   });
   cy.visit("");
   cy.get('[role="progressbar"]').should("not.exist");
+  cy.injectAxe();
 };
