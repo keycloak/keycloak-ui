@@ -55,38 +55,40 @@ export const ProviderInfo = () => {
                 <Td>{name}</Td>
                 <Td>
                   <ul>
-                    {Object.entries(providers).map(
-                      ([key, { operationalInfo }]) => (
-                        <Fragment key={key}>
-                          <li>{key}</li>
-                          {operationalInfo && (
-                            <ExpandableSection
-                              isExpanded={open.includes(key)}
-                              onToggle={() => toggleOpen(key)}
-                              toggleText={
-                                open.includes(key)
-                                  ? t("showLess")
-                                  : t("showMore")
-                              }
-                            >
-                              <TableComposable borders={false}>
-                                <Tbody>
-                                  {Object.entries(operationalInfo).map(
-                                    ([key, value]) => (
-                                      <Tr key={key}>
-                                        <Td>{key}</Td>
-                                        <Td>{value}</Td>
-                                      </Tr>
-                                    )
-                                  )}
-                                </Tbody>
-                              </TableComposable>
-                            </ExpandableSection>
-                          )}
-                        </Fragment>
-                      )
-                    )}
+                    {Object.entries(providers).map(([key]) => (
+                      <Fragment key={key}>
+                        <li>{key}</li>
+                      </Fragment>
+                    ))}
                   </ul>
+                  {Object.entries(providers).map(
+                    ([key, { operationalInfo }]) => (
+                      <Fragment key={key}>
+                        {operationalInfo && (
+                          <ExpandableSection
+                            isExpanded={open.includes(key)}
+                            onToggle={() => toggleOpen(key)}
+                            toggleText={
+                              open.includes(key) ? t("showLess") : t("showMore")
+                            }
+                          >
+                            <TableComposable borders={false}>
+                              <Tbody>
+                                {Object.entries(operationalInfo).map(
+                                  ([key, value]) => (
+                                    <Tr key={key}>
+                                      <Td>{key}</Td>
+                                      <Td>{value}</Td>
+                                    </Tr>
+                                  )
+                                )}
+                              </Tbody>
+                            </TableComposable>
+                          </ExpandableSection>
+                        )}
+                      </Fragment>
+                    )
+                  )}
                 </Td>
               </Tr>
             ))}
