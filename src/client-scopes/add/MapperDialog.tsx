@@ -86,7 +86,7 @@ export const AddMapperDialog = (props: AddMapperDialogProps) => {
 
   return (
     <Modal
-      aria-labelledby={t("addPredefinedMappers")}
+      aria-label={t("addPredefinedMappers")}
       variant={ModalVariant.medium}
       header={
         <TextContent>
