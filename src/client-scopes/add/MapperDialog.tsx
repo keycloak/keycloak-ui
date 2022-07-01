@@ -86,7 +86,9 @@ export const AddMapperDialog = (props: AddMapperDialogProps) => {
 
   return (
     <Modal
-      aria-label={t("addPredefinedMappers")}
+      aria-label={
+        isBuiltIn ? t("addPredefinedMappers") : t("emptySecondaryAction")
+      }
       variant={ModalVariant.medium}
       header={
         <TextContent>
@@ -142,7 +144,7 @@ export const AddMapperDialog = (props: AddMapperDialogProps) => {
           aria-label={t("addPredefinedMappers")}
           isCompact
         >
-          <DataListItem aria-labelledby="headerName" id="header">
+          <DataListItem aria-labelledby="header name" id="header">
             <DataListItemRow>
               <DataListItemCells
                 dataListCells={header.map((name) => (
