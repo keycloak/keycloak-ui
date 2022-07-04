@@ -56,9 +56,7 @@ export const ProviderInfo = () => {
                 <Td>
                   <ul>
                     {Object.entries(providers).map(([key]) => (
-                      <Fragment key={key}>
-                        <li>{key}</li>
-                      </Fragment>
+                      <li key={key}>{key}</li>
                     ))}
                   </ul>
                   {Object.entries(providers).map(
