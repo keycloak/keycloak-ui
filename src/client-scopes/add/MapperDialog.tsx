@@ -149,7 +149,7 @@ export const AddMapperDialog = (props: AddMapperDialogProps) => {
           aria-label={t("addPredefinedMappers")}
           isCompact
         >
-          <DataListItem aria-labelledby={t("headerName")} id="header">
+          <DataListItem aria-label={t("headerName")} id="header">
             <DataListItemRow>
               <DataListItemCells
                 dataListCells={header.map((name) => (
