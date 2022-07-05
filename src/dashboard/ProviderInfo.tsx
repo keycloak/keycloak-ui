@@ -1,4 +1,3 @@
-/* eslint-disable react/jsx-no-useless-fragment */
 import React, { useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { ExpandableSection, PageSection } from "@patternfly/react-core";
@@ -13,6 +12,7 @@ import {
 
 import { useServerInfo } from "../context/server-info/ServerInfoProvider";
 import { TableToolbar } from "../components/table-toolbar/TableToolbar";
+import { isDefined } from "../utils/isDefined";
 
 export const ProviderInfo = () => {
   const { t } = useTranslation("dashboard");
@@ -60,35 +60,33 @@ export const ProviderInfo = () => {
                       <li key={key}>{key}</li>
                     ))}
                   </ul>
-                  {Object.entries(providers).map(
-                    ([key, { operationalInfo }]) => (
-                      <>
-                        {operationalInfo && (
-                          <ExpandableSection
-                            key={key}
-                            isExpanded={open.includes(key)}
-                            onToggle={() => toggleOpen(key)}
-                            toggleText={
-                              open.includes(key) ? t("showLess") : t("showMore")
-                            }
-                          >
-                            <TableComposable borders={false}>
-                              <Tbody>
-                                {Object.entries(operationalInfo).map(
-                                  ([key, value]) => (
-                                    <Tr key={key}>
-                                      <Td>{key}</Td>
-                                      <Td>{value}</Td>
-                                    </Tr>
-                                  )
-                                )}
-                              </Tbody>
-                            </TableComposable>
-                          </ExpandableSection>
-                        )}
-                      </>
+                  {Object.entries(providers)
+                    .map(([key, { operationalInfo }]) =>
+                      operationalInfo ? (
+                        <ExpandableSection
+                          key={key}
+                          isExpanded={open.includes(key)}
+                          onToggle={() => toggleOpen(key)}
+                          toggleText={
+                            open.includes(key) ? t("showLess") : t("showMore")
+                          }
+                        >
+                          <TableComposable borders={false}>
+                            <Tbody>
+                              {Object.entries(operationalInfo).map(
+                                ([key, value]) => (
+                                  <Tr key={key}>
+                                    <Td>{key}</Td>
+                                    <Td>{value}</Td>
+                                  </Tr>
+                                )
+                              )}
+                            </Tbody>
+                          </TableComposable>
+                        </ExpandableSection>
+                      ) : null
                     )
-                  )}
+                    .filter(isDefined)}
                 </Td>
               </Tr>
             ))}
