@@ -1,4 +1,5 @@
-import React, { Fragment, useMemo, useState } from "react";
+/* eslint-disable react/jsx-no-useless-fragment */
+import React, { useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { ExpandableSection, PageSection } from "@patternfly/react-core";
 import {
@@ -61,9 +62,10 @@ export const ProviderInfo = () => {
                   </ul>
                   {Object.entries(providers).map(
                     ([key, { operationalInfo }]) => (
-                      <Fragment key={key}>
+                      <>
                         {operationalInfo && (
                           <ExpandableSection
+                            key={key}
                             isExpanded={open.includes(key)}
                             onToggle={() => toggleOpen(key)}
                             toggleText={
@@ -84,7 +86,7 @@ export const ProviderInfo = () => {
                             </TableComposable>
                           </ExpandableSection>
                         )}
-                      </Fragment>
+                      </>
                     )
                   )}
                 </Td>
