@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import React, { Fragment, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { ExpandableSection, PageSection } from "@patternfly/react-core";
@@ -59,34 +60,34 @@ export const ProviderInfo = () => {
                       <li key={key}>{key}</li>
                     ))}
                   </ul>
-                  {Object.entries(providers).map(
-                    ([key, { operationalInfo }]) => (
-                      <Fragment key={key}>
-                        {operationalInfo && (
-                          <ExpandableSection
-                            isExpanded={open.includes(key)}
-                            onToggle={() => toggleOpen(key)}
-                            toggleText={
-                              open.includes(key) ? t("showLess") : t("showMore")
-                            }
-                          >
-                            <TableComposable borders={false}>
-                              <Tbody>
-                                {Object.entries(operationalInfo).map(
-                                  ([key, value]) => (
-                                    <Tr key={key}>
-                                      <Td>{key}</Td>
-                                      <Td>{value}</Td>
-                                    </Tr>
-                                  )
-                                )}
-                              </Tbody>
-                            </TableComposable>
-                          </ExpandableSection>
-                        )}
-                      </Fragment>
+                  {Object.entries(providers)
+                    .filter(
+                      ([_, { operationalInfo }]) =>
+                        operationalInfo !== undefined
                     )
-                  )}
+                    .map(([key, { operationalInfo }]) => (
+                      <ExpandableSection
+                        key={key}
+                        isExpanded={open.includes(key)}
+                        onToggle={() => toggleOpen(key)}
+                        toggleText={
+                          open.includes(key) ? t("showLess") : t("showMore")
+                        }
+                      >
+                        <TableComposable borders={false}>
+                          <Tbody>
+                            {Object.entries(operationalInfo).map(
+                              ([key, value]) => (
+                                <Tr key={key}>
+                                  <Td>{key}</Td>
+                                  <Td>{value}</Td>
+                                </Tr>
+                              )
+                            )}
+                          </Tbody>
+                        </TableComposable>
+                      </ExpandableSection>
+                    ))}
                 </Td>
               </Tr>
             ))}
