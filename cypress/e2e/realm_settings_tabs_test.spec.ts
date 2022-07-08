@@ -93,7 +93,7 @@ describe("Realm settings tabs tests", () => {
       "example" + (Math.random() + 1).toString(36).substring(7) + "@example.com"
     );
     cy.findByTestId(realmSettingsPage.modalTestConnectionButton).click();
-    masthead.checkNotificationMessage(msg, true);
+    masthead.checkNotificationMessage(msg);
   });
 
   it("Go to themes tab", () => {

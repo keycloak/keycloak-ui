@@ -148,22 +148,22 @@ describe("User Fed LDAP mapper tests", () => {
 
     listingPage.itemExist(creationDateMapper).deleteItem(creationDateMapper);
     modalUtils.checkModalTitle(mapperDeleteTitle).confirmModal();
-    masthead.checkNotificationMessage(mapperDeletedSuccess, true);
+    masthead.checkNotificationMessage(mapperDeletedSuccess);
     listingPage.itemExist(creationDateMapper, false);
 
     listingPage.itemExist(emailMapper).deleteItem(emailMapper);
     modalUtils.checkModalTitle(mapperDeleteTitle).confirmModal();
-    masthead.checkNotificationMessage(mapperDeletedSuccess, true);
+    masthead.checkNotificationMessage(mapperDeletedSuccess);
     listingPage.itemExist(emailMapper, false);
 
     listingPage.itemExist(lastNameMapper).deleteItem(lastNameMapper);
     modalUtils.checkModalTitle(mapperDeleteTitle).confirmModal();
-    masthead.checkNotificationMessage(mapperDeletedSuccess, true);
+    masthead.checkNotificationMessage(mapperDeletedSuccess);
     listingPage.itemExist(lastNameMapper, false);
 
     listingPage.itemExist(modifyDateMapper).deleteItem(modifyDateMapper);
     modalUtils.checkModalTitle(mapperDeleteTitle).confirmModal();
-    masthead.checkNotificationMessage(mapperDeletedSuccess, true);
+    masthead.checkNotificationMessage(mapperDeletedSuccess);
     listingPage.itemExist(modifyDateMapper, false);
   });
 

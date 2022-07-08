@@ -48,7 +48,7 @@ describe("SAML identity provider test", () => {
         .fillDiscoveryUrl(samlDiscoveryUrl)
         .shouldBeSuccessful()
         .clickAdd();
-      masthead.checkNotificationMessage(createSuccessMsg, true);
+      masthead.checkNotificationMessage(createSuccessMsg);
     });
 
     it("should add auth constraints to existing SAML provider", () => {
@@ -60,7 +60,7 @@ describe("SAML identity provider test", () => {
         .fillAuthnContextDeclRefs(declRefName)
         .clickDeclRefsAdd()
         .clickSave();
-      masthead.checkNotificationMessage(saveSuccessMsg, true);
+      masthead.checkNotificationMessage(saveSuccessMsg);
     });
 
     it("should add SAML mapper of type Advanced Attribute to Role", () => {
@@ -69,7 +69,7 @@ describe("SAML identity provider test", () => {
       addMapperPage.goToMappersTab();
       addMapperPage.emptyStateAddMapper();
       addMapperPage.addAdvancedAttrToRoleMapper("SAML mapper");
-      masthead.checkNotificationMessage(createMapperSuccessMsg, true);
+      masthead.checkNotificationMessage(createMapperSuccessMsg);
     });
 
     it("should add SAML mapper of type Username Template Importer", () => {
@@ -80,7 +80,7 @@ describe("SAML identity provider test", () => {
       addMapperPage.addUsernameTemplateImporterMapper(
         "SAML Username Template Importer Mapper"
       );
-      masthead.checkNotificationMessage(createMapperSuccessMsg, true);
+      masthead.checkNotificationMessage(createMapperSuccessMsg);
     });
 
     it("should add SAML mapper of type Hardcoded User Session Attribute", () => {
@@ -91,7 +91,7 @@ describe("SAML identity provider test", () => {
       addMapperPage.addHardcodedUserSessionAttrMapper(
         "Hardcoded User Session Attribute"
       );
-      masthead.checkNotificationMessage(createMapperSuccessMsg, true);
+      masthead.checkNotificationMessage(createMapperSuccessMsg);
     });
 
     it("should add SAML mapper of type Attribute Importer", () => {
@@ -100,7 +100,7 @@ describe("SAML identity provider test", () => {
       addMapperPage.goToMappersTab();
       addMapperPage.addMapper();
       addMapperPage.addSAMLAttrImporterMapper("Attribute Importer");
-      masthead.checkNotificationMessage(createMapperSuccessMsg, true);
+      masthead.checkNotificationMessage(createMapperSuccessMsg);
     });
 
     it("should add SAML mapper of type Hardcoded Role", () => {
@@ -109,7 +109,7 @@ describe("SAML identity provider test", () => {
       addMapperPage.goToMappersTab();
       addMapperPage.addMapper();
       addMapperPage.addHardcodedRoleMapper("Hardcoded Role");
-      masthead.checkNotificationMessage(createMapperSuccessMsg, true);
+      masthead.checkNotificationMessage(createMapperSuccessMsg);
     });
 
     it("should add SAML mapper of type Hardcoded Attribute", () => {
@@ -118,7 +118,7 @@ describe("SAML identity provider test", () => {
       addMapperPage.goToMappersTab();
       addMapperPage.addMapper();
       addMapperPage.addHardcodedAttrMapper("Hardcoded Attribute");
-      masthead.checkNotificationMessage(createMapperSuccessMsg, true);
+      masthead.checkNotificationMessage(createMapperSuccessMsg);
     });
 
     it("should add SAML mapper of type SAML Attribute To Role", () => {
@@ -127,7 +127,7 @@ describe("SAML identity provider test", () => {
       addMapperPage.goToMappersTab();
       addMapperPage.addMapper();
       addMapperPage.addSAMLAttributeToRoleMapper("SAML Attribute To Role");
-      masthead.checkNotificationMessage(createMapperSuccessMsg, true);
+      masthead.checkNotificationMessage(createMapperSuccessMsg);
     });
 
     it("should edit Username Template Importer mapper", () => {
@@ -136,7 +136,7 @@ describe("SAML identity provider test", () => {
       addMapperPage.goToMappersTab();
       listingPage.goToItemDetails("SAML Username Template Importer Mapper");
       addMapperPage.editUsernameTemplateImporterMapper();
-      masthead.checkNotificationMessage(saveMapperSuccessMsg, true);
+      masthead.checkNotificationMessage(saveMapperSuccessMsg);
     });
 
     it("should edit SAML mapper", () => {
@@ -145,7 +145,7 @@ describe("SAML identity provider test", () => {
       addMapperPage.goToMappersTab();
       listingPage.goToItemDetails("SAML mapper");
       addMapperPage.editSAMLorOIDCMapper();
-      masthead.checkNotificationMessage(saveMapperSuccessMsg, true);
+      masthead.checkNotificationMessage(saveMapperSuccessMsg);
     });
 
     it("clean up providers", () => {
@@ -154,7 +154,7 @@ describe("SAML identity provider test", () => {
       sidebarPage.goToIdentityProviders();
       listingPage.itemExist(samlProviderName).deleteItem(samlProviderName);
       modalUtils.checkModalTitle(deletePrompt).confirmModal();
-      masthead.checkNotificationMessage(deleteSuccessMsg, true);
+      masthead.checkNotificationMessage(deleteSuccessMsg);
     });
   });
 });

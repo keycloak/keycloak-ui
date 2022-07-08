@@ -34,22 +34,22 @@ describe("Realm settings general tab tests", () => {
       false
     );
     realmSettingsPage.save(realmSettingsPage.generalSaveBtn);
-    masthead.checkNotificationMessage("Realm successfully updated", true);
+    masthead.checkNotificationMessage("Realm successfully updated");
     realmSettingsPage.toggleSwitch(
       realmSettingsPage.managedAccessSwitch,
       false
     );
     realmSettingsPage.save(realmSettingsPage.generalSaveBtn);
-    masthead.checkNotificationMessage("Realm successfully updated", true);
+    masthead.checkNotificationMessage("Realm successfully updated");
 
     // Enable realm
     realmSettingsPage.toggleSwitch(`${realmName}-switch`);
-    masthead.checkNotificationMessage("Realm successfully updated", true);
+    masthead.checkNotificationMessage("Realm successfully updated");
 
     // Disable realm
     realmSettingsPage.toggleSwitch(`${realmName}-switch`);
     realmSettingsPage.disableRealm();
-    masthead.checkNotificationMessage("Realm successfully updated", true);
+    masthead.checkNotificationMessage("Realm successfully updated");
 
     // Re-enable realm
     realmSettingsPage.toggleSwitch(`${realmName}-switch`);
@@ -60,7 +60,7 @@ describe("Realm settings general tab tests", () => {
     sidebarPage.goToRealmSettings();
     realmSettingsPage.fillDisplayName("display_name");
     realmSettingsPage.save(realmSettingsPage.generalSaveBtn);
-    masthead.checkNotificationMessage("Realm successfully updated", true);
+    masthead.checkNotificationMessage("Realm successfully updated");
   });
 
   it("Check Display name value", () => {
@@ -84,7 +84,7 @@ describe("Realm settings general tab tests", () => {
     sidebarPage.goToRealmSettings();
     realmSettingsPage.fillRequireSSL("All requests");
     realmSettingsPage.save(realmSettingsPage.generalSaveBtn);
-    masthead.checkNotificationMessage("Realm successfully updated", true);
+    masthead.checkNotificationMessage("Realm successfully updated");
   });
 
   it("Verify SSL all requests displays", () => {
@@ -96,7 +96,7 @@ describe("Realm settings general tab tests", () => {
     sidebarPage.goToRealmSettings();
     realmSettingsPage.fillRequireSSL("External requests");
     realmSettingsPage.save(realmSettingsPage.generalSaveBtn);
-    masthead.checkNotificationMessage("Realm successfully updated", true);
+    masthead.checkNotificationMessage("Realm successfully updated");
   });
 
   it("Verify SSL external requests displays", () => {
@@ -108,7 +108,7 @@ describe("Realm settings general tab tests", () => {
     sidebarPage.goToRealmSettings();
     realmSettingsPage.fillRequireSSL("None");
     realmSettingsPage.save(realmSettingsPage.generalSaveBtn);
-    masthead.checkNotificationMessage("Realm successfully updated", true);
+    masthead.checkNotificationMessage("Realm successfully updated");
   });
 
   it("Verify SSL None displays", () => {

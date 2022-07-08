@@ -36,8 +36,7 @@ describe("Realm roles test", () => {
 
     // The error should inform about duplicated name/id (THIS MESSAGE DOES NOT HAVE QUOTES AS THE OTHERS)
     masthead.checkNotificationMessage(
-      "Could not create role: Role with name admin already exists",
-      true
+      "Could not create role: Role with name admin already exists"
     );
   });
 
@@ -54,7 +53,7 @@ describe("Realm roles test", () => {
     // Create
     listingPage.itemExist(itemId, false).goToCreateItem();
     createRealmRolePage.fillRealmRoleData(itemId).save();
-    masthead.checkNotificationMessage("Role created", true);
+    masthead.checkNotificationMessage("Role created");
     sidebarPage.goToRealmRoles();
 
     const fetchUrl = "/admin/realms/master/roles?first=0&max=11";
@@ -64,7 +63,7 @@ describe("Realm roles test", () => {
 
     cy.wait(["@fetch"]);
     modalUtils.checkModalTitle("Delete role?").confirmModal();
-    masthead.checkNotificationMessage("The role has been deleted", true);
+    masthead.checkNotificationMessage("The role has been deleted");
 
     listingPage.itemExist(itemId, false);
 
@@ -75,20 +74,17 @@ describe("Realm roles test", () => {
     itemId += "_" + (Math.random() + 1).toString(36).substring(7);
     listingPage.goToCreateItem();
     createRealmRolePage.fillRealmRoleData(itemId).save();
-    masthead.checkNotificationMessage("Role created", true);
+    masthead.checkNotificationMessage("Role created");
     createRealmRolePage.clickActionMenu("Delete this role");
     modalUtils.confirmModal();
-    masthead.checkNotificationMessage("The role has been deleted", true);
+    masthead.checkNotificationMessage("The role has been deleted");
     itemId = "realm_role_crud";
   });
 
   it("should not be able to delete default role", () => {
     const defaultRole = "default-roles-master";
     listingPage.itemExist(defaultRole).deleteItem(defaultRole);
-    masthead.checkNotificationMessage(
-      "You cannot delete a default role.",
-      true
-    );
+    masthead.checkNotificationMessage("You cannot delete a default role.");
   });
 
   it("Add associated roles test", () => {
@@ -97,33 +93,33 @@ describe("Realm roles test", () => {
     // Create
     listingPage.itemExist(itemId, false).goToCreateItem();
     createRealmRolePage.fillRealmRoleData(itemId).save();
-    masthead.checkNotificationMessage("Role created", true);
+    masthead.checkNotificationMessage("Role created");
 
     // Add associated realm role from action dropdown
     associatedRolesPage.addAssociatedRealmRole("create-realm");
-    masthead.checkNotificationMessage("Associated roles have been added", true);
+    masthead.checkNotificationMessage("Associated roles have been added");
 
     // Add associated realm role from search bar
     associatedRolesPage.addAssociatedRoleFromSearchBar("offline_access");
-    masthead.checkNotificationMessage("Associated roles have been added", true);
+    masthead.checkNotificationMessage("Associated roles have been added");
 
     rolesTab.goToAssociatedRolesTab();
 
     // Add associated client role from search bar
     associatedRolesPage.addAssociatedRoleFromSearchBar("manage-account", true);
-    masthead.checkNotificationMessage("Associated roles have been added", true);
+    masthead.checkNotificationMessage("Associated roles have been added");
 
     rolesTab.goToAssociatedRolesTab();
 
     // Add associated client role
     associatedRolesPage.addAssociatedRoleFromSearchBar("manage-consent", true);
-    masthead.checkNotificationMessage("Associated roles have been added", true);
+    masthead.checkNotificationMessage("Associated roles have been added");
 
     rolesTab.goToAssociatedRolesTab();
 
     // Add associated client role
     associatedRolesPage.addAssociatedRoleFromSearchBar("manage-clients", true);
-    masthead.checkNotificationMessage("Associated roles have been added", true);
+    masthead.checkNotificationMessage("Associated roles have been added");
   });
 
   it("Should search existing associated role by name", () => {
@@ -156,10 +152,7 @@ describe("Realm roles test", () => {
     modalUtils.checkModalTitle("Remove associated role?").confirmModal();
     sidebarPage.waitForPageLoad();
 
-    masthead.checkNotificationMessage(
-      "Associated roles have been removed",
-      true
-    );
+    masthead.checkNotificationMessage("Associated roles have been removed");
   });
 
   it("Should delete all roles from search bar", () => {
@@ -175,10 +168,7 @@ describe("Realm roles test", () => {
     modalUtils.checkModalTitle("Remove associated roles?").confirmModal();
     sidebarPage.waitForPageLoad();
 
-    masthead.checkNotificationMessage(
-      "Associated roles have been removed",
-      true
-    );
+    masthead.checkNotificationMessage("Associated roles have been removed");
   });
 
   it("Should delete associated roles from list test", () => {
@@ -188,15 +178,15 @@ describe("Realm roles test", () => {
     // Create
     listingPage.itemExist(itemId, false).goToCreateItem();
     createRealmRolePage.fillRealmRoleData(itemId).save();
-    masthead.checkNotificationMessage("Role created", true);
+    masthead.checkNotificationMessage("Role created");
 
     // Add associated realm role from action dropdown
     associatedRolesPage.addAssociatedRealmRole("create-realm");
-    masthead.checkNotificationMessage("Associated roles have been added", true);
+    masthead.checkNotificationMessage("Associated roles have been added");
 
     // Add associated realm role from search bar
     associatedRolesPage.addAssociatedRoleFromSearchBar("offline_access");
-    masthead.checkNotificationMessage("Associated roles have been added", true);
+    masthead.checkNotificationMessage("Associated roles have been added");
 
     rolesTab.goToAssociatedRolesTab();
 
@@ -206,19 +196,13 @@ describe("Realm roles test", () => {
     modalUtils.checkModalTitle("Remove associated role?").confirmModal();
     sidebarPage.waitForPageLoad();
 
-    masthead.checkNotificationMessage(
-      "Associated roles have been removed",
-      true
-    );
+    masthead.checkNotificationMessage("Associated roles have been removed");
     listingPage.removeItem("offline_access");
     sidebarPage.waitForPageLoad();
     modalUtils.checkModalTitle("Remove associated role?").confirmModal();
     sidebarPage.waitForPageLoad();
 
-    masthead.checkNotificationMessage(
-      "Associated roles have been removed",
-      true
-    );
+    masthead.checkNotificationMessage("Associated roles have been removed");
   });
 
   describe("edit role details", () => {
@@ -239,7 +223,7 @@ describe("Realm roles test", () => {
       listingPage.itemExist(editRoleName).goToItemDetails(editRoleName);
       createRealmRolePage.checkNameDisabled().checkDescription(description);
       createRealmRolePage.updateDescription(updateDescription).save();
-      masthead.checkNotificationMessage("The role has been saved", true);
+      masthead.checkNotificationMessage("The role has been saved");
       createRealmRolePage.checkDescription(updateDescription);
     });
 
@@ -257,7 +241,7 @@ describe("Realm roles test", () => {
       createRealmRolePage.goToAttributesTab();
       keyValue.fillKeyValue({ key: "one", value: "1" }).validateRows(2);
       keyValue.save();
-      masthead.checkNotificationMessage("The role has been saved", true);
+      masthead.checkNotificationMessage("The role has been saved");
       keyValue.validateRows(1);
     });
 
