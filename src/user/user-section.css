@@ -2,11 +2,6 @@
   color: var(--pf-global--danger-color--100);
 }
 
-button.pf-c-button.pf-m-primary.kc-join-group-button {
-  margin-left: var(--pf-global--spacer--md);
-  margin-right: var(--pf-global--spacer--xl);
-}
-
 .kc-consents-chip-group .pf-c-chip-group,
 kc-consents-chip-group .pf-c-chip-group__list {
   width: 100%;

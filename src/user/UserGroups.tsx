@@ -4,6 +4,7 @@ import {
   ButtonVariant,
   Checkbox,
   Popover,
+  ToolbarItem,
 } from "@patternfly/react-core";
 import { QuestionCircleIcon } from "@patternfly/react-icons";
 import { cellWidth } from "@patternfly/react-table";
@@ -283,45 +284,52 @@ export const UserGroups = ({ user }: UserGroupsProps) => {
         }
         toolbarItem={
           <>
-            <Button
-              className="kc-join-group-button"
-              onClick={toggleModal}
-              data-testid="add-group-button"
-              isDisabled={!user.access?.manageGroupMembership}
-            >
-              {t("joinGroup")}
-            </Button>
-            <Checkbox
-              label={t("directMembership")}
-              key="direct-membership-check"
-              id="kc-direct-membership-checkbox"
-              onChange={() => setDirectMembership(!isDirectMembership)}
-              isChecked={isDirectMembership}
-              className="direct-membership-check"
-            />
-            <Button
-              onClick={() => leave(selectedGroups)}
-              data-testid="leave-group-button"
-              variant="link"
-              isDisabled={selectedGroups.length === 0}
-            >
-              {t("leave")}
-            </Button>
-
+            <ToolbarItem>
+              <Button
+                className="kc-join-group-button"
+                onClick={toggleModal}
+                data-testid="add-group-button"
+                isDisabled={!user.access?.manageGroupMembership}
+              >
+                {t("joinGroup")}
+              </Button>
+            </ToolbarItem>
+            <ToolbarItem>
+              <Checkbox
+                label={t("directMembership")}
+                key="direct-membership-check"
+                id="kc-direct-membership-checkbox"
+                onChange={() => setDirectMembership(!isDirectMembership)}
+                isChecked={isDirectMembership}
+                className="direct-membership-check"
+              />
+            </ToolbarItem>
+            <ToolbarItem>
+              <Button
+                onClick={() => leave(selectedGroups)}
+                data-testid="leave-group-button"
+                variant="link"
+                isDisabled={selectedGroups.length === 0}
+              >
+                {t("leave")}
+              </Button>
+            </ToolbarItem>
             {enabled && (
               <Popover
                 aria-label="Basic popover"
                 position="bottom"
                 bodyContent={<div>{t("whoWillAppearPopoverText")}</div>}
               >
-                <Button
-                  variant="link"
-                  className="kc-who-will-appear-button"
-                  key="who-will-appear-button"
-                  icon={<QuestionCircleIcon />}
-                >
-                  {t("whoWillAppearLinkText")}
-                </Button>
+                <ToolbarItem>
+                  <Button
+                    variant="link"
+                    className="kc-who-will-appear-button"
+                    key="who-will-appear-button"
+                    icon={<QuestionCircleIcon />}
+                  >
+                    {t("whoWillAppearLinkText")}
+                  </Button>
+                </ToolbarItem>
               </Popover>
             )}
           </>
