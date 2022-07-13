@@ -5,7 +5,6 @@ import { unflatten, flatten } from "flat";
 
 import type ClientRepresentation from "@keycloak/keycloak-admin-client/lib/defs/clientRepresentation";
 import type { ProviderRepresentation } from "@keycloak/keycloak-admin-client/lib/defs/serverInfoRepesentation";
-import type KeycloakAdminClient from "@keycloak/keycloak-admin-client";
 
 import {
   keyValueToArray,
@@ -134,14 +133,6 @@ export const upperCaseFormatter =
 
     return (value ? toUpperCase(value) : undefined) as string;
   };
-
-export const getBaseUrl = (adminClient: KeycloakAdminClient) => {
-  return (
-    (adminClient.keycloak
-      ? adminClient.keycloak.authServerUrl!
-      : adminClient.baseUrl) + "/"
-  );
-};
 
 export const alphaRegexPattern = /[^A-Za-z]/g;
 
