@@ -392,6 +392,7 @@ export const AuthorizationEvaluate = ({ client }: Props) => {
           <ActionGroup>
             <Button
               data-testid="authorization-eval"
+              id="authorization-eval"
               isDisabled={!isValid}
               onClick={() => evaluate()}
             >
@@ -399,6 +400,7 @@ export const AuthorizationEvaluate = ({ client }: Props) => {
             </Button>
             <Button
               data-testid="authorization-revert"
+              id="authorization-revert"
               variant="link"
               onClick={() => reset()}
             >
