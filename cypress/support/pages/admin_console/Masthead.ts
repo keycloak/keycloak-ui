@@ -49,12 +49,8 @@ export default class Masthead extends CommonElements {
     cy.get("#manage-account").click();
   }
 
-  checkNotificationMessage(message: string, closeNotification?: boolean) {
+  checkNotificationMessage(message: string) {
     cy.get(this.alertMessage).should("contain.text", message);
-
-    if (closeNotification) {
-      cy.get(`button[title="${message}"]`).last().click({ force: true });
-    }
     return this;
   }
 

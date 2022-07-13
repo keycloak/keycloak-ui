@@ -448,7 +448,7 @@ describe("Clients test", () => {
         .save();
       commonPage
         .masthead()
-        .checkNotificationMessage("Client created successfully", true);
+        .checkNotificationMessage("Client created successfully");
     });
 
     beforeEach(() => {
@@ -473,7 +473,7 @@ describe("Clients test", () => {
     it("Should create client role", () => {
       rolesTab.goToCreateRoleFromEmptyState();
       createRealmRolePage.fillRealmRoleData(itemId).save();
-      commonPage.masthead().checkNotificationMessage("Role created", true);
+      commonPage.masthead().checkNotificationMessage("Role created");
     });
 
     it("Should update client role description", () => {
@@ -481,9 +481,7 @@ describe("Clients test", () => {
       commonPage.tableToolbarUtils().searchItem(itemId, false);
       commonPage.tableUtils().clickRowItemLink(itemId);
       createRealmRolePage.updateDescription(updateDescription).save();
-      commonPage
-        .masthead()
-        .checkNotificationMessage("The role has been saved", true);
+      commonPage.masthead().checkNotificationMessage("The role has been saved");
       createRealmRolePage.checkDescription(updateDescription);
     });
 
@@ -496,9 +494,7 @@ describe("Clients test", () => {
         .addAttribute("crud_attribute_key", "crud_attribute_value")
         .save();
       attributesTab.asseertRowItemsEqualTo(1);
-      commonPage
-        .masthead()
-        .checkNotificationMessage("The role has been saved", true);
+      commonPage.masthead().checkNotificationMessage("The role has been saved");
     });
 
     it("Should delete attribute from client role", () => {
@@ -507,15 +503,13 @@ describe("Clients test", () => {
       rolesTab.goToAttributesTab();
       cy.wait(["@load", "@load"]);
       attributesTab.deleteAttribute(1);
-      commonPage
-        .masthead()
-        .checkNotificationMessage("The role has been saved", true);
+      commonPage.masthead().checkNotificationMessage("The role has been saved");
     });
 
     it("Should create client role to be deleted", () => {
       rolesTab.goToCreateRoleFromToolbar();
       createRealmRolePage.fillRealmRoleData("client_role_to_be_deleted").save();
-      commonPage.masthead().checkNotificationMessage("Role created", true);
+      commonPage.masthead().checkNotificationMessage("Role created");
     });
 
     it("Should fail to create duplicate client role", () => {
@@ -524,8 +518,7 @@ describe("Clients test", () => {
       commonPage
         .masthead()
         .checkNotificationMessage(
-          `Could not create role: Role with name ${itemId} already exists`,
-          true
+          `Could not create role: Role with name ${itemId} already exists`
         );
     });
 
@@ -552,13 +545,13 @@ describe("Clients test", () => {
       associatedRolesPage.addAssociatedRealmRole("create-realm");
       commonPage
         .masthead()
-        .checkNotificationMessage("Associated roles have been added", true);
+        .checkNotificationMessage("Associated roles have been added");
 
       // Add associated client role
       associatedRolesPage.addAssociatedRoleFromSearchBar("create-client", true);
       commonPage
         .masthead()
-        .checkNotificationMessage("Associated roles have been added", true);
+        .checkNotificationMessage("Associated roles have been added");
 
       rolesTab.goToAssociatedRolesTab();
 
@@ -569,7 +562,7 @@ describe("Clients test", () => {
       );
       commonPage
         .masthead()
-        .checkNotificationMessage("Associated roles have been added", true);
+        .checkNotificationMessage("Associated roles have been added");
     });
 
     it("Should hide inherited roles test", () => {
@@ -592,7 +585,7 @@ describe("Clients test", () => {
 
       commonPage
         .masthead()
-        .checkNotificationMessage("Associated roles have been removed", true);
+        .checkNotificationMessage("Associated roles have been removed");
 
       commonPage.tableUtils().selectRowItemAction("manage-consent", "Remove");
       commonPage.sidebar().waitForPageLoad();
@@ -626,7 +619,7 @@ describe("Clients test", () => {
 
       commonPage
         .masthead()
-        .checkNotificationMessage("Associated roles have been removed", true);
+        .checkNotificationMessage("Associated roles have been removed");
     });
 
     it("Should delete client role test", () => {
@@ -644,7 +637,7 @@ describe("Clients test", () => {
       commonPage.modalUtils().confirmModal();
       commonPage
         .masthead()
-        .checkNotificationMessage("The role has been deleted", true);
+        .checkNotificationMessage("The role has been deleted");
     });
   });
 

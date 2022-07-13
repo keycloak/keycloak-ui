@@ -47,7 +47,7 @@ describe("Client authentication subtab", () => {
 
   it("Should update the resource server settings", () => {
     policiesSubTab.setPolicy("DISABLED").formUtils().save();
-    masthead.checkNotificationMessage("Resource successfully updated", true);
+    masthead.checkNotificationMessage("Resource successfully updated");
   });
 
   it("Should create a resource", () => {
@@ -63,7 +63,7 @@ describe("Client authentication subtab", () => {
       })
       .formUtils()
       .save();
-    masthead.checkNotificationMessage("Resource created successfully", true);
+    masthead.checkNotificationMessage("Resource created successfully");
     sidebarPage.waitForPageLoad();
     authenticationTab.formUtils().cancel();
   });
@@ -81,8 +81,7 @@ describe("Client authentication subtab", () => {
       .save();
 
     masthead.checkNotificationMessage(
-      "Authorization scope created successfully",
-      true
+      "Authorization scope created successfully"
     );
     authenticationTab.goToScopesSubTab();
     listingPage.itemExist("The scope");
@@ -106,7 +105,7 @@ describe("Client authentication subtab", () => {
       .save();
 
     cy.wait(["@get"]);
-    masthead.checkNotificationMessage("Successfully created the policy", true);
+    masthead.checkNotificationMessage("Successfully created the policy");
 
     sidebarPage.waitForPageLoad();
     authenticationTab.formUtils().cancel();
@@ -117,7 +116,7 @@ describe("Client authentication subtab", () => {
     listingPage.deleteItem("Regex policy");
     new ModalUtils().confirmModal();
 
-    masthead.checkNotificationMessage("The Policy successfully deleted", true);
+    masthead.checkNotificationMessage("The Policy successfully deleted");
   });
 
   it("Should create a client policy", () => {
@@ -136,7 +135,7 @@ describe("Client authentication subtab", () => {
       .formUtils()
       .save();
     cy.wait(["@get"]);
-    masthead.checkNotificationMessage("Successfully created the policy", true);
+    masthead.checkNotificationMessage("Successfully created the policy");
 
     sidebarPage.waitForPageLoad();
     authenticationTab.formUtils().cancel();
@@ -153,10 +152,7 @@ describe("Client authentication subtab", () => {
     cy.intercept(
       "/admin/realms/master/clients/*/authz/resource-server/resource?first=0&max=10&permission=false"
     ).as("load");
-    masthead.checkNotificationMessage(
-      "Successfully created the permission",
-      true
-    );
+    masthead.checkNotificationMessage("Successfully created the permission");
     cy.wait(["@load"]);
 
     sidebarPage.waitForPageLoad();
@@ -167,7 +163,7 @@ describe("Client authentication subtab", () => {
     const exportTab = authenticationTab.goToExportSubTab();
     sidebarPage.waitForPageLoad();
     exportTab.copy();
-    masthead.checkNotificationMessage("Authorization details copied.", true);
+    masthead.checkNotificationMessage("Authorization details copied.");
   });
 
   it("Should export auth details", () => {
@@ -176,8 +172,7 @@ describe("Client authentication subtab", () => {
     exportTab.export();
 
     masthead.checkNotificationMessage(
-      "Successfully exported authorization details.",
-      true
+      "Successfully exported authorization details."
     );
   });
 });

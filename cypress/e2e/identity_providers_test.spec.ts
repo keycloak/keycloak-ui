@@ -43,7 +43,7 @@ describe("Identity provider test", () => {
         .clickAdd()
         .checkClientIdRequiredMessage(true);
       createProviderPage.fill(identityProviderName, "123").clickAdd();
-      masthead.checkNotificationMessage(createSuccessMsg, true);
+      masthead.checkNotificationMessage(createSuccessMsg);
 
       sidebarPage.goToIdentityProviders();
       listingPage.itemExist(identityProviderName);
@@ -55,7 +55,7 @@ describe("Identity provider test", () => {
         .clickItem("facebook")
         .fill("facebook", "123")
         .clickAdd();
-      masthead.checkNotificationMessage(createSuccessMsg, true);
+      masthead.checkNotificationMessage(createSuccessMsg);
     });
 
     it.skip("should change order of providers", () => {
@@ -73,7 +73,7 @@ describe("Identity provider test", () => {
         .clickItem("bitbucket")
         .fill("bitbucket", "123")
         .clickAdd();
-      masthead.checkNotificationMessage(createSuccessMsg, true);
+      masthead.checkNotificationMessage(createSuccessMsg);
 
       cy.wait(2000);
 
@@ -93,7 +93,7 @@ describe("Identity provider test", () => {
       const modalUtils = new ModalUtils();
       listingPage.deleteItem(identityProviderName);
       modalUtils.checkModalTitle(deletePrompt).confirmModal();
-      masthead.checkNotificationMessage(deleteSuccessMsg, true);
+      masthead.checkNotificationMessage(deleteSuccessMsg);
     });
 
     it("should add facebook social mapper", () => {
@@ -103,7 +103,7 @@ describe("Identity provider test", () => {
       addMapperPage.emptyStateAddMapper();
       addMapperPage.fillSocialMapper("facebook mapper");
       // addMapperPage.saveNewMapper();
-      masthead.checkNotificationMessage(createMapperSuccessMsg, true);
+      masthead.checkNotificationMessage(createMapperSuccessMsg);
     });
 
     it("should add Social mapper of type Attribute Importer", () => {
@@ -112,7 +112,7 @@ describe("Identity provider test", () => {
       addMapperPage.goToMappersTab();
       addMapperPage.addMapper();
       addMapperPage.fillSocialMapper("facebook attribute importer");
-      masthead.checkNotificationMessage(createMapperSuccessMsg, true);
+      masthead.checkNotificationMessage(createMapperSuccessMsg);
     });
 
     it("should edit facebook mapper", () => {
@@ -143,7 +143,7 @@ describe("Identity provider test", () => {
       sidebarPage.goToIdentityProviders();
       listingPage.itemExist("facebook").deleteItem("facebook");
       modalUtils.checkModalTitle(deletePrompt).confirmModal();
-      masthead.checkNotificationMessage(deleteSuccessMsg, true);
+      masthead.checkNotificationMessage(deleteSuccessMsg);
     });
   });
 });

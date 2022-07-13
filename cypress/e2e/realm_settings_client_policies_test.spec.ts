@@ -174,7 +174,7 @@ describe("Realm settings client policies tab tests", () => {
       "Test again",
       "Test Again Description"
     );
-    masthead.checkNotificationMessage("New policy created", true);
+    masthead.checkNotificationMessage("New policy created");
     sidebarPage.waitForPageLoad();
     cy.wait("@save");
     masthead.closeAllAlertMessages();

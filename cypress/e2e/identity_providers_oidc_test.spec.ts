@@ -47,7 +47,7 @@ describe("OIDC identity provider test", () => {
         .shouldBeSuccessful()
         .fill(oidcProviderName, secret)
         .clickAdd();
-      masthead.checkNotificationMessage(createSuccessMsg, true);
+      masthead.checkNotificationMessage(createSuccessMsg);
       createProviderPage.shouldHaveAuthorizationUrl(authorizationUrl);
     });
 
@@ -57,7 +57,7 @@ describe("OIDC identity provider test", () => {
       addMapperPage.goToMappersTab();
       addMapperPage.emptyStateAddMapper();
       addMapperPage.addOIDCAttrImporterMapper("OIDC Attribute Importer");
-      masthead.checkNotificationMessage(createMapperSuccessMsg, true);
+      masthead.checkNotificationMessage(createMapperSuccessMsg);
     });
 
     it("should add OIDC mapper of type Claim To Role", () => {
@@ -66,7 +66,7 @@ describe("OIDC identity provider test", () => {
       addMapperPage.goToMappersTab();
       addMapperPage.addMapper();
       addMapperPage.addOIDCClaimToRoleMapper("OIDC Claim to Role");
-      masthead.checkNotificationMessage(createMapperSuccessMsg, true);
+      masthead.checkNotificationMessage(createMapperSuccessMsg);
     });
 
     it("clean up providers", () => {
@@ -75,7 +75,7 @@ describe("OIDC identity provider test", () => {
       sidebarPage.goToIdentityProviders();
       listingPage.itemExist(oidcProviderName).deleteItem(oidcProviderName);
       modalUtils.checkModalTitle(deletePrompt).confirmModal();
-      masthead.checkNotificationMessage(deleteSuccessMsg, true);
+      masthead.checkNotificationMessage(deleteSuccessMsg);
     });
   });
 });

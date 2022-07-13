@@ -236,7 +236,7 @@ describe("User Fed Kerberos tests", () => {
     sidebarPage.goToUserFederation();
     priorityDialog.openDialog().checkOrder(providers);
     priorityDialog.clickSave();
-    masthead.checkNotificationMessage(changeSuccessMsg, true);
+    masthead.checkNotificationMessage(changeSuccessMsg);
   });
 
   it("Should delete a Kerberos provider from card view using the card's menu", () => {
