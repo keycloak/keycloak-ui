@@ -9,6 +9,7 @@ import { JsonFileUpload } from "../../components/json-file-upload/JsonFileUpload
 import { useRealm } from "../../context/realm-context/RealmContext";
 import { DiscoverySettings } from "./DiscoverySettings";
 import { DiscoveryEndpointField } from "../component/DiscoveryEndpointField";
+import { addTrailingSlash } from "../../util";
 
 export const OpenIdConnectSettings = () => {
   const { t } = useTranslation("identity-providers");
@@ -39,7 +40,9 @@ export const OpenIdConnectSettings = () => {
 
     try {
       const response = await fetch(
-        `${adminClient.baseUrl}admin/realms/${realm}/identity-provider/import-config`,
+        `${addTrailingSlash(
+          adminClient.baseUrl
+        )}admin/realms/${realm}/identity-provider/import-config`,
         {
           method: "POST",
           body: formData,

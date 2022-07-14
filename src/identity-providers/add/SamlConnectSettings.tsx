@@ -13,6 +13,7 @@ import { DescriptorSettings } from "./DescriptorSettings";
 import { DiscoveryEndpointField } from "../component/DiscoveryEndpointField";
 import { KeycloakTextInput } from "../../components/keycloak-text-input/KeycloakTextInput";
 import environment from "../../environment";
+import { addTrailingSlash } from "../../util";
 
 export const SamlConnectSettings = () => {
   const { t } = useTranslation("identity-providers");
@@ -45,7 +46,9 @@ export const SamlConnectSettings = () => {
 
     try {
       const response = await fetch(
-        `${adminClient.baseUrl}admin/realms/${realm}/identity-provider/import-config`,
+        `${addTrailingSlash(
+          adminClient.baseUrl
+        )}admin/realms/${realm}/identity-provider/import-config`,
         {
           method: "POST",
           body: formData,

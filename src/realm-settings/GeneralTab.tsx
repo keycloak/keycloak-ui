@@ -16,7 +16,7 @@ import {
 } from "@patternfly/react-core";
 
 import type RealmRepresentation from "@keycloak/keycloak-admin-client/lib/defs/realmRepresentation";
-import { convertToFormValues } from "../util";
+import { addTrailingSlash, convertToFormValues } from "../util";
 import useIsFeatureEnabled, { Feature } from "../utils/useIsFeatureEnabled";
 import { useAdminClient } from "../context/auth/AdminClient";
 import { useRealm } from "../context/realm-context/RealmContext";
@@ -240,13 +240,17 @@ export const RealmSettingsGeneralTab = ({
           <Stack>
             <StackItem>
               <FormattedLink
-                href={`${adminClient.baseUrl}realms/${realmName}/.well-known/openid-configuration`}
+                href={`${addTrailingSlash(
+                  adminClient.baseUrl
+                )}realms/${realmName}/.well-known/openid-configuration`}
                 title={t("openIDEndpointConfiguration")}
               />
             </StackItem>
             <StackItem>
               <FormattedLink
-                href={`${adminClient.baseUrl}realms/${realmName}/protocol/saml/descriptor`}
+                href={`${addTrailingSlash(
+                  adminClient.baseUrl
+                )}realms/${realmName}/protocol/saml/descriptor`}
                 title={t("samlIdentityProviderMetadata")}
               />
             </StackItem>
