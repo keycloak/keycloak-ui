@@ -2,7 +2,3 @@
 .pf-c-button.keycloak__client-authorization__policy-row-remove {
   color: var(--pf-c-button--m-plain--Color);
 }
-
-.pf-u-mt-md > button {
-  margin-right:16px
-}
