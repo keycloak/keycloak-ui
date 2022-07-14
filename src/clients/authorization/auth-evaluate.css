@@ -20,16 +20,12 @@ button#reevaluate-btn {
   margin-right: var(--pf-global--spacer--md);
 }
 
-button#authorization-eval, button#authorization-revert {
-  margin-right: 16px;
-}
-
 .kc-identity-information, .kc-permissions {
   border: none !important;
 }
 
 .kc-identity-information > div.pf-c-card__header.kc-form-panel__header {
-  padding-top: 0px;
+  padding-top: 0;
 }
 
 #resourcesAndAuthScopes > .pf-c-form__group-control > .kc-attributes__table > thead #key, 

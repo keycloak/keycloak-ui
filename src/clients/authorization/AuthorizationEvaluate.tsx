@@ -393,6 +393,7 @@ export const AuthorizationEvaluate = ({ client }: Props) => {
             <Button
               data-testid="authorization-eval"
               id="authorization-eval"
+              className="pf-u-mr-md"
               isDisabled={!isValid}
               onClick={() => evaluate()}
             >
@@ -401,6 +402,7 @@ export const AuthorizationEvaluate = ({ client }: Props) => {
             <Button
               data-testid="authorization-revert"
               id="authorization-revert"
+              className="pf-u-mr-md"
               variant="link"
               onClick={() => reset()}
             >
