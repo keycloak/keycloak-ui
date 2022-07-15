@@ -1,12 +1,10 @@
 import { useState } from "react";
 import { Link, useHistory, useLocation } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import { AlertVariant } from "@patternfly/react-core";
 import { cellWidth } from "@patternfly/react-table";
 
 import type GroupRepresentation from "@keycloak/keycloak-admin-client/lib/defs/groupRepresentation";
 import { useAdminClient } from "../context/auth/AdminClient";
-import { useAlerts } from "../components/alert/Alerts";
 import { useRealm } from "../context/realm-context/RealmContext";
 import { KeycloakDataTable } from "../components/table-toolbar/KeycloakDataTable";
 import { ListEmptyState } from "../components/list-empty-state/ListEmptyState";
@@ -18,13 +16,17 @@ import { toGroups } from "./routes/Groups";
 import { useAccess } from "../context/access/Access";
 import useToggle from "../utils/useToggle";
 import { DeleteGroup } from "./components/DeleteGroup";
+import { GroupToolbar, ViewType } from "./components/GroupToolbar";
 import { GroupToolbar } from "./components/GroupToolbar";
 
-export const GroupTable = () => {
+type GroupTableProps = {
+  toggleView?: (viewType: ViewType) => void;
+};
+
+export const GroupTable = ({ toggleView }: GroupTableProps) => {
   const { t } = useTranslation("groups");
 
   const { adminClient } = useAdminClient();
-  const { addAlert, addError } = useAlerts();
   const { realm } = useRealm();
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
   const [selectedRows, setSelectedRows] = useState<GroupRepresentation[]>([]);
@@ -111,9 +113,11 @@ export const GroupTable = () => {
         searchPlaceholderKey="groups:searchForGroups"
         toolbarItem={
           <GroupToolbar
-            kebabDisabled={selectedRows!.length === 0}
+            currentView={ViewType.Table}
+            toggleView={toggleView}
             toggleCreate={handleModalToggle}
             toggleDelete={toggleShowDelete}
+            kebabDisabled={selectedRows!.length === 0}
           />
         }
         actions={
