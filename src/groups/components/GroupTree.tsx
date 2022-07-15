@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useHistory, useLocation } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import {
   Dropdown,
@@ -15,41 +16,86 @@ import { TableToolbar } from "../../components/table-toolbar/TableToolbar";
 import useToggle from "../../utils/useToggle";
 import { CheckableTreeView } from "./CheckableTreeView";
 import { DeleteGroup } from "./DeleteGroup";
-import { GroupToolbar } from "./GroupToolbar";
+import { GroupToolbar, ViewType } from "./GroupToolbar";
+import { GroupsModal } from "../GroupsModal";
+import { MoveDialog } from "./MoveDialog";
 
-const GroupTreeContextMenu = ({ id }: { id: string }) => {
+type GroupTreeContextMenuProps = {
+  group: GroupRepresentation;
+  refresh: () => void;
+};
+
+const GroupTreeContextMenu = ({
+  group,
+  refresh,
+}: GroupTreeContextMenuProps) => {
   const { t } = useTranslation("groups");
+
+  const location = useLocation();
+  const history = useHistory();
+
   const [isOpen, toggleOpen] = useToggle();
+  const [createOpen, toggleCreateOpen] = useToggle();
+  const [moveOpen, toggleMoveOpen] = useToggle();
+  const [deleteOpen, toggleDeleteOpen] = useToggle();
 
   return (
-    <Dropdown
-      toggle={<KebabToggle onToggle={toggleOpen} />}
-      isOpen={isOpen}
-      isPlain
-      position={DropdownPosition.right}
-      dropdownItems={[
-        <DropdownItem key="edit" onClick={() => console.log("edit", id)}>
-          {t("common:edit")}
-        </DropdownItem>,
-        <DropdownItem key="delete" onClick={() => console.log("delete")}>
-          {t("common:delete")}
-        </DropdownItem>,
-      ]}
-    />
+    <>
+      {createOpen && (
+        <GroupsModal
+          id={group.id}
+          handleModalToggle={toggleCreateOpen}
+          refresh={refresh}
+        />
+      )}
+      {moveOpen && (
+        <MoveDialog source={group} refresh={refresh} onClose={toggleMoveOpen} />
+      )}
+      <DeleteGroup
+        show={deleteOpen}
+        toggleDialog={toggleDeleteOpen}
+        selectedRows={[group]}
+        refresh={refresh}
+      />
+      <Dropdown
+        toggle={<KebabToggle onToggle={toggleOpen} />}
+        isOpen={isOpen}
+        isPlain
+        position={DropdownPosition.right}
+        dropdownItems={[
+          <DropdownItem key="create" onClick={toggleCreateOpen}>
+            {t("createGroup")}
+          </DropdownItem>,
+          <DropdownItem key="move" onClick={toggleMoveOpen}>
+            {t("moveTo")}
+          </DropdownItem>,
+          <DropdownItem
+            key="edit"
+            onClick={() => history.push(`${location.pathname}/${group.id}`)}
+          >
+            {t("common:edit")}
+          </DropdownItem>,
+          <DropdownItem key="delete" onClick={toggleDeleteOpen}>
+            {t("common:delete")}
+          </DropdownItem>,
+        ]}
+      />
+    </>
   );
 };
 
-const mapGroup = ({
-  id,
-  name,
-  subGroups,
-}: GroupRepresentation): TreeViewDataItem => ({
-  id,
-  name,
+const mapGroup = (
+  group: GroupRepresentation,
+  refresh: () => void
+): TreeViewDataItem => ({
+  id: group.id,
+  name: group.name,
   checkProps: { checked: false },
   children:
-    subGroups && subGroups.length > 0 ? subGroups.map(mapGroup) : undefined,
-  action: <GroupTreeContextMenu id={id!} />,
+    group.subGroups && group.subGroups.length > 0
+      ? group.subGroups.map((g) => mapGroup(g, refresh))
+      : undefined,
+  action: <GroupTreeContextMenu group={group} refresh={refresh} />,
 });
 
 const filterGroup = (
@@ -81,14 +127,18 @@ const filterGroups = (
   const result: TreeViewDataItem[] = [];
   groups
     .map((g) => filterGroup(g, search))
-    .forEach((e) => {
-      if (e !== null) result.push(e);
+    .forEach((g) => {
+      if (g !== null) result.push(g);
     });
 
   return result;
 };
 
-export const GroupTree = () => {
+type GroupTreeProps = {
+  toggleView?: (viewType: ViewType) => void;
+};
+
+export const GroupTree = ({ toggleView }: GroupTreeProps) => {
   const { t } = useTranslation("groups");
   const adminClient = useAdminClient();
 
@@ -96,6 +146,7 @@ export const GroupTree = () => {
   const [filteredData, setFilteredData] = useState<TreeViewDataItem[]>();
   const [selectedRows, setSelectedRows] = useState<GroupRepresentation[]>([]);
   const [showDelete, toggleShowDelete] = useToggle();
+  const [showCreate, toggleShowCreate] = useToggle();
   const [key, setKey] = useState(0);
   const refresh = () => setKey(key + 1);
 
@@ -104,8 +155,8 @@ export const GroupTree = () => {
       adminClient.groups.find({
         briefRepresentation: false,
       }),
-    (groups) => setData(groups.map(mapGroup)),
-    []
+    (groups) => setData(groups.map((g) => mapGroup(g, refresh))),
+    [key]
   );
 
   return (
@@ -114,11 +165,11 @@ export const GroupTree = () => {
         show={showDelete}
         toggleDialog={toggleShowDelete}
         selectedRows={selectedRows}
-        refresh={() => {
-          refresh();
-          setSelectedRows([]);
-        }}
+        refresh={refresh}
       />
+      {showCreate && (
+        <GroupsModal handleModalToggle={toggleShowCreate} refresh={refresh} />
+      )}
       {data ? (
         <>
           <TableToolbar
@@ -130,21 +181,21 @@ export const GroupTree = () => {
               } else {
                 setFilteredData(filterGroups(data, search));
               }
-              refresh();
             }}
             toolbarItem={
               <GroupToolbar
+                currentView={ViewType.Tree}
+                toggleView={toggleView}
                 toggleDelete={toggleShowDelete}
-                toggleCreate={() => console.log("create")}
+                toggleCreate={toggleShowCreate}
                 kebabDisabled={selectedRows.length === 0}
               />
             }
           />
           <CheckableTreeView
-            key={key}
             data={filteredData || data}
             onSelect={(items) =>
-              setSelectedRows(items as GroupRepresentation[])
+              setSelectedRows(items.reverse() as GroupRepresentation[])
             }
           />
         </>

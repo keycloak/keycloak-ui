@@ -34,11 +34,11 @@ export const DeleteGroup = ({
           id: group.id!,
         });
       }
+      refresh();
       addAlert(t("groupDeleted", { count: selectedRows.length }));
     } catch (error) {
       addError("groups:groupDeleteError", error);
     }
-    refresh();
   };
 
   const modalProps: ConfirmDialogProps = {

@@ -10,14 +10,13 @@ import { KeycloakDataTable } from "../components/table-toolbar/KeycloakDataTable
 import { ListEmptyState } from "../components/list-empty-state/ListEmptyState";
 import { GroupsModal } from "./GroupsModal";
 import { getLastId } from "./groupIdUtils";
-import { GroupPickerDialog } from "../components/group/GroupPickerDialog";
 import { useSubGroups } from "./SubGroupsContext";
 import { toGroups } from "./routes/Groups";
 import { useAccess } from "../context/access/Access";
 import useToggle from "../utils/useToggle";
 import { DeleteGroup } from "./components/DeleteGroup";
 import { GroupToolbar, ViewType } from "./components/GroupToolbar";
-import { GroupToolbar } from "./components/GroupToolbar";
+import { MoveDialog } from "./components/MoveDialog";
 
 type GroupTableProps = {
   toggleView?: (viewType: ViewType) => void;
@@ -169,54 +168,13 @@ export const GroupTable = ({ toggleView }: GroupTableProps) => {
         />
       )}
       {move && (
-        <GroupPickerDialog
-          type="selectOne"
-          filterGroups={[move.name!]}
-          text={{
-            title: "groups:moveToGroup",
-            ok: "groups:moveHere",
+        <MoveDialog
+          source={move}
+          refresh={() => {
+            setMove(undefined);
+            refresh();
           }}
           onClose={() => setMove(undefined)}
-          onConfirm={async (group) => {
-            try {
-              if (group !== undefined) {
-                try {
-                  await adminClient.groups.setOrCreateChild(
-                    { id: group[0].id! },
-                    move
-                  );
-                } catch (error: any) {
-                  if (error.response) {
-                    throw error;
-                  }
-                }
-              } else {
-                await adminClient.groups.del({ id: move.id! });
-                const { id } = await adminClient.groups.create({
-                  ...move,
-                  id: undefined,
-                });
-                if (move.subGroups) {
-                  await Promise.all(
-                    move.subGroups.map((s) =>
-                      adminClient.groups.setOrCreateChild(
-                        { id: id! },
-                        {
-                          ...s,
-                          id: undefined,
-                        }
-                      )
-                    )
-                  );
-                }
-              }
-              setMove(undefined);
-              refresh();
-              addAlert(t("moveGroupSuccess"), AlertVariant.success);
-            } catch (error) {
-              addError("groups:moveGroupError", error);
-            }
-          }}
         />
       )}
     </>
