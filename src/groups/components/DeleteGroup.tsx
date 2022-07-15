@@ -14,7 +14,7 @@ type DeleteConfirmProps = {
   selectedRows: GroupRepresentation[];
   show: boolean;
   toggleDialog: () => void;
-  refresh?: () => void;
+  refresh: () => void;
 };
 
 export const DeleteGroup = ({
@@ -38,7 +38,7 @@ export const DeleteGroup = ({
     } catch (error) {
       addError("groups:groupDeleteError", error);
     }
-    if (refresh) refresh();
+    refresh();
   };
 
   const modalProps: ConfirmDialogProps = {

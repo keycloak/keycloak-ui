@@ -1,14 +1,7 @@
 import { useState } from "react";
 import { Link, useHistory, useLocation } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import {
-  AlertVariant,
-  Button,
-  Dropdown,
-  DropdownItem,
-  KebabToggle,
-  ToolbarItem,
-} from "@patternfly/react-core";
+import { AlertVariant } from "@patternfly/react-core";
 import { cellWidth } from "@patternfly/react-table";
 
 import type GroupRepresentation from "@keycloak/keycloak-admin-client/lib/defs/groupRepresentation";
@@ -25,6 +18,7 @@ import { toGroups } from "./routes/Groups";
 import { useAccess } from "../context/access/Access";
 import useToggle from "../utils/useToggle";
 import { DeleteGroup } from "./components/DeleteGroup";
+import { GroupToolbar } from "./components/GroupToolbar";
 
 export const GroupTable = () => {
   const { t } = useTranslation("groups");
@@ -32,7 +26,6 @@ export const GroupTable = () => {
   const { adminClient } = useAdminClient();
   const { addAlert, addError } = useAlerts();
   const { realm } = useRealm();
-  const [isKebabOpen, setIsKebabOpen] = useState(false);
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
   const [selectedRows, setSelectedRows] = useState<GroupRepresentation[]>([]);
   const [showDelete, toggleShowDelete] = useToggle();
@@ -117,43 +110,11 @@ export const GroupTable = () => {
         ariaLabelKey="groups:groups"
         searchPlaceholderKey="groups:searchForGroups"
         toolbarItem={
-          isManager && (
-            <>
-              <ToolbarItem>
-                <Button
-                  data-testid="openCreateGroupModal"
-                  variant="primary"
-                  onClick={handleModalToggle}
-                >
-                  {t("createGroup")}
-                </Button>
-              </ToolbarItem>
-              <ToolbarItem>
-                <Dropdown
-                  toggle={
-                    <KebabToggle
-                      onToggle={() => setIsKebabOpen(!isKebabOpen)}
-                      isDisabled={selectedRows!.length === 0}
-                    />
-                  }
-                  isOpen={isKebabOpen}
-                  isPlain
-                  dropdownItems={[
-                    <DropdownItem
-                      key="action"
-                      component="button"
-                      onClick={() => {
-                        toggleShowDelete();
-                        setIsKebabOpen(false);
-                      }}
-                    >
-                      {t("common:delete")}
-                    </DropdownItem>,
-                  ]}
-                />
-              </ToolbarItem>
-            </>
-          )
+          <GroupToolbar
+            kebabDisabled={selectedRows!.length === 0}
+            toggleCreate={handleModalToggle}
+            toggleDelete={toggleShowDelete}
+          />
         }
         actions={
           !isManager

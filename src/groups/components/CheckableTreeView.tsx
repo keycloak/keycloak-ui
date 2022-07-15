@@ -4,9 +4,13 @@ import { TreeView, TreeViewDataItem } from "@patternfly/react-core";
 
 type CheckableTreeViewProps = {
   data: TreeViewDataItem[];
+  onSelect: (items: TreeViewDataItem[]) => void;
 };
 
-export const CheckableTreeView = ({ data }: CheckableTreeViewProps) => {
+export const CheckableTreeView = ({
+  data,
+  onSelect,
+}: CheckableTreeViewProps) => {
   const [state, setState] = useState<{
     options: TreeViewDataItem[];
     checkedItems: TreeViewDataItem[];
@@ -49,18 +53,20 @@ export const CheckableTreeView = ({ data }: CheckableTreeViewProps) => {
       .filter((item) => filterItems(item, treeViewItem));
     const flatCheckedItems = flattenTree(checkedItemTree);
 
-    setState((prevState) => ({
-      options: prevState.options,
-      checkedItems: checked
-        ? prevState.checkedItems.concat(
-            flatCheckedItems.filter(
-              (item) => !prevState.checkedItems.some((i) => i.id === item.id)
-            )
+    const checkedItems = checked
+      ? state.checkedItems.concat(
+          flatCheckedItems.filter(
+            (item) => !state.checkedItems.some((i) => i.id === item.id)
           )
-        : prevState.checkedItems.filter(
-            (item) => !flatCheckedItems.some((i) => i.id === item.id)
-          ),
-    }));
+        )
+      : state.checkedItems.filter(
+          (item) => !flatCheckedItems.some((i) => i.id === item.id)
+        );
+    setState({
+      options: [...state.options],
+      checkedItems,
+    });
+    onSelect(checkedItems.filter((item) => item.checkProps?.checked !== null));
   };
 
   const isChecked = (item: TreeViewDataItem) =>

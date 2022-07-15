@@ -29,7 +29,7 @@ import { GroupRoleMapping } from "./GroupRoleMapping";
 import helpUrls from "../help-urls";
 import { PermissionsTab } from "../components/permission-tab/PermissionTab";
 import { useAccess } from "../context/access/Access";
-//import { GroupTree } from "./components/GroupTree";
+import { GroupTree } from "./components/GroupTree";
 
 import "./GroupsSection.css";
 
@@ -205,7 +205,7 @@ export default function GroupsSection() {
             )}
           </Tabs>
         )}
-        {subGroups.length === 0 && <GroupTable />}
+        {subGroups.length === 0 && <GroupTree />}
       </PageSection>
     </>
   );
