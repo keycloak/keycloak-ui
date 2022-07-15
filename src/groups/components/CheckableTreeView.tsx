@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 import { TreeView, TreeViewDataItem } from "@patternfly/react-core";
 
@@ -14,7 +14,7 @@ export const CheckableTreeView = ({
   const [state, setState] = useState<{
     options: TreeViewDataItem[];
     checkedItems: TreeViewDataItem[];
-  }>({ options: data, checkedItems: [] });
+  }>({ options: [], checkedItems: [] });
 
   const filterItems = (
     item: TreeViewDataItem,
@@ -33,6 +33,14 @@ export const CheckableTreeView = ({
     }
     return false;
   };
+
+  useEffect(() => {
+    onSelect(state.checkedItems.filter((i) => i.checkProps?.checked === true));
+  }, [state]);
+
+  useEffect(() => {
+    setState({ options: data, checkedItems: [] });
+  }, [data]);
 
   const flattenTree = (tree: TreeViewDataItem[]) => {
     let result: TreeViewDataItem[] = [];
@@ -53,20 +61,20 @@ export const CheckableTreeView = ({
       .filter((item) => filterItems(item, treeViewItem));
     const flatCheckedItems = flattenTree(checkedItemTree);
 
-    const checkedItems = checked
-      ? state.checkedItems.concat(
-          flatCheckedItems.filter(
-            (item) => !state.checkedItems.some((i) => i.id === item.id)
-          )
-        )
-      : state.checkedItems.filter(
-          (item) => !flatCheckedItems.some((i) => i.id === item.id)
-        );
-    setState({
-      options: [...state.options],
-      checkedItems,
+    setState((prevState) => {
+      return {
+        options: prevState.options,
+        checkedItems: checked
+          ? prevState.checkedItems.concat(
+              flatCheckedItems.filter(
+                (item) => !prevState.checkedItems.some((i) => i.id === item.id)
+              )
+            )
+          : prevState.checkedItems.filter(
+              (item) => !flatCheckedItems.some((i) => i.id === item.id)
+            ),
+      };
     });
-    onSelect(checkedItems.filter((item) => item.checkProps?.checked !== null));
   };
 
   const isChecked = (item: TreeViewDataItem) =>
