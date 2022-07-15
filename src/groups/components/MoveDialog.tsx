@@ -15,7 +15,7 @@ type MoveDialogProps = {
 export const MoveDialog = ({ source, onClose, refresh }: MoveDialogProps) => {
   const { t } = useTranslation("groups");
 
-  const adminClient = useAdminClient();
+  const { adminClient } = useAdminClient();
   const { addAlert, addError } = useAlerts();
 
   const moveGroup = async (group?: GroupRepresentation[]) => {

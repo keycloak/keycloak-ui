@@ -140,7 +140,7 @@ type GroupTreeProps = {
 
 export const GroupTree = ({ toggleView }: GroupTreeProps) => {
   const { t } = useTranslation("groups");
-  const adminClient = useAdminClient();
+  const { adminClient } = useAdminClient();
 
   const [data, setData] = useState<TreeViewDataItem[]>();
   const [filteredData, setFilteredData] = useState<TreeViewDataItem[]>();

@@ -24,7 +24,7 @@ export const DeleteGroup = ({
   refresh,
 }: DeleteConfirmProps) => {
   const { t } = useTranslation("groups");
-  const adminClient = useAdminClient();
+  const { adminClient } = useAdminClient();
   const { addAlert, addError } = useAlerts();
 
   const multiDelete = async () => {
