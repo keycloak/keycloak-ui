@@ -127,7 +127,7 @@ For more information about the Cypress command-line interface consult [the docum
 You can find information about the project structure in the [official Cypress documentation](https://docs.cypress.io/guides/core-concepts/writing-and-organizing-tests#Folder-structure).
 Read more about [how to write tests](./cypress/WRITING_TESTS.md)
 
-## Project Policy
+## Data processing
 
 Red Hat may process information including business contact information and code contributions as part of its participation in the project, data is processed in accordance with [Red Hat Privacy Statement](https://www.redhat.com/en/about/privacy-policy).
 
