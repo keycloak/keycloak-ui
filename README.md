@@ -14,7 +14,7 @@ You can find out which version of Node.js you are using by running the following
 node --version
 ```
 
-In order to run the Keycloak server you will also have to install the Java Development Kit (JDK). We recommend that you use the same version of the JDK as [required by the Keycloak server](<(https://github.com/keycloak/keycloak/blob/main/docs/building.md#building-from-source)>).
+In order to run the Keycloak server you will also have to install the Java Development Kit (JDK). We recommend that you use the same version of the JDK as [required by the Keycloak server](https://github.com/keycloak/keycloak/blob/main/docs/building.md#building-from-source).
 
 ### Running the Keycloak server
 
