@@ -9,7 +9,7 @@ export default class AdvancedTab extends CommonPage {
   private clusterNodesExpandBtn =
     ".pf-c-expandable-section .pf-c-expandable-section__toggle";
   private testClusterAvailability = "#testClusterAvailability";
-  private emptyClusterElement = '[data-testid="empty-state"]';
+  private emptyClusterElement = "empty-state";
   private registerNodeManuallyBtn = "no-nodes-registered-empty-action";
   private deleteClusterNodeDrpDwn =
     '[aria-label="registeredClusterNodes"] [aria-label="Actions"]';
@@ -69,7 +69,7 @@ export default class AdvancedTab extends CommonPage {
   }
 
   checkEmptyClusterNode() {
-    cy.get(this.emptyClusterElement).should("exist");
+    cy.findByTestId(this.emptyClusterElement).should("exist");
     return this;
   }
 
