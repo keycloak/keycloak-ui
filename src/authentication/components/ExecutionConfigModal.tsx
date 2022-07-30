@@ -24,6 +24,12 @@ import { useAlerts } from "../../components/alert/Alerts";
 import { HelpItem } from "../../components/help-enabler/HelpItem";
 import { DynamicComponents } from "../../components/dynamic/DynamicComponents";
 import { KeycloakTextInput } from "../../components/keycloak-text-input/KeycloakTextInput";
+import { convertFormValuesToObject, convertToFormValues } from "../../util";
+import {
+  convertMultivaluedString,
+  stringToMultiline,
+  toStringValue,
+} from "../../components/multi-line-input/multi-line-convert";
 
 type ExecutionConfigModalForm = {
   alias: string;
@@ -69,6 +75,12 @@ export const ExecutionConfigModal = ({
     if (config) {
       setValue("alias", config.alias);
       setValue("id", config.id);
+      config.config = convertMultivaluedString(
+        config.config,
+        configDescription.properties!,
+        stringToMultiline
+      );
+      convertToFormValues(config.config, setValue);
     }
   };
 
@@ -98,6 +110,12 @@ export const ExecutionConfigModal = ({
   }, [show]);
 
   const save = async (changedConfig: ExecutionConfigModalForm) => {
+    changedConfig = convertFormValuesToObject(changedConfig);
+    changedConfig.config = convertMultivaluedString(
+      changedConfig.config,
+      configDescription?.properties!,
+      toStringValue
+    )!;
     try {
       if (config) {
         const newConfig = {
@@ -105,7 +123,7 @@ export const ExecutionConfigModal = ({
           config: changedConfig.config,
         };
         await adminClient.authenticationManagement.updateConfig(newConfig);
-        setConfig({ ...newConfig.config });
+        setConfig(newConfig);
       } else {
         const newConfig = {
           id: execution.id!,
