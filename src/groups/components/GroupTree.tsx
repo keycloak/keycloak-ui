@@ -173,7 +173,7 @@ export const GroupTree = ({ toggleView }: GroupTreeProps) => {
       {data ? (
         <>
           <TableToolbar
-            inputGroupName="test"
+            inputGroupName="searchForGroups"
             inputGroupPlaceholder={t("groups:searchForGroups")}
             inputGroupOnEnter={(search) => {
               if (search === "") {

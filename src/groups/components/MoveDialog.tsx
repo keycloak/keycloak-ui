@@ -2,6 +2,7 @@ import React from "react";
 import { useTranslation } from "react-i18next";
 
 import type GroupRepresentation from "@keycloak/keycloak-admin-client/lib/defs/groupRepresentation";
+import type KeycloakAdminClient from "@keycloak/keycloak-admin-client";
 import { useAlerts } from "../../components/alert/Alerts";
 import { GroupPickerDialog } from "../../components/group/GroupPickerDialog";
 import { useAdminClient } from "../../context/auth/AdminClient";
@@ -12,6 +13,44 @@ type MoveDialogProps = {
   refresh: () => void;
 };
 
+const moveToRoot = async (
+  adminClient: KeycloakAdminClient,
+  source: GroupRepresentation
+) => {
+  await adminClient.groups.del({ id: source.id! });
+  const { id } = await adminClient.groups.create({
+    ...source,
+    id: undefined,
+  });
+  if (source.subGroups) {
+    await Promise.all(
+      source.subGroups.map((s) =>
+        adminClient.groups.setOrCreateChild(
+          { id: id! },
+          {
+            ...s,
+            id: undefined,
+          }
+        )
+      )
+    );
+  }
+};
+
+const moveToGroup = async (
+  adminClient: KeycloakAdminClient,
+  source: GroupRepresentation,
+  dest: GroupRepresentation
+) => {
+  try {
+    await adminClient.groups.setOrCreateChild({ id: dest.id! }, source);
+  } catch (error: any) {
+    if (error.response) {
+      throw error;
+    }
+  }
+};
+
 export const MoveDialog = ({ source, onClose, refresh }: MoveDialogProps) => {
   const { t } = useTranslation("groups");
 
@@ -20,37 +59,9 @@ export const MoveDialog = ({ source, onClose, refresh }: MoveDialogProps) => {
 
   const moveGroup = async (group?: GroupRepresentation[]) => {
     try {
-      if (group !== undefined) {
-        try {
-          await adminClient.groups.setOrCreateChild(
-            { id: group[0].id! },
-            source
-          );
-        } catch (error: any) {
-          if (error.response) {
-            throw error;
-          }
-        }
-      } else {
-        await adminClient.groups.del({ id: source.id! });
-        const { id } = await adminClient.groups.create({
-          ...source,
-          id: undefined,
-        });
-        if (source.subGroups) {
-          await Promise.all(
-            source.subGroups.map((s) =>
-              adminClient.groups.setOrCreateChild(
-                { id: id! },
-                {
-                  ...s,
-                  id: undefined,
-                }
-              )
-            )
-          );
-        }
-      }
+      await (group
+        ? moveToGroup(adminClient, source, group[0])
+        : moveToRoot(adminClient, source));
       refresh();
       addAlert(t("moveGroupSuccess"));
     } catch (error) {

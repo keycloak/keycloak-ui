@@ -3,10 +3,7 @@ import { useTranslation } from "react-i18next";
 import { ButtonVariant } from "@patternfly/react-core";
 
 import type GroupRepresentation from "@keycloak/keycloak-admin-client/lib/defs/groupRepresentation";
-import {
-  ConfirmDialogModal,
-  ConfirmDialogProps,
-} from "../../components/confirm-dialog/ConfirmDialog";
+import { ConfirmDialogModal } from "../../components/confirm-dialog/ConfirmDialog";
 import { useAdminClient } from "../../context/auth/AdminClient";
 import { useAlerts } from "../../components/alert/Alerts";
 
@@ -41,18 +38,13 @@ export const DeleteGroup = ({
     }
   };
 
-  const modalProps: ConfirmDialogProps = {
-    titleKey: t("deleteConfirmTitle", { count: selectedRows.length }),
-    messageKey: t("deleteConfirm", { count: selectedRows.length }),
-    continueButtonLabel: "common:delete",
-    continueButtonVariant: ButtonVariant.danger,
-    onConfirm: multiDelete,
-  };
-
   return (
     <ConfirmDialogModal
-      key="confirmDialog"
-      {...modalProps}
+      titleKey={t("deleteConfirmTitle", { count: selectedRows.length })}
+      messageKey={t("deleteConfirm", { count: selectedRows.length })}
+      continueButtonLabel="common:delete"
+      continueButtonVariant={ButtonVariant.danger}
+      onConfirm={multiDelete}
       open={show}
       toggleDialog={toggleDialog}
     />
