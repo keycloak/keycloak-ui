@@ -29,6 +29,7 @@ import { ClientDescription } from "../ClientDescription";
 import { toClient } from "../routes/Client";
 import { toClients } from "../routes/Clients";
 import { FileUploadForm } from "../../components/json-file-upload/FileUploadForm";
+import { getAuthorizationHeaders } from "../../utils/getAuthorizationHeaders";
 
 const isXml = (text: string) => text.startsWith("<");
 
@@ -60,9 +61,9 @@ export default function ImportForm() {
           {
             method: "POST",
             body: text,
-            headers: {
-              Authorization: `bearer ${await adminClient.getAccessToken()}`,
-            },
+            headers: getAuthorizationHeaders(
+              await adminClient.getAccessToken()
+            ),
           }
         );
         if (response.ok) {
