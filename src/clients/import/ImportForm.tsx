@@ -51,7 +51,7 @@ export default function ImportForm() {
       convertToFormValues(parsed, setValue);
       setImported(parsed);
     } catch (error) {
-      console.warn("Unable to parse file, ignoring value.");
+      addError("clients:importParseError", error);
     }
   };
 
