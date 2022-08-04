@@ -73,7 +73,7 @@ export default function ImportForm() {
       }
     );
 
-    if (response.ok) {
+    if (!response.ok) {
       throw new Error(
         `Server responded with invalid status: ${response.statusText}`
       );
