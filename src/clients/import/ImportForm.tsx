@@ -44,45 +44,43 @@ export default function ImportForm() {
 
   const { addAlert, addError } = useAlerts();
 
-  const handleFileChange = async (text: string) => {
-    let obj = {
-      protocol: "",
-      clientId: "",
-      name: "",
-      description: "",
-    };
+  const handleFileChange = async (contents: string) => {
+    try {
+      const parsed = await parseFileContents(contents);
 
-    if (isXml(text)) {
-      try {
-        const response = await fetch(
-          `${addTrailingSlash(
-            adminClient.baseUrl
-          )}admin/realms/${realm}/client-description-converter`,
-          {
-            method: "POST",
-            body: text,
-            headers: getAuthorizationHeaders(
-              await adminClient.getAccessToken()
-            ),
-          }
-        );
-        if (response.ok) {
-          obj = await response.json();
-        }
-      } catch (error) {
-        console.warn("Invalid json, ignoring value");
-      }
-    } else {
-      try {
-        obj = JSON.parse(text);
-      } catch (error) {
-        console.warn("Invalid json, ignoring value");
-      }
+      convertToFormValues(parsed, setValue);
+      setImported(parsed);
+    } catch (error) {
+      console.warn("Unable to parse file, ignoring value.");
+    }
+  };
+
+  async function parseFileContents(
+    contents: string
+  ): Promise<ClientRepresentation> {
+    if (!isXml(contents)) {
+      return JSON.parse(contents);
     }
 
-    convertToFormValues(obj, setValue);
-    setImported(obj);
-  };
+    const response = await fetch(
+      `${addTrailingSlash(
+        adminClient.baseUrl
+      )}admin/realms/${realm}/client-description-converter`,
+      {
+        method: "POST",
+        body: contents,
+        headers: getAuthorizationHeaders(await adminClient.getAccessToken()),
+      }
+    );
+
+    if (response.ok) {
+      throw new Error(
+        `Server responded with invalid status: ${response.statusText}`
+      );
+    }
+
+    return response.json();
+  }
 
   const save = async (client: ClientRepresentation) => {
     try {
