@@ -113,7 +113,7 @@ export default function ImportForm() {
             <FileUploadForm
               id="realm-file"
               language={Language.json}
-              extension=".json"
+              extension=".json,.xml"
               helpText="common-help:helpFileUploadClient"
               onChange={handleFileChange}
             />
