@@ -9,7 +9,7 @@ import {
   ToggleGroupItem,
   ToolbarItem,
 } from "@patternfly/react-core";
-import { TableIcon } from "@patternfly/react-icons";
+import { TableIcon, DomainIcon } from "@patternfly/react-icons";
 
 import { useSubGroups } from "../SubGroupsContext";
 import { useAccess } from "../../context/access/Access";
@@ -57,7 +57,7 @@ export const GroupToolbar = ({
               onChange={() => toggleView(ViewType.Table)}
             />
             <ToggleGroupItem
-              icon={<i className="fas fa-project-diagram"></i>}
+              icon={<DomainIcon />}
               aria-label={t("diagramView")}
               buttonId="diagramView"
               isSelected={currentView === ViewType.Tree}
