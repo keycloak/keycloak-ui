@@ -153,7 +153,7 @@ const Fields = ({ readOnly }: DiscoverySettingsProps) => {
               <Select
                 toggleId="pkceMethod"
                 required
-                direction="up"
+                direction="down"
                 onToggle={() => setPkceMethodOpen(!pkceMethodOpen)}
                 onSelect={(_, value) => {
                   onChange(value as string);
