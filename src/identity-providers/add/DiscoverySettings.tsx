@@ -17,13 +17,14 @@ import { HelpItem } from "../../components/help-enabler/HelpItem";
 
 import "./discovery-settings.css";
 
+const PKCE_METHODS = ["plain", "S256"] as const;
+
 type DiscoverySettingsProps = {
   readOnly: boolean;
 };
 
 const Fields = ({ readOnly }: DiscoverySettingsProps) => {
   const { t } = useTranslation("identity-providers");
-  const pkceMethods = ["plain", "S256"];
   const [pkceMethodOpen, setPkceMethodOpen] = useState(false);
   const {
     register,
@@ -32,15 +33,15 @@ const Fields = ({ readOnly }: DiscoverySettingsProps) => {
   } = useFormContext();
 
   const validateSignature = useWatch({
-    control: control,
+    control,
     name: "config.validateSignature",
   });
   const useJwks = useWatch({
-    control: control,
+    control,
     name: "config.useJwksUrl",
   });
   const isPkceEnabled = useWatch({
-    control: control,
+    control,
     name: "config.pkceEnabled",
   });
 
@@ -147,7 +148,7 @@ const Fields = ({ readOnly }: DiscoverySettingsProps) => {
         >
           <Controller
             name="config.pkceMethod"
-            defaultValue={pkceMethods[0]}
+            defaultValue={PKCE_METHODS[0]}
             control={control}
             render={({ onChange, value }) => (
               <Select
@@ -164,7 +165,7 @@ const Fields = ({ readOnly }: DiscoverySettingsProps) => {
                 aria-label={t("pkceMethod")}
                 isOpen={pkceMethodOpen}
               >
-                {pkceMethods.map((option) => (
+                {PKCE_METHODS.map((option) => (
                   <SelectOption
                     selected={option === value}
                     key={option}
