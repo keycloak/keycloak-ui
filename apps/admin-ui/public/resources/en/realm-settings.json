@@ -203,6 +203,7 @@
   "clientLoginTimeout": "Client Login Timeout",
   "userInitiatedActionLifespan": "User-Initiated Action Lifespan",
   "defaultAdminInitiated": "Default Admin-Initiated Action Lifespan",
+  "defaultAudValue": "Default aud value for access token",
   "emailVerification": "Email Verification",
   "idpAccountEmailVerification": "IdP account email verification",
   "executeActions": "Execute actions",

@@ -19,6 +19,7 @@ import type RealmRepresentation from "@keycloak/keycloak-admin-client/lib/defs/r
 import { FormAccess } from "../components/form-access/FormAccess";
 import { HelpItem } from "../components/help-enabler/HelpItem";
 import { FormPanel } from "../components/scroll-form/FormPanel";
+import { KeycloakTextInput } from "../components/keycloak-text-input/KeycloakTextInput";
 import {
   TimeSelector,
   toHumanFormat,
@@ -398,6 +399,30 @@ export const RealmSettingsTokensTab = ({
                   value={value}
                   onChange={onChange}
                   units={["minute", "hour", "day"]}
+                />
+              )}
+            />
+          </FormGroup>
+          <FormGroup
+            label={t("defaultAudValue")}
+            fieldId="defaultAudValue"
+            labelIcon={
+              <HelpItem
+                helpText="realm-settings-help:defaultAudValueTooltip"
+                fieldLabelId="realm-settings:defaultAudValue"
+              />
+            }
+          >
+            <Controller
+              name="defaultAudValueForAccessToken"
+              defaultValue=""
+              control={form.control}
+              render={({ onChange, value }) => (
+                <KeycloakTextInput
+                  id="defaultAudValue"
+                  value={value}
+                  onChange={onChange}
+                  placeholder={t("defaultAudValue")}
                 />
               )}
             />

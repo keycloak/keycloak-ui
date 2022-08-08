@@ -66,6 +66,7 @@
   "clientLoginTimeout": "Max time a client has to finish the access token protocol. This should normally be 1 minute.",
   "userInitiatedActionLifespan": "Maximum time before an action permit sent by a user (such as a forgot password e-mail) is expired. This value is recommended to be short because it's expected that the user would react to self-created action quickly.",
   "defaultAdminInitiatedActionLifespan": "Maximum time before an action permit sent to a user by administrator is expired. This value is recommended to be long to allow administrators to send e-mails for users that are currently offline. The default timeout can be overridden immediately before issuing the token.",
+  "defaultAudValueTooltip": "Default optional aud value for access token. If resource parameter is not present, aud claim is set equal to this value. Extra aud claim values can be added with Audience and AudienceResolver protocol mappers.",
   "overrideActionTokens": "Override default settings of maximum time before an action permit sent by a user (such as a forgot password e-mail) is expired for specific action. This value is recommended to be short because it's expected that the user would react to self-created action quickly.",
   "internationalization": "If enabled, you can choose which locales you support for this realm and which locale is the default.",
   "supportedLocales": "The locales to support for this realm. The user chooses one of these locales on the login screen.",
