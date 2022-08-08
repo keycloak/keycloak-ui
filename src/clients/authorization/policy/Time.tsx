@@ -93,7 +93,14 @@ type NumberControlProps = {
 
 const NumberControl = ({ name, min, max }: NumberControlProps) => {
   const { control } = useFormContext();
-  const setValue = (newValue: number) => Math.min(newValue, max);
+  const setValue = (newValue: number) => {
+    if (newValue < min) {
+      return min;
+    } else if (newValue > max) {
+      return max;
+    }
+    return newValue;
+  };
 
   return (
     <Controller
