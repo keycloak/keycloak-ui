@@ -93,14 +93,25 @@ const LoginFlow = ({
 };
 
 const syncModes = ["import", "legacy", "force"];
-type AdvancedSettingsProps = { isOIDC: boolean; isSAML: boolean };
+type AdvancedSettingsProps = {
+  isOIDC: boolean;
+  isSAML: boolean;
+  isGoogle: boolean;
+};
 
-export const AdvancedSettings = ({ isOIDC, isSAML }: AdvancedSettingsProps) => {
+export const AdvancedSettings = ({
+  isOIDC,
+  isSAML,
+  isGoogle,
+}: AdvancedSettingsProps) => {
   const { t } = useTranslation("identity-providers");
   const { control } = useFormContext();
   const [syncModeOpen, setSyncModeOpen] = useState(false);
   return (
     <>
+      {isGoogle && (
+        <TextField field="config.hostedDomain" label="hostedDomain" />
+      )}
       {!isOIDC && !isSAML && (
         <TextField field="config.defaultScope" label="scopes" />
       )}

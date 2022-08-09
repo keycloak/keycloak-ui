@@ -240,6 +240,7 @@ export default function DetailSettings() {
 
   const isOIDC = provider.providerId!.includes("oidc");
   const isSAML = provider.providerId!.includes("saml");
+  const isGoogle = provider.providerId!.includes("google");
 
   const loader = async () => {
     const [loaderMappers, loaderMapperTypes] = await Promise.all([
@@ -321,7 +322,11 @@ export default function DetailSettings() {
           isHorizontal
           onSubmit={handleSubmit(save)}
         >
-          <AdvancedSettings isOIDC={isOIDC!} isSAML={isSAML!} />
+          <AdvancedSettings
+            isOIDC={isOIDC!}
+            isSAML={isSAML!}
+            isGoogle={isGoogle!}
+          />
 
           <ActionGroup className="keycloak__form_actions">
             <Button data-testid={"save"} type="submit">

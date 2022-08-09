@@ -100,6 +100,7 @@
   "disableUserInfo": "Disable user info",
   "userInfoUrl": "User Info URL",
   "issuer": "Issuer",
+  "hostedDomain": "Hosted Domain",
   "scopes": "Scopes",
   "prompt": "Prompt",
   "prompts": {
