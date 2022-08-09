@@ -11,18 +11,19 @@ import {
 import { ClientIdSecret } from "../component/ClientIdSecret";
 import { HelpItem } from "../../components/help-enabler/HelpItem";
 
+const clientAuthentications = [
+  "clientAuth_post",
+  "clientAuth_basic",
+  "clientAuth_secret_jwt",
+  "clientAuth_privatekey_jwt",
+];
+
 export const OIDCAuthentication = ({ create = true }: { create?: boolean }) => {
   const { t } = useTranslation("identity-providers");
 
   const { control } = useFormContext();
   const [openClientAuth, setOpenClientAuth] = useState(false);
 
-  const clientAuthentications = [
-    "clientAuth_post",
-    "clientAuth_basic",
-    "clientAuth_secret_jwt",
-    "clientAuth_privatekey_jwt",
-  ];
   const clientAuthMethod = useWatch({
     control: control,
     name: "config.clientAuthMethod",
@@ -53,7 +54,7 @@ export const OIDCAuthentication = ({ create = true }: { create?: boolean }) => {
                 onChange(value as string);
                 setOpenClientAuth(false);
               }}
-              selections={t(`${value}`)}
+              selections={value}
               variant={SelectVariant.single}
               aria-label={t("clientAuthentication")}
               isOpen={openClientAuth}
