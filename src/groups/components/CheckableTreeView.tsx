@@ -16,24 +16,6 @@ export const CheckableTreeView = ({
     checkedItems: TreeViewDataItem[];
   }>({ options: [], checkedItems: [] });
 
-  const filterItems = (
-    item: TreeViewDataItem,
-    checkedItem: TreeViewDataItem
-  ): boolean => {
-    if (item.id === checkedItem.id) {
-      return true;
-    }
-
-    if (item.children) {
-      return (
-        (item.children = item.children
-          .map((opt) => Object.assign({}, opt))
-          .filter((child) => filterItems(child, checkedItem))).length > 0
-      );
-    }
-    return false;
-  };
-
   useEffect(() => {
     onSelect(state.checkedItems.filter((i) => i.checkProps?.checked === true));
   }, [state]);
@@ -55,11 +37,7 @@ export const CheckableTreeView = ({
 
   const onCheck = (evt: React.ChangeEvent, treeViewItem: TreeViewDataItem) => {
     const checked = (evt.target as HTMLInputElement).checked;
-
-    const checkedItemTree = state.options
-      .map((opt) => Object.assign({}, opt))
-      .filter((item) => filterItems(item, treeViewItem));
-    const flatCheckedItems = flattenTree(checkedItemTree);
+    const flatCheckedItems = flattenTree([treeViewItem]);
 
     setState((prevState) => {
       return {
@@ -80,18 +58,13 @@ export const CheckableTreeView = ({
   const isChecked = (item: TreeViewDataItem) =>
     state.checkedItems.some((i) => i.id === item.id);
 
-  const areAllDescendantsChecked = (dataItem: TreeViewDataItem): boolean =>
-    dataItem.children
-      ? dataItem.children.every((child) => areAllDescendantsChecked(child))
-      : isChecked(dataItem);
-
   const areSomeDescendantsChecked = (dataItem: TreeViewDataItem): boolean =>
     dataItem.children
       ? dataItem.children.some((child) => areSomeDescendantsChecked(child))
       : isChecked(dataItem);
 
   const mapTree = (item: TreeViewDataItem): TreeViewDataItem => {
-    const hasCheck = areAllDescendantsChecked(item);
+    const hasCheck = isChecked(item);
     // Reset checked properties to be updated
     item.checkProps!.checked = false;
 
