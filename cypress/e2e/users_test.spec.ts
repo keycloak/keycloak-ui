@@ -112,6 +112,8 @@ describe("User creation", () => {
       .fillPasswordForm()
       .clickConfirmationBtn()
       .clickSetPasswordBtn();
+
+    masthead.closeAllAlertMessages();
   });
 
   it("Search existing user test", () => {
@@ -250,7 +252,7 @@ describe("User creation", () => {
       .clickCloseDataDialogBtn();
   });
 
-  it.skip("Delete credential", () => {
+  it("Delete credential", () => {
     listingPage.goToItemDetails(itemIdWithCred);
     credentialsPage.goToCredentialsTab();
     listingPage.deleteItem(itemCredential);

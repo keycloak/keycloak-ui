@@ -503,7 +503,6 @@ describe("User Federation LDAP tests", () => {
     providersPage.verifyChangedHourInput(newLdapHour, defaultLdapHour);
 
     sidebarPage.goToUserFederation();
-    masthead.closeAllAlertMessages();
   });
 
   it("Should set cache policy to max_lifespan", () => {
