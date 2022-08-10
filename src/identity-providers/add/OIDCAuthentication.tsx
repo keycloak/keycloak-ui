@@ -12,10 +12,10 @@ import { ClientIdSecret } from "../component/ClientIdSecret";
 import { HelpItem } from "../../components/help-enabler/HelpItem";
 
 const clientAuthentications = [
-  "clientAuth_post",
-  "clientAuth_basic",
-  "clientAuth_secret_jwt",
-  "clientAuth_privatekey_jwt",
+  "client_secret_post",
+  "client_secret_basic",
+  "client_secret_jwt",
+  "private_key_jwt",
 ];
 
 export const OIDCAuthentication = ({ create = true }: { create?: boolean }) => {
