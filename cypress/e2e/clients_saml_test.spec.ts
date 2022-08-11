@@ -93,7 +93,8 @@ describe("Clients SAML tests", () => {
       cy.findAllByTestId("certificate").should("have.length", 1);
     });
 
-    it("should disable client signature", () => {
+    // https://github.com/keycloak/keycloak-admin-ui/issues/3092
+    it.skip("should disable client signature", () => {
       cy.intercept(
         "admin/realms/master/clients/*/certificates/saml.signing"
       ).as("load");
