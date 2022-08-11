@@ -46,9 +46,7 @@ describe("Group test", () => {
     );
   });
 
-  after(async () => {
-    await adminClient.deleteGroups();
-  });
+  after(() => adminClient.deleteGroups());
 
   beforeEach(() => {
     keycloakBefore();
