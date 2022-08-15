@@ -125,7 +125,7 @@ export const UserIdentityProviderLinks = () => {
     )?.groupName!;
     return (
       <Label color={groupName === "Social" ? "blue" : "orange"}>
-        {groupName === "Social" ? "Social" : "Custom"}
+        {groupName === "Social" ? "Social login" : "Custom"}
       </Label>
     );
   };
@@ -136,7 +136,11 @@ export const UserIdentityProviderLinks = () => {
     )?.groupName!;
     return (
       <Label color={groupName === "User-defined" ? "orange" : "blue"}>
-        {groupName === "User-defined" ? "Custom" : groupName!}
+        {groupName === "User-defined"
+          ? "Custom"
+          : groupName! === "Social"
+          ? "Social login"
+          : groupName!}
       </Label>
     );
   };
