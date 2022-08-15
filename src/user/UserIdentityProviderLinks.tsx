@@ -96,7 +96,7 @@ export const UserIdentityProviderLinks = () => {
           id,
           federatedIdentityId: federatedId,
         });
-        addAlert(t("common:mappingDeletedSuccess"), AlertVariant.success);
+        addAlert(t("users:idpUnlinkSuccess"), AlertVariant.success);
         refresh();
       } catch (error) {
         addError("common:mappingDeletedError", error);
