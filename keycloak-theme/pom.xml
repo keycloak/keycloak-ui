@@ -103,6 +103,11 @@
             <version>${kotlin.version}</version>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>org.eclipse.microprofile.openapi</groupId>
+            <artifactId>microprofile-openapi-api</artifactId>
+            <version>3.0</version>
+        </dependency>
     </dependencies>
 
     <profiles>
@@ -223,6 +228,21 @@
                 </configuration>
             </plugin>
             <plugin>
+                <artifactId>smallrye-open-api-maven-plugin</artifactId>
+                <groupId>io.smallrye</groupId>
+                <version>2.1.22</version>
+                <configuration>
+                    <scanPackages>org.keycloak.admin.ui.rest</scanPackages>
+                </configuration>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>generate-schema</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
                 <groupId>org.sonatype.plugins</groupId>
                 <artifactId>nexus-staging-maven-plugin</artifactId>
                 <version>${nexus.staging.plugin.version}</version>
@@ -232,7 +252,6 @@
                     <nexusUrl>${jboss.repo.nexusUrl}</nexusUrl>
                 </configuration>
             </plugin>
-
             <plugin>
                 <groupId>com.github.eirslett</groupId>
                 <artifactId>frontend-maven-plugin</artifactId>
