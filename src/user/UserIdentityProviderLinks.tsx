@@ -125,7 +125,9 @@ export const UserIdentityProviderLinks = () => {
     )?.groupName!;
     return (
       <Label color={groupName === "Social" ? "blue" : "orange"}>
-        {groupName === "Social" ? "Social login" : "Custom"}
+        {groupName === "Social"
+          ? t("users:idpType.social")
+          : t("users:idpType.custom")}
       </Label>
     );
   };
@@ -139,7 +141,7 @@ export const UserIdentityProviderLinks = () => {
         {groupName === "User-defined"
           ? "Custom"
           : groupName! === "Social"
-          ? "Social login"
+          ? t("users:idpType.social")
           : groupName!}
       </Label>
     );

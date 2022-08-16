@@ -134,7 +134,7 @@ article.pf-c-card.pf-m-flat.kc-available-idps > div > div > h1 {
 
 .pf-c-content.kc-no-providers-text{
   margin-top: 40px;
-  margin-right: 16px;
+  margin-right: var(--pf-global--spacer--md);
   margin-bottom: var(--pf-global--spacer--2xl);
 }
 
