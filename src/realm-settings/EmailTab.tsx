@@ -98,7 +98,7 @@ export const RealmSettingsEmailTab = ({
     }
 
     // For default value, back end is expecting null instead of 0
-    if (serverSettings["port"] === 0) serverSettings["port"] = null;
+    if (serverSettings.port === 0) serverSettings.port = null;
 
     try {
       const registered = await registerEmailIfNeeded();
