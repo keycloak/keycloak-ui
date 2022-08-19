@@ -221,9 +221,7 @@ class AdminClient {
     const user = await this.client.users.find({ username });
     const identityProviders =
       (await this.client.serverInfo.find()).identityProviders || [];
-    const idp = identityProviders.find((obj) => {
-      return obj.name === idpDisplayName;
-    });
+    const idp = identityProviders.find(({ name }) => name === idpDisplayName);
     const fedIdentity = {
       identityProvider: idp?.id,
       userId: "testUserIdApi",
