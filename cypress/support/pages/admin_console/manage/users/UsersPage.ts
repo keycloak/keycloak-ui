@@ -1,30 +1,28 @@
 import PageObject from "../../components/PageObject";
 import ListingPage from "../../ListingPage";
-import UserDetailsPage from "./user_details/UserDetailsPage";
 
 const listingPage = new ListingPage();
 
 export default class UsersPage extends PageObject {
-  goToUserListTab() {
-    return new UserListTab();
+  private userListTabLink = "listTab";
+  private permissionsTabLink = "permissionsTab";
+
+  public goToUserListTab() {
+    cy.findByTestId(this.userListTabLink).click();
+
+    return this;
   }
 
-  goToPermissionsTab() {
-    return new PermissionsTab();
-  }
-}
+  public goToPermissionsTab() {
+    cy.findByTestId(this.permissionsTabLink).click();
 
-class UserListTab {
+    return this;
+  }
+
   public goToUserDetailsPage(username: string) {
-    listingPage.goToItemDetails(username);
-
-    return new UserDetailsPage();
-  }
-
-  public searchUser(username: string) {
     listingPage.searchItem(username);
+    listingPage.goToItemDetails(username);
 
     return this;
   }
 }
-

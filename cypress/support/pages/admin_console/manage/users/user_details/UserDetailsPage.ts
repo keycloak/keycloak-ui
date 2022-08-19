@@ -1,6 +1,5 @@
 import { RequiredActionAlias } from "@keycloak/keycloak-admin-client/lib/defs/requiredActionProviderRepresentation";
 import PageObject from "../../../components/PageObject";
-import IdentityProviderLinksTab from "./tabs/IdentityProviderLinksTab";
 
 export default class UserDetailsPage extends PageObject {
   saveBtn: string;
@@ -40,7 +39,8 @@ export default class UserDetailsPage extends PageObject {
     cy.findByTestId(this.identityProviderLinksTab).click();
     cy.intercept("/admin/realms/master").as("load");
     cy.wait(["@load"]);
-    return new IdentityProviderLinksTab();
+
+    return this;
   }
 
   fillUserData() {

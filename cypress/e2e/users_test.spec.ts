@@ -222,21 +222,23 @@ describe("User creation", () => {
       },
     ];
 
-    before(() => {
-      adminClient.createUser({ username: usernameIdpLinksTest, enabled: true });
-      identityProviders.forEach((idp) =>
-        adminClient.createIdentityProvider(idp.displayName, idp.alias)
-      );
+    before(async () => {
+      await Promise.all([
+        adminClient.createUser({
+          username: usernameIdpLinksTest,
+          enabled: true,
+        }),
+        identityProviders.forEach((idp) =>
+          adminClient.createIdentityProvider(idp.displayName, idp.alias)
+        ),
+      ]);
     });
 
     after(() => adminClient.deleteUser(usernameIdpLinksTest));
 
     beforeEach(() => {
-      usersPage
-        .goToUserListTab()
-        .searchUser(usernameIdpLinksTest)
-        .goToUserDetailsPage(usernameIdpLinksTest)
-        .goToIdentityProviderLinksTab();
+      usersPage.goToUserListTab().goToUserDetailsPage(usernameIdpLinksTest);
+      userDetailsPage.goToIdentityProviderLinksTab();
     });
 
     identityProviders.forEach(($idp, linkedIdpsCount) => {
@@ -279,11 +281,8 @@ describe("User creation", () => {
       );
 
       sidebarPage.goToUsers();
-      usersPage
-        .goToUserListTab()
-        .searchUser(usernameIdpLinksTest)
-        .goToUserDetailsPage(usernameIdpLinksTest)
-        .goToIdentityProviderLinksTab();
+      usersPage.goToUserListTab().goToUserDetailsPage(usernameIdpLinksTest);
+      userDetailsPage.goToIdentityProviderLinksTab();
 
       cy.wrap(null).then(() =>
         adminClient.linkAccountIdentityProvider(
