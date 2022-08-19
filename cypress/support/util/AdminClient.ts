@@ -189,9 +189,7 @@ class AdminClient {
     await this.login();
     const identityProviders =
       (await this.client.serverInfo.find()).identityProviders || [];
-    const idp = identityProviders.find((obj) => {
-      return obj.name === idpDisplayName;
-    });
+    const idp = identityProviders.find(({ name }) => name === idpDisplayName);
     await this.client.identityProviders.create({
       providerId: idp?.id!,
       displayName: idpDisplayName,
