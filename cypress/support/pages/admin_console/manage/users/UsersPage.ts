@@ -28,4 +28,3 @@ class UserListTab {
   }
 }
 
-class PermissionsTab {}
