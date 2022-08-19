@@ -12,11 +12,11 @@ type AvailableClientRolesQuery = {
   search?: string;
 };
 
-type ClientRoleRepresentation = {
+type ClientRole = {
   id: string;
   role: string;
-  description: string;
-  client: string;
+  description?: string;
+  client?: string;
 };
 
 export const getAvailableClientRoles = async ({
@@ -27,7 +27,7 @@ export const getAvailableClientRoles = async ({
   first,
   max,
   search,
-}: AvailableClientRolesQuery): Promise<ClientRoleRepresentation[]> => {
+}: AvailableClientRolesQuery): Promise<ClientRole[]> => {
   const accessToken = await adminClient.getAccessToken();
   const baseUrl = adminClient.baseUrl;
 

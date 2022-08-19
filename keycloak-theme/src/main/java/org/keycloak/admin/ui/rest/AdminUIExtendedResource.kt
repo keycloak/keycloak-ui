@@ -5,7 +5,7 @@ import org.eclipse.microprofile.openapi.annotations.enums.SchemaType
 import org.eclipse.microprofile.openapi.annotations.media.Content
 import org.eclipse.microprofile.openapi.annotations.media.Schema
 import org.eclipse.microprofile.openapi.annotations.responses.APIResponse
-import org.keycloak.admin.ui.rest.model.ClientRoleRepresentation
+import org.keycloak.admin.ui.rest.model.ClientRole
 import org.keycloak.admin.ui.rest.model.RoleMapper
 import org.keycloak.models.KeycloakSession
 import org.keycloak.models.RealmModel
@@ -41,7 +41,7 @@ open class AdminUIExtendedResource(
         content = [Content(
             schema = Schema(
                 type = SchemaType.ARRAY,
-                implementation = ClientRoleRepresentation::class
+                implementation = ClientRole::class
             )
         )]
     )
@@ -50,7 +50,7 @@ open class AdminUIExtendedResource(
         @QueryParam("first") @DefaultValue("0") first: Long,
         @QueryParam("max") @DefaultValue("10") max: Long,
         @QueryParam("search") @DefaultValue("") search: String
-    ): List<ClientRoleRepresentation> {
+    ): List<ClientRole> {
         val scopeContainer = realm.getClientScopeById(id) ?: throw NotFoundException("Could not find client scope")
         auth.clients().requireView(scopeContainer)
 
@@ -71,7 +71,7 @@ open class AdminUIExtendedResource(
         content = [Content(
             schema = Schema(
                 type = SchemaType.ARRAY,
-                implementation = ClientRoleRepresentation::class
+                implementation = ClientRole::class
             )
         )]
     )
@@ -80,7 +80,7 @@ open class AdminUIExtendedResource(
         @QueryParam("first") @DefaultValue("0") first: Long,
         @QueryParam("max") @DefaultValue("10") max: Long,
         @QueryParam("search") @DefaultValue("") search: String
-    ): List<ClientRoleRepresentation> {
+    ): List<ClientRole> {
         val scopeContainer = realm.getClientById(id) ?: throw NotFoundException("Could not find client")
         auth.clients().requireView(scopeContainer)
 
@@ -101,7 +101,7 @@ open class AdminUIExtendedResource(
         content = [Content(
             schema = Schema(
                 type = SchemaType.ARRAY,
-                implementation = ClientRoleRepresentation::class
+                implementation = ClientRole::class
             )
         )]
     )
@@ -110,7 +110,7 @@ open class AdminUIExtendedResource(
         @QueryParam("first") @DefaultValue("0") first: Long,
         @QueryParam("max") @DefaultValue("10") max: Long,
         @QueryParam("search") @DefaultValue("") search: String
-    ): List<ClientRoleRepresentation> {
+    ): List<ClientRole> {
         val scopeContainer = realm.getGroupById(id) ?: throw NotFoundException("Could not find group")
         auth.groups().requireView(scopeContainer)
 
@@ -132,7 +132,7 @@ open class AdminUIExtendedResource(
         content = [Content(
             schema = Schema(
                 type = SchemaType.ARRAY,
-                implementation = ClientRoleRepresentation::class
+                implementation = ClientRole::class
             )
         )]
     )
@@ -141,10 +141,10 @@ open class AdminUIExtendedResource(
         @QueryParam("first") @DefaultValue("0") first: Long,
         @QueryParam("max") @DefaultValue("10") max: Long,
         @QueryParam("search") @DefaultValue("") search: String
-    ): List<ClientRoleRepresentation> {
+    ): List<ClientRole> {
         val user = session?.users()?.getUserById(realm, id)
             ?: if (auth.users().canQuery()) throw NotFoundException("User not found") else throw ForbiddenException()
-        auth.users().requireView(user);
+        auth.users().requireView(user)
 
         return availableMapping(Predicate<RoleModel?> { r -> user.hasDirectRole(r) }.negate(), first, max, search)
 
@@ -164,7 +164,7 @@ open class AdminUIExtendedResource(
         content = [Content(
             schema = Schema(
                 type = SchemaType.ARRAY,
-                implementation = ClientRoleRepresentation::class
+                implementation = ClientRole::class
             )
         )]
     )
@@ -172,7 +172,7 @@ open class AdminUIExtendedResource(
         @QueryParam("first") @DefaultValue("0") first: Long,
         @QueryParam("max") @DefaultValue("10") max: Long,
         @QueryParam("search") @DefaultValue("") search: String
-    ): List<ClientRoleRepresentation> {
+    ): List<ClientRole> {
         val clients = realm.clientsStream
         val mapper = Mappers.getMapper(RoleMapper::class.java)
         return clients
@@ -188,7 +188,7 @@ open class AdminUIExtendedResource(
         first: Long,
         max: Long,
         search: String
-    ): List<ClientRoleRepresentation> {
+    ): List<ClientRole> {
         val clients = realm.clientsStream
         val mapper = Mappers.getMapper(RoleMapper::class.java)
         return clients

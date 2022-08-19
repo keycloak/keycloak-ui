@@ -10,10 +10,10 @@ abstract class RoleMapper {
 
     @Mapping(source = "name", target = "role")
     @Mapping(target = "client", ignore = true)
-    abstract fun convertToRepresentation(role: RoleModel, @Context clientModel: Stream<ClientModel>): ClientRoleRepresentation
+    abstract fun convertToRepresentation(role: RoleModel, @Context clientModel: Stream<ClientModel>): ClientRole
 
     @AfterMapping
-    fun convert(role: RoleModel, @MappingTarget clientRole: ClientRoleRepresentation, @Context list: Stream<ClientModel>) {
+    fun convert(role: RoleModel, @MappingTarget clientRole: ClientRole, @Context list: Stream<ClientModel>) {
         clientRole.client = list.filter { c -> role.containerId == c.id }.findFirst().get().clientId
     }
 }
