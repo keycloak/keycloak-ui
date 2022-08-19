@@ -229,9 +229,7 @@ describe("User creation", () => {
       );
     });
 
-    after(() => {
-      adminClient.deleteUser(usernameIdpLinksTest);
-    });
+    after(() => adminClient.deleteUser(usernameIdpLinksTest));
 
     beforeEach(() => {
       usersPage
