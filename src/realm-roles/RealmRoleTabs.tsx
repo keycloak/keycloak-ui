@@ -264,7 +264,7 @@ export default function RealmRoleTabs() {
           AlertVariant.success,
           t("compositesRemovedAlertDescription")
         );
-        const loc = url.replace(/\/AssociatedRoles/g, "/details");
+        const loc = url.replace(/\/associated-roles/g, "/details");
         navigate(loc);
         refresh();
       } catch (error) {
