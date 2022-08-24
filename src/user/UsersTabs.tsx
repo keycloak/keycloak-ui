@@ -92,7 +92,7 @@ const UsersTabs = () => {
       if (id) {
         await adminClient.users.update({ id }, user);
         addAlert(t("userSaved"), AlertVariant.success);
-        setForceFetch(!forceFetch);
+        refresh();
       } else {
         const createdUser = await adminClient.users.create(user);
 
