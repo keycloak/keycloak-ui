@@ -216,7 +216,7 @@ describe("Clients test", () => {
     });
 
     //fails, issue https://github.com/keycloak/keycloak-admin-ui/issues/1874
-    it.skip("Should show initial items after filtering", () => {
+    it("Should show initial items after filtering", () => {
       commonPage
         .tableToolbarUtils()
         .selectSearchType(Filter.AssignedType)
