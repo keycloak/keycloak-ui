@@ -46,7 +46,8 @@ const UsersTabs = () => {
   const [user, setUser] = useState<UserRepresentation>();
   const [bruteForced, setBruteForced] = useState<BruteForced>();
   const [addedGroups, setAddedGroups] = useState<GroupRepresentation[]>([]);
-  const [forceFetch, setForceFetch] = useState(false);
+  const [refreshCount, setRefreshCount] = useState(0);
+  const refresh = () => setRefreshCount((count) => count + 1);
 
   useFetch(
     async () => {
