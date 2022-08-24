@@ -74,7 +74,7 @@ const UsersTabs = () => {
       setBruteForced(bruteForced);
       user && setupForm(user);
     },
-    [user?.username, forceFetch]
+    [user?.username, refreshCount]
   );
 
   const setupForm = (user: UserRepresentation) => {
