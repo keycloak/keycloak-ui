@@ -234,7 +234,12 @@ describe("User creation", () => {
       ]);
     });
 
-    after(() => adminClient.deleteUser(usernameIdpLinksTest));
+    after(async () => {
+      adminClient.deleteUser(usernameIdpLinksTest);
+      identityProviders.forEach((idp) =>
+        adminClient.deleteIdentityProvider(idp.alias)
+      );
+    });
 
     beforeEach(() => {
       usersPage.goToUserListTab().goToUserDetailsPage(usernameIdpLinksTest);
