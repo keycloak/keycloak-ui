@@ -236,9 +236,11 @@ describe("User creation", () => {
 
     after(async () => {
       await adminClient.deleteUser(usernameIdpLinksTest);
-      await Promise.all(identityProviders.map((idp) =>
-        adminClient.deleteIdentityProvider(idp.alias)
-      ));
+      await Promise.all(
+        identityProviders.map((idp) =>
+          adminClient.deleteIdentityProvider(idp.alias)
+        )
+      );
     });
 
     beforeEach(() => {
