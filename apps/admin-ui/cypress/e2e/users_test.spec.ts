@@ -235,10 +235,10 @@ describe("User creation", () => {
     });
 
     after(async () => {
-      adminClient.deleteUser(usernameIdpLinksTest);
-      identityProviders.forEach((idp) =>
+      await adminClient.deleteUser(usernameIdpLinksTest);
+      await Promise.all(identityProviders.map((idp) =>
         adminClient.deleteIdentityProvider(idp.alias)
-      );
+      ));
     });
 
     beforeEach(() => {
