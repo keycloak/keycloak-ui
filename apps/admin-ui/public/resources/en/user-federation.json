@@ -169,6 +169,5 @@
   "providerType": "Provider Type",
   "parentId": "Parent ID",
   "kerberosPrincipal": "Kerberos Principal",
-  "kerberosKeyTab": "Kerberos Key Tab",
-  "manageOrderItemAria": "Press space or enter to begin dragging, and use the arrow keys to navigate up or down. Press enter to confirm the drag, or any other key to cancel the drag operation."
+  "kerberosKeyTab": "Kerberos Key Tab"
 }
