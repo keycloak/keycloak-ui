@@ -31,6 +31,7 @@ import { useAdminClient, useFetch } from "../../context/auth/AdminClient";
 import { ClientSecret } from "./ClientSecret";
 import { SignedJWT } from "./SignedJWT";
 import { X509 } from "./X509";
+import "./credentials.css";
 
 type AccessToken = {
   registrationAccessToken: string;
@@ -190,12 +191,12 @@ export const Credentials = ({ client, save, refresh }: CredentialsProps) => {
               <Alert
                 variant="info"
                 isInline
-                className="pf-u-ml-4xl"
+                className="kc-signedJWTAlert"
                 title={t("signedJWTConfirm")}
               />
             )}
             {clientAuthenticatorType === "client-x509" && <X509 />}
-            <ActionGroup>
+            <ActionGroup className="pf-u-mt-md">
               <Button variant="primary" type="submit" isDisabled={!isDirty}>
                 {t("common:save")}
               </Button>
