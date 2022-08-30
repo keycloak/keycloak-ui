@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Controller, useFormContext, useWatch } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import {
+  Alert,
   ActionGroup,
   AlertVariant,
   Button,
@@ -185,6 +186,14 @@ export const Credentials = ({ client, save, refresh }: CredentialsProps) => {
             </FormGroup>
             {(clientAuthenticatorType === "client-jwt" ||
               clientAuthenticatorType === "client-secret-jwt") && <SignedJWT />}
+            {clientAuthenticatorType === "client-jwt" && (
+              <Alert
+                variant="info"
+                isInline
+                className="pf-u-ml-4xl"
+                title={t("signedJWTConfirm")}
+              />
+            )}
             {clientAuthenticatorType === "client-x509" && <X509 />}
             <ActionGroup>
               <Button variant="primary" type="submit" isDisabled={!isDirty}>
