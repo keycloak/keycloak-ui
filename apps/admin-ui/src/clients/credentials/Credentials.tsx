@@ -196,7 +196,7 @@ export const Credentials = ({ client, save, refresh }: CredentialsProps) => {
               />
             )}
             {clientAuthenticatorType === "client-x509" && <X509 />}
-            <ActionGroup className="pf-u-mt-md">
+            <ActionGroup>
               <Button variant="primary" type="submit" isDisabled={!isDirty}>
                 {t("common:save")}
               </Button>
