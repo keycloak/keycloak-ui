@@ -61,3 +61,7 @@ td.pf-c-table__check > input[type="checkbox"] {
   color: var(--pf-global--primary-color--100);
   width: fit-content;
 }
+
+.pf-c-form {
+  --pf-c-form--m-horizontal__group-label--md--GridColumnWidth: 12.375rem !important;
+}
