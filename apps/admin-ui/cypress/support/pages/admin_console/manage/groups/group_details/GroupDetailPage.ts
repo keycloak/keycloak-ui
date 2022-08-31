@@ -19,9 +19,7 @@ export default class GroupDetailPage extends GroupPage {
   private headerGroupName = ".pf-l-level.pf-m-gutter";
   private renameGroupModalGroupNameInput = "groupNameInput";
   private renameGroupModalRenameBtn = "renameGroup";
-  private permissionSwitch = ".pf-c-switch";
-  //private permissionSwitch = '[data-testid="permissionSwitch"]'
-  //[data-testid="permissionSwitch"] and permissionSwitch aren't visible.
+  private permissionSwitch = "permissionSwitch";
   public goToChildGroupsTab() {
     cy.findByTestId(this.childGroupsTab).click();
     return this;
@@ -137,15 +135,14 @@ export default class GroupDetailPage extends GroupPage {
   }
 
   enablePermissionSwitch() {
-    //cy.findByTestId(this.permissionSwitch).click() //this element is not visible
-    cy.get(this.permissionSwitch).click();
-    cy.get(this.permissionSwitch).should("not.be.enabled");
-    cy.get(this.permissionSwitch).click();
+    cy.findByTestId(this.permissionSwitch).parent().click();
+    this.assertSwitchStateOn(cy.findByTestId(this.permissionSwitch));
+    cy.findByTestId(this.permissionSwitch).parent().click();
     modalUtils
       .checkModalTitle("Disable permissions?")
       .checkConfirmButtonText("Confirm")
       .confirmModal();
-    cy.get(this.permissionSwitch).should("not.be.enabled");
+    this.assertSwitchStateOff(cy.findByTestId(this.permissionSwitch));
     return this;
   }
 }

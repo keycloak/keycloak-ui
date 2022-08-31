@@ -135,7 +135,6 @@ export const PermissionsTab = ({ id, type }: PermissionsTabProps) => {
             <FormGroup
               hasNoPaddingTop
               className="permission-label"
-              //data-testid="permissionSwitch" //visible
               label={t("permissionsEnabled")}
               fieldId="permissionsEnabled"
               labelIcon={
@@ -147,7 +146,7 @@ export const PermissionsTab = ({ id, type }: PermissionsTabProps) => {
             >
               <Switch
                 id="permissionsEnabled"
-                data-testid="permissionSwitch" //not visible
+                data-testid="permissionSwitch"
                 label={t("common:on")}
                 labelOff={t("common:off")}
                 isChecked={permission.enabled}
