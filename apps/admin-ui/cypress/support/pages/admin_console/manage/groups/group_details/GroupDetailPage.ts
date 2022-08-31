@@ -139,13 +139,13 @@ export default class GroupDetailPage extends GroupPage {
   enablePermissionSwitch() {
     //cy.findByTestId(this.permissionSwitch).click() //this element is not visible
     cy.get(this.permissionSwitch).click();
-    //cy.get(this.permissionSwitch).should('not.be.disabled')
+    cy.get(this.permissionSwitch).should("not.be.enabled");
     cy.get(this.permissionSwitch).click();
     modalUtils
       .checkModalTitle("Disable permissions?")
       .checkConfirmButtonText("Confirm")
       .confirmModal();
-    //cy.get(this.permissionSwitch).should('be.disabled')
+    cy.get(this.permissionSwitch).should("not.be.enabled");
     return this;
   }
 }
