@@ -9,6 +9,7 @@ export default class GroupDetailPage extends GroupPage {
   private childGroupsTab = "groups";
   private attributesTab = "attributes";
   private roleMappingTab = "role-mapping-tab";
+  private permissionsTab = "permissionsTab";
   private memberNameColumn =
     '[data-testid="members-table"] > tbody > tr > [data-label="Name"]';
   private addMembers = "addMember";
@@ -18,7 +19,9 @@ export default class GroupDetailPage extends GroupPage {
   private headerGroupName = ".pf-l-level.pf-m-gutter";
   private renameGroupModalGroupNameInput = "groupNameInput";
   private renameGroupModalRenameBtn = "renameGroup";
-
+  private permissionSwitch = ".pf-c-switch";
+  //private permissionSwitch = '[data-testid="permissionSwitch"]'
+  //[data-testid="permissionSwitch"] and permissionSwitch aren't visible.
   public goToChildGroupsTab() {
     cy.findByTestId(this.childGroupsTab).click();
     return this;
@@ -36,6 +39,11 @@ export default class GroupDetailPage extends GroupPage {
 
   public goToRoleMappingTab() {
     cy.findByTestId(this.roleMappingTab).click();
+    return this;
+  }
+
+  public goToPermissionsTab() {
+    cy.findByTestId(this.permissionsTab).click();
     return this;
   }
 
@@ -125,6 +133,19 @@ export default class GroupDetailPage extends GroupPage {
 
   clickAddMembers() {
     cy.findByTestId(this.addMembers).click();
+    return this;
+  }
+
+  enablePermissionSwitch() {
+    //cy.findByTestId(this.permissionSwitch).click() //this element is not visible
+    cy.get(this.permissionSwitch).click();
+    //cy.get(this.permissionSwitch).should('not.be.disabled')
+    cy.get(this.permissionSwitch).click();
+    modalUtils
+      .checkModalTitle("Disable permissions?")
+      .checkConfirmButtonText("Confirm")
+      .confirmModal();
+    //cy.get(this.permissionSwitch).should('be.disabled')
     return this;
   }
 }
