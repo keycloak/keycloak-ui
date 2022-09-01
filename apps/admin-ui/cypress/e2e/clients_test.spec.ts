@@ -191,16 +191,20 @@ describe("Clients test", () => {
     it("Should remove multiple client scopes from search bar", () => {
       const itemName1 = clientScopeName + 1;
       const itemName2 = clientScopeName + 2;
+      cy.intercept("/admin/realms/master/client-scopes").as("load");
       commonPage.tableToolbarUtils().clickSearchButton();
-      waitForClientScopes();
+      cy.wait("@load");
+      cy.wait(1000);
       commonPage.tableToolbarUtils().checkActionItemIsEnabled("Remove", false);
       commonPage.tableToolbarUtils().searchItem(clientScopeName, false);
       commonPage
         .tableUtils()
         .selectRowItemCheckbox(itemName1)
         .selectRowItemCheckbox(itemName2);
+      cy.intercept("/admin/realms/master/client-scopes").as("load");
       commonPage.tableToolbarUtils().clickSearchButton();
-      waitForClientScopes();
+      cy.wait("@load");
+      cy.wait(1000);
       commonPage.tableToolbarUtils().clickActionItem("Remove");
       commonPage.masthead().checkNotificationMessage(msgScopeMappingRemoved);
       commonPage.tableToolbarUtils().searchItem(clientScopeName, false);
@@ -1003,8 +1007,3 @@ describe("Clients test", () => {
     });
   });
 });
-
-function waitForClientScopes() {
-  cy.intercept("/admin/realms/master/client-scopes").as("load");
-  cy.wait("@load");
-}
