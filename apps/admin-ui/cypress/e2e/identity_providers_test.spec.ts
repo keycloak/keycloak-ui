@@ -30,6 +30,8 @@ describe("Identity provider test", () => {
   const commonPage = new CommonPage();
 
   const createSuccessMsg = "Identity provider successfully created";
+  const createFailMsg =
+    "Could not create the identity provider: Identity Provider github already exists";
   const createMapperSuccessMsg = "Mapper created successfully.";
 
   const changeSuccessMsg =
@@ -126,7 +128,7 @@ describe("Identity provider test", () => {
       });
     });
 
-    it("should create provider", () => {
+    it("should create github provider", () => {
       createProviderPage.checkGitHubCardVisible().clickGitHubCard();
 
       createProviderPage.checkAddButtonDisabled();
@@ -139,6 +141,15 @@ describe("Identity provider test", () => {
 
       sidebarPage.goToIdentityProviders();
       listingPage.itemExist(identityProviderName);
+    });
+
+    it("fail to make duplicate github provider", () => {
+      createProviderPage
+        .clickCreateDropdown()
+        .clickItem("github")
+        .fill("github2", "123")
+        .clickAdd();
+      masthead.checkNotificationMessage(createFailMsg, true);
     });
 
     it("should create facebook provider", () => {
