@@ -30,7 +30,6 @@ export const TextComponent = ({
         data-testid={name}
         isDisabled={isDisabled}
         ref={register()}
-        type="text"
         name={convertToName(name!)}
         defaultValue={defaultValue?.toString()}
       />
