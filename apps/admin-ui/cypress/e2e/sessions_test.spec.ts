@@ -2,12 +2,16 @@ import LoginPage from "../support/pages/LoginPage";
 import SidebarPage from "../support/pages/admin_console/SidebarPage";
 import SessionsPage from "../support/pages/admin_console/manage/sessions/SessionsPage";
 import CommonPage from "../support/pages/CommonPage";
+import ListingPage from "../support/pages/admin_console/ListingPage";
+import GroupPage from "../support/pages/admin_console/manage/groups/GroupPage";
 import { keycloakBefore } from "../support/util/keycloak_hooks";
 
 const loginPage = new LoginPage();
 const sidebarPage = new SidebarPage();
 const sessionsPage = new SessionsPage();
 const commonPage = new CommonPage();
+const listingPage = new ListingPage();
+const groupPage = new GroupPage();
 
 describe("Sessions test", () => {
   const admin = "admin";
@@ -28,6 +32,19 @@ describe("Sessions test", () => {
 
     it("go to item accessed clients link", () => {
       commonPage.tableUtils().clickRowItemLink(client);
+    });
+  });
+
+  describe("Search", () => {
+    it("search existing session", () => {
+      listingPage.searchItem(admin, false);
+      listingPage.itemExist(admin, true);
+      groupPage.assertNoSearchResultsMessageExist(false);
+    });
+
+    it("search non-existant session", () => {
+      listingPage.searchItem("non-existant-session", false);
+      groupPage.assertNoSearchResultsMessageExist(true);
     });
   });
 
