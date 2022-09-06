@@ -49,6 +49,14 @@ describe("Sessions test", () => {
   });
 
   describe("revocation", () => {
+    it("Clear revocation notBefore", () => {
+      sessionsPage.clearNotBefore();
+    });
+
+    it("Check if notBefore cleared", () => {
+      sessionsPage.checkNotBeforeCleared();
+    });
+
     it("Set revocation notBefore", () => {
       sessionsPage.setToNow();
     });
@@ -57,12 +65,14 @@ describe("Sessions test", () => {
       sessionsPage.checkNotBeforeValueExists();
     });
 
-    it("Clear revocation notBefore", () => {
-      sessionsPage.clearNotBefore();
+    it("Push when URI not configured", () => {
+      sessionsPage.pushRevocation();
+      commonPage.masthead().checkNotificationMessage("Failed to push");
     });
 
-    it("Check if notBefore cleared", () => {
-      sessionsPage.checkNotBeforeCleared();
+    it("Push when URI is configured", () => {
+      sessionsPage.pushRevocation();
+      commonPage.masthead().checkNotificationMessage("Successfully push");
     });
   });
 
