@@ -15,7 +15,7 @@ const groupPage = new GroupPage();
 
 describe("Sessions test", () => {
   const admin = "admin";
-  const client = "security-admin-console-v2";
+  const client = "security-admin-console";
   beforeEach(() => {
     keycloakBefore();
     loginPage.logIn();
@@ -67,12 +67,7 @@ describe("Sessions test", () => {
 
     it("Push when URI not configured", () => {
       sessionsPage.pushRevocation();
-      commonPage.masthead().checkNotificationMessage("Failed to push");
-    });
-
-    it("Push when URI is configured", () => {
-      sessionsPage.pushRevocation();
-      commonPage.masthead().checkNotificationMessage("Successfully push");
+      commonPage.masthead().checkNotificationMessage("No push sent");
     });
   });
 
