@@ -10,6 +10,7 @@ export default defineConfig({
   },
   resolve: {
     // Resolve the 'module' entrypoint at all times (not the default due to Node.js compatibility issues).
+    mainFields: ["module"],
     dedupe: ["react", "react-dom"],
   },
   plugins: [react(), checker({ typescript: true })],
