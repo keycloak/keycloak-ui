@@ -4,16 +4,10 @@ import {
   MouseEvent as ReactMouseEvent,
   useState,
 } from "react";
-import {
-  FormGroup,
-  FileUpload,
-  Modal,
-  ModalVariant,
-  Button,
-  FileUploadProps,
-} from "@patternfly/react-core";
+import { FormGroup, Modal, ModalVariant, Button } from "@patternfly/react-core";
 import { useTranslation } from "react-i18next";
 import { CodeEditor, Language } from "@patternfly/react-code-editor";
+import { FileUpload, FileUploadProps } from "./patternfly/FileUpload";
 
 type FileUploadType = {
   value: string;
@@ -59,10 +53,7 @@ export const FileUploadForm = ({
     filename,
     event
   ) => {
-    if (
-      event.nativeEvent instanceof MouseEvent &&
-      !(event.nativeEvent instanceof DragEvent)
-    ) {
+    if (event instanceof MouseEvent && !(event instanceof DragEvent)) {
       setFileUpload({ ...fileUpload, modal: true });
     } else {
       setFileUpload({
@@ -126,7 +117,7 @@ export const FileUploadForm = ({
           }
           isLoading={fileUpload.isLoading}
           dropzoneProps={{
-            accept: extension,
+            accept: { "application/text": [extension] },
           }}
         />
       )}
