@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-empty-function */
 import styles from "@patternfly/react-styles/css/components/FileUpload/file-upload";
 import { css } from "@patternfly/react-styles";
 import {
@@ -97,9 +96,9 @@ export const FileUploadField: React.FunctionComponent<FileUploadFieldProps> = ({
   type,
   value = "",
   filename = "",
-  onChange = () => {},
-  onBrowseButtonClick = () => {},
-  onClearButtonClick = () => {},
+  onChange,
+  onBrowseButtonClick,
+  onClearButtonClick,
   onTextAreaClick,
   onTextChange,
   className = "",
@@ -127,7 +126,7 @@ export const FileUploadField: React.FunctionComponent<FileUploadFieldProps> = ({
     newValue: string,
     event: React.ChangeEvent<HTMLTextAreaElement>
   ) => {
-    onChange(newValue, filename, event);
+    onChange?.(newValue, filename, event);
     onTextChange?.(newValue);
   };
   return (

@@ -1,4 +1,3 @@
-/* eslint-disable */
 import {
   DropEvent,
   DropzoneInputProps,
@@ -103,11 +102,11 @@ export const FileUpload: React.FunctionComponent<FileUploadProps> = ({
     : undefined,
   filename = "",
   children = null,
-  onChange = () => {},
+  onChange,
   onFileInputChange,
-  onReadStarted = () => {},
-  onReadFinished = () => {},
-  onReadFailed = () => {},
+  onReadStarted,
+  onReadFinished,
+  onReadFailed,
   onClearClick,
   onClick = (event) => event.preventDefault(),
   onTextChange,
@@ -122,40 +121,39 @@ export const FileUpload: React.FunctionComponent<FileUploadProps> = ({
         onFileInputChange?.(event, fileHandle);
       }
       if (type === fileReaderType.text || type === fileReaderType.dataURL) {
-        onChange("", fileHandle.name, event); // Show the filename while reading
-        onReadStarted(fileHandle);
+        onChange?.("", fileHandle.name, event); // Show the filename while reading
+        onReadStarted?.(fileHandle);
         readFile(fileHandle, type as fileReaderType)
           .then((data) => {
-            onReadFinished(fileHandle);
-            onChange(data as string, fileHandle.name, event);
+            onReadFinished?.(fileHandle);
+            onChange?.(data as string, fileHandle.name, event);
             onDataChange?.(data as string);
           })
           .catch((error: DOMException) => {
-            onReadFailed(error, fileHandle);
-            onReadFinished(fileHandle);
-            onChange("", "", event); // Clear the filename field on a failure
+            onReadFailed?.(error, fileHandle);
+            onReadFinished?.(fileHandle);
+            onChange?.("", "", event); // Clear the filename field on a failure
             onDataChange?.("");
           });
       } else {
-        onChange(fileHandle, fileHandle.name, event);
+        onChange?.(fileHandle, fileHandle.name, event);
       }
     }
-    dropzoneProps.onDropAccepted &&
-      dropzoneProps.onDropAccepted(acceptedFiles, event);
+    dropzoneProps.onDropAccepted?.(acceptedFiles, event);
   };
 
   const onDropRejected = (rejectedFiles: FileRejection[], event: DropEvent) => {
     if (rejectedFiles.length > 0) {
-      onChange("", rejectedFiles[0].file.name, event);
+      onChange?.("", rejectedFiles[0].file.name, event);
     }
-    dropzoneProps.onDropRejected &&
-      dropzoneProps.onDropRejected(rejectedFiles, event);
+
+    dropzoneProps.onDropRejected?.(rejectedFiles, event);
   };
 
   const onClearButtonClick = (
     event: React.MouseEvent<HTMLButtonElement, MouseEvent>
   ) => {
-    onChange("", "", event);
+    onChange?.("", "", event);
     onClearClick?.(event);
     setFileValue("");
   };

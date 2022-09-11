@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unnecessary-condition */
 export enum fileReaderType {
   text = "text",
   dataURL = "dataURL",
@@ -14,14 +13,19 @@ export enum fileReaderType {
 export function readFile(fileHandle: File, type: fileReaderType) {
   return new Promise((resolve, reject) => {
     const reader = new FileReader();
+
     reader.onload = () => resolve(reader.result);
     reader.onerror = () => reject(reader.error);
-    if (type === fileReaderType.text) {
-      reader.readAsText(fileHandle);
-    } else if (type === fileReaderType.dataURL) {
-      reader.readAsDataURL(fileHandle);
-    } else {
-      reject("unknown type");
+
+    switch (type) {
+      case fileReaderType.text:
+        reader.readAsText(fileHandle);
+        break;
+      case fileReaderType.dataURL:
+        reader.readAsDataURL(fileHandle);
+        break;
+      default:
+        reject("unknown type");
     }
   });
 }
