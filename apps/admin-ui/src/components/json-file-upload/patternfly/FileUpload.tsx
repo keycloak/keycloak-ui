@@ -1,5 +1,4 @@
 /* eslint-disable */
-// @ts-nocheck
 import {
   DropEvent,
   DropzoneInputProps,
@@ -101,11 +100,11 @@ export const FileUpload: React.FunctionComponent<FileUploadProps> = ({
   type,
   value = type === fileReaderType.text || type === fileReaderType.dataURL
     ? ""
-    : null,
+    : undefined,
   filename = "",
   children = null,
   onChange = () => {},
-  onFileInputChange = null,
+  onFileInputChange,
   onReadStarted = () => {},
   onReadFinished = () => {},
   onReadFailed = () => {},
@@ -158,7 +157,7 @@ export const FileUpload: React.FunctionComponent<FileUploadProps> = ({
   ) => {
     onChange("", "", event);
     onClearClick?.(event);
-    setFileValue(null);
+    setFileValue("");
   };
 
   const { getRootProps, getInputProps, isDragActive, open, inputRef } =
@@ -170,6 +169,10 @@ export const FileUpload: React.FunctionComponent<FileUploadProps> = ({
     });
 
   const setFileValue = (filename: string) => {
+    if (!inputRef.current) {
+      return;
+    }
+
     inputRef.current.value = filename;
   };
 
@@ -192,7 +195,7 @@ export const FileUpload: React.FunctionComponent<FileUploadProps> = ({
         refKey: "containerRef",
         onClick: (event) => event.preventDefault(),
       })}
-      tabIndex={null} // Omit the unwanted tabIndex from react-dropzone's getRootProps
+      tabIndex={undefined} // Omit the unwanted tabIndex from react-dropzone's getRootProps
       id={id}
       type={type}
       filename={filename}
@@ -213,4 +216,5 @@ export const FileUpload: React.FunctionComponent<FileUploadProps> = ({
     </FileUploadField>
   );
 };
+
 FileUpload.displayName = "FileUpload";
