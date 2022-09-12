@@ -204,6 +204,7 @@ export const FileUpload: React.FunctionComponent<FileUploadProps> = ({
       onClearButtonClick={onClearButtonClick}
       onTextAreaClick={onClick}
       onTextChange={onTextChange}
+      onClick={(e) => e.stopPropagation()}
     >
       <input
         /* hidden, necessary for react-dropzone */
