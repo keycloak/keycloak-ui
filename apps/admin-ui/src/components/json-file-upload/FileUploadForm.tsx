@@ -61,8 +61,7 @@ export const FileUploadForm = ({
   };
 
   const handleClear = () => {
-    setFileUpload({ ...fileUpload, value: "", filename: "" });
-    onChange("");
+    setFileUpload({ ...fileUpload, modal: true });
   };
 
   return (
