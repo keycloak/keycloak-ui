@@ -8,8 +8,7 @@ export default class GroupModal {
 
   typeResourceFile = (filename: string) => {
     cy.get("#partial-import-file-filename").selectFile(
-      "cypress/fixtures/partial-import-test-data/" + filename,
-      { action: "drag-drop" }
+      "cypress/fixtures/partial-import-test-data/" + filename
     );
   };
 
