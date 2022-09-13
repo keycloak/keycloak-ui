@@ -701,7 +701,7 @@ describe("Clients test", () => {
       advancedTab.checkEmptyClusterNode();
     });
 
-    it("Fine grain OpenID connect configuration", () => {
+    it.skip("Fine grain OpenID connect configuration", () => {
       const algorithm = "ES384";
       advancedTab
         .selectAccessTokenSignatureAlgorithm(algorithm)
