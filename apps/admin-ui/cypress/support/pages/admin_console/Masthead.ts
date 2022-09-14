@@ -49,7 +49,7 @@ export default class Masthead extends CommonElements {
     cy.get("#manage-account").click();
   }
 
-  checkNotificationMessage(message: string, closeNotification?: boolean) {
+  checkNotificationMessage(message: string, closeNotification: boolean = true) {
     cy.get(this.alertMessage).should("contain.text", message);
 
     if (closeNotification) {
