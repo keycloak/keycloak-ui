@@ -362,7 +362,7 @@
                         </replacement>
                         <replacement>
                             <token><![CDATA[</head>]]></token>
-							<value xml:space="preserve">
+                            <value xml:space="preserve">
 <![CDATA[
     <#if properties.styles?has_content>
 	    <#list properties.styles?split(' ') as style>
