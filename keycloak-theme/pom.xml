@@ -360,7 +360,7 @@
 ]]>
 </value>
                         </replacement>
-						<replacement>
+                        <replacement>
                             <token><![CDATA[</head>]]></token>
 							<value xml:space="preserve">
 <![CDATA[
