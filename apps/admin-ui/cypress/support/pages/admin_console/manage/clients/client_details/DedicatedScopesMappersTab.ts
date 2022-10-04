@@ -11,7 +11,7 @@ export default class DedicatedScopesMappersTab extends CommonPage {
   private configureNewMapperEmptyStateBtn =
     "configure-a-new-mapper-empty-action";
 
-  addMapperFromPredefinedMappers() {
+  public addMapperFromPredefinedMappers() {
     this.emptyState().checkIfExists(false);
     this.tableToolbarUtils()
       .addMapper()
@@ -19,7 +19,7 @@ export default class DedicatedScopesMappersTab extends CommonPage {
     return this;
   }
 
-  addMapperByConfiguration() {
+  public addMapperByConfiguration() {
     this.emptyState().checkIfExists(false);
     this.tableToolbarUtils()
       .addMapper()
@@ -27,7 +27,7 @@ export default class DedicatedScopesMappersTab extends CommonPage {
     return this;
   }
 
-  addPredefinedMapper() {
+  public addPredefinedMapper() {
     this.emptyState().checkIfExists(true);
     cy.findByTestId(this.addPredefinedMapperEmptyStateBtn).click({
       force: true,
@@ -35,7 +35,7 @@ export default class DedicatedScopesMappersTab extends CommonPage {
     return this;
   }
 
-  configureNewMapper() {
+  public configureNewMapper() {
     this.emptyState().checkIfExists(true);
     cy.findByTestId(this.configureNewMapperEmptyStateBtn).click({
       force: true,
