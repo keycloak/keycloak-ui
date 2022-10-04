@@ -5,13 +5,13 @@ enum mapperType {
   ByConfiguration = "By configuration",
 }
 
-enum mapperTypeEmptyState {
-  AddPredefinedMapper = "Add predefined mapper",
-  ConfigureaNewMapper = "Configure a new mapper",
-}
-
 export default class DedicatedScopesMappersTab extends CommonPage {
-  addMapperFromPredefinedMappers() {
+  private addPredefinedMapperEmptyStateBtn =
+    "add-predefined-mapper-empty-action";
+  private configureNewMapperEmptyStateBtn =
+    "configure-a-new-mapper-empty-action";
+
+  public addMapperFromPredefinedMappers() {
     this.emptyState().checkIfExists(false);
     this.tableToolbarUtils()
       .addMapper()
@@ -19,7 +19,7 @@ export default class DedicatedScopesMappersTab extends CommonPage {
     return this;
   }
 
-  addMapperByConfiguration() {
+  public addMapperByConfiguration() {
     this.emptyState().checkIfExists(false);
     this.tableToolbarUtils()
       .addMapper()
@@ -27,19 +27,19 @@ export default class DedicatedScopesMappersTab extends CommonPage {
     return this;
   }
 
-  addPredefinedMapper() {
+  public addPredefinedMapper() {
     this.emptyState().checkIfExists(true);
-    this.emptyState().clickSecondaryBtn(
-      mapperTypeEmptyState.AddPredefinedMapper,
-      true
-    );
+    cy.findByTestId(this.addPredefinedMapperEmptyStateBtn).click({
+      force: true,
+    });
     return this;
   }
 
-  configureNewMapper() {
-    this.emptyState()
-      .checkIfExists(true)
-      .clickSecondaryBtn(mapperTypeEmptyState.ConfigureaNewMapper);
+  public configureNewMapper() {
+    this.emptyState().checkIfExists(true);
+    cy.findByTestId(this.configureNewMapperEmptyStateBtn).click({
+      force: true,
+    });
     return this;
   }
 }
