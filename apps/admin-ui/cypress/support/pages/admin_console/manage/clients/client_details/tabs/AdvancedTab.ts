@@ -21,12 +21,12 @@ export default class AdvancedTab extends PageObject {
   private accessTokenSignatureAlgorithmInput = "#accessTokenSignatureAlgorithm";
   private fineGrainSaveBtn = "#fineGrainSave";
   private fineGrainRevertBtn = "#fineGrainRevert";
-  private OIDCCompatabilitySaveBtn = "#OIDCCompatabilitySave";
-  private OIDCCompatabilityRevertBtn = "#OIDCCompatabilityRevert";
-  private OIDCAdvancedSaveBtn = "#OIDCAdvancedSave";
-  private OIDCAdvancedRevertBtn = "#OIDCAdvancedRevert";
-  private OIDCAuthFlowOverrideSaveBtn = "#OIDCAuthFlowOverrideSave";
-  private OIDCAuthFlowOverrideRevertBtn = "#OIDCAuthFlowOverrideRevert";
+  private OIDCCompatabilitySaveBtn = "OIDCCompatabilitySave";
+  private OIDCCompatabilityRevertBtn = "OIDCCompatabilityRevert";
+  private OIDCAdvancedSaveBtn = "OIDCAdvancedSave";
+  private OIDCAdvancedRevertBtn = "OIDCAdvancedRevert";
+  private OIDCAuthFlowOverrideSaveBtn = "OIDCAuthFlowOverrideSave";
+  private OIDCAuthFlowOverrideRevertBtn = "OIDCAuthFlowOverrideRevert";
 
   private excludeSessionStateSwitch =
     "#excludeSessionStateFromAuthenticationResponse-switch";
@@ -148,12 +148,12 @@ export default class AdvancedTab extends PageObject {
   }
 
   saveCompatibility() {
-    cy.get(this.OIDCCompatabilitySaveBtn).click();
+    cy.findByTestId(this.OIDCCompatabilitySaveBtn).click();
     return this;
   }
 
   revertCompatibility() {
-    cy.get(this.OIDCCompatabilityRevertBtn).click();
+    cy.findByTestId(this.OIDCCompatabilityRevertBtn).click();
     cy.findByTestId(this.jumpToOIDCCompatabilitySettings).click();
     //uncomment when revert function reverts all switches, rather than just the first one
     //this.assertSwitchStateOn(cy.get(this.useRefreshTokenForClientCredentialsGrantSwitch));
@@ -196,12 +196,12 @@ export default class AdvancedTab extends PageObject {
   }
 
   saveAdvanced() {
-    cy.get(this.OIDCAdvancedSaveBtn).click();
+    cy.findByTestId(this.OIDCAdvancedSaveBtn).click();
     return this;
   }
 
   revertAdvanced() {
-    cy.get(this.OIDCAdvancedRevertBtn).click();
+    cy.findByTestId(this.OIDCAdvancedRevertBtn).click();
     return this;
   }
 
@@ -246,12 +246,12 @@ export default class AdvancedTab extends PageObject {
   }
 
   saveAuthFlowOverride() {
-    cy.get(this.OIDCAuthFlowOverrideSaveBtn).click();
+    cy.findByTestId(this.OIDCAuthFlowOverrideSaveBtn).click();
     return this;
   }
 
   revertAuthFlowOverride() {
-    cy.get(this.OIDCAuthFlowOverrideRevertBtn).click();
+    cy.findByTestId(this.OIDCAuthFlowOverrideRevertBtn).click();
     return this;
   }
 
