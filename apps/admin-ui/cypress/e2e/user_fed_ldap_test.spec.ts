@@ -458,6 +458,8 @@ describe("User Federation LDAP tests", () => {
       providersPage.ldapEditModeInput,
       editModeUnsynced
     );
+
+    masthead.closeAllAlertMessages();
   });
 
   it("Should update display name", () => {
@@ -535,6 +537,7 @@ describe("User Federation LDAP tests", () => {
     masthead.checkNotificationMessage(savedSuccessMessage);
     sidebarPage.goToUserFederation();
     expect(cy.contains("Enabled").should("exist"));
+    masthead.closeAllAlertMessages();
   });
 
   it("Should create new LDAP provider using New Provider dropdown", () => {
