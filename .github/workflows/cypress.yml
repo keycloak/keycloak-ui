@@ -81,6 +81,7 @@ jobs:
     needs: [build-keycloak, install-nightly]
     if: always() && ( needs.build-keycloak.result == 'success' || needs.install-nightly.result == 'success' )
     runs-on: ubuntu-latest
+    container: cypress/browsers:node16.17.0-chrome106
     strategy:
       fail-fast: false
       matrix:
