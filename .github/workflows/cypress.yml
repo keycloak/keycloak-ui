@@ -90,6 +90,9 @@ jobs:
       - name: Check out Admin UI
         uses: actions/checkout@v3
 
+      - name: Install dependencies
+        run: npm ci
+
       - name: Restore Keycloak server
         uses: actions/download-artifact@v3
         with:
@@ -106,6 +109,7 @@ jobs:
       - name: Run Cypress
         uses: cypress-io/github-action@v4
         with:
+          install: false
           record: true
           parallel: true
           browser: chrome
