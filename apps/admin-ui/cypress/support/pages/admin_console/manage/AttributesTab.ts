@@ -13,7 +13,7 @@ export default class AttributesTab {
   }
 
   public addAttribute(key: string, value: string) {
-    cy.findByTestId(this.attributeRow)
+    cy.findAllByTestId(this.attributeRow)
       .its("length")
       .then((index) => {
         cy.findByTestId(this.keyInput(index - 1)).type(key, { force: true });
