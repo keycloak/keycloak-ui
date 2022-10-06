@@ -968,6 +968,7 @@ describe("Clients test", () => {
         .checkTabExists(ClientsDetailsTab.Settings, true)
         .checkTabExists(ClientsDetailsTab.Roles, true)
         .checkTabExists(ClientsDetailsTab.Sessions, true)
+        .checkTabExists(ClientsDetailsTab.Authorization, true)
         .checkTabExists(ClientsDetailsTab.Permissions, true)
         .checkTabExists(ClientsDetailsTab.Advanced, true)
         .checkNumberOfTabsIsEqual(5);
