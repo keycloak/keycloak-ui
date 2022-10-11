@@ -102,12 +102,7 @@ describe("Realm settings tabs tests", () => {
     cy.intercept(`/admin/realms/${realmName}/users/*`).as("load");
     cy.findByTestId(realmSettingsPage.testConnectionButton).click();
     cy.wait("@load");
-    cy.findByTestId(realmSettingsPage.modalTestConnectionButton).click();
     masthead.checkNotificationMessage(msg, true);
-
-    //realmSettingsPage.addSenderEmail(
-    //  "example" + (Math.random() + 1).toString(36).substring(7) + "@example.com"
-    //);
   });
 
   it("Go to themes tab", () => {
