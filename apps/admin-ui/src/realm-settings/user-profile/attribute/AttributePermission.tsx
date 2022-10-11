@@ -15,7 +15,7 @@ const Permissions = ({ name }: { name: string }) => {
         name={`permissions.${name}`}
         control={control}
         defaultValue={[]}
-        render={({ onChange, value }) => (
+        render={({ field }) => (
           <>
             <GridItem lg={4} sm={6}>
               <Checkbox
@@ -23,14 +23,14 @@ const Permissions = ({ name }: { name: string }) => {
                 label={t("user")}
                 value="user"
                 data-testid={`user-${name}`}
-                isChecked={value.includes("user")}
+                isChecked={field.value.includes("user")}
                 onChange={() => {
                   const option = "user";
-                  const changedValue = value.includes(option)
-                    ? value.filter((item: string) => item !== option)
-                    : [...value, option];
+                  const changedValue = field.value.includes(option)
+                    ? field.value.filter((item: string) => item !== option)
+                    : [...field.value, option];
 
-                  onChange(changedValue);
+                  field.onChange(changedValue);
                 }}
               />
             </GridItem>
@@ -40,14 +40,14 @@ const Permissions = ({ name }: { name: string }) => {
                 label={t("admin")}
                 value="admin"
                 data-testid={`admin-${name}`}
-                isChecked={value.includes("admin")}
+                isChecked={field.value.includes("admin")}
                 onChange={() => {
                   const option = "admin";
-                  const changedValue = value.includes(option)
-                    ? value.filter((item: string) => item !== option)
-                    : [...value, option];
+                  const changedValue = field.value.includes(option)
+                    ? field.value.filter((item: string) => item !== option)
+                    : [...field.value, option];
 
-                  onChange(changedValue);
+                  field.onChange(changedValue);
                 }}
               />
             </GridItem>

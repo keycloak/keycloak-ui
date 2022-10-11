@@ -49,16 +49,16 @@ const LoginFlow = ({
         name={field}
         defaultValue={defaultValue}
         control={control}
-        render={({ onChange, value }) => (
+        render={({ field }) => (
           <Select
             toggleId={label}
             required
             onToggle={() => setOpen(!open)}
             onSelect={(_, value) => {
-              onChange(value as string);
+              field.onChange(value as string);
               setOpen(false);
             }}
-            selections={value || t("common:none")}
+            selections={field.value || t("common:none")}
             variant={SelectVariant.single}
             aria-label={t(label)}
             isOpen={open}
@@ -77,7 +77,7 @@ const LoginFlow = ({
             <>
               {flows?.map((option) => (
                 <SelectOption
-                  selected={option.alias === value}
+                  selected={option.alias === field.value}
                   key={option.id}
                   value={option.alias}
                 >
@@ -155,24 +155,24 @@ export const AdvancedSettings = ({ isOIDC, isSAML }: AdvancedSettingsProps) => {
           name="config.syncMode"
           defaultValue={syncModes[0].toUpperCase()}
           control={control}
-          render={({ onChange, value }) => (
+          render={({ field }) => (
             <Select
               toggleId="syncMode"
               required
               direction="up"
               onToggle={() => setSyncModeOpen(!syncModeOpen)}
               onSelect={(_, value) => {
-                onChange(value as string);
+                field.onChange(value as string);
                 setSyncModeOpen(false);
               }}
-              selections={t(`syncModes.${value.toLowerCase()}`)}
+              selections={t(`syncModes.${field.value.toLowerCase()}`)}
               variant={SelectVariant.single}
               aria-label={t("syncMode")}
               isOpen={syncModeOpen}
             >
               {syncModes.map((option) => (
                 <SelectOption
-                  selected={option === value}
+                  selected={option === field.value}
                   key={option}
                   value={option.toUpperCase()}
                 >

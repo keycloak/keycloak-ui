@@ -21,6 +21,8 @@ import { toClients } from "../routes/Clients";
 import { CapabilityConfig } from "./CapabilityConfig";
 import { GeneralSettings } from "./GeneralSettings";
 
+type FormFields = Omit<ClientRepresentation, "authorizationSettings">;
+
 export default function NewClientForm() {
   const { t } = useTranslation("clients");
   const { realm } = useRealm();
@@ -42,7 +44,7 @@ export default function NewClientForm() {
     frontchannelLogout: true,
   });
   const { addAlert, addError } = useAlerts();
-  const methods = useForm<ClientRepresentation>({ defaultValues: client });
+  const methods = useForm<FormFields>({ defaultValues: client });
   const protocol = methods.watch("protocol");
 
   const save = async () => {

@@ -46,7 +46,7 @@ export const ExecutionConfigModal = ({
   const [configDescription, setConfigDescription] =
     useState<AuthenticatorConfigInfoRepresentation>();
 
-  const form = useForm<ExecutionConfigModalForm>({ shouldUnregister: false });
+  const form = useForm<ExecutionConfigModalForm>();
   const {
     register,
     setValue,
@@ -55,6 +55,7 @@ export const ExecutionConfigModal = ({
   } = form;
 
   const setupForm = (config?: AuthenticatorConfigRepresentation) => {
+    // @ts-ignore
     convertToFormValues(config, setValue);
   };
 
@@ -149,9 +150,8 @@ export const ExecutionConfigModal = ({
                 isReadOnly={!!config}
                 type="text"
                 id="alias"
-                name="alias"
                 data-testid="alias"
-                ref={register({ required: true })}
+                {...register("alias", { required: true })}
                 validated={
                   errors.alias
                     ? ValidatedOptions.error

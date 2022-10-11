@@ -30,9 +30,8 @@ export const NameDescription = () => {
         <KeycloakTextInput
           type="text"
           id="kc-name"
-          name="alias"
+          {...register("alias", { required: true })}
           data-testid="name"
-          ref={register({ required: true })}
           validated={
             errors.alias ? ValidatedOptions.error : ValidatedOptions.default
           }
@@ -53,15 +52,14 @@ export const NameDescription = () => {
         helperTextInvalid={errors.description?.message}
       >
         <KeycloakTextArea
-          ref={register({
+          type="text"
+          id="kc-description"
+          {...register("description", {
             maxLength: {
               value: 255,
               message: t("common:maxLength", { length: 255 }),
             },
           })}
-          type="text"
-          id="kc-description"
-          name="description"
           data-testid="description"
           validated={
             errors.description

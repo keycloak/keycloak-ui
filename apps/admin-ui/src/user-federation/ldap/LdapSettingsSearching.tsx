@@ -7,14 +7,15 @@ import {
 } from "@patternfly/react-core";
 import { useTranslation } from "react-i18next";
 import { useState } from "react";
+import type ComponentRepresentation from "@keycloak/keycloak-admin-client/lib/defs/componentRepresentation";
 import { HelpItem } from "../../components/help-enabler/HelpItem";
-import { UseFormMethods, Controller } from "react-hook-form";
+import { Controller, UseFormReturn } from "react-hook-form";
 import { FormAccess } from "../../components/form-access/FormAccess";
 import { WizardSectionHeader } from "../../components/wizard-section-header/WizardSectionHeader";
 import { KeycloakTextInput } from "../../components/keycloak-text-input/KeycloakTextInput";
 
 export type LdapSettingsSearchingProps = {
-  form: UseFormMethods;
+  form: UseFormReturn<ComponentRepresentation>;
   showSectionHeading?: boolean;
   showSectionDescription?: boolean;
 };
@@ -30,6 +31,10 @@ export const LdapSettingsSearching = ({
   const [isSearchScopeDropdownOpen, setIsSearchScopeDropdownOpen] =
     useState(false);
   const [isEditModeDropdownOpen, setIsEditModeDropdownOpen] = useState(false);
+
+  const {
+    formState: { errors },
+  } = form;
 
   return (
     <>
@@ -52,17 +57,19 @@ export const LdapSettingsSearching = ({
           }
           fieldId="kc-edit-mode"
           isRequired
-          validated={form.errors.config?.editMode?.[0] ? "error" : "default"}
-          helperTextInvalid={form.errors.config?.editMode?.[0].message}
+          validated={errors.config?.editMode ? "error" : "default"}
+          helperTextInvalid={
+            errors.config?.editMode ? t("validateEditMode") : ""
+          }
         >
           <Controller
-            name="config.editMode[0]"
+            name="config.editMode.0"
             defaultValue=""
             control={form.control}
             rules={{
-              required: { value: true, message: t("validateEditMode") },
+              required: true,
             }}
-            render={({ onChange, value }) => (
+            render={({ field }) => (
               <Select
                 toggleId="kc-edit-mode"
                 required
@@ -71,14 +78,12 @@ export const LdapSettingsSearching = ({
                 }
                 isOpen={isEditModeDropdownOpen}
                 onSelect={(_, value) => {
-                  onChange(value.toString());
+                  field.onChange(value.toString());
                   setIsEditModeDropdownOpen(false);
                 }}
-                selections={value}
+                selections={field.value}
                 variant={SelectVariant.single}
-                validated={
-                  form.errors.config?.editMode?.[0] ? "error" : "default"
-                }
+                validated={errors.config?.editMode ? "error" : "default"}
               >
                 <SelectOption value="" isPlaceholder />
                 <SelectOption value="READ_ONLY" />
@@ -98,8 +103,8 @@ export const LdapSettingsSearching = ({
           }
           fieldId="kc-console-users-dn"
           isRequired
-          validated={form.errors.config?.usersDn?.[0] ? "error" : "default"}
-          helperTextInvalid={form.errors.config?.usersDn?.[0].message}
+          validated={errors.config?.usersDn ? "error" : "default"}
+          helperTextInvalid={errors.config?.usersDn ? t("validateUsersDn") : ""}
         >
           <KeycloakTextInput
             isRequired
@@ -107,14 +112,10 @@ export const LdapSettingsSearching = ({
             defaultValue=""
             id="kc-console-users-dn"
             data-testid="ldap-users-dn"
-            name="config.usersDn[0]"
-            ref={form.register({
-              required: {
-                value: true,
-                message: `${t("validateUsersDn")}`,
-              },
+            validated={errors.config?.usersDn ? "error" : "default"}
+            {...form.register("config.usersDn.0", {
+              required: true,
             })}
-            validated={form.errors.config?.usersDn?.[0] ? "error" : "default"}
           />
         </FormGroup>
         <FormGroup
@@ -127,11 +128,11 @@ export const LdapSettingsSearching = ({
           }
           fieldId="kc-username-ldap-attribute"
           isRequired
-          validated={
-            form.errors.config?.usernameLDAPAttribute?.[0] ? "error" : "default"
-          }
+          validated={errors.config?.usernameLDAPAttribute ? "error" : "default"}
           helperTextInvalid={
-            form.errors.config?.usernameLDAPAttribute?.[0].message
+            errors.config?.usernameLDAPAttribute
+              ? t("validateUsernameLDAPAttribute")
+              : ""
           }
         >
           <KeycloakTextInput
@@ -140,18 +141,12 @@ export const LdapSettingsSearching = ({
             defaultValue="cn"
             id="kc-username-ldap-attribute"
             data-testid="ldap-username-attribute"
-            name="config.usernameLDAPAttribute[0]"
-            ref={form.register({
-              required: {
-                value: true,
-                message: `${t("validateUsernameLDAPAttribute")}`,
-              },
-            })}
             validated={
-              form.errors.config?.usernameLDAPAttribute?.[0]
-                ? "error"
-                : "default"
+              errors.config?.usernameLDAPAttribute ? "error" : "default"
             }
+            {...form.register("config.usernameLDAPAttribute.0", {
+              required: true,
+            })}
           />
         </FormGroup>
         <FormGroup
@@ -164,10 +159,10 @@ export const LdapSettingsSearching = ({
           }
           fieldId="kc-rdn-ldap-attribute"
           isRequired
-          validated={
-            form.errors.config?.rdnLDAPAttribute?.[0] ? "error" : "default"
+          validated={errors.config?.rdnLDAPAttribute ? "error" : "default"}
+          helperTextInvalid={
+            errors.config?.rdnLDAPAttribute ? t("validateRdnLdapAttribute") : ""
           }
-          helperTextInvalid={form.errors.config?.rdnLDAPAttribute?.[0].message}
         >
           <KeycloakTextInput
             isRequired
@@ -175,16 +170,10 @@ export const LdapSettingsSearching = ({
             defaultValue="cn"
             id="kc-rdn-ldap-attribute"
             data-testid="ldap-rdn-attribute"
-            name="config.rdnLDAPAttribute[0]"
-            ref={form.register({
-              required: {
-                value: true,
-                message: `${t("validateRdnLdapAttribute")}`,
-              },
+            validated={errors.config?.rdnLDAPAttribute ? "error" : "default"}
+            {...form.register("config.rdnLDAPAttribute.0", {
+              required: true,
             })}
-            validated={
-              form.errors.config?.rdnLDAPAttribute?.[0] ? "error" : "default"
-            }
           />
         </FormGroup>
         <FormGroup
@@ -197,10 +186,12 @@ export const LdapSettingsSearching = ({
           }
           fieldId="kc-uuid-ldap-attribute"
           isRequired
-          validated={
-            form.errors.config?.uuidLDAPAttribute?.[0] ? "error" : "default"
+          validated={errors.config?.uuidLDAPAttribute ? "error" : "default"}
+          helperTextInvalid={
+            errors.config?.uuidLDAPAttribute
+              ? t("validateUuidLDAPAttribute")
+              : ""
           }
-          helperTextInvalid={form.errors.config?.uuidLDAPAttribute?.[0].message}
         >
           <KeycloakTextInput
             isRequired
@@ -208,16 +199,10 @@ export const LdapSettingsSearching = ({
             defaultValue="objectGUID"
             id="kc-uuid-ldap-attribute"
             data-testid="ldap-uuid-attribute"
-            name="config.uuidLDAPAttribute[0]"
-            ref={form.register({
-              required: {
-                value: true,
-                message: `${t("validateUuidLDAPAttribute")}`,
-              },
+            validated={errors.config?.uuidLDAPAttribute ? "error" : "default"}
+            {...form.register("config.uuidLDAPAttribute.0", {
+              required: true,
             })}
-            validated={
-              form.errors.config?.uuidLDAPAttribute?.[0] ? "error" : "default"
-            }
           />
         </FormGroup>
         <FormGroup
@@ -230,10 +215,12 @@ export const LdapSettingsSearching = ({
           }
           fieldId="kc-user-object-classes"
           isRequired
-          validated={
-            form.errors.config?.userObjectClasses?.[0] ? "error" : "default"
+          validated={errors.config?.userObjectClasses ? "error" : "default"}
+          helperTextInvalid={
+            errors.config?.userObjectClasses
+              ? t("validateUserObjectClasses")
+              : ""
           }
-          helperTextInvalid={form.errors.config?.userObjectClasses?.[0].message}
         >
           <KeycloakTextInput
             isRequired
@@ -241,16 +228,10 @@ export const LdapSettingsSearching = ({
             defaultValue="person, organizationalPerson, user"
             id="kc-user-object-classes"
             data-testid="ldap-user-object-classes"
-            name="config.userObjectClasses[0]"
-            ref={form.register({
-              required: {
-                value: true,
-                message: `${t("validateUserObjectClasses")}`,
-              },
+            validated={errors.config?.userObjectClasses ? "error" : "default"}
+            {...form.register("config.userObjectClasses.0", {
+              required: true,
             })}
-            validated={
-              form.errors.config?.userObjectClasses?.[0] ? "error" : "default"
-            }
           />
         </FormGroup>
         <FormGroup
@@ -263,30 +244,24 @@ export const LdapSettingsSearching = ({
           }
           fieldId="kc-user-ldap-filter"
           validated={
-            form.errors.config?.customUserSearchFilter?.[0]
-              ? "error"
-              : "default"
+            errors.config?.customUserSearchFilter ? "error" : "default"
           }
           helperTextInvalid={
-            form.errors.config?.customUserSearchFilter?.[0].message
+            errors.config?.customUserSearchFilter
+              ? t("validateCustomUserSearchFilter")
+              : ""
           }
         >
           <KeycloakTextInput
             type="text"
             id="kc-user-ldap-filter"
             data-testid="user-ldap-filter"
-            name="config.customUserSearchFilter[0]"
-            ref={form.register({
-              pattern: {
-                value: /(\(.*\))$/,
-                message: `${t("validateCustomUserSearchFilter")}`,
-              },
-            })}
             validated={
-              form.errors.config?.customUserSearchFilter?.[0]
-                ? "error"
-                : "default"
+              errors.config?.customUserSearchFilter ? "error" : "default"
             }
+            {...form.register("config.customUserSearchFilter.0", {
+              pattern: /(\(.*\))$/,
+            })}
           />
         </FormGroup>
 
@@ -301,10 +276,10 @@ export const LdapSettingsSearching = ({
           fieldId="kc-search-scope"
         >
           <Controller
-            name="config.searchScope[0]"
+            name="config.searchScope.0"
             defaultValue=""
             control={form.control}
-            render={({ onChange, value }) => (
+            render={({ field }) => (
               <Select
                 toggleId="kc-search-scope"
                 required
@@ -313,10 +288,10 @@ export const LdapSettingsSearching = ({
                 }
                 isOpen={isSearchScopeDropdownOpen}
                 onSelect={(_, value) => {
-                  onChange(value as string);
+                  field.onChange(value as string);
                   setIsSearchScopeDropdownOpen(false);
                 }}
-                selections={value}
+                selections={field.value}
                 variant={SelectVariant.single}
               >
                 <SelectOption key={0} value="1" isPlaceholder>
@@ -344,8 +319,7 @@ export const LdapSettingsSearching = ({
             min={0}
             id="kc-read-timeout"
             data-testid="ldap-read-timeout"
-            name="config.readTimeout[0]"
-            ref={form.register}
+            {...form.register("config.readTimeout.0")}
           />
         </FormGroup>
         <FormGroup
@@ -363,13 +337,13 @@ export const LdapSettingsSearching = ({
             name="config.pagination"
             defaultValue={["false"]}
             control={form.control}
-            render={({ onChange, value }) => (
+            render={({ field }) => (
               <Switch
                 id="kc-console-pagination"
                 data-testid="console-pagination"
                 isDisabled={false}
-                onChange={(value) => onChange([`${value}`])}
-                isChecked={value[0] === "true"}
+                onChange={(value) => field.onChange([`${value}`])}
+                isChecked={field.value[0] === "true"}
                 label={t("common:on")}
                 labelOff={t("common:off")}
                 aria-label={t("pagination")}

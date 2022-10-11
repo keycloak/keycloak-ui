@@ -52,22 +52,26 @@ export const ExtendedNonDiscoverySettings = () => {
             name="config.prompt"
             defaultValue=""
             control={control}
-            render={({ onChange, value }) => (
+            render={({ field }) => (
               <Select
                 toggleId="prompt"
                 required
                 onToggle={() => setPromptOpen(!promptOpen)}
                 onSelect={(_, value) => {
-                  onChange(value as string);
+                  field.onChange(value as string);
                   setPromptOpen(false);
                 }}
-                selections={value || t(`prompts.unspecified`)}
+                selections={field.value || t(`prompts.unspecified`)}
                 variant={SelectVariant.single}
                 aria-label={t("prompt")}
                 isOpen={promptOpen}
               >
                 {Object.entries(promptOptions).map(([key, val]) => (
-                  <SelectOption selected={val === value} key={key} value={val}>
+                  <SelectOption
+                    selected={val === field.value}
+                    key={key}
+                    value={val}
+                  >
                     {t(`prompts.${key}`)}
                   </SelectOption>
                 ))}
@@ -93,13 +97,13 @@ export const ExtendedNonDiscoverySettings = () => {
             name="config.allowedClockSkew"
             control={control}
             defaultValue={0}
-            render={({ onChange, value }) => (
+            render={({ field }) => (
               <NumberInput
-                value={value}
+                value={field.value}
                 data-testid="allowedClockSkew"
-                onMinus={() => onChange(value - 1)}
-                onChange={onChange}
-                onPlus={() => onChange(value + 1)}
+                onMinus={() => field.onChange(field.value - 1)}
+                onChange={field.onChange}
+                onPlus={() => field.onChange(field.value + 1)}
                 inputName="input"
                 inputAriaLabel={t("allowedClockSkew")}
                 minusBtnAriaLabel={t("common:minus")}

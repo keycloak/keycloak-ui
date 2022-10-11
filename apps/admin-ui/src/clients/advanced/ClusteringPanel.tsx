@@ -98,8 +98,8 @@ export const ClusteringPanel = ({
                 name="nodeReRegistrationTimeout"
                 defaultValue=""
                 control={control}
-                render={({ onChange, value }) => (
-                  <TimeSelector value={value} onChange={onChange} />
+                render={({ field }) => (
+                  <TimeSelector value={field.value} onChange={field.onChange} />
                 )}
               />
             </SplitItem>

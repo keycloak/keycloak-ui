@@ -53,7 +53,7 @@ export const RealmSettingsEmailTab = ({
     reset: resetForm,
     getValues,
     formState: { errors },
-  } = useForm<RealmRepresentation>({ defaultValues: realm });
+  } = useForm<FormFields>({ defaultValues: realm });
 
   const reset = () => resetForm(realm);
   const watchFromValue = watch("smtpServer.from", "");

@@ -64,7 +64,7 @@ export default function PolicyDetails() {
   const { t } = useTranslation("clients");
   const { id, realm, policyId, policyType } = useParams<PolicyDetailsParams>();
   const navigate = useNavigate();
-  const form = useForm({ shouldUnregister: false });
+  const form = useForm();
   const { reset, handleSubmit } = form;
 
   const { adminClient } = useAdminClient();

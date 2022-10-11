@@ -7,16 +7,17 @@ import {
 import { useTranslation } from "react-i18next";
 import { useState } from "react";
 import { HelpItem } from "../../components/help-enabler/HelpItem";
-import { UseFormMethods, Controller } from "react-hook-form";
+import { UseFormReturn, Controller } from "react-hook-form";
 import { FormAccess } from "../../components/form-access/FormAccess";
 import { useRealm } from "../../context/realm-context/RealmContext";
 
+import type ComponentRepresentation from "@keycloak/keycloak-admin-client/lib/defs/componentRepresentation";
 import { WizardSectionHeader } from "../../components/wizard-section-header/WizardSectionHeader";
 import { KeycloakTextInput } from "../../components/keycloak-text-input/KeycloakTextInput";
 import { useAdminClient, useFetch } from "../../context/auth/AdminClient";
 
 export type LdapSettingsGeneralProps = {
-  form: UseFormMethods;
+  form: UseFormReturn<ComponentRepresentation>;
   showSectionHeading?: boolean;
   showSectionDescription?: boolean;
   vendorEdit?: boolean;
@@ -42,49 +43,49 @@ export const LdapSettingsGeneral = ({
   const [isVendorDropdownOpen, setIsVendorDropdownOpen] = useState(false);
 
   const setVendorDefaultValues = () => {
-    switch (form.getValues("config.vendor[0]")) {
+    switch (form.getValues("config.vendor.0")) {
       case "ad":
-        form.setValue("config.usernameLDAPAttribute[0]", "cn");
-        form.setValue("config.rdnLDAPAttribute[0]", "cn");
-        form.setValue("config.uuidLDAPAttribute[0]", "objectGUID");
+        form.setValue("config.usernameLDAPAttribute.0", "cn");
+        form.setValue("config.rdnLDAPAttribute.0", "cn");
+        form.setValue("config.uuidLDAPAttribute.0", "objectGUID");
         form.setValue(
-          "config.userObjectClasses[0]",
+          "config.userObjectClasses.0",
           "person, organizationalPerson, user"
         );
         break;
       case "rhds":
-        form.setValue("config.usernameLDAPAttribute[0]", "uid");
-        form.setValue("config.rdnLDAPAttribute[0]", "uid");
-        form.setValue("config.uuidLDAPAttribute[0]", "nsuniqueid");
+        form.setValue("config.usernameLDAPAttribute.0", "uid");
+        form.setValue("config.rdnLDAPAttribute.0", "uid");
+        form.setValue("config.uuidLDAPAttribute.0", "nsuniqueid");
         form.setValue(
-          "config.userObjectClasses[0]",
+          "config.userObjectClasses.0",
           "inetOrgPerson, organizationalPerson"
         );
         break;
       case "tivoli":
-        form.setValue("config.usernameLDAPAttribute[0]", "uid");
-        form.setValue("config.rdnLDAPAttribute[0]", "uid");
-        form.setValue("config.uuidLDAPAttribute[0]", "uniqueidentifier");
+        form.setValue("config.usernameLDAPAttribute.0", "uid");
+        form.setValue("config.rdnLDAPAttribute.0", "uid");
+        form.setValue("config.uuidLDAPAttribute.0", "uniqueidentifier");
         form.setValue(
-          "config.userObjectClasses[0]",
+          "config.userObjectClasses.0",
           "inetOrgPerson, organizationalPerson"
         );
         break;
       case "edirectory":
-        form.setValue("config.usernameLDAPAttribute[0]", "uid");
-        form.setValue("config.rdnLDAPAttribute[0]", "uid");
-        form.setValue("config.uuidLDAPAttribute[0]", "guid");
+        form.setValue("config.usernameLDAPAttribute.0", "uid");
+        form.setValue("config.rdnLDAPAttribute.0", "uid");
+        form.setValue("config.uuidLDAPAttribute.0", "guid");
         form.setValue(
-          "config.userObjectClasses[0]",
+          "config.userObjectClasses.0",
           "inetOrgPerson, organizationalPerson"
         );
         break;
       case "other":
-        form.setValue("config.usernameLDAPAttribute[0]", "uid");
-        form.setValue("config.rdnLDAPAttribute[0]", "uid");
-        form.setValue("config.uuidLDAPAttribute[0]", "entryUUID");
+        form.setValue("config.usernameLDAPAttribute.0", "uid");
+        form.setValue("config.rdnLDAPAttribute.0", "uid");
+        form.setValue("config.uuidLDAPAttribute.0", "entryUUID");
         form.setValue(
-          "config.userObjectClasses[0]",
+          "config.userObjectClasses.0",
           "inetOrgPerson, organizationalPerson"
         );
         break;
@@ -92,6 +93,10 @@ export const LdapSettingsGeneral = ({
         return "";
     }
   };
+
+  const {
+    formState: { errors },
+  } = form;
 
   return (
     <>
@@ -113,48 +118,44 @@ export const LdapSettingsGeneral = ({
           }
           fieldId="kc-console-display-name"
           isRequired
-          validated={form.errors.name ? "error" : "default"}
-          helperTextInvalid={form.errors.name?.message}
+          validated={errors.name ? "error" : "default"}
+          helperTextInvalid={errors.name?.message}
         >
           {/* These hidden fields are required so data object written back matches data retrieved */}
           <KeycloakTextInput
             hidden
             type="text"
             id="kc-console-provider-id"
-            name="providerId"
             defaultValue="ldap"
-            ref={form.register}
+            {...form.register("providerId")}
           />
           <KeycloakTextInput
             hidden
             type="text"
             id="kc-console-provider-type"
-            name="providerType"
             defaultValue="org.keycloak.storage.UserStorageProvider"
-            ref={form.register}
+            {...form.register("providerType")}
           />
           <KeycloakTextInput
             hidden
             type="text"
             id="kc-console-parentId"
-            name="parentId"
             defaultValue={realm}
-            ref={form.register}
+            {...form.register("parentId")}
           />
           <KeycloakTextInput
             isRequired
             type="text"
             id="kc-console-display-name"
-            name="name"
             defaultValue="ldap"
-            ref={form.register({
+            data-testid="ldap-name"
+            validated={errors.name ? "error" : "default"}
+            {...form.register("name", {
               required: {
                 value: true,
                 message: `${t("validateName")}`,
               },
             })}
-            data-testid="ldap-name"
-            validated={form.errors.name ? "error" : "default"}
           />
         </FormGroup>
         <FormGroup
@@ -169,10 +170,10 @@ export const LdapSettingsGeneral = ({
           isRequired
         >
           <Controller
-            name="config.vendor[0]"
+            name="config.vendor.0"
             defaultValue="ad"
             control={form.control}
-            render={({ onChange, value }) => (
+            render={({ field }) => (
               <Select
                 isDisabled={!!vendorEdit}
                 toggleId="kc-vendor"
@@ -180,11 +181,11 @@ export const LdapSettingsGeneral = ({
                 onToggle={() => setIsVendorDropdownOpen(!isVendorDropdownOpen)}
                 isOpen={isVendorDropdownOpen}
                 onSelect={(_, value) => {
-                  onChange(value as string);
+                  field.onChange(value as string);
                   setIsVendorDropdownOpen(false);
                   setVendorDefaultValues();
                 }}
-                selections={value}
+                selections={field.value}
                 variant={SelectVariant.single}
               >
                 <SelectOption key={0} value="ad" isPlaceholder>

@@ -39,7 +39,7 @@ type SamlKeysProps = {
 const KEYS = ["saml.signing", "saml.encryption"] as const;
 export type KeyTypes = typeof KEYS[number];
 
-const KEYS_MAPPING: { [key in KeyTypes]: { [index: string]: string } } = {
+const KEYS_MAPPING = {
   "saml.signing": {
     name: convertAttributeNameToForm("attributes.saml.client.signature"),
     title: "signingKeysConfig",
@@ -61,6 +61,8 @@ type KeySectionProps = {
   onImport: (key: KeyTypes) => void;
 };
 
+type FormFields = Omit<ClientRepresentation, "authorizationSettings">;
+
 const KeySection = ({
   clientId,
   keyInfo,
@@ -70,7 +72,7 @@ const KeySection = ({
   onImport,
 }: KeySectionProps) => {
   const { t } = useTranslation("clients");
-  const { control, watch } = useFormContext<ClientRepresentation>();
+  const { control, watch } = useFormContext<FormFields>();
   const title = KEYS_MAPPING[attr].title;
   const key = KEYS_MAPPING[attr].key;
   const name = KEYS_MAPPING[attr].name;
@@ -103,18 +105,18 @@ const KeySection = ({
               name={name}
               control={control}
               defaultValue="false"
-              render={({ onChange, value }) => (
+              render={({ field }) => (
                 <Switch
                   data-testid={key}
                   id={key}
                   label={t("common:on")}
                   labelOff={t("common:off")}
-                  isChecked={value === "true"}
+                  isChecked={field.value === "true"}
                   onChange={(value) => {
                     const v = value.toString();
                     if (v === "true") {
                       onChanged(attr);
-                      onChange(v);
+                      field.onChange(v);
                     } else {
                       onGenerate(attr, false);
                     }

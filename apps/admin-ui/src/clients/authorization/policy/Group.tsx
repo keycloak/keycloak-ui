@@ -23,6 +23,11 @@ export type GroupValue = {
   extendChildren: boolean;
 };
 
+type FormFields = {
+  groupsClaim?: string;
+  groups?: GroupValue[];
+};
+
 export const Group = () => {
   const { t } = useTranslation("clients");
   const {
@@ -31,9 +36,7 @@ export const Group = () => {
     getValues,
     setValue,
     formState: { errors },
-  } = useFormContext<{
-    groups?: GroupValue[];
-  }>();
+  } = useFormContext<FormFields>();
   const values = getValues("groups");
 
   const [open, setOpen] = useState(false);
@@ -73,9 +76,8 @@ export const Group = () => {
         <KeycloakTextInput
           type="text"
           id="groupsClaim"
-          name="groupsClaim"
+          {...register("groupsClaim")}
           data-testid="groupsClaim"
-          ref={register}
         />
       </FormGroup>
       <FormGroup
@@ -96,10 +98,10 @@ export const Group = () => {
           control={control}
           defaultValue={[]}
           rules={{
-            validate: (value: GroupValue[]) =>
-              value.filter(({ id }) => id).length > 0,
+            validate: (value) =>
+              value && value.filter(({ id }) => id).length > 0,
           }}
-          render={({ onChange, value }) => (
+          render={({ field }) => (
             <>
               {open && (
                 <GroupPickerDialog
@@ -109,8 +111,8 @@ export const Group = () => {
                     ok: "common:add",
                   }}
                   onConfirm={(groups) => {
-                    onChange([
-                      ...value,
+                    field.onChange([
+                      ...(field.value ?? []),
                       ...(groups || []).map(({ id }) => ({ id })),
                     ]);
                     setSelectedGroups([...selectedGroups, ...(groups || [])]);
@@ -149,16 +151,16 @@ export const Group = () => {
                   <Td>{group.path}</Td>
                   <Td>
                     <Controller
-                      name={`groups[${index}].extendChildren`}
+                      name={`groups.${index}.extendChildren`}
                       defaultValue={false}
                       control={control}
-                      render={({ onChange, value }) => (
+                      render={({ field }) => (
                         <Checkbox
                           id="extendChildren"
                           data-testid="standard"
                           name="extendChildren"
-                          isChecked={value}
-                          onChange={onChange}
+                          isChecked={field.value}
+                          onChange={field.onChange}
                           isDisabled={group.subGroups?.length === 0}
                         />
                       )}

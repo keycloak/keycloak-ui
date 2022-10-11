@@ -59,11 +59,11 @@ export const AdvancedSettings = ({
             )}
             defaultValue=""
             control={control}
-            render={({ onChange, value }) => (
+            render={({ field }) => (
               <TimeSelector
                 units={["minute", "day", "hour"]}
-                value={value}
-                onChange={onChange}
+                value={field.value}
+                onChange={field.onChange}
               />
             )}
           />
@@ -136,13 +136,13 @@ export const AdvancedSettings = ({
               name="attributes.tls-client-certificate-bound-access-tokens"
               defaultValue={false}
               control={control}
-              render={({ onChange, value }) => (
+              render={({ field }) => (
                 <Switch
                   id="oAuthMutual-switch"
                   label={t("common:on")}
                   labelOff={t("common:off")}
-                  isChecked={value === "true"}
-                  onChange={(value) => onChange("" + value)}
+                  isChecked={field.value === "true"}
+                  onChange={(value) => field.onChange("" + value)}
                   aria-label={t("oAuthMutual")}
                 />
               )}
@@ -165,17 +165,17 @@ export const AdvancedSettings = ({
               )}
               defaultValue=""
               control={control}
-              render={({ onChange, value }) => (
+              render={({ field }) => (
                 <Select
                   toggleId="keyForCodeExchange"
                   variant={SelectVariant.single}
                   onToggle={setOpen}
                   isOpen={open}
                   onSelect={(_, value) => {
-                    onChange(value);
+                    field.onChange(value);
                     setOpen(false);
                   }}
-                  selections={[value || t("common:choose")]}
+                  selections={[field.value || t("common:choose")]}
                 >
                   {["", "S256", "plain"].map((v) => (
                     <SelectOption key={v} value={v}>
@@ -202,13 +202,13 @@ export const AdvancedSettings = ({
               )}
               defaultValue="false"
               control={control}
-              render={({ onChange, value }) => (
+              render={({ field }) => (
                 <Switch
                   id="pushedAuthorizationRequestRequired"
                   label={t("common:on")}
                   labelOff={t("common:off")}
-                  isChecked={value === "true"}
-                  onChange={(value) => onChange(value.toString())}
+                  isChecked={field.value === "true"}
+                  onChange={(value) => field.onChange(value.toString())}
                   aria-label={t("pushedAuthorizationRequestRequired")}
                 />
               )}

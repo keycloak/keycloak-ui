@@ -22,6 +22,11 @@ import { useWhoAmI } from "../../context/whoami/WhoAmI";
 import { toDashboard } from "../../dashboard/routes/Dashboard";
 import { convertFormValuesToObject, convertToFormValues } from "../../util";
 
+type FormFields = Omit<
+  RealmRepresentation,
+  "clients" | "components" | "groups"
+>;
+
 export default function NewRealmForm() {
   const { t } = useTranslation("realm");
   const navigate = useNavigate();
@@ -37,7 +42,7 @@ export default function NewRealmForm() {
     control,
     setValue,
     formState: { errors },
-  } = useForm<RealmRepresentation>({ mode: "onChange" });
+  } = useForm<FormFields>({ mode: "onChange" });
 
   const handleFileChange = (obj?: object) => {
     const defaultRealm = { id: "", realm: "", enabled: true };
@@ -87,9 +92,8 @@ export default function NewRealmForm() {
               isRequired
               type="text"
               id="kc-realm-name"
-              name="realm"
+              {...register("realm", { required: true })}
               validated={errors.realm ? "error" : "default"}
-              ref={register({ required: true })}
             />
           </FormGroup>
           <FormGroup label={t("enabled")} fieldId="kc-realm-enabled-switch">
@@ -97,14 +101,14 @@ export default function NewRealmForm() {
               name="enabled"
               defaultValue={true}
               control={control}
-              render={({ onChange, value }) => (
+              render={({ field }) => (
                 <Switch
                   id="kc-realm-enabled-switch"
                   name="enabled"
                   label={t("common:on")}
                   labelOff={t("common:off")}
-                  isChecked={value}
-                  onChange={onChange}
+                  isChecked={field.value}
+                  onChange={field.onChange}
                   aria-label={t("enabled")}
                 />
               )}

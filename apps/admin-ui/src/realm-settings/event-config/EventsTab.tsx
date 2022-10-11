@@ -28,7 +28,7 @@ type EventsTabProps = {
   realm: RealmRepresentation;
 };
 
-type EventsConfigForm = RealmEventsConfigRepresentation & {
+export type EventsConfigForm = RealmEventsConfigRepresentation & {
   adminEventsExpiration?: number;
 };
 

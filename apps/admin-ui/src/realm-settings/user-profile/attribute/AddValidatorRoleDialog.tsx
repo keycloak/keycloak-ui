@@ -18,7 +18,7 @@ export const AddValidatorRoleDialog = ({
   selected,
 }: AddValidatorRoleDialogProps) => {
   const { t } = useTranslation("realm-settings");
-  const form = useForm();
+  const form = useForm<Validator>();
   const { handleSubmit } = form;
   const selectedRoleValidator = selected;
 

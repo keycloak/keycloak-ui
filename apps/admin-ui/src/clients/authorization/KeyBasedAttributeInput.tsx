@@ -103,14 +103,14 @@ const ValueInput = ({
     <Td>
       {resources || attributeValues?.length ? (
         <Controller
-          name={`${name}[${rowIndex}].value`}
+          name={`${name}.${rowIndex}.value`}
           defaultValue={[]}
           control={control}
-          render={({ onChange, value }) => (
+          render={({ field }) => (
             <Select
               id={`${attribute.id}-value`}
               className="kc-attribute-value-selectable"
-              name={`${name}[${rowIndex}].value`}
+              name={`${name}.${rowIndex}.value`}
               chipGroupProps={{
                 numChips: 1,
                 expandedText: t("common:hide"),
@@ -122,9 +122,9 @@ const ValueInput = ({
               variant={SelectVariant.typeahead}
               typeAheadAriaLabel={t("clients:selectOrTypeAKey")}
               placeholderText={t("clients:selectOrTypeAKey")}
-              selections={value}
+              selections={field.value}
               onSelect={(_, v) => {
-                onChange(v);
+                field.onChange(v);
 
                 toggleValueSelect(rowIndex, false);
               }}
@@ -137,8 +137,7 @@ const ValueInput = ({
         <KeycloakTextInput
           id={`${getMessageBundleKey(attribute.key)}-value`}
           className="value-input"
-          name={`${name}[${rowIndex}].value`}
-          ref={register()}
+          {...register(`${name}.${rowIndex}.value` as const)}
           defaultValue={attribute.value}
           data-testid="attribute-value-input"
         />
@@ -155,7 +154,7 @@ export const KeyBasedAttributeInput = ({
   const { t } = useTranslation("common");
   const { control, watch } = useFormContext();
   const { fields, append, remove } = useFieldArray({
-    control: control,
+    control,
     name,
   });
 
@@ -168,11 +167,11 @@ export const KeyBasedAttributeInput = ({
 
   useEffect(() => {
     if (!fields.length) {
-      append({ key: "", value: "" }, false);
+      append({ key: "", value: "" }, { shouldFocus: false });
     }
   }, [fields]);
 
-  const watchLastValue = watch(`${name}[${fields.length - 1}].value`, "");
+  const watchLastValue = watch(`${name}.${fields.length - 1}.value`, "");
 
   return (
     <TableComposable
@@ -196,30 +195,30 @@ export const KeyBasedAttributeInput = ({
           <Tr key={attribute.id} data-testid="attribute-row">
             <Td>
               <Controller
-                name={`${name}[${rowIndex}].key`}
-                defaultValue={attribute.key}
+                name={`${name}.${rowIndex}.key`}
+                defaultValue={(attribute as any).key}
                 control={control}
-                render={({ onChange, value }) => (
+                render={({ field }) => (
                   <Select
-                    id={`${name}[${rowIndex}].key`}
+                    id={`${name}.${rowIndex}.key`}
                     className="kc-attribute-key-selectable"
-                    name={`${name}[${rowIndex}].key`}
+                    name={`${name}.${rowIndex}.key`}
                     toggleId={`group-${name}`}
                     onToggle={(open) => toggleKeySelect(rowIndex, open)}
                     isOpen={isKeyOpenArray[rowIndex]}
                     variant={SelectVariant.typeahead}
                     typeAheadAriaLabel={t("clients:selectOrTypeAKey")}
                     placeholderText={t("clients:selectOrTypeAKey")}
-                    selections={value}
+                    selections={field.value}
                     onSelect={(_, v) => {
-                      onChange(v.toString());
+                      field.onChange(v.toString());
 
                       toggleKeySelect(rowIndex, false);
                     }}
                   >
                     {selectableValues?.map((attribute) => (
                       <SelectOption
-                        selected={attribute.name === value}
+                        selected={attribute.name === field.value}
                         key={attribute.key}
                         value={resources ? attribute.name : attribute.key}
                       >

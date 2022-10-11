@@ -41,22 +41,22 @@ export const GeneralSettings = () => {
           name="protocol"
           defaultValue=""
           control={control}
-          render={({ onChange, value }) => (
+          render={({ field }) => (
             <Select
               id="kc-type"
               onToggle={isOpen}
               onSelect={(_, value) => {
-                onChange(value.toString());
+                field.onChange(value.toString());
                 isOpen(false);
               }}
-              selections={value}
+              selections={field.value}
               variant={SelectVariant.single}
               aria-label={t("selectEncryptionType")}
               isOpen={open}
             >
               {providers.map((option) => (
                 <SelectOption
-                  selected={option === value}
+                  selected={option === field.value}
                   key={option}
                   value={option}
                   data-testid={`option-${option}`}

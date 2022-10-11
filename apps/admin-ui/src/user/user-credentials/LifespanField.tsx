@@ -23,11 +23,11 @@ export const LifespanField = () => {
         name="lifespan"
         defaultValue={credResetFormDefaultValues.lifespan}
         control={control}
-        render={({ onChange, value }) => (
+        render={({ field }) => (
           <TimeSelector
-            value={value}
+            value={field.value}
             units={["minute", "hour", "day"]}
-            onChange={onChange}
+            onChange={field.onChange}
             menuAppendTo="parent"
           />
         )}

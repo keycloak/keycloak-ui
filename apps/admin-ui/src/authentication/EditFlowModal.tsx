@@ -27,9 +27,7 @@ type EditForm = {
 
 export const EditFlowModal = ({ flow, toggleDialog }: EditFlowModalProps) => {
   const { t } = useTranslation("authentication");
-  const form = useForm<EditForm>({
-    shouldUnregister: false,
-  });
+  const form = useForm<EditForm>();
   const { reset, handleSubmit } = form;
   const { adminClient } = useAdminClient();
   const { addAlert, addError } = useAlerts();

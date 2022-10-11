@@ -86,15 +86,15 @@ export const BindFlowDialog = ({ flowAlias, onClose }: BindFlowDialogProps) => {
             name="bindingType"
             defaultValue={"browserFlow"}
             control={control}
-            render={({ onChange, value }) => (
+            render={({ field }) => (
               <Select
                 toggleId="chooseBindingType"
                 onToggle={toggle}
                 onSelect={(_, value) => {
-                  onChange(value.toString());
+                  field.onChange(value.toString());
                   toggle();
                 }}
-                selections={value}
+                selections={field.value}
                 variant={SelectVariant.single}
                 aria-label={t("bindingFlow")}
                 isOpen={open}

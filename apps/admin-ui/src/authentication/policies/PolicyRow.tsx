@@ -54,8 +54,7 @@ export const PolicyRow = ({
             <KeycloakTextInput
               id={id}
               data-testid={id}
-              ref={register({ required: true })}
-              name={id}
+              {...register(id!, { required: true })}
               defaultValue={defaultValue}
               validated={
                 errors[id!] ? ValidatedOptions.error : ValidatedOptions.default
@@ -67,7 +66,7 @@ export const PolicyRow = ({
               name={id!}
               defaultValue={Number.parseInt(defaultValue || "0")}
               control={control}
-              render={({ onChange, value }) => {
+              render={({ field: { onChange, value } }) => {
                 const MIN_VALUE = 0;
                 const setValue = (newValue: number) =>
                   onChange(Math.max(newValue, MIN_VALUE));

@@ -6,7 +6,7 @@ import {
   ValidatedOptions,
 } from "@patternfly/react-core";
 import { useTranslation } from "react-i18next";
-import type { UseFormMethods } from "react-hook-form";
+import type { UseFormReturn } from "react-hook-form";
 import { ViewHeader } from "../components/view-header/ViewHeader";
 import { FormAccess } from "../components/form-access/FormAccess";
 import type { AttributeForm } from "../components/key-value-form/AttributeForm";
@@ -16,14 +16,19 @@ import { useRealm } from "../context/realm-context/RealmContext";
 import { useNavigate } from "react-router-dom-v5-compat";
 
 export type RealmRoleFormProps = {
-  form: UseFormMethods<AttributeForm>;
+  form: UseFormReturn<AttributeForm>;
   save: () => void;
   editMode: boolean;
   reset: () => void;
 };
 
 export const RealmRoleForm = ({
-  form: { handleSubmit, errors, register, getValues },
+  form: {
+    handleSubmit,
+    register,
+    getValues,
+    formState: { errors },
+  },
   save,
   editMode,
   reset,
@@ -50,15 +55,16 @@ export const RealmRoleForm = ({
             helperTextInvalid={t("common:required")}
           >
             <KeycloakTextInput
-              ref={register({
-                required: !editMode,
-                validate: (value: string) =>
-                  !!value.trim() || t("common:required").toString(),
-              })}
               type="text"
               id="kc-name"
-              name="name"
               isReadOnly={editMode}
+              {...register("name", {
+                required: !editMode,
+                validate: (value) =>
+                  !value ||
+                  value.trim().length === 0 ||
+                  t("common:required").toString(),
+              })}
             />
           </FormGroup>
           <FormGroup
@@ -72,15 +78,8 @@ export const RealmRoleForm = ({
             helperTextInvalid={errors.description?.message}
           >
             <KeycloakTextArea
-              name="description"
               aria-label="description"
               isDisabled={getValues().name?.includes("default-roles")}
-              ref={register({
-                maxLength: {
-                  value: 255,
-                  message: t("common:maxLength", { length: 255 }),
-                },
-              })}
               type="text"
               validated={
                 errors.description
@@ -88,6 +87,12 @@ export const RealmRoleForm = ({
                   : ValidatedOptions.default
               }
               id="kc-role-description"
+              {...register("description", {
+                maxLength: {
+                  value: 255,
+                  message: t("common:maxLength", { length: 255 }),
+                },
+              })}
             />
           </FormGroup>
           <ActionGroup>

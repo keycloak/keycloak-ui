@@ -33,7 +33,7 @@ export const FlowType = () => {
         name="providerId"
         defaultValue={TYPES[0]}
         control={control}
-        render={({ onChange, value }) => (
+        render={({ field: { onChange, value } }) => (
           <Select
             toggleId="flowType"
             onToggle={setOpen}

@@ -14,11 +14,11 @@ import {
   Button,
 } from "@patternfly/react-core";
 
-import type ClientScopeRepresentation from "@keycloak/keycloak-admin-client/lib/defs/clientScopeRepresentation";
 import {
   clientScopeTypesSelectOptions,
   allClientScopeTypes,
   ClientScopeDefaultOptionalType,
+  ClientScope,
 } from "../../components/client-scope/ClientScopeTypes";
 import { HelpItem } from "../../components/help-enabler/HelpItem";
 import { useLoginProviders } from "../../context/server-info/ServerInfoProvider";
@@ -31,7 +31,7 @@ import { KeycloakTextInput } from "../../components/keycloak-text-input/Keycloak
 import { KeycloakTextArea } from "../../components/keycloak-text-area/KeycloakTextArea";
 
 type ScopeFormProps = {
-  clientScope: ClientScopeRepresentation;
+  clientScope?: ClientScopeDefaultOptionalType;
   save: (clientScope: ClientScopeDefaultOptionalType) => void;
 };
 
@@ -44,7 +44,7 @@ export const ScopeForm = ({ clientScope, save }: ScopeFormProps) => {
     handleSubmit,
     setValue,
     formState: { errors },
-  } = useForm<ClientScopeRepresentation>();
+  } = useForm<ClientScopeDefaultOptionalType>();
   const { realm } = useRealm();
 
   const providers = useLoginProviders();
@@ -52,15 +52,16 @@ export const ScopeForm = ({ clientScope, save }: ScopeFormProps) => {
   const [openType, setOpenType] = useState(false);
   const { id } = useParams<{ id: string }>();
 
-  const displayOnConsentScreen = useWatch<string>({
+  const displayOnConsentScreen: "true" | "false" = useWatch({
     control,
     name: convertAttributeNameToForm("attributes.display.on.consent.screen"),
     defaultValue:
-      clientScope.attributes?.["display.on.consent.screen"] ??
+      clientScope?.attributes?.["display.on.consent.screen"] ??
       (id ? "false" : "true"),
   });
 
   useEffect(() => {
+    // @ts-ignore
     convertToFormValues(clientScope, setValue);
   }, [clientScope]);
 
@@ -83,14 +84,13 @@ export const ScopeForm = ({ clientScope, save }: ScopeFormProps) => {
         helperTextInvalid={t("common:required")}
       >
         <KeycloakTextInput
-          ref={register({
-            required: true,
-            validate: (value: string) =>
-              !!value.trim() || t("common:required").toString(),
-          })}
           type="text"
           id="kc-name"
-          name="name"
+          {...register("name", {
+            required: true,
+            validate: (value) =>
+              !!value?.trim() || t("common:required").toString(),
+          })}
           validated={
             errors.name ? ValidatedOptions.error : ValidatedOptions.default
           }
@@ -111,9 +111,6 @@ export const ScopeForm = ({ clientScope, save }: ScopeFormProps) => {
         helperTextInvalid={t("common:maxLength", { length: 255 })}
       >
         <KeycloakTextInput
-          ref={register({
-            maxLength: 255,
-          })}
           validated={
             errors.description
               ? ValidatedOptions.error
@@ -121,7 +118,9 @@ export const ScopeForm = ({ clientScope, save }: ScopeFormProps) => {
           }
           type="text"
           id="kc-description"
-          name="description"
+          {...register("description", {
+            maxLength: 255,
+          })}
         />
       </FormGroup>
       <FormGroup
@@ -136,17 +135,17 @@ export const ScopeForm = ({ clientScope, save }: ScopeFormProps) => {
       >
         <Controller
           name="type"
-          defaultValue={allClientScopeTypes[0]}
+          defaultValue={ClientScope.default}
           control={control}
-          render={({ onChange, value }) => (
+          render={({ field }) => (
             <Select
               id="type"
               variant={SelectVariant.single}
               isOpen={openType}
-              selections={value}
+              selections={field.value}
               onToggle={setOpenType}
               onSelect={(_, value) => {
-                onChange(value);
+                field.onChange(value);
                 setOpenType(false);
               }}
             >
@@ -170,23 +169,23 @@ export const ScopeForm = ({ clientScope, save }: ScopeFormProps) => {
             name="protocol"
             defaultValue={providers[0]}
             control={control}
-            render={({ onChange, value }) => (
+            render={({ field }) => (
               <Select
                 toggleId="kc-protocol"
                 required
                 onToggle={isOpen}
                 onSelect={(_, value) => {
-                  onChange(value as string);
+                  field.onChange(value as string);
                   isOpen(false);
                 }}
-                selections={value}
+                selections={field.value}
                 variant={SelectVariant.single}
                 aria-label={t("selectEncryptionType")}
                 isOpen={open}
               >
                 {providers.map((option) => (
                   <SelectOption
-                    selected={option === value}
+                    selected={option === field.value}
                     key={option}
                     value={option}
                     data-testid={`option-${option}`}
@@ -216,13 +215,13 @@ export const ScopeForm = ({ clientScope, save }: ScopeFormProps) => {
           )}
           control={control}
           defaultValue={displayOnConsentScreen}
-          render={({ onChange, value }) => (
+          render={({ field }) => (
             <Switch
               id="kc-display.on.consent.screen-switch"
               label={t("common:on")}
               labelOff={t("common:off")}
-              isChecked={value === "true"}
-              onChange={(value) => onChange("" + value)}
+              isChecked={field.value === "true"}
+              onChange={(value) => field.onChange("" + value)}
               aria-label={t("displayOnConsentScreen")}
             />
           )}
@@ -240,10 +239,11 @@ export const ScopeForm = ({ clientScope, save }: ScopeFormProps) => {
           fieldId="kc-consent-screen-text"
         >
           <KeycloakTextArea
-            ref={register}
             type="text"
             id="kc-consent-screen-text"
-            name={convertAttributeNameToForm("attributes.consent.screen.text")}
+            {...register(
+              convertAttributeNameToForm("attributes.consent.screen.text")
+            )}
           />
         </FormGroup>
       )}
@@ -262,13 +262,13 @@ export const ScopeForm = ({ clientScope, save }: ScopeFormProps) => {
           name={convertAttributeNameToForm("attributes.include.in.token.scope")}
           control={control}
           defaultValue="true"
-          render={({ onChange, value }) => (
+          render={({ field }) => (
             <Switch
               id="includeInTokenScope-switch"
               label={t("common:on")}
               labelOff={t("common:off")}
-              isChecked={value === "true"}
-              onChange={(value) => onChange("" + value)}
+              isChecked={field.value === "true"}
+              onChange={(value) => field.onChange("" + value)}
               aria-label={t("includeInTokenScope")}
             />
           )}
@@ -288,14 +288,14 @@ export const ScopeForm = ({ clientScope, save }: ScopeFormProps) => {
           name={convertAttributeNameToForm("attributes.gui.order")}
           defaultValue=""
           control={control}
-          render={({ onChange, value }) => (
+          render={({ field }) => (
             <KeycloakTextInput
               id="kc-gui-order"
               type="number"
-              value={value}
+              value={field.value}
               data-testid="displayOrder"
               min={0}
-              onChange={onChange}
+              onChange={field.onChange}
             />
           )}
         />

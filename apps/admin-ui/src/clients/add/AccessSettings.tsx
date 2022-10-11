@@ -14,13 +14,15 @@ import { useRealm } from "../../context/realm-context/RealmContext";
 import { useAccess } from "../../context/access/Access";
 import { convertAttributeNameToForm } from "../../util";
 
+type FormFields = Omit<ClientRepresentation, "authorizationSettings">;
+
 export const AccessSettings = ({
   client,
   save,
   reset,
 }: ClientSettingsProps) => {
   const { t } = useTranslation("clients");
-  const { register, watch } = useFormContext<ClientRepresentation>();
+  const { register, watch } = useFormContext<FormFields>();
   const { realm } = useRealm();
 
   const { hasAccess } = useAccess();
@@ -52,8 +54,7 @@ export const AccessSettings = ({
             <KeycloakTextInput
               type="text"
               id="kc-root-url"
-              name="rootUrl"
-              ref={register}
+              {...register("rootUrl")}
             />
           </FormGroup>
           <FormGroup
@@ -69,8 +70,7 @@ export const AccessSettings = ({
             <KeycloakTextInput
               type="text"
               id="kc-home-url"
-              name="baseUrl"
-              ref={register}
+              {...register("baseUrl")}
             />
           </FormGroup>
           <FormGroup
@@ -128,8 +128,7 @@ export const AccessSettings = ({
                 <KeycloakTextInput
                   type="text"
                   id="idpInitiatedSsoUrlName"
-                  name="attributes.saml_idp_initiated_sso_url_name"
-                  ref={register}
+                  {...register("attributes.saml_idp_initiated_sso_url_name")}
                 />
               </FormGroup>
               <FormGroup
@@ -145,8 +144,7 @@ export const AccessSettings = ({
                 <KeycloakTextInput
                   type="text"
                   id="idpInitiatedSsoRelayState"
-                  name="attributes.saml_idp_initiated_sso_relay_state"
-                  ref={register}
+                  {...register("attributes.saml_idp_initiated_sso_relay_state")}
                 />
               </FormGroup>
               <FormGroup
@@ -162,8 +160,7 @@ export const AccessSettings = ({
                 <KeycloakTextInput
                   type="text"
                   id="masterSamlProcessingUrl"
-                  name="adminUrl"
-                  ref={register}
+                  {...register("adminUrl")}
                 />
               </FormGroup>
             </>
@@ -202,8 +199,7 @@ export const AccessSettings = ({
           <KeycloakTextInput
             type="text"
             id="kc-admin-url"
-            name="adminUrl"
-            ref={register}
+            {...register("adminUrl")}
           />
         </FormGroup>
       )}

@@ -98,24 +98,26 @@ export const UserSelect = ({
             ? { required: true }
             : {}
         }
-        render={({ onChange, value }) => (
+        render={({ field }) => (
           <Select
             toggleId={name!}
             variant={variant}
             placeholderText={t("selectAUser")}
             onToggle={toggleOpen}
             isOpen={open}
-            selections={value}
+            selections={field.value}
             onFilter={(_, value) => {
               setSearch(value);
               return convert(users);
             }}
             onSelect={(_, v) => {
               const option = v.toString();
-              if (value.includes(option)) {
-                onChange(value.filter((item: string) => item !== option));
+              if (field.value.includes(option)) {
+                field.onChange(
+                  field.value.filter((item: string) => item !== option)
+                );
               } else {
-                onChange([...value, option]);
+                field.onChange([...field.value, option]);
               }
               toggleOpen();
             }}

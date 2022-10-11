@@ -188,7 +188,7 @@ export default function ExecutorForm() {
               name="executor"
               defaultValue=""
               control={control}
-              render={({ value }) => (
+              render={({ field }) => (
                 <Select
                   toggleId="kc-executor"
                   placeholderText="Select an executor"
@@ -204,7 +204,7 @@ export default function ExecutorForm() {
                     );
                     setSelectExecutorTypeOpen(false);
                   }}
-                  selections={editMode ? executorName : value}
+                  selections={editMode ? executorName : field.value}
                   variant={SelectVariant.single}
                   data-testid="executorType-select"
                   aria-label={t("executorType")}
@@ -214,7 +214,7 @@ export default function ExecutorForm() {
                 >
                   {executorTypes?.map((option) => (
                     <SelectOption
-                      selected={option.id === value}
+                      selected={option.id === field.value}
                       key={option.id}
                       value={option.id}
                       description={option.helpText}

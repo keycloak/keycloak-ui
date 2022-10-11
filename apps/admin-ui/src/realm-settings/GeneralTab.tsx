@@ -35,6 +35,11 @@ type RealmSettingsGeneralTabProps = {
   save: (realm: RealmRepresentation) => void;
 };
 
+type FormFields = Omit<
+  RealmRepresentation,
+  "clients" | "components" | "groups"
+>;
+
 export const RealmSettingsGeneralTab = ({
   realm,
   save,
@@ -42,7 +47,7 @@ export const RealmSettingsGeneralTab = ({
   const { t } = useTranslation("realm-settings");
   const { adminClient } = useAdminClient();
   const { realm: realmName } = useRealm();
-  const form = useForm<RealmRepresentation>({ shouldUnregister: false });
+  const form = useForm<FormFields>();
   const {
     register,
     control,
@@ -81,9 +86,9 @@ export const RealmSettingsGeneralTab = ({
             name="realm"
             control={control}
             defaultValue=""
-            render={({ onChange, value }) => (
-              <ClipboardCopy data-testid="realmName" onChange={onChange}>
-                {value}
+            render={({ field }) => (
+              <ClipboardCopy data-testid="realmName" onChange={field.onChange}>
+                {field.value}
               </ClipboardCopy>
             )}
           />
@@ -92,16 +97,14 @@ export const RealmSettingsGeneralTab = ({
           <KeycloakTextInput
             type="text"
             id="kc-display-name"
-            name="displayName"
-            ref={register}
+            {...register("displayName")}
           />
         </FormGroup>
         <FormGroup label={t("htmlDisplayName")} fieldId="kc-html-display-name">
           <KeycloakTextInput
             type="text"
             id="kc-html-display-name"
-            name="displayNameHtml"
-            ref={register}
+            {...register("displayNameHtml")}
           />
         </FormGroup>
         <FormGroup
@@ -117,8 +120,7 @@ export const RealmSettingsGeneralTab = ({
           <KeycloakTextInput
             type="text"
             id="kc-frontend-url"
-            name={convertAttributeNameToForm("attributes.frontendUrl")}
-            ref={register}
+            {...register(convertAttributeNameToForm("attributes.frontendUrl"))}
           />
         </FormGroup>
         <FormGroup
@@ -135,22 +137,22 @@ export const RealmSettingsGeneralTab = ({
             name="sslRequired"
             defaultValue="none"
             control={control}
-            render={({ onChange, value }) => (
+            render={({ field }) => (
               <Select
                 toggleId="kc-require-ssl"
                 onToggle={() => setOpen(!open)}
                 onSelect={(_, value) => {
-                  onChange(value as string);
+                  field.onChange(value.toString());
                   setOpen(false);
                 }}
-                selections={value}
+                selections={field.value}
                 variant={SelectVariant.single}
                 aria-label={t("requireSsl")}
                 isOpen={open}
               >
                 {requireSslTypes.map((sslType) => (
                   <SelectOption
-                    selected={sslType === value}
+                    selected={sslType === field.value}
                     key={sslType}
                     value={sslType}
                   >
@@ -192,14 +194,14 @@ export const RealmSettingsGeneralTab = ({
             name="userManagedAccessAllowed"
             control={control}
             defaultValue={false}
-            render={({ onChange, value }) => (
+            render={({ field }) => (
               <Switch
                 id="kc-user-managed-access"
                 data-testid="user-managed-access-switch"
                 label={t("common:on")}
                 labelOff={t("common:off")}
-                isChecked={value}
-                onChange={onChange}
+                isChecked={field.value}
+                onChange={field.onChange}
                 aria-label={t("userManagedAccess")}
               />
             )}
@@ -221,14 +223,14 @@ export const RealmSettingsGeneralTab = ({
               name={convertAttributeNameToForm("attributes.userProfileEnabled")}
               control={control}
               defaultValue={false}
-              render={({ onChange, value }) => (
+              render={({ field }) => (
                 <Switch
                   id="kc-user-profile-enabled"
                   data-testid="user-profile-enabled-switch"
                   label={t("common:on")}
                   labelOff={t("common:off")}
-                  isChecked={value === "true"}
-                  onChange={(value) => onChange(value.toString())}
+                  isChecked={field.value === "true"}
+                  onChange={(value) => field.onChange(value.toString())}
                   aria-label={t("userProfileEnabled")}
                 />
               )}

@@ -1,6 +1,11 @@
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
-import { Controller, FormProvider, useForm } from "react-hook-form";
+import {
+  Controller,
+  FormProvider,
+  SubmitHandler,
+  useForm,
+} from "react-hook-form";
 import {
   ActionGroup,
   AlertVariant,
@@ -59,9 +64,7 @@ export default function NewClientPolicyCondition() {
     useParams<EditClientPolicyConditionParams>();
 
   const serverInfo = useServerInfo();
-  const form = useForm({
-    shouldUnregister: false,
-  });
+  const form = useForm();
 
   const conditionTypes =
     serverInfo.componentTypes?.[
@@ -101,7 +104,7 @@ export default function NewClientPolicyCondition() {
     []
   );
 
-  const save = async (configPolicy: ConfigProperty) => {
+  const save: SubmitHandler<any> = async (configPolicy: ConfigProperty) => {
     const configValues = configPolicy.config;
 
     const writeConfig = () => {
@@ -204,7 +207,7 @@ export default function NewClientPolicyCondition() {
               name="conditions"
               defaultValue={"any-client"}
               control={form.control}
-              render={({ onChange, value }) => (
+              render={({ field }) => (
                 <Select
                   placeholderText={t("selectACondition")}
                   className="kc-conditionType-select"
@@ -213,7 +216,7 @@ export default function NewClientPolicyCondition() {
                   isDisabled={!!conditionName}
                   onToggle={(toggle) => setOpenConditionType(toggle)}
                   onSelect={(_, value) => {
-                    onChange(value);
+                    field.onChange(value);
                     setConditionProperties(
                       (value as ComponentTypeRepresentation).properties
                     );
@@ -232,7 +235,7 @@ export default function NewClientPolicyCondition() {
                 >
                   {conditionTypes?.map((condition) => (
                     <SelectOption
-                      selected={condition.id === value}
+                      selected={condition.id === field.value}
                       description={t(
                         `realm-settings-help:${camelCase(
                           condition.id.replace(/-/g, " ")

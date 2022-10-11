@@ -53,11 +53,11 @@ export const OtpPolicy = ({ realm, realmUpdated }: OtpPolicyProps) => {
   const localeSort = useLocaleSort();
   const [open, toggle] = useToggle();
 
-  const otpType = useWatch<typeof POLICY_TYPES[number]>({
+  const otpType = useWatch({
     name: "otpPolicyType",
     control,
     defaultValue: POLICY_TYPES[0],
-  });
+  }) as typeof POLICY_TYPES[number];
 
   const setupForm = (realm: RealmRepresentation) => reset(realm);
 
@@ -109,16 +109,16 @@ export const OtpPolicy = ({ realm, realmUpdated }: OtpPolicyProps) => {
             data-testid="otpPolicyType"
             defaultValue={POLICY_TYPES[0]}
             control={control}
-            render={({ onChange, value }) => (
+            render={({ field }) => (
               <>
                 {POLICY_TYPES.map((type) => (
                   <Radio
                     id={type}
                     key={type}
                     data-testid={type}
-                    isChecked={value === type}
+                    isChecked={field.value === type}
                     name="otpPolicyType"
-                    onChange={() => onChange(type)}
+                    onChange={() => field.onChange(type)}
                     label={t(`policyType.${type}`)}
                     className="keycloak__otp_policies_authentication__policy-type"
                   />
@@ -141,22 +141,22 @@ export const OtpPolicy = ({ realm, realmUpdated }: OtpPolicyProps) => {
             name="otpPolicyAlgorithm"
             defaultValue={`Hmac${OTP_HASH_ALGORITHMS[0]}`}
             control={control}
-            render={({ onChange, value }) => (
+            render={({ field }) => (
               <Select
                 toggleId="otpHashAlgorithm"
                 onToggle={toggle}
                 onSelect={(_, value) => {
-                  onChange(value.toString());
+                  field.onChange(value.toString());
                   toggle();
                 }}
-                selections={value}
+                selections={field.value}
                 variant={SelectVariant.single}
                 aria-label={t("otpHashAlgorithm")}
                 isOpen={open}
               >
                 {OTP_HASH_ALGORITHMS.map((type) => (
                   <SelectOption
-                    selected={`Hmac${type}` === value}
+                    selected={`Hmac${type}` === field.value}
                     key={type}
                     value={`Hmac${type}`}
                   >
@@ -183,16 +183,16 @@ export const OtpPolicy = ({ realm, realmUpdated }: OtpPolicyProps) => {
             data-testid="otpPolicyDigits"
             defaultValue={NUMBER_OF_DIGITS[0]}
             control={control}
-            render={({ onChange, value }) => (
+            render={({ field }) => (
               <>
                 {NUMBER_OF_DIGITS.map((type) => (
                   <Radio
                     id={`digit-${type}`}
                     key={type}
                     data-testid={`digit-${type}`}
-                    isChecked={value === type}
+                    isChecked={field.value === type}
                     name="otpPolicyDigits"
-                    onChange={() => onChange(type)}
+                    onChange={() => field.onChange(type)}
                     label={type}
                     className="keycloak__otp_policies_authentication__number-of-digits"
                   />
@@ -215,18 +215,18 @@ export const OtpPolicy = ({ realm, realmUpdated }: OtpPolicyProps) => {
             name="otpPolicyLookAheadWindow"
             defaultValue={1}
             control={control}
-            render={({ onChange, value }) => {
+            render={({ field }) => {
               const MIN_VALUE = 0;
               const setValue = (newValue: number) =>
-                onChange(Math.max(newValue, MIN_VALUE));
+                field.onChange(Math.max(newValue, MIN_VALUE));
 
               return (
                 <NumberInput
                   id="lookAhead"
-                  value={value}
+                  value={field.value}
                   min={MIN_VALUE}
-                  onPlus={() => setValue(value + 1)}
-                  onMinus={() => setValue(value - 1)}
+                  onPlus={() => setValue(field.value + 1)}
+                  onMinus={() => setValue(field.value - 1)}
                   onChange={(event) => {
                     const newValue = Number(event.currentTarget.value);
                     setValue(!isNaN(newValue) ? newValue : 0);
@@ -254,12 +254,12 @@ export const OtpPolicy = ({ realm, realmUpdated }: OtpPolicyProps) => {
               defaultValue={30}
               control={control}
               rules={{ min: 1, max: 120 }}
-              render={({ onChange, value }) => (
+              render={({ field }) => (
                 <TimeSelector
                   data-testid="otpPolicyPeriod"
                   aria-label={t("otpPolicyPeriod")}
-                  value={value}
-                  onChange={onChange}
+                  value={field.value}
+                  onChange={field.onChange}
                   units={["second", "minute"]}
                   validated={errors.otpPolicyPeriod ? "error" : "default"}
                 />
@@ -285,18 +285,18 @@ export const OtpPolicy = ({ realm, realmUpdated }: OtpPolicyProps) => {
               defaultValue={30}
               control={control}
               rules={{ min: 1, max: 120 }}
-              render={({ onChange, value }) => {
+              render={({ field }) => {
                 const MIN_VALUE = 1;
                 const setValue = (newValue: number) =>
-                  onChange(Math.max(newValue, MIN_VALUE));
+                  field.onChange(Math.max(newValue, MIN_VALUE));
 
                 return (
                   <NumberInput
                     id="initialCounter"
-                    value={value}
+                    value={field.value}
                     min={MIN_VALUE}
-                    onPlus={() => setValue(value + 1)}
-                    onMinus={() => setValue(value - 1)}
+                    onPlus={() => setValue(field.value + 1)}
+                    onMinus={() => setValue(field.value - 1)}
                     onChange={(event) => {
                       const newValue = Number(event.currentTarget.value);
                       setValue(!isNaN(newValue) ? newValue : 30);
@@ -340,13 +340,13 @@ export const OtpPolicy = ({ realm, realmUpdated }: OtpPolicyProps) => {
               name="otpPolicyCodeReusable"
               defaultValue={true}
               control={control}
-              render={({ onChange, value }) => (
+              render={({ field }) => (
                 <Switch
                   id="otpPolicyCodeReusable"
                   label={t("common:on")}
                   labelOff={t("common:off")}
-                  isChecked={value}
-                  onChange={onChange}
+                  isChecked={field.value}
+                  onChange={field.onChange}
                 />
               )}
             />

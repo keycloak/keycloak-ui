@@ -23,9 +23,8 @@ export const GroupComponent = ({ name, label, helpText }: ComponentProps) => {
     <Controller
       name={convertToName(name!)}
       defaultValue=""
-      typeAheadAriaLabel={t("selectGroup")}
       control={control}
-      render={({ onChange, value }) => (
+      render={({ field }) => (
         <>
           {open && (
             <GroupPickerDialog
@@ -35,11 +34,11 @@ export const GroupComponent = ({ name, label, helpText }: ComponentProps) => {
                 ok: "common:select",
               }}
               onConfirm={(groups) => {
-                onChange(groups?.[0].path);
+                field.onChange(groups?.[0].path);
                 setOpen(false);
               }}
               onClose={() => setOpen(false)}
-              filterGroups={value}
+              filterGroups={field.value}
             />
           )}
 
@@ -55,8 +54,10 @@ export const GroupComponent = ({ name, label, helpText }: ComponentProps) => {
           >
             <InputGroup>
               <ChipGroup>
-                {value && (
-                  <Chip onClick={() => onChange(undefined)}>{value}</Chip>
+                {field.value && (
+                  <Chip onClick={() => field.onChange(undefined)}>
+                    {field.value}
+                  </Chip>
                 )}
               </ChipGroup>
               <Button

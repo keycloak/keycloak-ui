@@ -41,17 +41,20 @@ const CANONICALIZATION = [
   },
 ] as const;
 
+type FormFields = Omit<ClientRepresentation, "authorizationSettings">;
+
 export const SamlSignature = () => {
   const { t } = useTranslation("clients");
   const [algOpen, setAlgOpen] = useState(false);
   const [keyOpen, setKeyOpen] = useState(false);
   const [canOpen, setCanOpen] = useState(false);
 
-  const { control, watch } = useFormContext<ClientRepresentation>();
+  const { control, watch } = useFormContext<FormFields>();
 
   const signDocs = watch(
     convertAttributeNameToForm("attributes.saml.server.signature")
   );
+
   const signAssertion = watch(
     convertAttributeNameToForm("attributes.saml.assertion.signature")
   );
@@ -87,24 +90,23 @@ export const SamlSignature = () => {
                 "attributes.saml.signature.algorithm"
               )}
               defaultValue={SIGNATURE_ALGORITHMS[0]}
-              Key
               control={control}
-              render={({ onChange, value }) => (
+              render={({ field }) => (
                 <Select
                   toggleId="signatureAlgorithm"
                   onToggle={setAlgOpen}
                   onSelect={(_, value) => {
-                    onChange(value.toString());
+                    field.onChange(value.toString());
                     setAlgOpen(false);
                   }}
-                  selections={value}
+                  selections={field.value}
                   variant={SelectVariant.single}
                   aria-label={t("signatureAlgorithm")}
                   isOpen={algOpen}
                 >
                   {SIGNATURE_ALGORITHMS.map((algorithm) => (
                     <SelectOption
-                      selected={algorithm === value}
+                      selected={algorithm === field.value}
                       key={algorithm}
                       value={algorithm}
                     />
@@ -129,22 +131,22 @@ export const SamlSignature = () => {
               )}
               defaultValue={KEYNAME_TRANSFORMER[0]}
               control={control}
-              render={({ onChange, value }) => (
+              render={({ field }) => (
                 <Select
                   toggleId="signatureKeyName"
                   onToggle={setKeyOpen}
                   onSelect={(_, value) => {
-                    onChange(value.toString());
+                    field.onChange(value.toString());
                     setKeyOpen(false);
                   }}
-                  selections={value}
+                  selections={field.value}
                   variant={SelectVariant.single}
                   aria-label={t("signatureKeyName")}
                   isOpen={keyOpen}
                 >
                   {KEYNAME_TRANSFORMER.map((key) => (
                     <SelectOption
-                      selected={key === value}
+                      selected={key === field.value}
                       key={key}
                       value={key}
                     />
@@ -167,16 +169,17 @@ export const SamlSignature = () => {
               name="attributes.saml_signature_canonicalization_method"
               defaultValue={CANONICALIZATION[0].value}
               control={control}
-              render={({ onChange, value }) => (
+              render={({ field }) => (
                 <Select
                   toggleId="canonicalization"
                   onToggle={setCanOpen}
                   onSelect={(_, value) => {
-                    onChange(value.toString());
+                    field.onChange(value.toString());
                     setCanOpen(false);
                   }}
                   selections={
-                    CANONICALIZATION.find((can) => can.value === value)?.name
+                    CANONICALIZATION.find((can) => can.value === field.value)
+                      ?.name
                   }
                   variant={SelectVariant.single}
                   aria-label={t("canonicalization")}
@@ -184,7 +187,7 @@ export const SamlSignature = () => {
                 >
                   {CANONICALIZATION.map((can) => (
                     <SelectOption
-                      selected={can.value === value}
+                      selected={can.value === field.value}
                       key={can.name}
                       value={can.value}
                     >

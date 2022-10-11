@@ -37,27 +37,27 @@ export const SignedJWT = () => {
         )}
         defaultValue=""
         control={control}
-        render={({ onChange, value }) => (
+        render={({ field }) => (
           <Select
             maxHeight={200}
             toggleId="kc-signature-algorithm"
             onToggle={isOpen}
             onSelect={(_, value) => {
-              onChange(value.toString());
+              field.onChange(value.toString());
               isOpen(false);
             }}
-            selections={value || t("anyAlgorithm")}
+            selections={field.value || t("anyAlgorithm")}
             variant={SelectVariant.single}
             aria-label={t("signatureAlgorithm")}
             isOpen={open}
           >
-            <SelectOption selected={value === ""} key="any" value="">
+            <SelectOption selected={field.value === ""} key="any" value="">
               {t("anyAlgorithm")}
             </SelectOption>
             <>
               {providers.map((option) => (
                 <SelectOption
-                  selected={option === value}
+                  selected={option === field.value}
                   key={option}
                   value={option}
                 />

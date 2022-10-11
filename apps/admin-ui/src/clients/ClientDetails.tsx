@@ -182,6 +182,8 @@ export type SaveOptions = {
   messageKey?: string;
 };
 
+type FormFields = Omit<ClientRepresentation, "authorizationSettings">;
+
 export default function ClientDetails() {
   const { t } = useTranslation("clients");
   const { adminClient } = useAdminClient();
@@ -202,7 +204,7 @@ export default function ClientDetails() {
   const [downloadDialogOpen, toggleDownloadDialogOpen] = useToggle();
   const [changeAuthenticatorOpen, toggleChangeAuthenticatorOpen] = useToggle();
 
-  const form = useForm<ClientRepresentation>({ shouldUnregister: false });
+  const form = useForm<FormFields>();
   const { clientId } = useParams<ClientParams>();
   const [key, setKey] = useState(0);
 
@@ -237,6 +239,7 @@ export default function ClientDetails() {
 
   const setupForm = (client: ClientRepresentation) => {
     form.reset({ ...client });
+    // @ts-ignore
     convertToFormValues(client, form.setValue);
     form.setValue(
       convertAttributeNameToForm("attributes.request.uris"),
@@ -398,10 +401,10 @@ export default function ClientDetails() {
         name="enabled"
         control={form.control}
         defaultValue={true}
-        render={({ onChange, value }) => (
+        render={({ field }) => (
           <ClientDetailHeader
-            value={value}
-            onChange={onChange}
+            value={field.value ?? true}
+            onChange={field.onChange}
             client={client}
             save={save}
             toggleDeleteDialog={toggleDeleteDialog}

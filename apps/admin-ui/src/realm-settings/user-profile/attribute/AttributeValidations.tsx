@@ -34,7 +34,7 @@ export const AttributeValidations = () => {
   }>();
   const { setValue, control, register } = useFormContext();
 
-  const validators = useWatch<KeyValueType[]>({
+  const validators: KeyValueType[] = useWatch({
     name: "validations",
     control,
     defaultValue: [],

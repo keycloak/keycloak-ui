@@ -30,9 +30,8 @@ export const Regex = () => {
         <KeycloakTextInput
           type="text"
           id="targetClaim"
-          name="targetClaim"
+          {...register("targetClaim", { required: true })}
           data-testid="targetClaim"
-          ref={register({ required: true })}
           validated={errors.targetClaim ? "error" : "default"}
         />
       </FormGroup>
@@ -50,10 +49,9 @@ export const Regex = () => {
         helperTextInvalid={t("common:required")}
       >
         <KeycloakTextInput
-          ref={register({ required: true })}
           type="text"
           id="pattern"
-          name="pattern"
+          {...register("pattern", { required: true })}
           data-testid="regexPattern"
           validated={errors.pattern ? "error" : "default"}
         />

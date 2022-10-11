@@ -25,7 +25,7 @@ export const BruteForceDetection = ({
   save,
 }: BruteForceDetectionProps) => {
   const { t } = useTranslation("realm-settings");
-  const form = useForm({ shouldUnregister: false });
+  const form = useForm();
   const {
     setValue,
     handleSubmit,
@@ -62,13 +62,13 @@ export const BruteForceDetection = ({
             name="bruteForceProtected"
             defaultValue={false}
             control={control}
-            render={({ onChange, value }) => (
+            render={({ field }) => (
               <Switch
                 id="bruteForceProtected"
                 label={t("common:on")}
                 labelOff={t("common:off")}
-                isChecked={value}
-                onChange={onChange}
+                isChecked={field.value}
+                onChange={field.onChange}
                 aria-label={t("common:enabled")}
               />
             )}
@@ -91,15 +91,17 @@ export const BruteForceDetection = ({
                 defaultValue={0}
                 control={control}
                 rules={{ required: true }}
-                render={({ onChange, value }) => (
+                render={({ field }) => (
                   <NumberInput
                     type="text"
                     id="failureFactor"
-                    value={value}
-                    onPlus={() => onChange(value + 1)}
-                    onMinus={() => onChange(value - 1)}
+                    value={field.value}
+                    onPlus={() => field.onChange(field.value + 1)}
+                    onMinus={() => field.onChange(field.value - 1)}
                     onChange={(event) =>
-                      onChange(Number((event.target as HTMLInputElement).value))
+                      field.onChange(
+                        Number((event.target as HTMLInputElement).value)
+                      )
                     }
                   />
                 )}
@@ -114,13 +116,13 @@ export const BruteForceDetection = ({
                 name="permanentLockout"
                 defaultValue={false}
                 control={control}
-                render={({ onChange, value }) => (
+                render={({ field }) => (
                   <Switch
                     id="permanentLockout"
                     label={t("common:on")}
                     labelOff={t("common:off")}
-                    isChecked={value}
-                    onChange={onChange}
+                    isChecked={field.value}
+                    onChange={field.onChange}
                     aria-label={t("permanentLockout")}
                   />
                 )}
@@ -149,7 +151,7 @@ export const BruteForceDetection = ({
                 name="quickLoginCheckMilliSeconds"
                 defaultValue={0}
                 control={control}
-                render={({ onChange, value }) => (
+                render={({ field: { onChange, value } }) => (
                   <NumberInput
                     type="text"
                     id="quickLoginCheckMilliSeconds"

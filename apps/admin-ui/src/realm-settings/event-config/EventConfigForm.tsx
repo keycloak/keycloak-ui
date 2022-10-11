@@ -1,5 +1,5 @@
 import { useTranslation } from "react-i18next";
-import { Controller, UseFormMethods } from "react-hook-form";
+import { Controller, UseFormReturn } from "react-hook-form";
 import {
   ActionGroup,
   Button,
@@ -11,12 +11,13 @@ import {
 import { HelpItem } from "../../components/help-enabler/HelpItem";
 import { TimeSelector } from "../../components/time-selector/TimeSelector";
 import { useConfirmDialog } from "../../components/confirm-dialog/ConfirmDialog";
+import { EventsConfigForm } from "./EventsTab";
 
 export type EventsType = "admin" | "user";
 
 type EventConfigFormProps = {
   type: EventsType;
-  form: UseFormMethods;
+  form: UseFormReturn<EventsConfigForm>;
   reset: () => void;
   clear: () => void;
 };
@@ -36,7 +37,7 @@ export const EventConfigForm = ({
   } = form;
 
   const eventKey = type === "admin" ? "adminEventsEnabled" : "eventsEnabled";
-  const eventsEnabled: boolean = watch(eventKey);
+  const eventsEnabled: boolean = watch(eventKey)!;
 
   const [toggleDisableDialog, DisableConfirm] = useConfirmDialog({
     titleKey: "realm-settings:events-disable-title",
@@ -63,18 +64,18 @@ export const EventConfigForm = ({
           name={eventKey}
           defaultValue={false}
           control={control}
-          render={({ onChange, value }) => (
+          render={({ field }) => (
             <Switch
               data-testid={eventKey}
               id={`${eventKey}-switch`}
               label={t("common:on")}
               labelOff={t("common:off")}
-              isChecked={value}
+              isChecked={field.value}
               onChange={(value) => {
                 if (!value) {
                   toggleDisableDialog();
                 } else {
-                  onChange(value);
+                  field.onChange(value);
                 }
               }}
               aria-label={t("saveEvents")}
@@ -100,14 +101,14 @@ export const EventConfigForm = ({
                 name="adminEventsDetailsEnabled"
                 defaultValue={false}
                 control={control}
-                render={({ onChange, value }) => (
+                render={({ field }) => (
                   <Switch
                     data-testid="includeRepresentation"
                     id="includeRepresentation"
                     label={t("common:on")}
                     labelOff={t("common:off")}
-                    isChecked={value}
-                    onChange={onChange}
+                    isChecked={field.value}
+                    onChange={field.onChange}
                     aria-label={t("includeRepresentation")}
                   />
                 )}
@@ -128,12 +129,12 @@ export const EventConfigForm = ({
               name={
                 type === "user" ? "eventsExpiration" : "adminEventsExpiration"
               }
-              defaultValue=""
+              defaultValue={0}
               control={control}
-              render={({ onChange, value }) => (
+              render={({ field }) => (
                 <TimeSelector
-                  value={value}
-                  onChange={onChange}
+                  value={field.value || 0}
+                  onChange={field.onChange}
                   units={["minute", "hour", "day"]}
                 />
               )}

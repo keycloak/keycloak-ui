@@ -25,7 +25,6 @@ import {
 
 import type ClientProfileRepresentation from "@keycloak/keycloak-admin-client/lib/defs/clientProfileRepresentation";
 import type ClientProfilesRepresentation from "@keycloak/keycloak-admin-client/lib/defs/clientProfilesRepresentation";
-import type ClientPolicyExecutorRepresentation from "@keycloak/keycloak-admin-client/lib/defs/clientPolicyExecutorRepresentation";
 import { FormAccess } from "../components/form-access/FormAccess";
 import { ViewHeader } from "../components/view-header/ViewHeader";
 import { Link, useNavigate } from "react-router-dom-v5-compat";
@@ -68,11 +67,10 @@ export default function ClientProfileForm() {
     mode: "onChange",
   });
 
-  const { fields: profileExecutors, remove } =
-    useFieldArray<ClientPolicyExecutorRepresentation>({
-      name: "executors",
-      control,
-    });
+  const { fields: profileExecutors, remove } = useFieldArray({
+    name: "executors",
+    control,
+  });
 
   const { addAlert, addError } = useAlerts();
   const { adminClient } = useAdminClient();
@@ -108,12 +106,15 @@ export default function ClientProfileForm() {
       );
       const profile = profiles.profiles?.find((p) => p.name === profileName);
       setIsGlobalProfile(globalProfile !== undefined);
-      setValue("name", globalProfile?.name ?? profile?.name);
+      setValue("name", globalProfile?.name ?? profile?.name ?? "");
       setValue(
         "description",
-        globalProfile?.description ?? profile?.description
+        globalProfile?.description ?? profile?.description ?? ""
       );
-      setValue("executors", globalProfile?.executors ?? profile?.executors);
+      setValue(
+        "executors",
+        globalProfile?.executors ?? profile?.executors ?? []
+      );
     },
     [key]
   );
@@ -228,8 +229,7 @@ export default function ClientProfileForm() {
             }
           >
             <KeycloakTextInput
-              ref={register({ required: true })}
-              name="name"
+              {...register("name", { required: true })}
               type="text"
               id="name"
               aria-label={t("name")}
@@ -239,8 +239,7 @@ export default function ClientProfileForm() {
           </FormGroup>
           <FormGroup label={t("common:description")} fieldId="kc-description">
             <KeycloakTextArea
-              ref={register()}
-              name="description"
+              {...register("description")}
               type="text"
               id="description"
               aria-label={t("description")}

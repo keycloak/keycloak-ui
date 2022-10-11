@@ -74,7 +74,7 @@ export const AddHostDialog = ({
     >
       <Form isHorizontal>
         <FormGroup label={t("nodeHost")} fieldId="nodeHost">
-          <KeycloakTextInput id="nodeHost" ref={register} name="node" />
+          <KeycloakTextInput id="nodeHost" {...register("node")} />
         </FormGroup>
       </Form>
     </Modal>

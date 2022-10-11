@@ -38,6 +38,8 @@ import { UserSelect } from "../../components/users/UserSelect";
 
 import "./auth-evaluate.css";
 
+type FormFields = Omit<ClientRepresentation, "authorizationSettings">;
+
 interface EvaluateFormInputs
   extends Omit<ResourceEvaluation, "context" | "resources"> {
   alias: string;
@@ -46,7 +48,7 @@ interface EvaluateFormInputs
     attributes: Record<string, string>[];
   };
   resources?: Record<string, string>[];
-  client: ClientRepresentation;
+  client: FormFields;
   user: string[];
 }
 
@@ -82,9 +84,8 @@ export const AuthorizationEvaluate = ({ client }: Props) => {
     control,
     register,
     reset,
-    errors,
     trigger,
-    formState: { isValid },
+    formState: { errors, isValid },
   } = form;
   const { t } = useTranslation("clients");
   const { adminClient } = useAdminClient();
@@ -210,11 +211,10 @@ export const AuthorizationEvaluate = ({ client }: Props) => {
             >
               <Controller
                 name="roleIds"
-                placeholderText={t("selectARole")}
                 control={control}
                 defaultValue={[]}
-                rules={{ validate: (value) => value.length > 0 }}
-                render={({ onChange, value }) => (
+                rules={{ validate: (value) => value && value.length > 0 }}
+                render={({ field: { value, onChange } }) => (
                   <Select
                     variant={SelectVariant.typeaheadMulti}
                     toggleId="role"
@@ -222,12 +222,12 @@ export const AuthorizationEvaluate = ({ client }: Props) => {
                     selections={value}
                     onSelect={(_, v) => {
                       const option = v.toString();
-                      if (value.includes(option)) {
+                      if (value?.includes(option)) {
                         onChange(
                           value.filter((item: string) => item !== option)
                         );
                       } else {
-                        onChange([...value, option]);
+                        onChange([...(value ?? []), option]);
                       }
                       setRoleDropdownOpen(false);
                     }}
@@ -308,15 +308,14 @@ export const AuthorizationEvaluate = ({ client }: Props) => {
                     />
                   }
                   fieldId="client"
-                  validated={form.errors.alias ? "error" : "default"}
+                  validated={errors.alias ? "error" : "default"}
                   helperTextInvalid={t("common:required")}
                 >
                   <KeycloakTextInput
                     type="text"
                     id="alias"
-                    name="alias"
                     data-testid="alias"
-                    ref={register({ required: true })}
+                    {...register("alias", { required: true })}
                   />
                 </FormGroup>
                 <FormGroup
@@ -333,29 +332,35 @@ export const AuthorizationEvaluate = ({ client }: Props) => {
                     name="authScopes"
                     defaultValue={[]}
                     control={control}
-                    render={({ onChange, value }) => (
+                    render={({ field }) => (
                       <Select
                         toggleId="authScopes"
                         onToggle={setScopesDropdownOpen}
                         onSelect={(_, v) => {
                           const option = v.toString();
-                          if (value.includes(option)) {
-                            onChange(
-                              value.filter((item: string) => item !== option)
+                          if (field.value.includes(option)) {
+                            field.onChange(
+                              field.value.filter(
+                                (item: string) => item !== option
+                              )
                             );
                           } else {
-                            onChange([...value, option]);
+                            field.onChange([...field.value, option]);
                           }
                           setScopesDropdownOpen(false);
                         }}
-                        selections={value}
+                        selections={field.value}
                         variant={SelectVariant.typeaheadMulti}
                         aria-label={t("authScopes")}
                         isOpen={scopesDropdownOpen}
                       >
                         {scopes.map((scope) => (
                           <SelectOption
-                            selected={scope.name === value}
+                            selected={
+                              scope.name
+                                ? field.value.includes(scope.name)
+                                : false
+                            }
                             key={scope.id}
                             value={scope.name}
                           />

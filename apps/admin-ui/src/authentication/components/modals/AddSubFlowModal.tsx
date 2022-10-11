@@ -103,9 +103,8 @@ export const AddSubFlowModal = ({
           <KeycloakTextInput
             type="text"
             id="name"
-            name="name"
+            {...register("name", { required: true })}
             data-testid="name"
-            ref={register({ required: true })}
             validated={
               errors.name ? ValidatedOptions.error : ValidatedOptions.default
             }
@@ -124,9 +123,8 @@ export const AddSubFlowModal = ({
           <KeycloakTextInput
             type="text"
             id="description"
-            name="description"
+            {...register("description")}
             data-testid="description"
-            ref={register}
           />
         </FormGroup>
         <FormGroup
@@ -143,23 +141,23 @@ export const AddSubFlowModal = ({
             name="type"
             defaultValue={types[0]}
             control={control}
-            render={({ onChange, value }) => (
+            render={({ field }) => (
               <Select
                 menuAppendTo="parent"
                 toggleId="flowType"
                 onToggle={setOpen}
                 onSelect={(_, value) => {
-                  onChange(value as string);
+                  field.onChange(value as string);
                   setOpen(false);
                 }}
-                selections={t(`flow-type.${value}`)}
+                selections={t(`flow-type.${field.value}`)}
                 variant={SelectVariant.single}
                 aria-label={t("flowType")}
                 isOpen={open}
               >
                 {types.map((type) => (
                   <SelectOption
-                    selected={type === value}
+                    selected={type === field.value}
                     key={type}
                     value={type}
                   >
@@ -185,7 +183,7 @@ export const AddSubFlowModal = ({
               name="provider"
               defaultValue=""
               control={control}
-              render={({ onChange, value }) => (
+              render={({ field: { onChange, value } }) => (
                 <Select
                   menuAppendTo="parent"
                   toggleId="provider"
@@ -194,7 +192,7 @@ export const AddSubFlowModal = ({
                     onChange(value.toString());
                     setOpenProvider(false);
                   }}
-                  selections={value.displayName}
+                  selections={value}
                   variant={SelectVariant.single}
                   aria-label={t("flowType")}
                   isOpen={openProvider}
@@ -203,7 +201,7 @@ export const AddSubFlowModal = ({
                     <SelectOption
                       selected={provider.displayName === value}
                       key={provider.id}
-                      value={provider}
+                      value={provider.displayName}
                     >
                       {provider.displayName}
                     </SelectOption>
@@ -215,9 +213,8 @@ export const AddSubFlowModal = ({
         )}
         {formProviders?.length === 1 && (
           <input
-            name="provider"
+            {...register("provider")}
             type="hidden"
-            ref={register}
             value={formProviders[0].id}
           />
         )}

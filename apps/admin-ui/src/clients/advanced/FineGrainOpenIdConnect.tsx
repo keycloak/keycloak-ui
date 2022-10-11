@@ -165,17 +165,17 @@ export const FineGrainOpenIdConnect = ({
           )}
           defaultValue=""
           control={control}
-          render={({ onChange, value }) => (
+          render={({ field }) => (
             <Select
               toggleId="accessTokenSignatureAlgorithm"
               variant={SelectVariant.single}
               onToggle={setAccessTokenOpen}
               isOpen={accessTokenOpen}
               onSelect={(_, value) => {
-                onChange(value);
+                field.onChange(value);
                 setAccessTokenOpen(false);
               }}
-              selections={value}
+              selections={field.value}
             >
               {keyOptions}
             </Select>
@@ -198,17 +198,17 @@ export const FineGrainOpenIdConnect = ({
           )}
           defaultValue=""
           control={control}
-          render={({ onChange, value }) => (
+          render={({ field }) => (
             <Select
               toggleId="idTokenSignatureAlgorithm"
               variant={SelectVariant.single}
               onToggle={setIdTokenOpen}
               isOpen={idTokenOpen}
               onSelect={(_, value) => {
-                onChange(value);
+                field.onChange(value);
                 setIdTokenOpen(false);
               }}
-              selections={value}
+              selections={field.value}
             >
               {keyOptions}
             </Select>
@@ -231,17 +231,17 @@ export const FineGrainOpenIdConnect = ({
           )}
           defaultValue=""
           control={control}
-          render={({ onChange, value }) => (
+          render={({ field }) => (
             <Select
               toggleId="idTokenEncryptionKeyManagementAlgorithm"
               variant={SelectVariant.single}
               onToggle={setIdTokenKeyManagementOpen}
               isOpen={idTokenKeyManagementOpen}
               onSelect={(_, value) => {
-                onChange(value);
+                field.onChange(value);
                 setIdTokenKeyManagementOpen(false);
               }}
-              selections={value}
+              selections={field.value}
             >
               {cekManagementOptions}
             </Select>
@@ -264,17 +264,17 @@ export const FineGrainOpenIdConnect = ({
           )}
           defaultValue=""
           control={control}
-          render={({ onChange, value }) => (
+          render={({ field }) => (
             <Select
               toggleId="idTokenEncryptionContentEncryptionAlgorithm"
               variant={SelectVariant.single}
               onToggle={setIdTokenContentOpen}
               isOpen={idTokenContentOpen}
               onSelect={(_, value) => {
-                onChange(value);
+                field.onChange(value);
                 setIdTokenContentOpen(false);
               }}
-              selections={value}
+              selections={field.value}
             >
               {contentOptions}
             </Select>
@@ -297,17 +297,17 @@ export const FineGrainOpenIdConnect = ({
           )}
           defaultValue=""
           control={control}
-          render={({ onChange, value }) => (
+          render={({ field }) => (
             <Select
               toggleId="userInfoSignedResponseAlgorithm"
               variant={SelectVariant.single}
               onToggle={setUserInfoSignedResponseOpen}
               isOpen={userInfoSignedResponseOpen}
               onSelect={(_, value) => {
-                onChange(value);
+                field.onChange(value);
                 setUserInfoSignedResponseOpen(false);
               }}
-              selections={value}
+              selections={field.value}
             >
               {signatureOptions}
             </Select>
@@ -330,17 +330,17 @@ export const FineGrainOpenIdConnect = ({
           )}
           defaultValue=""
           control={control}
-          render={({ onChange, value }) => (
+          render={({ field }) => (
             <Select
               toggleId="requestObjectSignatureAlgorithm"
               variant={SelectVariant.single}
               onToggle={setRequestObjectSignatureOpen}
               isOpen={requestObjectSignatureOpen}
               onSelect={(_, value) => {
-                onChange(value);
+                field.onChange(value);
                 setRequestObjectSignatureOpen(false);
               }}
-              selections={value}
+              selections={field.value}
             >
               {requestObjectOptions}
             </Select>
@@ -363,17 +363,17 @@ export const FineGrainOpenIdConnect = ({
           )}
           defaultValue=""
           control={control}
-          render={({ onChange, value }) => (
+          render={({ field }) => (
             <Select
               toggleId="requestObjectEncryption"
               variant={SelectVariant.single}
               onToggle={setRequestObjectEncryptionOpen}
               isOpen={requestObjectEncryptionOpen}
               onSelect={(_, value) => {
-                onChange(value);
+                field.onChange(value);
                 setRequestObjectEncryptionOpen(false);
               }}
-              selections={value}
+              selections={field.value}
             >
               {requestObjectEncryptionOptions}
             </Select>
@@ -396,17 +396,17 @@ export const FineGrainOpenIdConnect = ({
           )}
           defaultValue=""
           control={control}
-          render={({ onChange, value }) => (
+          render={({ field }) => (
             <Select
               toggleId="requestObjectEncoding"
               variant={SelectVariant.single}
               onToggle={setRequestObjectEncodingOpen}
               isOpen={requestObjectEncodingOpen}
               onSelect={(_, value) => {
-                onChange(value);
+                field.onChange(value);
                 setRequestObjectEncodingOpen(false);
               }}
-              selections={value}
+              selections={field.value}
             >
               {requestObjectEncodingOptions}
             </Select>
@@ -429,17 +429,17 @@ export const FineGrainOpenIdConnect = ({
           )}
           defaultValue=""
           control={control}
-          render={({ onChange, value }) => (
+          render={({ field }) => (
             <Select
               toggleId="requestObjectRequired"
               variant={SelectVariant.single}
               onToggle={setRequestObjectRequiredOpen}
               isOpen={requestObjectRequiredOpen}
               onSelect={(_, value) => {
-                onChange(value);
+                field.onChange(value);
                 setRequestObjectRequiredOpen(false);
               }}
-              selections={value}
+              selections={field.value}
             >
               {requestObjectRequiredOptions}
             </Select>
@@ -478,17 +478,17 @@ export const FineGrainOpenIdConnect = ({
           )}
           defaultValue=""
           control={control}
-          render={({ onChange, value }) => (
+          render={({ field }) => (
             <Select
               toggleId="authorizationSignedResponseAlg"
               variant={SelectVariant.single}
               onToggle={setAuthorizationSignedOpen}
               isOpen={authorizationSignedOpen}
               onSelect={(_, value) => {
-                onChange(value);
+                field.onChange(value);
                 setAuthorizationSignedOpen(false);
               }}
-              selections={value}
+              selections={field.value}
             >
               {authorizationSignedResponseOptions}
             </Select>
@@ -511,17 +511,17 @@ export const FineGrainOpenIdConnect = ({
           )}
           defaultValue=""
           control={control}
-          render={({ onChange, value }) => (
+          render={({ field }) => (
             <Select
               toggleId="authorizationEncryptedResponseAlg"
               variant={SelectVariant.single}
               onToggle={setAuthorizationEncryptedOpen}
               isOpen={authorizationEncryptedOpen}
               onSelect={(_, value) => {
-                onChange(value);
+                field.onChange(value);
                 setAuthorizationEncryptedOpen(false);
               }}
-              selections={value}
+              selections={field.value}
             >
               {cekManagementOptions}
             </Select>
@@ -544,17 +544,17 @@ export const FineGrainOpenIdConnect = ({
           )}
           defaultValue=""
           control={control}
-          render={({ onChange, value }) => (
+          render={({ field }) => (
             <Select
               toggleId="authorizationEncryptedResponseEnc"
               variant={SelectVariant.single}
               onToggle={setAuthorizationEncryptedResponseOpen}
               isOpen={authorizationEncryptedResponseOpen}
               onSelect={(_, value) => {
-                onChange(value);
+                field.onChange(value);
                 setAuthorizationEncryptedResponseOpen(false);
               }}
-              selections={value}
+              selections={field.value}
             >
               {contentOptions}
             </Select>

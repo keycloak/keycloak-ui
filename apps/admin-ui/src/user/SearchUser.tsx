@@ -38,8 +38,7 @@ export const SearchUser = ({ onSearch }: SearchUserProps) => {
             <KeycloakTextInput
               type="text"
               id="kc-user-search"
-              name="search"
-              ref={register()}
+              {...register("search")}
             />
             <Button
               variant={ButtonVariant.control}

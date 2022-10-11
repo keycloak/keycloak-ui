@@ -21,12 +21,14 @@ type CapabilityConfigProps = {
   protocol?: string;
 };
 
+type FormFields = Omit<ClientRepresentation, "authorizationSettings">;
+
 export const CapabilityConfig = ({
   unWrap,
   protocol: type,
 }: CapabilityConfigProps) => {
   const { t } = useTranslation("clients");
-  const { control, watch, setValue } = useFormContext<ClientRepresentation>();
+  const { control, watch, setValue } = useFormContext<FormFields>();
   const protocol = type || watch("protocol");
   const clientAuthentication = watch("publicClient");
   const authorization = watch("authorizationServicesEnabled");
@@ -56,16 +58,16 @@ export const CapabilityConfig = ({
               name="publicClient"
               defaultValue={false}
               control={control}
-              render={({ onChange, value }) => (
+              render={({ field }) => (
                 <Switch
                   data-testid="authentication"
                   id="kc-authentication-switch"
                   name="publicClient"
                   label={t("common:on")}
                   labelOff={t("common:off")}
-                  isChecked={!value}
+                  isChecked={!field.value}
                   onChange={(value) => {
-                    onChange(!value);
+                    field.onChange(!value);
                     if (!value) {
                       setValue("authorizationServicesEnabled", false);
                       setValue("serviceAccountsEnabled", false);
@@ -97,16 +99,16 @@ export const CapabilityConfig = ({
               name="authorizationServicesEnabled"
               defaultValue={false}
               control={control}
-              render={({ onChange, value }) => (
+              render={({ field }) => (
                 <Switch
                   data-testid="authorization"
                   id="kc-authorization-switch"
                   name="authorizationServicesEnabled"
                   label={t("common:on")}
                   labelOff={t("common:off")}
-                  isChecked={value && !clientAuthentication}
+                  isChecked={field.value && !clientAuthentication}
                   onChange={(value) => {
-                    onChange(value);
+                    field.onChange(value);
                     if (value) {
                       setValue("serviceAccountsEnabled", true);
                     }
@@ -128,15 +130,15 @@ export const CapabilityConfig = ({
                   name="standardFlowEnabled"
                   defaultValue={true}
                   control={control}
-                  render={({ onChange, value }) => (
+                  render={({ field }) => (
                     <InputGroup>
                       <Checkbox
                         data-testid="standard"
                         label={t("standardFlow")}
                         id="kc-flow-standard"
                         name="standardFlowEnabled"
-                        isChecked={value.toString() === "true"}
-                        onChange={onChange}
+                        isChecked={(field.value ?? true).toString() === "true"}
+                        onChange={field.onChange}
                       />
                       <HelpItem
                         helpText="clients-help:standardFlow"
@@ -151,15 +153,15 @@ export const CapabilityConfig = ({
                   name="directAccessGrantsEnabled"
                   defaultValue={true}
                   control={control}
-                  render={({ onChange, value }) => (
+                  render={({ field }) => (
                     <InputGroup>
                       <Checkbox
                         data-testid="direct"
                         label={t("directAccess")}
                         id="kc-flow-direct"
                         name="directAccessGrantsEnabled"
-                        isChecked={value}
-                        onChange={onChange}
+                        isChecked={field.value}
+                        onChange={field.onChange}
                       />
                       <HelpItem
                         helpText="clients-help:directAccess"
@@ -174,15 +176,15 @@ export const CapabilityConfig = ({
                   name="implicitFlowEnabled"
                   defaultValue={true}
                   control={control}
-                  render={({ onChange, value }) => (
+                  render={({ field }) => (
                     <InputGroup>
                       <Checkbox
                         data-testid="implicit"
                         label={t("implicitFlow")}
                         id="kc-flow-implicit"
                         name="implicitFlowEnabled"
-                        isChecked={value.toString() === "true"}
-                        onChange={onChange}
+                        isChecked={(field.value ?? true).toString() === "true"}
+                        onChange={field.onChange}
                       />
                       <HelpItem
                         helpText="clients-help:implicitFlow"
@@ -197,7 +199,7 @@ export const CapabilityConfig = ({
                   name="serviceAccountsEnabled"
                   defaultValue={false}
                   control={control}
-                  render={({ onChange, value }) => (
+                  render={({ field }) => (
                     <InputGroup>
                       <Checkbox
                         data-testid="service-account"
@@ -205,10 +207,10 @@ export const CapabilityConfig = ({
                         id="kc-flow-service-account"
                         name="serviceAccountsEnabled"
                         isChecked={
-                          value.toString() === "true" ||
+                          (field.value ?? false).toString() === "true" ||
                           (clientAuthentication && authorization)
                         }
-                        onChange={onChange}
+                        onChange={field.onChange}
                         isDisabled={
                           (clientAuthentication && !authorization) ||
                           (!clientAuthentication && authorization)
@@ -229,15 +231,15 @@ export const CapabilityConfig = ({
                   )}
                   defaultValue={false}
                   control={control}
-                  render={({ onChange, value }) => (
+                  render={({ field }) => (
                     <InputGroup>
                       <Checkbox
                         data-testid="oauth-device-authorization-grant"
                         label={t("oauthDeviceAuthorizationGrant")}
                         id="kc-oauth-device-authorization-grant"
                         name="oauth2.device.authorization.grant.enabled"
-                        isChecked={value.toString() === "true"}
-                        onChange={onChange}
+                        isChecked={field.value.toString() === "true"}
+                        onChange={field.onChange}
                       />
                       <HelpItem
                         helpText="clients-help:oauthDeviceAuthorizationGrant"
@@ -254,15 +256,15 @@ export const CapabilityConfig = ({
                   )}
                   defaultValue={false}
                   control={control}
-                  render={({ onChange, value }) => (
+                  render={({ field }) => (
                     <InputGroup>
                       <Checkbox
                         data-testid="oidc-ciba-grant"
                         label={t("oidcCibaGrant")}
                         id="kc-oidc-ciba-grant"
                         name="oidc.ciba.grant.enabled"
-                        isChecked={value.toString() === "true"}
-                        onChange={onChange}
+                        isChecked={field.value.toString() === "true"}
+                        onChange={field.onChange}
                         isDisabled={clientAuthentication}
                       />
                       <HelpItem
@@ -294,14 +296,14 @@ export const CapabilityConfig = ({
               name={convertAttributeNameToForm("attributes.saml.encrypt")}
               control={control}
               defaultValue={false}
-              render={({ onChange, value }) => (
+              render={({ field }) => (
                 <Switch
                   data-testid="encrypt"
                   id="kc-encrypt"
                   label={t("common:on")}
                   labelOff={t("common:off")}
-                  isChecked={value}
-                  onChange={onChange}
+                  isChecked={field.value}
+                  onChange={field.onChange}
                   aria-label={t("encryptAssertions")}
                 />
               )}
@@ -324,14 +326,14 @@ export const CapabilityConfig = ({
               )}
               control={control}
               defaultValue={false}
-              render={({ onChange, value }) => (
+              render={({ field }) => (
                 <Switch
                   data-testid="client-signature"
                   id="kc-client-signature"
                   label={t("common:on")}
                   labelOff={t("common:off")}
-                  isChecked={value}
-                  onChange={onChange}
+                  isChecked={field.value}
+                  onChange={field.onChange}
                   aria-label={t("clientSignature")}
                 />
               )}

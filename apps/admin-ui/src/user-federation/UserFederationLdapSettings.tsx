@@ -37,7 +37,7 @@ import {
 } from "../components/routable-tabs/RoutableTabs";
 import { toUserFederationLdap } from "./routes/UserFederationLdap";
 
-type ldapComponentRepresentation = ComponentRepresentation & {
+export type LdapComponentRepresentation = ComponentRepresentation & {
   config?: {
     periodicChangedUsersSync?: boolean;
     periodicFullSync?: boolean;
@@ -47,7 +47,7 @@ type ldapComponentRepresentation = ComponentRepresentation & {
 const AddLdapFormContent = ({
   save,
 }: {
-  save: (component: ldapComponentRepresentation) => void;
+  save: (component: LdapComponentRepresentation) => void;
 }) => {
   const { t } = useTranslation("user-federation");
   const form = useFormContext();
@@ -112,7 +112,7 @@ const AddLdapFormContent = ({
 
 export default function UserFederationLdapSettings() {
   const { t } = useTranslation("user-federation");
-  const form = useForm<ComponentRepresentation>({ mode: "onChange" });
+  const form = useForm<LdapComponentRepresentation>({ mode: "onChange" });
   const navigate = useNavigate();
   const history = useHistory();
   const { adminClient } = useAdminClient();
@@ -144,7 +144,7 @@ export default function UserFederationLdapSettings() {
     [refreshCount]
   );
 
-  const setupForm = (component: ComponentRepresentation) => {
+  const setupForm = (component: LdapComponentRepresentation) => {
     form.reset({ ...component });
     form.setValue(
       "config.periodicChangedUsersSync",
@@ -157,7 +157,7 @@ export default function UserFederationLdapSettings() {
     );
   };
 
-  const save = async (component: ldapComponentRepresentation) => {
+  const save = async (component: LdapComponentRepresentation) => {
     if (component.config?.periodicChangedUsersSync !== undefined) {
       if (component.config.periodicChangedUsersSync === false) {
         component.config.changedSyncPeriod = ["-1"];

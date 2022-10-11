@@ -58,10 +58,9 @@ export const InlineLabelEdit = ({
           {isEditable ? (
             <>
               <KeycloakTextInput
-                name="userLabel"
+                {...register("userLabel")}
                 data-testid="userLabelFld"
                 defaultValue={credential.userLabel}
-                ref={register()}
                 type="text"
                 className="kc-userLabel"
                 aria-label={t("userLabel")}

@@ -119,16 +119,16 @@ export const PoliciesTab = () => {
           data-testid={`${clientPolicy.name!}-switch`}
           defaultValue={clientPolicy.enabled}
           control={form.control}
-          render={({ onChange, value }) => (
+          render={({ field }) => (
             <Switch
               label={t("common:enabled")}
               labelOff={t("common:disabled")}
-              isChecked={value}
+              isChecked={field.value}
               onChange={(value) => {
                 if (!value) {
                   toggleDisableDialog();
                 } else {
-                  onChange(value);
+                  field.onChange(value);
                   saveStatus();
                 }
               }}

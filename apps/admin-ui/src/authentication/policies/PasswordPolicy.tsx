@@ -91,13 +91,13 @@ export const PasswordPolicy = ({
   const onSelect = (row: PasswordPolicyTypeRepresentation) =>
     setRows([...rows, row]);
 
-  const form = useForm<SubmittedValues>({ shouldUnregister: false });
+  const form = useForm<SubmittedValues>();
   const { handleSubmit, setValue, getValues } = form;
 
   const setupForm = (realm: RealmRepresentation) => {
     const values = parsePolicy(realm.passwordPolicy || "", passwordPolicies!);
     values.forEach((v) => {
-      setValue(v.id!, v.value);
+      if (v.value) setValue(v.id!, v.value);
     });
     setRows(values);
   };

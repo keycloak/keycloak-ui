@@ -24,7 +24,7 @@ const allTimes: TimeUnit[] = [
 
 export type TimeSelectorProps = TextInputProps &
   Pick<DropdownProps, "menuAppendTo"> & {
-    value: number;
+    value: number | undefined;
     units?: Unit[];
     onChange: (time: number | string) => void;
     className?: string;
@@ -75,15 +75,16 @@ export const TimeSelector = ({
   const [open, setOpen] = useState(false);
 
   useEffect(() => {
+    if (!value) {
+      setTimeValue(value ?? "");
+      setMultiplier(defaultMultiplier);
+      return;
+    }
+
     const multiplier = getTimeUnit(value).multiplier;
 
-    if (value) {
-      setMultiplier(multiplier);
-      setTimeValue(value / multiplier);
-    } else {
-      setTimeValue(value);
-      setMultiplier(defaultMultiplier);
-    }
+    setMultiplier(multiplier);
+    setTimeValue(value / multiplier);
   }, [value]);
 
   const updateTimeout = (

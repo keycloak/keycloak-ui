@@ -24,16 +24,16 @@ export const SwitchField = ({
         name={field}
         defaultValue={fieldType === "string" ? "false" : false}
         control={control}
-        render={({ onChange, value }) => (
+        render={({ field }) => (
           <Switch
             id={label}
             label={t("common:on")}
             labelOff={t("common:off")}
             isChecked={
-              fieldType === "string" ? value === "true" : (value as boolean)
+              fieldType === "string" ? field.value === "true" : field.value
             }
             onChange={(value) =>
-              onChange(fieldType === "string" ? "" + value : value)
+              field.onChange(fieldType === "string" ? "" + value : value)
             }
             isDisabled={isReadOnly}
             aria-label={label}

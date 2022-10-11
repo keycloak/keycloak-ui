@@ -57,12 +57,11 @@ export const SamlGeneralSettings = ({
           type="text"
           id="alias"
           data-testid="alias"
-          name="alias"
+          {...register("alias", { required: true })}
           isReadOnly={isAliasReadonly}
           validated={
             errors.alias ? ValidatedOptions.error : ValidatedOptions.default
           }
-          ref={register({ required: true })}
         />
       </FormGroup>
 

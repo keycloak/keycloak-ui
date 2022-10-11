@@ -29,7 +29,10 @@ export const ClientSelect = ({
   required = false,
 }: ClientSelectProps) => {
   const { t } = useTranslation(namespace);
-  const { control, errors } = useFormContext();
+  const {
+    control,
+    formState: { errors },
+  } = useFormContext();
 
   const [open, setOpen] = useState(false);
   const [clients, setClients] = useState<ClientRepresentation[]>([]);
@@ -80,20 +83,20 @@ export const ClientSelect = ({
         defaultValue={defaultValue || ""}
         control={control}
         rules={required ? { required: true } : {}}
-        render={({ onChange, value }) => (
+        render={({ field }) => (
           <Select
             toggleId={name}
             variant={SelectVariant.typeahead}
             onToggle={(open) => setOpen(open)}
             isOpen={open}
             isDisabled={isDisabled}
-            selections={value}
+            selections={field.value}
             onFilter={(_, value) => {
               setSearch(value);
               return convert(clients);
             }}
             onSelect={(_, value) => {
-              onChange(value.toString());
+              field.onChange(value.toString());
               setOpen(false);
             }}
             aria-label={t(label!)}

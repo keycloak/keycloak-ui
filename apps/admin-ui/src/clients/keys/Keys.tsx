@@ -39,6 +39,8 @@ type KeysProps = {
 
 const attr = "jwt.credential";
 
+type FormFields = Omit<ClientRepresentation, "authorizationSettings">;
+
 export const Keys = ({ clientId, save, hasConfigureAccess }: KeysProps) => {
   const { t } = useTranslation("clients");
   const {
@@ -46,7 +48,7 @@ export const Keys = ({ clientId, save, hasConfigureAccess }: KeysProps) => {
     register,
     getValues,
     formState: { isDirty },
-  } = useFormContext<ClientRepresentation>();
+  } = useFormContext<FormFields>();
   const { adminClient } = useAdminClient();
   const { addAlert, addError } = useAlerts();
 
@@ -151,14 +153,14 @@ export const Keys = ({ clientId, save, hasConfigureAccess }: KeysProps) => {
                 name={convertAttributeNameToForm("attributes.use.jwks.url")}
                 defaultValue="false"
                 control={control}
-                render={({ onChange, value }) => (
+                render={({ field }) => (
                   <Switch
                     data-testid="useJwksUrl"
                     id="useJwksUrl-switch"
                     label={t("common:on")}
                     labelOff={t("common:off")}
-                    isChecked={value === "true"}
-                    onChange={(value) => onChange(`${value}`)}
+                    isChecked={field.value === "true"}
+                    onChange={(value) => field.onChange(`${value}`)}
                     aria-label={t("useJwksUrl")}
                   />
                 )}
@@ -184,8 +186,9 @@ export const Keys = ({ clientId, save, hasConfigureAccess }: KeysProps) => {
                 <KeycloakTextInput
                   type="text"
                   id="jwksUrl"
-                  name={convertAttributeNameToForm("attributes.jwks.url")}
-                  ref={register}
+                  {...register(
+                    convertAttributeNameToForm("attributes.jwks.url")
+                  )}
                 />
               </FormGroup>
             )}

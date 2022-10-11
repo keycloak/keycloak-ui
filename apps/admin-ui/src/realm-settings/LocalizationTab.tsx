@@ -24,7 +24,7 @@ import { useServerInfo } from "../context/server-info/ServerInfoProvider";
 import { FormPanel } from "../components/scroll-form/FormPanel";
 import { useAdminClient, useFetch } from "../context/auth/AdminClient";
 import { ListEmptyState } from "../components/list-empty-state/ListEmptyState";
-import { AddMessageBundleModal } from "./AddMessageBundleModal";
+import { AddMessageBundleModal, BundleForm } from "./AddMessageBundleModal";
 import { useAlerts } from "../components/alert/Alerts";
 import { HelpItem } from "../components/help-enabler/HelpItem";
 import { useRealm } from "../context/realm-context/RealmContext";
@@ -64,9 +64,10 @@ export enum RowEditAction {
   Delete = "delete",
 }
 
-export type BundleForm = {
-  messageBundle: KeyValueType;
-};
+type FormFields = Omit<
+  RealmRepresentation,
+  "clients" | "components" | "groups"
+>;
 
 const localeToDisplayName = (locale: string) =>
   new Intl.DisplayNames([locale], { type: "language" }).of(locale);
@@ -82,9 +83,8 @@ export const LocalizationTab = ({ save, realm }: LocalizationTabProps) => {
   const [filterDropdownOpen, setFilterDropdownOpen] = useState(false);
   const [selectMenuLocale, setSelectMenuLocale] = useState(DEFAULT_LOCALE);
 
-  const { setValue, getValues, control, handleSubmit, formState } = useForm({
-    shouldUnregister: false,
-  });
+  const { setValue, getValues, control, handleSubmit, formState } =
+    useForm<FormFields>();
   const [selectMenuValueSelected, setSelectMenuValueSelected] = useState(false);
   const [messageBundles, setMessageBundles] = useState<[string, string][]>([]);
   const [tableRows, setTableRows] = useState<IRow[]>([]);
@@ -110,7 +110,7 @@ export const LocalizationTab = ({ save, realm }: LocalizationTabProps) => {
 
   useEffect(setupForm, []);
 
-  const watchSupportedLocales = useWatch<string[]>({
+  const watchSupportedLocales = useWatch({
     control,
     name: "supportedLocales",
     defaultValue: [DEFAULT_LOCALE],
@@ -303,7 +303,7 @@ export const LocalizationTab = ({ save, realm }: LocalizationTabProps) => {
     </SelectGroup>,
     <Divider key="divider" />,
     <SelectGroup label={t("supportedLocales")} key="group2">
-      {watchSupportedLocales.map((locale) => (
+      {watchSupportedLocales?.map((locale) => (
         <SelectOption key={locale} value={locale}>
           {localeToDisplayName(locale)}
         </SelectOption>
@@ -380,18 +380,18 @@ export const LocalizationTab = ({ save, realm }: LocalizationTabProps) => {
               name="internationalizationEnabled"
               control={control}
               defaultValue={false}
-              render={({ onChange, value }) => (
+              render={({ field }) => (
                 <Switch
                   id="kc-l-internationalization"
                   label={t("common:enabled")}
                   labelOff={t("common:disabled")}
                   isChecked={internationalizationEnabled}
                   data-testid={
-                    value
+                    field.value
                       ? "internationalization-enabled"
                       : "internationalization-disabled"
                   }
-                  onChange={onChange}
+                  onChange={field.onChange}
                   aria-label={t("internationalization")}
                 />
               )}
@@ -407,7 +407,7 @@ export const LocalizationTab = ({ save, realm }: LocalizationTabProps) => {
                   name="supportedLocales"
                   control={control}
                   defaultValue={[DEFAULT_LOCALE]}
-                  render={({ onChange, value }) => (
+                  render={({ field }) => (
                     <Select
                       toggleId="kc-l-supported-locales"
                       onToggle={(open) => {
@@ -415,18 +415,19 @@ export const LocalizationTab = ({ save, realm }: LocalizationTabProps) => {
                       }}
                       onSelect={(_, v) => {
                         const option = v as string;
-                        if (value.includes(option)) {
-                          onChange(
-                            value.filter((item: string) => item !== option)
+                        const fieldValue = field.value ?? [];
+                        if (fieldValue.includes(option)) {
+                          field.onChange(
+                            fieldValue.filter((item: string) => item !== option)
                           );
                         } else {
-                          onChange([...value, option]);
+                          field.onChange([...fieldValue, option]);
                         }
                       }}
                       onClear={() => {
-                        onChange([]);
+                        field.onChange([]);
                       }}
-                      selections={value}
+                      selections={field.value}
                       variant={SelectVariant.typeaheadMulti}
                       aria-label={t("supportedLocales")}
                       isOpen={supportedLocalesOpen}
@@ -434,7 +435,9 @@ export const LocalizationTab = ({ save, realm }: LocalizationTabProps) => {
                     >
                       {allLocales.map((locale) => (
                         <SelectOption
-                          selected={value.includes(locale)}
+                          selected={
+                            field.value ? field.value.includes(locale) : false
+                          }
                           key={locale}
                           value={locale}
                         >
@@ -453,17 +456,17 @@ export const LocalizationTab = ({ save, realm }: LocalizationTabProps) => {
                   name="defaultLocale"
                   control={control}
                   defaultValue={DEFAULT_LOCALE}
-                  render={({ onChange, value }) => (
+                  render={({ field }) => (
                     <Select
                       toggleId="kc-default-locale"
                       onToggle={() => setDefaultLocaleOpen(!defaultLocaleOpen)}
                       onSelect={(_, value) => {
-                        onChange(value as string);
+                        field.onChange(value as string);
                         setDefaultLocaleOpen(false);
                       }}
                       selections={
-                        value
-                          ? localeToDisplayName(value)
+                        field.value
+                          ? localeToDisplayName(field.value)
                           : realm.defaultLocale !== ""
                           ? localeToDisplayName(
                               realm.defaultLocale || DEFAULT_LOCALE
@@ -476,7 +479,7 @@ export const LocalizationTab = ({ save, realm }: LocalizationTabProps) => {
                       placeholderText={t("placeholderText")}
                       data-testid="select-default-locale"
                     >
-                      {watchSupportedLocales.map(
+                      {watchSupportedLocales?.map(
                         (locale: string, idx: number) => (
                           <SelectOption
                             key={`default-locale-${idx}`}

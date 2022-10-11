@@ -24,16 +24,16 @@ export const DisplayOrder = () => {
         name="config.guiOrder"
         control={control}
         defaultValue=""
-        render={({ onChange, value }) => (
+        render={({ field }) => (
           <TextInput
             id="kc-display-order"
             type="number"
-            value={value}
+            value={field.value}
             data-testid="displayOrder"
             min={0}
             onChange={(value) => {
               const num = Number(value);
-              onChange(value === "" ? value : num < 0 ? 0 : num);
+              field.onChange(value === "" ? value : num < 0 ? 0 : num);
             }}
           />
         )}

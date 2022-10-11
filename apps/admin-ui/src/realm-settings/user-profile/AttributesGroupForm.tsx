@@ -60,7 +60,7 @@ export default function AttributesGroupForm() {
   const { config, save } = useUserProfile();
   const navigate = useNavigate();
   const params = useParams<Partial<EditAttributesGroupParams>>();
-  const form = useForm<FormFields>({ defaultValues, shouldUnregister: false });
+  const form = useForm<FormFields>({ defaultValues });
 
   const matchingGroup = useMemo(
     () => config?.groups?.find(({ name }) => name === params.name),
@@ -104,6 +104,10 @@ export default function AttributesGroupForm() {
     }
   };
 
+  const {
+    formState: { errors },
+  } = form;
+
   return (
     <>
       <ViewHeader
@@ -121,7 +125,7 @@ export default function AttributesGroupForm() {
             fieldId="kc-name"
             isRequired
             helperTextInvalid={t("common:required")}
-            validated={form.errors.name ? "error" : "default"}
+            validated={errors.name ? "error" : "default"}
             labelIcon={
               <HelpItem
                 helpText="attributes-group:nameHint"
@@ -130,14 +134,13 @@ export default function AttributesGroupForm() {
             }
           >
             <KeycloakTextInput
-              ref={form.register({ required: true })}
               type="text"
               id="kc-name"
-              name="name"
               isReadOnly={!!matchingGroup}
+              {...form.register("name", { required: true })}
             />
             {!!matchingGroup && (
-              <input type="hidden" ref={form.register()} name="name" />
+              <input type="hidden" {...form.register("name")} />
             )}
           </FormGroup>
           <FormGroup
@@ -151,10 +154,9 @@ export default function AttributesGroupForm() {
             }
           >
             <KeycloakTextInput
-              ref={form.register()}
               type="text"
               id="kc-display-header"
-              name="displayHeader"
+              {...form.register("displayHeader")}
             />
           </FormGroup>
           <FormGroup
@@ -168,10 +170,9 @@ export default function AttributesGroupForm() {
             }
           >
             <KeycloakTextInput
-              ref={form.register()}
               type="text"
               id="kc-display-description"
-              name="displayDescription"
+              {...form.register("displayDescription")}
             />
           </FormGroup>
           <TextContent>

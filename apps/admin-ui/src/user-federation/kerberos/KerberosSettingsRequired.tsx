@@ -7,11 +7,12 @@ import {
   Switch,
 } from "@patternfly/react-core";
 import { useTranslation } from "react-i18next";
-import { UseFormMethods, Controller, useWatch } from "react-hook-form";
+import { UseFormReturn, Controller, useWatch } from "react-hook-form";
 
 import { FormAccess } from "../../components/form-access/FormAccess";
 import { useRealm } from "../../context/realm-context/RealmContext";
 
+import type ComponentRepresentation from "@keycloak/keycloak-admin-client/lib/defs/componentRepresentation";
 import { HelpItem } from "../../components/help-enabler/HelpItem";
 import { isEqual } from "lodash-es";
 import { WizardSectionHeader } from "../../components/wizard-section-header/WizardSectionHeader";
@@ -19,7 +20,7 @@ import { KeycloakTextInput } from "../../components/keycloak-text-input/Keycloak
 import { useAdminClient, useFetch } from "../../context/auth/AdminClient";
 
 export type KerberosSettingsRequiredProps = {
-  form: UseFormMethods;
+  form: UseFormReturn<ComponentRepresentation>;
   showSectionHeading?: boolean;
   showSectionDescription?: boolean;
 };
@@ -48,6 +49,10 @@ export const KerberosSettingsRequired = ({
     []
   );
 
+  const {
+    formState: { errors },
+  } = form;
+
   return (
     <>
       {showSectionHeading && (
@@ -70,52 +75,48 @@ export const KerberosSettingsRequired = ({
           }
           fieldId="kc-console-display-name"
           isRequired
-          validated={form.errors.name ? "error" : "default"}
-          helperTextInvalid={form.errors.name?.message}
+          validated={errors.name ? "error" : "default"}
+          helperTextInvalid={errors.name?.message}
         >
           {/* These hidden fields are required so data object written back matches data retrieved */}
           <KeycloakTextInput
             hidden
             type="text"
             id="kc-console-providerId"
-            name="providerId"
             defaultValue="kerberos"
-            ref={form.register}
             aria-label={t("providerId")}
+            {...form.register("providerId")}
           />
           <KeycloakTextInput
             hidden
             type="text"
             id="kc-console-providerType"
-            name="providerType"
             defaultValue="org.keycloak.storage.UserStorageProvider"
-            ref={form.register}
             aria-label={t("providerType")}
+            {...form.register("providerType")}
           />
           <KeycloakTextInput
             hidden
             type="text"
             id="kc-console-parentId"
-            name="parentId"
             defaultValue={realm}
-            ref={form.register}
             aria-label={t("parentId")}
+            {...form.register("parentId")}
           />
 
           <KeycloakTextInput
             isRequired
             type="text"
             id="kc-console-name"
-            name="name"
-            ref={form.register({
+            data-testid="kerberos-name"
+            validated={errors.name ? "error" : "default"}
+            aria-label={t("consoleDisplayName")}
+            {...form.register("name", {
               required: {
                 value: true,
                 message: `${t("validateName")}`,
               },
             })}
-            data-testid="kerberos-name"
-            validated={form.errors.name ? "error" : "default"}
-            aria-label={t("consoleDisplayName")}
           />
         </FormGroup>
 
@@ -129,27 +130,21 @@ export const KerberosSettingsRequired = ({
           }
           fieldId="kc-kerberos-realm"
           isRequired
-          validated={
-            form.errors.config?.kerberosRealm?.[0] ? "error" : "default"
+          validated={errors.config?.kerberosRealm ? "error" : "default"}
+          helperTextInvalid={
+            errors.config?.kerberosRealm ? t("validateRealm") : ""
           }
-          helperTextInvalid={form.errors.config?.kerberosRealm?.[0].message}
         >
           <KeycloakTextInput
             isRequired
             type="text"
             id="kc-kerberos-realm"
-            name="config.kerberosRealm[0]"
-            ref={form.register({
-              required: {
-                value: true,
-                message: `${t("validateRealm")}`,
-              },
-            })}
             data-testid="kerberos-realm"
             aria-label={t("kerberosRealm")}
-            validated={
-              form.errors.config?.kerberosRealm?.[0] ? "error" : "default"
-            }
+            validated={errors.config?.kerberosRealm ? "error" : "default"}
+            {...form.register("config.kerberosRealm.0", {
+              required: true,
+            })}
           />
         </FormGroup>
 
@@ -163,27 +158,21 @@ export const KerberosSettingsRequired = ({
           }
           fieldId="kc-server-principal"
           isRequired
-          validated={
-            form.errors.config?.serverPrincipal?.[0] ? "error" : "default"
+          validated={errors.config?.serverPrincipal ? "error" : "default"}
+          helperTextInvalid={
+            errors.config?.serverPrincipal ? t("validateServerPrincipal") : ""
           }
-          helperTextInvalid={form.errors.config?.serverPrincipal?.[0].message}
         >
           <KeycloakTextInput
             isRequired
             type="text"
             id="kc-server-principal"
-            name="config.serverPrincipal[0]"
-            ref={form.register({
-              required: {
-                value: true,
-                message: `${t("validateServerPrincipal")}`,
-              },
-            })}
             data-testid="kerberos-principal"
             aria-label={t("kerberosPrincipal")}
-            validated={
-              form.errors.config?.serverPrincipal?.[0] ? "error" : "default"
-            }
+            validated={errors.config?.serverPrincipal ? "error" : "default"}
+            {...form.register("config.serverPrincipal.0", {
+              required: true,
+            })}
           />
         </FormGroup>
 
@@ -197,23 +186,18 @@ export const KerberosSettingsRequired = ({
           }
           fieldId="kc-key-tab"
           isRequired
-          validated={form.errors.config?.keyTab?.[0] ? "error" : "default"}
-          helperTextInvalid={form.errors.config?.keyTab?.[0].message}
+          validated={errors.config?.keyTab ? "error" : "default"}
+          helperTextInvalid={errors.config?.keyTab ? t("validateKeyTab") : ""}
         >
           <KeycloakTextInput
             isRequired
             type="text"
             id="kc-key-tab"
-            name="config.keyTab[0]"
-            ref={form.register({
-              required: {
-                value: true,
-                message: `${t("validateKeyTab")}`,
-              },
-            })}
-            data-testid="kerberos-keytab"
             aria-label={t("kerberosKeyTab")}
-            validated={form.errors.config?.keyTab?.[0] ? "error" : "default"}
+            validated={errors.config?.keyTab ? "error" : "default"}
+            {...form.register("config.keyTab.0", {
+              required: true,
+            })}
           />
         </FormGroup>
 
@@ -233,12 +217,12 @@ export const KerberosSettingsRequired = ({
             name="config.debug"
             defaultValue={["false"]}
             control={form.control}
-            render={({ onChange, value }) => (
+            render={({ field }) => (
               <Switch
                 id={"kc-debug"}
                 data-testid="debug"
-                onChange={(value) => onChange([`${value}`])}
-                isChecked={value?.[0] === "true"}
+                onChange={(value) => field.onChange([`${value}`])}
+                isChecked={field.value[0] === "true"}
                 label={t("common:on")}
                 labelOff={t("common:off")}
                 aria-label={t("debug")}
@@ -262,12 +246,12 @@ export const KerberosSettingsRequired = ({
             name="config.allowPasswordAuthentication"
             defaultValue={["false"]}
             control={form.control}
-            render={({ onChange, value }) => (
+            render={({ field }) => (
               <Switch
                 id={"kc-allow-password-authentication"}
                 data-testid="allow-password-authentication"
-                onChange={(value) => onChange([`${value}`])}
-                isChecked={value?.[0] === "true"}
+                onChange={(value) => field.onChange([`${value}`])}
+                isChecked={field.value[0] === "true"}
                 label={t("common:on")}
                 labelOff={t("common:off")}
                 aria-label={t("allowPasswordAuthentication")}
@@ -290,11 +274,11 @@ export const KerberosSettingsRequired = ({
           >
             {" "}
             <Controller
-              name="config.editMode[0]"
+              name="config.editMode.0"
               defaultValue="READ_ONLY"
               control={form.control}
               rules={{ required: true }}
-              render={({ onChange, value }) => (
+              render={({ field }) => (
                 <Select
                   toggleId="kc-edit-mode"
                   required
@@ -303,10 +287,10 @@ export const KerberosSettingsRequired = ({
                   }
                   isOpen={isEditModeDropdownOpen}
                   onSelect={(_, value) => {
-                    onChange(value as string);
+                    field.onChange(value as string);
                     setIsEditModeDropdownOpen(false);
                   }}
-                  selections={value}
+                  selections={field.value}
                   variant={SelectVariant.single}
                 >
                   <SelectOption key={0} value="READ_ONLY" isPlaceholder />
@@ -332,12 +316,12 @@ export const KerberosSettingsRequired = ({
             name="config.updateProfileFirstLogin"
             defaultValue={["false"]}
             control={form.control}
-            render={({ onChange, value }) => (
+            render={({ field }) => (
               <Switch
                 id={"kc-update-first-login"}
                 data-testid="update-first-login"
-                onChange={(value) => onChange([`${value}`])}
-                isChecked={value?.[0] === "true"}
+                onChange={(value) => field.onChange([`${value}`])}
+                isChecked={field.value[0] === "true"}
                 label={t("common:on")}
                 labelOff={t("common:off")}
                 aria-label={t("updateFirstLogin")}

@@ -45,23 +45,23 @@ export const OIDCAuthentication = ({ create = true }: { create?: boolean }) => {
           name="config.clientAuthMethod"
           defaultValue={clientAuthentications[0]}
           control={control}
-          render={({ onChange, value }) => (
+          render={({ field }) => (
             <Select
               toggleId="clientAuthentication"
               required
               onToggle={() => setOpenClientAuth(!openClientAuth)}
               onSelect={(_, value) => {
-                onChange(value as string);
+                field.onChange(value as string);
                 setOpenClientAuth(false);
               }}
-              selections={value}
+              selections={field.value}
               variant={SelectVariant.single}
               aria-label={t("clientAuthentication")}
               isOpen={openClientAuth}
             >
               {clientAuthentications.map((option) => (
                 <SelectOption
-                  selected={option === value}
+                  selected={option === field.value}
                   key={option}
                   value={option}
                 >

@@ -129,7 +129,6 @@ export const AdminEvents = () => {
     formState: { isDirty },
     control,
   } = useForm<AdminEventSearchForm>({
-    shouldUnregister: false,
     mode: "onChange",
     defaultValues,
   });
@@ -225,13 +224,7 @@ export const AdminEvents = () => {
                 <Controller
                   name="resourceTypes"
                   control={control}
-                  render={({
-                    onChange,
-                    value,
-                  }: {
-                    onChange: (newValue: string[]) => void;
-                    value: string[];
-                  }) => (
+                  render={({ field }) => (
                     <Select
                       className="keycloak__events_search__type_select"
                       name="resourceTypes"
@@ -244,29 +237,31 @@ export const AdminEvents = () => {
                       variant={SelectVariant.typeaheadMulti}
                       typeAheadAriaLabel="Select"
                       onToggle={(isOpen) => setSelectResourceTypesOpen(isOpen)}
-                      selections={value}
+                      selections={field.value}
                       onSelect={(_, selectedValue) => {
                         const option = selectedValue.toString();
-                        const changedValue = value.includes(option)
-                          ? value.filter((item) => item !== option)
-                          : [...value, option];
+                        const changedValue = field.value.includes(option)
+                          ? field.value.filter((item) => item !== option)
+                          : [...field.value, option];
 
-                        onChange(changedValue);
+                        field.onChange(changedValue);
                       }}
                       onClear={(resource) => {
                         resource.stopPropagation();
-                        onChange([]);
+                        field.onChange([]);
                       }}
                       isOpen={selectResourceTypesOpen}
                       aria-labelledby={"resourceTypes"}
                       chipGroupComponent={
                         <ChipGroup>
-                          {value.map((chip) => (
+                          {field.value.map((chip) => (
                             <Chip
                               key={chip}
                               onClick={(resource) => {
                                 resource.stopPropagation();
-                                onChange(value.filter((val) => val !== chip));
+                                field.onChange(
+                                  field.value.filter((val) => val !== chip)
+                                );
                               }}
                             >
                               {chip}
@@ -290,13 +285,7 @@ export const AdminEvents = () => {
                 <Controller
                   name="operationTypes"
                   control={control}
-                  render={({
-                    onChange,
-                    value,
-                  }: {
-                    onChange: (newValue: string[]) => void;
-                    value: string[];
-                  }) => (
+                  render={({ field }) => (
                     <Select
                       className="keycloak__events_search__type_select"
                       name="operationTypes"
@@ -309,29 +298,31 @@ export const AdminEvents = () => {
                       variant={SelectVariant.typeaheadMulti}
                       typeAheadAriaLabel="Select"
                       onToggle={(isOpen) => setSelectOperationTypesOpen(isOpen)}
-                      selections={value}
+                      selections={field.value}
                       onSelect={(_, selectedValue) => {
                         const option = selectedValue.toString();
-                        const changedValue = value.includes(option)
-                          ? value.filter((item) => item !== option)
-                          : [...value, option];
+                        const changedValue = field.value.includes(option)
+                          ? field.value.filter((item) => item !== option)
+                          : [...field.value, option];
 
-                        onChange(changedValue);
+                        field.onChange(changedValue);
                       }}
                       onClear={(operation) => {
                         operation.stopPropagation();
-                        onChange([]);
+                        field.onChange([]);
                       }}
                       isOpen={selectOperationTypesOpen}
                       aria-labelledby={"operationTypes"}
                       chipGroupComponent={
                         <ChipGroup>
-                          {value.map((chip) => (
+                          {field.value.map((chip) => (
                             <Chip
                               key={chip}
                               onClick={(operation) => {
                                 operation.stopPropagation();
-                                onChange(value.filter((val) => val !== chip));
+                                field.onChange(
+                                  field.value.filter((val) => val !== chip)
+                                );
                               }}
                             >
                               {chip}
@@ -353,10 +344,9 @@ export const AdminEvents = () => {
                 className="keycloak__events_search__form_label"
               >
                 <KeycloakTextInput
-                  ref={register()}
                   type="text"
                   id="kc-resourcePath"
-                  name="resourcePath"
+                  {...register("resourcePath")}
                   data-testid="resourcePath-searchField"
                 />
               </FormGroup>
@@ -366,10 +356,9 @@ export const AdminEvents = () => {
                 className="keycloak__events_search__form_label"
               >
                 <KeycloakTextInput
-                  ref={register()}
                   type="text"
                   id="kc-realm"
-                  name="authRealm"
+                  {...register("authRealm")}
                   data-testid="realm-searchField"
                 />
               </FormGroup>
@@ -379,10 +368,9 @@ export const AdminEvents = () => {
                 className="keycloak__events_search__form_label"
               >
                 <KeycloakTextInput
-                  ref={register()}
                   type="text"
                   id="kc-client"
-                  name="authClient"
+                  {...register("authClient")}
                   data-testid="client-searchField"
                 />
               </FormGroup>
@@ -392,10 +380,9 @@ export const AdminEvents = () => {
                 className="keycloak__events_search__form_label"
               >
                 <KeycloakTextInput
-                  ref={register()}
                   type="text"
                   id="kc-user"
-                  name="authUser"
+                  {...register("authUser")}
                   data-testid="user-searchField"
                 />
               </FormGroup>
@@ -405,10 +392,9 @@ export const AdminEvents = () => {
                 className="keycloak__events_search__form_label"
               >
                 <KeycloakTextInput
-                  ref={register()}
                   type="text"
                   id="kc-ipAddress"
-                  name="authIpAddress"
+                  {...register("authIpAddress")}
                   data-testid="ipAddress-searchField"
                 />
               </FormGroup>
@@ -420,11 +406,11 @@ export const AdminEvents = () => {
                 <Controller
                   name="dateFrom"
                   control={control}
-                  render={({ onChange, value }) => (
+                  render={({ field }) => (
                     <DatePicker
                       className="pf-u-w-100"
-                      value={value}
-                      onChange={(value) => onChange(value)}
+                      value={field.value}
+                      onChange={(value) => field.onChange(value)}
                       inputProps={{ id: "kc-dateFrom" }}
                     />
                   )}
@@ -438,11 +424,11 @@ export const AdminEvents = () => {
                 <Controller
                   name="dateTo"
                   control={control}
-                  render={({ onChange, value }) => (
+                  render={({ field }) => (
                     <DatePicker
                       className="pf-u-w-100"
-                      value={value}
-                      onChange={(value) => onChange(value)}
+                      value={field.value}
+                      onChange={(value) => field.onChange(value)}
                       inputProps={{ id: "kc-dateTo" }}
                     />
                   )}

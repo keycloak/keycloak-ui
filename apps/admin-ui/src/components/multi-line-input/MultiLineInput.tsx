@@ -38,6 +38,7 @@ export const MultiLineInput = ({
     setValue(name, [...fields, ""]);
   };
 
+  // @ts-ignore
   useEffect(() => register(name), [register]);
 
   return (
@@ -54,7 +55,7 @@ export const MultiLineInput = ({
                   ...fields.slice(index + 1),
                 ]);
               }}
-              name={`${name}[${index}]`}
+              name={`${name}.${index}`}
               value={value}
               isDisabled={isDisabled}
               {...rest}

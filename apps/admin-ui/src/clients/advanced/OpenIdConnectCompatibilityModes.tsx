@@ -43,13 +43,13 @@ export const OpenIdConnectCompatibilityModes = ({
           )}
           defaultValue=""
           control={control}
-          render={({ onChange, value }) => (
+          render={({ field }) => (
             <Switch
               id="excludeSessionStateFromAuthenticationResponse-switch"
               label={t("common:on")}
               labelOff={t("common:off")}
-              isChecked={value === "true"}
-              onChange={(value) => onChange(value.toString())}
+              isChecked={field.value === "true"}
+              onChange={(value) => field.onChange(value.toString())}
               aria-label={t("excludeSessionStateFromAuthenticationResponse")}
             />
           )}
@@ -70,13 +70,13 @@ export const OpenIdConnectCompatibilityModes = ({
           name={convertAttributeNameToForm("attributes.use.refresh.tokens")}
           defaultValue="true"
           control={control}
-          render={({ onChange, value }) => (
+          render={({ field }) => (
             <Switch
               id="useRefreshTokens"
               label={t("common:on")}
               labelOff={t("common:off")}
-              isChecked={value === "true"}
-              onChange={(value) => onChange(value.toString())}
+              isChecked={field.value === "true"}
+              onChange={(value) => field.onChange(value.toString())}
               aria-label={t("useRefreshTokens")}
             />
           )}
@@ -99,13 +99,13 @@ export const OpenIdConnectCompatibilityModes = ({
           )}
           defaultValue="false"
           control={control}
-          render={({ onChange, value }) => (
+          render={({ field }) => (
             <Switch
               id="useRefreshTokenForClientCredentialsGrant"
               label={t("common:on")}
               labelOff={t("common:off")}
-              isChecked={value === "true"}
-              onChange={(value) => onChange(value.toString())}
+              isChecked={field.value === "true"}
+              onChange={(value) => field.onChange(value.toString())}
               aria-label={t("useRefreshTokenForClientCredentialsGrant")}
             />
           )}
@@ -128,13 +128,13 @@ export const OpenIdConnectCompatibilityModes = ({
           )}
           defaultValue="false"
           control={control}
-          render={({ onChange, value }) => (
+          render={({ field }) => (
             <Switch
               id="useLowerCaseBearerType"
               label={t("common:on")}
               labelOff={t("common:off")}
-              isChecked={value === "true"}
-              onChange={(value) => onChange(value.toString())}
+              isChecked={field.value === "true"}
+              onChange={(value) => field.onChange(value.toString())}
               aria-label={t("useLowerCaseBearerType")}
             />
           )}

@@ -37,23 +37,23 @@ export const ListComponent = ({
         data-testid={name}
         defaultValue={defaultValue || ""}
         control={control}
-        render={({ onChange, value }) => (
+        render={({ field }) => (
           <Select
             toggleId={name}
             isDisabled={isDisabled}
             onToggle={(toggle) => setOpen(toggle)}
             onSelect={(_, value) => {
-              onChange(value as string);
+              field.onChange(value as string);
               setOpen(false);
             }}
-            selections={value}
+            selections={field.value}
             variant={SelectVariant.single}
             aria-label={t(label!)}
             isOpen={open}
           >
             {options?.map((option) => (
               <SelectOption
-                selected={option === value}
+                selected={option === field.value}
                 key={option}
                 value={option}
               />

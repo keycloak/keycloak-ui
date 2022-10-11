@@ -106,12 +106,11 @@ export const UserIdpModal = ({
           <KeycloakTextInput
             data-testid="idpNameInput"
             aria-label="Identity provider name input"
-            ref={register({ required: true })}
             autoFocus
             isReadOnly
             type="text"
             id="link-idp-name"
-            name="identityProvider"
+            {...register("identityProvider", { required: true })}
             value={capitalize(federatedId)}
             validated={
               errors.identityProvider
@@ -134,11 +133,10 @@ export const UserIdpModal = ({
           <KeycloakTextInput
             data-testid="userIdInput"
             aria-label="user ID input"
-            ref={register({ required: true })}
             autoFocus
             type="text"
             id="link-idp-user-id"
-            name="userId"
+            {...register("userId", { required: true })}
             validated={
               errors.userId ? ValidatedOptions.error : ValidatedOptions.default
             }
@@ -158,11 +156,10 @@ export const UserIdpModal = ({
           <KeycloakTextInput
             data-testid="usernameInput"
             aria-label="username input"
-            ref={register({ required: true })}
             autoFocus
             type="text"
             id="link-idp-username"
-            name="userName"
+            {...register("userName", { required: true })}
             validated={
               errors.name ? ValidatedOptions.error : ValidatedOptions.default
             }

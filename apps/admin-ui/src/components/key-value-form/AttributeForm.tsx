@@ -1,5 +1,5 @@
 import { useTranslation } from "react-i18next";
-import { FormProvider, UseFormMethods } from "react-hook-form";
+import { FormProvider, UseFormReturn } from "react-hook-form";
 import { ActionGroup, Button } from "@patternfly/react-core";
 
 import type RoleRepresentation from "@keycloak/keycloak-admin-client/lib/defs/roleRepresentation";
@@ -12,7 +12,7 @@ export type AttributeForm = Omit<RoleRepresentation, "attributes"> & {
 };
 
 export type AttributesFormProps = {
-  form: UseFormMethods<AttributeForm>;
+  form: UseFormReturn<AttributeForm>;
   save?: (model: AttributeForm) => void;
   reset?: () => void;
   fineGrainedAccess?: boolean;

@@ -1,5 +1,6 @@
 import { cloneDeep } from "lodash-es";
 import FileSaver from "file-saver";
+import type { UseFormSetValue } from "react-hook-form";
 import type { IFormatter, IFormatterValueType } from "@patternfly/react-table";
 import { flatten } from "flat";
 
@@ -85,19 +86,37 @@ const isAttributeArray = (value: any) => {
 
 const isEmpty = (obj: any) => Object.keys(obj).length === 0;
 
-export const convertAttributeNameToForm = (name: string) => {
+type ReplaceOptions = {
+  skipFirst?: boolean;
+};
+
+type Replace<
+  Input extends string,
+  Search extends string,
+  Replacement extends string,
+  Options extends ReplaceOptions = {}
+> = Input extends `${infer Head}${Search}${infer Tail}`
+  ? Options["skipFirst"] extends true
+    ? `${Head}${Search}${Replace<Tail, Search, Replacement>}`
+    : `${Head}${Replacement}${Replace<Tail, Search, Replacement>}`
+  : Input;
+
+export const convertAttributeNameToForm = <T extends string>(name: T) => {
   const index = name.indexOf(".");
   return `${name.substring(0, index)}.${convertAttribute(
     name.substring(index + 1)
-  )}`;
+  )}` as Replace<T, ".", "🍺", { skipFirst: true }>;
 };
 
-const convertAttribute = (name: string) => name.replace(/\./g, "🍺");
-const convertFormNameToAttribute = (name: string) => name.replace(/🍺/g, ".");
+const convertAttribute = <T extends string>(name: T) =>
+  name.replaceAll(".", "🍺") as Replace<T, ".", "🍺">;
+
+const convertFormNameToAttribute = <T extends string>(name: T) =>
+  name.replaceAll("🍺", ".") as Replace<T, "🍺", ".">;
 
 export const convertToFormValues = (
   obj: any,
-  setValue: (name: string, value: any) => void
+  setValue: UseFormSetValue<any>
 ) => {
   Object.entries(obj).map(([key, value]) => {
     if (key === "attributes" && isAttributesObject(value)) {

@@ -1,8 +1,9 @@
 import { Button, FormGroup, Switch } from "@patternfly/react-core";
 import { useTranslation } from "react-i18next";
 
+import type ComponentRepresentation from "@keycloak/keycloak-admin-client/lib/defs/componentRepresentation";
 import { HelpItem } from "../../components/help-enabler/HelpItem";
-import { UseFormMethods, Controller } from "react-hook-form";
+import { UseFormReturn, Controller } from "react-hook-form";
 import { FormAccess } from "../../components/form-access/FormAccess";
 import { WizardSectionHeader } from "../../components/wizard-section-header/WizardSectionHeader";
 import { convertFormToSettings } from "./LdapSettingsConnection";
@@ -12,7 +13,7 @@ import { useAlerts } from "../../components/alert/Alerts";
 
 export type LdapSettingsAdvancedProps = {
   id?: string;
-  form: UseFormMethods;
+  form: UseFormReturn<ComponentRepresentation>;
   showSectionHeading?: boolean;
   showSectionDescription?: boolean;
 };
@@ -78,13 +79,13 @@ export const LdapSettingsAdvanced = ({
             name="config.usePasswordModifyExtendedOp"
             defaultValue={["false"]}
             control={form.control}
-            render={({ onChange, value }) => (
+            render={({ field }) => (
               <Switch
                 id={"kc-enable-ldapv3-password"}
                 data-testid="ldapv3-password"
                 isDisabled={false}
-                onChange={(value) => onChange([`${value}`])}
-                isChecked={value[0] === "true"}
+                onChange={(value) => field.onChange([`${value}`])}
+                isChecked={field.value[0] === "true"}
                 label={t("common:on")}
                 labelOff={t("common:off")}
                 aria-label={t("enableLdapv3Password")}
@@ -108,13 +109,13 @@ export const LdapSettingsAdvanced = ({
             name="config.validatePasswordPolicy"
             defaultValue={["false"]}
             control={form.control}
-            render={({ onChange, value }) => (
+            render={({ field }) => (
               <Switch
                 id={"kc-validate-password-policy"}
                 data-testid="password-policy"
                 isDisabled={false}
-                onChange={(value) => onChange([`${value}`])}
-                isChecked={value[0] === "true"}
+                onChange={(value) => field.onChange([`${value}`])}
+                isChecked={field.value[0] === "true"}
                 label={t("common:on")}
                 labelOff={t("common:off")}
                 aria-label={t("validatePasswordPolicy")}
@@ -138,13 +139,13 @@ export const LdapSettingsAdvanced = ({
             name="config.trustEmail"
             defaultValue={["false"]}
             control={form.control}
-            render={({ onChange, value }) => (
+            render={({ field }) => (
               <Switch
                 id={"kc-trust-email"}
                 data-testid="trust-email"
                 isDisabled={false}
-                onChange={(value) => onChange([`${value}`])}
-                isChecked={value[0] === "true"}
+                onChange={(value) => field.onChange([`${value}`])}
+                isChecked={field.value[0] === "true"}
                 label={t("common:on")}
                 labelOff={t("common:off")}
                 aria-label={t("trustEmail")}

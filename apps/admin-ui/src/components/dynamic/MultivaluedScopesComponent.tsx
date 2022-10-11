@@ -57,14 +57,14 @@ export const MultivaluedScopesComponent = ({
         control={control}
         defaultValue={[defaultValue]}
         rules={{ required: true }}
-        render={({ onChange, value }) => {
+        render={({ field }) => {
           return (
             <>
               {open && (
                 <AddScopeDialog
                   clientScopes={localeSort(
                     clientScopes.filter(
-                      (scope) => !value.includes(scope.name!)
+                      (scope) => !field.value.includes(scope.name!)
                     ),
                     mapByKey("name")
                   )}
@@ -72,8 +72,8 @@ export const MultivaluedScopesComponent = ({
                   open={open}
                   toggleDialog={() => setOpen(!open)}
                   onAdd={(scopes) => {
-                    onChange([
-                      ...value,
+                    field.onChange([
+                      ...field.value,
                       ...scopes
                         .map((scope) => scope.scope)
                         .map((item) => item.name!),
@@ -81,11 +81,11 @@ export const MultivaluedScopesComponent = ({
                   }}
                 />
               )}
-              {value.length === 0 && !conditionName && (
+              {field.value.length === 0 && !conditionName && (
                 <KeycloakTextInput
                   type="text"
                   id="kc-scopes"
-                  value={value}
+                  value={field.value}
                   data-testid="client-scope-input"
                   name="config.client-scopes"
                   isDisabled
@@ -95,15 +95,17 @@ export const MultivaluedScopesComponent = ({
                 className="kc-client-scopes-chip-group"
                 isClosable
                 onClick={() => {
-                  onChange([]);
+                  field.onChange([]);
                 }}
               >
-                {value.map((currentChip: string) => (
+                {field.value.map((currentChip: string) => (
                   <Chip
                     key={currentChip}
                     onClick={() => {
-                      onChange(
-                        value.filter((item: string) => item !== currentChip)
+                      field.onChange(
+                        field.value.filter(
+                          (item: string) => item !== currentChip
+                        )
                       );
                     }}
                   >

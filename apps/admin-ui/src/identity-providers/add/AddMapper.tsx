@@ -48,10 +48,12 @@ export type Role = RoleRepresentation & {
 export default function AddMapper() {
   const { t } = useTranslation("identity-providers");
 
-  const form = useForm<IdPMapperRepresentationWithAttributes>({
-    shouldUnregister: false,
-  });
-  const { handleSubmit, register, errors } = form;
+  const form = useForm<IdPMapperRepresentationWithAttributes>();
+  const {
+    handleSubmit,
+    register,
+    formState: { errors },
+  } = form;
   const { addAlert, addError } = useAlerts();
   const navigate = useNavigate();
   const localeSort = useLocaleSort();
@@ -219,16 +221,15 @@ export default function AddMapper() {
             helperTextInvalid={t("common:required")}
           >
             <KeycloakTextInput
-              ref={register()}
               type="text"
               value={currentMapper.id}
               datatest-id="name-input"
               id="kc-name"
-              name="name"
               isDisabled={!!id}
               validated={
                 errors.name ? ValidatedOptions.error : ValidatedOptions.default
               }
+              {...register("name")}
             />
           </FormGroup>
         )}

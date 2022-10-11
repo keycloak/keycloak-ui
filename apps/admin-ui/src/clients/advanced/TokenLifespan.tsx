@@ -61,7 +61,7 @@ export const TokenLifespan = ({
         name={name}
         defaultValue={defaultValue}
         control={control}
-        render={({ onChange, value }) => (
+        render={({ field }) => (
           <Split hasGutter>
             <SplitItem>
               <Select
@@ -69,21 +69,21 @@ export const TokenLifespan = ({
                 onToggle={setOpen}
                 isOpen={open}
                 onSelect={(_, value) => {
-                  onChange(value);
+                  field.onChange(value);
                   setOpen(false);
                 }}
-                selections={[isExpireSet(value) ? t(expires) : t(never)]}
+                selections={[isExpireSet(field.value) ? t(expires) : t(never)]}
               >
                 <SelectOption value={-1}>{t(never)}</SelectOption>
                 <SelectOption value={60}>{t(expires)}</SelectOption>
               </Select>
             </SplitItem>
             <SplitItem>
-              {isExpireSet(value) && (
+              {isExpireSet(field.value) && (
                 <TimeSelector
                   units={units}
-                  value={value}
-                  onChange={onChange}
+                  value={field.value}
+                  onChange={field.onChange}
                   onFocus={onFocus}
                   onBlur={onBlur}
                   min={1}

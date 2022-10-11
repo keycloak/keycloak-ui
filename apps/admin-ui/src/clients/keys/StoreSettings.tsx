@@ -36,9 +36,8 @@ export const StoreSettings = ({
           data-testid="keyAlias"
           type="text"
           id="keyAlias"
-          name="keyAlias"
-          ref={register({ required: true })}
           validated={errors.keyAlias ? "error" : "default"}
+          {...register("keyAlias", { required: true })}
         />
       </FormGroup>
       {!hidePassword && (
@@ -58,9 +57,8 @@ export const StoreSettings = ({
           <PasswordInput
             data-testid="keyPassword"
             id="keyPassword"
-            name="keyPassword"
-            ref={register({ required: true })}
             validated={errors.keyPassword ? "error" : "default"}
+            {...register("keyPassword", { required: true })}
           />
         </FormGroup>
       )}
@@ -79,8 +77,7 @@ export const StoreSettings = ({
             data-testid="realmCertificateAlias"
             type="text"
             id="realmCertificateAlias"
-            name="realmAlias"
-            ref={register()}
+            {...register("realmAlias", { required: true })}
           />
         </FormGroup>
       )}
@@ -100,9 +97,8 @@ export const StoreSettings = ({
         <PasswordInput
           data-testid="storePassword"
           id="storePassword"
-          name="storePassword"
-          ref={register({ required: true })}
           validated={errors.storePassword ? "error" : "default"}
+          {...register("storePassword", { required: true })}
         />
       </FormGroup>
     </>

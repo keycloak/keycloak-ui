@@ -20,12 +20,12 @@ type KeyValueInputProps = {
 export const KeyValueInput = ({ name }: KeyValueInputProps) => {
   const { t } = useTranslation("common");
   const { control, register } = useFormContext();
-  const { fields, append, remove } = useFieldArray<KeyValueType>({
-    control: control,
+  const { fields, append, remove } = useFieldArray({
+    control,
     name,
   });
 
-  const watchFields = useWatch<KeyValueType[]>({
+  const watchFields: KeyValueType[] = useWatch({
     control,
     name,
     defaultValue: [],
@@ -37,7 +37,7 @@ export const KeyValueInput = ({ name }: KeyValueInputProps) => {
 
   useEffect(() => {
     if (!fields.length) {
-      append({ key: "", value: "" }, false);
+      append({ key: "", value: "" }, { shouldFocus: false });
     }
   }, [fields]);
 
@@ -59,12 +59,11 @@ export const KeyValueInput = ({ name }: KeyValueInputProps) => {
           <Flex key={attribute.id} data-testid="row">
             <FlexItem grow={{ default: "grow" }}>
               <KeycloakTextInput
-                name={`${name}[${index}].key`}
-                ref={register()}
+                {...register(`${name}.${index}.key`)}
                 placeholder={t("keyPlaceholder")}
                 aria-label={t("key")}
-                defaultValue={attribute.key}
-                data-testid={`${name}[${index}].key`}
+                defaultValue={(attribute as any).key}
+                data-testid={`${name}.${index}.key`}
               />
             </FlexItem>
             <FlexItem
@@ -72,12 +71,11 @@ export const KeyValueInput = ({ name }: KeyValueInputProps) => {
               spacer={{ default: "spacerNone" }}
             >
               <KeycloakTextInput
-                name={`${name}[${index}].value`}
-                ref={register()}
+                {...register(`${name}.${index}.value`)}
                 placeholder={t("valuePlaceholder")}
                 aria-label={t("value")}
-                defaultValue={attribute.value}
-                data-testid={`${name}[${index}].value`}
+                defaultValue={(attribute as any).value}
+                data-testid={`${name}.${index}.value`}
               />
             </FlexItem>
             <FlexItem>
@@ -86,7 +84,7 @@ export const KeyValueInput = ({ name }: KeyValueInputProps) => {
                 title={t("removeAttribute")}
                 isDisabled={watchFields.length === 1}
                 onClick={() => remove(index)}
-                data-testid={`${name}[${index}].remove`}
+                data-testid={`${name}.${index}.remove`}
               >
                 <MinusCircleIcon />
               </Button>

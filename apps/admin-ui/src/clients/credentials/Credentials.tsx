@@ -43,6 +43,8 @@ export type CredentialsProps = {
   refresh: () => void;
 };
 
+type FormFields = Omit<ClientRepresentation, "authorizationSettings">;
+
 export const Credentials = ({ client, save, refresh }: CredentialsProps) => {
   const { t } = useTranslation("clients");
   const { adminClient } = useAdminClient();
@@ -57,7 +59,7 @@ export const Credentials = ({ client, save, refresh }: CredentialsProps) => {
     control,
     formState: { isDirty },
     handleSubmit,
-  } = useFormContext<ClientRepresentation>();
+  } = useFormContext<FormFields>();
 
   const clientAuthenticatorType = useWatch({
     control: control,
@@ -158,23 +160,23 @@ export const Credentials = ({ client, save, refresh }: CredentialsProps) => {
                 name="clientAuthenticatorType"
                 control={control}
                 defaultValue=""
-                render={({ onChange, value }) => (
+                render={({ field }) => (
                   <Select
                     toggleId="kc-client-authenticator-type"
                     required
                     onToggle={isOpen}
                     onSelect={(_, value) => {
-                      onChange(value as string);
+                      field.onChange(value as string);
                       isOpen(false);
                     }}
-                    selections={value}
+                    selections={field.value}
                     variant={SelectVariant.single}
                     aria-label={t("clientAuthenticator")}
                     isOpen={open}
                   >
                     {providers.map((option) => (
                       <SelectOption
-                        selected={option.id === value}
+                        selected={option.id === field.value}
                         key={option.id}
                         value={option.id}
                       >

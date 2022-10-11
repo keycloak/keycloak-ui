@@ -25,13 +25,13 @@ export const JavaScript = () => {
         name="code"
         defaultValue=""
         control={control}
-        render={({ onChange, value }) => (
+        render={({ field }) => (
           <CodeEditor
             id="code"
             data-testid="code"
             type="text"
-            onChange={onChange}
-            code={value}
+            onChange={field.onChange}
+            code={field.value}
             height="600px"
             language={Language.javascript}
           />

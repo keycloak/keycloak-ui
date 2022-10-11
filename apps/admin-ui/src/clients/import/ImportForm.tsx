@@ -34,12 +34,14 @@ import { getAuthorizationHeaders } from "../../utils/getAuthorizationHeaders";
 
 const isXml = (text: string) => text.startsWith("<");
 
+type FormFields = Omit<ClientRepresentation, "authorizationSettings">;
+
 export default function ImportForm() {
   const { t } = useTranslation("clients");
   const navigate = useNavigate();
   const { adminClient } = useAdminClient();
   const { realm } = useRealm();
-  const form = useForm<ClientRepresentation>({ shouldUnregister: false });
+  const form = useForm<FormFields>();
   const { register, handleSubmit, setValue } = form;
   const [imported, setImported] = useState<ClientRepresentation>({});
 
@@ -121,9 +123,8 @@ export default function ImportForm() {
               <KeycloakTextInput
                 type="text"
                 id="kc-type"
-                name="protocol"
                 isReadOnly
-                ref={register()}
+                {...register("protocol")}
               />
             </FormGroup>
             <CapabilityConfig unWrap={true} />

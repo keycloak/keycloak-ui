@@ -77,17 +77,17 @@ export const AuthenticationOverrides = ({
           name="authenticationFlowBindingOverrides.browser"
           defaultValue=""
           control={control}
-          render={({ onChange, value }) => (
+          render={({ field }) => (
             <Select
               toggleId="browserFlow"
               variant={SelectVariant.single}
               onToggle={setBrowserFlowOpen}
               isOpen={browserFlowOpen}
               onSelect={(_, value) => {
-                onChange(value);
+                field.onChange(value);
                 setBrowserFlowOpen(false);
               }}
-              selections={[value]}
+              selections={[field.value]}
             >
               {flows}
             </Select>
@@ -109,17 +109,17 @@ export const AuthenticationOverrides = ({
             name="authenticationFlowBindingOverrides.direct_grant"
             defaultValue=""
             control={control}
-            render={({ onChange, value }) => (
+            render={({ field }) => (
               <Select
                 toggleId="directGrant"
                 variant={SelectVariant.single}
                 onToggle={setDirectGrantOpen}
                 isOpen={directGrantOpen}
                 onSelect={(_, value) => {
-                  onChange(value);
+                  field.onChange(value);
                   setDirectGrantOpen(false);
                 }}
-                selections={[value]}
+                selections={[field.value]}
               >
                 {flows}
               </Select>

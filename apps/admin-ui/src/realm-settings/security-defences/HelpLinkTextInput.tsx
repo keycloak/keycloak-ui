@@ -34,12 +34,7 @@ export const HelpLinkTextInput = ({
         />
       }
     >
-      <KeycloakTextInput
-        type="text"
-        id={name}
-        name={fieldName}
-        ref={register}
-      />
+      <KeycloakTextInput type="text" id={name} {...register(fieldName)} />
     </FormGroup>
   );
 };

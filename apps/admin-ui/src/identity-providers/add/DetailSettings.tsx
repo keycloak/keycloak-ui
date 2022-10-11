@@ -350,10 +350,10 @@ export default function DetailSettings() {
         name="enabled"
         control={form.control}
         defaultValue={true}
-        render={({ onChange, value }) => (
+        render={({ field }) => (
           <Header
-            value={value}
-            onChange={onChange}
+            value={field.value ?? true}
+            onChange={field.onChange}
             save={save}
             toggleDeleteDialog={toggleDeleteDialog}
           />

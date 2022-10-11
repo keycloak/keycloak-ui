@@ -31,21 +31,20 @@ describe("FormAccess", () => {
                   type="text"
                   id="field"
                   data-testid="field"
-                  name="fieldName"
-                  ref={register()}
+                  {...register("fieldName")}
                 />
               </FormGroup>
               <Controller
                 name="consentRequired"
                 defaultValue={false}
                 control={control}
-                render={({ onChange, value }) => (
+                render={({ field }) => (
                   <Switch
                     data-testid="kc-consent"
                     label={"on"}
                     labelOff="off"
-                    isChecked={value}
-                    onChange={onChange}
+                    isChecked={field.value}
+                    onChange={field.onChange}
                   />
                 )}
               />

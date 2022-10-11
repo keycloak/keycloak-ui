@@ -32,10 +32,10 @@ export const FileComponent = ({
         name={convertToName(name!)}
         control={control}
         defaultValue={defaultValue || ""}
-        render={({ onChange, value }) => (
+        render={({ field }) => (
           <FileUpload
             id={name!}
-            value={value}
+            value={field.value}
             type="text"
             filename={filename}
             isDisabled={isDisabled}
@@ -43,13 +43,13 @@ export const FileComponent = ({
             onReadStarted={() => setIsLoading(true)}
             onReadFinished={() => setIsLoading(false)}
             onClearClick={() => {
-              onChange("");
+              field.onChange("");
               setFilename("");
             }}
             isLoading={isLoading}
             allowEditingUploadedText={false}
             onChange={(value, filename) => {
-              onChange(value);
+              field.onChange(value);
               setFilename(filename);
             }}
           />

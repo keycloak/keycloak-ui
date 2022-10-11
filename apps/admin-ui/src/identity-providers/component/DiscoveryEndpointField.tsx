@@ -130,7 +130,7 @@ export const DiscoveryEndpointField = ({
         >
           <KeycloakTextInput
             type="text"
-            name="discoveryEndpoint"
+            {...register("discoveryEndpoint", { required: true })}
             data-testid="discoveryEndpoint"
             id="kc-discovery-endpoint"
             placeholder={
@@ -151,7 +151,6 @@ export const DiscoveryEndpointField = ({
                 ? environment.resourceUrl + "/discovery-load-indicator.svg"
                 : ""
             }
-            ref={register({ required: true })}
           />
         </FormGroup>
       )}

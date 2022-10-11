@@ -35,17 +35,23 @@ import { toUpperCase } from "../../util";
 import { KeycloakSpinner } from "../../components/keycloak-spinner/KeycloakSpinner";
 import { KeycloakTextInput } from "../../components/keycloak-text-input/KeycloakTextInput";
 import { KeycloakTextArea } from "../../components/keycloak-text-area/KeycloakTextArea";
+import { DecisionStrategy } from "@keycloak/keycloak-admin-client/lib/defs/policyRepresentation";
 
 const DECISION_STRATEGIES = ["UNANIMOUS", "AFFIRMATIVE", "CONSENSUS"] as const;
+
+type FormFields = PolicyRepresentation & { resourceType?: string };
 
 export default function PermissionDetails() {
   const { t } = useTranslation("clients");
 
-  const form = useForm<PolicyRepresentation>({
-    shouldUnregister: false,
-    mode: "onChange",
-  });
-  const { register, control, reset, errors, handleSubmit } = form;
+  const form = useForm<FormFields>({ mode: "onChange" });
+  const {
+    register,
+    control,
+    reset,
+    handleSubmit,
+    formState: { errors },
+  } = form;
 
   const navigate = useNavigate();
   const { id, realm, permissionType, permissionId, selectedId } = useParams<
@@ -159,7 +165,7 @@ export default function PermissionDetails() {
     },
   });
 
-  const resourcesIds = useWatch<PolicyRepresentation["resources"]>({
+  const resourcesIds = useWatch({
     control,
     name: "resources",
     defaultValue: [],
@@ -214,9 +220,8 @@ export default function PermissionDetails() {
             >
               <KeycloakTextInput
                 id="name"
-                name="name"
-                ref={register({ required: true })}
                 validated={errors.name ? "error" : "default"}
+                {...register("name", { required: true })}
               />
             </FormGroup>
             <FormGroup
@@ -233,14 +238,13 @@ export default function PermissionDetails() {
             >
               <KeycloakTextArea
                 id="description"
-                name="description"
-                ref={register({
+                validated={errors.description ? "error" : "default"}
+                {...register("description", {
                   maxLength: {
                     value: 255,
                     message: t("common:maxLength", { length: 255 }),
                   },
                 })}
-                validated={errors.description ? "error" : "default"}
               />
             </FormGroup>
             <FormGroup
@@ -277,8 +281,9 @@ export default function PermissionDetails() {
               >
                 <KeycloakTextInput
                   id="resourceType"
-                  name="resourceType"
-                  ref={register({ required: permissionType === "scope" })}
+                  {...register("resourceType", {
+                    required: permissionType === "scope",
+                  })}
                 />
               </FormGroup>
             ) : (
@@ -362,18 +367,18 @@ export default function PermissionDetails() {
               <Controller
                 name="decisionStrategy"
                 data-testid="decisionStrategy"
-                defaultValue={DECISION_STRATEGIES[0]}
+                defaultValue={DecisionStrategy.UNANIMOUS}
                 control={control}
-                render={({ onChange, value }) => (
+                render={({ field }) => (
                   <>
                     {DECISION_STRATEGIES.map((strategy) => (
                       <Radio
                         id={strategy}
                         key={strategy}
                         data-testid={strategy}
-                        isChecked={value === strategy}
+                        isChecked={field.value === strategy}
                         name="decisionStrategies"
-                        onChange={() => onChange(strategy)}
+                        onChange={() => field.onChange(strategy)}
                         label={t(`decisionStrategies.${strategy}`)}
                         className="pf-u-mb-md"
                       />

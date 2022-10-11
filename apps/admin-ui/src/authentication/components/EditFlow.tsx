@@ -13,6 +13,7 @@ import {
 } from "@patternfly/react-core";
 import { PencilAltIcon } from "@patternfly/react-icons";
 
+import AuthenticationExecutionInfoRepresentation from "@keycloak/keycloak-admin-client/lib/defs/authenticationExecutionInfoRepresentation";
 import type { ExpandableExecution } from "../execution-model";
 import useToggle from "../../utils/useToggle";
 import { HelpItem } from "../../components/help-enabler/HelpItem";
@@ -26,11 +27,16 @@ type EditFlowProps = {
 
 export const EditFlow = ({ execution, onRowChange }: EditFlowProps) => {
   const { t } = useTranslation("authentication");
-  const { register, errors, reset, handleSubmit } = useForm();
+  const {
+    register,
+    reset,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<AuthenticationExecutionInfoRepresentation>();
 
   const [show, toggle] = useToggle();
 
-  const update = (values: ExpandableExecution) => {
+  const update = (values: AuthenticationExecutionInfoRepresentation) => {
     onRowChange({ ...execution, ...values });
     toggle();
   };
@@ -98,9 +104,8 @@ export const EditFlow = ({ execution, onRowChange }: EditFlowProps) => {
               <KeycloakTextInput
                 type="text"
                 id="name"
-                name="displayName"
+                {...register("displayName", { required: true })}
                 data-testid="displayName"
-                ref={register({ required: true })}
                 validated={
                   errors.displayName
                     ? ValidatedOptions.error
@@ -125,15 +130,14 @@ export const EditFlow = ({ execution, onRowChange }: EditFlowProps) => {
               helperTextInvalid={errors.description?.message}
             >
               <KeycloakTextArea
-                ref={register({
+                type="text"
+                id="kc-description"
+                {...register("description", {
                   maxLength: {
                     value: 255,
                     message: t("common:maxLength", { length: 255 }),
                   },
                 })}
-                type="text"
-                id="kc-description"
-                name="description"
                 data-testid="description"
                 validated={
                   errors.description

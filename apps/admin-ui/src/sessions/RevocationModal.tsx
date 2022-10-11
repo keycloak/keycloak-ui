@@ -201,7 +201,6 @@ export const RevocationModal = ({
         >
           <KeycloakTextInput
             data-testid="not-before-input"
-            ref={register({ required: true, pattern: emailRegexPattern })}
             autoFocus
             isReadOnly
             value={
@@ -211,7 +210,10 @@ export const RevocationModal = ({
             }
             type="text"
             id="not-before"
-            name="notBefore"
+            {...register("notBefore", {
+              required: true,
+              pattern: emailRegexPattern,
+            })}
             validated={
               errors.email ? ValidatedOptions.error : ValidatedOptions.default
             }

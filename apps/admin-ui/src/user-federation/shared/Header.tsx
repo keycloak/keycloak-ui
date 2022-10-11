@@ -45,7 +45,7 @@ export const Header = ({
     messageKey: "user-federation:userFedDisableConfirm",
     continueButtonLabel: "common:disable",
     onConfirm: () => {
-      setValue("config.enabled[0]", "false");
+      setValue("config.enabled.0", "false");
       save();
     },
   });
@@ -71,10 +71,10 @@ export const Header = ({
       <DisableConfirm />
       <DeleteConfirm />
       <Controller
-        name="config.enabled[0]"
+        name="config.enabled.0"
         defaultValue={["true"][0]}
         control={control}
-        render={({ onChange, value }) =>
+        render={({ field }) =>
           !id ? (
             <ViewHeader
               titleKey={t("addProvider", {
@@ -96,12 +96,12 @@ export const Header = ({
                   {t("deleteProvider")}
                 </DropdownItem>,
               ]}
-              isEnabled={value === "true"}
+              isEnabled={field.value === "true"}
               onToggle={(value) => {
                 if (!value) {
                   toggleDisableDialog();
                 } else {
-                  onChange(value.toString());
+                  field.onChange(value.toString());
                   save();
                 }
               }}

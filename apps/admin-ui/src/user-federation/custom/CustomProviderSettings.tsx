@@ -37,7 +37,7 @@ export default function CustomProviderSettings() {
   });
   const {
     register,
-    errors,
+    formState: { errors },
     reset,
     setValue,
     handleSubmit,
@@ -136,12 +136,11 @@ export default function CustomProviderSettings() {
               isRequired
               type="text"
               id="kc-console-display-name"
-              name="name"
-              ref={register({
-                required: true,
-              })}
               data-testid="console-name"
               validated={errors.name ? "error" : "default"}
+              {...register("name", {
+                required: true,
+              })}
             />
           </FormGroup>
           <FormProvider {...form}>

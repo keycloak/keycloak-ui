@@ -39,11 +39,11 @@ export const Time = ({
         defaultValue=""
         control={control}
         rules={{ required: true }}
-        render={({ onChange, value }) => (
+        render={({ field }) => (
           <TimeSelector
             data-testid={name}
-            value={value}
-            onChange={onChange}
+            value={field.value}
+            onChange={field.onChange}
             validated={
               errors[name] ? ValidatedOptions.error : ValidatedOptions.default
             }

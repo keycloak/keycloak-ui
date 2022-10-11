@@ -62,7 +62,7 @@ const CreateAttributeFormContent = ({
   save: (profileConfig: UserProfileConfig) => void;
 }) => {
   const { t } = useTranslation("realm-settings");
-  const form = useFormContext();
+  const form = useFormContext<UserProfileConfig>();
   const { realm, attributeName } = useParams<AttributeParams>();
   const editMode = attributeName ? true : false;
 
@@ -101,7 +101,7 @@ const CreateAttributeFormContent = ({
 export default function NewAttributeSettings() {
   const { realm, attributeName } = useParams<AttributeParams>();
   const { adminClient } = useAdminClient();
-  const form = useForm<UserProfileConfig>({ shouldUnregister: false });
+  const form = useForm<UserProfileAttributeType>();
   const { t } = useTranslation("realm-settings");
   const navigate = useNavigate();
   const { addAlert, addError } = useAlerts();
@@ -132,7 +132,7 @@ export default function NewAttributeSettings() {
       convertToFormValues(values, form.setValue);
       Object.entries(
         flatten<any, any>({ permissions, selector, required }, { safe: true })
-      ).map(([key, value]) => form.setValue(key, value));
+      ).map(([key, value]) => form.setValue(key as any, value));
       form.setValue("annotations", convert(annotations));
       form.setValue("validations", validations);
       form.setValue("isRequired", required !== undefined);

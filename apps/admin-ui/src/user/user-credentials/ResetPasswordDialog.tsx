@@ -55,7 +55,6 @@ export const ResetPasswordDialog = ({
   } = useForm<CredentialsForm>({
     defaultValues: credFormDefaultValues,
     mode: "onChange",
-    shouldUnregister: false,
   });
 
   const [confirm, toggle] = useToggle(true);
@@ -158,9 +157,8 @@ export const ResetPasswordDialog = ({
           >
             <PasswordInput
               data-testid="passwordField"
-              name="password"
+              {...register("password", { required: true })}
               aria-label="password"
-              ref={register({ required: true })}
             />
           </FormGroup>
           <FormGroup
@@ -181,14 +179,13 @@ export const ResetPasswordDialog = ({
           >
             <PasswordInput
               data-testid="passwordConfirmationField"
-              name="passwordConfirmation"
-              aria-label="passwordConfirm"
-              ref={register({
+              {...register("passwordConfirmation", {
                 required: true,
                 validate: (value) =>
                   value === password ||
                   t("confirmPasswordDoesNotMatch").toString(),
               })}
+              aria-label="passwordConfirm"
             />
           </FormGroup>
           <FormGroup
@@ -205,11 +202,11 @@ export const ResetPasswordDialog = ({
               name="temporaryPassword"
               defaultValue={true}
               control={control}
-              render={({ onChange, value }) => (
+              render={({ field }) => (
                 <Switch
                   className="kc-temporaryPassword"
-                  onChange={onChange}
-                  isChecked={value}
+                  onChange={field.onChange}
+                  isChecked={field.value}
                   label={t("common:on")}
                   labelOff={t("common:off")}
                   aria-label={t("common:temporaryPassword")}

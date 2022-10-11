@@ -26,6 +26,8 @@ import { KeycloakTextInput } from "../../components/keycloak-text-input/Keycloak
 import useToggle from "../../utils/useToggle";
 import { DeleteScopeDialog } from "./DeleteScopeDialog";
 
+type FormFields = Omit<ScopeRepresentation, "resources">;
+
 export default function ScopeDetails() {
   const { t } = useTranslation("clients");
   const { id, scopeId, realm } = useParams<ScopeDetailsParams>();
@@ -41,7 +43,7 @@ export default function ScopeDetails() {
     reset,
     handleSubmit,
     formState: { errors },
-  } = useForm<ScopeRepresentation>({
+  } = useForm<FormFields>({
     mode: "onChange",
   });
 
@@ -142,8 +144,7 @@ export default function ScopeDetails() {
           >
             <KeycloakTextInput
               id="name"
-              name="name"
-              ref={register({ required: true })}
+              {...register("name", { required: true })}
               validated={
                 errors.name ? ValidatedOptions.error : ValidatedOptions.default
               }
@@ -159,11 +160,7 @@ export default function ScopeDetails() {
               />
             }
           >
-            <KeycloakTextInput
-              id="displayName"
-              name="displayName"
-              ref={register}
-            />
+            <KeycloakTextInput id="displayName" {...register("displayName")} />
           </FormGroup>
           <FormGroup
             label={t("iconUri")}
@@ -175,7 +172,7 @@ export default function ScopeDetails() {
               />
             }
           >
-            <KeycloakTextInput id="iconUri" name="iconUri" ref={register} />
+            <KeycloakTextInput id="iconUri" {...register("iconUri")} />
           </FormGroup>
           <ActionGroup>
             <div className="pf-u-mt-md">

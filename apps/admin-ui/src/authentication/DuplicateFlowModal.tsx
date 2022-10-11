@@ -31,9 +31,7 @@ export const DuplicateFlowModal = ({
   onComplete,
 }: DuplicateFlowModalProps) => {
   const { t } = useTranslation("authentication");
-  const form = useForm({
-    shouldUnregister: false,
-  });
+  const form = useForm();
   const { setValue, trigger, getValues } = form;
   const { adminClient } = useAdminClient();
   const { addAlert, addError } = useAlerts();

@@ -30,14 +30,14 @@ export const BooleanComponent = ({
         data-testid={name}
         defaultValue={defaultValue || false}
         control={control}
-        render={({ onChange, value }) => (
+        render={({ field }) => (
           <Switch
             id={name!}
             isDisabled={isDisabled}
             label={t("common:on")}
             labelOff={t("common:off")}
-            isChecked={value === "true" || value === true}
-            onChange={(value) => onChange("" + value)}
+            isChecked={field.value === "true" || field.value === true}
+            onChange={(value) => field.onChange("" + value)}
             data-testid={name}
             aria-label={t(label!)}
           />

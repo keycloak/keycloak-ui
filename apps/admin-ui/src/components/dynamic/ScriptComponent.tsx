@@ -32,14 +32,14 @@ export const ScriptComponent = ({
         name={convertToName(name!)}
         defaultValue={defaultValue}
         control={control}
-        render={({ onChange, value }) => (
+        render={({ field }) => (
           <CodeEditor
             id={name!}
             data-testid={name}
             isReadOnly={isDisabled}
             type="text"
-            onChange={onChange}
-            code={value}
+            onChange={field.onChange}
+            code={field.value}
             height="600px"
             language={Language.javascript}
           />

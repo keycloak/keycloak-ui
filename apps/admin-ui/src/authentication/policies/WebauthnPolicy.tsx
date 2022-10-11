@@ -102,7 +102,7 @@ const WebauthnSelect = ({
         name={name}
         defaultValue={options[0]}
         control={control}
-        render={({ onChange, value }) => (
+        render={({ field: { onChange, value } }) => (
           <Select
             toggleId={name}
             onToggle={toggle}
@@ -161,14 +161,13 @@ export const WebauthnPolicy = ({
   const { addAlert, addError } = useAlerts();
   const { realm: realmName } = useRealm();
   const { enabled } = useHelp();
-  const form = useForm({ mode: "onChange", shouldUnregister: false });
+  const form = useForm({ mode: "onChange" });
   const {
     control,
     register,
     setValue,
-    errors,
     handleSubmit,
-    formState: { isDirty },
+    formState: { isDirty, errors },
   } = form;
 
   const namePrefix = isPasswordLess
@@ -224,11 +223,12 @@ export const WebauthnPolicy = ({
           }
         >
           <KeycloakTextInput
-            ref={register({ required: true })}
-            name={`${namePrefix}RpEntityName`}
             id="webAuthnPolicyRpEntityName"
             data-testid="webAuthnPolicyRpEntityName"
             validated={errors.webAuthnPolicyRpEntityName ? "error" : "default"}
+            {...register(`${namePrefix}RpEntityName` as const, {
+              required: true,
+            })}
           />
         </FormGroup>
         <FormProvider {...form}>
@@ -250,8 +250,7 @@ export const WebauthnPolicy = ({
           >
             <KeycloakTextInput
               id="webAuthnPolicyRpId"
-              name={`${namePrefix}RpId`}
-              ref={register()}
+              {...register(`${namePrefix}RpId` as const)}
               data-testid="webAuthnPolicyRpId
             "
             />
@@ -297,12 +296,12 @@ export const WebauthnPolicy = ({
               defaultValue={0}
               control={control}
               rules={{ min: 0, max: 31536 }}
-              render={({ onChange, value }) => (
+              render={({ field }) => (
                 <TimeSelector
                   data-testid="webAuthnPolicyCreateTimeout"
                   aria-label={t("webAuthnPolicyCreateTimeout")}
-                  value={value}
-                  onChange={onChange}
+                  value={field.value}
+                  onChange={field.onChange}
                   units={["second", "minute", "hour"]}
                   validated={
                     errors.webAuthnPolicyCreateTimeout ? "error" : "default"
@@ -325,13 +324,13 @@ export const WebauthnPolicy = ({
               name={`${namePrefix}AvoidSameAuthenticatorRegister`}
               defaultValue={false}
               control={control}
-              render={({ onChange, value }) => (
+              render={({ field }) => (
                 <Switch
                   id="webAuthnPolicyAvoidSameAuthenticatorRegister"
                   label={t("common:on")}
                   labelOff={t("common:off")}
-                  isChecked={value}
-                  onChange={onChange}
+                  isChecked={field.value}
+                  onChange={field.onChange}
                   aria-label={t("webAuthnPolicyAvoidSameAuthenticatorRegister")}
                 />
               )}

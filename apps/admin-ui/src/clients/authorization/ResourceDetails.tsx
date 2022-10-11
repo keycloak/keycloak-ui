@@ -37,7 +37,10 @@ import { KeycloakTextInput } from "../../components/keycloak-text-input/Keycloak
 
 import "./resource-details.css";
 
-type SubmittedResource = Omit<ResourceRepresentation, "attributes"> & {
+type SubmittedResource = Omit<
+  ResourceRepresentation,
+  "attributes" | "scopes"
+> & {
   attributes: KeyValueType[];
 };
 
@@ -51,11 +54,14 @@ export default function ResourceDetails() {
 
   const { adminClient } = useAdminClient();
   const { addAlert, addError } = useAlerts();
-  const form = useForm<SubmittedResource>({
-    shouldUnregister: false,
-    mode: "onChange",
-  });
-  const { register, errors, control, setValue, handleSubmit } = form;
+  const form = useForm<SubmittedResource>({ mode: "onChange" });
+  const {
+    register,
+    control,
+    setValue,
+    handleSubmit,
+    formState: { errors },
+  } = form;
 
   const { id, resourceId, realm } = useParams<ResourceDetailsParams>();
   const navigate = useNavigate();
@@ -215,13 +221,12 @@ export default function ResourceDetails() {
             >
               <KeycloakTextInput
                 id="name"
-                name="name"
-                ref={register({ required: true })}
                 validated={
                   errors.name
                     ? ValidatedOptions.error
                     : ValidatedOptions.default
                 }
+                {...register("name", { required: true })}
               />
             </FormGroup>
             <FormGroup
@@ -234,7 +239,7 @@ export default function ResourceDetails() {
                 />
               }
             >
-              <KeycloakTextInput id="displayName" name="name" ref={register} />
+              <KeycloakTextInput id="displayName" {...register("name")} />
             </FormGroup>
             <FormGroup
               label={t("type")}
@@ -243,7 +248,7 @@ export default function ResourceDetails() {
                 <HelpItem helpText="clients-help:type" fieldLabelId="type" />
               }
             >
-              <KeycloakTextInput id="type" name="type" ref={register} />
+              <KeycloakTextInput id="type" {...register("type")} />
             </FormGroup>
             <FormGroup
               label={t("uris")}
@@ -272,7 +277,7 @@ export default function ResourceDetails() {
                 />
               }
             >
-              <KeycloakTextInput id="iconUri" name="icon_uri" ref={register} />
+              <KeycloakTextInput id="iconUri" {...register("icon_uri")} />
             </FormGroup>
             <FormGroup
               hasNoPaddingTop
@@ -289,13 +294,13 @@ export default function ResourceDetails() {
                 name="ownerManagedAccess"
                 control={control}
                 defaultValue={false}
-                render={({ onChange, value }) => (
+                render={({ field }) => (
                   <Switch
                     id="ownerManagedAccess"
                     label={t("common:on")}
                     labelOff={t("common:off")}
-                    isChecked={value}
-                    onChange={onChange}
+                    isChecked={field.value}
+                    onChange={field.onChange}
                     aria-label={t("ownerManagedAccess")}
                   />
                 )}

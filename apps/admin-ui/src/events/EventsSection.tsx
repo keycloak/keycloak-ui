@@ -120,7 +120,6 @@ export default function EventsSection() {
     formState: { isDirty },
     control,
   } = useForm<UserEventSearchForm>({
-    shouldUnregister: false,
     mode: "onChange",
     defaultValues,
   });
@@ -238,10 +237,9 @@ export default function EventsSection() {
                 className="keycloak__events_search__form_label"
               >
                 <KeycloakTextInput
-                  ref={register()}
                   type="text"
                   id="kc-userId"
-                  name="user"
+                  {...register("user")}
                   data-testid="userId-searchField"
                 />
               </FormGroup>
@@ -253,13 +251,7 @@ export default function EventsSection() {
                 <Controller
                   name="type"
                   control={control}
-                  render={({
-                    onChange,
-                    value,
-                  }: {
-                    onChange: (newValue: EventType[]) => void;
-                    value: EventType[];
-                  }) => (
+                  render={({ field }) => (
                     <Select
                       className="keycloak__events_search__type_select"
                       name="eventType"
@@ -272,29 +264,31 @@ export default function EventsSection() {
                       variant={SelectVariant.typeaheadMulti}
                       typeAheadAriaLabel="Select"
                       onToggle={(isOpen) => setSelectOpen(isOpen)}
-                      selections={value}
+                      selections={field.value}
                       onSelect={(_, selectedValue) => {
                         const option = selectedValue.toString() as EventType;
-                        const changedValue = value.includes(option)
-                          ? value.filter((item) => item !== option)
-                          : [...value, option];
+                        const changedValue = field.value.includes(option)
+                          ? field.value.filter((item) => item !== option)
+                          : [...field.value, option];
 
-                        onChange(changedValue);
+                        field.onChange(changedValue);
                       }}
                       onClear={(event) => {
                         event.stopPropagation();
-                        onChange([]);
+                        field.onChange([]);
                       }}
                       isOpen={selectOpen}
                       aria-labelledby={"eventType"}
                       chipGroupComponent={
                         <ChipGroup>
-                          {value.map((chip) => (
+                          {field.value.map((chip) => (
                             <Chip
                               key={chip}
                               onClick={(event) => {
                                 event.stopPropagation();
-                                onChange(value.filter((val) => val !== chip));
+                                field.onChange(
+                                  field.value.filter((val) => val !== chip)
+                                );
                               }}
                             >
                               {chip}
@@ -316,10 +310,9 @@ export default function EventsSection() {
                 className="keycloak__events_search__form_label"
               >
                 <KeycloakTextInput
-                  ref={register()}
                   type="text"
                   id="kc-client"
-                  name="client"
+                  {...register("client")}
                   data-testid="client-searchField"
                 />
               </FormGroup>
@@ -331,11 +324,11 @@ export default function EventsSection() {
                 <Controller
                   name="dateFrom"
                   control={control}
-                  render={({ onChange, value }) => (
+                  render={({ field }) => (
                     <DatePicker
                       className="pf-u-w-100"
-                      value={value}
-                      onChange={(value) => onChange(value)}
+                      value={field.value}
+                      onChange={(value) => field.onChange(value)}
                       inputProps={{ id: "kc-dateFrom" }}
                     />
                   )}
@@ -349,11 +342,11 @@ export default function EventsSection() {
                 <Controller
                   name="dateTo"
                   control={control}
-                  render={({ onChange, value }) => (
+                  render={({ field }) => (
                     <DatePicker
                       className="pf-u-w-100"
-                      value={value}
-                      onChange={(value) => onChange(value)}
+                      value={field.value}
+                      onChange={(value) => field.onChange(value)}
                       inputProps={{ id: "kc-dateTo" }}
                     />
                   )}

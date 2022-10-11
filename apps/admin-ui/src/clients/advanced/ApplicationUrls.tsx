@@ -25,9 +25,8 @@ export const ApplicationUrls = () => {
         <KeycloakTextInput
           type="text"
           id="logoUrl"
-          name={convertAttributeNameToForm("attributes.logoUri")}
+          {...register(convertAttributeNameToForm("attributes.logoUri"))}
           data-testid="logoUrl"
-          ref={register}
         />
       </FormGroup>
       <FormGroup
@@ -43,9 +42,8 @@ export const ApplicationUrls = () => {
         <KeycloakTextInput
           type="text"
           id="policyUrl"
-          name={convertAttributeNameToForm("attributes.policyUri")}
+          {...register(convertAttributeNameToForm("attributes.policyUri"))}
           data-testid="policyUrl"
-          ref={register}
         />
       </FormGroup>
       <FormGroup
@@ -61,9 +59,8 @@ export const ApplicationUrls = () => {
         <KeycloakTextInput
           type="text"
           id="termsOfServiceUrl"
-          name={convertAttributeNameToForm("attributes.tosUri")}
+          {...register(convertAttributeNameToForm("attributes.tosUri"))}
           data-testid="termsOfServiceUrl"
-          ref={register}
         />
       </FormGroup>
     </>

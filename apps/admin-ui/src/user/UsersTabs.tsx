@@ -154,7 +154,7 @@ const UsersTabs = () => {
         name="enabled"
         control={userForm.control}
         defaultValue={true}
-        render={({ onChange, value }) => (
+        render={({ field }) => (
           <ViewHeader
             titleKey={user?.id ? user.username! : t("createUser")}
             divider={!id}
@@ -174,9 +174,9 @@ const UsersTabs = () => {
                 {t("common:delete")}
               </DropdownItem>,
             ]}
-            isEnabled={value}
+            isEnabled={field.value}
             onToggle={(value) => {
-              onChange(value);
+              field.onChange(value);
               save(userForm.getValues());
             }}
           />

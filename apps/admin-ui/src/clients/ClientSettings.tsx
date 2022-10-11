@@ -18,10 +18,12 @@ export type ClientSettingsProps = {
   reset: () => void;
 };
 
+type FormFields = Omit<ClientRepresentation, "authorizationSettings">;
+
 export const ClientSettings = (props: ClientSettingsProps) => {
   const { t } = useTranslation("clients");
 
-  const { watch } = useFormContext<ClientRepresentation>();
+  const { watch } = useFormContext<FormFields>();
   const protocol = watch("protocol");
 
   const { client } = props;

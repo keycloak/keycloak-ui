@@ -81,7 +81,7 @@ export const ScopeSelect = ({
       defaultValue={preSelected ? [preSelected] : []}
       control={control}
       rules={{ validate: (value) => value.length > 0 }}
-      render={({ onChange }) => (
+      render={({ field }) => (
         <Select
           toggleId="scopes"
           variant={SelectVariant.typeaheadMulti}
@@ -91,7 +91,7 @@ export const ScopeSelect = ({
             return toSelectOptions(scopes);
           }}
           onClear={() => {
-            onChange([]);
+            field.onChange([]);
             setSearch("");
           }}
           selections={selectedScopes.map((s) => s.name)}
@@ -104,7 +104,7 @@ export const ScopeSelect = ({
               ? selectedScopes.filter((p) => p.id !== option.id)
               : [...selectedScopes, option];
 
-            onChange(changedValue.map((s) => s.id));
+            field.onChange(changedValue.map((s) => s.id));
             setSelectedScopes(changedValue);
             setSearch("");
           }}

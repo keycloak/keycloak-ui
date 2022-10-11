@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
-import { Controller, UseFormMethods } from "react-hook-form";
+import { Controller, UseFormReturn } from "react-hook-form";
 import {
   ActionGroup,
   Button,
@@ -10,11 +10,12 @@ import {
   SelectVariant,
 } from "@patternfly/react-core";
 
+import type { RealmEventsConfigRepresentation } from "@keycloak/keycloak-admin-client/lib/defs/realmEventsConfigRepresentation";
 import { HelpItem } from "../../components/help-enabler/HelpItem";
 import { useServerInfo } from "../../context/server-info/ServerInfoProvider";
 
 type EventListenersFormProps = {
-  form: UseFormMethods;
+  form: UseFormReturn<RealmEventsConfigRepresentation>;
   reset: () => void;
 };
 
@@ -47,15 +48,9 @@ export const EventListenersForm = ({
       >
         <Controller
           name="eventsListeners"
-          defaultValue=""
+          defaultValue={[""]}
           control={control}
-          render={({
-            onChange,
-            value,
-          }: {
-            onChange: (newValue: string[]) => void;
-            value: string[];
-          }) => (
+          render={({ field: { onChange, value } }) => (
             <Select
               name="eventsListeners"
               className="kc_eventListeners_select"
@@ -71,9 +66,9 @@ export const EventListenersForm = ({
               selections={value}
               onSelect={(_, selectedValue) => {
                 const option = selectedValue.toString();
-                const changedValue = value.includes(option)
+                const changedValue = value?.includes(option)
                   ? value.filter((item) => item !== option)
-                  : [...value, option];
+                  : [...(value || []), option];
                 onChange(changedValue);
               }}
               onClear={(operation) => {

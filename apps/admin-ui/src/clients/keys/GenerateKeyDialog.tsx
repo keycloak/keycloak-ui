@@ -68,15 +68,15 @@ export const KeyForm = ({
           name="format"
           defaultValue="JKS"
           control={control}
-          render={({ onChange, value }) => (
+          render={({ field }) => (
             <Select
               toggleId="archiveFormat"
               onToggle={setOpenArchiveFormat}
               onSelect={(_, value) => {
-                onChange(value.toString());
+                field.onChange(value.toString());
                 setOpenArchiveFormat(false);
               }}
-              selections={value}
+              selections={field.value}
               variant={SelectVariant.single}
               aria-label={t("archiveFormat")}
               isOpen={openArchiveFormat}
@@ -109,15 +109,15 @@ export const KeyForm = ({
             name="file"
             defaultValue=""
             control={control}
-            render={({ onChange, value }) => (
+            render={({ field }) => (
               <FileUpload
                 id="importFile"
-                value={value}
+                value={field.value}
                 filename={filename}
                 browseButtonText={t("browse")}
                 onChange={(value, filename) => {
                   setFilename(filename);
-                  onChange(value);
+                  field.onChange(value);
                 }}
               />
             )}

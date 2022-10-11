@@ -24,6 +24,8 @@ export type SearchForm = {
   resource?: string;
   scope?: string;
   type?: string;
+  uri?: string;
+  owner?: string;
 };
 
 type SearchDropdownProps = {
@@ -94,10 +96,9 @@ export const SearchDropdown = ({
       >
         <FormGroup label={t("common:name")} fieldId="name">
           <KeycloakTextInput
-            ref={register}
             type="text"
             id="name"
-            name="name"
+            {...register("name")}
             data-testid="searchdropdown_name"
           />
         </FormGroup>
@@ -105,28 +106,25 @@ export const SearchDropdown = ({
           <>
             <FormGroup label={t("common:type")} fieldId="type">
               <KeycloakTextInput
-                ref={register}
                 type="text"
                 id="type"
-                name="type"
+                {...register("type")}
                 data-testid="searchdropdown_type"
               />
             </FormGroup>
             <FormGroup label={t("uris")} fieldId="uri">
               <KeycloakTextInput
-                ref={register}
                 type="text"
                 id="uri"
-                name="uri"
+                {...register("uri")}
                 data-testid="searchdropdown_uri"
               />
             </FormGroup>
             <FormGroup label={t("owner")} fieldId="owner">
               <KeycloakTextInput
-                ref={register}
                 type="text"
                 id="owner"
-                name="owner"
+                {...register("owner")}
                 data-testid="searchdropdown_owner"
               />
             </FormGroup>
@@ -135,20 +133,18 @@ export const SearchDropdown = ({
         {!isResource && (
           <FormGroup label={t("resource")} fieldId="resource">
             <KeycloakTextInput
-              ref={register}
               type="text"
               id="resource"
-              name="resource"
+              {...register("resource")}
               data-testid="searchdropdown_resource"
             />
           </FormGroup>
         )}
         <FormGroup label={t("scope")} fieldId="scope">
           <KeycloakTextInput
-            ref={register}
             type="text"
             id="scope"
-            name="scope"
+            {...register("scope")}
             data-testid="searchdropdown_scope"
           />
         </FormGroup>
@@ -158,21 +154,21 @@ export const SearchDropdown = ({
               name="type"
               defaultValue=""
               control={control}
-              render={({ onChange, value }) => (
+              render={({ field }) => (
                 <Select
                   toggleId="type"
                   onToggle={toggleType}
                   onSelect={(event, value) => {
                     event.stopPropagation();
-                    onChange(value);
+                    field.onChange(value);
                     toggleType();
                   }}
-                  selections={value || t("allTypes")}
+                  selections={field.value || t("allTypes")}
                   variant={SelectVariant.single}
                   aria-label={t("common:type")}
                   isOpen={typeOpen}
                 >
-                  {typeOptions(value)}
+                  {field.value ? typeOptions(field.value) : []}
                 </Select>
               )}
             />

@@ -29,8 +29,7 @@ export const TextComponent = ({
         id={name!}
         data-testid={name}
         isDisabled={isDisabled}
-        ref={register()}
-        name={convertToName(name!)}
+        {...register(convertToName(name!))}
         defaultValue={defaultValue?.toString()}
       />
     </FormGroup>

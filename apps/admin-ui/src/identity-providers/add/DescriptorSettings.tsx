@@ -9,6 +9,7 @@ import {
   SelectVariant,
   ValidatedOptions,
 } from "@patternfly/react-core";
+import IdentityProviderRepresentation from "@keycloak/keycloak-admin-client/lib/defs/identityProviderRepresentation";
 import { HelpItem } from "../../components/help-enabler/HelpItem";
 import { SwitchField } from "../component/SwitchField";
 import { TextField } from "../component/TextField";
@@ -20,6 +21,15 @@ type DescriptorSettingsProps = {
   readOnly: boolean;
 };
 
+type DiscoveryError = {
+  type: "manual";
+  message: string;
+};
+
+type FormFields = IdentityProviderRepresentation & {
+  discoveryError: DiscoveryError;
+};
+
 const Fields = ({ readOnly }: DescriptorSettingsProps) => {
   const { t } = useTranslation("identity-providers");
   const { t: th } = useTranslation("identity-providers-help");
@@ -28,7 +38,7 @@ const Fields = ({ readOnly }: DescriptorSettingsProps) => {
     register,
     control,
     formState: { errors },
-  } = useFormContext();
+  } = useFormContext<FormFields>();
   const [namedPolicyDropdownOpen, setNamedPolicyDropdownOpen] = useState(false);
   const [principalTypeDropdownOpen, setPrincipalTypeDropdownOpen] =
     useState(false);
@@ -49,7 +59,7 @@ const Fields = ({ readOnly }: DescriptorSettingsProps) => {
     name: "config.validateSignature",
   });
 
-  const principalType = useWatch<string>({
+  const principalType = useWatch({
     control,
     name: "config.principalType",
   });
@@ -68,10 +78,9 @@ const Fields = ({ readOnly }: DescriptorSettingsProps) => {
       >
         <KeycloakTextInput
           type="text"
-          name="config.entityId"
+          {...register("config.entityId")}
           data-testid="serviceProviderEntityId"
           id="kc-saml-service-provider-entity-id"
-          ref={register()}
         />
       </FormGroup>
       <FormGroup
@@ -86,10 +95,9 @@ const Fields = ({ readOnly }: DescriptorSettingsProps) => {
       >
         <KeycloakTextInput
           type="text"
-          name="config.idpEntityId"
+          {...register("config.idpEntityId")}
           data-testid="identityProviderEntityId"
           id="kc-identity-provider-entity-id"
-          ref={register()}
         />
       </FormGroup>
       <FormGroup
@@ -113,8 +121,7 @@ const Fields = ({ readOnly }: DescriptorSettingsProps) => {
           type="text"
           data-testid="sso-service-url"
           id="kc-sso-service-url"
-          name="config.singleSignOnServiceUrl"
-          ref={register({ required: true })}
+          {...register("config.singleSignOnServiceUrl", { required: true })}
           validated={
             errors.config?.singleSignOnServiceUrl
               ? ValidatedOptions.error
@@ -143,8 +150,7 @@ const Fields = ({ readOnly }: DescriptorSettingsProps) => {
         <KeycloakTextInput
           type="text"
           id="single-logout-service-url"
-          name="config.singleLogoutServiceUrl"
-          ref={register}
+          {...register("config.singleLogoutServiceUrl")}
           isReadOnly={readOnly}
         />
       </FormGroup>
@@ -169,16 +175,16 @@ const Fields = ({ readOnly }: DescriptorSettingsProps) => {
           name="config.nameIDPolicyFormat"
           defaultValue={t("persistent")}
           control={control}
-          render={({ onChange, value }) => (
+          render={({ field }) => (
             <Select
               toggleId="kc-nameIdPolicyFormat"
               onToggle={(isExpanded) => setNamedPolicyDropdownOpen(isExpanded)}
               isOpen={namedPolicyDropdownOpen}
               onSelect={(_, value) => {
-                onChange(value as string);
+                field.onChange(value as string);
                 setNamedPolicyDropdownOpen(false);
               }}
-              selections={value}
+              selections={field.value}
               variant={SelectVariant.single}
               isDisabled={readOnly}
             >
@@ -248,7 +254,7 @@ const Fields = ({ readOnly }: DescriptorSettingsProps) => {
           name="config.principalType"
           defaultValue={t("subjectNameId")}
           control={control}
-          render={({ onChange, value }) => (
+          render={({ field }) => (
             <Select
               toggleId="kc-principalType"
               onToggle={(isExpanded) =>
@@ -256,10 +262,10 @@ const Fields = ({ readOnly }: DescriptorSettingsProps) => {
               }
               isOpen={principalTypeDropdownOpen}
               onSelect={(_, value) => {
-                onChange(value.toString());
+                field.onChange(value.toString());
                 setPrincipalTypeDropdownOpen(false);
               }}
-              selections={value}
+              selections={field.value}
               variant={SelectVariant.single}
               isDisabled={readOnly}
             >
@@ -302,9 +308,8 @@ const Fields = ({ readOnly }: DescriptorSettingsProps) => {
             type="text"
             id="principalAttribute"
             data-testid="principalAttribute"
-            name="config.principalAttribute"
-            ref={register}
             isReadOnly={readOnly}
+            {...register("config.principalAttribute")}
           />
         </FormGroup>
       )}
@@ -354,7 +359,7 @@ const Fields = ({ readOnly }: DescriptorSettingsProps) => {
               name="config.signatureAlgorithm"
               defaultValue="RSA_SHA256"
               control={control}
-              render={({ onChange, value }) => (
+              render={({ field }) => (
                 <Select
                   toggleId="kc-signatureAlgorithm"
                   onToggle={(isExpanded) =>
@@ -362,10 +367,10 @@ const Fields = ({ readOnly }: DescriptorSettingsProps) => {
                   }
                   isOpen={signatureAlgorithmDropdownOpen}
                   onSelect={(_, value) => {
-                    onChange(value.toString());
+                    field.onChange(value.toString());
                     setSignatureAlgorithmDropdownOpen(false);
                   }}
-                  selections={value}
+                  selections={field.value}
                   variant={SelectVariant.single}
                   isDisabled={readOnly}
                 >
@@ -393,7 +398,7 @@ const Fields = ({ readOnly }: DescriptorSettingsProps) => {
               name="config.xmlSigKeyInfoKeyNameTransformer"
               defaultValue={t("keyID")}
               control={control}
-              render={({ onChange, value }) => (
+              render={({ field }) => (
                 <Select
                   toggleId="kc-samlSignatureKeyName"
                   onToggle={(isExpanded) =>
@@ -401,10 +406,10 @@ const Fields = ({ readOnly }: DescriptorSettingsProps) => {
                   }
                   isOpen={samlSignatureKeyNameDropdownOpen}
                   onSelect={(_, value) => {
-                    onChange(value.toString());
+                    field.onChange(value.toString());
                     setSamlSignatureKeyNameDropdownOpen(false);
                   }}
-                  selections={value}
+                  selections={field.value}
                   variant={SelectVariant.single}
                   isDisabled={readOnly}
                 >
@@ -478,8 +483,7 @@ const Fields = ({ readOnly }: DescriptorSettingsProps) => {
           max="2147483"
           id="allowedClockSkew"
           data-testid="allowedClockSkew"
-          name="config.allowedClockSkew"
-          ref={register}
+          {...register("config.allowedClockSkew")}
           isReadOnly={readOnly}
         />
       </FormGroup>
@@ -501,8 +505,7 @@ const Fields = ({ readOnly }: DescriptorSettingsProps) => {
           max="65535"
           id="attributeConsumingServiceIndex"
           data-testid="attributeConsumingServiceIndex"
-          name="config.attributeConsumingServiceIndex"
-          ref={register}
+          {...register("config.attributeConsumingServiceIndex")}
           isReadOnly={readOnly}
         />
       </FormGroup>
@@ -522,8 +525,7 @@ const Fields = ({ readOnly }: DescriptorSettingsProps) => {
           type="text"
           id="attributeConsumingServiceName"
           data-testid="attributeConsumingServiceName"
-          name="config.attributeConsumingServiceName"
-          ref={register}
+          {...register("config.attributeConsumingServiceName")}
           isReadOnly={readOnly}
         />
       </FormGroup>

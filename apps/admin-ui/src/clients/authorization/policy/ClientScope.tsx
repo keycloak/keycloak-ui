@@ -76,13 +76,15 @@ export const ClientScope = () => {
           validate: (value: RequiredIdValue[]) =>
             value.filter((c) => c.id).length > 0,
         }}
-        render={({ onChange, value }) => (
+        render={({ field }) => (
           <>
             {open && (
               <AddScopeDialog
                 clientScopes={scopes.filter(
                   (scope) =>
-                    !value.map((c: RequiredIdValue) => c.id).includes(scope.id!)
+                    !field.value
+                      .map((c: RequiredIdValue) => c.id)
+                      .includes(scope.id!)
                 )}
                 isClientScopesConditionType
                 open={open}
@@ -92,8 +94,8 @@ export const ClientScope = () => {
                     ...selectedScopes,
                     ...scopes.map((s) => s.scope),
                   ]);
-                  onChange([
-                    ...value,
+                  field.onChange([
+                    ...field.value,
                     ...scopes
                       .map((scope) => scope.scope)
                       .map((item) => ({ id: item.id!, required: false })),
@@ -128,16 +130,16 @@ export const ClientScope = () => {
                 <Td>{scope.name}</Td>
                 <Td>
                   <Controller
-                    name={`clientScopes[${index}].required`}
+                    name={`clientScopes.${index}.required`}
                     defaultValue={false}
                     control={control}
-                    render={({ onChange, value }) => (
+                    render={({ field }) => (
                       <Checkbox
                         id="required"
                         data-testid="standard"
                         name="required"
-                        isChecked={value}
-                        onChange={onChange}
+                        isChecked={field.value}
+                        onChange={field.onChange}
                       />
                     )}
                   />

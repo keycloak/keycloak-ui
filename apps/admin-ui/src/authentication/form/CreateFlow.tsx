@@ -68,8 +68,8 @@ export default function CreateFlow() {
             role="manage-authorization"
             onSubmit={handleSubmit(save)}
           >
-            <input name="builtIn" type="hidden" ref={register} />
-            <input name="topLevel" type="hidden" ref={register} />
+            <input type="hidden" {...register("builtIn")} />
+            <input type="hidden" {...register("topLevel")} />
             <NameDescription />
             <FlowType />
             <ActionGroup>

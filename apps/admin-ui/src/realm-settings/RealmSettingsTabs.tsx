@@ -176,7 +176,6 @@ export const RealmSettingsTabs = ({
 
   const { control, setValue, getValues } = useForm({
     mode: "onChange",
-    shouldUnregister: false,
   });
   const [key, setKey] = useState(0);
 
@@ -248,10 +247,10 @@ export const RealmSettingsTabs = ({
         name="enabled"
         defaultValue={true}
         control={control}
-        render={({ onChange, value }) => (
+        render={({ field }) => (
           <RealmSettingsHeader
-            value={value}
-            onChange={onChange}
+            value={field.value}
+            onChange={field.onChange}
             realmName={realmName}
             refresh={refreshHeader}
             save={() => save(getValues())}

@@ -28,12 +28,14 @@ const POLICY_ENFORCEMENT_MODES = [
   "DISABLED",
 ] as const;
 
+type FormFields = Omit<ResourceServerRepresentation, "resources" | "scopes">;
+
 export const AuthorizationSettings = ({ clientId }: { clientId: string }) => {
   const { t } = useTranslation("clients");
   const [resource, setResource] = useState<ResourceServerRepresentation>();
   const [importDialog, toggleImportDialog] = useToggle();
 
-  const form = useForm<ResourceServerRepresentation>({});
+  const form = useForm<FormFields>({});
   const { control, reset, handleSubmit } = form;
 
   const { adminClient } = useAdminClient();
@@ -114,16 +116,16 @@ export const AuthorizationSettings = ({ clientId }: { clientId: string }) => {
             data-testid="policyEnforcementMode"
             defaultValue={POLICY_ENFORCEMENT_MODES[0]}
             control={control}
-            render={({ onChange, value }) => (
+            render={({ field }) => (
               <>
                 {POLICY_ENFORCEMENT_MODES.map((mode) => (
                   <Radio
                     id={mode}
                     key={mode}
                     data-testid={mode}
-                    isChecked={value === mode}
+                    isChecked={field.value === mode}
                     name="policyEnforcementMode"
-                    onChange={() => onChange(mode)}
+                    onChange={() => field.onChange(mode)}
                     label={t(`policyEnforcementModes.${mode}`)}
                     className="pf-u-mb-md"
                   />
@@ -151,13 +153,13 @@ export const AuthorizationSettings = ({ clientId }: { clientId: string }) => {
             data-testid="allowRemoteResourceManagement"
             defaultValue={false}
             control={control}
-            render={({ onChange, value }) => (
+            render={({ field }) => (
               <Switch
                 id="allowRemoteResourceManagement"
                 label={t("common:on")}
                 labelOff={t("common:off")}
-                isChecked={value}
-                onChange={onChange}
+                isChecked={field.value}
+                onChange={field.onChange}
                 aria-label={t("allowRemoteResourceManagement")}
               />
             )}

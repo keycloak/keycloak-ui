@@ -15,6 +15,15 @@ import environment from "../../environment";
 import { addTrailingSlash } from "../../util";
 import { getAuthorizationHeaders } from "../../utils/getAuthorizationHeaders";
 
+type DiscoveryError = {
+  type: "manual";
+  message: string;
+};
+
+type FormFields = IdentityProviderRepresentation & {
+  discoveryError: DiscoveryError;
+};
+
 export const SamlConnectSettings = () => {
   const { t } = useTranslation("identity-providers");
   const id = "saml";
@@ -27,7 +36,7 @@ export const SamlConnectSettings = () => {
     setError,
     clearErrors,
     formState: { errors },
-  } = useFormContext();
+  } = useFormContext<FormFields>();
 
   const setupForm = (result: IdentityProviderRepresentation) => {
     Object.entries(result).map(([key, value]) =>
@@ -93,10 +102,9 @@ export const SamlConnectSettings = () => {
       >
         <KeycloakTextInput
           type="text"
-          name="config.entityId"
+          {...register("config.entityId", { required: true })}
           data-testid="serviceProviderEntityId"
           id="kc-service-provider-entity-id"
-          ref={register({ required: true })}
           validated={errors.config?.entityId ? "error" : "default"}
           defaultValue={`${environment.authServerUrl}/realms/${realm}`}
         />

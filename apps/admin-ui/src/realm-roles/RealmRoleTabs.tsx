@@ -97,9 +97,7 @@ export default function RealmRoleTabs() {
       if (role) {
         const convertedRole = convert(role);
         setRole(convertedRole);
-        Object.entries(convertedRole).map((entry) => {
-          setValue(entry[0], entry[1]);
-        });
+        reset(convertedRole);
       }
     },
     [key, url]

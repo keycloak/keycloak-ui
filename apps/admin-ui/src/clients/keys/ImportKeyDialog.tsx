@@ -48,7 +48,7 @@ export const ImportKeyDialog = ({
 
   const [openArchiveFormat, setOpenArchiveFormat] = useState(false);
 
-  const format = useWatch<string>({
+  const format = useWatch({
     control,
     name: "keystoreFormat",
     defaultValue: "JKS",
@@ -104,22 +104,22 @@ export const ImportKeyDialog = ({
             name="keystoreFormat"
             control={control}
             defaultValue="JKS"
-            render={({ onChange, value }) => (
+            render={({ field }) => (
               <Select
                 toggleId="archiveFormat"
                 onToggle={setOpenArchiveFormat}
                 onSelect={(_, value) => {
-                  onChange(value as string);
+                  field.onChange(value as string);
                   setOpenArchiveFormat(false);
                 }}
-                selections={value}
+                selections={field.value}
                 variant={SelectVariant.single}
                 aria-label={t("archiveFormat")}
                 isOpen={openArchiveFormat}
               >
                 {formats.map((option) => (
                   <SelectOption
-                    selected={option === value}
+                    selected={option === field.value}
                     key={option}
                     value={option}
                   />
@@ -137,13 +137,14 @@ export const ImportKeyDialog = ({
           <Controller
             name="file"
             control={control}
-            defaultValue=""
-            render={({ onChange, value }) => (
+            render={({ field }) => (
               <FileUpload
                 id="importFile"
-                value={value.value}
-                filename={value.filename}
-                onChange={(value, filename) => onChange({ value, filename })}
+                value={field.value.value}
+                filename={field.value.filename}
+                onChange={(value, filename) =>
+                  field.onChange({ value, filename })
+                }
               />
             )}
           />

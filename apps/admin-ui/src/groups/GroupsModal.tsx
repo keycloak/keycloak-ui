@@ -106,11 +106,10 @@ export const GroupsModal = ({
           <KeycloakTextInput
             data-testid="groupNameInput"
             aria-label="group name input"
-            ref={register({ required: true })}
             autoFocus
             type="text"
             id="create-group-name"
-            name="name"
+            {...register("name", { required: true })}
             validated={
               errors.name ? ValidatedOptions.error : ValidatedOptions.default
             }
