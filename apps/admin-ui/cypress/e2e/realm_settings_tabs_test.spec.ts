@@ -101,6 +101,7 @@ describe("Realm settings tabs tests", () => {
     realmSettingsPage.toggleCheck(realmSettingsPage.enableStartTlsCheck);
     realmSettingsPage.fillHostField("localhost");
     cy.intercept(`/admin/realms/${realmName}/users/*`).as("load");
+    cy.findByTestId("email-tab-save").click();
     cy.findByTestId(realmSettingsPage.testConnectionButton).click();
     cy.wait("@load");
     masthead.checkNotificationMessage(msg, true);
