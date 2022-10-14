@@ -101,9 +101,15 @@ describe("Realm settings tabs tests", () => {
     realmSettingsPage.toggleCheck(realmSettingsPage.enableStartTlsCheck);
     realmSettingsPage.fillHostField("localhost");
     cy.intercept(`/admin/realms/${realmName}/users/*`).as("load");
-    cy.findByTestId("email-tab-save").click();
     cy.findByTestId(realmSettingsPage.testConnectionButton).click();
     cy.wait("@load");
+
+    //ln109-113 cause the tests to fail locally, but is needed for the test to pass on the dashboard.
+    realmSettingsPage.fillEmailField(
+      "example" + (Math.random() + 1).toString(36).substring(7) + "@example.com"
+    );
+    cy.findByTestId(realmSettingsPage.modalTestConnectionButton).click();
+
     masthead.checkNotificationMessage(msg, true);
   });
 
