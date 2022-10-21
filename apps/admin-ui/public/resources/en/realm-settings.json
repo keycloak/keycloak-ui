@@ -122,9 +122,9 @@
   "enableSwitchError": "Could not enable / disable due to {{error}}",
   "testConnection": "Test connection",
   "testConnectionHint": {
-    "withEmail": "When testing the connection an e-mail will be sent to the currently logged-in user ({{email}}).",
-    "withoutEmail": "To test the connection you must first configure an e-mail address for your user.",
-    "withoutEmailAction": "Configure email"
+    "withEmail": "When testing the connection an e-mail will be sent to the current user ({{email}}).",
+    "withoutEmail": "To test the connection you must first configure an e-mail address for the current user ({{userName}}).",
+    "withoutEmailAction": "Configure e-mail address"
   },
   "testConnectionSuccess": "Success! SMTP connection successful. E-mail was sent!",
   "testConnectionError": "Error! {{error}}",

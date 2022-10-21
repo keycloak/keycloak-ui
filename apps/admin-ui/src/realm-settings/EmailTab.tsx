@@ -397,7 +397,9 @@ export const RealmSettingsEmailTab = ({
                   variant="warning"
                   isInline
                   isPlain
-                  title={t("testConnectionHint.withoutEmail")}
+                  title={t("testConnectionHint.withoutEmail", {
+                    userName: currentUser.username,
+                  })}
                   actionLinks={
                     <AlertActionLink
                       component={(props) => (
