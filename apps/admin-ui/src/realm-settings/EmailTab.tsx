@@ -387,7 +387,6 @@ export const RealmSettingsEmailTab = ({
                 <Alert
                   variant="info"
                   isInline
-                  isPlain
                   title={t("testConnectionHint.withEmail", {
                     email: currentUser.email,
                   })}
@@ -396,7 +395,6 @@ export const RealmSettingsEmailTab = ({
                 <Alert
                   variant="warning"
                   isInline
-                  isPlain
                   title={t("testConnectionHint.withoutEmail", {
                     userName: currentUser.username,
                   })}
