@@ -108,7 +108,7 @@ jobs:
           name: keycloak
 
       - name: Start LDAP server
-        run: npx ldap-server-mock --conf=./cypress/fixtures/ldap/server.json --database=./cypress/fixtures/ldap/users.json &
+        run: npm run cy:ldap-server &
         working-directory: apps/admin-ui
 
       - name: Start Keycloak Server
