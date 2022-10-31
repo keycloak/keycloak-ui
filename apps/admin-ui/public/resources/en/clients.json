@@ -519,5 +519,7 @@
     "never": "Never expires"
   },
   "mappers": "Mappers",
-  "sessions": "Sessions"
+  "sessions": "Sessions",
+  "dPopSettings": "DPop Settings",
+  "dPop": "DPop"
 }

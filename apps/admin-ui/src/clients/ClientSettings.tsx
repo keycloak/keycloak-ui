@@ -11,6 +11,7 @@ import { SamlSignature } from "./add/SamlSignature";
 import { AccessSettings } from "./add/AccessSettings";
 import { LoginSettingsPanel } from "./add/LoginSettingsPanel";
 import { LogoutPanel } from "./add/LogoutPanel";
+import { DPopPanel } from "./add/DPopSettingsPanel";
 
 export type ClientSettingsProps = {
   client: ClientRepresentation;
@@ -69,6 +70,11 @@ export const ClientSettings = (props: ClientSettingsProps) => {
           title: t("logoutSettings"),
           isHidden: client.bearerOnly,
           panel: <LogoutPanel {...props} />,
+        },
+        {
+          title: t("dPopSettings"),
+          isHidden: client.bearerOnly,
+          panel: <DPopPanel {...props} />,
         },
       ]}
     />
