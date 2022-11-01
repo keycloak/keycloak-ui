@@ -9,7 +9,7 @@
   "dependencies": {
     "@patternfly/patternfly": "^4.217.1",
     "@patternfly/react-core": "^4.250.1",
-    "@patternfly/react-icons": "^4.92.6",
+    "@patternfly/react-icons": "^4.92.10",
     "i18next": "^22.0.2",
     "i18next-http-backend": "^2.0.0",
     "react": "^17.0.2",
