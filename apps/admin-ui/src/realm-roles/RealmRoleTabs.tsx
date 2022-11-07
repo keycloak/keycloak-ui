@@ -18,7 +18,7 @@ import { useAdminClient, useFetch } from "../context/auth/AdminClient";
 import type RoleRepresentation from "@keycloak/keycloak-admin-client/lib/defs/roleRepresentation";
 import {
   AttributesForm,
-  AttributeForm,
+  RoleFormField,
 } from "../components/key-value-form/AttributeForm";
 import {
   arrayToKeyValue,
@@ -44,14 +44,14 @@ import { RoleMapping } from "../components/role-mapping/RoleMapping";
 
 export default function RealmRoleTabs() {
   const { t } = useTranslation("roles");
-  const form = useForm<AttributeForm>({
+  const form = useForm<RoleFormField>({
     mode: "onChange",
   });
   const { setValue, getValues, trigger, reset } = form;
   const navigate = useNavigate();
 
   const { adminClient } = useAdminClient();
-  const [role, setRole] = useState<AttributeForm>();
+  const [role, setRole] = useState<RoleFormField>();
 
   const { id, clientId } = useParams<{ id: string; clientId: string }>();
 
@@ -326,14 +326,7 @@ export default function RealmRoleTabs() {
     return <KeycloakSpinner />;
   }
   if (!role) {
-    return (
-      <RealmRoleForm
-        reset={() => reset(role)}
-        form={form}
-        save={save}
-        editMode={false}
-      />
-    );
+    return <RealmRoleForm reset={() => reset(role)} form={form} save={save} />;
   }
 
   return (
@@ -374,7 +367,7 @@ export default function RealmRoleTabs() {
                 reset={() => reset(role)}
                 form={form}
                 save={save}
-                editMode={true}
+                editMode
               />
             </Tab>
             {role.composite && (

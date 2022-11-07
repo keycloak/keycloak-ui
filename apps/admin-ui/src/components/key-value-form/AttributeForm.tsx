@@ -7,13 +7,13 @@ import type { KeyValueType } from "./key-value-convert";
 import { KeyValueInput } from "./KeyValueInput";
 import { FormAccess } from "../form-access/FormAccess";
 
-export type AttributeForm = Omit<RoleRepresentation, "attributes"> & {
+export type RoleFormField = Omit<RoleRepresentation, "attributes"> & {
   attributes?: KeyValueType[];
 };
 
 export type AttributesFormProps = {
-  form: UseFormReturn<AttributeForm>;
-  save?: (model: AttributeForm) => void;
+  form: UseFormReturn<RoleFormField>;
+  save?: (model: RoleFormField) => void;
   reset?: () => void;
   fineGrainedAccess?: boolean;
 };

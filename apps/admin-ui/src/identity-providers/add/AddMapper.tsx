@@ -33,13 +33,13 @@ import type { IdentityProviderMapperTypeRepresentation } from "@keycloak/keycloa
 import { AddMapperForm } from "./AddMapperForm";
 import { DynamicComponents } from "../../components/dynamic/DynamicComponents";
 import { KeycloakSpinner } from "../../components/keycloak-spinner/KeycloakSpinner";
-import type { AttributeForm } from "../../components/key-value-form/AttributeForm";
+import type { RoleFormField } from "../../components/key-value-form/AttributeForm";
 import { KeycloakTextInput } from "../../components/keycloak-text-input/KeycloakTextInput";
 import { useConfirmDialog } from "../../components/confirm-dialog/ConfirmDialog";
 import useLocaleSort, { mapByKey } from "../../utils/useLocaleSort";
 
 export type IdPMapperRepresentationWithAttributes =
-  IdentityProviderMapperRepresentation & AttributeForm;
+  IdentityProviderMapperRepresentation & RoleFormField;
 
 export type Role = RoleRepresentation & {
   clientId?: string;

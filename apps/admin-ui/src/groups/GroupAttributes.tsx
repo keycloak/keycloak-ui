@@ -9,7 +9,7 @@ import {
 
 import { useAlerts } from "../components/alert/Alerts";
 import {
-  AttributeForm,
+  RoleFormField,
   AttributesForm,
 } from "../components/key-value-form/AttributeForm";
 import {
@@ -26,7 +26,7 @@ export const GroupAttributes = () => {
   const { t } = useTranslation("groups");
   const { adminClient } = useAdminClient();
   const { addAlert, addError } = useAlerts();
-  const form = useForm<AttributeForm>({
+  const form = useForm<RoleFormField>({
     mode: "onChange",
   });
 
@@ -42,7 +42,7 @@ export const GroupAttributes = () => {
     form.setValue("attributes", convertAttributes());
   }, [subGroups]);
 
-  const save = async (attributeForm: AttributeForm) => {
+  const save = async (attributeForm: RoleFormField) => {
     try {
       const group = currentGroup();
       const attributes = keyValueToArray(attributeForm.attributes!);

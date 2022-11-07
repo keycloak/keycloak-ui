@@ -9,16 +9,16 @@ import { useTranslation } from "react-i18next";
 import type { UseFormReturn } from "react-hook-form";
 import { ViewHeader } from "../components/view-header/ViewHeader";
 import { FormAccess } from "../components/form-access/FormAccess";
-import type { AttributeForm } from "../components/key-value-form/AttributeForm";
+import type { RoleFormField } from "../components/key-value-form/AttributeForm";
 import { KeycloakTextInput } from "../components/keycloak-text-input/KeycloakTextInput";
 import { KeycloakTextArea } from "../components/keycloak-text-area/KeycloakTextArea";
 import { useRealm } from "../context/realm-context/RealmContext";
 import { useNavigate } from "react-router-dom-v5-compat";
 
 export type RealmRoleFormProps = {
-  form: UseFormReturn<AttributeForm>;
+  form: UseFormReturn<RoleFormField>;
   save: () => void;
-  editMode: boolean;
+  editMode?: boolean;
   reset: () => void;
 };
 
@@ -30,7 +30,7 @@ export const RealmRoleForm = ({
     formState: { errors },
   },
   save,
-  editMode,
+  editMode = false,
   reset,
 }: RealmRoleFormProps) => {
   const { t } = useTranslation("roles");
@@ -61,9 +61,7 @@ export const RealmRoleForm = ({
               {...register("name", {
                 required: !editMode,
                 validate: (value) =>
-                  !value ||
-                  value.trim().length === 0 ||
-                  t("common:required").toString(),
+                  !!value!.trim() || t("common:required").toString(),
               })}
             />
           </FormGroup>

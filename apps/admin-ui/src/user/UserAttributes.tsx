@@ -11,7 +11,7 @@ import type UserRepresentation from "@keycloak/keycloak-admin-client/lib/defs/us
 
 import { useAlerts } from "../components/alert/Alerts";
 import {
-  AttributeForm,
+  RoleFormField,
   AttributesForm,
 } from "../components/key-value-form/AttributeForm";
 import {
@@ -29,7 +29,7 @@ export const UserAttributes = ({ user: defaultUser }: UserAttributesProps) => {
   const { adminClient } = useAdminClient();
   const { addAlert, addError } = useAlerts();
   const [user, setUser] = useState<UserRepresentation>(defaultUser);
-  const form = useForm<AttributeForm>({ mode: "onChange" });
+  const form = useForm<RoleFormField>({ mode: "onChange" });
 
   const convertAttributes = (attr?: Record<string, any>) => {
     return arrayToKeyValue(attr || user.attributes!);
@@ -39,7 +39,7 @@ export const UserAttributes = ({ user: defaultUser }: UserAttributesProps) => {
     form.setValue("attributes", convertAttributes());
   }, [user]);
 
-  const save = async (attributeForm: AttributeForm) => {
+  const save = async (attributeForm: RoleFormField) => {
     try {
       const attributes = keyValueToArray(attributeForm.attributes!);
       await adminClient.users.update({ id: user.id! }, { ...user, attributes });
