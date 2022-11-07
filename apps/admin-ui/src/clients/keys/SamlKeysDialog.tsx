@@ -38,7 +38,7 @@ type SamlKeysDialogProps = {
 };
 
 export type SamlKeysDialogForm = KeyStoreConfig & {
-  file: File;
+  file: File | string;
 };
 
 export const submitForm = async (

@@ -15,7 +15,10 @@ export const StoreSettings = ({
   isSaml?: boolean;
 }) => {
   const { t } = useTranslation("clients");
-  const { register, errors } = useFormContext<KeyStoreConfig>();
+  const {
+    register,
+    formState: { errors },
+  } = useFormContext<KeyStoreConfig>();
 
   return (
     <>

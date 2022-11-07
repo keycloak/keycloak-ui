@@ -24,6 +24,7 @@ import type KeyStoreConfig from "@keycloak/keycloak-admin-client/lib/defs/keysto
 import { HelpItem } from "../../components/help-enabler/HelpItem";
 import { StoreSettings } from "./StoreSettings";
 import { FileUpload } from "../../components/json-file-upload/patternfly/FileUpload";
+import { SamlKeysDialogForm } from "./SamlKeysDialog";
 
 type GenerateKeyDialogProps = {
   clientId: string;
@@ -49,7 +50,7 @@ export const KeyForm = ({
   const [filename, setFilename] = useState<string>();
   const [openArchiveFormat, setOpenArchiveFormat] = useState(false);
 
-  const { control, watch } = useFormContext<KeyStoreConfig>();
+  const { control, watch } = useFormContext<SamlKeysDialogForm>();
   const format = watch("format");
 
   return (
@@ -85,7 +86,7 @@ export const KeyForm = ({
                 .concat(hasPem ? CERT_PEM : [])
                 .map((option) => (
                   <SelectOption
-                    selected={option === value}
+                    selected={option === field.value}
                     key={option}
                     value={option}
                   />
