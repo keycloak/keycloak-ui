@@ -85,13 +85,13 @@ export const MapComponent = ({ name, label, helpText }: ComponentProps) => {
           <Flex key={attribute.id} data-testid="row">
             <FlexItem grow={{ default: "grow" }}>
               <TextInput
-                name={`${name}[${index}].key`}
+                name={`${fieldName}[${index}].key`}
                 placeholder={t("common:keyPlaceholder")}
                 aria-label={t("key")}
                 defaultValue={attribute.key}
-                data-testid={`${name}[${index}].key`}
+                data-testid={`${fieldName}[${index}].key`}
                 onChange={(value) => updateKey(index, value)}
-                onBlur={update}
+                onBlur={() => update()}
               />
             </FlexItem>
             <FlexItem
@@ -99,13 +99,13 @@ export const MapComponent = ({ name, label, helpText }: ComponentProps) => {
               spacer={{ default: "spacerNone" }}
             >
               <TextInput
-                name={`${name}[${index}].value`}
+                name={`${fieldName}[${index}].value`}
                 placeholder={t("common:valuePlaceholder")}
                 aria-label={t("common:value")}
                 defaultValue={attribute.value}
-                data-testid={`${name}[${index}].value`}
+                data-testid={`${fieldName}[${index}].value`}
                 onChange={(value) => updateValue(index, value)}
-                onBlur={update}
+                onBlur={() => update()}
               />
             </FlexItem>
             <FlexItem>
@@ -114,7 +114,7 @@ export const MapComponent = ({ name, label, helpText }: ComponentProps) => {
                 title={t("common:removeAttribute")}
                 isDisabled={map.length === 1}
                 onClick={() => remove(index)}
-                data-testid={`${name}[${index}].remove`}
+                data-testid={`${fieldName}[${index}].remove`}
               >
                 <MinusCircleIcon />
               </Button>
@@ -125,7 +125,7 @@ export const MapComponent = ({ name, label, helpText }: ComponentProps) => {
       <ActionList>
         <ActionListItem>
           <Button
-            data-testid={`${name}-add-row`}
+            data-testid={`${fieldName}-add-row`}
             className="pf-u-px-0 pf-u-mt-sm"
             variant="link"
             icon={<PlusCircleIcon />}
