@@ -16,7 +16,7 @@ export interface ClientRepresentation {
   rootUrl: string;
   baseUrl: string;
   effectiveUrl: string;
-  consent: ConsentRepresentation;
+  consent?: ConsentRepresentation;
   logoUri: string;
   policyUri: string;
   tosUri: string;
@@ -144,4 +144,106 @@ export interface CredentialRepresentation {
    * @deprecated
    */
   config: { [index: string]: string[] };
+}
+
+export interface CredentialMetadataRepresentation {
+  infoMessage: string;
+  warningMessageTitle: string;
+  warningMessageDescription: string;
+}
+
+export interface CredentialTypeMetadata {
+  type: string;
+  displayName: string;
+  helpText: string;
+  iconCssClass: string;
+  createAction: string;
+  updateAction: string;
+  removeable: boolean;
+  category: "basic-authentication" | "two-factor" | "passwordless";
+}
+
+export interface CredentialContainer {
+  type: string;
+  category: string;
+  displayName: string;
+  helptext: string;
+  iconCssClass: string;
+  createAction: string;
+  updateAction: string;
+  removeable: boolean;
+  userCredentialMetadatas: CredentialMetadataRepresentation[];
+  metadata: CredentialTypeMetadata;
+}
+
+export interface DeviceRepresentation {
+  id: string;
+  ipAddress: string;
+  os: string;
+  osVersion: string;
+  browser: string;
+  device: string;
+  lastAccess: number;
+  current: boolean;
+  sessions: SessionRepresentation[];
+  mobile: boolean;
+}
+
+export interface SessionRepresentation {
+  id: string;
+  ipAddress: string;
+  started: number;
+  lastAccess: number;
+  expires: number;
+  clients: ClientRepresentation[];
+  browser: string;
+  current: boolean;
+}
+
+export interface ClientRepresentation {
+  clientId: string;
+  clientName: string;
+  description: string;
+  userConsentRequired: boolean;
+  inUse: boolean;
+  offlineAccess: boolean;
+  rootUrl: string;
+  baseUrl: string;
+  effectiveUrl: string;
+  logoUri: string;
+  policyUri: string;
+  tosUri: string;
+}
+
+export interface Client {
+  baseUrl: string;
+  clientId: string;
+  name?: string;
+}
+
+export interface Scope {
+  name: string;
+  displayName?: string;
+}
+
+export interface Resource {
+  _id: string;
+  name: string;
+  client: Client;
+  scopes: Scope[];
+  uris: string[];
+  shareRequests: Permission[];
+}
+
+export interface Permission {
+  email?: string;
+  firstName?: string;
+  lastName?: string;
+  scopes: Scope[] | string[]; // this should be Scope[] - fix API
+  username: string;
+}
+
+export interface Permissions {
+  permissions: Permission[];
+  row?: number;
 }
