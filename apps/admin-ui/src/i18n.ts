@@ -1,11 +1,11 @@
-import i18n, { InitOptions, TOptions } from "i18next";
+import type KeycloakAdminClient from "@keycloak/keycloak-admin-client";
+import i18n, { InitOptions, ReadCallback, TOptions } from "i18next";
 import HttpBackend, { LoadPathOption } from "i18next-http-backend";
 import { initReactI18next } from "react-i18next";
-import type KeycloakAdminClient from "@keycloak/keycloak-admin-client";
 
 import environment from "./environment";
-import { getAuthorizationHeaders } from "./utils/getAuthorizationHeaders";
 import { addTrailingSlash } from "./util";
+import { getAuthorizationHeaders } from "./utils/getAuthorizationHeaders";
 
 export const DEFAULT_LOCALE = "en";
 
@@ -71,6 +71,31 @@ const initOptions = async (
   };
 };
 
+// A custom loader that ignores 404s.
+class CustomBackend extends HttpBackend {
+  loadUrl(
+    url: string,
+    callback: ReadCallback,
+    languages?: string | string[] | undefined,
+    namespaces?: string | string[] | undefined
+  ): void {
+    const overwrittenCallback: ReadCallback = (error, data) => {
+      // See: https://github.com/i18next/i18next-http-backend/issues/102
+      const notFound =
+        typeof error === "string" &&
+        (error as string).includes("status code: 404");
+
+      if (notFound) {
+        callback(null, {});
+      } else {
+        callback(error, data);
+      }
+    };
+
+    super.loadUrl(url, overwrittenCallback, languages, namespaces);
+  }
+}
+
 const configuredI18n = i18n
   .use({
     type: "postProcessor",
@@ -87,6 +112,6 @@ const configuredI18n = i18n
     },
   })
   .use(initReactI18next)
-  .use(HttpBackend);
+  .use(CustomBackend);
 
 export default configuredI18n;
