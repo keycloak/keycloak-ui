@@ -24,6 +24,7 @@ import type KeyStoreConfig from "@keycloak/keycloak-admin-client/lib/defs/keysto
 import { HelpItem } from "../../components/help-enabler/HelpItem";
 import { StoreSettings } from "./StoreSettings";
 import { FileUpload } from "../../components/json-file-upload/patternfly/FileUpload";
+import { useServerInfo } from "../../context/server-info/ServerInfoProvider";
 
 type GenerateKeyDialogProps = {
   clientId: string;
@@ -81,8 +82,10 @@ export const KeyForm = ({
               aria-label={t("archiveFormat")}
               isOpen={openArchiveFormat}
             >
-              {["JKS", "PKCS12"]
-                .concat(hasPem ? CERT_PEM : [])
+              {useServerInfo()
+                .cryptoInfo?.supportedKeystoreTypes.concat(
+                  hasPem ? CERT_PEM : []
+                )
                 .map((option) => (
                   <SelectOption
                     selected={option === value}

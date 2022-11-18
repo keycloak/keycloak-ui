@@ -39,6 +39,17 @@ type KeysProps = {
 
 const attr = "jwt.credential";
 
+export const getFileExt = (keystoreType: string | undefined) => {
+  if (keystoreType == "PKCS12") {
+    return "p12";
+  } else if (keystoreType == "JKS") {
+    return "jks";
+  } else if (keystoreType == "BCFKS") {
+    return "bcfks";
+  }
+  return "";
+};
+
 export const Keys = ({ clientId, save, hasConfigureAccess }: KeysProps) => {
   const { t } = useTranslation("clients");
   const {
@@ -80,7 +91,7 @@ export const Keys = ({ clientId, save, hasConfigureAccess }: KeysProps) => {
       );
       FileSaver.saveAs(
         new Blob([keyStore], { type: "application/octet-stream" }),
-        `keystore.${config.format == "PKCS12" ? "p12" : "jks"}`
+        `keystore.${getFileExt(config.format)}`
       );
       addAlert(t("generateSuccess"), AlertVariant.success);
       refresh();

@@ -17,13 +17,17 @@ import {
 import { HelpItem } from "../../components/help-enabler/HelpItem";
 import { StoreSettings } from "./StoreSettings";
 import { FileUpload } from "../../components/json-file-upload/patternfly/FileUpload";
+import { useServerInfo } from "../../context/server-info/ServerInfoProvider";
 
 type ImportKeyDialogProps = {
   toggleDialog: () => void;
   save: (importFile: ImportFile) => void;
 };
 
-const baseFormats = ["JKS", "PKCS12"];
+const empty: string[] = [];
+const supportedKeystoreTypes =
+  useServerInfo().cryptoInfo?.supportedKeystoreTypes;
+const baseFormats = { ...empty, supportedKeystoreTypes };
 
 const formats = baseFormats.concat([
   "Certificate PEM",

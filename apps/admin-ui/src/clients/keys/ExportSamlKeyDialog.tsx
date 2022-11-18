@@ -14,6 +14,17 @@ type ExportSamlKeyDialogProps = {
   close: () => void;
 };
 
+export const getFileExt = (keystoreType: string | undefined) => {
+  if (keystoreType == "PKCS12") {
+    return "p12";
+  } else if (keystoreType == "JKS") {
+    return "jks";
+  } else if (keystoreType == "BCFKS") {
+    return "bcfks";
+  }
+  return "";
+};
+
 export const ExportSamlKeyDialog = ({
   clientId,
   close,
@@ -39,7 +50,7 @@ export const ExportSamlKeyDialog = ({
       );
       FileSaver.saveAs(
         new Blob([keyStore], { type: "application/octet-stream" }),
-        `keystore.${config.format == "PKCS12" ? "p12" : "jks"}`
+        `keystore.${getFileExt(config.format)}`
       );
       addAlert(t("samlKeysExportSuccess"));
       close();
