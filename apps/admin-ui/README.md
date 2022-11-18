@@ -2,6 +2,41 @@
 
 This project is the next generation of the Keycloak Administration UI. It is written with React and [PatternFly 4](https://www.patternfly.org/v4/).
 
+## Repository structure
+
+    ├── cypress                    # Automated end-to-end cypress tests
+    │   ├── component
+    │   ├── e2e
+    │   ├── fixtures
+    │   ├── support
+    │   ├── WRITING_TESTS.md
+    │   └── tsconfig.json
+    ├── public                     # Resources i.e translations, icons
+    │   ├── resources
+    │   └── ...
+    ├── src                        # Source files
+    ├── CODING_GUIDELINES.md
+    ├── README.md
+    ├── cypress.config.mjs
+    ├── index.html
+    ├── package.json
+    ├── tsconfig.json
+    ├── tsconfig.node.json
+    ├── vite.config.ts
+    ├── vitest.setup.ts
+
+### Automated end-to-end cypress tests
+
+All end-to-end tests are stored in the `cypress` folder. Refer to the `WRITING_TESTS.md` for detailed instruction on how to write tests.
+
+### Resources i.e images, icons
+
+Resources such as translations of texts into different languages and icons are stored in the `public` folder.
+
+### Source files
+
+The source code for the Keycloak Administration UI is stored in the `src` folder.
+
 ## Development
 
 ### Prerequisites
@@ -45,6 +80,7 @@ Every time you create a commit it should be automatically linted and formatted f
 ```bash
 npm run lint
 ```
+
 ## Integration testing with Cypress
 
 This repository contains integration tests developed with the [Cypress framework](https://www.cypress.io/).
@@ -73,4 +109,3 @@ For more information about the Cypress command-line interface consult [the docum
 
 You can find information about the project structure in the [official Cypress documentation](https://docs.cypress.io/guides/core-concepts/writing-and-organizing-tests#Folder-structure).
 Read more about [how to write tests](./cypress/WRITING_TESTS.md)
-
