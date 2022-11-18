@@ -2,6 +2,16 @@
 
 This app allows you to run a local development version of the Keycloak server.
 
+## Repository structure
+
+    ├── scripts                    # Keycloak server config scripts
+    ├── README.md
+    ├── package.json
+
+### Keycloak server config scripts
+
+`start-server.mjs`, `import-client.mjs` and `security-admin-console-v2.json` are stored in the `scripts` folder. The scripts allow to start the Keycloak server, import a new Keycloak client and the latest Keycloak theme.
+
 ### Running the Keycloak server
 
 First, ensure that all dependencies are installed locally using NPM by running:
