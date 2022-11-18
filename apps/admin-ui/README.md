@@ -27,7 +27,7 @@ This project is the next generation of the Keycloak Administration UI. It is wri
 
 ### Automated end-to-end cypress tests
 
-All end-to-end tests are stored in the `cypress` folder. Refer to the `WRITING_TESTS.md` for detailed instruction on how to write tests.
+All end-to-end tests are stored in the `cypress` folder. Refer to the `WRITING_TESTS.md` for detailed instruction on how to write cypress tests.
 
 ### Resources i.e images, icons
 
