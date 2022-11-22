@@ -1,15 +1,15 @@
-import { useTranslation } from "react-i18next";
-import { Controller, useFormContext } from "react-hook-form";
 import { FormGroup, Switch, ValidatedOptions } from "@patternfly/react-core";
+import { Controller, useFormContext } from "react-hook-form-v7";
+import { useTranslation } from "react-i18next";
 
 import type ClientRepresentation from "@keycloak/keycloak-admin-client/lib/defs/clientRepresentation";
-import type { ClientSettingsProps } from "../ClientSettings";
 import { FormAccess } from "../../components/form-access/FormAccess";
 import { HelpItem } from "../../components/help-enabler/HelpItem";
 import { KeycloakTextInput } from "../../components/keycloak-text-input/KeycloakTextInput";
 import { useAccess } from "../../context/access/Access";
-import { SaveReset } from "../advanced/SaveReset";
 import { convertAttributeNameToForm } from "../../util";
+import { SaveReset } from "../advanced/SaveReset";
+import type { ClientSettingsProps } from "../ClientSettings";
 
 export const LogoutPanel = ({
   save,
@@ -51,13 +51,13 @@ export const LogoutPanel = ({
           name="frontchannelLogout"
           defaultValue={true}
           control={control}
-          render={({ onChange, value }) => (
+          render={({ field }) => (
             <Switch
               id="kc-frontchannelLogout-switch"
               label={t("common:on")}
               labelOff={t("common:off")}
-              isChecked={value}
-              onChange={onChange}
+              isChecked={field.value}
+              onChange={field.onChange}
               aria-label={t("frontchannelLogout")}
             />
           )}
@@ -74,29 +74,30 @@ export const LogoutPanel = ({
             />
           }
           helperTextInvalid={
-            errors.attributes?.frontchannel?.logout?.url?.message
+            errors.attributes?.frontchannel.logout?.url?.message
           }
           validated={
-            errors.attributes?.frontchannel?.logout?.url?.message
+            errors.attributes?.frontchannel.logout?.url?.message
               ? ValidatedOptions.error
               : ValidatedOptions.default
           }
         >
           <KeycloakTextInput
-            type="text"
             id="frontchannelLogoutUrl"
-            name={convertAttributeNameToForm(
-              "attributes.frontchannel.logout.url"
+            {...register(
+              convertAttributeNameToForm<ClientRepresentation>(
+                "attributes.frontchannel.logout.url"
+              ),
+              {
+                validate: (uri) =>
+                  ((uri.startsWith("https://") || uri.startsWith("http://")) &&
+                    !uri.includes("*")) ||
+                  uri === "" ||
+                  t("frontchannelUrlInvalid").toString(),
+              }
             )}
-            ref={register({
-              validate: (uri) =>
-                ((uri.startsWith("https://") || uri.startsWith("http://")) &&
-                  !uri.includes("*")) ||
-                uri === "" ||
-                t("frontchannelUrlInvalid").toString(),
-            })}
             validated={
-              errors.attributes?.frontchannel?.logout?.url?.message
+              errors.attributes?.frontchannel.logout?.url?.message
                 ? ValidatedOptions.error
                 : ValidatedOptions.default
             }
@@ -115,29 +116,31 @@ export const LogoutPanel = ({
               />
             }
             helperTextInvalid={
-              errors.attributes?.backchannel?.logout?.url?.message
+              errors.attributes?.backchannel.logout?.url?.message
             }
             validated={
-              errors.attributes?.backchannel?.logout?.url?.message
+              errors.attributes?.backchannel.logout?.url?.message
                 ? ValidatedOptions.error
                 : ValidatedOptions.default
             }
           >
             <KeycloakTextInput
-              type="text"
               id="backchannelLogoutUrl"
-              name={convertAttributeNameToForm(
-                "attributes.backchannel.logout.url"
+              {...register(
+                convertAttributeNameToForm<ClientRepresentation>(
+                  "attributes.backchannel.logout.url"
+                ),
+                {
+                  validate: (uri) =>
+                    ((uri.startsWith("https://") ||
+                      uri.startsWith("http://")) &&
+                      !uri.includes("*")) ||
+                    uri === "" ||
+                    t("backchannelUrlInvalid").toString(),
+                }
               )}
-              ref={register({
-                validate: (uri) =>
-                  ((uri.startsWith("https://") || uri.startsWith("http://")) &&
-                    !uri.includes("*")) ||
-                  uri === "" ||
-                  t("backchannelUrlInvalid").toString(),
-              })}
               validated={
-                errors.attributes?.backchannel?.logout?.url?.message
+                errors.attributes?.backchannel.logout?.url?.message
                   ? ValidatedOptions.error
                   : ValidatedOptions.default
               }
@@ -155,18 +158,18 @@ export const LogoutPanel = ({
             hasNoPaddingTop
           >
             <Controller
-              name={convertAttributeNameToForm(
+              name={convertAttributeNameToForm<ClientRepresentation>(
                 "attributes.backchannel.logout.session.required"
               )}
               defaultValue="true"
               control={control}
-              render={({ onChange, value }) => (
+              render={({ field }) => (
                 <Switch
                   id="backchannelLogoutSessionRequired"
                   label={t("common:on")}
                   labelOff={t("common:off")}
-                  isChecked={value === "true"}
-                  onChange={(value) => onChange(value.toString())}
+                  isChecked={field.value === "true"}
+                  onChange={(value) => field.onChange(value.toString())}
                   aria-label={t("backchannelLogoutSessionRequired")}
                 />
               )}
@@ -184,18 +187,18 @@ export const LogoutPanel = ({
             hasNoPaddingTop
           >
             <Controller
-              name={convertAttributeNameToForm(
+              name={convertAttributeNameToForm<ClientRepresentation>(
                 "attributes.backchannel.logout.revoke.offline.tokens"
               )}
               defaultValue="false"
               control={control}
-              render={({ onChange, value }) => (
+              render={({ field }) => (
                 <Switch
                   id="backchannelLogoutRevokeOfflineSessions"
                   label={t("common:on")}
                   labelOff={t("common:off")}
-                  isChecked={value === "true"}
-                  onChange={(value) => onChange(value.toString())}
+                  isChecked={field.value === "true"}
+                  onChange={(value) => field.onChange(value.toString())}
                   aria-label={t("backchannelLogoutRevokeOfflineSessions")}
                 />
               )}

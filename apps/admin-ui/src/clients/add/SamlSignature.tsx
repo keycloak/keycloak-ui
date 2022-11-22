@@ -1,17 +1,17 @@
-import { useState } from "react";
-import { useTranslation } from "react-i18next";
-import { Controller, useFormContext } from "react-hook-form";
 import {
   FormGroup,
   Select,
   SelectOption,
   SelectVariant,
 } from "@patternfly/react-core";
+import { useState } from "react";
+import { Controller, useFormContext } from "react-hook-form-v7";
+import { useTranslation } from "react-i18next";
 
 import type ClientRepresentation from "@keycloak/keycloak-admin-client/lib/defs/clientRepresentation";
-import { convertAttributeNameToForm } from "../../util";
 import { FormAccess } from "../../components/form-access/FormAccess";
 import { HelpItem } from "../../components/help-enabler/HelpItem";
+import { convertAttributeNameToForm } from "../../util";
 import { Toggle } from "./SamlConfig";
 
 const SIGNATURE_ALGORITHMS = [
@@ -50,10 +50,14 @@ export const SamlSignature = () => {
   const { control, watch } = useFormContext<ClientRepresentation>();
 
   const signDocs = watch(
-    convertAttributeNameToForm("attributes.saml.server.signature")
+    convertAttributeNameToForm<ClientRepresentation>(
+      "attributes.saml.server.signature"
+    )
   );
   const signAssertion = watch(
-    convertAttributeNameToForm("attributes.saml.assertion.signature")
+    convertAttributeNameToForm<ClientRepresentation>(
+      "attributes.saml.assertion.signature"
+    )
   );
 
   return (
@@ -83,28 +87,27 @@ export const SamlSignature = () => {
             }
           >
             <Controller
-              name={convertAttributeNameToForm(
+              name={convertAttributeNameToForm<ClientRepresentation>(
                 "attributes.saml.signature.algorithm"
               )}
               defaultValue={SIGNATURE_ALGORITHMS[0]}
-              Key
               control={control}
-              render={({ onChange, value }) => (
+              render={({ field }) => (
                 <Select
                   toggleId="signatureAlgorithm"
                   onToggle={setAlgOpen}
                   onSelect={(_, value) => {
-                    onChange(value.toString());
+                    field.onChange(value.toString());
                     setAlgOpen(false);
                   }}
-                  selections={value}
+                  selections={field.value}
                   variant={SelectVariant.single}
                   aria-label={t("signatureAlgorithm")}
                   isOpen={algOpen}
                 >
                   {SIGNATURE_ALGORITHMS.map((algorithm) => (
                     <SelectOption
-                      selected={algorithm === value}
+                      selected={algorithm === field.value}
                       key={algorithm}
                       value={algorithm}
                     />
@@ -124,27 +127,27 @@ export const SamlSignature = () => {
             }
           >
             <Controller
-              name={convertAttributeNameToForm(
-                "attributes.saml.server.signature.keyinfo$xmlSigKeyInfoKeyNameTransformer"
+              name={convertAttributeNameToForm<ClientRepresentation>(
+                "attributes.saml.server.signature.keyinfo.xmlSigKeyInfoKeyNameTransformer"
               )}
               defaultValue={KEYNAME_TRANSFORMER[0]}
               control={control}
-              render={({ onChange, value }) => (
+              render={({ field }) => (
                 <Select
                   toggleId="signatureKeyName"
                   onToggle={setKeyOpen}
                   onSelect={(_, value) => {
-                    onChange(value.toString());
+                    field.onChange(value.toString());
                     setKeyOpen(false);
                   }}
-                  selections={value}
+                  selections={field.value}
                   variant={SelectVariant.single}
                   aria-label={t("signatureKeyName")}
                   isOpen={keyOpen}
                 >
                   {KEYNAME_TRANSFORMER.map((key) => (
                     <SelectOption
-                      selected={key === value}
+                      selected={key === field.value}
                       key={key}
                       value={key}
                     />
@@ -167,16 +170,17 @@ export const SamlSignature = () => {
               name="attributes.saml_signature_canonicalization_method"
               defaultValue={CANONICALIZATION[0].value}
               control={control}
-              render={({ onChange, value }) => (
+              render={({ field }) => (
                 <Select
                   toggleId="canonicalization"
                   onToggle={setCanOpen}
                   onSelect={(_, value) => {
-                    onChange(value.toString());
+                    field.onChange(value.toString());
                     setCanOpen(false);
                   }}
                   selections={
-                    CANONICALIZATION.find((can) => can.value === value)?.name
+                    CANONICALIZATION.find((can) => can.value === field.value)
+                      ?.name
                   }
                   variant={SelectVariant.single}
                   aria-label={t("canonicalization")}
@@ -184,7 +188,7 @@ export const SamlSignature = () => {
                 >
                   {CANONICALIZATION.map((can) => (
                     <SelectOption
-                      selected={can.value === value}
+                      selected={can.value === field.value}
                       key={can.name}
                       value={can.value}
                     >

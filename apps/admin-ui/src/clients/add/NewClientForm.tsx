@@ -1,3 +1,4 @@
+import type ClientRepresentation from "@keycloak/keycloak-admin-client/lib/defs/clientRepresentation";
 import {
   AlertVariant,
   Button,
@@ -6,9 +7,8 @@ import {
   WizardContextConsumer,
   WizardFooter,
 } from "@patternfly/react-core";
-import type ClientRepresentation from "@keycloak/keycloak-admin-client/lib/defs/clientRepresentation";
 import { useState } from "react";
-import { FormProvider, useForm } from "react-hook-form";
+import { FormProvider, useForm } from "react-hook-form-v7";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom-v5-compat";
 import { useAlerts } from "../../components/alert/Alerts";

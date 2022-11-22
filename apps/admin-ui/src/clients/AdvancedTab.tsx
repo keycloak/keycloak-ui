@@ -55,7 +55,7 @@ export const AdvancedTab = ({ save, client }: AdvancedProps) => {
   const { t } = useTranslation("clients");
   const openIdConnect = "openid-connect";
 
-  const { setValue, control } = useFormContext();
+  const { setValue } = useFormContext();
   const {
     publicClient,
     attributes,
@@ -128,7 +128,6 @@ export const AdvancedTab = ({ save, client }: AdvancedProps) => {
                   {t("clients-help:openIdConnectCompatibilityModes")}
                 </Text>
                 <OpenIdConnectCompatibilityModes
-                  control={control}
                   save={() => save()}
                   reset={() =>
                     resetFields(["exclude.session.state.from.auth.response"])
@@ -146,7 +145,6 @@ export const AdvancedTab = ({ save, client }: AdvancedProps) => {
                   {t("clients-help:fineGrainSamlEndpointConfig")}
                 </Text>
                 <FineGrainSamlEndpointConfig
-                  control={control}
                   save={() => save()}
                   reset={() =>
                     resetFields([
@@ -178,7 +176,6 @@ export const AdvancedTab = ({ save, client }: AdvancedProps) => {
                 </Text>
                 <AdvancedSettings
                   protocol={protocol}
-                  control={control}
                   save={() => save()}
                   reset={() => {
                     resetFields([
@@ -201,7 +198,6 @@ export const AdvancedTab = ({ save, client }: AdvancedProps) => {
                 </Text>
                 <AuthenticationOverrides
                   protocol={protocol}
-                  control={control}
                   save={() => save()}
                   reset={() => {
                     setValue(

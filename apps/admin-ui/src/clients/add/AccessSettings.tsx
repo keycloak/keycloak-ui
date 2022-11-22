@@ -1,5 +1,5 @@
 import { useTranslation } from "react-i18next";
-import { useFormContext } from "react-hook-form";
+import { useFormContext } from "react-hook-form-v7";
 import { FormGroup } from "@patternfly/react-core";
 
 import type ClientRepresentation from "@keycloak/keycloak-admin-client/lib/defs/clientRepresentation";
@@ -49,12 +49,7 @@ export const AccessSettings = ({
               />
             }
           >
-            <KeycloakTextInput
-              type="text"
-              id="kc-root-url"
-              name="rootUrl"
-              ref={register}
-            />
+            <KeycloakTextInput id="kc-root-url" {...register("rootUrl")} />
           </FormGroup>
           <FormGroup
             label={t("homeURL")}
@@ -66,12 +61,7 @@ export const AccessSettings = ({
               />
             }
           >
-            <KeycloakTextInput
-              type="text"
-              id="kc-home-url"
-              name="baseUrl"
-              ref={register}
-            />
+            <KeycloakTextInput id="kc-home-url" {...register("baseUrl")} />
           </FormGroup>
           <FormGroup
             label={t("validRedirectUri")}
@@ -127,11 +117,9 @@ export const AccessSettings = ({
                 }
               >
                 <KeycloakTextInput
-                  type="text"
                   id="idpInitiatedSsoUrlName"
-                  name="attributes.saml_idp_initiated_sso_url_name"
                   data-testid="idpInitiatedSsoUrlName"
-                  ref={register}
+                  {...register("attributes.saml_idp_initiated_sso_url_name")}
                 />
               </FormGroup>
               <FormGroup
@@ -145,11 +133,9 @@ export const AccessSettings = ({
                 }
               >
                 <KeycloakTextInput
-                  type="text"
                   id="idpInitiatedSsoRelayState"
-                  name="attributes.saml_idp_initiated_sso_relay_state"
                   data-testid="idpInitiatedSsoRelayState"
-                  ref={register}
+                  {...register("attributes.saml_idp_initiated_sso_relay_state")}
                 />
               </FormGroup>
               <FormGroup
@@ -163,11 +149,9 @@ export const AccessSettings = ({
                 }
               >
                 <KeycloakTextInput
-                  type="text"
                   id="masterSamlProcessingUrl"
-                  name="adminUrl"
                   data-testid="masterSamlProcessingUrl"
-                  ref={register}
+                  {...register("adminUrl")}
                 />
               </FormGroup>
             </>
@@ -203,12 +187,7 @@ export const AccessSettings = ({
             />
           }
         >
-          <KeycloakTextInput
-            type="text"
-            id="kc-admin-url"
-            name="adminUrl"
-            ref={register}
-          />
+          <KeycloakTextInput id="kc-admin-url" {...register("adminUrl")} />
         </FormGroup>
       )}
       {client.bearerOnly && (

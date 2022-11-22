@@ -1,7 +1,8 @@
-import { useTranslation } from "react-i18next";
-import { useFormContext } from "react-hook-form";
 import { FormGroup } from "@patternfly/react-core";
+import { useFormContext } from "react-hook-form-v7";
+import { useTranslation } from "react-i18next";
 
+import ClientRepresentation from "libs/keycloak-admin-client/lib/defs/clientRepresentation";
 import { HelpItem } from "../../components/help-enabler/HelpItem";
 import { KeycloakTextInput } from "../../components/keycloak-text-input/KeycloakTextInput";
 import { convertAttributeNameToForm } from "../../util";
@@ -23,11 +24,13 @@ export const ApplicationUrls = () => {
         }
       >
         <KeycloakTextInput
-          type="text"
           id="logoUrl"
-          name={convertAttributeNameToForm("attributes.logoUri")}
           data-testid="logoUrl"
-          ref={register}
+          {...register(
+            convertAttributeNameToForm<ClientRepresentation>(
+              "attributes.logoUri"
+            )
+          )}
         />
       </FormGroup>
       <FormGroup
@@ -41,11 +44,13 @@ export const ApplicationUrls = () => {
         }
       >
         <KeycloakTextInput
-          type="text"
           id="policyUrl"
-          name={convertAttributeNameToForm("attributes.policyUri")}
           data-testid="policyUrl"
-          ref={register}
+          {...register(
+            convertAttributeNameToForm<ClientRepresentation>(
+              "attributes.policyUri"
+            )
+          )}
         />
       </FormGroup>
       <FormGroup
@@ -59,11 +64,13 @@ export const ApplicationUrls = () => {
         }
       >
         <KeycloakTextInput
-          type="text"
           id="termsOfServiceUrl"
-          name={convertAttributeNameToForm("attributes.tosUri")}
           data-testid="termsOfServiceUrl"
-          ref={register}
+          {...register(
+            convertAttributeNameToForm<ClientRepresentation>(
+              "attributes.tosUri"
+            )
+          )}
         />
       </FormGroup>
     </>
