@@ -20,7 +20,7 @@ concurrency:
 jobs:
   build-keycloak:
     if: ${{ github.event_name != 'schedule' }}
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
     steps:
       - name: Check out Admin UI
         uses: actions/checkout@v3
@@ -65,7 +65,7 @@ jobs:
 
   install-nightly:
     if: ${{ github.event_name == 'schedule' }}
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
     env:
       GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     steps:
@@ -83,7 +83,7 @@ jobs:
   test:
     needs: [build-keycloak, install-nightly]
     if: always() && ( needs.build-keycloak.result == 'success' || needs.install-nightly.result == 'success' )
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
     strategy:
       fail-fast: false
       matrix:
