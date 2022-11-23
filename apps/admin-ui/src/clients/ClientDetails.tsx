@@ -183,6 +183,11 @@ export type SaveOptions = {
   messageKey?: string;
 };
 
+export type FormFields = Omit<
+  ClientRepresentation,
+  "authorizationSettings" | "resources"
+>;
+
 export default function ClientDetails() {
   const { t } = useTranslation("clients");
   const { adminClient } = useAdminClient();
@@ -203,7 +208,7 @@ export default function ClientDetails() {
   const [downloadDialogOpen, toggleDownloadDialogOpen] = useToggle();
   const [changeAuthenticatorOpen, toggleChangeAuthenticatorOpen] = useToggle();
 
-  const form = useForm<ClientRepresentation>({ shouldUnregister: false });
+  const form = useForm<FormFields>({ shouldUnregister: false });
   const { clientId } = useParams<ClientParams>();
   const [key, setKey] = useState(0);
 
@@ -268,46 +273,48 @@ export default function ClientDetails() {
       messageKey: "clientSaveSuccess",
     }
   ) => {
-    if (await form.trigger()) {
-      if (
-        !client?.publicClient &&
-        client?.clientAuthenticatorType !== clientAuthenticatorType &&
-        !confirmed
-      ) {
-        toggleChangeAuthenticatorOpen();
-        return;
-      }
+    if (!(await form.trigger())) {
+      return;
+    }
 
-      const values = convertFormValuesToObject(form.getValues());
+    if (
+      !client?.publicClient &&
+      client?.clientAuthenticatorType !== clientAuthenticatorType &&
+      !confirmed
+    ) {
+      toggleChangeAuthenticatorOpen();
+      return;
+    }
 
-      const submittedClient =
-        convertFormValuesToObject<ClientRepresentation>(values);
+    const values = convertFormValuesToObject(form.getValues());
 
-      if (submittedClient.attributes?.["acr.loa.map"]) {
-        submittedClient.attributes["acr.loa.map"] = JSON.stringify(
-          Object.fromEntries(
-            (submittedClient.attributes["acr.loa.map"] as KeyValueType[])
-              .filter(({ key }) => key !== "")
-              .map(({ key, value }) => [key, value])
-          )
-        );
-      }
+    const submittedClient =
+      convertFormValuesToObject<ClientRepresentation>(values);
 
-      try {
-        const newClient: ClientRepresentation = {
-          ...client,
-          ...submittedClient,
-        };
+    if (submittedClient.attributes?.["acr.loa.map"]) {
+      submittedClient.attributes["acr.loa.map"] = JSON.stringify(
+        Object.fromEntries(
+          (submittedClient.attributes["acr.loa.map"] as KeyValueType[])
+            .filter(({ key }) => key !== "")
+            .map(({ key, value }) => [key, value])
+        )
+      );
+    }
 
-        newClient.clientId = newClient.clientId?.trim();
+    try {
+      const newClient: ClientRepresentation = {
+        ...client,
+        ...submittedClient,
+      };
 
-        await adminClient.clients.update({ id: clientId }, newClient);
-        setupForm(newClient);
-        setClient(newClient);
-        addAlert(t(messageKey), AlertVariant.success);
-      } catch (error) {
-        addError("clients:clientSaveError", error);
-      }
+      newClient.clientId = newClient.clientId?.trim();
+
+      await adminClient.clients.update({ id: clientId }, newClient);
+      setupForm(newClient);
+      setClient(newClient);
+      addAlert(t(messageKey), AlertVariant.success);
+    } catch (error) {
+      addError("clients:clientSaveError", error);
     }
   };
 

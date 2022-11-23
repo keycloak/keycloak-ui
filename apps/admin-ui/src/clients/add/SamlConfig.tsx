@@ -14,18 +14,18 @@ import {
 } from "react-hook-form-v7";
 import { useTranslation } from "react-i18next";
 
-import type ClientRepresentation from "@keycloak/keycloak-admin-client/lib/defs/clientRepresentation";
 import { FormAccess } from "../../components/form-access/FormAccess";
 import { HelpItem } from "../../components/help-enabler/HelpItem";
 import { convertAttributeNameToForm } from "../../util";
+import { FormFields } from "../ClientDetails";
 
 type ToggleProps = {
-  name: PathValue<ClientRepresentation, Path<ClientRepresentation>>;
+  name: PathValue<FormFields, Path<FormFields>>;
   label: string;
 };
 export const Toggle = ({ name, label }: ToggleProps) => {
   const { t } = useTranslation("clients");
-  const { control } = useFormContext<ClientRepresentation>();
+  const { control } = useFormContext<FormFields>();
 
   return (
     <FormGroup
@@ -61,7 +61,7 @@ export const Toggle = ({ name, label }: ToggleProps) => {
 
 export const SamlConfig = () => {
   const { t } = useTranslation("clients");
-  const { control } = useFormContext<ClientRepresentation>();
+  const { control } = useFormContext<FormFields>();
 
   const [nameFormatOpen, setNameFormatOpen] = useState(false);
   return (

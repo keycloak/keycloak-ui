@@ -7,7 +7,7 @@ import { FormAccess } from "../../components/form-access/FormAccess";
 import { HelpItem } from "../../components/help-enabler/HelpItem";
 import { KeycloakTextInput } from "../../components/keycloak-text-input/KeycloakTextInput";
 import { useAccess } from "../../context/access/Access";
-import { convertAttributeNameToForm } from "../../util";
+import { convertAttribute, convertAttributeNameToForm } from "../../util";
 import { SaveReset } from "../advanced/SaveReset";
 import type { ClientSettingsProps } from "../ClientSettings";
 
@@ -74,10 +74,12 @@ export const LogoutPanel = ({
             />
           }
           helperTextInvalid={
-            errors.attributes?.frontchannel.logout?.url?.message
+            errors.attributes?.[convertAttribute("frontchannel.logout.url")]
+              ?.message
           }
           validated={
-            errors.attributes?.frontchannel.logout?.url?.message
+            errors.attributes?.[convertAttribute("frontchannel.logout.url")]
+              ?.message
               ? ValidatedOptions.error
               : ValidatedOptions.default
           }
@@ -97,7 +99,8 @@ export const LogoutPanel = ({
               }
             )}
             validated={
-              errors.attributes?.frontchannel.logout?.url?.message
+              errors.attributes?.[convertAttribute("frontchannel.logout.url")]
+                ?.message
                 ? ValidatedOptions.error
                 : ValidatedOptions.default
             }
@@ -116,10 +119,12 @@ export const LogoutPanel = ({
               />
             }
             helperTextInvalid={
-              errors.attributes?.backchannel.logout?.url?.message
+              errors.attributes?.[convertAttribute("backchannel.logout.url")]
+                ?.message
             }
             validated={
-              errors.attributes?.backchannel.logout?.url?.message
+              errors.attributes?.[convertAttribute("backchannel.logout.url")]
+                ?.message
                 ? ValidatedOptions.error
                 : ValidatedOptions.default
             }
@@ -140,7 +145,8 @@ export const LogoutPanel = ({
                 }
               )}
               validated={
-                errors.attributes?.backchannel.logout?.url?.message
+                errors.attributes?.[convertAttribute("backchannel.logout.url")]
+                  ?.message
                   ? ValidatedOptions.error
                   : ValidatedOptions.default
               }

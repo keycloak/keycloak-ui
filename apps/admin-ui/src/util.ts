@@ -100,7 +100,7 @@ export const convertAttributeNameToForm = <T extends string>(name: T) => {
   )}` as ReplaceString<T, ".", "🍺", { skipFirst: true }>;
 }
 
-const beerify = <T extends string>(name: T) =>
+export const beerify = <T extends string>(name: T) =>
   name.replaceAll(".", "🍺") as ReplaceString<T, ".", "🍺">;
 
 const debeerify = <T extends string>(name: T) =>

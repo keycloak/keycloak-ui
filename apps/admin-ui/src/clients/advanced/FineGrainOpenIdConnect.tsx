@@ -10,12 +10,12 @@ import { useState } from "react";
 import { Controller, useFormContext } from "react-hook-form-v7";
 import { useTranslation } from "react-i18next";
 
-import ClientRepresentation from "libs/keycloak-admin-client/lib/defs/clientRepresentation";
 import { FormAccess } from "../../components/form-access/FormAccess";
 import { HelpItem } from "../../components/help-enabler/HelpItem";
 import { MultiLineInput } from "../../components/multi-line-input/MultiLineInput";
 import { useServerInfo } from "../../context/server-info/ServerInfoProvider";
 import { convertAttributeNameToForm, sortProviders } from "../../util";
+import { FormFields } from "../ClientDetails";
 import { ApplicationUrls } from "./ApplicationUrls";
 
 type FineGrainOpenIdConnectProps = {
@@ -161,7 +161,7 @@ export const FineGrainOpenIdConnect = ({
         }
       >
         <Controller
-          name={convertAttributeNameToForm<ClientRepresentation>(
+          name={convertAttributeNameToForm<FormFields>(
             "attributes.access.token.signed.response.alg"
           )}
           defaultValue=""
@@ -194,7 +194,7 @@ export const FineGrainOpenIdConnect = ({
         }
       >
         <Controller
-          name={convertAttributeNameToForm<ClientRepresentation>(
+          name={convertAttributeNameToForm<FormFields>(
             "attributes.id.token.signed.response.alg"
           )}
           defaultValue=""
@@ -227,7 +227,7 @@ export const FineGrainOpenIdConnect = ({
         }
       >
         <Controller
-          name={convertAttributeNameToForm<ClientRepresentation>(
+          name={convertAttributeNameToForm<FormFields>(
             "attributes.id.token.encrypted.response.alg"
           )}
           defaultValue=""
@@ -260,7 +260,7 @@ export const FineGrainOpenIdConnect = ({
         }
       >
         <Controller
-          name={convertAttributeNameToForm<ClientRepresentation>(
+          name={convertAttributeNameToForm<FormFields>(
             "attributes.id.token.encrypted.response.enc"
           )}
           defaultValue=""
@@ -293,7 +293,7 @@ export const FineGrainOpenIdConnect = ({
         }
       >
         <Controller
-          name={convertAttributeNameToForm<ClientRepresentation>(
+          name={convertAttributeNameToForm<FormFields>(
             "attributes.user.info.response.signature.alg"
           )}
           defaultValue=""
@@ -326,7 +326,7 @@ export const FineGrainOpenIdConnect = ({
         }
       >
         <Controller
-          name={convertAttributeNameToForm<ClientRepresentation>(
+          name={convertAttributeNameToForm<FormFields>(
             "attributes.request.object.signature.alg"
           )}
           defaultValue=""
@@ -359,7 +359,7 @@ export const FineGrainOpenIdConnect = ({
         }
       >
         <Controller
-          name={convertAttributeNameToForm<ClientRepresentation>(
+          name={convertAttributeNameToForm<FormFields>(
             "attributes.request.object.encryption.alg"
           )}
           defaultValue=""
@@ -392,7 +392,7 @@ export const FineGrainOpenIdConnect = ({
         }
       >
         <Controller
-          name={convertAttributeNameToForm<ClientRepresentation>(
+          name={convertAttributeNameToForm<FormFields>(
             "attributes.request.object.encryption.enc"
           )}
           defaultValue=""
@@ -425,7 +425,7 @@ export const FineGrainOpenIdConnect = ({
         }
       >
         <Controller
-          name={convertAttributeNameToForm<ClientRepresentation>(
+          name={convertAttributeNameToForm<FormFields>(
             "attributes.request.object.required"
           )}
           defaultValue=""
@@ -475,7 +475,7 @@ export const FineGrainOpenIdConnect = ({
         }
       >
         <Controller
-          name={convertAttributeNameToForm<ClientRepresentation>(
+          name={convertAttributeNameToForm<FormFields>(
             "attributes.authorization.signed.response.alg"
           )}
           defaultValue=""
@@ -508,7 +508,7 @@ export const FineGrainOpenIdConnect = ({
         }
       >
         <Controller
-          name={convertAttributeNameToForm<ClientRepresentation>(
+          name={convertAttributeNameToForm<FormFields>(
             "attributes.authorization.encrypted.response.alg"
           )}
           defaultValue=""
@@ -541,7 +541,7 @@ export const FineGrainOpenIdConnect = ({
         }
       >
         <Controller
-          name={convertAttributeNameToForm<ClientRepresentation>(
+          name={convertAttributeNameToForm<FormFields>(
             "attributes.authorization.encrypted.response.enc"
           )}
           defaultValue=""

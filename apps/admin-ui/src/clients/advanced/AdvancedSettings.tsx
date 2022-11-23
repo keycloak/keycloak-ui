@@ -11,13 +11,13 @@ import { useState } from "react";
 import { Controller, useFormContext } from "react-hook-form-v7";
 import { useTranslation } from "react-i18next";
 
-import ClientRepresentation from "libs/keycloak-admin-client/lib/defs/clientRepresentation";
 import { FormAccess } from "../../components/form-access/FormAccess";
 import { HelpItem } from "../../components/help-enabler/HelpItem";
-import { KeyValueInput } from "../../components/key-value-form/KeyValueInput";
+import { KeyValueInput } from "../../components/key-value-form/hook-form-v7/KeyValueInput";
 import { MultiLineInput } from "../../components/multi-line-input/MultiLineInput";
 import { TimeSelector } from "../../components/time-selector/TimeSelector";
 import { convertAttributeNameToForm } from "../../util";
+import { FormFields } from "../ClientDetails";
 import { TokenLifespan } from "./TokenLifespan";
 
 type AdvancedSettingsProps = {
@@ -55,7 +55,7 @@ export const AdvancedSettings = ({
           }
         >
           <Controller
-            name={convertAttributeNameToForm<ClientRepresentation>(
+            name={convertAttributeNameToForm<FormFields>(
               "attributes.saml.assertion.lifespan"
             )}
             defaultValue=""
@@ -156,7 +156,7 @@ export const AdvancedSettings = ({
             }
           >
             <Controller
-              name={convertAttributeNameToForm<ClientRepresentation>(
+              name={convertAttributeNameToForm<FormFields>(
                 "attributes.pkce.code.challenge.method"
               )}
               defaultValue=""
@@ -193,7 +193,7 @@ export const AdvancedSettings = ({
             }
           >
             <Controller
-              name={convertAttributeNameToForm<ClientRepresentation>(
+              name={convertAttributeNameToForm<FormFields>(
                 "attributes.require.pushed.authorization.requests"
               )}
               defaultValue="false"

@@ -32,6 +32,7 @@ import { useAccess } from "../../context/access/Access";
 import { useAdminClient, useFetch } from "../../context/auth/AdminClient";
 import { useRealm } from "../../context/realm-context/RealmContext";
 import { ForbiddenSection } from "../../ForbiddenSection";
+import { FormFields } from "../ClientDetails";
 import { defaultContextAttributes } from "../utils";
 import { Results } from "./evaluate/Results";
 import { KeyBasedAttributeInput } from "./KeyBasedAttributeInput";
@@ -46,7 +47,7 @@ interface EvaluateFormInputs
     attributes: Record<string, string>[];
   };
   resources?: Record<string, string>[];
-  client: ClientRepresentation;
+  client: FormFields;
   user: string[];
 }
 
@@ -209,12 +210,12 @@ export const AuthorizationEvaluate = ({ client }: Props) => {
             >
               <Controller
                 name="roleIds"
-                placeholderText={t("selectARole")}
                 control={control}
                 defaultValue={[]}
                 rules={{ validate: (value) => (value || "").length > 0 }}
                 render={({ field }) => (
                   <Select
+                    placeholderText={t("selectARole")}
                     variant={SelectVariant.typeaheadMulti}
                     toggleId="role"
                     onToggle={setRoleDropdownOpen}
@@ -226,7 +227,7 @@ export const AuthorizationEvaluate = ({ client }: Props) => {
                           field.value.filter((item: string) => item !== option)
                         );
                       } else {
-                        field.onChange([...field.value, option]);
+                        field.onChange([...(field.value || []), option]);
                       }
                       setRoleDropdownOpen(false);
                     }}
@@ -239,7 +240,7 @@ export const AuthorizationEvaluate = ({ client }: Props) => {
                   >
                     {clientRoles.map((role) => (
                       <SelectOption
-                        selected={role.name === value}
+                        selected={role.name === field.value}
                         key={role.name}
                         value={role.name}
                       />

@@ -2,10 +2,10 @@ import { ActionGroup, Button, FormGroup, Switch } from "@patternfly/react-core";
 import { Controller, useFormContext } from "react-hook-form-v7";
 import { useTranslation } from "react-i18next";
 
-import ClientRepresentation from "libs/keycloak-admin-client/lib/defs/clientRepresentation";
 import { FormAccess } from "../../components/form-access/FormAccess";
 import { HelpItem } from "../../components/help-enabler/HelpItem";
 import { convertAttributeNameToForm } from "../../util";
+import { FormFields } from "../ClientDetails";
 
 type OpenIdConnectCompatibilityModesProps = {
   save: () => void;
@@ -38,7 +38,7 @@ export const OpenIdConnectCompatibilityModes = ({
         }
       >
         <Controller
-          name={convertAttributeNameToForm<ClientRepresentation>(
+          name={convertAttributeNameToForm<FormFields>(
             "attributes.exclude.session.state.from.auth.response"
           )}
           defaultValue=""
@@ -67,7 +67,7 @@ export const OpenIdConnectCompatibilityModes = ({
         }
       >
         <Controller
-          name={convertAttributeNameToForm<ClientRepresentation>(
+          name={convertAttributeNameToForm<FormFields>(
             "attributes.use.refresh.tokens"
           )}
           defaultValue="true"
@@ -96,7 +96,7 @@ export const OpenIdConnectCompatibilityModes = ({
         }
       >
         <Controller
-          name={convertAttributeNameToForm<ClientRepresentation>(
+          name={convertAttributeNameToForm<FormFields>(
             "attributes.client_credentials.use_refresh_token"
           )}
           defaultValue="false"
@@ -125,7 +125,7 @@ export const OpenIdConnectCompatibilityModes = ({
         }
       >
         <Controller
-          name={convertAttributeNameToForm<ClientRepresentation>(
+          name={convertAttributeNameToForm<FormFields>(
             "attributes.token.response.type.bearer.lower-case"
           )}
           defaultValue="false"

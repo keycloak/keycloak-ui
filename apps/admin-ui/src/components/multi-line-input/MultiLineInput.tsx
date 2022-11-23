@@ -1,3 +1,4 @@
+
 import {
   Button,
   ButtonVariant,
@@ -7,7 +8,7 @@ import {
 } from "@patternfly/react-core";
 import { MinusCircleIcon, PlusCircleIcon } from "@patternfly/react-icons";
 import { Fragment, useEffect, useState } from "react";
-import { useFormContext } from "react-hook-form";
+import { useFormContext } from "react-hook-form-v7";
 import { useTranslation } from "react-i18next";
 
 function stringToMultiline(value?: string): string[] {

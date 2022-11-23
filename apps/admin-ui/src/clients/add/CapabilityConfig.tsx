@@ -13,6 +13,7 @@ import type ClientRepresentation from "@keycloak/keycloak-admin-client/lib/defs/
 import { FormAccess } from "../../components/form-access/FormAccess";
 import { HelpItem } from "../../components/help-enabler/HelpItem";
 import { convertAttributeNameToForm } from "../../util";
+import { FormFields } from "../ClientDetails";
 
 import "./capability-config.css";
 
@@ -26,7 +27,7 @@ export const CapabilityConfig = ({
   protocol: type,
 }: CapabilityConfigProps) => {
   const { t } = useTranslation("clients");
-  const { control, watch, setValue } = useFormContext<ClientRepresentation>();
+  const { control, watch, setValue } = useFormContext<FormFields>();
   const protocol = type || watch("protocol");
   const clientAuthentication = watch("publicClient");
   const authorization = watch("authorizationServicesEnabled");
@@ -69,7 +70,7 @@ export const CapabilityConfig = ({
                       setValue("authorizationServicesEnabled", false);
                       setValue("serviceAccountsEnabled", false);
                       setValue(
-                        convertAttributeNameToForm<ClientRepresentation>(
+                        convertAttributeNameToForm<FormFields>(
                           "attributes.oidc.ciba.grant.enabled"
                         ),
                         false
@@ -243,7 +244,7 @@ export const CapabilityConfig = ({
               </GridItem>
               <GridItem lg={8} sm={6}>
                 <Controller
-                  name={convertAttributeNameToForm<ClientRepresentation>(
+                  name={convertAttributeNameToForm<FormFields>(
                     "attributes.oidc.ciba.grant.enabled"
                   )}
                   defaultValue={false}
@@ -285,7 +286,7 @@ export const CapabilityConfig = ({
             hasNoPaddingTop
           >
             <Controller
-              name={convertAttributeNameToForm<ClientRepresentation>(
+              name={convertAttributeNameToForm<FormFields>(
                 "attributes.saml.encrypt"
               )}
               control={control}
@@ -315,7 +316,7 @@ export const CapabilityConfig = ({
             hasNoPaddingTop
           >
             <Controller
-              name={convertAttributeNameToForm<ClientRepresentation>(
+              name={convertAttributeNameToForm<FormFields>(
                 "attributes.saml.client.signature"
               )}
               control={control}

@@ -1,6 +1,7 @@
-import { useTranslation } from "react-i18next";
-import { useFormContext } from "react-hook-form";
 import { AlertVariant, PageSection, Text } from "@patternfly/react-core";
+import type { TFunction } from "i18next";
+import { useFormContext } from "react-hook-form-v7";
+import { useTranslation } from "react-i18next";
 
 import type ClientRepresentation from "@keycloak/keycloak-admin-client/lib/defs/clientRepresentation";
 import type GlobalRequestResult from "@keycloak/keycloak-admin-client/lib/defs/globalRequestResult";
@@ -10,13 +11,12 @@ import { ScrollForm } from "../components/scroll-form/ScrollForm";
 import { convertAttributeNameToForm, toUpperCase } from "../util";
 import { AdvancedSettings } from "./advanced/AdvancedSettings";
 import { AuthenticationOverrides } from "./advanced/AuthenticationOverrides";
+import { ClusteringPanel } from "./advanced/ClusteringPanel";
 import { FineGrainOpenIdConnect } from "./advanced/FineGrainOpenIdConnect";
 import { FineGrainSamlEndpointConfig } from "./advanced/FineGrainSamlEndpointConfig";
 import { OpenIdConnectCompatibilityModes } from "./advanced/OpenIdConnectCompatibilityModes";
-import type { SaveOptions } from "./ClientDetails";
-import type { TFunction } from "i18next";
 import { RevocationPanel } from "./advanced/RevocationPanel";
-import { ClusteringPanel } from "./advanced/ClusteringPanel";
+import type { FormFields, SaveOptions } from "./ClientDetails";
 
 export const parseResult = (
   result: GlobalRequestResult,
@@ -66,7 +66,7 @@ export const AdvancedTab = ({ save, client }: AdvancedProps) => {
   const resetFields = (names: string[]) => {
     for (const name of names) {
       setValue(
-        convertAttributeNameToForm(`attributes.${name}`),
+        convertAttributeNameToForm<FormFields>(`attributes.${name}`),
         attributes?.[name] || ""
       );
     }

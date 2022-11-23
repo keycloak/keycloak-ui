@@ -2,11 +2,11 @@ import { FormGroup, Switch, ValidatedOptions } from "@patternfly/react-core";
 import { Controller, useFormContext } from "react-hook-form-v7";
 import { useTranslation } from "react-i18next";
 
-import type ClientRepresentation from "@keycloak/keycloak-admin-client/lib/defs/clientRepresentation";
 import { FormAccess } from "../components/form-access/FormAccess";
 import { HelpItem } from "../components/help-enabler/HelpItem";
 import { KeycloakTextArea } from "../components/keycloak-text-area/KeycloakTextArea";
 import { KeycloakTextInput } from "../components/keycloak-text-input/KeycloakTextInput";
+import { FormFields } from "./ClientDetails";
 
 type ClientDescriptionProps = {
   protocol?: string;
@@ -21,7 +21,7 @@ export const ClientDescription = ({
     register,
     control,
     formState: { errors },
-  } = useFormContext<ClientRepresentation>();
+  } = useFormContext<FormFields>();
   return (
     <FormAccess role="manage-clients" fineGrainedAccess={configure} unWrap>
       <FormGroup
