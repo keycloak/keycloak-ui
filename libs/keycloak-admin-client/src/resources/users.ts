@@ -12,17 +12,23 @@ import type GroupRepresentation from "../defs/groupRepresentation.js";
 import type CredentialRepresentation from "../defs/credentialRepresentation.js";
 import type UserProfileConfig from "../defs/userProfileConfig.js";
 
-interface PaginationQuery {
-  first?: number;
-  max?: number;
+interface SearchQuery {
   search?: string;
 }
 
-export interface UserQuery extends PaginationQuery {
+interface PaginationQuery {
+  first?: number;
+  max?: number;
+}
+
+interface UserBaseQuery {
   email?: string;
   firstName?: string;
   lastName?: string;
   username?: string;
+}
+
+export interface UserQuery extends PaginationQuery, SearchQuery, UserBaseQuery {
   exact?: boolean;
   [key: string]: string | number | undefined | boolean;
 }
@@ -67,7 +73,7 @@ export class Users extends Resource<{ realm?: string }> {
     urlParamKeys: ["id"],
   });
 
-  public count = this.makeRequest<UserQuery, number>({
+  public count = this.makeRequest<UserBaseQuery & SearchQuery, number>({
     method: "GET",
     path: "/count",
   });
@@ -229,7 +235,7 @@ export class Users extends Resource<{ realm?: string }> {
    */
 
   public listGroups = this.makeRequest<
-    { id: string; briefRepresentation?: boolean } & PaginationQuery,
+    { id: string; briefRepresentation?: boolean } & PaginationQuery & SearchQuery,
     GroupRepresentation[]
   >({
     method: "GET",
