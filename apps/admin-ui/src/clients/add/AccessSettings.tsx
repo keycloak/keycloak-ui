@@ -2,7 +2,6 @@ import { useTranslation } from "react-i18next";
 import { useFormContext } from "react-hook-form-v7";
 import { FormGroup } from "@patternfly/react-core";
 
-import type ClientRepresentation from "@keycloak/keycloak-admin-client/lib/defs/clientRepresentation";
 import type { ClientSettingsProps } from "../ClientSettings";
 import { MultiLineInput } from "../../components/multi-line-input/MultiLineInput";
 import { FormAccess } from "../../components/form-access/FormAccess";
@@ -13,6 +12,7 @@ import environment from "../../environment";
 import { useRealm } from "../../context/realm-context/RealmContext";
 import { useAccess } from "../../context/access/Access";
 import { convertAttributeNameToForm } from "../../util";
+import { FormFields } from "../ClientDetails";
 
 export const AccessSettings = ({
   client,
@@ -20,7 +20,7 @@ export const AccessSettings = ({
   reset,
 }: ClientSettingsProps) => {
   const { t } = useTranslation("clients");
-  const { register, watch } = useFormContext<ClientRepresentation>();
+  const { register, watch } = useFormContext<FormFields>();
   const { realm } = useRealm();
 
   const { hasAccess } = useAccess();

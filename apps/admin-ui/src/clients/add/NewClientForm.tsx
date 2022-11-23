@@ -16,6 +16,7 @@ import { ViewHeader } from "../../components/view-header/ViewHeader";
 import { useAdminClient } from "../../context/auth/AdminClient";
 import { useRealm } from "../../context/realm-context/RealmContext";
 import { convertFormValuesToObject } from "../../util";
+import { FormFields } from "../ClientDetails";
 import { toClient } from "../routes/Client";
 import { toClients } from "../routes/Clients";
 import { CapabilityConfig } from "./CapabilityConfig";
@@ -42,7 +43,7 @@ export default function NewClientForm() {
     frontchannelLogout: true,
   });
   const { addAlert, addError } = useAlerts();
-  const methods = useForm<ClientRepresentation>({ defaultValues: client });
+  const methods = useForm<FormFields>({ defaultValues: client });
   const protocol = methods.watch("protocol");
 
   const save = async () => {

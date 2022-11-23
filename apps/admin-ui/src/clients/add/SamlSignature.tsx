@@ -8,10 +8,10 @@ import { useState } from "react";
 import { Controller, useFormContext } from "react-hook-form-v7";
 import { useTranslation } from "react-i18next";
 
-import type ClientRepresentation from "@keycloak/keycloak-admin-client/lib/defs/clientRepresentation";
 import { FormAccess } from "../../components/form-access/FormAccess";
 import { HelpItem } from "../../components/help-enabler/HelpItem";
 import { convertAttributeNameToForm } from "../../util";
+import { FormFields } from "../ClientDetails";
 import { Toggle } from "./SamlConfig";
 
 const SIGNATURE_ALGORITHMS = [
@@ -47,15 +47,13 @@ export const SamlSignature = () => {
   const [keyOpen, setKeyOpen] = useState(false);
   const [canOpen, setCanOpen] = useState(false);
 
-  const { control, watch } = useFormContext<ClientRepresentation>();
+  const { control, watch } = useFormContext<FormFields>();
 
   const signDocs = watch(
-    convertAttributeNameToForm<ClientRepresentation>(
-      "attributes.saml.server.signature"
-    )
+    convertAttributeNameToForm<FormFields>("attributes.saml.server.signature")
   );
   const signAssertion = watch(
-    convertAttributeNameToForm<ClientRepresentation>(
+    convertAttributeNameToForm<FormFields>(
       "attributes.saml.assertion.signature"
     )
   );
@@ -87,7 +85,7 @@ export const SamlSignature = () => {
             }
           >
             <Controller
-              name={convertAttributeNameToForm<ClientRepresentation>(
+              name={convertAttributeNameToForm<FormFields>(
                 "attributes.saml.signature.algorithm"
               )}
               defaultValue={SIGNATURE_ALGORITHMS[0]}
@@ -127,7 +125,7 @@ export const SamlSignature = () => {
             }
           >
             <Controller
-              name={convertAttributeNameToForm<ClientRepresentation>(
+              name={convertAttributeNameToForm<FormFields>(
                 "attributes.saml.server.signature.keyinfo.xmlSigKeyInfoKeyNameTransformer"
               )}
               defaultValue={KEYNAME_TRANSFORMER[0]}

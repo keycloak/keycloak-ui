@@ -11,6 +11,7 @@ import { SamlSignature } from "./add/SamlSignature";
 import { AccessSettings } from "./add/AccessSettings";
 import { LoginSettingsPanel } from "./add/LoginSettingsPanel";
 import { LogoutPanel } from "./add/LogoutPanel";
+import { FormFields } from "./ClientDetails";
 
 export type ClientSettingsProps = {
   client: ClientRepresentation;
@@ -21,7 +22,7 @@ export type ClientSettingsProps = {
 export const ClientSettings = (props: ClientSettingsProps) => {
   const { t } = useTranslation("clients");
 
-  const { watch } = useFormContext<ClientRepresentation>();
+  const { watch } = useFormContext<FormFields>();
   const protocol = watch("protocol");
 
   const { client } = props;

@@ -2,7 +2,6 @@ import { FormGroup, Switch, ValidatedOptions } from "@patternfly/react-core";
 import { Controller, useFormContext } from "react-hook-form-v7";
 import { useTranslation } from "react-i18next";
 
-import type ClientRepresentation from "@keycloak/keycloak-admin-client/lib/defs/clientRepresentation";
 import { FormAccess } from "../../components/form-access/FormAccess";
 import { HelpItem } from "../../components/help-enabler/HelpItem";
 import { KeycloakTextInput } from "../../components/keycloak-text-input/KeycloakTextInput";
@@ -10,6 +9,7 @@ import { useAccess } from "../../context/access/Access";
 import { convertAttribute, convertAttributeNameToForm } from "../../util";
 import { SaveReset } from "../advanced/SaveReset";
 import type { ClientSettingsProps } from "../ClientSettings";
+import { FormFields } from "../ClientDetails";
 
 export const LogoutPanel = ({
   save,
@@ -22,7 +22,7 @@ export const LogoutPanel = ({
     control,
     watch,
     formState: { errors },
-  } = useFormContext<ClientRepresentation>();
+  } = useFormContext<FormFields>();
 
   const { hasAccess } = useAccess();
   const isManager = hasAccess("manage-clients") || access?.configure;
@@ -87,7 +87,7 @@ export const LogoutPanel = ({
           <KeycloakTextInput
             id="frontchannelLogoutUrl"
             {...register(
-              convertAttributeNameToForm<ClientRepresentation>(
+              convertAttributeNameToForm<FormFields>(
                 "attributes.frontchannel.logout.url"
               ),
               {
@@ -132,7 +132,7 @@ export const LogoutPanel = ({
             <KeycloakTextInput
               id="backchannelLogoutUrl"
               {...register(
-                convertAttributeNameToForm<ClientRepresentation>(
+                convertAttributeNameToForm<FormFields>(
                   "attributes.backchannel.logout.url"
                 ),
                 {
@@ -164,7 +164,7 @@ export const LogoutPanel = ({
             hasNoPaddingTop
           >
             <Controller
-              name={convertAttributeNameToForm<ClientRepresentation>(
+              name={convertAttributeNameToForm<FormFields>(
                 "attributes.backchannel.logout.session.required"
               )}
               defaultValue="true"
@@ -193,7 +193,7 @@ export const LogoutPanel = ({
             hasNoPaddingTop
           >
             <Controller
-              name={convertAttributeNameToForm<ClientRepresentation>(
+              name={convertAttributeNameToForm<FormFields>(
                 "attributes.backchannel.logout.revoke.offline.tokens"
               )}
               defaultValue="false"
