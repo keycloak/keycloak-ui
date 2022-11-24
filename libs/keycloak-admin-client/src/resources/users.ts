@@ -235,7 +235,8 @@ export class Users extends Resource<{ realm?: string }> {
    */
 
   public listGroups = this.makeRequest<
-    { id: string; briefRepresentation?: boolean } & PaginationQuery & SearchQuery,
+    { id: string; briefRepresentation?: boolean } & PaginationQuery &
+      SearchQuery,
     GroupRepresentation[]
   >({
     method: "GET",
