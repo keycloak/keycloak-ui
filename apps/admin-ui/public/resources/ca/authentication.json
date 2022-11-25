@@ -3,5 +3,7 @@
     "none": "cap"
   },
   "edit": "Edita",
-  "alias": "Àlies"
+  "alias": "Àlies",
+  "updateProfileOnFirstLoginTooltip": "Defineix condicions sota les quals un usuari ha de actualitzar el seu perfil durant el primer inici de sessi\u00F3.",
+  "updateProfileOnFirstLogin": "Actualitzar perfil al primer inici de sessi\u00F3"
 }

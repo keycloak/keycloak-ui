@@ -151,5 +151,7 @@
   "setAsDefaultAction": "Set as default action",
   "disabledOff": "Disabled off",
   "updatedRequiredActionSuccess": "Updated required action successfully",
-  "updatedRequiredActionError": "Could not update required action: {{error}}"
+  "updatedRequiredActionError": "Could not update required action: {{error}}",
+  "updateProfileOnFirstLoginTooltip": "Define conditions under which a user has to update their profile during first-time login.",
+  "updateProfileOnFirstLogin": "Update Profile on First Login"
 }

@@ -3,5 +3,7 @@
     "none": "ninguno"
   },
   "edit": "Editar",
-  "alias": "Alias"
+  "alias": "Alias",
+  "updateProfileOnFirstLoginTooltip": "Define condiciones bajo las cuales un usuario tiene que actualizar su perfil durante el primer inicio de sesi\u00F3n.",
+  "updateProfileOnFirstLogin": "Actualizar perfil en el primer inicio de sesi\u00F3n"
 }

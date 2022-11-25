@@ -30,5 +30,7 @@
   },
   "addExecution": "Pridėti išimtį",
   "requirement": "Privalomumas",
-  "alias": "Pseudonimas"
+  "alias": "Pseudonimas",
+  "updateProfileOnFirstLoginTooltip": "Nurodykite sąlygas, kuomet naudotojas privalo atnaujinti savo profilį pirmojo prisijungimo metu.",
+  "updateProfileOnFirstLogin": "Profilio duomenų atnaujinimas pirmojo prisijungimo metu"
 }

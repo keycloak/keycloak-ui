@@ -30,5 +30,7 @@
   },
   "addExecution": "Legg til eksekvering",
   "requirement": "Krav",
-  "alias": "Alias"
+  "alias": "Alias",
+  "updateProfileOnFirstLoginTooltip": "Definer vilk\u00E5rene en bruker m\u00E5 oppfylle for \u00E5 oppdatere sin profil ved f\u00F8rste innlogging.",
+  "updateProfileOnFirstLogin": "Oppdater profil ved f\u00F8rste innlogging"
 }

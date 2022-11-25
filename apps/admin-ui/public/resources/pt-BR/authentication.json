@@ -31,5 +31,7 @@
   },
   "addExecution": "Adicionar execução",
   "requirement": "Condição",
-  "alias": "Alias"
+  "alias": "Alias",
+  "updateProfileOnFirstLoginTooltip": "Define condições onde um usuário precisa atualizar o seu perfil durante o primeiro login.",
+  "updateProfileOnFirstLogin": "Atualizar Profile no primeiro login"
 }

@@ -31,5 +31,7 @@
   },
   "addExecution": "添加执行",
   "requirement": "需求",
-  "alias": "别名"
+  "alias": "别名",
+  "updateProfileOnFirstLoginTooltip": "定义用户在首次登录期间必须更新其配置文件的条件。",
+  "updateProfileOnFirstLogin": "首次登录时更新配置文件"
 }

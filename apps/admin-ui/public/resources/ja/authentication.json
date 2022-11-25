@@ -47,5 +47,7 @@
   "requirements": {
     "DISABLED": "無効"
   },
-  "alias": "エイリアス"
+  "alias": "エイリアス",
+  "updateProfileOnFirstLoginTooltip": "初回ログイン時にどのユーザーがプロファイルの更新を必要とするか条件を定義します。",
+  "updateProfileOnFirstLogin": "初回ログイン時にプロファイルを更新"
 }
