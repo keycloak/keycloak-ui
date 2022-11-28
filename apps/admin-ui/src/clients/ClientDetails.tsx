@@ -30,12 +30,12 @@ import {
 import { DownloadDialog } from "../components/download-dialog/DownloadDialog";
 import type { KeyValueType } from "../components/key-value-form/key-value-convert";
 import { KeycloakSpinner } from "../components/keycloak-spinner/KeycloakSpinner";
-import {
 import { PermissionsTab } from "../components/permission-tab/PermissionTab";
 import {
   routableTab,
   RoutableTabs,
 } from "../components/routable-tabs/RoutableTabs";
+import {
   ViewHeader,
   ViewHeaderBadge,
 } from "../components/view-header/ViewHeader";

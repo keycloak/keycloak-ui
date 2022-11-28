@@ -6,7 +6,7 @@ import { FormAccess } from "../../components/form-access/FormAccess";
 import { HelpItem } from "../../components/help-enabler/HelpItem";
 import { KeycloakTextInput } from "../../components/keycloak-text-input/KeycloakTextInput";
 import { useAccess } from "../../context/access/Access";
-import { convertAttribute, convertAttributeNameToForm } from "../../util";
+import { beerify, convertAttributeNameToForm } from "../../util";
 import { SaveReset } from "../advanced/SaveReset";
 import type { ClientSettingsProps } from "../ClientSettings";
 import { FormFields } from "../ClientDetails";
@@ -74,12 +74,10 @@ export const LogoutPanel = ({
             />
           }
           helperTextInvalid={
-            errors.attributes?.[convertAttribute("frontchannel.logout.url")]
-              ?.message
+            errors.attributes?.[beerify("frontchannel.logout.url")]?.message
           }
           validated={
-            errors.attributes?.[convertAttribute("frontchannel.logout.url")]
-              ?.message
+            errors.attributes?.[beerify("frontchannel.logout.url")]?.message
               ? ValidatedOptions.error
               : ValidatedOptions.default
           }
@@ -99,8 +97,7 @@ export const LogoutPanel = ({
               }
             )}
             validated={
-              errors.attributes?.[convertAttribute("frontchannel.logout.url")]
-                ?.message
+              errors.attributes?.[beerify("frontchannel.logout.url")]?.message
                 ? ValidatedOptions.error
                 : ValidatedOptions.default
             }
@@ -119,12 +116,10 @@ export const LogoutPanel = ({
               />
             }
             helperTextInvalid={
-              errors.attributes?.[convertAttribute("backchannel.logout.url")]
-                ?.message
+              errors.attributes?.[beerify("backchannel.logout.url")]?.message
             }
             validated={
-              errors.attributes?.[convertAttribute("backchannel.logout.url")]
-                ?.message
+              errors.attributes?.[beerify("backchannel.logout.url")]?.message
                 ? ValidatedOptions.error
                 : ValidatedOptions.default
             }
@@ -145,8 +140,7 @@ export const LogoutPanel = ({
                 }
               )}
               validated={
-                errors.attributes?.[convertAttribute("backchannel.logout.url")]
-                  ?.message
+                errors.attributes?.[beerify("backchannel.logout.url")]?.message
                   ? ValidatedOptions.error
                   : ValidatedOptions.default
               }

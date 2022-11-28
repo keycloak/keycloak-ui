@@ -1,19 +1,17 @@
-
 import { saveAs } from "file-saver";
 import { cloneDeep } from "lodash-es";
-import type ClientRepresentation from "@keycloak/keycloak-admin-client/lib/defs/clientRepresentation";
-import type { ProviderRepresentation } from "@keycloak/keycloak-admin-client/lib/defs/serverInfoRepesentation";
-import type { IFormatter, IFormatterValueType } from "@patternfly/react-table";
-import { saveAs } from "file-saver";
-import { flatten } from "flat";
-import { cloneDeep } from "lodash-es";
-
 import {
   FieldValues,
   Path,
   PathValue,
   UseFormSetValue,
 } from "react-hook-form-v7";
+import { flatten } from "flat";
+
+import type ClientRepresentation from "@keycloak/keycloak-admin-client/lib/defs/clientRepresentation";
+import type { ProviderRepresentation } from "@keycloak/keycloak-admin-client/lib/defs/serverInfoRepesentation";
+import type { IFormatter, IFormatterValueType } from "@patternfly/react-table";
+
 import {
   arrayToKeyValue,
   keyValueToArray,
@@ -91,13 +89,13 @@ const isAttributeArray = (value: any) => {
 
 const isEmpty = (obj: any) => Object.keys(obj).length === 0;
 
-export const convertAttributeNameToForm = <T extends string>(name: T) => {
+export function convertAttributeNameToForm<T>(
   name: string
 ): PathValue<T, Path<T>> {
   const index = name.indexOf(".");
   return `${name.substring(0, index)}.${beerify(
     name.substring(index + 1)
-  )}` as ReplaceString<T, ".", "🍺", { skipFirst: true }>;
+  )}` as PathValue<T, Path<T>>;
 }
 
 export const beerify = <T extends string>(name: T) =>
@@ -122,7 +120,7 @@ export function convertToFormValues<T extends FieldValues>(
         );
 
         convertedValues.forEach(([k, v]) =>
-          setValue(`${key}.${beerify(k)}`, v)
+          setValue(`${key}.${beerify(k)}` as Path<T>, v)
         );
       } else {
         setValue(key, undefined as PathValue<T, Path<T>>);
