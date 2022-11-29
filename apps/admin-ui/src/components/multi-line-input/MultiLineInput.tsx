@@ -88,7 +88,7 @@ export const MultiLineInput = ({
         <Fragment key={id}>
           <InputGroup>
             <TextInput
-              id={name + id}
+              data-testid={name + index}
               onChange={(value) => updateValue(index, value)}
               name={`${name}[${index}].value`}
               value={value}
