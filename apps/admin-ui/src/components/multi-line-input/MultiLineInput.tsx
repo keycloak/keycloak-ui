@@ -11,7 +11,7 @@ import { useFormContext } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 
 function stringToMultiline(value?: string): string[] {
-  return (value || "").split("##");
+  return value ? value.split("##") : [];
 }
 
 function toStringValue(formValue: string[]): string {
