@@ -1,41 +1,6 @@
 # Keycloak Admin UI
 
-This project is the next generation of the Keycloak Administration UI. It is written with React and [PatternFly 4](https://www.patternfly.org/v4/).
-
-## Repository structure
-
-    ├── cypress                    # Automated end-to-end cypress tests
-    │   ├── component
-    │   ├── e2e
-    │   ├── fixtures
-    │   ├── support
-    │   ├── WRITING_TESTS.md
-    │   └── tsconfig.json
-    ├── public                     # Resources i.e translations, icons
-    │   ├── resources
-    │   └── ...
-    ├── src                        # Source files
-    ├── CODING_GUIDELINES.md
-    ├── README.md
-    ├── cypress.config.mjs
-    ├── index.html
-    ├── package.json
-    ├── tsconfig.json
-    ├── tsconfig.node.json
-    ├── vite.config.ts
-    ├── vitest.setup.ts
-
-### Automated end-to-end cypress tests
-
-All end-to-end tests are stored in the `cypress` folder. Refer to the `WRITING_TESTS.md` for detailed instruction on how to write cypress tests.
-
-### Resources i.e images, icons
-
-Resources such as translations of texts into different languages and icons are stored in the `public` folder.
-
-### Source files
-
-The source code for the Keycloak Administration UI is stored in the `src` folder.
+This project is the next generation of the Keycloak Administration UI. It is written with React and [PatternFly 4](https://www.patternfly.org/v4/) and uses [Vite](https://vitejs.dev/guide/) and [Cypress](https://docs.cypress.io/guides/overview/why-cypress).
 
 ## Development
 

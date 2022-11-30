@@ -4,30 +4,17 @@ This repository contains the UIs and related libraries of the Keycloak project.
 
 ## Repository structure
 
-    ├── apps                    # UI projects
-    │   ├── account-ui
-    │   ├── admin-ui
-    │   └── keycloak-server
-    ├── keycloak-theme          # Maven build for the Keycloak theme
-    ├── libs                    # Keycloak libraries
-    ├── LICENSE
-    ├── MAINTAINERS.md
-    ├── README.md
-    ├── package.json
-    ├── tsconfig.eslint.json
-    └── tsconfig.json
-
-### UI projects
-
-The source code for each UI project is stored in the `apps` folder. Refer to the individual README.md for details on how to run each application.
-
-### Maven build for the Keycloak theme
-
-The Maven build for the Keycloak theme is stored in the `Keycloak-theme` folder. It allows the theme to be built as a JAR which can be included when running the Keycloak server.
-
-### Keycloak libraries
-
-`keycloak-admin-client`, `keycloak-js` and `keycloak-masthead` libraries are stored in the `libs` folder.
+    ├── apps
+    │   ├── account-ui                 # Account UI for account management i.e controlling password and account access, tracking and managing permissions
+    │   ├── admin-ui                   # Admin UI for handling login, registration, administration, and account management
+    │   └── keycloak-server            # Keycloak server for local development of UIs
+    ├── keycloak-theme                 # Maven build for the Keycloak theme
+    ├── libs
+    │   ├── keycloak-admin-client      # Keycloak Admin Client library for Keycloak REST API
+    │   ├── keycloak-js                # Keycloak JS library for securing HTML5/JavaScript applications
+    │   └── keycloak-masthead          # Keycloak Masthead library for an easy way to bring applications into the Keycloak ecosystem, allow users to access
+    │                                  # and manage security for those applications and manage authorization of resources
+    ├── ...
 
 ## Data processing
 
