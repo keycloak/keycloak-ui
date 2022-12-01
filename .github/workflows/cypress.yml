@@ -1,9 +1,9 @@
 name: Cypress
 on:
   push:
-    branches: [main]
+    branches: [main, release/**]
   pull_request:
-    branches: [main]
+    branches: [main, release/**]
   schedule:
     - cron: '0 4 * * *'
   workflow_dispatch:
@@ -24,7 +24,7 @@ jobs:
     if: ${{ github.event_name != 'schedule' }}
     runs-on: ubuntu-latest
     steps:
-      - name: Check out Admin UI
+      - name: Check out repository
         uses: actions/checkout@v3
         with:
           path: admin-ui-repo
@@ -32,7 +32,7 @@ jobs:
       - name: Check out Keycloak Server
         uses: actions/checkout@v3
         with:
-          repository: ${{ inputs.keycloakRepo || 'keycloak/keycloak' }}
+          repository: ${{ inputs.keycloakRepo || (contains(github.ref, 'release/') && github.ref || 'keycloak/keycloak') }}
           ref: ${{ inputs.keycloakBranch || 'main' }}
           path: keycloak-repo
 
@@ -91,7 +91,7 @@ jobs:
       matrix:
         container: [1, 2, 3, 4, 5]
     steps:
-      - name: Check out Admin UI
+      - name: Check out repository
         uses: actions/checkout@v3
 
       - name: Set up Node
