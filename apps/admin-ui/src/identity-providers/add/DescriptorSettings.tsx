@@ -103,7 +103,9 @@ const Fields = ({ readOnly }: DescriptorSettingsProps) => {
         fieldId="kc-sso-service-url"
         isRequired
         validated={
-          errors.config ? ValidatedOptions.error : ValidatedOptions.default
+          errors.config?.singleSignOnServiceUrl
+            ? ValidatedOptions.error
+            : ValidatedOptions.default
         }
         helperTextInvalid={t("common:required")}
       >
