@@ -197,8 +197,10 @@ export default function ClientProfileForm() {
         badges={[
           {
             id: "global-client-profile-badge",
-            text: (
-              <Label color="blue">{isGlobalProfile ? t("global") : ""}</Label>
+            text: isGlobalProfile ? (
+              <Label color="blue">{t("global")}</Label>
+            ) : (
+              ""
             ),
           },
         ]}
