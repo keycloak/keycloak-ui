@@ -21,6 +21,7 @@ import {
   Text,
   TextVariants,
   ValidatedOptions,
+  Label,
 } from "@patternfly/react-core";
 
 import type ClientProfileRepresentation from "@keycloak/keycloak-admin-client/lib/defs/clientProfileRepresentation";
@@ -196,7 +197,9 @@ export default function ClientProfileForm() {
         badges={[
           {
             id: "global-client-profile-badge",
-            text: isGlobalProfile ? t("global") : "",
+            text: (
+              <Label color="blue">{isGlobalProfile ? t("global") : ""}</Label>
+            ),
           },
         ]}
         divider
