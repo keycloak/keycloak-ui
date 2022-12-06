@@ -69,6 +69,19 @@ type IdPWithMapperAttributes = IdentityProviderMapperRepresentation & {
 const Header = ({ onChange, value, save, toggleDeleteDialog }: HeaderProps) => {
   const { t } = useTranslation("identity-providers");
   const { alias: displayName } = useParams<{ alias: string }>();
+  const { adminClient } = useAdminClient();
+  const [provider, setProvider] = useState<IdentityProviderRepresentation>();
+
+  useFetch(
+    () => adminClient.identityProviders.findOne({ alias: displayName }),
+    (fetchedProvider) => {
+      if (!fetchedProvider) {
+        throw new Error(t("common:notFound"));
+      }
+      setProvider(fetchedProvider);
+    },
+    []
+  );
 
   const [toggleDisableDialog, DisableConfirm] = useConfirmDialog({
     titleKey: "identity-providers:disableProvider",
@@ -84,7 +97,7 @@ const Header = ({ onChange, value, save, toggleDeleteDialog }: HeaderProps) => {
     <>
       <DisableConfirm />
       <ViewHeader
-        titleKey={toUpperCase(displayName)}
+        titleKey={toUpperCase(provider ? provider.displayName! : "")}
         divider={false}
         dropdownItems={[
           <DropdownItem key="delete" onClick={() => toggleDeleteDialog()}>
