@@ -40,6 +40,7 @@ import { addTrailingSlash } from "../util";
 import { getAuthorizationHeaders } from "../utils/getAuthorizationHeaders";
 
 import "./authentication-section.css";
+import useLocaleSort, { mapByKey } from "../utils/useLocaleSort";
 
 type UsedBy = "SPECIFIC_CLIENTS" | "SPECIFIC_PROVIDERS" | "DEFAULT";
 
@@ -64,7 +65,7 @@ export default function AuthenticationSection() {
   const [key, setKey] = useState(0);
   const refresh = () => setKey(key + 1);
   const { addAlert, addError } = useAlerts();
-
+  const localeSort = useLocaleSort();
   const [selectedFlow, setSelectedFlow] = useState<AuthenticationType>();
   const [open, toggleOpen] = useToggle();
   const [bindFlowOpen, toggleBindFlow] = useToggle();
@@ -81,7 +82,12 @@ export default function AuthenticationSection() {
     );
     const flows = await flowsRequest.json();
 
-    return sortBy(flows as AuthenticationType[], (flow) => flow.usedBy?.type);
+    return sortBy(
+      flows
+        ? localeSort(flows as AuthenticationType[], mapByKey("alias"))
+        : ([] as AuthenticationType[]),
+      (flow) => flow.usedBy?.type
+    );
   };
 
   const [toggleDeleteDialog, DeleteConfirm] = useConfirmDialog({
