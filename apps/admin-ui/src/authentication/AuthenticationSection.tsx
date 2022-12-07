@@ -38,9 +38,9 @@ import {
 import { AuthenticationTab, toAuthentication } from "./routes/Authentication";
 import { addTrailingSlash } from "../util";
 import { getAuthorizationHeaders } from "../utils/getAuthorizationHeaders";
+import useLocaleSort, { mapByKey } from "../utils/useLocaleSort";
 
 import "./authentication-section.css";
-import useLocaleSort, { mapByKey } from "../utils/useLocaleSort";
 
 type UsedBy = "SPECIFIC_CLIENTS" | "SPECIFIC_PROVIDERS" | "DEFAULT";
 
@@ -82,10 +82,12 @@ export default function AuthenticationSection() {
     );
     const flows = await flowsRequest.json();
 
+    if (!flows) {
+      return [];
+    }
+
     return sortBy(
-      flows
-        ? localeSort(flows as AuthenticationType[], mapByKey("alias"))
-        : ([] as AuthenticationType[]),
+      localeSort<AuthenticationType>(flows, mapByKey("alias")),
       (flow) => flow.usedBy?.type
     );
   };
