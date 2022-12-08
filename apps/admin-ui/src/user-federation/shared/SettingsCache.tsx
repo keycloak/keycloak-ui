@@ -25,8 +25,6 @@ const CacheFields = ({ form }: { form: UseFormMethods }) => {
   const { t } = useTranslation("user-federation");
 
   const [isCachePolicyOpen, toggleCachePolicy] = useToggle();
-  const [isEvictionHourOpen, toggleEvictionHour] = useToggle();
-  const [isEvictionMinuteOpen, toggleEvictionMinute] = useToggle();
 
   const [isEvictionDayOpen, toggleEvictionDay] = useToggle();
 
@@ -184,23 +182,32 @@ const CacheFields = ({ form }: { form: UseFormMethods }) => {
           >
             <Controller
               name="config.evictionHour"
-              defaultValue={["0"]}
+              defaultValue={0}
               control={form.control}
-              render={({ onChange, value }) => (
-                <Select
-                  toggleId="kc-eviction-hour"
-                  onToggle={toggleEvictionHour}
-                  isOpen={isEvictionHourOpen}
-                  onSelect={(_, value) => {
-                    onChange(value as string);
-                    toggleEvictionHour();
-                  }}
-                  selections={value}
-                  variant={SelectVariant.single}
-                >
-                  {hourOptions}
-                </Select>
-              )}
+              render={({ onChange, value }) => {
+                const MIN_VALUE = 0;
+                const MAX_VALUE = 23;
+                const setValue = (newValue: number) =>
+                  onChange(Math.max(Math.min(newValue, MAX_VALUE), MIN_VALUE));
+
+                return (
+                  <NumberInput
+                    id="kc-eviction-hour"
+                    data-testid="kerberos-cache-hour"
+                    value={value}
+                    min={MIN_VALUE}
+                    max={MAX_VALUE}
+                    unit={"Hours"}
+                    type="text"
+                    onPlus={() => onChange(Number(value) + 1)}
+                    onMinus={() => onChange(Number(value) - 1)}
+                    onChange={(event) => {
+                      const newValue = Number(event.currentTarget.value);
+                      setValue(!isNaN(newValue) ? newValue : 0);
+                    }}
+                  />
+                );
+              }}
             />
           </FormGroup>
           <FormGroup
@@ -216,23 +223,32 @@ const CacheFields = ({ form }: { form: UseFormMethods }) => {
           >
             <Controller
               name="config.evictionMinute"
-              defaultValue={["0"]}
+              defaultValue={0}
               control={form.control}
-              render={({ onChange, value }) => (
-                <Select
-                  toggleId="kc-eviction-minute"
-                  onToggle={toggleEvictionMinute}
-                  isOpen={isEvictionMinuteOpen}
-                  onSelect={(_, value) => {
-                    onChange(value as string);
-                    toggleEvictionMinute();
-                  }}
-                  selections={value}
-                  variant={SelectVariant.single}
-                >
-                  {minuteOptions}
-                </Select>
-              )}
+              render={({ onChange, value }) => {
+                const MIN_VALUE = 0;
+                const MAX_VALUE = 59;
+                const setValue = (newValue: number) =>
+                  onChange(Math.max(Math.min(newValue, MAX_VALUE), MIN_VALUE));
+
+                return (
+                  <NumberInput
+                    id="kc-eviction-minute"
+                    data-testid="kerberos-cache-minute"
+                    value={value}
+                    min={MIN_VALUE}
+                    max={MAX_VALUE}
+                    unit={"Minutes"}
+                    type="text"
+                    onPlus={() => onChange(Number(value) + 1)}
+                    onMinus={() => onChange(Number(value) - 1)}
+                    onChange={(event) => {
+                      const newValue = Number(event.currentTarget.value);
+                      setValue(!isNaN(newValue) ? newValue : 0);
+                    }}
+                  />
+                );
+              }}
             />
           </FormGroup>
         </>
