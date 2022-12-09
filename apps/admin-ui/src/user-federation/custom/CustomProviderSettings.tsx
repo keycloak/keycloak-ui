@@ -1,8 +1,4 @@
-import { useState } from "react";
-import { useParams } from "react-router-dom";
-import { Link, useNavigate } from "react-router-dom-v5-compat";
-import { useTranslation } from "react-i18next";
-import { FormProvider, useForm } from "react-hook-form";
+import type ComponentRepresentation from "@keycloak/keycloak-admin-client/lib/defs/componentRepresentation";
 import {
   ActionGroup,
   AlertVariant,
@@ -10,21 +6,25 @@ import {
   FormGroup,
   PageSection,
 } from "@patternfly/react-core";
+import { useState } from "react";
+import { FormProvider, useForm } from "react-hook-form";
+import { useTranslation } from "react-i18next";
+import { Link, useNavigate } from "react-router-dom-v5-compat";
 
-import type ComponentRepresentation from "@keycloak/keycloak-admin-client/lib/defs/componentRepresentation";
-import type { ProviderRouteParams } from "../routes/NewProvider";
-import { HelpItem } from "../../components/help-enabler/HelpItem";
+import { useAlerts } from "../../components/alert/Alerts";
+import { DynamicComponents } from "../../components/dynamic/DynamicComponents";
 import { FormAccess } from "../../components/form-access/FormAccess";
+import { HelpItem } from "../../components/help-enabler/HelpItem";
 import { KeycloakTextInput } from "../../components/keycloak-text-input/KeycloakTextInput";
-import { toUserFederation } from "../routes/UserFederation";
 import { useAdminClient, useFetch } from "../../context/auth/AdminClient";
 import { useRealm } from "../../context/realm-context/RealmContext";
-import { useAlerts } from "../../components/alert/Alerts";
-import { SettingsCache } from "../shared/SettingsCache";
-import { ExtendedHeader } from "../shared/ExtendedHeader";
 import { useServerInfo } from "../../context/server-info/ServerInfoProvider";
-import { DynamicComponents } from "../../components/dynamic/DynamicComponents";
 import { convertFormValuesToObject, convertToFormValues } from "../../util";
+import { useParams } from "../../utils/useParams";
+import type { ProviderRouteParams } from "../routes/NewProvider";
+import { toUserFederation } from "../routes/UserFederation";
+import { ExtendedHeader } from "../shared/ExtendedHeader";
+import { SettingsCache } from "../shared/SettingsCache";
 import { SyncSettings } from "./SyncSettings";
 
 import "./custom-provider-settings.css";
@@ -122,27 +122,27 @@ export default function CustomProviderSettings() {
           onSubmit={handleSubmit(save)}
         >
           <FormGroup
-            label={t("consoleDisplayName")}
+            label={t("uiDisplayName")}
             labelIcon={
               <HelpItem
-                helpText="user-federation-help:consoleDisplayNameHelp"
-                fieldLabelId="user-federation:consoleDisplayName"
+                helpText="user-federation-help:uiDisplayNameHelp"
+                fieldLabelId="user-federation:uiDisplayName"
               />
             }
             helperTextInvalid={t("validateName")}
             validated={errors.name ? "error" : "default"}
-            fieldId="kc-console-display-name"
+            fieldId="kc-ui-display-name"
             isRequired
           >
             <KeycloakTextInput
               isRequired
               type="text"
-              id="kc-console-display-name"
+              id="kc-ui-display-name"
               name="name"
               ref={register({
                 required: true,
               })}
-              data-testid="console-name"
+              data-testid="ui-name"
               validated={errors.name ? "error" : "default"}
             />
           </FormGroup>

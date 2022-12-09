@@ -1,17 +1,17 @@
-import SidebarPage from "../support/pages/admin_console/SidebarPage";
+import SidebarPage from "../support/pages/admin-ui/SidebarPage";
 import LoginPage from "../support/pages/LoginPage";
-import CreateUserPage from "../support/pages/admin_console/manage/users/CreateUserPage";
-import Masthead from "../support/pages/admin_console/Masthead";
-import ListingPage from "../support/pages/admin_console/ListingPage";
-import UserDetailsPage from "../support/pages/admin_console/manage/users/user_details/UserDetailsPage";
-import AttributesTab from "../support/pages/admin_console/manage/AttributesTab";
+import CreateUserPage from "../support/pages/admin-ui/manage/users/CreateUserPage";
+import Masthead from "../support/pages/admin-ui/Masthead";
+import ListingPage from "../support/pages/admin-ui/ListingPage";
+import UserDetailsPage from "../support/pages/admin-ui/manage/users/user_details/UserDetailsPage";
+import AttributesTab from "../support/pages/admin-ui/manage/AttributesTab";
 import ModalUtils from "../support/util/ModalUtils";
 import { keycloakBefore } from "../support/util/keycloak_hooks";
-import UserGroupsPage from "../support/pages/admin_console/manage/users/UserGroupsPage";
+import UserGroupsPage from "../support/pages/admin-ui/manage/users/UserGroupsPage";
 import adminClient from "../support/util/AdminClient";
-import CredentialsPage from "../support/pages/admin_console/manage/users/CredentialsPage";
-import UsersPage from "../support/pages/admin_console/manage/users/UsersPage";
-import IdentityProviderLinksTab from "../support/pages/admin_console/manage/users/user_details/tabs/IdentityProviderLinksTab";
+import CredentialsPage from "../support/pages/admin-ui/manage/users/CredentialsPage";
+import UsersPage from "../support/pages/admin-ui/manage/users/UsersPage";
+import IdentityProviderLinksTab from "../support/pages/admin-ui/manage/users/user_details/tabs/IdentityProviderLinksTab";
 
 let groupName = "group";
 let groupsList: string[] = [];
@@ -180,7 +180,7 @@ describe("User creation", () => {
     userGroupsPage.goToGroupsTab();
     userGroupsPage.toggleAddGroupModal();
 
-    const groupsListCopy = groupsList.slice(0, 1);
+    const groupsListCopy = groupsList.slice(0, 3);
 
     groupsListCopy.forEach((element) => {
       cy.findByTestId(`${element}-check`).click();
@@ -196,6 +196,19 @@ describe("User creation", () => {
     userGroupsPage.goToGroupsTab();
     cy.findByTestId(`leave-${groupsList[0]}`).click();
     cy.findByTestId("confirm").click({ force: true });
+  });
+
+  it("search and leave group", () => {
+    listingPage.searchItem(itemId).itemExist(itemId);
+    listingPage.goToItemDetails(itemId);
+    userGroupsPage.goToGroupsTab();
+
+    listingPage.searchItem("group");
+    userGroupsPage.leaveGroupButtonDisabled();
+
+    listingPage.clickTableHeaderItemCheckboxAllRows();
+    userGroupsPage.leaveGroupButtonEnabled();
+    userGroupsPage.leaveGroup();
   });
 
   it("Go to user consents test", () => {

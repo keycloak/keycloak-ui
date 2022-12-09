@@ -78,7 +78,7 @@
     "react-i18next": "^12.0.0",
     "react-router": "^5.3.4",
     "react-router-dom": "^5.3.4",
-    "react-router-dom-v5-compat": "^6.4.3",
+    "react-router-dom-v5-compat": "^6.4.4",
     "react-use-localstorage": "^3.5.3",
     "use-react-router-breadcrumbs": "^2.0.2"
   },
@@ -87,7 +87,7 @@
     "@babel/core": "^7.20.5",
     "@babel/preset-env": "^7.20.2",
     "@cypress/webpack-batteries-included-preprocessor": "^2.3.0",
-    "@cypress/webpack-preprocessor": "^5.15.5",
+    "@cypress/webpack-preprocessor": "^5.15.6",
     "@testing-library/cypress": "^8.0.7",
     "@testing-library/jest-dom": "^5.16.5",
     "@testing-library/react": "^12.1.5",
