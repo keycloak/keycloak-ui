@@ -146,12 +146,6 @@ export interface CredentialRepresentation {
   config: { [index: string]: string[] };
 }
 
-export interface CredentialMetadataRepresentation {
-  infoMessage: string;
-  warningMessageTitle: string;
-  warningMessageDescription: string;
-}
-
 export interface CredentialTypeMetadata {
   type: string;
   displayName: string;
@@ -174,45 +168,6 @@ export interface CredentialContainer {
   removeable: boolean;
   userCredentialMetadatas: CredentialMetadataRepresentation[];
   metadata: CredentialTypeMetadata;
-}
-
-export interface DeviceRepresentation {
-  id: string;
-  ipAddress: string;
-  os: string;
-  osVersion: string;
-  browser: string;
-  device: string;
-  lastAccess: number;
-  current: boolean;
-  sessions: SessionRepresentation[];
-  mobile: boolean;
-}
-
-export interface SessionRepresentation {
-  id: string;
-  ipAddress: string;
-  started: number;
-  lastAccess: number;
-  expires: number;
-  clients: ClientRepresentation[];
-  browser: string;
-  current: boolean;
-}
-
-export interface ClientRepresentation {
-  clientId: string;
-  clientName: string;
-  description: string;
-  userConsentRequired: boolean;
-  inUse: boolean;
-  offlineAccess: boolean;
-  rootUrl: string;
-  baseUrl: string;
-  effectiveUrl: string;
-  logoUri: string;
-  policyUri: string;
-  tosUri: string;
 }
 
 export interface Client {

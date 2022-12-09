@@ -6,14 +6,15 @@ import {
   AlertGroup,
   AlertVariant,
 } from "@patternfly/react-core";
+import { TranslationKeys } from "../../react-i18next";
 
 export type AddAlertFunction = (
-  message: string,
+  message: TranslationKeys,
   variant?: AlertVariant,
   description?: string
 ) => void;
 
-export type AddErrorFunction = (message: string, error: any) => void;
+export type AddErrorFunction = (message: TranslationKeys, error: any) => void;
 
 type AlertProps = {
   addAlert: AddAlertFunction;
@@ -40,13 +41,14 @@ export const AlertProvider: FunctionComponent = ({ children }) => {
   };
 
   const addAlert = (
-    message: string,
+    message: TranslationKeys,
     variant: AlertVariant = AlertVariant.success,
     description?: string
   ) => {
     setAlerts([
       {
         id: Math.random() * 100,
+        //@ts-ignore
         message: t(message),
         variant,
         description,
@@ -55,8 +57,9 @@ export const AlertProvider: FunctionComponent = ({ children }) => {
     ]);
   };
 
-  const addError = (message: string, error: Error | string) => {
+  const addError = (message: TranslationKeys, error: Error | string) => {
     addAlert(
+      //@ts-ignore
       t(message, {
         error,
       }),

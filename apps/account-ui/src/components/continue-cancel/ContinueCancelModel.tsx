@@ -1,16 +1,17 @@
 import { ReactNode, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Button, ButtonProps, Modal, ModalProps } from "@patternfly/react-core";
+import { TranslationKeys } from "../../react-i18next";
 
 type ContinueCancelModalProps = Omit<ModalProps, "ref" | "children"> & {
-  modalTitle: string;
+  modalTitle: TranslationKeys;
   modalMessage?: string;
-  buttonTitle: string | ReactNode;
+  buttonTitle: TranslationKeys | ReactNode;
   buttonVariant?: ButtonProps["variant"];
   isDisabled?: boolean;
   onContinue: () => void;
-  continueLabel?: string;
-  cancelLabel?: string;
+  continueLabel?: TranslationKeys;
+  cancelLabel?: TranslationKeys;
   component?: React.ElementType<any> | React.ComponentType<any>;
   children?: ReactNode;
 };
@@ -39,11 +40,15 @@ export const ContinueCancelModal = ({
         onClick={() => setOpen(true)}
         isDisabled={isDisabled}
       >
-        {typeof buttonTitle === "string" ? t(buttonTitle) : buttonTitle}
+        {
+          //@ts-ignore
+          typeof buttonTitle === "string" ? t(buttonTitle) : buttonTitle
+        }
       </Component>
       <Modal
         variant="small"
         {...rest}
+        //@ts-ignore
         title={t(modalTitle)}
         isOpen={open}
         onClose={() => setOpen(false)}
@@ -57,7 +62,10 @@ export const ContinueCancelModal = ({
               onContinue();
             }}
           >
-            {t(continueLabel)}
+            {
+              //@ts-ignore
+              t(continueLabel)
+            }
           </Button>,
           <Button
             id="modal-cancel"
@@ -65,11 +73,17 @@ export const ContinueCancelModal = ({
             variant="secondary"
             onClick={() => setOpen(false)}
           >
-            {t(cancelLabel)}
+            {
+              //@ts-ignore
+              t(cancelLabel)
+            }
           </Button>,
         ]}
       >
-        {modalMessage ? t(modalMessage) : children}
+        {
+          //@ts-ignore
+          modalMessage ? t(modalMessage) : children
+        }
       </Modal>
     </>
   );
