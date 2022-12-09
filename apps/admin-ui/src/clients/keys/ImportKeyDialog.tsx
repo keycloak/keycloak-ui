@@ -44,7 +44,7 @@ export const ImportKeyDialog = ({
   const format = useWatch<string>({
     control,
     name: "keystoreFormat",
-    defaultValue: "JKS",
+    defaultValue: "",
   });
 
   const baseFormats = useServerInfo().cryptoInfo?.supportedKeystoreTypes ?? [];
@@ -105,7 +105,6 @@ export const ImportKeyDialog = ({
           <Controller
             name="keystoreFormat"
             control={control}
-            defaultValue="JKS"
             render={({ onChange, value }) => (
               <Select
                 toggleId="archiveFormat"

@@ -81,7 +81,6 @@ export const KeyForm = ({
       >
         <Controller
           name="format"
-          defaultValue="JKS"
           control={control}
           render={({ field }) => (
             <Select
