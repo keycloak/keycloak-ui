@@ -49,6 +49,7 @@ export default defineConfig({
     baseUrl: "http://localhost:8080",
     slowTestThreshold: 30000,
     specPattern: "cypress/e2e/**/*.{js,jsx,ts,tsx}",
+    experimentalSessionAndOrigin: true,
   },
 
   component: {

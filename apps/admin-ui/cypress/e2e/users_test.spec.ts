@@ -42,10 +42,10 @@ describe("User creation", () => {
       groupsList = [...groupsList, groupName];
     }
     keycloakBefore();
-    loginPage.logIn();
   });
 
   beforeEach(() => {
+    loginPage.logIn();
     sidebarPage.goToUsers();
   });
 

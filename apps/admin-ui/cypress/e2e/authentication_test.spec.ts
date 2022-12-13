@@ -26,13 +26,13 @@ describe("Authentication test", () => {
   before(() => {
     cy.wrap(adminClient.createRealm("test"));
     keycloakBefore();
-    loginPage.logIn();
-    sidebarPage.goToRealm("test");
   });
 
   after(() => adminClient.deleteRealm("test"));
 
   beforeEach(() => {
+    loginPage.logIn();
+    sidebarPage.goToRealm("test");
     sidebarPage.goToAuthentication();
   });
 

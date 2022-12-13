@@ -33,10 +33,10 @@ You can then have multiple test or create a new `describe` block to setup some d
 describe("Realm roles test", () => {
   before(() => {
     keycloakBefore();
-    loginPage.logIn();
   });
 
   beforeEach(() => {
+    loginPage.logIn();
     sidebarPage.goToRealmRoles();
   });
 ```
