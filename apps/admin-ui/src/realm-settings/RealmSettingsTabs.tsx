@@ -51,6 +51,7 @@ import useIsFeatureEnabled, { Feature } from "../utils/useIsFeatureEnabled";
 import { ClientPoliciesTab, toClientPolicies } from "./routes/ClientPolicies";
 import { KeysTab } from "./keys/KeysTab";
 import type { KeyValueType } from "../components/key-value-form/key-value-convert";
+import { RealmSettingsAttributeTab } from "./RealmSettingsAttributeTab";
 
 type RealmSettingsHeaderProps = {
   onChange: (value: boolean) => void;
@@ -404,6 +405,13 @@ export const RealmSettingsTabs = ({
             {...route("user-registration")}
           >
             <UserRegistration />
+          </Tab>
+          <Tab
+            title={<TabTitleText>{t("attributes")}</TabTitleText>}
+            data-testid="rs-realm-attributes-tab"
+            {...route("attributes")}
+          >
+            <RealmSettingsAttributeTab realm={realm} />
           </Tab>
         </RoutableTabs>
       </PageSection>
