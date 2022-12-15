@@ -30,8 +30,8 @@ export default class KeysTab extends CommonPage {
     keyPassword: string,
     storePassword: string
   ) {
-    cy.get('[id="archiveFormat"]').click();
-    cy.findAllByRole("option").contains("JKS").click();
+    cy.get("#archiveFormat").click();
+    cy.findAllByRole("option").contains(archiveFormat).click();
     cy.findByTestId(this.keyAlias).type(keyAlias);
     cy.findByTestId(this.keyPassword).type(keyPassword);
     cy.findByTestId(this.storePassword).type(storePassword);
