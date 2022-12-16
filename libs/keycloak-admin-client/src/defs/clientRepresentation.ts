@@ -3,6 +3,7 @@
  */
 import type ResourceServerRepresentation from "./resourceServerRepresentation.js";
 import type ProtocolMapperRepresentation from "./protocolMapperRepresentation.js";
+import { SSOProtocol } from "./ssoProtocols.js";
 
 export default interface ClientRepresentation {
   access?: Record<string, boolean>;
@@ -31,7 +32,7 @@ export default interface ClientRepresentation {
   notBefore?: number;
   optionalClientScopes?: string[];
   origin?: string;
-  protocol?: string;
+  protocol?: SSOProtocol;
   protocolMappers?: ProtocolMapperRepresentation[];
   publicClient?: boolean;
   redirectUris?: string[];

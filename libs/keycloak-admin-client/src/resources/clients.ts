@@ -16,6 +16,7 @@ import type ResourceRepresentation from "../defs/resourceRepresentation.js";
 import type ResourceServerRepresentation from "../defs/resourceServerRepresentation.js";
 import type RoleRepresentation from "../defs/roleRepresentation.js";
 import type ScopeRepresentation from "../defs/scopeRepresentation.js";
+import { SSOProtocol } from "../defs/ssoProtocols.js";
 import type UserRepresentation from "../defs/userRepresentation.js";
 import type UserSessionRepresentation from "../defs/userSessionRepresentation.js";
 import Resource from "./resource.js";
@@ -297,7 +298,7 @@ export class Clients extends Resource<{ realm?: string }> {
   });
 
   public findProtocolMappersByProtocol = this.makeRequest<
-    { id: string; protocol: string },
+    { id: string; protocol: SSOProtocol },
     ProtocolMapperRepresentation[]
   >({
     method: "GET",

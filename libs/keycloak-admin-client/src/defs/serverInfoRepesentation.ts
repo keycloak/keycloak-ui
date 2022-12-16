@@ -3,6 +3,7 @@ import type { ConfigPropertyRepresentation } from "./configPropertyRepresentatio
 import type PasswordPolicyTypeRepresentation from "./passwordPolicyTypeRepresentation.js";
 import type ProfileInfoRepresentation from "./profileInfoRepresentation.js";
 import type ProtocolMapperRepresentation from "./protocolMapperRepresentation.js";
+import { SSOProtocol } from "./ssoProtocols.js";
 import type SystemInfoRepresentation from "./systemInfoRepersantation.js";
 
 /**
@@ -43,7 +44,7 @@ export interface ProviderRepresentation {
 
 export interface ClientInstallationRepresentation {
   id: string;
-  protocol: string;
+  protocol: SSOProtocol;
   downloadOnly: boolean;
   displayType: string;
   helpText: string;

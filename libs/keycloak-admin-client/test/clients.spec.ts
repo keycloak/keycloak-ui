@@ -11,6 +11,8 @@ import type ResourceRepresentation from "../src/defs/resourceRepresentation.js";
 import type ScopeRepresentation from "../src/defs/scopeRepresentation.js";
 import type UserRepresentation from "../src/defs/userRepresentation.js";
 import { credentials } from "./constants.js";
+import { ClientScopeCreateRepresentation } from "../src/defs/clientScopeRepresentation.js";
+import { SSOProtocol } from "../src/defs/ssoProtocols.js";
 
 const expect = chai.expect;
 
@@ -274,11 +276,13 @@ describe("Clients", () => {
       dummyClientScope = {
         name: "does-anyone-read-this",
         description: "Oh - seems like you are reading  Hey there!",
-        protocol: "openid-connect",
+        protocol: SSOProtocol["openid-connect"],
       };
 
       // setup dummy client scope
-      await kcAdminClient.clientScopes.create(dummyClientScope);
+      await kcAdminClient.clientScopes.create(
+        dummyClientScope as ClientScopeCreateRepresentation
+      );
       currentClientScope = (await kcAdminClient.clientScopes.findOneByName({
         name: dummyClientScope.name!,
       }))!;
@@ -368,11 +372,13 @@ describe("Clients", () => {
       dummyClientScope = {
         name: "i-hope-your-well",
         description: "Everyone has that one friend.",
-        protocol: "openid-connect",
+        protocol: SSOProtocol["openid-connect"],
       };
 
       // setup dummy client scope
-      await kcAdminClient.clientScopes.create(dummyClientScope);
+      await kcAdminClient.clientScopes.create(
+        dummyClientScope as ClientScopeCreateRepresentation
+      );
       currentClientScope = (await kcAdminClient.clientScopes.findOneByName({
         name: dummyClientScope.name!,
       }))!;
@@ -459,7 +465,7 @@ describe("Clients", () => {
     beforeEach(() => {
       dummyMapper = {
         name: "become-a-farmer",
-        protocol: "openid-connect",
+        protocol: SSOProtocol["openid-connect"],
         protocolMapper: "oidc-role-name-mapper",
         config: {
           role: "admin",

@@ -5,6 +5,7 @@ import type ClientRepresentation from "../src/defs/clientRepresentation.js";
 import type ClientScopeRepresentation from "../src/defs/clientScopeRepresentation.js";
 import type ProtocolMapperRepresentation from "../src/defs/protocolMapperRepresentation.js";
 import { credentials } from "./constants.js";
+import { SSOProtocol } from "../src/defs/ssoProtocols.js";
 
 const expect = chai.expect;
 
@@ -23,6 +24,7 @@ describe("Client Scopes", () => {
     currentClientScopeName = "best-of-the-bests-scope";
     await kcAdminClient.clientScopes.create({
       name: currentClientScopeName,
+      protocol: SSOProtocol["openid-connect"],
     });
     currentClientScope = (await kcAdminClient.clientScopes.findOneByName({
       name: currentClientScopeName,
@@ -75,6 +77,7 @@ describe("Client Scopes", () => {
 
     await kcAdminClient.clientScopes.create({
       name: currentClientScopeName,
+      protocol: SSOProtocol["openid-connect"],
     });
 
     const scope = (await kcAdminClient.clientScopes.findOneByName({
@@ -82,6 +85,7 @@ describe("Client Scopes", () => {
     }))!;
     expect(scope).to.be.ok;
     expect(scope.name).to.equal(currentClientScopeName);
+    expect(scope.protocol).to.equal(SSOProtocol["openid-connect"]);
   });
 
   it("create client scope and return id", async () => {
@@ -96,6 +100,7 @@ describe("Client Scopes", () => {
 
     const { id } = await kcAdminClient.clientScopes.create({
       name: currentClientScopeName,
+      protocol: SSOProtocol["openid-connect"],
     });
 
     const scope = (await kcAdminClient.clientScopes.findOne({
@@ -103,6 +108,7 @@ describe("Client Scopes", () => {
     }))!;
     expect(scope).to.be.ok;
     expect(scope.name).to.equal(currentClientScopeName);
+    expect(scope.protocol).to.equal(SSOProtocol["openid-connect"]);
   });
 
   it("find scope by id", async () => {
@@ -256,7 +262,7 @@ describe("Client Scopes", () => {
     beforeEach(() => {
       dummyMapper = {
         name: "mapping-maps-mapper",
-        protocol: "openid-connect",
+        protocol: SSOProtocol["openid-connect"],
         protocolMapper: "oidc-audience-mapper",
       };
     });

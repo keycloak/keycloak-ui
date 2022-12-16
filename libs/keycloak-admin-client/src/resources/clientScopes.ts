@@ -4,6 +4,8 @@ import type { KeycloakAdminClient } from "../client.js";
 import type ProtocolMapperRepresentation from "../defs/protocolMapperRepresentation.js";
 import type MappingsRepresentation from "../defs/mappingsRepresentation.js";
 import type RoleRepresentation from "../defs/roleRepresentation.js";
+import { SSOProtocol } from "../defs/ssoProtocols.js";
+import { ClientScopeCreateRepresentation } from "../defs/clientScopeRepresentation.js";
 
 export class ClientScopes extends Resource<{ realm?: string }> {
   public find = this.makeRequest<{}, ClientScopeRepresentation[]>({
@@ -11,7 +13,10 @@ export class ClientScopes extends Resource<{ realm?: string }> {
     path: "/client-scopes",
   });
 
-  public create = this.makeRequest<ClientScopeRepresentation, { id: string }>({
+  public create = this.makeRequest<
+    ClientScopeCreateRepresentation,
+    { id: string }
+  >({
     method: "POST",
     path: "/client-scopes",
     returnResourceIdInLocationHeader: { field: "id" },
@@ -143,7 +148,7 @@ export class ClientScopes extends Resource<{ realm?: string }> {
   });
 
   public findProtocolMappersByProtocol = this.makeRequest<
-    { id: string; protocol: string },
+    { id: string; protocol: SSOProtocol },
     ProtocolMapperRepresentation[]
   >({
     method: "GET",
