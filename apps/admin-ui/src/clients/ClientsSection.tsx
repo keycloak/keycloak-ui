@@ -99,6 +99,12 @@ export default function ClientsSection() {
     </Link>
   );
 
+  const ClientName = (client: ClientRepresentation) => (
+    <TableText wrapModifier="truncate">
+      {emptyFormatter()(client.name)}
+    </TableText>
+  );
+
   const ClientDescription = (client: ClientRepresentation) => (
     <TableText wrapModifier="truncate">
       {emptyFormatter()(client.description)}
@@ -197,6 +203,11 @@ export default function ClientsSection() {
                 return actions;
               }}
               columns={[
+                {
+                  name: "clientName",
+                  displayKey: "common:clientName",
+                  cellRenderer: ClientName,
+                },
                 {
                   name: "clientId",
                   displayKey: "common:clientId",
