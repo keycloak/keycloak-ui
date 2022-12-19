@@ -65,7 +65,7 @@
     "file-saver": "^2.0.5",
     "flat": "^5.0.2",
     "i18next": "^22.0.2",
-    "i18next-http-backend": "^2.0.2",
+    "i18next-http-backend": "^2.1.0",
     "keycloak-js": "999.0.0-dev",
     "lodash-es": "^4.17.21",
     "react": "^17.0.2",
@@ -78,16 +78,16 @@
     "react-i18next": "^12.0.0",
     "react-router": "^5.3.4",
     "react-router-dom": "^5.3.4",
-    "react-router-dom-v5-compat": "^6.4.4",
+    "react-router-dom-v5-compat": "^6.4.5",
     "react-use-localstorage": "^3.5.3",
     "use-react-router-breadcrumbs": "^2.0.2"
   },
   "devDependencies": {
-    "@4tw/cypress-drag-drop": "^2.2.2",
+    "@4tw/cypress-drag-drop": "^2.2.3",
     "@babel/core": "^7.20.5",
     "@babel/preset-env": "^7.20.2",
     "@cypress/webpack-batteries-included-preprocessor": "^2.3.0",
-    "@cypress/webpack-preprocessor": "^5.15.6",
+    "@cypress/webpack-preprocessor": "^5.15.7",
     "@testing-library/cypress": "^8.0.7",
     "@testing-library/jest-dom": "^5.16.5",
     "@testing-library/react": "^12.1.5",
@@ -105,9 +105,9 @@
     "jsdom": "^20.0.3",
     "ldap-server-mock": "^6.0.1",
     "ts-node": "^10.9.1",
-    "vite": "^3.2.4",
-    "vite-plugin-checker": "^0.5.1",
-    "vitest": "^0.25.3",
+    "vite": "^3.2.5",
+    "vite-plugin-checker": "^0.5.2",
+    "vitest": "^0.25.8",
     "webpack": "^5.75.0"
   }
 }
