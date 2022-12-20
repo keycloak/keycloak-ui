@@ -204,30 +204,34 @@ export default function ClientsSection() {
               }}
               columns={[
                 {
-                  name: "clientName",
-                  displayKey: "common:clientName",
-                  cellRenderer: ClientName,
-                },
-                {
                   name: "clientId",
                   displayKey: "common:clientId",
+                  transforms: [cellWidth(20)],
                   cellRenderer: ClientDetailLink,
+                },
+                {
+                  name: "clientName",
+                  displayKey: "common:clientName",
+                  transforms: [cellWidth(20)],
+                  cellRenderer: ClientName,
                 },
                 {
                   name: "protocol",
                   displayKey: "common:type",
+                  transforms: [cellWidth(10)],
                   cellRenderer: (client) =>
                     getProtocolName(t, client.protocol ?? "openid-connect"),
                 },
                 {
                   name: "description",
                   displayKey: "common:description",
-                  transforms: [cellWidth(20)],
+                  transforms: [cellWidth(30)],
                   cellRenderer: ClientDescription,
                 },
                 {
                   name: "baseUrl",
                   displayKey: "clients:homeURL",
+                  transforms: [cellWidth(20)],
                   cellFormatters: [formattedLinkTableCell(), emptyFormatter()],
                   cellRenderer: (c) =>
                     convertClientToUrl(c, adminClient.baseUrl),
