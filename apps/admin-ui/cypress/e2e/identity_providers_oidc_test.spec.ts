@@ -122,6 +122,15 @@ describe("OIDC identity provider test", () => {
       masthead.checkNotificationMessage(createMapperSuccessMsg, true);
     });
 
+    it("should cancel the addition of the OIDC mapper", () => {
+      sidebarPage.goToIdentityProviders();
+      listingPage.goToItemDetails(oidcProviderName);
+      addMapperPage.goToMappersTab();
+      addMapperPage.addMapper();
+      addMapperPage.cancelNewMapper();
+      addMapperPage.shouldGoToMappersTab();
+    });
+
     it("clean up providers", () => {
       const modalUtils = new ModalUtils();
 

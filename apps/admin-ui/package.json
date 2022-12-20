@@ -83,7 +83,7 @@
     "use-react-router-breadcrumbs": "^2.0.2"
   },
   "devDependencies": {
-    "@4tw/cypress-drag-drop": "^2.2.2",
+    "@4tw/cypress-drag-drop": "^2.2.3",
     "@babel/core": "^7.20.5",
     "@babel/preset-env": "^7.20.2",
     "@cypress/webpack-batteries-included-preprocessor": "^2.3.0",
@@ -105,9 +105,9 @@
     "jsdom": "^20.0.3",
     "ldap-server-mock": "^6.0.1",
     "ts-node": "^10.9.1",
-    "vite": "^4.0.0",
+    "vite": "^3.2.5",
     "vite-plugin-checker": "^0.5.2",
-    "vitest": "^0.25.7",
+    "vitest": "^0.25.8",
     "webpack": "^5.75.0"
   }
 }
