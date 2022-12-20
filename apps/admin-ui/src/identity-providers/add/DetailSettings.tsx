@@ -102,7 +102,13 @@ const Header = ({ onChange, value, save, toggleDeleteDialog }: HeaderProps) => {
     <>
       <DisableConfirm />
       <ViewHeader
-        titleKey={toUpperCase(provider ? provider.displayName! : "")}
+        titleKey={toUpperCase(
+          provider
+            ? provider.displayName
+              ? provider.displayName
+              : provider.providerId!
+            : ""
+        )}
         divider={false}
         dropdownItems={[
           <DropdownItem key="delete" onClick={() => toggleDeleteDialog()}>
