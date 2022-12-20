@@ -45,6 +45,7 @@ export const EventsTab = ({ realm }: EventsTabProps) => {
   const [events, setEvents] = useState<RealmEventsConfigRepresentation>();
   const [type, setType] = useState<EventsType>();
   const [addEventType, setAddEventType] = useState(false);
+  const [eventsConfigSaved, setEventsConfigSaved] = useState(false);
 
   const { adminClient } = useAdminClient();
   const { addAlert, addError } = useAlerts();
@@ -115,6 +116,7 @@ export const EventsTab = ({ realm }: EventsTabProps) => {
         eventConfig
       );
       setupForm({ ...events, ...eventConfig, adminEventsExpiration });
+      setEventsConfigSaved(true);
       addAlert(
         updatedEventListener
           ? t("realm-settings:saveEventListenersSuccess")
@@ -122,6 +124,7 @@ export const EventsTab = ({ realm }: EventsTabProps) => {
         AlertVariant.success
       );
     } catch (error) {
+      setEventsConfigSaved(false);
       addError(
         updatedEventListener
           ? t("realm-settings:saveEventListenersError")
@@ -193,7 +196,7 @@ export const EventsTab = ({ realm }: EventsTabProps) => {
               />
             </FormAccess>
           </PageSection>
-          {eventsEnabled && (
+          {eventsEnabled && eventsConfigSaved && (
             <PageSection>
               <EventsTypeTable
                 key={tableKey}
