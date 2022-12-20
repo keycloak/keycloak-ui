@@ -8,7 +8,6 @@ import {
   Tab,
   Tabs,
   TabTitleText,
-  Title,
 } from "@patternfly/react-core";
 
 import type RealmRepresentation from "@keycloak/keycloak-admin-client/lib/defs/realmRepresentation";
@@ -181,11 +180,6 @@ export const EventsTab = ({ realm }: EventsTabProps) => {
           data-testid="rs-events-tab"
         >
           <PageSection>
-            <Title headingLevel="h1" size="xl">
-              {t("userEventsConfig")}
-            </Title>
-          </PageSection>
-          <PageSection>
             <FormAccess
               role="manage-events"
               isHorizontal
@@ -227,11 +221,6 @@ export const EventsTab = ({ realm }: EventsTabProps) => {
           title={<TabTitleText>{t("adminEventsSettings")}</TabTitleText>}
           data-testid="rs-admin-events-tab"
         >
-          <PageSection>
-            <Title headingLevel="h4" size="xl">
-              {t("adminEventsConfig")}
-            </Title>
-          </PageSection>
           <PageSection>
             <FormAccess
               role="manage-events"
