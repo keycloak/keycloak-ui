@@ -26,6 +26,7 @@ import { AttributeRoute } from "./routes/Attribute";
 import { NewAttributesGroupRoute } from "./routes/NewAttributesGroup";
 import { EditAttributesGroupRoute } from "./routes/EditAttributesGroup";
 import { EventsRoute } from "./routes/EventsTab";
+import { UserRegistrationRoute } from "./routes/UserRegistrationTab";
 
 const routes: RouteDef[] = [
   RealmSettingsRoute,
@@ -49,6 +50,7 @@ const routes: RouteDef[] = [
   AttributeRoute,
   NewAttributesGroupRoute,
   EditAttributesGroupRoute,
+  UserRegistrationRoute,
 ];
 
 export default routes;

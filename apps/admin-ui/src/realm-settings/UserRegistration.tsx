@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
-import { AlertVariant, Tab, Tabs, TabTitleText } from "@patternfly/react-core";
+import { AlertVariant, Tab, TabTitleText } from "@patternfly/react-core";
 
 import type RealmRepresentation from "@keycloak/keycloak-admin-client/lib/defs/realmRepresentation";
 import type RoleRepresentation from "@keycloak/keycloak-admin-client/lib/defs/roleRepresentation";
@@ -10,12 +10,21 @@ import { KeycloakSpinner } from "../components/keycloak-spinner/KeycloakSpinner"
 import { useAlerts } from "../components/alert/Alerts";
 import { RoleMapping } from "../components/role-mapping/RoleMapping";
 import { DefaultsGroupsTab } from "./DefaultGroupsTab";
+import {
+  routableTab,
+  RoutableTabs,
+} from "../components/routable-tabs/RoutableTabs";
+import {
+  UserRegistrationSubTab,
+  toUserRegistrationTab,
+} from "./routes/UserRegistrationTab";
+import { useHistory } from "react-router";
 
 export const UserRegistration = () => {
   const { t } = useTranslation("realm-settings");
   const [realm, setRealm] = useState<RealmRepresentation>();
-  const [activeTab, setActiveTab] = useState(10);
   const [key, setKey] = useState(0);
+  const history = useHistory();
 
   const { adminClient } = useAdminClient();
   const { addAlert, addError } = useAlerts();
@@ -46,16 +55,26 @@ export const UserRegistration = () => {
     }
   };
 
+  const userRegistrationRoute = (tab: UserRegistrationSubTab) =>
+    routableTab({
+      to: toUserRegistrationTab({ realm: realmName, tab }),
+      history,
+    });
+
   return (
-    <Tabs
-      activeKey={activeTab}
-      onSelect={(_, key) => setActiveTab(key as number)}
+    <RoutableTabs
+      mountOnEnter
+      unmountOnExit
+      defaultLocation={toUserRegistrationTab({
+        realm: realmName,
+        tab: "default-roles",
+      })}
     >
       <Tab
         key={key}
         id="roles"
-        eventKey={10}
         title={<TabTitleText>{t("defaultRoles")}</TabTitleText>}
+        {...userRegistrationRoute("default-roles")}
       >
         <RoleMapping
           name={realm.defaultRole!.name!}
@@ -67,11 +86,11 @@ export const UserRegistration = () => {
       </Tab>
       <Tab
         id="groups"
-        eventKey={20}
         title={<TabTitleText>{t("defaultGroups")}</TabTitleText>}
+        {...userRegistrationRoute("default-groups")}
       >
         <DefaultsGroupsTab />
       </Tab>
-    </Tabs>
+    </RoutableTabs>
   );
 };
