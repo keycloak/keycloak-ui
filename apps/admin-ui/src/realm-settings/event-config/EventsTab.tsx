@@ -6,7 +6,6 @@ import {
   ButtonVariant,
   PageSection,
   Tab,
-  Tabs,
   TabTitleText,
   Title,
 } from "@patternfly/react-core";
@@ -23,6 +22,12 @@ import { EventsTypeTable, EventType } from "./EventsTypeTable";
 import { AddEventTypesDialog } from "./AddEventTypesDialog";
 import { EventListenersForm } from "./EventListenersForm";
 import { convertToFormValues } from "../../util";
+import { EventsSubTab, toEventsTab } from "../routes/EventsTab";
+import {
+  routableTab,
+  RoutableTabs,
+} from "../../components/routable-tabs/RoutableTabs";
+import { useHistory } from "react-router";
 
 type EventsTabProps = {
   realm: RealmRepresentation;
@@ -34,6 +39,7 @@ type EventsConfigForm = RealmEventsConfigRepresentation & {
 
 export const EventsTab = ({ realm }: EventsTabProps) => {
   const { t } = useTranslation("realm-settings");
+  const history = useHistory();
   const form = useForm<EventsConfigForm>();
   const { setValue, handleSubmit, watch } = form;
 
@@ -42,7 +48,6 @@ export const EventsTab = ({ realm }: EventsTabProps) => {
   const [tableKey, setTableKey] = useState(0);
   const reload = () => setTableKey(new Date().getTime());
 
-  const [activeTab, setActiveTab] = useState("event");
   const [events, setEvents] = useState<RealmEventsConfigRepresentation>();
   const [type, setType] = useState<EventsType>();
   const [addEventType, setAddEventType] = useState(false);
@@ -146,6 +151,13 @@ export const EventsTab = ({ realm }: EventsTabProps) => {
   };
 
   const eventsEnabled: boolean = watch("eventsEnabled") || false;
+
+  const eventsRoute = (tab: EventsSubTab) =>
+    routableTab({
+      to: toEventsTab({ realm: realmName, tab }),
+      history,
+    });
+
   return (
     <>
       <DeleteConfirm />
@@ -156,14 +168,19 @@ export const EventsTab = ({ realm }: EventsTabProps) => {
           onClose={() => setAddEventType(false)}
         />
       )}
-      <Tabs
-        activeKey={activeTab}
-        onSelect={(_, key) => setActiveTab(key as string)}
+      <RoutableTabs
+        mountOnEnter
+        unmountOnExit
+        defaultLocation={toEventsTab({
+          realm: realmName,
+          tab: "event-listeners",
+        })}
       >
         <Tab
-          eventKey="event"
+          id="event"
           title={<TabTitleText>{t("eventListeners")}</TabTitleText>}
           data-testid="rs-event-listeners-tab"
+          {...eventsRoute("event-listeners")}
         >
           <PageSection>
             <FormAccess
@@ -176,9 +193,10 @@ export const EventsTab = ({ realm }: EventsTabProps) => {
           </PageSection>
         </Tab>
         <Tab
-          eventKey="user"
+          id="user"
           title={<TabTitleText>{t("userEventsSettings")}</TabTitleText>}
           data-testid="rs-events-tab"
+          {...eventsRoute("user-events-settings")}
         >
           <PageSection>
             <Title headingLevel="h1" size="xl">
@@ -223,9 +241,10 @@ export const EventsTab = ({ realm }: EventsTabProps) => {
           )}
         </Tab>
         <Tab
-          eventKey="admin"
+          id="admin"
           title={<TabTitleText>{t("adminEventsSettings")}</TabTitleText>}
           data-testid="rs-admin-events-tab"
+          {...eventsRoute("admin-events-settings")}
         >
           <PageSection>
             <Title headingLevel="h4" size="xl">
@@ -247,7 +266,7 @@ export const EventsTab = ({ realm }: EventsTabProps) => {
             </FormAccess>
           </PageSection>
         </Tab>
-      </Tabs>
+      </RoutableTabs>
     </>
   );
 };

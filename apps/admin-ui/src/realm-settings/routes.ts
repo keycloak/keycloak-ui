@@ -25,12 +25,14 @@ import { KeysRoute } from "./routes/KeysTab";
 import { AttributeRoute } from "./routes/Attribute";
 import { NewAttributesGroupRoute } from "./routes/NewAttributesGroup";
 import { EditAttributesGroupRoute } from "./routes/EditAttributesGroup";
+import { EventsRoute } from "./routes/EventsTab";
 
 const routes: RouteDef[] = [
   RealmSettingsRoute,
   RealmSettingsRouteWithTab,
   KeysRoute,
   KeyProviderFormRoute,
+  EventsRoute,
   ClientPoliciesRoute,
   AddClientProfileRoute,
   AddExecutorRoute,
