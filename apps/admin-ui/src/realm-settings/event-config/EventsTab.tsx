@@ -34,7 +34,7 @@ type EventsConfigForm = RealmEventsConfigRepresentation & {
 export const EventsTab = ({ realm }: EventsTabProps) => {
   const { t } = useTranslation("realm-settings");
   const form = useForm<EventsConfigForm>();
-  const { setValue, handleSubmit, watch } = form;
+  const { setValue, handleSubmit } = form;
 
   const [key, setKey] = useState(0);
   const refresh = () => setKey(new Date().getTime());
@@ -45,7 +45,6 @@ export const EventsTab = ({ realm }: EventsTabProps) => {
   const [events, setEvents] = useState<RealmEventsConfigRepresentation>();
   const [type, setType] = useState<EventsType>();
   const [addEventType, setAddEventType] = useState(false);
-  const [eventsConfigSaved, setEventsConfigSaved] = useState(false);
 
   const { adminClient } = useAdminClient();
   const { addAlert, addError } = useAlerts();
@@ -116,7 +115,6 @@ export const EventsTab = ({ realm }: EventsTabProps) => {
         eventConfig
       );
       setupForm({ ...events, ...eventConfig, adminEventsExpiration });
-      setEventsConfigSaved(true);
       addAlert(
         updatedEventListener
           ? t("realm-settings:saveEventListenersSuccess")
@@ -124,7 +122,6 @@ export const EventsTab = ({ realm }: EventsTabProps) => {
         AlertVariant.success
       );
     } catch (error) {
-      setEventsConfigSaved(false);
       addError(
         updatedEventListener
           ? t("realm-settings:saveEventListenersError")
@@ -147,7 +144,6 @@ export const EventsTab = ({ realm }: EventsTabProps) => {
     refresh();
   };
 
-  const eventsEnabled: boolean = watch("eventsEnabled") || false;
   return (
     <>
       <DeleteConfirm />
@@ -196,20 +192,20 @@ export const EventsTab = ({ realm }: EventsTabProps) => {
               />
             </FormAccess>
           </PageSection>
-          {eventsEnabled && eventsConfigSaved && (
+          {events?.eventsEnabled && (
             <PageSection>
               <EventsTypeTable
                 key={tableKey}
                 addTypes={() => setAddEventType(true)}
                 loader={() =>
                   Promise.resolve(
-                    events?.enabledEventTypes?.map((id) => {
+                    events.enabledEventTypes?.map((id) => {
                       return { id };
                     }) || []
                   )
                 }
                 onDelete={(value) => {
-                  const enabledEventTypes = events?.enabledEventTypes?.filter(
+                  const enabledEventTypes = events.enabledEventTypes?.filter(
                     (e) => e !== value.id
                   );
                   addEvents(enabledEventTypes);
