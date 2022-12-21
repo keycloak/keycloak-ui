@@ -26,6 +26,7 @@ import { AttributeRoute } from "./routes/Attribute";
 import { NewAttributesGroupRoute } from "./routes/NewAttributesGroup";
 import { EditAttributesGroupRoute } from "./routes/EditAttributesGroup";
 import { EventsRoute } from "./routes/EventsTab";
+import { SecurityDefensesRoute } from "./routes/SecurityDefenses";
 import { UserRegistrationRoute } from "./routes/UserRegistrationTab";
 
 const routes: RouteDef[] = [
@@ -50,6 +51,7 @@ const routes: RouteDef[] = [
   AttributeRoute,
   NewAttributesGroupRoute,
   EditAttributesGroupRoute,
+  SecurityDefensesRoute,
   UserRegistrationRoute,
 ];
 

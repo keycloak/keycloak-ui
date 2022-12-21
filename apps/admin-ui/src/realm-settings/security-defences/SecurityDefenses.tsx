@@ -1,10 +1,19 @@
-import { useState } from "react";
 import { useTranslation } from "react-i18next";
-import { PageSection, Tab, Tabs, TabTitleText } from "@patternfly/react-core";
+import { PageSection, Tab, TabTitleText } from "@patternfly/react-core";
 
 import type RealmRepresentation from "@keycloak/keycloak-admin-client/lib/defs/realmRepresentation";
 import { HeadersForm } from "./HeadersForm";
 import { BruteForceDetection } from "./BruteForceDetection";
+import {
+  SecurityDefensesSubTab,
+  toSecurityDefensesTab,
+} from "../routes/SecurityDefenses";
+import {
+  routableTab,
+  RoutableTabs,
+} from "../../components/routable-tabs/RoutableTabs";
+import { useHistory } from "react-router";
+import { useRealm } from "../../context/realm-context/RealmContext";
 
 type SecurityDefensesProps = {
   realm: RealmRepresentation;
@@ -13,16 +22,28 @@ type SecurityDefensesProps = {
 
 export const SecurityDefenses = ({ realm, save }: SecurityDefensesProps) => {
   const { t } = useTranslation("realm-settings");
-  const [activeTab, setActiveTab] = useState(10);
+  const { realm: realmName } = useRealm();
+  const history = useHistory();
+
+  const securityDefensesRoute = (tab: SecurityDefensesSubTab) =>
+    routableTab({
+      to: toSecurityDefensesTab({ realm: realmName, tab }),
+      history,
+    });
+
   return (
-    <Tabs
-      activeKey={activeTab}
-      onSelect={(_, key) => setActiveTab(key as number)}
+    <RoutableTabs
+      mountOnEnter
+      unmountOnExit
+      defaultLocation={toSecurityDefensesTab({
+        realm: realmName,
+        tab: "headers",
+      })}
     >
       <Tab
         id="headers"
-        eventKey={10}
         title={<TabTitleText>{t("headers")}</TabTitleText>}
+        {...securityDefensesRoute("headers")}
       >
         <PageSection variant="light">
           <HeadersForm realm={realm} save={save} />
@@ -30,13 +51,13 @@ export const SecurityDefenses = ({ realm, save }: SecurityDefensesProps) => {
       </Tab>
       <Tab
         id="bruteForce"
-        eventKey={20}
         title={<TabTitleText>{t("bruteForceDetection")}</TabTitleText>}
+        {...securityDefensesRoute("brute-force-detection")}
       >
         <PageSection variant="light">
           <BruteForceDetection realm={realm} save={save} />
         </PageSection>
       </Tab>
-    </Tabs>
+    </RoutableTabs>
   );
 };
