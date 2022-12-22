@@ -1,6 +1,6 @@
 export default class UserRegistration {
   private userRegistrationTab = "rs-userRegistration-tab";
-  private defaultGroupTab = "#pf-tab-20-groups";
+  private defaultGroupTab = "#groups";
   private addRoleBtn = "assignRole";
   private addDefaultGroupBtn = "no-default-groups-empty-action";
   private namesColumn = 'tbody td[data-label="Name"]:visible';
