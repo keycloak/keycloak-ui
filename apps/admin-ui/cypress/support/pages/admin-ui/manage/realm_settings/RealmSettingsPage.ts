@@ -454,7 +454,7 @@ export default class RealmSettingsPage extends CommonPage {
   }
 
   save(saveBtn: string) {
-    cy.findByTestId(saveBtn).click();
+    cy.findByTestId(saveBtn).click({ force: true });
 
     return this;
   }
@@ -666,7 +666,7 @@ export default class RealmSettingsPage extends CommonPage {
     cy.get(this.eventListenersInputFld).click().type("email");
     cy.get(this.eventListenersDrpDwnOption).click();
     cy.get(this.eventListenersDrwDwnSelect).click();
-    cy.findByTestId(this.eventListenersSaveBtn).click();
+    cy.findByTestId(this.eventListenersSaveBtn).click({ force: true });
     cy.get(this.alertMessage).should(
       "be.visible",
       "Event listener has been updated."

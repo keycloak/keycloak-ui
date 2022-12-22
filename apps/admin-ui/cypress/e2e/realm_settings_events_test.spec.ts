@@ -288,7 +288,7 @@ describe("Realm settings events tab tests", () => {
   it("Brute force detection", () => {
     sidebarPage.goToRealmSettings();
     cy.findAllByTestId("rs-security-defenses-tab").click();
-    cy.get("#pf-tab-20-bruteForce").click();
+    cy.get("#bruteForce").click();
 
     cy.findByTestId("brute-force-tab-save").should("be.disabled");
 
