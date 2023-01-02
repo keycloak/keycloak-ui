@@ -299,6 +299,20 @@ export default function DetailSettings() {
     return components;
   };
 
+  const toTab = (tab: IdentityProviderTab) =>
+    toIdentityProvider({
+      realm,
+      alias,
+      providerId,
+      tab,
+    });
+
+  const useTab = (tab: IdentityProviderTab) => useRoutableTab(toTab(tab));
+
+  const settingsTab = useTab("settings");
+  const mappersTab = useTab("mappers");
+  const permissionsTab = useTab("permissions");
+
   const sections = [
     {
       title: t("generalSettings"),
