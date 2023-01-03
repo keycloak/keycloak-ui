@@ -33,6 +33,7 @@ export interface TokenResponseRaw {
   not_before_policy: number;
   session_state: string;
   scope: string;
+  id_token?: string;
 }
 
 export interface TokenResponse {
@@ -44,6 +45,7 @@ export interface TokenResponse {
   notBeforePolicy: number;
   sessionState: string;
   scope: string;
+  idToken?: string;
 }
 
 export const getToken = async (settings: Settings): Promise<TokenResponse> => {
