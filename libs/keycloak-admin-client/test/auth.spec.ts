@@ -20,7 +20,6 @@ describe("Authorization", () => {
       "sessionState",
       "scope"
     );
-    expect(data.scope).to.equal("openid");
   });
 
   it("should get token from local keycloak with custom scope", async () => {
@@ -39,8 +38,10 @@ describe("Authorization", () => {
       "tokenType",
       "notBeforePolicy",
       "sessionState",
-      "scope"
+      "scope",
+      "idToken"
     );
-    expect(data.scope).to.equal("openid profile");
+
+    expect(data.scope).to.equal("openid profile email");
   });
 });
