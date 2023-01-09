@@ -115,7 +115,7 @@ export const ShareTheResource = ({
 
   return (
     <Modal
-      title={t("shareTheResourceTitle", [resource.name])}
+      title={t("shareTheResource", [resource.name])}
       variant="medium"
       isOpen={open}
       onClose={onClose}
@@ -137,7 +137,7 @@ export const ShareTheResource = ({
     >
       <Form id="share-form" onSubmit={handleSubmit(addShare)}>
         <FormGroup
-          label={t("shareUserLabel")}
+          label={t("shareUser")}
           type="string"
           helperTextInvalid={errors.usernames?.message}
           fieldId="users"

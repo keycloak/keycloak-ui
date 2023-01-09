@@ -54,7 +54,7 @@ export const EditTheResource = ({
 
   return (
     <Modal
-      title={t("editTheResourceTitle", [resource.name])}
+      title={t("editTheResource", [resource.name])}
       variant="medium"
       isOpen
       onClose={onClose}
