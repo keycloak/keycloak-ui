@@ -75,7 +75,7 @@
     "react-flow-renderer": "^9.7.4",
     "react-hook-form": "^6.15.8",
     "react-hook-form-v7": "npm:react-hook-form@^7.35.1",
-    "react-i18next": "^12.0.0",
+    "react-i18next": "^12.1.4",
     "react-router": "^5.3.4",
     "react-router-dom": "^5.3.4",
     "react-router-dom-v5-compat": "^6.6.1",
