@@ -1,63 +1,8 @@
+import { Links, parseLinks } from "./api/parse-links";
+import { Permission, Resource, Scope } from "./api/representations";
 import { environment } from "./environment";
 import { keycloak } from "./keycloak";
-import {
-  ClientRepresentation,
-  CredentialContainer,
-  CredentialRepresentation,
-  DeviceRepresentation,
-  Permission,
-  Resource,
-  Scope,
-  UserRepresentation,
-} from "./api/representations";
 import { joinPath } from "./utils/joinPath";
-import { parseLinks, Links } from "./api/parse-links";
-
-export const fetchPersonalInfo = (params: RequestInit) =>
-  request<UserRepresentation>("/", params);
-
-export const savePersonalInfo = (info: UserRepresentation) =>
-  request("/", { body: JSON.stringify(info), method: "post" });
-
-export const fetchCredentials = async (
-  params: RequestInit
-): Promise<CredentialContainer[]> => {
-  const response = await request<CredentialContainer[]>("/credentials", params);
-  return checkResponse(response);
-};
-
-export const deleteCredentials = (credential: CredentialRepresentation) =>
-  request("/credentials/" + credential.id, {
-    method: "delete",
-  });
-
-export const fetchDevices = async (
-  params: RequestInit
-): Promise<DeviceRepresentation[]> => {
-  const response = await request<DeviceRepresentation[]>(
-    "/sessions/devices",
-    params
-  );
-  return checkResponse(response);
-};
-
-export const deleteSession = (id?: string) =>
-  request(`"/sessions${id ? `/${id}` : ""}`, {
-    method: "delete",
-  });
-
-export const fetchApplications = async (
-  params: RequestInit
-): Promise<ClientRepresentation[]> => {
-  const response = await request<ClientRepresentation[]>(
-    "/applications",
-    params
-  );
-  return checkResponse(response);
-};
-
-export const deleteConcent = (id: string) =>
-  request(`/applications/${id}/consent`, { method: "delete" });
 
 export const fetchResources = async (
   params: RequestInit,
@@ -126,11 +71,6 @@ export const updatePermissions = (
   request(`/resources/${resourceId}/permissions`, {
     method: "put",
     body: JSON.stringify(permissions),
-  });
-
-export const findUser = (resourceId: string, username: string) =>
-  request<string>(`/resources/${resourceId}/user?value=${username}`, {
-    method: "get",
   });
 
 function checkResponse<T>(response: T) {
