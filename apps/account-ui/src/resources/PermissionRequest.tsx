@@ -1,5 +1,3 @@
-import { useState } from "react";
-import { useTranslation } from "react-i18next";
 import {
   Badge,
   Button,
@@ -8,6 +6,8 @@ import {
   ModalVariant,
   Text,
 } from "@patternfly/react-core";
+import { UserCheckIcon } from "@patternfly/react-icons";
+
 import {
   TableComposable,
   Tbody,
@@ -16,11 +16,11 @@ import {
   Thead,
   Tr,
 } from "@patternfly/react-table";
-import { UserCheckIcon } from "@patternfly/react-icons";
-
-import { Permission, Resource } from "../representations";
-import { useAlerts } from "../components/alerts/Alerts";
+import { useState } from "react";
+import { useTranslation } from "react-i18next";
 import { fetchPermission, updateRequest } from "../api";
+import { Permission, Resource } from "../api/representations";
+import { useAlerts } from "../components/alerts/Alerts";
 
 type PermissionRequestProps = {
   resource: Resource;

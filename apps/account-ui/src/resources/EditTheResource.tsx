@@ -1,14 +1,13 @@
-import { Fragment, useEffect } from "react";
-import { useTranslation } from "react-i18next";
 import { Button, Form, FormGroup, Modal } from "@patternfly/react-core";
-
+import { Fragment, useEffect } from "react";
 import { FormProvider, useFieldArray, useForm } from "react-hook-form";
+import { useTranslation } from "react-i18next";
 
-import type { Permission, Resource } from "../representations";
+import { updatePermissions } from "../api";
+import type { Permission, Resource } from "../api/representations";
 import { useAlerts } from "../components/alerts/Alerts";
 import { SelectControl } from "../components/controls/SelectControl";
 import { KeycloakTextInput } from "../components/keycloak-text-input/KeycloakTextInput";
-import { updatePermissions } from "../api";
 
 type EditTheResourceProps = {
   resource: Resource;

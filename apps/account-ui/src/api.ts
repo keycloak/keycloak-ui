@@ -9,9 +9,9 @@ import {
   Resource,
   Scope,
   UserRepresentation,
-} from "./representations";
+} from "./api/representations";
 import { joinPath } from "./utils/joinPath";
-import parse, { Links } from "./utils/parse-links";
+import { parseLinks, Links } from "./api/parse-links";
 
 export const fetchPersonalInfo = (params: RequestInit) =>
   request<UserRepresentation>("/", params);
@@ -71,9 +71,17 @@ export const fetchResources = async (
     params
   );
 
+  let links: Links;
+
+  try {
+    links = parseLinks(response);
+  } catch (error) {
+    links = {};
+  }
+
   return {
     data: checkResponse(await response.json()),
-    links: parse(response.headers.get("link")),
+    links,
   };
 };
 

@@ -3,8 +3,12 @@ export type Links = {
   next?: Record<string, string>;
 };
 
-export default function parse(linkHeader: string | null): Links {
-  if (!linkHeader) return {};
+export function parseLinks(response: Response): Links {
+  const linkHeader = response.headers.get("link");
+
+  if (!linkHeader) {
+    throw new Error("Attempted to parse links, but no header was found.");
+  }
 
   const links = linkHeader.split(/,\s*</);
   return links.reduce<Links>((acc: Links, link: string) => {

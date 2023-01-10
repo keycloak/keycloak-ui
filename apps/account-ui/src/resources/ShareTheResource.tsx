@@ -1,28 +1,28 @@
+import {
+  Button,
+  Chip,
+  ChipGroup,
+  Form,
+  FormGroup,
+  InputGroup,
+  Modal,
+  ValidatedOptions,
+} from "@patternfly/react-core";
 import { useEffect } from "react";
-import { useTranslation } from "react-i18next";
 import {
   FormProvider,
   useFieldArray,
   useForm,
   useWatch,
 } from "react-hook-form";
-import {
-  Modal,
-  Button,
-  Form,
-  FormGroup,
-  ChipGroup,
-  Chip,
-  InputGroup,
-  ValidatedOptions,
-} from "@patternfly/react-core";
+import { useTranslation } from "react-i18next";
 
-import { Permission, Resource } from "../representations";
-import { KeycloakTextInput } from "../components/keycloak-text-input/KeycloakTextInput";
-import { SelectControl } from "../components/controls/SelectControl";
-import { SharedWith } from "./SharedWith";
-import { useAlerts } from "../components/alerts/Alerts";
 import { updateRequest } from "../api";
+import { Permission, Resource } from "../api/representations";
+import { useAlerts } from "../components/alerts/Alerts";
+import { SelectControl } from "../components/controls/SelectControl";
+import { KeycloakTextInput } from "../components/keycloak-text-input/KeycloakTextInput";
+import { SharedWith } from "./SharedWith";
 
 type ShareTheResourceProps = {
   resource: Resource;

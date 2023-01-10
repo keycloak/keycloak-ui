@@ -1,5 +1,3 @@
-import { useState } from "react";
-import { useTranslation } from "react-i18next";
 import {
   Button,
   Dropdown,
@@ -20,31 +18,33 @@ import {
   ShareAltIcon,
 } from "@patternfly/react-icons";
 import {
+  ExpandableRowContent,
   TableComposable,
-  Thead,
-  Tr,
-  Th,
   Tbody,
   Td,
-  ExpandableRowContent,
+  Th,
+  Thead,
+  Tr,
 } from "@patternfly/react-table";
+import { useState } from "react";
+import { useTranslation } from "react-i18next";
 
-import { ContinueCancelModal } from "../components/continue-cancel/ContinueCancelModel";
-import { Permission, Resource } from "../representations";
-import { Links } from "../utils/parse-links";
-import { ResourceToolbar } from "./ResourceToolbar";
-import { PermissionRequest } from "./PermissionRequest";
-import { ShareTheResource } from "./ShareTheResource";
-import { SharedWith } from "./SharedWith";
-import { EditTheResource } from "./EditTheResource";
-import { useAlerts } from "../components/alerts/Alerts";
-import { usePromise } from "../utils/usePromise";
 import {
   fetchPermission,
   fetchRequest,
   fetchResources,
   updatePermissions,
 } from "../api";
+import { Links } from "../api/parse-links";
+import { Permission, Resource } from "../api/representations";
+import { useAlerts } from "../components/alerts/Alerts";
+import { ContinueCancelModal } from "../components/continue-cancel/ContinueCancelModel";
+import { usePromise } from "../utils/usePromise";
+import { EditTheResource } from "./EditTheResource";
+import { PermissionRequest } from "./PermissionRequest";
+import { ResourceToolbar } from "./ResourceToolbar";
+import { SharedWith } from "./SharedWith";
+import { ShareTheResource } from "./ShareTheResource";
 
 type PermissionDetail = {
   contextOpen?: boolean;
