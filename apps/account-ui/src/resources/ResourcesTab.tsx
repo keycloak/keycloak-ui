@@ -29,12 +29,8 @@ import {
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
 
-import {
-  fetchPermission,
-  fetchRequest,
-  fetchResources,
-  updatePermissions,
-} from "../api";
+import { fetchPermission, fetchResources, updatePermissions } from "../api";
+import { getPermissionRequests } from "../api/methods";
 import { Links } from "../api/parse-links";
 import { Permission, Resource } from "../api/representations";
 import { useAlerts } from "../components/alerts/Alerts";
@@ -75,7 +71,8 @@ export const ResourcesTab = () => {
       const result = await fetchResources({ signal }, params);
       await Promise.all(
         result.data.map(
-          async (r) => (r.shareRequests = await fetchRequest({ signal }, r._id))
+          async (r) =>
+            (r.shareRequests = await getPermissionRequests(r._id, { signal }))
         )
       );
       return result;

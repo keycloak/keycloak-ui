@@ -30,19 +30,6 @@ export const fetchResources = async (
   };
 };
 
-export const fetchRequest = async (
-  params: RequestInit,
-  resourceId: string,
-  pending: boolean | undefined = false
-): Promise<Permission[]> => {
-  const response = await request<Permission[]>(
-    `/resources/${resourceId}/permissions/${pending ? "pending-" : ""}requests`,
-    params
-  );
-
-  return checkResponse(response);
-};
-
 export const fetchPermission = async (
   params: RequestInit,
   resourceId: string

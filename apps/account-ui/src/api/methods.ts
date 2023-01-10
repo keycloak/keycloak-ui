@@ -1,5 +1,5 @@
 import { parseResponse } from "./parse-response";
-import { UserRepresentation } from "./representations";
+import { Permission, UserRepresentation } from "./representations";
 import { request } from "./request";
 
 export type CallOptions = {
@@ -16,4 +16,16 @@ export async function getPersonalInfo({
 }: CallOptions = {}): Promise<UserRepresentation> {
   const response = await request("/", { signal });
   return parseResponse<UserRepresentation>(response);
+}
+
+export async function getPermissionRequests(
+  resourceId: string,
+  { signal }: CallOptions = {}
+): Promise<Permission[]> {
+  const response = await request(
+    `/resources/${resourceId}/permissions/requests`,
+    { signal }
+  );
+
+  return parseResponse<Permission[]>(response);
 }
