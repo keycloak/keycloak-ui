@@ -272,7 +272,9 @@ export const UserForm = ({
           <FederatedUserLink user={user} />
         </FormGroup>
       )}
-      {isFeatureEnabled(Feature.DeclarativeUserProfile) ? (
+      {isFeatureEnabled(Feature.DeclarativeUserProfile) &&
+      realm?.attributes?.userProfileEnabled !== undefined &&
+      realm.attributes.userProfileEnabled === "true" ? (
         <UserProfileFields />
       ) : (
         <>
