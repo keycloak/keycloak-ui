@@ -12,7 +12,7 @@ import { omit } from "lodash-es";
 import { useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
-import { useLocation, useMatch, useNavigate } from "react-router-dom-v5-compat";
+import { useLocation, useMatch, useNavigate } from "react-router-dom";
 
 import { toClient } from "../clients/routes/Client";
 import {
