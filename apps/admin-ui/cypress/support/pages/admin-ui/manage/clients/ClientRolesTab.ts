@@ -11,7 +11,7 @@ export default class ClientRolesTab extends CommonPage {
   private createRoleEmptyStateBtn = "no-roles-for-this-client-empty-action";
   private hideInheritedRolesChkBox = "#hideInheritedRoles";
   private rolesTab = "rolesTab";
-  private associatedRolesTab = ".kc-associated-roles-tab > button";
+  private associatedRolesTab = "associatedRolesTab";
 
   goToDetailsTab() {
     this.tabUtils().clickTab(ClientRolesTabItems.Details);
@@ -19,9 +19,7 @@ export default class ClientRolesTab extends CommonPage {
   }
 
   goToAttributesTab() {
-    cy.intercept("/admin/realms/master/roles-by-id/*").as("load");
     this.tabUtils().clickTab(ClientRolesTabItems.Attributes);
-    cy.wait("@load");
     return this;
   }
 
@@ -36,9 +34,7 @@ export default class ClientRolesTab extends CommonPage {
   }
 
   goToAssociatedRolesTab() {
-    cy.intercept("/admin/realms/master/roles-by-id/*").as("load");
-    cy.get(this.associatedRolesTab).click();
-    cy.wait("@load");
+    cy.findByTestId(this.associatedRolesTab).click();
     return this;
   }
 
