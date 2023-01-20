@@ -8,11 +8,8 @@ import {
   DrawerHead,
   DrawerPanelContent,
 } from "@patternfly/react-core";
-import { MouseEvent as ReactMouseEvent, useCallback, useState } from "react";
+import { MouseEvent as ReactMouseEvent, useMemo, useState } from "react";
 import ReactFlow, {
-  addEdge,
-  applyEdgeChanges,
-  applyNodeChanges,
   Background,
   Controls,
   Edge,
@@ -21,10 +18,12 @@ import ReactFlow, {
   Node,
   NodeMouseHandler,
   NodeTypes,
-  OnConnect,
   Position,
   ReactFlowInstance,
+  useEdgesState,
+  useNodesState,
 } from "react-flow-renderer";
+import { useUpdateEffect } from "../../utils/useUpdateEffect";
 
 import type { ExecutionList, ExpandableExecution } from "../execution-model";
 import { providerConditionFilter } from "../FlowDetails";
@@ -236,55 +235,49 @@ const edgeTypes: ButtonEdges = {
   buttonEdge: ButtonEdge,
 };
 
+function renderNodes(expandableList: ExpandableExecution[]) {
+  return getLayoutedNodes([
+    {
+      id: "start",
+      sourcePosition: Position.Right,
+      type: "input",
+      data: { label: "Start" },
+      position: { x: 0, y: 0 },
+      className: "keycloak__authentication__input_node",
+    },
+    {
+      id: "end",
+      targetPosition: Position.Left,
+      type: "output",
+      data: { label: "End" },
+      position: { x: 0, y: 0 },
+      className: "keycloak__authentication__output_node",
+    },
+    ...renderFlowNodes(expandableList),
+  ]);
+}
+
+function renderEdges(expandableList: ExpandableExecution[]): Edge[] {
+  return getLayoutedEdges(
+    renderFlowEdges({ id: "start" }, expandableList, {
+      id: "end",
+    })
+  );
+}
+
 export const FlowDiagram = ({
   executionList: { expandableList },
 }: FlowDiagramProps) => {
   const [expandDrawer, setExpandDrawer] = useState(false);
+  const initialNodes = useMemo(() => renderNodes(expandableList), []);
+  const initialEdges = useMemo(() => renderEdges(expandableList), []);
+  const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
+  const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
 
-  const [nodes, setNodes] = useState(() =>
-    getLayoutedNodes([
-      {
-        id: "start",
-        sourcePosition: Position.Right,
-        type: "input",
-        data: { label: "Start" },
-        position: { x: 0, y: 0 },
-        className: "keycloak__authentication__input_node",
-      },
-      {
-        id: "end",
-        targetPosition: Position.Left,
-        type: "output",
-        data: { label: "End" },
-        position: { x: 0, y: 0 },
-        className: "keycloak__authentication__output_node",
-      },
-      ...renderFlowNodes(expandableList),
-    ])
-  );
-
-  const [edges, setEdges] = useState(() =>
-    getLayoutedEdges(
-      renderFlowEdges({ id: "start" }, expandableList, {
-        id: "end",
-      })
-    )
-  );
-
-  const onNodesChange = useCallback(
-    (changes) => setNodes((ns) => applyNodeChanges(changes, ns)),
-    []
-  );
-
-  const onEdgesChange = useCallback(
-    (changes) => setEdges((es) => applyEdgeChanges(changes, es)),
-    []
-  );
-
-  const onConnect = useCallback<OnConnect>(
-    (connection) => setEdges((eds) => addEdge(connection, eds)),
-    []
-  );
+  useUpdateEffect(() => {
+    setNodes(renderNodes(expandableList));
+    setEdges(renderEdges(expandableList));
+  }, [expandableList]);
 
   const onInit = (reactFlowInstance: ReactFlowInstance) =>
     reactFlowInstance.fitView();
@@ -313,7 +306,6 @@ export const FlowDiagram = ({
             edges={edges}
             onNodesChange={onNodesChange}
             onEdgesChange={onEdgesChange}
-            onConnect={onConnect}
             onInit={onInit}
             nodeTypes={nodeTypes}
             edgeTypes={edgeTypes as EdgeTypes}
