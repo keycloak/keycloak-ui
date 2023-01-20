@@ -392,7 +392,7 @@ const Fields = ({ readOnly }: DescriptorSettingsProps) => {
               control={control}
               render={({ field }) => (
                 <Select
-                  toggleId={"kc-encryptionAlgorithm"}
+                  toggleId="kc-encryptionAlgorithm"
                   onToggle={(isExpanded) =>
                     setEncryptionAlgorithmDropdownOpen(isExpanded)
                   }
