@@ -1,0 +1,219 @@
+import type RealmRepresentation from "@keycloak/keycloak-admin-client/lib/defs/realmRepresentation";
+import {
+  ActionGroup,
+  AlertVariant,
+  Button,
+  ButtonVariant,
+  FormGroup,
+  PageSection,
+  Select,
+  SelectOption,
+  SelectVariant,
+} from "@patternfly/react-core";
+import { useEffect, useState } from "react";
+import { Controller, useForm } from "react-hook-form";
+import { useTranslation } from "react-i18next";
+
+import { useAlerts } from "../../components/alert/Alerts";
+import { FormAccess } from "../../components/form-access/FormAccess";
+import { HelpItem } from "../../components/help-enabler/HelpItem";
+import { KeycloakTextInput } from "../../components/keycloak-text-input/KeycloakTextInput";
+import { useAdminClient } from "../../context/auth/AdminClient";
+import { useRealm } from "../../context/realm-context/RealmContext";
+import { convertFormValuesToObject, convertToFormValues } from "../../util";
+
+const CIBA_BACKHANNEL_TOKEN_DELIVERY_MODES = ["poll", "ping"] as const;
+const CIBA_EXPIRES_IN_MIN = 10;
+const CIBA_EXPIRES_IN_MAX = 600;
+const CIBA_INTERVAL_MIN = 0;
+const CIBA_INTERVAL_MAX = 600;
+
+type CibaPolicyProps = {
+  realm: RealmRepresentation;
+  realmUpdated: (realm: RealmRepresentation) => void;
+};
+
+type FormFields = Omit<
+  RealmRepresentation,
+  "clients" | "components" | "groups"
+>;
+
+export const CibaPolicy = ({ realm, realmUpdated }: CibaPolicyProps) => {
+  const { t } = useTranslation("authentication");
+  const {
+    control,
+    register,
+    handleSubmit,
+    setValue,
+    formState: { errors, isValid, isDirty },
+  } = useForm<FormFields>({ mode: "onChange" });
+  const { adminClient } = useAdminClient();
+  const { realm: realmName } = useRealm();
+  const { addAlert, addError } = useAlerts();
+  const [isSelectOpen, setIsSelectOpen] = useState(false);
+
+  const setupForm = (realm: RealmRepresentation) =>
+    convertToFormValues(realm, setValue);
+
+  useEffect(() => setupForm(realm), []);
+
+  const onSubmit = async (formValues: FormFields) => {
+    try {
+      await adminClient.realms.update(
+        { realm: realmName },
+        convertFormValuesToObject(formValues)
+      );
+
+      const updatedRealm = await adminClient.realms.findOne({
+        realm: realmName,
+      });
+
+      realmUpdated(updatedRealm!);
+      setupForm(updatedRealm!);
+      addAlert(t("updateCibaSuccess"), AlertVariant.success);
+    } catch (error) {
+      addError("authentication:updateCibaError", error);
+    }
+  };
+
+  return (
+    <PageSection variant="light">
+      <FormAccess
+        role="manage-realm"
+        isHorizontal
+        onSubmit={handleSubmit(onSubmit)}
+      >
+        <FormGroup
+          fieldId="cibaBackchannelTokenDeliveryMode"
+          label={t("cibaBackchannelTokenDeliveryMode")}
+          labelIcon={
+            <HelpItem
+              helpText="authentication-help:cibaBackchannelTokenDeliveryMode"
+              fieldLabelId="authentication:cibaBackchannelTokenDeliveryMode"
+            />
+          }
+        >
+          <Controller
+            name="attributes.cibaBackchannelTokenDeliveryMode"
+            defaultValue={CIBA_BACKHANNEL_TOKEN_DELIVERY_MODES[0]}
+            control={control}
+            render={({ field }) => (
+              <Select
+                toggleId="cibaBackchannelTokenDeliveryMode"
+                onSelect={(_, value) => {
+                  setIsSelectOpen(false);
+                  field.onChange(value.toString());
+                }}
+                selections={field.value}
+                variant={SelectVariant.single}
+                isOpen={isSelectOpen}
+                onToggle={(isExpanded) => setIsSelectOpen(isExpanded)}
+              >
+                {CIBA_BACKHANNEL_TOKEN_DELIVERY_MODES.map((value) => (
+                  <SelectOption
+                    key={value}
+                    value={value}
+                    selected={value === field.value}
+                  >
+                    {t(`cibaBackhannelTokenDeliveryModes.${value}`)}
+                  </SelectOption>
+                ))}
+              </Select>
+            )}
+          />
+        </FormGroup>
+        <FormGroup
+          fieldId="cibaExpiresIn"
+          label={t("cibaExpiresIn")}
+          labelIcon={
+            <HelpItem
+              helpText="authentication-help:cibaExpiresIn"
+              fieldLabelId="authentication:cibaExpiresIn"
+            />
+          }
+          validated={errors.attributes?.cibaExpiresIn ? "error" : "default"}
+          helperTextInvalid={errors.attributes?.cibaExpiresIn?.message}
+          isRequired
+        >
+          <KeycloakTextInput
+            id="cibaExpiresIn"
+            type="number"
+            min={CIBA_EXPIRES_IN_MIN}
+            max={CIBA_EXPIRES_IN_MAX}
+            {...register("attributes.cibaExpiresIn", {
+              min: {
+                value: CIBA_EXPIRES_IN_MIN,
+                message: t("common:greaterThan", {
+                  value: CIBA_EXPIRES_IN_MIN,
+                }),
+              },
+              max: {
+                value: CIBA_EXPIRES_IN_MAX,
+                message: t("common:lessThan", { value: CIBA_EXPIRES_IN_MAX }),
+              },
+              required: {
+                value: true,
+                message: t("common:required"),
+              },
+            })}
+            validated={errors.attributes?.cibaExpiresIn ? "error" : "default"}
+          />
+        </FormGroup>
+        <FormGroup
+          fieldId="cibaInterval"
+          label={t("cibaInterval")}
+          labelIcon={
+            <HelpItem
+              helpText="authentication-help:cibaInterval"
+              fieldLabelId="authentication:cibaInterval"
+            />
+          }
+          validated={errors.attributes?.cibaInterval ? "error" : "default"}
+          helperTextInvalid={errors.attributes?.cibaInterval?.message}
+          isRequired
+        >
+          <KeycloakTextInput
+            id="cibaInterval"
+            type="number"
+            min={CIBA_INTERVAL_MIN}
+            max={CIBA_INTERVAL_MAX}
+            {...register("attributes.cibaInterval", {
+              min: {
+                value: CIBA_INTERVAL_MIN,
+                message: t("common:greaterThan", {
+                  value: CIBA_INTERVAL_MIN,
+                }),
+              },
+              max: {
+                value: CIBA_INTERVAL_MAX,
+                message: t("common:lessThan", { value: CIBA_INTERVAL_MAX }),
+              },
+              required: {
+                value: true,
+                message: t("common:required"),
+              },
+            })}
+            validated={errors.attributes?.cibaInterval ? "error" : "default"}
+          />
+        </FormGroup>
+        <ActionGroup>
+          <Button
+            data-testid="save"
+            variant="primary"
+            type="submit"
+            isDisabled={!isValid || !isDirty}
+          >
+            {t("common:save")}
+          </Button>
+          <Button
+            data-testid="reload"
+            variant={ButtonVariant.link}
+            onClick={() => setupForm({ ...realm })}
+          >
+            {t("common:reload")}
+          </Button>
+        </ActionGroup>
+      </FormAccess>
+    </PageSection>
+  );
+};
