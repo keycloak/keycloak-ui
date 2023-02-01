@@ -5,6 +5,8 @@ import {
   Button,
   ButtonVariant,
   FormGroup,
+  InputGroup,
+  InputGroupText,
   PageSection,
   Select,
   SelectOption,
@@ -135,29 +137,34 @@ export const CibaPolicy = ({ realm, realmUpdated }: CibaPolicyProps) => {
           helperTextInvalid={errors.attributes?.cibaExpiresIn?.message}
           isRequired
         >
-          <KeycloakTextInput
-            id="cibaExpiresIn"
-            type="number"
-            min={CIBA_EXPIRES_IN_MIN}
-            max={CIBA_EXPIRES_IN_MAX}
-            {...register("attributes.cibaExpiresIn", {
-              min: {
-                value: CIBA_EXPIRES_IN_MIN,
-                message: t("common:greaterThan", {
+          <InputGroup>
+            <KeycloakTextInput
+              id="cibaExpiresIn"
+              type="number"
+              min={CIBA_EXPIRES_IN_MIN}
+              max={CIBA_EXPIRES_IN_MAX}
+              {...register("attributes.cibaExpiresIn", {
+                min: {
                   value: CIBA_EXPIRES_IN_MIN,
-                }),
-              },
-              max: {
-                value: CIBA_EXPIRES_IN_MAX,
-                message: t("common:lessThan", { value: CIBA_EXPIRES_IN_MAX }),
-              },
-              required: {
-                value: true,
-                message: t("common:required"),
-              },
-            })}
-            validated={errors.attributes?.cibaExpiresIn ? "error" : "default"}
-          />
+                  message: t("common:greaterThan", {
+                    value: CIBA_EXPIRES_IN_MIN,
+                  }),
+                },
+                max: {
+                  value: CIBA_EXPIRES_IN_MAX,
+                  message: t("common:lessThan", { value: CIBA_EXPIRES_IN_MAX }),
+                },
+                required: {
+                  value: true,
+                  message: t("common:required"),
+                },
+              })}
+              validated={errors.attributes?.cibaExpiresIn ? "error" : "default"}
+            />
+            <InputGroupText variant="plain">
+              {t("common:times:seconds")}
+            </InputGroupText>
+          </InputGroup>
         </FormGroup>
         <FormGroup
           fieldId="cibaInterval"
@@ -172,29 +179,34 @@ export const CibaPolicy = ({ realm, realmUpdated }: CibaPolicyProps) => {
           helperTextInvalid={errors.attributes?.cibaInterval?.message}
           isRequired
         >
-          <KeycloakTextInput
-            id="cibaInterval"
-            type="number"
-            min={CIBA_INTERVAL_MIN}
-            max={CIBA_INTERVAL_MAX}
-            {...register("attributes.cibaInterval", {
-              min: {
-                value: CIBA_INTERVAL_MIN,
-                message: t("common:greaterThan", {
+          <InputGroup>
+            <KeycloakTextInput
+              id="cibaInterval"
+              type="number"
+              min={CIBA_INTERVAL_MIN}
+              max={CIBA_INTERVAL_MAX}
+              {...register("attributes.cibaInterval", {
+                min: {
                   value: CIBA_INTERVAL_MIN,
-                }),
-              },
-              max: {
-                value: CIBA_INTERVAL_MAX,
-                message: t("common:lessThan", { value: CIBA_INTERVAL_MAX }),
-              },
-              required: {
-                value: true,
-                message: t("common:required"),
-              },
-            })}
-            validated={errors.attributes?.cibaInterval ? "error" : "default"}
-          />
+                  message: t("common:greaterThan", {
+                    value: CIBA_INTERVAL_MIN,
+                  }),
+                },
+                max: {
+                  value: CIBA_INTERVAL_MAX,
+                  message: t("common:lessThan", { value: CIBA_INTERVAL_MAX }),
+                },
+                required: {
+                  value: true,
+                  message: t("common:required"),
+                },
+              })}
+              validated={errors.attributes?.cibaInterval ? "error" : "default"}
+            />
+            <InputGroupText variant="plain">
+              {t("common:times:seconds")}
+            </InputGroupText>
+          </InputGroup>
         </FormGroup>
         <ActionGroup>
           <Button
