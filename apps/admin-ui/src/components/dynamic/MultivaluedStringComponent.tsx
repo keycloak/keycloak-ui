@@ -25,12 +25,14 @@ export const MultiValuedStringComponent = ({
       fieldId={name!}
     >
       <MultiLineInput
+        aria-label={t(label!)}
         name={fieldName}
         isDisabled={isDisabled}
         defaultValue={[defaultValue]}
         addButtonLabel={t("addMultivaluedLabel", {
           fieldLabel: t(label!).toLowerCase(),
         })}
+        stringify
       />
     </FormGroup>
   );
