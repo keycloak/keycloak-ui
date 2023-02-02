@@ -26,6 +26,7 @@ export const MultiValuedStringComponent = ({
     >
       <MultiLineInput
         name={fieldName}
+        aria-label={t(label!)}
         isDisabled={isDisabled}
         defaultValue={[defaultValue]}
         addButtonLabel={t("addMultivaluedLabel", {
