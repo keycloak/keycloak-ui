@@ -43,6 +43,7 @@
   },
   "cibaExpiresIn": "Expires In",
   "cibaInterval": "Interval",
+  "cibaAuthRequestedUserHint": "Authentication Requested User Hint",
   "updateCibaSuccess": "CIBA policy successfully updated",
   "updateCibaError": "Could not update CIBA policy: {{error}}",
   "webAuthnPolicySignatureAlgorithms": "Signature algorithms",

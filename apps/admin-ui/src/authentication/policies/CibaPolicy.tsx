@@ -52,7 +52,12 @@ export const CibaPolicy = ({ realm, realmUpdated }: CibaPolicyProps) => {
   const { adminClient } = useAdminClient();
   const { realm: realmName } = useRealm();
   const { addAlert, addError } = useAlerts();
-  const [isSelectOpen, setIsSelectOpen] = useState(false);
+  const [
+    backchannelTokenDeliveryModeOpen,
+    setBackchannelTokenDeliveryModeOpen,
+  ] = useState(false);
+  const [authRequestedUserHintOpen, setAuthRequestedUserHintOpen] =
+    useState(false);
 
   const setupForm = (realm: RealmRepresentation) =>
     convertToFormValues(realm, setValue);
@@ -103,13 +108,15 @@ export const CibaPolicy = ({ realm, realmUpdated }: CibaPolicyProps) => {
               <Select
                 toggleId="cibaBackchannelTokenDeliveryMode"
                 onSelect={(_, value) => {
-                  setIsSelectOpen(false);
+                  setBackchannelTokenDeliveryModeOpen(false);
                   field.onChange(value.toString());
                 }}
                 selections={field.value}
                 variant={SelectVariant.single}
-                isOpen={isSelectOpen}
-                onToggle={(isExpanded) => setIsSelectOpen(isExpanded)}
+                isOpen={backchannelTokenDeliveryModeOpen}
+                onToggle={(isExpanded) =>
+                  setBackchannelTokenDeliveryModeOpen(isExpanded)
+                }
               >
                 {CIBA_BACKHANNEL_TOKEN_DELIVERY_MODES.map((value) => (
                   <SelectOption
@@ -207,6 +214,30 @@ export const CibaPolicy = ({ realm, realmUpdated }: CibaPolicyProps) => {
               {t("common:times:seconds")}
             </InputGroupText>
           </InputGroup>
+        </FormGroup>
+        <FormGroup
+          fieldId="cibaAuthRequestedUserHint"
+          label={t("cibaAuthRequestedUserHint")}
+          labelIcon={
+            <HelpItem
+              helpText="authentication-help:cibaAuthRequestedUserHint"
+              fieldLabelId="authentication:cibaAuthRequestedUserHint"
+            />
+          }
+        >
+          <Select
+            toggleId="cibaAuthRequestedUserHint"
+            selections="login_hint"
+            isOpen={authRequestedUserHintOpen}
+            onToggle={(isExpanded) => setAuthRequestedUserHintOpen(isExpanded)}
+            isDisabled
+          >
+            <SelectOption value="login_hint">login_hint</SelectOption>
+            <SelectOption value="id_token_hint">id_token_hint</SelectOption>
+            <SelectOption value="login_hint_token">
+              login_hint_token
+            </SelectOption>
+          </Select>
         </FormGroup>
         <ActionGroup>
           <Button
