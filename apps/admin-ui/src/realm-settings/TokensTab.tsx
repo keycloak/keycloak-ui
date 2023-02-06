@@ -51,11 +51,18 @@ export const RealmSettingsTokensTab = ({
   const allComponentTypes =
     serverInfo.componentTypes?.["org.keycloak.keys.KeyProvider"] ?? [];
 
-  const esOptions = ["ES256", "ES384", "ES512"];
+  const esOptions = ["ES256", "ES384", "ES512", "Ed25519", "Ed448"];
 
-  const hmacAlgorithmOptions = allComponentTypes[2].properties[4].options;
+  // allComponentTypes[0] : GeneratedEcdsaKeyProviderFactory
+  // allComponentTypes[1] : GeneratedEddsaKeyProviderFactory
+  // allComponentTypes[2] : GeneratedAesKeyProviderFactory
+  // allComponentTypes[3] : GeneratedHmacKeyProviderFactory
+  //   5th property of ProviderConfigProperty (properties[4]) shows supported algorithms.
+  // allComponentTypes[4] : JavaKeyStoreKeyProviderFactory
+  //   4th property of ProviderConfigProperty (properties[3]) shows supported algorithms.
+  const hmacAlgorithmOptions = allComponentTypes[3].properties[4].options;
 
-  const javaKeystoreAlgOptions = allComponentTypes[3].properties[3].options;
+  const javaKeystoreAlgOptions = allComponentTypes[4].properties[3].options;
 
   const defaultSigAlgOptions = esOptions.concat(
     hmacAlgorithmOptions!,
