@@ -92,7 +92,34 @@ export const LdapSettingsAdvanced = ({
             )}
           ></Controller>
         </FormGroup>
-
+        <FormGroup
+          hasNoPaddingTop
+          label={t("enableAdUser")}
+          labelIcon={
+            <HelpItem
+              helpText="user-federation-help:enableAdUserHelp"
+              fieldLabelId="user-federation:enableAdUser"
+            />
+          }
+          fieldId="kc-enable-ad-user"
+        >
+          <Controller
+            name="config.enableAdUser"
+            defaultValue={["false"]}
+            control={form.control}
+            render={({ field }) => (
+              <Switch
+                id="kc-enable-ad-user"
+                data-testid="enable-ad-user"
+                label={t("common:on")}
+                labelOff={t("common:off")}
+                onChange={(value) => field.onChange([`${value}`])}
+                isChecked={field.value[0] === "true"}
+                aria-label={t("enableAdUser")}
+              />
+            )}
+          />
+        </FormGroup>
         <FormGroup
           label={t("validatePasswordPolicy")}
           labelIcon={
