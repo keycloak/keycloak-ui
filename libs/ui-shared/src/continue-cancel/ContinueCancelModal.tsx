@@ -1,7 +1,7 @@
 import { ReactNode, useState } from "react";
 import { Button, ButtonProps, Modal, ModalProps } from "@patternfly/react-core";
 
-export type ContinueCancelModalProps = Omit<ModalProps, "ref"> & {
+export type ContinueCancelModalProps = Omit<ModalProps, "ref" | "children"> & {
   modalTitle: string;
   modalMessage?: string;
   buttonTitle: string | ReactNode;
@@ -11,6 +11,7 @@ export type ContinueCancelModalProps = Omit<ModalProps, "ref"> & {
   continueLabel?: string;
   cancelLabel?: string;
   component?: React.ElementType<any> | React.ComponentType<any>;
+  children?: ReactNode;
 };
 
 export const ContinueCancelModal = ({
