@@ -5,6 +5,7 @@ import type ClientScopeRepresentation from "@keycloak/keycloak-admin-client/lib/
 import type RealmRepresentation from "@keycloak/keycloak-admin-client/lib/defs/realmRepresentation";
 import type UserProfileConfig from "@keycloak/keycloak-admin-client/lib/defs/userProfileConfig";
 import type RoleRepresentation from "@keycloak/keycloak-admin-client/lib/defs/roleRepresentation";
+import type { RoleMappingPayload } from "@keycloak/keycloak-admin-client/lib/defs/roleRepresentation";
 import { merge } from "lodash-es";
 
 class AdminClient {
@@ -34,6 +35,11 @@ class AdminClient {
   async createRealm(realm: string, payload?: RealmRepresentation) {
     await this.login();
     await this.client.realms.create({ realm, ...payload });
+  }
+
+  async getRealm(realm: string) {
+    await this.login();
+    return await this.client.realms.findOne({ realm });
   }
 
   async updateRealm(realm: string, payload: RealmRepresentation) {
@@ -112,6 +118,17 @@ class AdminClient {
   async addUserToGroup(userId: string, groupId: string) {
     await this.login();
     await this.client.users.addToGroup({ id: userId, groupId });
+  }
+
+  async addRealmRoleToUser(userId: string, roleName: string) {
+    await this.login();
+
+    const realmRole = await this.client.roles.findOneByName({ name: roleName });
+
+    await this.client.users.addRealmRoleMappings({
+      id: userId,
+      roles: [realmRole as RoleMappingPayload],
+    });
   }
 
   async createUserInGroup(username: string, groupId: string) {
@@ -216,6 +233,29 @@ class AdminClient {
     await this.client.identityProviders.del({
       alias: idpAlias,
     });
+  }
+
+  async addLocalizationText(locale: string, key: string, value: string) {
+    await this.login();
+    await this.client.realms.addLocalization(
+      { realm: this.client.realmName, selectedLocale: locale, key: key },
+      value
+    );
+  }
+
+  async removeAllLocalizationTexts() {
+    await this.login();
+    const localesWithTexts = await this.client.realms.getRealmSpecificLocales({
+      realm: this.client.realmName,
+    });
+    await Promise.all(
+      localesWithTexts.map((locale) =>
+        this.client.realms.deleteRealmLocalizationTexts({
+          realm: this.client.realmName,
+          selectedLocale: locale,
+        })
+      )
+    );
   }
 
   async unlinkAccountIdentityProvider(

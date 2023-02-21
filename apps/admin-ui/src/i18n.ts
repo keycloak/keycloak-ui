@@ -1,4 +1,4 @@
-import { init, use, InitOptions, TOptions } from "i18next";
+import i18n, { init, use, InitOptions, ResourceStore } from "i18next";
 import HttpBackend, { LoadPathOption } from "i18next-http-backend";
 import { initReactI18next } from "react-i18next";
 import type KeycloakAdminClient from "@keycloak/keycloak-admin-client";
@@ -8,10 +8,73 @@ import { getAuthorizationHeaders } from "./utils/getAuthorizationHeaders";
 import { addTrailingSlash } from "./util";
 
 export const DEFAULT_LOCALE = "en";
+const OVERRIDES_NS = "overrides";
+
+/**
+ * Helper type to define internal operations of ResourceStore, which we have to access.
+ */
+interface ResourceStoreInternal extends ResourceStore {
+  getResource(
+    lng: string,
+    ns: string,
+    key?: any,
+    originalOptions?: Pick<InitOptions, "keySeparator" | "ignoreJSONStructure">
+  ): any;
+}
 
 export async function initI18n(adminClient: KeycloakAdminClient) {
   const options = await initOptions(adminClient);
   await init(options);
+
+  addInterceptorForGetResource();
+}
+
+/**
+ * Intercept the "getResource" function of the resource store, in order to apply the "overrides" from realm localization.
+ *
+ * An alternative would be to use a postProcessor, but to make that work, almost all the default processing logic
+ * would need to be re-implemented here.
+ * Several functionality cannot be easily supported with a postProcessor:
+ * <ul>
+ *     <li>The key might or might not contain the namespace, thus key parsing would need to be re-implemented.</li>
+ *     <li>In case of plurals, the key will not contain the "_one" or "_other" suffix - would need to be re-implemented</li>
+ *     <li>For the "overrides", interpolation (replacing placeholders) would need to be applied.</li>
+ *     <li>Probably more ...</li>
+ * </ul>
+ */
+function addInterceptorForGetResource() {
+  const functionNameGetResource = "getResource";
+  const i18nStore = i18n.store as ResourceStoreInternal;
+  const originalGetResource = i18nStore[functionNameGetResource];
+  const interceptGetResource: any = (
+    lng: string,
+    ns: string,
+    key?: any,
+    originalOptions?: Pick<InitOptions, "keySeparator" | "ignoreJSONStructure">
+  ) => {
+    // key undefined means this is just a check whether a resource bundle exists
+    if (key === undefined) {
+      return originalGetResource.apply(i18nStore, [lng, ns]);
+    }
+
+    const options = originalOptions !== undefined ? originalOptions : {};
+
+    const realmLocalizationKey = ns + ":" + key;
+    const override = originalGetResource.apply(i18nStore, [
+      lng,
+      OVERRIDES_NS,
+      realmLocalizationKey,
+      options,
+    ]);
+    if (ns === OVERRIDES_NS) {
+      return override;
+    }
+
+    return (
+      override || originalGetResource.apply(i18nStore, [lng, ns, key, options])
+    );
+  };
+  i18nStore[functionNameGetResource] = interceptGetResource;
 }
 
 const initOptions = async (
@@ -21,7 +84,7 @@ const initOptions = async (
     if (namespaces[0] === "overrides") {
       return `${addTrailingSlash(adminClient.baseUrl)}admin/realms/${
         adminClient.realmName
-      }/localization/{{lng}}?useRealmDefaultLocaleFallback=true`;
+      }/localization/{{lng}}`;
     } else {
       return `${environment.resourceUrl}/resources/{{lng}}/{{ns}}.json`;
     }
@@ -56,12 +119,11 @@ const initOptions = async (
       "identity-providers",
       "identity-providers-help",
       "dynamic",
-      "overrides",
+      OVERRIDES_NS,
     ],
     interpolation: {
       escapeValue: false,
     },
-    postProcess: ["overrideProcessor"],
     backend: {
       loadPath: constructLoadPath,
       customHeaders: getAuthorizationHeaders(
@@ -71,16 +133,6 @@ const initOptions = async (
   };
 };
 
-const configuredI18n = use({
-  type: "postProcessor",
-  name: "overrideProcessor",
-  process: function (value: string, key: string, _: TOptions, translator: any) {
-    const override: string =
-      translator.resourceStore.data[translator.language].overrides?.[key];
-    return override || value;
-  },
-})
-  .use(initReactI18next)
-  .use(HttpBackend);
+const configuredI18n = use(initReactI18next).use(HttpBackend);
 
 export default configuredI18n;
