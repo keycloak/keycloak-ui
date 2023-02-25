@@ -9,6 +9,7 @@ import { keycloakBefore } from "../support/util/keycloak_hooks";
 import adminClient from "../support/util/AdminClient";
 import ClientRolesTab from "../support/pages/admin-ui/manage/clients/ClientRolesTab";
 import KeyValueInput from "../support/pages/admin-ui/manage/KeyValueInput";
+import { v4 as uuidv4 } from "uuid";
 
 let itemId = "realm_role_crud";
 const loginPage = new LoginPage();
@@ -46,7 +47,7 @@ describe("Realm roles test", () => {
   });
 
   it("Realm role CRUD test", () => {
-    itemId += "_" + crypto.randomUUID();
+    itemId += "_" + uuidv4();
 
     // Create
     listingPage.itemExist(itemId, false).goToCreateItem();
@@ -69,7 +70,7 @@ describe("Realm roles test", () => {
   });
 
   it("should delete role from details action", () => {
-    itemId += "_" + crypto.randomUUID();
+    itemId += "_" + uuidv4();
     listingPage.goToCreateItem();
     createRealmRolePage.fillRealmRoleData(itemId).save();
     masthead.checkNotificationMessage("Role created", true);
@@ -89,7 +90,7 @@ describe("Realm roles test", () => {
   });
 
   it("Add associated roles test", () => {
-    itemId += "_" + crypto.randomUUID();
+    itemId += "_" + uuidv4();
 
     // Create
     listingPage.itemExist(itemId, false).goToCreateItem();
@@ -183,7 +184,7 @@ describe("Realm roles test", () => {
 
   it("Should delete associated roles from list test", () => {
     itemId = "realm_role_crud";
-    itemId += "_" + crypto.randomUUID();
+    itemId += "_" + uuidv4();
 
     // Create
     listingPage.itemExist(itemId, false).goToCreateItem();

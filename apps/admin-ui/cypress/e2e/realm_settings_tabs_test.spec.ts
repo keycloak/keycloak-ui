@@ -4,6 +4,7 @@ import RealmSettingsPage from "../support/pages/admin-ui/manage/realm_settings/R
 import Masthead from "../support/pages/admin-ui/Masthead";
 import { keycloakBefore } from "../support/util/keycloak_hooks";
 import adminClient from "../support/util/AdminClient";
+import { v4 as uuidv4 } from "uuid";
 
 const loginPage = new LoginPage();
 const sidebarPage = new SidebarPage();
@@ -11,7 +12,7 @@ const masthead = new Masthead();
 const realmSettingsPage = new RealmSettingsPage();
 
 describe("Realm settings tabs tests", () => {
-  const realmName = "Realm_" + crypto.randomUUID();
+  const realmName = "Realm_" + uuidv4();
 
   beforeEach(() => {
     loginPage.logIn();

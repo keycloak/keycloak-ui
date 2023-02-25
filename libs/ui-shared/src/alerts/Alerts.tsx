@@ -6,6 +6,7 @@ import {
 } from "@patternfly/react-core";
 import { createContext, PropsWithChildren, useContext, useState } from "react";
 import { useTranslation } from "react-i18next";
+import { v4 as uuidv4 } from "uuid";
 
 export type AddAlertFunction = (
   message: string,
@@ -46,7 +47,7 @@ export const AlertProvider = ({ children }: PropsWithChildren) => {
   ) => {
     setAlerts([
       {
-        id: crypto.randomUUID(),
+        id: uuidv4(),
         //@ts-ignore
         message: t(message),
         variant,

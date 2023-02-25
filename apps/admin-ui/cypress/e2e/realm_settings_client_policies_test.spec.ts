@@ -5,6 +5,7 @@ import { keycloakBefore } from "../support/util/keycloak_hooks";
 import adminClient from "../support/util/AdminClient";
 import ModalUtils from "../support/util/ModalUtils";
 import Masthead from "../support/pages/admin-ui/Masthead";
+import { v4 as uuidv4 } from "uuid";
 
 const loginPage = new LoginPage();
 const sidebarPage = new SidebarPage();
@@ -12,7 +13,7 @@ const modalUtils = new ModalUtils();
 const masthead = new Masthead();
 
 describe("Realm settings client policies tab tests", () => {
-  const realmName = "Realm_" + crypto.randomUUID();
+  const realmName = "Realm_" + uuidv4();
   const realmSettingsPage = new RealmSettingsPage(realmName);
 
   beforeEach(() => {

@@ -12,6 +12,7 @@ import EventsPage, {
 } from "../support/pages/admin-ui/manage/events/EventsPage";
 import ListingPage from "../support/pages/admin-ui/ListingPage";
 import adminClient from "../support/util/AdminClient";
+import { v4 as uuidv4 } from "uuid";
 
 const loginPage = new LoginPage();
 const sidebarPage = new SidebarPage();
@@ -33,7 +34,7 @@ describe("Events tests", () => {
   const eventsTestUser = {
     eventsTestUserId: "",
     userRepresentation: {
-      username: "events-test" + crypto.randomUUID(),
+      username: "events-test" + uuidv4(),
       enabled: true,
       credentials: [{ value: "events-test" }],
     },

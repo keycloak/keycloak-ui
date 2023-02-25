@@ -11,13 +11,14 @@ import PasswordPolicies from "../support/pages/admin-ui/manage/authentication/Pa
 import ModalUtils from "../support/util/ModalUtils";
 import CommonPage from "../support/pages/CommonPage";
 import BindFlowModal from "../support/pages/admin-ui/manage/authentication/BindFlowModal";
+import { v4 as uuidv4 } from "uuid";
 
 const loginPage = new LoginPage();
 const masthead = new Masthead();
 const sidebarPage = new SidebarPage();
 const commonPage = new CommonPage();
 const listingPage = new ListingPage();
-const realmName = "test" + crypto.randomUUID();
+const realmName = "test" + uuidv4();
 
 describe("Authentication test", () => {
   const detailPage = new FlowDetails();

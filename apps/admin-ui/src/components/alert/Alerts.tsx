@@ -7,6 +7,7 @@ import { createNamedContext } from "../../utils/createNamedContext";
 import useRequiredContext from "../../utils/useRequiredContext";
 import useSetTimeout from "../../utils/useSetTimeout";
 import { AlertPanel } from "./AlertPanel";
+import { v4 as uuidv4 } from "uuid";
 
 const ALERT_TIMEOUT = 8000;
 
@@ -48,7 +49,7 @@ export const AlertProvider = ({ children }: PropsWithChildren) => {
   const addAlert = useCallback<AddAlertFunction>(
     (message, variant = AlertVariant.success, description) => {
       const alert: AlertEntry = {
-        id: crypto.randomUUID(),
+        id: uuidv4(),
         message,
         variant,
         description,

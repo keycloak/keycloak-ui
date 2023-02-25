@@ -6,7 +6,7 @@ import adminClient from "../support/util/AdminClient";
 import { keycloakBefore } from "../support/util/keycloak_hooks";
 import RealmSettings from "../support/pages/admin-ui/configure/realm_settings/RealmSettings";
 import ModalUtils from "../support/util/ModalUtils";
-
+import { v4 as uuidv4 } from "uuid";
 const masthead = new Masthead();
 const loginPage = new LoginPage();
 const sidebarPage = new SidebarPage();
@@ -14,9 +14,9 @@ const createRealmPage = new CreateRealmPage();
 const realmSettings = new RealmSettings();
 const modalUtils = new ModalUtils();
 
-const testRealmName = "Test-realm-" + crypto.randomUUID();
-const newRealmName = "New-Test-realm-" + crypto.randomUUID();
-const editedRealmName = "Edited-Test-realm-" + crypto.randomUUID();
+const testRealmName = "Test-realm-" + uuidv4();
+const newRealmName = "New-Test-realm-" + uuidv4();
+const editedRealmName = "Edited-Test-realm-" + uuidv4();
 const testDisabledName = "Test-Disabled";
 
 describe("Realm tests", () => {

@@ -12,6 +12,7 @@ import adminClient from "../support/util/AdminClient";
 import CredentialsPage from "../support/pages/admin-ui/manage/users/CredentialsPage";
 import UsersPage from "../support/pages/admin-ui/manage/users/UsersPage";
 import IdentityProviderLinksTab from "../support/pages/admin-ui/manage/users/user_details/tabs/IdentityProviderLinksTab";
+import { v4 as uuidv4 } from "uuid";
 
 let groupName = "group";
 let groupsList: string[] = [];
@@ -37,7 +38,7 @@ describe("User creation", () => {
 
   before(async () => {
     for (let i = 0; i <= 2; i++) {
-      groupName += "_" + crypto.randomUUID();
+      groupName += "_" + uuidv4();
       await adminClient.createGroup(groupName);
       groupsList = [...groupsList, groupName];
     }
@@ -61,7 +62,7 @@ describe("User creation", () => {
   });
 
   it("Create user test", () => {
-    itemId += "_" + crypto.randomUUID();
+    itemId += "_" + uuidv4();
     // Create
     createUserPage.goToCreateUser();
 
@@ -73,7 +74,7 @@ describe("User creation", () => {
   });
 
   it("Create user with groups test", () => {
-    itemIdWithGroups += crypto.randomUUID();
+    itemIdWithGroups += uuidv4();
     // Add user from search bar
     createUserPage.goToCreateUser();
 
@@ -95,7 +96,7 @@ describe("User creation", () => {
   });
 
   it("Create user with credentials test", () => {
-    itemIdWithCred += "_" + crypto.randomUUID();
+    itemIdWithCred += "_" + uuidv4();
 
     // Add user from search bar
     createUserPage.goToCreateUser();

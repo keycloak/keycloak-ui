@@ -16,6 +16,7 @@ import { HelpItem } from "../help-enabler/HelpItem";
 import { KeyValueType } from "../key-value-form/key-value-convert";
 import type { ComponentProps } from "./components";
 import { convertToName } from "./DynamicComponents";
+import { v4 as uuidv4 } from "uuid";
 
 type IdKeyValueType = KeyValueType & {
   id: string;
@@ -34,7 +35,7 @@ export const MapComponent = ({ name, label, helpText }: ComponentProps) => {
     if (!values.length) {
       values.push({ key: "", value: "" });
     }
-    setMap(values.map((value) => ({ ...value, id: crypto.randomUUID() })));
+    setMap(values.map((value) => ({ ...value, id: uuidv4() })));
   }, [register, getValues]);
 
   const update = (val = map) => {
@@ -128,7 +129,7 @@ export const MapComponent = ({ name, label, helpText }: ComponentProps) => {
             variant="link"
             icon={<PlusCircleIcon />}
             onClick={() =>
-              setMap([...map, { key: "", value: "", id: crypto.randomUUID() }])
+              setMap([...map, { key: "", value: "", id: uuidv4() }])
             }
           >
             {t("common:addAttribute")}

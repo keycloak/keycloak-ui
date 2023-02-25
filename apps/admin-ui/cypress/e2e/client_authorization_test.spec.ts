@@ -10,6 +10,7 @@ import ClientDetailsPage from "../support/pages/admin-ui/manage/clients/client_d
 import PoliciesTab from "../support/pages/admin-ui/manage/clients/client_details/tabs/authorization_subtabs/PoliciesTab";
 import PermissionsTab from "../support/pages/admin-ui/manage/clients/client_details/tabs/authorization_subtabs/PermissionsTab";
 import CreateResourcePage from "../support/pages/admin-ui/manage/clients/client_details/CreateResourcePage";
+import { v4 as uuidv4 } from "uuid";
 
 describe("Client authentication subtab", () => {
   const loginPage = new LoginPage();
@@ -20,7 +21,7 @@ describe("Client authentication subtab", () => {
   const clientDetailsPage = new ClientDetailsPage();
   const policiesSubTab = new PoliciesTab();
   const permissionsSubTab = new PermissionsTab();
-  const clientId = "client-authentication-" + crypto.randomUUID();
+  const clientId = "client-authentication-" + uuidv4();
 
   before(() =>
     adminClient.createClient({

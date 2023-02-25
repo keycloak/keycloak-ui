@@ -17,6 +17,7 @@ import MappersTab from "../support/pages/admin-ui/manage/client_scopes/client_sc
 import MapperDetailsPage, {
   ClaimJsonType,
 } from "../support/pages/admin-ui/manage/client_scopes/client_scope_details/tabs/mappers/MapperDetailsPage";
+import { v4 as uuidv4 } from "uuid";
 
 let itemId = "client_scope_crud";
 const loginPage = new LoginPage();
@@ -291,7 +292,7 @@ describe("Client Scopes test", () => {
     });
 
     it("Client scope CRUD test", () => {
-      itemId += "_" + crypto.randomUUID();
+      itemId += "_" + uuidv4();
 
       // Create
       listingPage.itemExist(itemId, false).goToCreateItem();

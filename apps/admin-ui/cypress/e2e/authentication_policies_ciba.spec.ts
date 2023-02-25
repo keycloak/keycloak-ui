@@ -6,12 +6,13 @@ import SidebarPage from "../support/pages/admin-ui/SidebarPage";
 import LoginPage from "../support/pages/LoginPage";
 import adminClient from "../support/util/AdminClient";
 import { keycloakBefore } from "../support/util/keycloak_hooks";
+import { v4 as uuidv4 } from "uuid";
 
 const loginPage = new LoginPage();
 const sidebarPage = new SidebarPage();
 
 describe("Authentication - Policies - CIBA", () => {
-  const realmName = crypto.randomUUID();
+  const realmName = uuidv4();
 
   before(() => adminClient.createRealm(realmName));
   after(() => adminClient.deleteRealm(realmName));

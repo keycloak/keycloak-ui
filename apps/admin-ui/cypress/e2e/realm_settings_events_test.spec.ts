@@ -6,6 +6,7 @@ import ModalUtils from "../support/util/ModalUtils";
 import { keycloakBefore } from "../support/util/keycloak_hooks";
 import ListingPage from "../support/pages/admin-ui/ListingPage";
 import adminClient from "../support/util/AdminClient";
+import { v4 as uuidv4 } from "uuid";
 
 const loginPage = new LoginPage();
 const sidebarPage = new SidebarPage();
@@ -14,7 +15,7 @@ const modalUtils = new ModalUtils();
 const realmSettingsPage = new RealmSettingsPage();
 
 describe("Realm settings events tab tests", () => {
-  const realmName = "Realm_" + crypto.randomUUID();
+  const realmName = "Realm_" + uuidv4();
   const listingPage = new ListingPage();
 
   beforeEach(() => {
@@ -87,10 +88,7 @@ describe("Realm settings events tab tests", () => {
   };
 
   const addBundle = () => {
-    realmSettingsPage.addKeyValuePair(
-      "key_" + crypto.randomUUID(),
-      "value_" + crypto.randomUUID()
-    );
+    realmSettingsPage.addKeyValuePair("key_" + uuidv4(), "value_" + uuidv4());
 
     return this;
   };

@@ -18,6 +18,7 @@ import ClientDetailsPage, {
 import CommonPage from "../support/pages/CommonPage";
 import AttributesTab from "../support/pages/admin-ui/manage/AttributesTab";
 import DedicatedScopesMappersTab from "../support/pages/admin-ui/manage/clients/client_details/DedicatedScopesMappersTab";
+import { v4 as uuidv4 } from "uuid";
 
 let itemId = "client_crud";
 const loginPage = new LoginPage();
@@ -313,7 +314,7 @@ describe("Clients test", () => {
     });
 
     it("Client CRUD test", () => {
-      itemId += "_" + crypto.randomUUID();
+      itemId += "_" + uuidv4();
 
       // Create
       commonPage.tableUtils().checkRowItemExists(itemId, false);
@@ -480,7 +481,7 @@ describe("Clients test", () => {
 
   describe("Roles tab test", () => {
     const rolesTab = new ClientRolesTab();
-    const client = "client_" + crypto.randomUUID();
+    const client = "client_" + uuidv4();
 
     before(() =>
       adminClient.createClient({
@@ -685,7 +686,7 @@ describe("Clients test", () => {
       loginPage.logIn();
       keycloakBefore();
       commonPage.sidebar().goToClients();
-      client = "client_" + crypto.randomUUID();
+      client = "client_" + uuidv4();
       commonPage.tableToolbarUtils().createClient();
       createClientPage
         .selectClientType("openid-connect")

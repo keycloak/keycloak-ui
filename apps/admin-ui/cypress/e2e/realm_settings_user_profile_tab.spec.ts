@@ -6,6 +6,7 @@ import LoginPage from "../support/pages/LoginPage";
 import adminClient from "../support/util/AdminClient";
 import { keycloakBefore } from "../support/util/keycloak_hooks";
 import ModalUtils from "../support/util/ModalUtils";
+import { v4 as uuidv4 } from "uuid";
 
 const loginPage = new LoginPage();
 const sidebarPage = new SidebarPage();
@@ -23,7 +24,7 @@ const clickCreateAttributeButton = () =>
   userProfileTab.createAttributeButtonClick();
 
 describe("User profile tabs", () => {
-  const realmName = "Realm_" + crypto.randomUUID();
+  const realmName = "Realm_" + uuidv4();
   const attributeName = "Test";
 
   before(() =>

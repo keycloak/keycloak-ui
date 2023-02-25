@@ -12,6 +12,7 @@ import adminClient from "../support/util/AdminClient";
 import { range } from "lodash-es";
 import RoleMappingTab from "../support/pages/admin-ui/manage/RoleMappingTab";
 import CommonPage from "../support/pages/CommonPage";
+import { v4 as uuidv4 } from "uuid";
 
 describe("Group test", () => {
   const loginPage = new LoginPage();
@@ -55,7 +56,7 @@ describe("Group test", () => {
     loginPage.logIn();
     keycloakBefore();
     sidebarPage.goToGroups();
-    groupName = groupNamePrefix + crypto.randomUUID();
+    groupName = groupNamePrefix + uuidv4();
     groupNames.push(groupName);
   });
 
