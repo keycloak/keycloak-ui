@@ -26,7 +26,7 @@ new functionality can follow them, such as QE or documentation.
 - [ ] Code has been tested locally by PR requester
 - [ ] User-visible strings are using the react-i18next framework (useTranslation)
 - [ ] Help has been implemented
-- [ ] Axe tool check has been run and resulting a11y issues have been resolved
+- [ ] Axe check has been run and resulting a11y issues have been resolved
 - [ ] Manual keyboard and screen reader checks have been run and resulting a11y issues have been resolved
 - [ ] Unit tests have been created/updated
 
