@@ -144,7 +144,7 @@ export const GroupTree = ({
               {group.name}
             </Link>
           ) : (
-            <span>{group.name}</span>
+            group.name
           )}
         </Tooltip>
       ),
